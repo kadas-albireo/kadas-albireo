@@ -487,10 +487,7 @@ void QgsGPSInformationWidget::displayGPSInformation( const QgsGPSInformation& in
 #if (WITH_QWTPOLAR)
   if ( mStackedWidget->currentIndex() == 2 && info.satInfoComplete ) //satellites
   {
-    while ( !mMarkerList.isEmpty() )
-    {
-      delete mMarkerList.takeFirst();
-    }
+    qDeleteAll( mMarkerList );
   } //satellites
 #endif
   if ( mStackedWidget->currentIndex() == 4 ) //debug
