@@ -1561,7 +1561,6 @@ QString QgsPostgresProvider::geomParam( int offset ) const
       case QGis::WKBPolygon25D:
       case QGis::WKBUnknown:
       case QGis::WKBNoGeometry:
-      case QGis::WKBMixedGeometry:
         forceMulti = false;
         break;
 
@@ -3402,10 +3401,10 @@ QGISEXTERN bool saveStyle( const QString& uri, const QString& qmlStyle, const QS
   {
     res = conn->PQexec( "CREATE TABLE layer_styles("
                         "id SERIAL PRIMARY KEY"
-                        ",f_table_catalog varchar(256)"
-                        ",f_table_schema varchar(256)"
-                        ",f_table_name varchar(256)"
-                        ",f_geometry_column varchar(256)"
+                        ",f_table_catalog varchar"
+                        ",f_table_schema varchar"
+                        ",f_table_name varchar"
+                        ",f_geometry_column varchar"
                         ",styleName varchar(30)"
                         ",styleQML xml"
                         ",styleSLD xml"
