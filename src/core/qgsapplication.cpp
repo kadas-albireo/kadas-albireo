@@ -66,9 +66,9 @@ QString ABISYM( QgsApplication::mBuildOutputPath );
 QStringList ABISYM( QgsApplication::mGdalSkipList );
 int ABISYM( QgsApplication::mMaxThreads );
 
-const char* QgsApplication::QGIS_ORGANIZATION_NAME = "QGIS";
-const char* QgsApplication::QGIS_ORGANIZATION_DOMAIN = "qgis.org";
-const char* QgsApplication::QGIS_APPLICATION_NAME = "QGIS2";
+const char* QgsApplication::QGIS_ORGANIZATION_NAME = "Sourcepole";
+const char* QgsApplication::QGIS_ORGANIZATION_DOMAIN = "sourcepole.com";
+const char* QgsApplication::QGIS_APPLICATION_NAME = "QGIS Enterprise 15";
 
 /*!
   \class QgsApplication
