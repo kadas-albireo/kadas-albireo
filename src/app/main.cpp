@@ -639,7 +639,7 @@ int main( int argc, char *argv[] )
 
 // (if Windows/Mac, use icon from resource)
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
-  myApp.setWindowIcon( QIcon( QgsApplication::iconsPath() + "qgis-icon-60x60.png" ) );
+  myApp.setWindowIcon( QIcon( QgsApplication::iconsPath() + "qgis-icon.png" ) );
 #endif
 
   //
@@ -691,7 +691,7 @@ int main( int argc, char *argv[] )
     gdalShares << QCoreApplication::applicationDirPath().append( "/share/gdal" )
     << appResources.append( "/share/gdal" )
     << appResources.append( "/gdal" );
-    Q_FOREACH ( const QString& gdalShare, gdalShares )
+    Q_FOREACH( const QString& gdalShare, gdalShares )
     {
       if ( QFile::exists( gdalShare ) )
       {

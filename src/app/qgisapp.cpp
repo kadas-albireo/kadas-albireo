@@ -331,9 +331,9 @@ class QTreeWidgetItem;
   */
 static void setTitleBarText_( QWidget & qgisApp )
 {
-  QString caption = QgisApp::tr( "QGIS " );
+  QString caption = QgisApp::tr( "QGIS Enterprise " );
 
-  if ( QString( QGis::QGIS_VERSION ).endsWith( "Master" ) )
+  if ( QString( QGis::QGIS_VERSION ).endsWith( "Dev" ) )
   {
     caption += QString( "%1" ).arg( QGis::QGIS_DEV_VERSION );
   }
