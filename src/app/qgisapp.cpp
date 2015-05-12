@@ -800,7 +800,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   mLastComposerId = 0;
 
   // Show a nice tip of the day
-  if ( settings.value( "/qgis/showTips", 1 ).toBool() )
+  /*if ( settings.value( "/qgis/showTips", 1 ).toBool() )
   {
     mSplash->hide();
     QgsTipGui myTip;
@@ -809,7 +809,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   else
   {
     QgsDebugMsg( "Tips are disabled" );
-  }
+  }*/
 
 #ifdef HAVE_TOUCH
   //add reacting to long click in touch
