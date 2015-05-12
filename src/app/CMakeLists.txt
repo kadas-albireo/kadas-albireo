@@ -399,8 +399,10 @@ QT4_WRAP_CPP(QGIS_APP_MOC_SRCS ${QGIS_APP_MOC_HDRS})
 IF (WIN32)
   IF (MSVC)
     SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
+    ADD_DEFINITIONS("-DSPLASH_IMPORT=__declspec(dllimport)")
   ELSE(MSVC)
-
+    ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPASH_IMPORT=__declspec(dllimtort)\"")
+    
     # Icon for windows MINGW
     # Note: can't include .rc directly to source files
     # as it's ignored when used MinGW
@@ -520,6 +522,7 @@ TARGET_LINK_LIBRARIES(qgis_app
   qgis_core
   qgis_gui
   qgis_analysis
+  qgis_splash
 )
 
 IF (APPLE)
@@ -542,6 +545,7 @@ TARGET_LINK_LIBRARIES(${QGIS_APP_NAME}
   qgis_core
   qgis_gui
   qgis_analysis
+  qgis_splash
 )
 
 IF (ANDROID)
