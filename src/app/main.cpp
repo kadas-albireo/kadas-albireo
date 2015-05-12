@@ -47,6 +47,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+extern const char* splash_image[];
+
 #ifdef WIN32
 // Open files in binary mode
 #include <fcntl.h> /*  _O_BINARY */
@@ -880,19 +882,11 @@ int main( int argc, char *argv[] )
 #endif
 
   //set up splash screen
-  QString mySplashPath( QgsCustomization::instance()->splashPath() );
-  QPixmap myPixmap( mySplashPath + QString( "splash.png" ) );
+  QPixmap myPixmap( splash_image );
   QSplashScreen *mypSplash = new QSplashScreen( myPixmap );
-  if ( mySettings.value( "/qgis/hideSplash" ).toBool() || myHideSplash )
-  {
-    //splash screen hidden
-  }
-  else
-  {
-    //for win and linux we can just automask and png transparency areas will be used
-    mypSplash->setMask( myPixmap.mask() );
-    mypSplash->show();
-  }
+  //for win and linux we can just automask and png transparency areas will be used
+  mypSplash->setMask( myPixmap.mask() );
+  mypSplash->show();
 
   // optionally restore default window state
   // use restoreDefaultWindowState setting only if NOT using command line (then it is set already)
