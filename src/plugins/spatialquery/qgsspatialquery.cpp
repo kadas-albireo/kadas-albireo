@@ -1,9 +1,9 @@
 /***************************************************************************
-                          qgsspatialquery.cpp
-                             -------------------
-    begin                : Dec 29, 2009
-    copyright            : (C) 2009 by Diego Moreira And Luiz Motta
-    email                : moreira.geo at gmail.com And motta.luiz at gmail.com
+        qgsspatialquery.cpp
+        -------------------
+ begin                : Dec 29, 2009
+ copyright            : (C) 2009 by Diego Moreira And Luiz Motta
+ email                : moreira.geo at gmail.com And motta.luiz at gmail.com
 
  ***************************************************************************/
 
@@ -79,25 +79,25 @@ void QgsSpatialQuery::runQuery( QgsFeatureIds &qsetIndexResult,
 QMap<QString, int>* QgsSpatialQuery::getTypesOperations( QgsVectorLayer* lyrTarget, QgsVectorLayer* lyrReference )
 {
   /* Relations from OGC document (obtain in February 2010)
-     06-103r3_Candidate_Implementation_Specification_for_Geographic_Information_-_Simple_feature_access_-_Part_1_Common_Architecture_v1.2.0.pdf
+  06-103r3_Candidate_Implementation_Specification_for_Geographic_Information_-_Simple_feature_access_-_Part_1_Common_Architecture_v1.2.0.pdf
 
-     (P)oint, (L)ine and (A)rea
-     Target Geometry(P,L,A) / Reference Geometry (P,L,A)
-     dim -> Dimension of geometry
-     Relations:
-      1) Intersects and Disjoint: All
-      2) Touches: P/L P/A L/L L/A A/A
-         dimReference  > dimTarget OR dimReference = dimTarget if dimReference > 0
-      3) Crosses: P/L P/A L/L L/A
-         dimReference  > dimTarget OR dimReference = dimTarget if dimReference = 1
-      4) Within: P/L P/A L/A A/A
-         dimReference  > dimTarget OR dimReference = dimTarget if dimReference = 2
-      5) Equals: P/P L/L A/A
-         dimReference = dimTarget
-      6) Overlaps: P/P L/L A/A
-         dimReference = dimTarget
-      7) Contains: L/P A/P A/L A/A
-         dimReference  <  dimTarget OR dimReference = dimTarget if dimReference = 2
+  (P)oint, (L)ine and (A)rea
+  Target Geometry(P,L,A) / Reference Geometry (P,L,A)
+  dim -> Dimension of geometry
+  Relations:
+   1) Intersects and Disjoint: All
+   2) Touches: P/L P/A L/L L/A A/A
+   dimReference  > dimTarget OR dimReference = dimTarget if dimReference > 0
+   3) Crosses: P/L P/A L/L L/A
+   dimReference  > dimTarget OR dimReference = dimTarget if dimReference = 1
+   4) Within: P/L P/A L/A A/A
+   dimReference  > dimTarget OR dimReference = dimTarget if dimReference = 2
+   5) Equals: P/P L/L A/A
+   dimReference = dimTarget
+   6) Overlaps: P/P L/L A/A
+   dimReference = dimTarget
+   7) Contains: L/P A/P A/L A/A
+   dimReference  <  dimTarget OR dimReference = dimTarget if dimReference = 2
   */
 
   QMap<QString, int> * operations = new QMap<QString, int>;
@@ -216,7 +216,7 @@ void QgsSpatialQuery::setSpatialIndexReference( QgsFeatureIds &qsetIndexInvalidR
 
 void QgsSpatialQuery::execQuery( QgsFeatureIds &qsetIndexResult, QgsFeatureIds &qsetIndexInvalidTarget, int relation )
 {
-  bool ( QgsGeometry::* operation )( const QgsGeometry * ) const;
+  bool ( QgsGeometry::* operation )( const QgsGeometry *, QString* ) const;
   switch ( relation )
   {
     case Disjoint:
@@ -253,7 +253,7 @@ void QgsSpatialQuery::execQuery( QgsFeatureIds &qsetIndexResult, QgsFeatureIds &
   coordinateTransform->setCoordinateTransform( mLayerTarget, mLayerReference );
 
   // Set function for populate result
-  void ( QgsSpatialQuery::* funcPopulateIndexResult )( QgsFeatureIds&, QgsFeatureId, QgsGeometry *, bool ( QgsGeometry::* )( const QgsGeometry * ) const );
+  void ( QgsSpatialQuery::* funcPopulateIndexResult )( QgsFeatureIds&, QgsFeatureId, QgsGeometry *, bool ( QgsGeometry::* )( const QgsGeometry *, QString* ) const );
   funcPopulateIndexResult = ( relation == Disjoint )
                             ? &QgsSpatialQuery::populateIndexResultDisjoint
                             : &QgsSpatialQuery::populateIndexResult;
@@ -282,7 +282,7 @@ void QgsSpatialQuery::execQuery( QgsFeatureIds &qsetIndexResult, QgsFeatureIds &
 
 void QgsSpatialQuery::populateIndexResult(
   QgsFeatureIds &qsetIndexResult, QgsFeatureId idTarget, QgsGeometry * geomTarget,
-  bool ( QgsGeometry::* op )( const QgsGeometry * ) const )
+  bool ( QgsGeometry::* op )( const QgsGeometry *, QString* ) const )
 {
   QList<QgsFeatureId> listIdReference;
   listIdReference = mIndexReference.intersects( geomTarget->boundingBox() );
@@ -297,7 +297,7 @@ void QgsSpatialQuery::populateIndexResult(
   {
     mLayerReference->getFeatures( QgsFeatureRequest().setFilterFid( *iterIdReference ) ).nextFeature( featureReference );
     geomReference = featureReference.geometry();
-    if (( geomTarget->*op )( geomReference ) )
+    if (( geomTarget->*op )( geomReference, 0 ) )
     {
       qsetIndexResult.insert( idTarget );
       break;
@@ -308,7 +308,7 @@ void QgsSpatialQuery::populateIndexResult(
 
 void QgsSpatialQuery::populateIndexResultDisjoint(
   QgsFeatureIds &qsetIndexResult, QgsFeatureId idTarget, QgsGeometry * geomTarget,
-  bool ( QgsGeometry::* op )( const QgsGeometry * ) const )
+  bool ( QgsGeometry::* op )( const QgsGeometry *, QString* ) const )
 {
   QList<QgsFeatureId> listIdReference;
   listIdReference = mIndexReference.intersects( geomTarget->boundingBox() );
@@ -326,7 +326,7 @@ void QgsSpatialQuery::populateIndexResultDisjoint(
     mLayerReference->getFeatures( QgsFeatureRequest().setFilterFid( *iterIdReference ) ).nextFeature( featureReference );
     geomReference = featureReference.geometry();
 
-    if ( !( geomTarget->*op )( geomReference ) )
+    if ( !( geomTarget->*op )( geomReference, 0 ) )
     {
       addIndex = false;
       break;

@@ -125,12 +125,12 @@ class QgsGeometry
     bool isGeosEmpty();
 
     /** get area of geometry using GEOS */
-    double area();
+    double area(QString* errorMsg = 0);
 
     /** get length of geometry using GEOS */
-    double length();
+    double length(QString* errorMsg = 0);
 
-    double distance( QgsGeometry& geom );
+    double distance( QgsGeometry& geom, QString* errorMsg = 0 );
 
     /**
        Returns the vertex closest to the given point, the corresponding vertex index, squared distance snap point / target point
@@ -291,35 +291,35 @@ class QgsGeometry
     bool intersects( const QgsRectangle& r ) const;
 
     /** Test for intersection with a geometry (uses GEOS) */
-    bool intersects( const QgsGeometry* geometry ) const;
+    bool intersects( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for containment of a point (uses GEOS) */
     bool contains( const QgsPoint* p ) const;
 
     /** Test for if geometry is contained in another (uses GEOS) */
-    bool contains( const QgsGeometry* geometry ) const;
+    bool contains( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry is disjoint of another (uses GEOS) */
-    bool disjoint( const QgsGeometry* geometry ) const;
+    bool disjoint( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry equals another (uses GEOS) */
-    bool equals( const QgsGeometry* geometry ) const;
+    bool equals( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry touch another (uses GEOS) */
-    bool touches( const QgsGeometry* geometry ) const;
+    bool touches( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry overlaps another (uses GEOS) */
-    bool overlaps( const QgsGeometry* geometry ) const;
+    bool overlaps( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry is within another (uses GEOS) */
-    bool within( const QgsGeometry* geometry ) const;
+    bool within( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry crosses another (uses GEOS) */
-    bool crosses( const QgsGeometry* geometry ) const;
+    bool crosses( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Returns a buffer region around this geometry having the given width and with a specified number
         of segments used to approximate curves */
-    QgsGeometry* buffer( double distance, int segments ) /Factory/;
+    QgsGeometry* buffer( double distance, int segments, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a buffer region around the geometry, with additional style options.
      * @param distance    buffer distance
@@ -330,45 +330,45 @@ class QgsGeometry
      * @note added in 2.4
      * @note needs GEOS >= 3.3 - otherwise always returns 0
      */
-    QgsGeometry* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) /Factory/;
+    QgsGeometry* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns an offset line at a given distance and side from an input line.
      * See buffer() method for details on parameters.
      * @note added in 2.4
      * @note needs GEOS >= 3.3 - otherwise always returns 0
      */
-    QgsGeometry* offsetCurve( double distance, int segments, int joinStyle, double mitreLimit ) /Factory/;
+    QgsGeometry* offsetCurve( double distance, int segments, int joinStyle, double mitreLimit, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a simplified version of this geometry using a specified tolerance value */
-    QgsGeometry* simplify( double tolerance ) /Factory/;
+    QgsGeometry* simplify( double tolerance, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns the center of mass of a geometry
     * @note for line based geometries, the center point of the line is returned,
     * and for point based geometries, the point itself is returned */
-    QgsGeometry* centroid() /Factory/;
+    QgsGeometry* centroid(QString* errorMsg = 0) /Factory/;
 
     /** Returns a point within a geometry */
-    QgsGeometry* pointOnSurface() /Factory/;
+    QgsGeometry* pointOnSurface(QString* errorMsg = 0) /Factory/;
 
     /** Returns the smallest convex polygon that contains all the points in the geometry. */
-    QgsGeometry* convexHull() /Factory/;
+    QgsGeometry* convexHull(QString* errorMsg = 0) /Factory/;
 
     /* Return interpolated point on line at distance */
-    QgsGeometry* interpolate( double distance ) /Factory/;
+    QgsGeometry* interpolate( double distance, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a geometry representing the points shared by this geometry and other. */
-    QgsGeometry* intersection( QgsGeometry* geometry ) /Factory/;
+    QgsGeometry* intersection( QgsGeometry* geometry, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a geometry representing all the points in this geometry and other (a
      * union geometry operation).
      * @note this operation is not called union since its a reserved word in C++.*/
-    QgsGeometry* combine( QgsGeometry* geometry ) /Factory/;
+    QgsGeometry* combine( QgsGeometry* geometry, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a geometry representing the points making up this geometry that do not make up other. */
-    QgsGeometry* difference( QgsGeometry* geometry ) /Factory/;
+    QgsGeometry* difference( QgsGeometry* geometry, QString* errorMsg = 0 ) /Factory/;
 
     /** Returns a Geometry representing the points making up this Geometry that do not make up other. */
-    QgsGeometry* symDifference( QgsGeometry* geometry ) /Factory/;
+    QgsGeometry* symDifference( QgsGeometry* geometry, QString* errorMsg = 0 ) /Factory/;
 
     /** Exports the geometry to WKT
      *  @note precision parameter added in 2.4
@@ -462,9 +462,9 @@ class QgsGeometry
         Error( QString m );
         Error( QString m, QgsPoint p );
 
-        QString what();
-        QgsPoint where();
-        bool hasWhere();
+        QString what() const;
+        QgsPoint where() const;
+        bool hasWhere() const;
     };
 
     /** Validate geometry and produce a list of geometry errors */
@@ -474,6 +474,6 @@ class QgsGeometry
         @param geometryList a list of QgsGeometry* as input
         @returns the new computed QgsGeometry, or null
     */
-    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList ) /Factory/;
+    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList, QString* errorMsg = 0 ) /Factory/;
 }; // class QgsGeometry
 

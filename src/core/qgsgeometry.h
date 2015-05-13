@@ -23,6 +23,7 @@ email                : morb at ozemail dot com dot au
 #include "qgis.h"
 
 #include <geos_c.h>
+#include "geosextra/geos_c_extra.h"
 
 #include "qgspoint.h"
 #include "qgscoordinatetransform.h"
@@ -144,7 +145,7 @@ class CORE_EXPORT QgsGeometry
     size_t wkbSize() const;
 
     /**Returns a geos geometry. QgsGeometry keeps ownership, don't delete the returned object!
-        @note not available in python bindings
+     @note not available in python bindings
       */
     const GEOSGeometry* asGeos() const;
 
@@ -167,12 +168,12 @@ class CORE_EXPORT QgsGeometry
     bool isGeosEmpty();
 
     /** get area of geometry using GEOS */
-    double area();
+    double area( QString* errorMsg = 0 );
 
     /** get length of geometry using GEOS */
-    double length();
+    double length( QString* errorMsg = 0 );
 
-    double distance( QgsGeometry& geom );
+    double distance( QgsGeometry& geom, QString* errorMsg = 0 );
 
     /**
        Returns the vertex closest to the given point, the corresponding vertex index, squared distance snap point / target point
@@ -186,11 +187,11 @@ class CORE_EXPORT QgsGeometry
        This function takes into account the following factors:
 
        1. If the given vertex index is at the end of a linestring,
-          the adjacent index will be -1 (for "no adjacent vertex")
+       the adjacent index will be -1 (for "no adjacent vertex")
        2. If the given vertex index is at the end of a linear ring
-          (such as in a polygon), the adjacent index will take into
-          account the first vertex is equal to the last vertex (and will
-          skip equal vertex positions).
+       (such as in a polygon), the adjacent index will take into
+       account the first vertex is equal to the last vertex (and will
+       skip equal vertex positions).
     */
     void adjacentVertices( int atVertex, int& beforeVertex, int& afterVertex );
 
@@ -289,7 +290,7 @@ class CORE_EXPORT QgsGeometry
      @return 0 in case of success*/
     int translate( double dx, double dy );
 
-    /**Transform this geometry as described by CoordinateTransform ct
+    /**Transform this geometry as described by CoordinateTranasform ct
      @return 0 in case of success*/
     int transform( const QgsCoordinateTransform& ct );
 
@@ -315,7 +316,7 @@ class CORE_EXPORT QgsGeometry
     int splitGeometry( const QList<QgsPoint>& splitLine,
                        QList<QgsGeometry*>&newGeometries,
                        bool topological,
-                       QList<QgsPoint> &topologyTestPoints );
+                       QList<QgsPoint> &topologyTestPoints, QString* errorMsg = 0 );
 
     /**Replaces a part of this geometry with another line
       @return 0 in case of success */
@@ -324,7 +325,7 @@ class CORE_EXPORT QgsGeometry
     /**Changes this geometry such that it does not intersect the other geometry
        @param other geometry that should not be intersect
        @return 0 in case of success*/
-    int makeDifference( QgsGeometry* other );
+    int makeDifference( QgsGeometry* other, QString* errorMsg = 0 );
 
     /**Returns the bounding box of this feature*/
     QgsRectangle boundingBox();
@@ -333,35 +334,39 @@ class CORE_EXPORT QgsGeometry
     bool intersects( const QgsRectangle& r ) const;
 
     /** Test for intersection with a geometry (uses GEOS) */
-    bool intersects( const QgsGeometry* geometry ) const;
+    bool intersects( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for containment of a point (uses GEOS) */
     bool contains( const QgsPoint* p ) const;
 
     /** Test for if geometry is contained in another (uses GEOS) */
-    bool contains( const QgsGeometry* geometry ) const;
+    bool contains( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry is disjoint of another (uses GEOS) */
-    bool disjoint( const QgsGeometry* geometry ) const;
+    bool disjoint( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry equals another (uses GEOS) */
-    bool equals( const QgsGeometry* geometry ) const;
+    bool equals( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry touch another (uses GEOS) */
-    bool touches( const QgsGeometry* geometry ) const;
+    bool touches( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry overlaps another (uses GEOS) */
-    bool overlaps( const QgsGeometry* geometry ) const;
+    bool overlaps( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry is within another (uses GEOS) */
-    bool within( const QgsGeometry* geometry ) const;
+    bool within( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Test for if geometry crosses another (uses GEOS) */
-    bool crosses( const QgsGeometry* geometry ) const;
+    bool crosses( const QgsGeometry* geometry, QString* errorMsg = 0 ) const;
 
     /** Returns a buffer region around this geometry having the given width and with a specified number
-        of segments used to approximate curves */
-    QgsGeometry* buffer( double distance, int segments );
+     of segments used to approximate curves */
+    QgsGeometry* buffer( double distance, int segments, QString* errorMsg = 0 );
+
+    /** Returns a buffer region around this geometry, with options as specified by params
+     of segments used to approximate curves */
+    QgsGeometry* buffer( double distance, GEOSBufferParams* params , QString *errorMsg = 0 );
 
     /** Returns a buffer region around the geometry, with additional style options.
      * @param distance    buffer distance
@@ -372,45 +377,45 @@ class CORE_EXPORT QgsGeometry
      * @note added in 2.4
      * @note needs GEOS >= 3.3 - otherwise always returns 0
      */
-    QgsGeometry* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit );
+    QgsGeometry* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit, QString* errorMsg = 0 );
 
     /** Returns an offset line at a given distance and side from an input line.
      * See buffer() method for details on parameters.
      * @note added in 2.4
      * @note needs GEOS >= 3.3 - otherwise always returns 0
      */
-    QgsGeometry* offsetCurve( double distance, int segments, int joinStyle, double mitreLimit );
+    QgsGeometry* offsetCurve( double distance, int segments, int joinStyle, double mitreLimit, QString* errorMsg = 0 );
 
     /** Returns a simplified version of this geometry using a specified tolerance value */
-    QgsGeometry* simplify( double tolerance );
+    QgsGeometry* simplify( double tolerance, QString* errorMsg = 0 );
 
     /** Returns the center of mass of a geometry
     * @note for line based geometries, the center point of the line is returned,
     * and for point based geometries, the point itself is returned */
-    QgsGeometry* centroid();
+    QgsGeometry* centroid( QString* errorMsg = 0 );
 
     /** Returns a point within a geometry */
-    QgsGeometry* pointOnSurface();
+    QgsGeometry* pointOnSurface( QString* errorMsg = 0 );
 
     /** Returns the smallest convex polygon that contains all the points in the geometry. */
-    QgsGeometry* convexHull();
+    QgsGeometry* convexHull( QString* errorMsg = 0 );
 
     /* Return interpolated point on line at distance */
-    QgsGeometry* interpolate( double distance );
+    QgsGeometry* interpolate( double distance, QString* errorMsg = 0 );
 
     /** Returns a geometry representing the points shared by this geometry and other. */
-    QgsGeometry* intersection( QgsGeometry* geometry );
+    QgsGeometry* intersection( QgsGeometry* geometry, QString* errorMsg = 0, GEOSGeometryPrecisionReducer* reducer = 0 );
 
     /** Returns a geometry representing all the points in this geometry and other (a
      * union geometry operation).
      * @note this operation is not called union since its a reserved word in C++.*/
-    QgsGeometry* combine( QgsGeometry* geometry );
+    QgsGeometry* combine( QgsGeometry* geometry, QString* errorMsg = 0, GEOSGeometryPrecisionReducer* reducer = 0 );
 
     /** Returns a geometry representing the points making up this geometry that do not make up other. */
-    QgsGeometry* difference( QgsGeometry* geometry );
+    QgsGeometry* difference( QgsGeometry* geometry, QString* errorMsg = 0, GEOSGeometryPrecisionReducer* reducer = 0 );
 
     /** Returns a Geometry representing the points making up this Geometry that do not make up other. */
-    QgsGeometry* symDifference( QgsGeometry* geometry );
+    QgsGeometry* symDifference( QgsGeometry* geometry, QString* errorMsg = 0, GEOSGeometryPrecisionReducer* reducer = 0 );
 
     /** Exports the geometry to WKT
      *  @note precision parameter added in 2.4
@@ -435,31 +440,34 @@ class CORE_EXPORT QgsGeometry
     /* Accessor functions for getting geometry data */
 
     /** return contents of the geometry as a point
-        if wkbType is WKBPoint, otherwise returns [0,0] */
+     if wkbType is WKBPoint, otherwise returns [0,0] */
     QgsPoint asPoint() const;
 
     /** return contents of the geometry as a polyline
-        if wkbType is WKBLineString, otherwise an empty list */
+     if wkbType is WKBLineString, otherwise an empty list */
     QgsPolyline asPolyline() const;
 
     /** return contents of the geometry as a polygon
-        if wkbType is WKBPolygon, otherwise an empty list */
+     if wkbType is WKBPolygon, otherwise an empty list */
     QgsPolygon asPolygon() const;
 
     /** return contents of the geometry as a multi point
-        if wkbType is WKBMultiPoint, otherwise an empty list */
+     if wkbType is WKBMultiPoint, otherwise an empty list */
     QgsMultiPoint asMultiPoint() const;
 
     /** return contents of the geometry as a multi linestring
-        if wkbType is WKBMultiLineString, otherwise an empty list */
+     if wkbType is WKBMultiLineString, otherwise an empty list */
     QgsMultiPolyline asMultiPolyline() const;
 
     /** return contents of the geometry as a multi polygon
-        if wkbType is WKBMultiPolygon, otherwise an empty list */
+     if wkbType is WKBMultiPolygon, otherwise an empty list */
     QgsMultiPolygon asMultiPolygon() const;
 
     /** return contents of the geometry as a list of geometries */
     QList<QgsGeometry*> asGeometryCollection() const;
+
+    /** return new geometry from collection of geometries */
+    static QgsGeometry* fromCollection( const QList<QgsGeometry*>&geoms, QString *errorMsg = 0 );
 
     /**Return contents of the geometry as a QPointF if wkbType is WKBPoint,
      * otherwise returns a null QPointF.
@@ -507,19 +515,22 @@ class CORE_EXPORT QgsGeometry
         Error( QString m ) : message( m ), hasLocation( false ) {}
         Error( QString m, QgsPoint p ) : message( m ), location( p ), hasLocation( true ) {}
 
-        QString what() { return message; };
-        QgsPoint where() { return location; }
-        bool hasWhere() { return hasLocation; }
+        QString what() const { return message; }
+        QgsPoint where() const { return location; }
+        bool hasWhere() const { return hasLocation; }
     };
+
+    /** Filters all geometries from a geometry collection whose type does not match the specified one. */
+    void filterGeometryCollection( QGis::WkbType type );
 
     /** Validate geometry and produce a list of geometry errors */
     void validateGeometry( QList<Error> &errors );
 
     /** compute the unary union on a list of geometries. May be faster than an iterative union on a set of geometries.
-        @param geometryList a list of QgsGeometry* as input
-        @returns the new computed QgsGeometry, or null
+     @param geometryList a list of QgsGeometry* as input
+     @returns the new computed QgsGeometry, or null
     */
-    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList );
+    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList, QString* errorMsg = 0, GEOSGeometryPrecisionReducer* reducer = 0 );
 
   private:
     // Private variables
@@ -530,7 +541,7 @@ class CORE_EXPORT QgsGeometry
     // semantically change the value that this object represents.
 
     /** pointer to geometry in binary WKB format
-        This is the class' native implementation
+     This is the class' native implementation
      */
     mutable unsigned char * mGeometry;
 
@@ -550,12 +561,12 @@ class CORE_EXPORT QgsGeometry
     // Private functions
 
     /** Converts from the WKB geometry to the GEOS geometry.
-        @return   true in case of success and false else
+     @return   true in case of success and false else
      */
     bool exportWkbToGeos() const;
 
     /** Converts from the GEOS geometry to the WKB geometry.
-        @return   true in case of success and false else
+     @return   true in case of success and false else
      */
     bool exportGeosToWkb() const;
 
@@ -607,14 +618,14 @@ class CORE_EXPORT QgsGeometry
     int topologicalTestPointsSplit( const GEOSGeometry* splitLine, QList<QgsPoint>& testPoints ) const;
 
     /**Creates a new line from an original line and a reshape line. The part of the input line from the first to the last intersection with the
-        reshape line will be replaced. The calling function takes ownership of the result.
+     reshape line will be replaced. The calling function takes ownership of the result.
     @param origLine the original line
     @param reshapeLineGeos the reshape line
     @return the reshaped line or 0 in case of error*/
     static GEOSGeometry* reshapeLine( const GEOSGeometry* origLine, const GEOSGeometry* reshapeLineGeos );
 
     /**Creates a new polygon replacing the part from the first to the second intersection with the reshape line. As a polygon ring is always closed,
-        the method keeps the longer part of the existing boundary
+     the method keeps the longer part of the existing boundary
     @param polygon geometry to reshape
     @param reshapeLineGeos the reshape line
     @return the reshaped polygon or 0 in case of error*/
@@ -625,7 +636,7 @@ class CORE_EXPORT QgsGeometry
     static GEOSGeometry* nodeGeometries( const GEOSGeometry *splitLine, const GEOSGeometry *poly );
 
     /**Tests if line1 is completely contained in line2. This method works with a very small buffer around line2 and therefore is less prone
-        to numerical errors as the corresponding geos method*/
+     to numerical errors as the corresponding geos method*/
     static int lineContainedInLine( const GEOSGeometry* line1, const GEOSGeometry* line2 );
 
     /**Tests if a point is on a line. This method works with a very small buffer and is thus less prone to numerical problems as the direct geos functions.
@@ -652,7 +663,7 @@ class CORE_EXPORT QgsGeometry
     QgsPolygon asPolygon( QgsConstWkbPtr &wkbPtr, bool hasZValue ) const;
 
     static bool geosRelOp( char( *op )( GEOSContextHandle_t handle, const GEOSGeometry*, const GEOSGeometry * ),
-                           const QgsGeometry* a, const QgsGeometry* b );
+                           const QgsGeometry* a, const QgsGeometry* b, QString* errorMsg = 0 );
 
     /**Returns < 0 if point(x/y) is left of the line x1,y1 -> x1,y2*/
     double leftOf( double x, double y, double& x1, double& y1, double& x2, double& y2 );

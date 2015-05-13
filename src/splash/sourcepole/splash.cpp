@@ -1,5 +1,5 @@
 /* XPM */
-extern SPLASH_EXPORT const char* splash_image[] =
+SPLASH_EXPORT const char* splash_image[] =
 {
   "495 285 2770 2",
   "   c None",
