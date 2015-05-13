@@ -1,9 +1,9 @@
 /***************************************************************************
-                          qgsspatialquery.h
-                             -------------------
-    begin                : Dec 29, 2009
-    copyright            : (C) 2009 by Diego Moreira And Luiz Motta
-    email                : moreira.geo at gmail.com And motta.luiz at gmail.com
+        qgsspatialquery.h
+        -------------------
+ begin                : Dec 29, 2009
+ copyright            : (C) 2009 by Diego Moreira And Luiz Motta
+ email                : moreira.geo at gmail.com And motta.luiz at gmail.com
 
  ***************************************************************************/
 
@@ -137,7 +137,7 @@ class QgsSpatialQuery
     */
     void populateIndexResult(
       QgsFeatureIds &qsetIndexResult, QgsFeatureId idTarget, QgsGeometry *geomTarget,
-      bool ( QgsGeometry::* operation )( const QgsGeometry * ) const );
+      bool ( QgsGeometry::* operation )( const QgsGeometry *, QString* ) const );
     /**
     * \brief Populate index Result Disjoint
     * \param qsetIndexResult    Reference to QSet contains the result query
@@ -145,9 +145,8 @@ class QgsSpatialQuery
     * \param geomTarget         Geometry the feature Target
     * \param operation          Pointer to function of GEOS operation
     */
-    void populateIndexResultDisjoint(
-      QgsFeatureIds &qsetIndexResult, QgsFeatureId idTarget, QgsGeometry *geomTarget,
-      bool ( QgsGeometry::* operation )( const QgsGeometry * ) const );
+    void populateIndexResultDisjoint( QgsFeatureIds &qsetIndexResult, QgsFeatureId idTarget, QgsGeometry *geomTarget,
+                                      bool ( QgsGeometry::*operation )( const QgsGeometry*, QString* ) const );
 
     MngProgressBar *mPb;
     bool mUseReferenceSelection;

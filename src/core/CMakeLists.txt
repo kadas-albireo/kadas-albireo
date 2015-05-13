@@ -46,7 +46,7 @@ SET(QGIS_CORE_SRCS
   diagram/qgspiediagram.cpp
   diagram/qgstextdiagram.cpp
   diagram/qgshistogramdiagram.cpp
-  
+
   effects/qgsimageoperation.cpp
 
   layertree/qgslayertreegroup.cpp
@@ -276,6 +276,8 @@ SET(QGIS_CORE_SRCS
   raster/qgssinglebandpseudocolorrenderer.cpp
   raster/qgsbrightnesscontrastfilter.cpp
   raster/qgshuesaturationfilter.cpp
+
+  geosextra/geos_c_extra.cpp
 )
 
 IF(ENABLE_MODELTEST)
@@ -423,6 +425,8 @@ SET(QGIS_CORE_MOC_HDRS
   layertree/qgslayertreemodellegendnode.h
   layertree/qgslayertreenode.h
   layertree/qgslayertreeregistrybridge.h
+
+  geosextra/geos_c_extra.h
 )
 
 IF (NOT QT5_BUILD)
@@ -556,7 +560,7 @@ SET(QGIS_CORE_HDRS
   diagram/qgspiediagram.h
   diagram/qgstextdiagram.h
   diagram/qgshistogramdiagram.h
-  
+
   effects/qgsimageoperation.h
 
   composer/qgsaddremovemultiframecommand.h
@@ -757,6 +761,7 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${EXPAT_LIBRARY}
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
+  ${GEOS_CPP_LIBRARY}
 )
 
 # install
