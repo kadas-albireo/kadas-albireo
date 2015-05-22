@@ -24,6 +24,7 @@ struct QgsOgrConn
 {
   QString path;
   OGRDataSourceH ds;
+  bool valid;
 };
 
 inline QString qgsConnectionPool_ConnectionToName( QgsOgrConn* c )
@@ -36,6 +37,7 @@ inline void qgsConnectionPool_ConnectionCreate( QString connInfo, QgsOgrConn*& c
   c = new QgsOgrConn;
   c->ds = OGROpen( connInfo.toUtf8().constData(), false, NULL );
   c->path = connInfo;
+  c->valid = true;
 }
 
 inline void qgsConnectionPool_ConnectionDestroy( QgsOgrConn* c )
@@ -44,6 +46,15 @@ inline void qgsConnectionPool_ConnectionDestroy( QgsOgrConn* c )
   delete c;
 }
 
+inline void qgsConnectionPool_InvalidateConnection( QgsOgrConn* c )
+{
+  c->valid = false;
+}
+
+inline bool qgsConnectionPool_ConnectionIsValid( QgsOgrConn* c )
+{
+  return c->valid;
+}
 
 class QgsOgrConnPoolGroup : public QObject, public QgsConnectionPoolGroup<QgsOgrConn*>
 {
