@@ -32,3 +32,9 @@ QgsOgrConnPool::~QgsOgrConnPool()
   QgsDebugCall;
 }
 
+void QgsOgrConnPool::invalidateHandles( const QString& connInfo )
+{
+  mMutex.lock();
+  mGroups.remove( connInfo );
+  mMutex.unlock();
+}

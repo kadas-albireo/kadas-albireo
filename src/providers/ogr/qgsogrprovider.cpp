@@ -19,7 +19,6 @@ email                : sherman at mrcc.com
 #include "qgsogrfeatureiterator.h"
 #include "qgslogger.h"
 #include "qgsmessagelog.h"
-#include "qgslocalec.h"
 
 #define CPL_SUPRESS_CPLUSPLUS
 #include <gdal.h>         // to collect version information
@@ -46,7 +45,6 @@ email                : sherman at mrcc.com
 #include "qgsgeometry.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgsvectorlayerimport.h"
-#include "qgslocalec.h"
 
 static const QString TEXT_PROVIDER_KEY = "ogr";
 static const QString TEXT_PROVIDER_DESCRIPTION =
@@ -84,8 +82,6 @@ bool QgsOgrProvider::convertField( QgsField &field, const QTextCodec &encoding )
   OGRFieldType ogrType = OFTString; //default to string
   int ogrWidth = field.length();
   int ogrPrecision = field.precision();
-  if ( ogrPrecision > 0 )
-    ogrWidth += 1;
   switch ( field.type() )
   {
     case QVariant::LongLong:
@@ -369,11 +365,6 @@ QgsOgrProvider::QgsOgrProvider( QString const & uri )
   QgsDebugMsg( "mLayerName: " + mLayerName );
   QgsDebugMsg( "mSubsetString: " + mSubsetString );
   CPLSetConfigOption( "OGR_ORGANIZE_POLYGONS", "ONLY_CCW" );  // "SKIP" returns MULTIPOLYGONs for multiringed POLYGONs
-
-  if ( mFilePath.startsWith( "MySQL:" ) && !mLayerName.isEmpty() )
-  {
-    mFilePath += ",tables=" + mLayerName;
-  }
 
   // first try to open in update mode (unless specified otherwise)
   if ( !openReadOnly )
@@ -745,6 +736,7 @@ OGRwkbGeometryType QgsOgrProvider::getOgrGeomType( OGRLayerH ogrLayer )
 
 void QgsOgrProvider::loadFields()
 {
+  QgsOgrConnPool::instance()->invalidateHandles( filePath() );
   //the attribute fields need to be read again when the encoding changes
   mAttributeFields.clear();
 
@@ -795,11 +787,6 @@ void QgsOgrProvider::loadFields()
         }
       }
 
-      int width = OGR_Fld_GetWidth( fldDef );
-      int prec = OGR_Fld_GetPrecision( fldDef );
-      if ( prec > 0 )
-        width -= 1;
-
       mAttributeFields.append(
         QgsField(
           name,
@@ -809,9 +796,8 @@ void QgsOgrProvider::loadFields()
 #else
           mEncoding->toUnicode( OGR_GetFieldTypeName( ogrType ) ),
 #endif
-          width, prec
-        )
-      );
+          OGR_Fld_GetWidth( fldDef ),
+          OGR_Fld_GetPrecision( fldDef ) ) );
     }
   }
 }
@@ -1005,7 +991,11 @@ bool QgsOgrProvider::addFeature( QgsFeature& f )
 
   const QgsAttributes& attrs = f.attributes();
 
-  QgsLocaleNumC l;
+  char *oldlocale = setlocale( LC_NUMERIC, NULL );
+  if ( oldlocale )
+    oldlocale = strdup( oldlocale );
+
+  setlocale( LC_NUMERIC, "C" );
 
   //add possible attribute information
   for ( int targetAttributeId = 0; targetAttributeId < attrs.count(); ++targetAttributeId )
@@ -1078,11 +1068,13 @@ bool QgsOgrProvider::addFeature( QgsFeature& f )
   }
   else
   {
-    long id = OGR_F_GetFID( feature );
-    if ( id >= 0 )
-      f.setFeatureId( id );
+    f.setFeatureId( OGR_F_GetFID( feature ) );
   }
   OGR_F_Destroy( feature );
+
+  setlocale( LC_NUMERIC, oldlocale );
+  if ( oldlocale )
+    free( oldlocale );
 
   return returnValue;
 }
@@ -1146,10 +1138,7 @@ bool QgsOgrProvider::addAttributes( const QList<QgsField> &attributes )
     }
 
     OGRFieldDefnH fielddefn = OGR_Fld_Create( mEncoding->fromUnicode( iter->name() ).constData(), type );
-    int width = iter->length();
-    if ( iter->precision() )
-      width += 1;
-    OGR_Fld_SetWidth( fielddefn, width );
+    OGR_Fld_SetWidth( fielddefn, iter->length() );
     OGR_Fld_SetPrecision( fielddefn, iter->precision() );
 
     if ( OGR_L_CreateField( ogrLayer, fielddefn, true ) != OGRERR_NONE )
@@ -1218,7 +1207,10 @@ bool QgsOgrProvider::changeAttributeValues( const QgsChangedAttributesMap &attr_
       continue;
     }
 
-    QgsLocaleNumC l;
+    char *oldlocale = setlocale( LC_NUMERIC, NULL );
+    if ( oldlocale )
+      oldlocale = strdup( oldlocale );
+    setlocale( LC_NUMERIC, "C" );
 
     for ( QgsAttributeMap::const_iterator it2 = attr.begin(); it2 != attr.end(); ++it2 )
     {
@@ -1280,6 +1272,10 @@ bool QgsOgrProvider::changeAttributeValues( const QgsChangedAttributesMap &attr_
     {
       pushError( tr( "OGR error setting feature %1: %2" ).arg( fid ).arg( CPLGetLastErrorMsg() ) );
     }
+
+    setlocale( LC_NUMERIC, oldlocale );
+    if ( oldlocale )
+      free( oldlocale );
   }
 
   if ( OGR_L_SyncToDisk( ogrLayer ) != OGRERR_NONE )
@@ -2170,8 +2166,6 @@ QGISEXTERN bool createEmptyDataSource( const QString &uri,
 
     int width = fields.size() > 1 ? fields[1].toInt() : -1;
     int precision = fields.size() > 2 ? fields[2].toInt() : -1;
-    if ( precision > 0 )
-      width += 1;
 
     OGRFieldDefnH field;
     if ( fields[0] == "Real" )
@@ -2524,12 +2518,8 @@ void QgsOgrProvider::recalculateFeatureCount()
   {
     OGR_L_SetSpatialFilter( ogrLayer, filter );
   }
-}
 
-bool QgsOgrProvider::doesStrictFeatureTypeCheck() const
-{
-  // FIXME probably other drivers too...
-  return ogrDriverName != "ESRI Shapefile" || geomType == wkbPoint;
+  QgsOgrConnPool::instance()->invalidateHandles( filePath() );
 }
 
 OGRwkbGeometryType QgsOgrProvider::ogrWkbSingleFlatten( OGRwkbGeometryType type )
