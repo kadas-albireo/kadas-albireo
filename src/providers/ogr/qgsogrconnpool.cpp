@@ -35,6 +35,7 @@ QgsOgrConnPool::~QgsOgrConnPool()
 void QgsOgrConnPool::invalidateHandles( const QString& connInfo )
 {
   mMutex.lock();
-  mGroups.remove( connInfo );
+  if ( mGroups.contains( connInfo ) )
+    mGroups[connInfo]->invalidateConnections();
   mMutex.unlock();
 }

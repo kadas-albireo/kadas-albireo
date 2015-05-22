@@ -17,6 +17,7 @@
 #define QGSPOSTGRESCONNPOOL_H
 
 #include "qgsconnectionpool.h"
+
 #include "qgspostgresconn.h"
 
 
@@ -33,6 +34,15 @@ inline void qgsConnectionPool_ConnectionCreate( QString connInfo, QgsPostgresCon
 inline void qgsConnectionPool_ConnectionDestroy( QgsPostgresConn* c )
 {
   c->unref(); // will delete itself
+}
+
+inline void qgsConnectionPool_InvalidateConnection( QgsPostgresConn* c )
+{
+}
+
+inline bool qgsConnectionPool_ConnectionIsValid( QgsPostgresConn* c )
+{
+  return true;
 }
 
 
@@ -65,8 +75,6 @@ class QgsPostgresConnPool : public QgsConnectionPool<QgsPostgresConn*, QgsPostgr
   private:
     QgsPostgresConnPool();
     ~QgsPostgresConnPool();
-
-    static QgsPostgresConnPool sInstance;
 };
 
 
