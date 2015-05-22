@@ -736,6 +736,7 @@ OGRwkbGeometryType QgsOgrProvider::getOgrGeomType( OGRLayerH ogrLayer )
 
 void QgsOgrProvider::loadFields()
 {
+  QgsOgrConnPool::instance()->invalidateHandles( filePath() );
   //the attribute fields need to be read again when the encoding changes
   mAttributeFields.clear();
 
@@ -2517,6 +2518,8 @@ void QgsOgrProvider::recalculateFeatureCount()
   {
     OGR_L_SetSpatialFilter( ogrLayer, filter );
   }
+
+  QgsOgrConnPool::instance()->invalidateHandles( filePath() );
 }
 
 OGRwkbGeometryType QgsOgrProvider::ogrWkbSingleFlatten( OGRwkbGeometryType type )
