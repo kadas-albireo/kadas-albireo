@@ -102,6 +102,8 @@ class QgsConnectionPoolGroup
             QMetaObject::invokeMethod( expirationTimer->parent(), "stopExpirationTimer" );
           }
 
+          acquiredConns.append( i.c );
+
           return i.c;
         }
       }
@@ -115,11 +117,14 @@ class QgsConnectionPoolGroup
         return 0;
       }
 
+      acquiredConns.append( c );
       return c;
     }
 
     void release( T conn )
     {
+      acquiredConns.removeAll( conn );
+
       connMutex.lock();
       Item i;
       i.c = conn;
