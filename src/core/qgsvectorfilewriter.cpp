@@ -2677,11 +2677,3 @@ void QgsVectorFileWriter::addRendererAttributes( QgsVectorLayer* vl, QgsAttribut
     }
   }
 }
-
-void QgsVectorFileWriter::syncToDisk()
-{
-  if ( mLayer )
-  {
-    OGR_L_SyncToDisk( mLayer );
-  }
-}

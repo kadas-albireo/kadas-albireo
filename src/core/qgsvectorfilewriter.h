@@ -269,8 +269,6 @@ class CORE_EXPORT QgsVectorFileWriter
 
     static bool driverMetadata( const QString& driverName, MetaData& driverMetadata );
 
-    void syncToDisk();
-
   protected:
     //! @note not available in python bindings
     OGRGeometryH createEmptyGeometry( QGis::WkbType wkbType );
