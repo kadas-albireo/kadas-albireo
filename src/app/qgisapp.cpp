@@ -5464,14 +5464,7 @@ QgsGeometry* QgisApp::unionGeometries( const QgsVectorLayer* vl, QgsFeatureList&
   }
 
   //convert unionGeom to a multipart geometry in case it is necessary to match the layer type
-  QGis::WkbType t = vl->wkbType();
-  bool layerIsMultiType = ( t == QGis::WKBMultiPoint ||
-                            t == QGis::WKBMultiPoint25D ||
-                            t == QGis::WKBMultiLineString ||
-                            t == QGis::WKBMultiLineString25D ||
-                            t == QGis::WKBMultiPolygon ||
-                            t == QGis::WKBMultiPolygon25D );
-  if ( layerIsMultiType && !unionGeom->isMultipart() )
+  if ( QGis::isMultiType( vl->wkbType() ) && !unionGeom->isMultipart() )
   {
     unionGeom->convertToMultiType();
   }
@@ -9356,6 +9349,8 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
         mActionMergeFeatureAttributes->setEnabled( false );
       }
 
+      bool isMultiPart = QGis::isMultiType( vlayer->wkbType() ) || !dprovider->doesStrictFeatureTypeCheck();
+
       // moving enabled if geometry changes are supported
       mActionAddPart->setEnabled( isEditable && canChangeGeometry );
       mActionDeletePart->setEnabled( isEditable && canChangeGeometry );
@@ -9391,7 +9386,7 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
 
         mActionReshapeFeatures->setEnabled( isEditable && canAddFeatures );
         mActionSplitFeatures->setEnabled( isEditable && canAddFeatures );
-        mActionSplitParts->setEnabled( isEditable && canAddFeatures );
+        mActionSplitParts->setEnabled( isEditable && canChangeGeometry && isMultiPart );
         mActionSimplifyFeature->setEnabled( isEditable && canAddFeatures );
         mActionOffsetCurve->setEnabled( isEditable && canAddFeatures && canChangeAttributes );
 
@@ -9407,7 +9402,7 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
         mActionFillRing->setEnabled( isEditable && canChangeGeometry );
         mActionReshapeFeatures->setEnabled( isEditable && canChangeGeometry );
         mActionSplitFeatures->setEnabled( isEditable && canAddFeatures );
-        mActionSplitParts->setEnabled( isEditable && canChangeGeometry );
+        mActionSplitParts->setEnabled( isEditable && canChangeGeometry && isMultiPart );
         mActionSimplifyFeature->setEnabled( isEditable && canChangeGeometry );
         mActionDeleteRing->setEnabled( isEditable && canChangeGeometry );
         mActionOffsetCurve->setEnabled( false );

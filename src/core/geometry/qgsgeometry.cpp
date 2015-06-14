@@ -577,10 +577,7 @@ int QgsGeometry::addPart( const QList<QgsPoint> &points, QGis::GeometryType geom
     }
   }
 
-  if ( !isMultipart() )
-  {
-    convertToMultiType();
-  }
+  convertToMultiType();
 
   QgsAbstractGeometryV2* partGeom = 0;
   if ( points.size() == 1 )
@@ -666,6 +663,8 @@ int QgsGeometry::splitGeometry( const QList<QgsPoint>& splitLine, QList<QgsGeome
   {
     return 0;
   }
+
+  convertToMultiType();
 
   QList<QgsAbstractGeometryV2*> newGeoms;
   QgsLineStringV2 splitLineString;
@@ -1455,6 +1454,12 @@ bool QgsGeometry::deletePart( int partNum )
   if ( !d || !d->geometry )
   {
     return false;
+  }
+
+  if ( !isMultipart() && partNum < 1 )
+  {
+    setGeometry( 0 );
+    return true;
   }
 
   detach( true );
