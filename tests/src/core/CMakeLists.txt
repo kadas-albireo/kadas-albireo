@@ -10,6 +10,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/src/core
   ${CMAKE_SOURCE_DIR}/src/core/composer
   ${CMAKE_SOURCE_DIR}/src/core/effects
+  ${CMAKE_SOURCE_DIR}/src/core/geometry
   ${CMAKE_SOURCE_DIR}/src/core/layertree
   ${CMAKE_SOURCE_DIR}/src/core/raster
   ${CMAKE_SOURCE_DIR}/src/core/symbology-ng
@@ -149,5 +150,3 @@ ADD_QGIS_TEST(maplayerstylemanager testqgsmaplayerstylemanager.cpp )
 ADD_QGIS_TEST(pointlocatortest testqgspointlocator.cpp )
 ADD_QGIS_TEST(snappingutilstest testqgssnappingutils.cpp )
 ADD_QGIS_TEST(imageoperationtest testqgsimageoperation.cpp)
-ADD_QGIS_TEST(pallabelingtest testqgspallabeling.cpp)
-

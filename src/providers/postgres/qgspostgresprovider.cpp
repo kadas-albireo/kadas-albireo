@@ -571,7 +571,7 @@ QString QgsPostgresProvider::filterWhereClause() const
 
   if ( mRequestedGeomType != QGis::WKBUnknown && mRequestedGeomType != mDetectedGeomType )
   {
-    where += delim + QgsPostgresConn::postgisTypeFilter( mGeometryColumn, mRequestedGeomType, mSpatialColType == sctGeography );
+    where += delim + QgsPostgresConn::postgisTypeFilter( mGeometryColumn, ( QgsWKBTypes::Type )mRequestedGeomType, mSpatialColType == sctGeography );
     delim = " AND ";
   }
 
@@ -1234,16 +1234,14 @@ QVariant QgsPostgresProvider::minimumValue( int index )
   {
     // get the field name
     const QgsField &fld = field( index );
-    QString sql = QString( "SELECT min(%1) AS %1 FROM %2" )
-                  .arg( quotedIdentifier( fld.name() ) )
+    QString sql = QString( "SELECT %1 FROM %2" )
+                  .arg( connectionRO()->fieldExpression( fld, "min(%1)" ) )
                   .arg( mQuery );
 
     if ( !mSqlWhereClause.isEmpty() )
     {
       sql += QString( " WHERE %1" ).arg( mSqlWhereClause );
     }
-
-    sql = QString( "SELECT %1 FROM (%2) foo" ).arg( connectionRO()->fieldExpression( fld ) ).arg( sql );
 
     QgsPostgresResult rmin = connectionRO()->PQexec( sql );
     return convertValue( fld.type(), rmin.PQgetvalue( 0, 0 ) );
@@ -1264,7 +1262,7 @@ void QgsPostgresProvider::uniqueValues( int index, QList<QVariant> &uniqueValues
     // get the field name
     const QgsField &fld = field( index );
     QString sql = QString( "SELECT DISTINCT %1 FROM %2" )
-                  .arg( quotedIdentifier( fld.name() ) )
+                  .arg( connectionRO()->fieldExpression( fld ) )
                   .arg( mQuery );
 
     if ( !mSqlWhereClause.isEmpty() )
@@ -1272,14 +1270,12 @@ void QgsPostgresProvider::uniqueValues( int index, QList<QVariant> &uniqueValues
       sql += QString( " WHERE %1" ).arg( mSqlWhereClause );
     }
 
-    sql +=  QString( " ORDER BY %1" ).arg( quotedIdentifier( fld.name() ) );
+    sql +=  QString( " ORDER BY %1" ).arg( connectionRO()->fieldExpression( fld ) );
 
     if ( limit >= 0 )
     {
       sql += QString( " LIMIT %1" ).arg( limit );
     }
-
-    sql = QString( "SELECT %1 FROM (%2) foo" ).arg( connectionRO()->fieldExpression( fld ) ).arg( sql );
 
     QgsPostgresResult res = connectionRO()->PQexec( sql );
     if ( res.PQresultStatus() == PGRES_TUPLES_OK )
@@ -1410,16 +1406,14 @@ QVariant QgsPostgresProvider::maximumValue( int index )
   {
     // get the field name
     const QgsField &fld = field( index );
-    QString sql = QString( "SELECT max(%1) AS %1 FROM %2" )
-                  .arg( quotedIdentifier( fld.name() ) )
+    QString sql = QString( "SELECT %1 FROM %2" )
+                  .arg( connectionRO()->fieldExpression( fld, "max(%1)" ) )
                   .arg( mQuery );
 
     if ( !mSqlWhereClause.isEmpty() )
     {
       sql += QString( " WHERE %1" ).arg( mSqlWhereClause );
     }
-
-    sql = QString( "SELECT %1 FROM (%2) foo" ).arg( connectionRO()->fieldExpression( fld ) ).arg( sql );
 
     QgsPostgresResult rmax = connectionRO()->PQexec( sql );
     return convertValue( fld.type(), rmax.PQgetvalue( 0, 0 ) );
@@ -1890,7 +1884,7 @@ bool QgsPostgresProvider::deleteFeatures( const QgsFeatureIds & id )
       dropOrphanedTopoGeoms();
     }
 
-    mShared->addFeaturesCounted( -id.size() );
+    mShared->addFeaturesCounted( id.size() );
   }
   catch ( PGException &e )
   {

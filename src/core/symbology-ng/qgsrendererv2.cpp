@@ -28,6 +28,7 @@
 #include "qgsfeature.h"
 #include "qgslogger.h"
 #include "qgsvectorlayer.h"
+#include "qgswkbptr.h"
 
 #include <QDomElement>
 #include <QDomDocument>

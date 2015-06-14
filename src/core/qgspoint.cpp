@@ -153,25 +153,13 @@ QString QgsPoint::toDegreesMinutesSeconds( int thePrecision, const bool useSuffi
     myWrappedX = myWrappedX + 360.0;
   }
 
-  //first, limit latitude to -180 to 180 degree range
-  double myWrappedY = fmod( m_y, 180.0 );
-  //next, wrap around latitudes > 90 or < -90 degrees, so that eg "110S" -> "70N"
-  if ( myWrappedY > 90.0 )
-  {
-    myWrappedY = myWrappedY - 180.0;
-  }
-  else if ( myWrappedY < -90.0 )
-  {
-    myWrappedY = myWrappedY + 180.0;
-  }
-
   int myDegreesX = int( qAbs( myWrappedX ) );
   double myFloatMinutesX = double(( qAbs( myWrappedX ) - myDegreesX ) * 60 );
   int myIntMinutesX = int( myFloatMinutesX );
   double mySecondsX = double( myFloatMinutesX - myIntMinutesX ) * 60;
 
-  int myDegreesY = int( qAbs( myWrappedY ) );
-  double myFloatMinutesY = double(( qAbs( myWrappedY ) - myDegreesY ) * 60 );
+  int myDegreesY = int( qAbs( m_y ) );
+  double myFloatMinutesY = double(( qAbs( m_y ) - myDegreesY ) * 60 );
   int myIntMinutesY = int( myFloatMinutesY );
   double mySecondsY = double( myFloatMinutesY - myIntMinutesY ) * 60;
 
@@ -204,7 +192,7 @@ QString QgsPoint::toDegreesMinutesSeconds( int thePrecision, const bool useSuffi
   if ( useSuffix )
   {
     myXHemisphere = myWrappedX < 0 ? QObject::tr( "W" ) : QObject::tr( "E" );
-    myYHemisphere = myWrappedY < 0 ? QObject::tr( "S" ) : QObject::tr( "N" );
+    myYHemisphere = m_y < 0 ? QObject::tr( "S" ) : QObject::tr( "N" );
   }
   else
   {
@@ -212,7 +200,7 @@ QString QgsPoint::toDegreesMinutesSeconds( int thePrecision, const bool useSuffi
     {
       myXSign = QObject::tr( "-" );
     }
-    if ( myWrappedY < 0 )
+    if ( m_y < 0 )
     {
       myYSign = QObject::tr( "-" );
     }
@@ -458,4 +446,9 @@ double QgsPoint::sqrDistToSegment( double x1, double y1, double x2, double y2, Q
     return 0.0;
   }
   return dist;
+}
+
+bool QgsPoint::compare( const QgsPoint &other, double epsilon ) const
+{
+  return ( qgsDoubleNear( m_x, other.x(), epsilon ) && qgsDoubleNear( m_y, other.y(), epsilon ) );
 }

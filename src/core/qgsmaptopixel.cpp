@@ -272,3 +272,21 @@ void QgsMapToPixel::transformInPlace( qreal& x, qreal& y ) const
   //QgsDebugMsg(QString("XXX transformInPlace X : %1-->%2, Y: %3 -->%4").arg(x).arg(mx).arg(y).arg(my));
   x = mx; y = my;
 }
+
+QTransform QgsMapToPixel::transform() const
+{
+  double rotation = mapRotation();
+  if ( qgsDoubleNear( rotation, 0.0 ) )
+  {
+    //no rotation, return a simplified matrix
+    return QTransform::fromScale( 1.0 / mMapUnitsPerPixel, -1.0 / mMapUnitsPerPixel )
+           .translate( -xMin, - ( yMin + mHeight * mMapUnitsPerPixel ) );
+  }
+
+  double cy = mapHeight() / 2.0;
+  double cx = mapWidth() / 2.0;
+  return QTransform::fromTranslate( cx, cy )
+         .rotate( rotation )
+         .scale( 1 / mMapUnitsPerPixel, -1 / mMapUnitsPerPixel )
+         .translate( -xCenter, -yCenter );
+}

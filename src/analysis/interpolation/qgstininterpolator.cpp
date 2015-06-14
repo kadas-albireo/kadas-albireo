@@ -21,6 +21,7 @@
 #include "NormVecDecorator.h"
 #include "LinTriangleInterpolator.h"
 #include "Point3D.h"
+#include "qgswkbptr.h"
 #include "qgsfeature.h"
 #include "qgsgeometry.h"
 #include "qgsvectorlayer.h"

@@ -17,6 +17,7 @@
 
 #include "qgsgeometry.h"
 #include "qgsvectorlayer.h"
+#include "qgswkbptr.h"
 
 #include <spatialindex/SpatialIndex.h>
 
@@ -706,8 +707,8 @@ void QgsPointLocator::destroyIndex()
 
   mIsEmptyLayer = false;
 
-  qDeleteAll( mGeoms );
-
+  foreach ( QgsGeometry* g, mGeoms )
+    delete g;
   mGeoms.clear();
 }
 
@@ -740,13 +741,9 @@ void QgsPointLocator::onFeatureAdded( QgsFeatureId fid )
       }
     }
 
-    QgsRectangle bbox = f.geometry()->boundingBox();
-    if ( !bbox.isNull() )
-    {
-      SpatialIndex::Region r( rect2region( bbox ) );
-      mRTree->insertData( 0, 0, r, f.id() );
-      mGeoms[fid] = new QgsGeometry( *f.geometry() );
-    }
+    SpatialIndex::Region r( rect2region( f.geometry()->boundingBox() ) );
+    mRTree->insertData( 0, 0, r, f.id() );
+    mGeoms[fid] = new QgsGeometry( *f.geometry() );
   }
 }
 
