@@ -447,3 +447,8 @@ double QgsPoint::sqrDistToSegment( double x1, double y1, double x2, double y2, Q
   }
   return dist;
 }
+
+bool QgsPoint::compare( const QgsPoint &other, double epsilon ) const
+{
+  return ( qgsDoubleNear( m_x, other.x(), epsilon ) && qgsDoubleNear( m_y, other.y(), epsilon ) );
+}
