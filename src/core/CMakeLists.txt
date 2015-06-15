@@ -3,6 +3,8 @@
 
 SET(QGIS_CORE_SRCS
 
+  geosextra/geos_c_extra.cpp
+
   gps/qgsgpsconnection.cpp
   gps/qgsgpsconnectionregistry.cpp
   gps/qgsnmeaconnection.cpp
