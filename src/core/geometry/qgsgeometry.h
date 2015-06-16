@@ -555,9 +555,9 @@ class CORE_EXPORT QgsGeometry
         Error( QString m ) : message( m ), hasLocation( false ) {}
         Error( QString m, QgsPoint p ) : message( m ), location( p ), hasLocation( true ) {}
 
-        QString what() { return message; }
-        QgsPoint where() { return location; }
-        bool hasWhere() { return hasLocation; }
+        QString what() const { return message; }
+        QgsPoint where() const { return location; }
+        bool hasWhere() const { return hasLocation; }
     };
 
     /** Validate geometry and produce a list of geometry errors
@@ -570,7 +570,7 @@ class CORE_EXPORT QgsGeometry
         @param geometryList a list of QgsGeometry* as input
         @returns the new computed QgsGeometry, or null
     */
-    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList );
+    static QgsGeometry *unaryUnion( const QList<QgsGeometry*>& geometryList, QString* errorMsg = 0 );
 
     /** Converts the geometry to straight line segments, if it is a curved geometry type.
      * @note added in QGIS 2.10

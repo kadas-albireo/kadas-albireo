@@ -18,6 +18,7 @@ email                : marco.hugentobler at sourcepole dot com
 
 #include "qgsgeometryengine.h"
 #include "qgspointv2.h"
+#include "geosextra/geos_c_extra.h"
 #include <geos_c.h>
 
 class QgsLineStringV2;
@@ -27,7 +28,7 @@ class QgsPolygonV2;
 class CORE_EXPORT QgsGeos: public QgsGeometryEngine
 {
   public:
-    QgsGeos( const QgsAbstractGeometryV2* geometry );
+    QgsGeos( const QgsAbstractGeometryV2* geometry, int precision = 7 );
     ~QgsGeos();
 
     /**Removes caches*/
@@ -83,6 +84,9 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
   private:
     mutable GEOSGeometry* mGeos;
     const GEOSPreparedGeometry* mGeosPrepared;
+    //precision reducer
+    GEOSPrecisionModel* mPrecisionModel;
+    GEOSGeometryPrecisionReducer* mPrecisionReducer;
 
     enum Overlay
     {

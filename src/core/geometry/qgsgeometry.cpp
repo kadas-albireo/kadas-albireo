@@ -1508,7 +1508,7 @@ bool QgsGeometry::isGeosEmpty() const
   return geos.isEmpty();
 }
 
-QgsGeometry *QgsGeometry::unaryUnion( const QList<QgsGeometry*> &geometryList )
+QgsGeometry *QgsGeometry::unaryUnion( const QList<QgsGeometry*> &geometryList, QString* errorMsg )
 {
   QgsGeos geos( 0 );
 
@@ -1522,7 +1522,7 @@ QgsGeometry *QgsGeometry::unaryUnion( const QList<QgsGeometry*> &geometryList )
     }
   }
 
-  QgsAbstractGeometryV2* geom = geos.combine( geomV2List );
+  QgsAbstractGeometryV2* geom = geos.combine( geomV2List, errorMsg );
   return new QgsGeometry( geom );
 }
 
@@ -2290,47 +2290,40 @@ QgsGeometry* QgsGeometry::buffer( double distance, GEOSBufferParams* params, QSt
 
 QgsGeometry* QgsGeometry::fromCollection( const QList<QgsGeometry *> & geoms, QString* errorMsg )
 {
-  return 0;
-#if 0
-  QVector<GEOSGeometry*> geosGeoms;
-  geosGeoms.reserve( geoms.size() );
-  foreach ( QgsGeometry* geom, geoms )
+  if ( geoms.size() < 1 )
   {
-    if ( geom != 0 )
-    {
-      geosGeoms.append( GEOSGeom_clone_r( geosinit.ctxt, geom->asGeos() ) );
-    }
-  }
-  GEOSGeometry* outGeosGeom = 0;
-  int geosType;
-  QGis::WkbType wkbType = QGis::flatType( QGis::multiType( geoms.first()->wkbType() ) );
-  if ( wkbType == QGis::WKBMultiPoint )
-  {
-    geosType = GEOS_MULTIPOINT;
-  }
-  else if ( wkbType == QGis::WKBMultiLineString )
-  {
-    geosType = GEOS_MULTILINESTRING;
-  }
-  else if ( wkbType == QGis::WKBMultiPolygon )
-  {
-    geosType = GEOS_MULTIPOLYGON;
-  }
-  else
-  {
-    if ( errorMsg )
-      *errorMsg = QObject::tr( "Invalid geometry type" );
     return 0;
   }
-  try
+
+  QgsWKBTypes::Type singleType = QgsWKBTypes::flatType(( QgsWKBTypes::Type )geoms.at( 0 )->wkbType() );
+  QgsWKBTypes::Type multiType = QgsWKBTypes::multiType( singleType );
+  QgsGeometryCollectionV2* collection = dynamic_cast< QgsGeometryCollectionV2* >( QgsGeometryImport::geomFromWkbType( multiType ) );
+  if ( !collection )
   {
-    outGeosGeom = GEOSGeom_createCollection_r( geosinit.ctxt, geosType, &geosGeoms.first(), geosGeoms.size() );
+    return 0;
   }
-  CATCH_GEOS_WITH_ERRMSG( 0 );
-  QgsGeometry* outGeom = new QgsGeometry();
-  outGeom->fromGeos( outGeosGeom );
-  return outGeom;
-#endif //0
+
+  QList<QgsGeometry*>::const_iterator geomIt = geoms.constBegin();
+  for ( ; geomIt != geoms.constEnd(); ++geomIt )
+  {
+    if ( !( *geomIt ) )
+    {
+      continue;
+    }
+
+    const QgsAbstractGeometryV2* geom = ( *geomIt )->geometry();
+    if ( !geom )
+    {
+      continue;
+    }
+
+    if ( QgsWKBTypes::flatType( geom->wkbType() ) == singleType )
+    {
+      collection->addGeometry( geom->clone() );
+    }
+  }
+
+  return new QgsGeometry( collection );
 }
 
 QDataStream& operator<<( QDataStream& out, const QgsGeometry& geometry )

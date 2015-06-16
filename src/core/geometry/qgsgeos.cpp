@@ -25,6 +25,7 @@ email                : marco.hugentobler at sourcepole dot com
 #include "qgslogger.h"
 #include "qgspolygonv2.h"
 #include <cstdio>
+#include <QtCore/qmath.h>
 
 #define DEFAULT_QUADRANT_SEGMENTS 8
 
@@ -134,8 +135,27 @@ class GEOSInit
 
 static GEOSInit geosinit;
 
-QgsGeos::QgsGeos( const QgsAbstractGeometryV2* geometry ): QgsGeometryEngine( geometry ), mGeos( 0 ), mGeosPrepared( 0 )
+class GEOSGeomScopedPtr
 {
+  public:
+    GEOSGeomScopedPtr( GEOSGeometry* geom = 0 ) : mGeom( geom ) {}
+    ~GEOSGeomScopedPtr() { GEOSGeom_destroy( mGeom ); }
+    GEOSGeometry* get() const { return mGeom; }
+    void reset( GEOSGeometry* geom )
+    {
+      GEOSGeom_destroy_r( geosinit.ctxt, mGeom );
+      mGeom = geom;
+    }
+
+  private:
+    GEOSGeometry* mGeom;
+};
+
+QgsGeos::QgsGeos( const QgsAbstractGeometryV2* geometry, int precision ): QgsGeometryEngine( geometry ), mGeos( 0 ), mGeosPrepared( 0 )
+{
+  double prec = qPow( 10, -precision );
+  mPrecisionModel = GEOSPrecisionModel_createFixed( 1.f / prec );
+  mPrecisionReducer = GEOSGeometryPrecisionReducer_create( mPrecisionModel );
   cacheGeos();
 }
 
@@ -143,6 +163,8 @@ QgsGeos::~QgsGeos()
 {
   GEOSGeom_destroy_r( geosinit.ctxt, mGeos );
   GEOSPreparedGeom_destroy_r( geosinit.ctxt, mGeosPrepared );
+  GEOSGeometryPrecisionReducer_destroy( mPrecisionReducer );
+  GEOSPrecisionModel_destroy( mPrecisionModel );
 }
 
 void QgsGeos::geometryChanged()
@@ -171,7 +193,12 @@ void QgsGeos::cacheGeos() const
     return;
   }
 
-  mGeos = asGeos( mGeometry );
+  GEOSGeometry* g = asGeos( mGeometry );
+  if ( g )
+  {
+    mGeos = GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, g );
+    GEOSGeom_destroy_r( geosinit.ctxt, g );
+  }
 }
 
 QgsAbstractGeometryV2* QgsGeos::intersection( const QgsAbstractGeometryV2& geom, QString* errorMsg ) const
@@ -1051,41 +1078,43 @@ QgsAbstractGeometryV2* QgsGeos::overlay( const QgsAbstractGeometryV2& geom, Over
     return 0;
   }
 
-  GEOSGeometry* geosGeom = asGeos( &geom );
-  if ( !geosGeom )
+  GEOSGeometry* gG = asGeos( &geom );
+  if ( !gG )
   {
     return 0;
   }
+  GEOSGeomScopedPtr geosGeom;
+  geosGeom.reset( gG );
+
+  //reduce precision
+  GEOSGeomScopedPtr pg2;
+  pg2.reset( GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geosGeom.get() ) );
 
   try
   {
-    GEOSGeometry* opGeom = 0;
+    GEOSGeomScopedPtr opGeom;
     switch ( op )
     {
       case INTERSECTION:
-        opGeom = GEOSIntersection_r( geosinit.ctxt, mGeos, geosGeom );
+        opGeom.reset( GEOSIntersection_r( geosinit.ctxt, mGeos, pg2.get() ) );
         break;
       case DIFFERENCE:
-        opGeom = GEOSDifference_r( geosinit.ctxt, mGeos, geosGeom );
+        opGeom.reset( GEOSDifference_r( geosinit.ctxt, mGeos, pg2.get() ) );
         break;
       case UNION:
-        opGeom = GEOSUnion_r( geosinit.ctxt, mGeos, geosGeom );
+        opGeom.reset( GEOSUnion_r( geosinit.ctxt, mGeos, pg2.get() ) );
         break;
       case SYMDIFFERENCE:
-        opGeom = GEOSSymDifference_r( geosinit.ctxt, mGeos, geosGeom );
+        opGeom.reset( GEOSSymDifference_r( geosinit.ctxt, mGeos, pg2.get() ) );
         break;
       default:    //unknown op
-        GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
         return 0;
     }
-    QgsAbstractGeometryV2* opResult = fromGeos( opGeom );
-    GEOSGeom_destroy_r( geosinit.ctxt, opGeom );
-    GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
+    QgsAbstractGeometryV2* opResult = fromGeos( opGeom.get() );
     return opResult;
   }
   catch ( GEOSException &e )
   {
-    GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
     if ( errorMsg )
     {
       *errorMsg = e.what();
@@ -1101,13 +1130,18 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
     return false;
   }
 
-  GEOSGeometry* geosGeom = asGeos( &geom );
-  if ( !geosGeom )
+  GEOSGeometry* gG = asGeos( &geom );
+  if ( !gG )
   {
     return false;
   }
+  GEOSGeomScopedPtr geosGeom;
+  geosGeom.reset( gG );
 
   bool result = false;
+
+  GEOSGeomScopedPtr pg2;
+  pg2.reset( GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geosGeom.get() ) );
 
   try
   {
@@ -1116,65 +1150,61 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
       switch ( r )
       {
         case INTERSECTS:
-          result = ( GEOSPreparedIntersects_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedIntersects_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case TOUCHES:
-          result = ( GEOSPreparedTouches_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedTouches_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case CROSSES:
-          result = ( GEOSPreparedCrosses_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedCrosses_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case WITHIN:
-          result = ( GEOSPreparedWithin_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedWithin_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case CONTAINS:
-          result = ( GEOSPreparedContains_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedContains_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case DISJOINT:
-          result = ( GEOSPreparedDisjoint_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedDisjoint_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         case OVERLAPS:
-          result = ( GEOSPreparedOverlaps_r( geosinit.ctxt, mGeosPrepared, geosGeom ) == 1 );
+          result = ( GEOSPreparedOverlaps_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
           break;
         default:
-          GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
           return false;
       }
-      GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
       return result;
     }
 
     switch ( r )
     {
       case INTERSECTS:
-        result = ( GEOSIntersects_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSIntersects_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case TOUCHES:
-        result = ( GEOSTouches_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSTouches_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case CROSSES:
-        result = ( GEOSCrosses_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSCrosses_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case WITHIN:
-        result = ( GEOSWithin_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSWithin_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case CONTAINS:
-        result = ( GEOSContains_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSContains_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case DISJOINT:
-        result = ( GEOSDisjoint_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSDisjoint_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       case OVERLAPS:
-        result = ( GEOSOverlaps_r( geosinit.ctxt, mGeos, geosGeom ) == 1 );
+        result = ( GEOSOverlaps_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
         break;
       default:
-        GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
         return false;
     }
   }
   catch ( GEOSException &e )
   {
-    GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
     if ( errorMsg )
     {
       *errorMsg = e.what();
@@ -1182,7 +1212,6 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
     return 0;
   }
 
-  GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
   return result;
 }
 
