@@ -21,7 +21,7 @@ email                : morb at ozemail dot com dot au
 #include "qgis.h"
 #include "qgsgeometry.h"
 #include "qgsgeometryeditutils.h"
-#include "qgsgeometryimport.h"
+#include "qgsgeometryfactory.h"
 #include "qgsgeometryutils.h"
 #include "qgsgeos.h"
 #include "qgsapplication.h"
@@ -156,7 +156,7 @@ bool QgsGeometry::isEmpty() const
 
 QgsGeometry* QgsGeometry::fromWkt( QString wkt )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::geomFromWkt( wkt );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::geomFromWkt( wkt );
   if ( !geom )
   {
     return 0;
@@ -166,7 +166,7 @@ QgsGeometry* QgsGeometry::fromWkt( QString wkt )
 
 QgsGeometry* QgsGeometry::fromPoint( const QgsPoint& point )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromPoint( point );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromPoint( point );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -176,7 +176,7 @@ QgsGeometry* QgsGeometry::fromPoint( const QgsPoint& point )
 
 QgsGeometry* QgsGeometry::fromPolyline( const QgsPolyline& polyline )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromPolyline( polyline );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromPolyline( polyline );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -186,7 +186,7 @@ QgsGeometry* QgsGeometry::fromPolyline( const QgsPolyline& polyline )
 
 QgsGeometry* QgsGeometry::fromPolygon( const QgsPolygon& polygon )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromPolygon( polygon );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromPolygon( polygon );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -196,7 +196,7 @@ QgsGeometry* QgsGeometry::fromPolygon( const QgsPolygon& polygon )
 
 QgsGeometry* QgsGeometry::fromMultiPoint( const QgsMultiPoint& multipoint )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromMultiPoint( multipoint );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromMultiPoint( multipoint );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -206,7 +206,7 @@ QgsGeometry* QgsGeometry::fromMultiPoint( const QgsMultiPoint& multipoint )
 
 QgsGeometry* QgsGeometry::fromMultiPolyline( const QgsMultiPolyline& multiline )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromMultiPolyline( multiline );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromMultiPolyline( multiline );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -216,7 +216,7 @@ QgsGeometry* QgsGeometry::fromMultiPolyline( const QgsMultiPolyline& multiline )
 
 QgsGeometry* QgsGeometry::fromMultiPolygon( const QgsMultiPolygon& multipoly )
 {
-  QgsAbstractGeometryV2* geom = QgsGeometryImport::fromMultiPolygon( multipoly );
+  QgsAbstractGeometryV2* geom = QgsGeometryFactory::fromMultiPolygon( multipoly );
   if ( geom )
   {
     return new QgsGeometry( geom );
@@ -250,7 +250,7 @@ void QgsGeometry::fromWkb( unsigned char *wkb, size_t length )
   detach( false );
   delete d->geometry;
   removeWkbGeos();
-  d->geometry = QgsGeometryImport::geomFromWkb( wkb );
+  d->geometry = QgsGeometryFactory::geomFromWkb( wkb );
   d->mWkb = wkb;
   d->mWkbSize = length;
 }
@@ -909,7 +909,7 @@ bool QgsGeometry::convertToMultiType()
   }
 
   QgsGeometryCollectionV2* multiGeom = dynamic_cast<QgsGeometryCollectionV2*>
-                                       ( QgsGeometryImport::geomFromWkbType( QgsWKBTypes::multiType( d->geometry->wkbType() ) ) );
+                                       ( QgsGeometryFactory::geomFromWkbType( QgsWKBTypes::multiType( d->geometry->wkbType() ) ) );
   if ( !multiGeom )
   {
     return false;
@@ -2253,7 +2253,7 @@ void QgsGeometry::filterGeometryCollection( QgsWKBTypes::Type type )
     return;
   }
 
-  QgsAbstractGeometryV2* newGeom = QgsGeometryImport::geomFromWkbType( QgsWKBTypes::multiType( type ) );
+  QgsAbstractGeometryV2* newGeom = QgsGeometryFactory::geomFromWkbType( QgsWKBTypes::multiType( type ) );
   QgsGeometryCollectionV2* newGeomCollection = dynamic_cast< QgsGeometryCollectionV2* >( newGeom );
   if ( !newGeomCollection )
   {
@@ -2311,7 +2311,7 @@ QgsGeometry* QgsGeometry::fromCollection( const QList<QgsGeometry *> & geoms, QS
 
   QgsWKBTypes::Type singleType = QgsWKBTypes::flatType(( QgsWKBTypes::Type )geoms.at( 0 )->wkbType() );
   QgsWKBTypes::Type multiType = QgsWKBTypes::multiType( singleType );
-  QgsGeometryCollectionV2* collection = dynamic_cast< QgsGeometryCollectionV2* >( QgsGeometryImport::geomFromWkbType( multiType ) );
+  QgsGeometryCollectionV2* collection = dynamic_cast< QgsGeometryCollectionV2* >( QgsGeometryFactory::geomFromWkbType( multiType ) );
   if ( !collection )
   {
     return 0;
