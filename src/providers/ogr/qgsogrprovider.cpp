@@ -1282,6 +1282,7 @@ bool QgsOgrProvider::changeAttributeValues( const QgsChangedAttributesMap &attr_
   {
     pushError( tr( "OGR error syncing to disk: %1" ).arg( CPLGetLastErrorMsg() ) );
   }
+  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
   return true;
 }
 
@@ -1345,6 +1346,7 @@ bool QgsOgrProvider::changeGeometryValues( QgsGeometryMap & geometry_map )
 
     OGR_F_Destroy( theOGRFeature );
   }
+  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
   return syncToDisc();
 }
 
