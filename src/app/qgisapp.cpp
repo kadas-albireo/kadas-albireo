@@ -738,7 +738,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
     // enable Python in the Plugin Manager and pass the PythonUtils to it
     mPluginManager->setPythonUtils( mPythonUtils );
   }
-  else
+  else if ( mActionShowPythonDialog )
   {
     mActionShowPythonDialog->setVisible( false );
   }
@@ -800,7 +800,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   mLastComposerId = 0;
 
   // Show a nice tip of the day
-  /*if ( settings.value( "/qgis/showTips", 1 ).toBool() )
+  /*if ( settings.value( QString( "/qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() )
   {
     mSplash->hide();
     QgsTipGui myTip;
@@ -2929,7 +2929,15 @@ bool QgisApp::addVectorLayers( const QStringList &theLayerQStringList, const QSt
         QStringList sublayers = layer->dataProvider()->subLayers();
         QStringList elements = sublayers.at( 0 ).split( ":" );
         if ( layer->storageType() != "GeoJSON" )
+        {
+          while ( elements.size() > 4 )
+          {
+            elements[1] += ":" + elements[2];
+            elements.removeAt( 2 );
+          }
+
           layer->setLayerName( elements.at( 1 ) );
+        }
         myList << layer;
       }
       else
@@ -3254,8 +3262,20 @@ void QgisApp::loadOGRSublayers( QString layertype, QString uri, QStringList list
   for ( int i = 0; i < list.size(); i++ )
   {
     QString composedURI;
-    QString layerName = list.at( i ).split( ':' ).value( 0 );
-    QString layerType = list.at( i ).split( ':' ).value( 1 );
+    QStringList elements = list.at( i ).split( ":" );
+    while ( elements.size() > 2 )
+    {
+      elements[0] += ":" + elements[1];
+      elements.removeAt( 1 );
+    }
+
+    QString layerName = elements.value( 0 );
+    QString layerType = elements.value( 1 );
+    if ( layerType == "any" )
+    {
+      layerType = "";
+      elements.removeAt( 1 );
+    }
 
     if ( layertype != "GRASS" )
     {
@@ -5656,21 +5676,23 @@ void QgisApp::deletePrintComposers()
   QSet<QgsComposer*>::iterator it = mPrintComposers.begin();
   while ( it != mPrintComposers.end() )
   {
-    emit composerWillBeRemoved(( *it )->view() );
+    QgsComposer* c = ( *it );
+    emit composerWillBeRemoved( c->view() );
+    it = mPrintComposers.erase( it );
+    emit composerRemoved( c->view() );
 
     //save a reference to the composition
-    QgsComposition* composition = ( *it )->composition();
+    QgsComposition* composition = c->composition();
 
     //first, delete the composer. This must occur before deleting the composition as some of the cleanup code in
     //composer or in composer item widgets may require the composition to still be around
-    delete( *it );
+    delete( c );
 
     //next, delete the composition
     if ( composition )
     {
       delete composition;
     }
-    it = mPrintComposers.erase( it );
   }
   mLastComposerId = 0;
   markDirty();
@@ -6206,12 +6228,13 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
       // convert geometry to match destination layer
       QGis::GeometryType destType = pasteVectorLayer->geometryType();
       bool destIsMulti = QGis::isMultiType( pasteVectorLayer->wkbType() );
-      if ( pasteVectorLayer->storageType() == "ESRI Shapefile" && destType != QGis::Point )
+      if ( pasteVectorLayer->dataProvider() &&
+           !pasteVectorLayer->dataProvider()->doesStrictFeatureTypeCheck() )
       {
-        // force destination to multi if shapefile if it's not a point file
-        // Should we really force anything here?  Isn't it better to just transform?
+        // force destination to multi if provider doesn't do a feature strict check
         destIsMulti = true;
       }
+
       if ( destType != QGis::UnknownGeometry )
       {
         QgsGeometry* newGeometry = featureIt->geometry()->convertToType( destType, destIsMulti );
@@ -6927,14 +6950,23 @@ void QgisApp::showMouseCoordinate( const QgsPoint & p )
   {
     if ( mMapCanvas->mapUnits() == QGis::Degrees )
     {
+      if ( !mMapCanvas->mapSettings().destinationCrs().isValid() )
+        return;
+
+      QgsPoint geo = p;
+      if ( !mMapCanvas->mapSettings().destinationCrs().geographicFlag() )
+      {
+        QgsCoordinateTransform ct( mMapCanvas->mapSettings().destinationCrs(), QgsCoordinateReferenceSystem( GEOSRID ) );
+        geo = ct.transform( p );
+      }
       QString format = QgsProject::instance()->readEntry( "PositionPrecision", "/DegreeFormat", "D" );
 
       if ( format == "DM" )
-        mCoordsEdit->setText( p.toDegreesMinutes( mMousePrecisionDecimalPlaces ) );
+        mCoordsEdit->setText( geo.toDegreesMinutes( mMousePrecisionDecimalPlaces ) );
       else if ( format == "DMS" )
-        mCoordsEdit->setText( p.toDegreesMinutesSeconds( mMousePrecisionDecimalPlaces ) );
+        mCoordsEdit->setText( geo.toDegreesMinutesSeconds( mMousePrecisionDecimalPlaces ) );
       else
-        mCoordsEdit->setText( p.toString( mMousePrecisionDecimalPlaces ) );
+        mCoordsEdit->setText( geo.toString( mMousePrecisionDecimalPlaces ) );
     }
     else
     {
@@ -7138,7 +7170,12 @@ void QgisApp::duplicateLayers( QList<QgsMapLayer *> lyrList )
       }
       else if ( vlayer )
       {
-        dupLayer = new QgsVectorLayer( vlayer->source(), layerDupName, vlayer->providerType() );
+        QgsVectorLayer *dupVLayer = new QgsVectorLayer( vlayer->source(), layerDupName, vlayer->providerType() );
+        if ( vlayer->dataProvider() )
+        {
+          dupVLayer->setProviderEncoding( vlayer->dataProvider()->encoding() );
+        }
+        dupLayer = dupVLayer;
       }
     }
 
@@ -8026,7 +8063,7 @@ void QgisApp::embedLayers()
 {
   //dialog to select groups/layers from other project files
   QgsProjectLayerGroupDialog d( this );
-  if ( d.exec() == QDialog::Accepted )
+  if ( d.exec() == QDialog::Accepted && d.isValid() )
   {
     mMapCanvas->freeze( true );
 
