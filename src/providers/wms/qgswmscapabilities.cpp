@@ -1381,6 +1381,8 @@ void QgsWmsCapabilities::parseWMTSContents( QDomElement const &e )
         bb.crs = DEFAULT_LATLON_CRS;
         bb.box = QgsRectangle( QgsPoint( ll[0].toDouble(), ll[1].toDouble() ),
                                QgsPoint( ur[0].toDouble(), ur[1].toDouble() ) );
+
+        l.boundingBoxes << bb;
       }
     }
 
@@ -1834,6 +1836,18 @@ bool QgsWmsCapabilities::shouldInvertAxisOrientation( const QString& ogcCrs )
     changeXY = !changeXY;
 
   return changeXY;
+}
+
+int QgsWmsCapabilities::identifyCapabilities() const
+{
+  int capability = QgsRasterInterface::NoCapabilities;
+
+  foreach ( QgsRaster::IdentifyFormat f, mIdentifyFormats.keys() )
+  {
+    capability |= QgsRasterDataProvider::identifyFormatToCapability( f );
+  }
+
+  return capability;
 }
 
 

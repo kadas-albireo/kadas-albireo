@@ -81,7 +81,11 @@ def run(item, action, mainwindow):
             mainwindow.infoBar.pushMessage("Invalid topology", u'Schema "{0}" is not registered in topology.topology.'.format(item.schema().name), QgsMessageBar.WARNING, mainwindow.iface.messageTimeout())
             return False
 
-        toposrid = str(res[0])
+        if ( res[0] < 0 ):
+          mainwindow.infoBar.pushMessage("WARNING", u'Topology "{0}" is registered as having a srid of {1} in topology.topology, we will assume 0 (for unknown)'.format(item.schema().name, res[0]), QgsMessageBar.WARNING, mainwindow.iface.messageTimeout())
+          toposrid = '0'
+        else:
+          toposrid = str(res[0])
 
         # load layers into the current project
         toponame = item.schema().name
@@ -258,6 +262,16 @@ def run(item, action, mainwindow):
                 legend.setLayerExpanded(layer, False)
 
         finally:
+
+                # Set canvas extent to topology extent, if not yet initialized
+                canvas = iface.mapCanvas()
+                if ( canvas.fullExtent().isNull() ):
+                  ext = node_extent
+                  ext.combineExtentWith(edge_extent)
+                  # Grow by 1/20 of largest side
+                  ext = ext.buffer(max(ext.width(),ext.height())/20)
+                  canvas.setExtent(ext)
+
                 # restore canvas render flag
                 iface.mapCanvas().setRenderFlag( prevRenderFlagState )
 
