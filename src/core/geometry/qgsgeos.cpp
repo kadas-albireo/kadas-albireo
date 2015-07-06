@@ -139,7 +139,7 @@ class GEOSGeomScopedPtr
 {
   public:
     GEOSGeomScopedPtr( GEOSGeometry* geom = 0 ) : mGeom( geom ) {}
-    ~GEOSGeomScopedPtr() { GEOSGeom_destroy( mGeom ); }
+    ~GEOSGeomScopedPtr() { GEOSGeom_destroy_r( geosinit.ctxt, mGeom ); }
     GEOSGeometry* get() const { return mGeom; }
     void reset( GEOSGeometry* geom )
     {
