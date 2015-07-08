@@ -1,4 +1,3 @@
-
 SET(QGIS_GUI_SRCS
 
 raster/qgsrasterminmaxwidget.cpp
@@ -168,6 +167,7 @@ qgsfiledropedit.cpp
 qgsfilterlineedit.cpp
 qgsformannotationitem.cpp
 qgsgenericprojectionselector.cpp
+qgsgeometryrubberband.cpp
 qgshighlight.cpp
 qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
