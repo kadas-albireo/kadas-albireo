@@ -3,6 +3,8 @@
 
 SET(QGIS_CORE_SRCS
 
+  geosextra/geos_c_extra.cpp
+
   gps/qgsgpsconnection.cpp
   gps/qgsgpsconnectionregistry.cpp
   gps/qgsnmeaconnection.cpp
@@ -91,7 +93,6 @@ SET(QGIS_CORE_SRCS
   qgsfeaturestore.cpp
   qgsfield.cpp
   qgsfontutils.cpp
-  qgsgeometry.cpp
   qgsgeometrycache.cpp
   qgsgeometrysimplifier.cpp
   qgsgeometryvalidator.cpp
@@ -173,6 +174,8 @@ SET(QGIS_CORE_SRCS
   qgsvectorlayerundocommand.cpp
   qgsvectorsimplifymethod.cpp
   qgsxmlutils.cpp
+  qgsslconnect.cpp
+  qgslocalec.cpp
 
   composer/qgsaddremoveitemcommand.cpp
   composer/qgsaddremovemultiframecommand.cpp
@@ -276,6 +279,28 @@ SET(QGIS_CORE_SRCS
   raster/qgssinglebandpseudocolorrenderer.cpp
   raster/qgsbrightnesscontrastfilter.cpp
   raster/qgshuesaturationfilter.cpp
+  
+  geometry/qgsabstractgeometryv2.cpp
+  geometry/qgscircularstringv2.cpp
+  geometry/qgscompoundcurvev2.cpp
+  geometry/qgscurvev2.cpp
+  geometry/qgscurvepolygonv2.cpp
+  geometry/qgsgeometry.cpp
+  geometry/qgsgeometrycollectionv2.cpp
+  geometry/qgsgeometryeditutils.cpp
+  geometry/qgsgeometryimport.cpp
+  geometry/qgsgeometryutils.cpp
+  geometry/qgsgeos.cpp
+  geometry/qgspointv2.cpp
+  geometry/qgspolygonv2.cpp
+  geometry/qgslinestringv2.cpp
+  geometry/qgsmulticurvev2.cpp
+  geometry/qgsmultilinestringv2.cpp
+  geometry/qgsmultipointv2.cpp
+  geometry/qgsmultipolygonv2.cpp
+  geometry/qgsmultisurfacev2.cpp
+  geometry/qgswkbptr.cpp
+  geometry/qgswkbtypes.cpp
 
   geosextra/geos_c_extra.cpp
 )
@@ -495,7 +520,6 @@ SET(QGIS_CORE_HDRS
   qgsfeaturestore.h
   qgsfield.h
   qgsfontutils.h
-  qgsgeometry.h
   qgsgeometrycache.h
   qgslayerdefinition.h
   qgslabel.h
@@ -555,6 +579,7 @@ SET(QGIS_CORE_HDRS
   qgsvectorlayerundocommand.h
   qgsvectorsimplifymethod.h
   qgsxmlutils.h
+  qgslocalec.h
 
   diagram/qgsdiagram.h
   diagram/qgspiediagram.h
@@ -643,6 +668,10 @@ SET(QGIS_CORE_HDRS
 
   layertree/qgslayertree.h
   layertree/qgslayertreeutils.h
+  
+  geometry/qgsgeometry.h
+  geometry/qgsabstractgeometryv2.h
+  geometry/qgswkbtypes.h
 )
 
 IF (QT_MOBILITY_LOCATION_FOUND)
@@ -656,6 +685,7 @@ INCLUDE_DIRECTORIES(
   composer
   dxf
   effects
+  geometry
   layertree
   pal
   raster

@@ -299,6 +299,20 @@ void QgsAttributeForm::onAttributeDeleted( int idx )
   setFeature( mFeature );
 }
 
+void QgsAttributeForm::refreshFeature()
+{
+  if ( mLayer->isEditable() || !mFeature.isValid() )
+    return;
+
+  // reload feature if layer changed although not editable
+  // (datasource probably changed bypassing QgsVectorLayer)
+  if ( !mLayer->getFeatures( QgsFeatureRequest().setFilterFid( mFeature.id() ) ).nextFeature( mFeature ) )
+    return;
+
+  init();
+  setFeature( mFeature );
+}
+
 void QgsAttributeForm::synchronizeEnabledState()
 {
   bool isEditable = ( mFeature.isValid() || mIsAddDialog ) && mLayer->isEditable();
@@ -530,7 +544,8 @@ void QgsAttributeForm::initPython()
     QString numArgs;
     QgsPythonRunner::eval( QString( "len(inspect.getargspec(%1)[0])" ).arg( module ), numArgs );
 
-    mPyFormVarName = QString( "_qgis_featureform_%1" ).arg( mFormNr );
+    static int sFormId = 0;
+    mPyFormVarName = QString( "_qgis_featureform_%1_%2" ).arg( mFormNr ).arg( sFormId++ );
 
     QString form = QString( "%1 = sip.wrapinstance( %2, qgis.gui.QgsAttributeForm )" )
                    .arg( mPyFormVarName )
@@ -665,7 +680,7 @@ QWidget* QgsAttributeForm::createWidgetFromDef( const QgsAttributeEditorElement 
 
         ++index;
       }
-      gbLayout->addItem( new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding ), index, 0 );
+      gbLayout->addItem( new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::Preferred ), index, 0 );
 
       labelText = QString::null;
       labelOnTop = true;

@@ -5,6 +5,7 @@ ADD_DEFINITIONS(-DGRASS_BASE=\\\"${GRASS_PREFIX}\\\")
 
 INCLUDE_DIRECTORIES(
   ../../core
+  ../../core/geometry
   ../../core/raster
   ${GRASS_INCLUDE_DIR}
   ${GDAL_INCLUDE_DIR}

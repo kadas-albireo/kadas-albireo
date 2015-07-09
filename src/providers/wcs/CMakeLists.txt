@@ -16,7 +16,7 @@ SET (WCS_MOC_HDRS
 
 QT4_WRAP_CPP (WCS_MOC_SRCS ${WCS_MOC_HDRS})
 
-INCLUDE_DIRECTORIES( . ../../core ../../core/raster ../../gui
+INCLUDE_DIRECTORIES( . ../../core ../../core/geometry ../../core/raster ../../gui
   ../gdal
   ${CMAKE_CURRENT_BINARY_DIR}/../../ui
   ${GDAL_INCLUDE_DIR}

@@ -40,6 +40,7 @@ INCLUDE_DIRECTORIES(
   ${GEOS_INCLUDE_DIR}
   ${QSCINTILLA_INCLUDE_DIR}
   ../../core
+  ../../core/geometry
   ../../gui
   ${CMAKE_CURRENT_BINARY_DIR}/../../ui
 )

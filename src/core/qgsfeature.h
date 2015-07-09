@@ -187,6 +187,10 @@ class CORE_EXPORT QgsFeature
      */
     QgsGeometry *geometry() const;
 
+    /** Gets a const pointer to the geometry object associated with this feature.
+      */
+    const QgsGeometry* constGeometry() const;
+
     /**
      * Get the geometry object associated with this feature
      * The caller assumes responsibility for the QgsGeometry*'s destruction.
