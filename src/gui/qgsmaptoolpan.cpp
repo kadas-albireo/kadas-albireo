@@ -17,6 +17,7 @@
 #include "qgsmapcanvas.h"
 #include "qgscursors.h"
 #include "qgsmaptopixel.h"
+#include "qgsrubberband.h"
 #include <QBitmap>
 #include <QCursor>
 #include <QMouseEvent>
@@ -25,6 +26,7 @@
 QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas )
     : QgsMapTool( canvas )
     , mDragging( false )
+    , mZoomRubberBand( 0 )
 {
   mToolName = tr( "Pan" );
   // set cursor
@@ -33,14 +35,33 @@ QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas )
   mCursor = QCursor( panBmp, panBmpMask, 5, 5 );
 }
 
+void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
+{
+  if (( e->buttons() & Qt::LeftButton ) && ( e->modifiers() & Qt::ShiftModifier ) != 0 )
+  {
+    mZoomRubberBand = new QgsRubberBand( mCanvas, QGis::Polygon );
+    mZoomRubberBand->setColor( QColor( 0, 0, 255, 63 ) );
+    mZoomRect.setTopLeft( e->pos() );
+    mZoomRect.setBottomRight( e->pos() );
+    mZoomRubberBand->setToCanvasRectangle( mZoomRect );
+    mZoomRubberBand->show();
+  }
+}
 
 void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 {
   if (( e->buttons() & Qt::LeftButton ) )
   {
-    mDragging = true;
-    // move map and other canvas items
-    mCanvas->panAction( e );
+    if ( mZoomRubberBand )
+    {
+      mZoomRect.setBottomRight( e->pos() );
+      mZoomRubberBand->setToCanvasRectangle( mZoomRect );
+    }
+    else
+    {
+      mDragging = true;
+      mCanvas->panAction( e );
+    }
   }
 }
 
@@ -48,7 +69,20 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( e->button() == Qt::LeftButton )
   {
-    if ( mDragging )
+    if ( mZoomRubberBand )
+    {
+      delete mZoomRubberBand;
+      mZoomRubberBand = 0;
+
+      // set center and zoom
+      QSize zoomRectSize = mZoomRect.normalized().size();
+      QSize canvasSize = mCanvas->mapSettings().outputSize();
+      double sfx = ( double )zoomRectSize.width() / canvasSize.width();
+      double sfy = ( double )zoomRectSize.height() / canvasSize.height();
+      mCanvas->setCenter( mCanvas->getCoordinateTransform()->toMapCoordinates( mZoomRect.center() ) );
+      mCanvas->zoomByFactor( qMax( sfx, sfy ) );
+    }
+    else if ( mDragging )
     {
       mCanvas->panActionEnd( e->pos() );
       mDragging = false;
