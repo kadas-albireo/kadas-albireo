@@ -107,9 +107,9 @@ void QgsMapToolZoom::canvasReleaseEvent( QMouseEvent * e )
     mZoomRect = mZoomRect.normalized();
 
     // set center and zoom
-    const QSize& zoomRectSize = mZoomRect.size();
+    QSize zoomRectSize = mZoomRect.size();
     const QgsMapSettings& mapSettings = mCanvas->mapSettings();
-    const QSize& canvasSize = mapSettings.outputSize();
+    QSize canvasSize = mapSettings.outputSize();
     double sfx = ( double )zoomRectSize.width() / canvasSize.width();
     double sfy = ( double )zoomRectSize.height() / canvasSize.height();
     double sf = qMax( sfx, sfy );
@@ -119,8 +119,6 @@ void QgsMapToolZoom::canvasReleaseEvent( QMouseEvent * e )
 
     mCanvas->setCenter( c );
     mCanvas->zoomByFactor( mZoomOut ? 1.0 / sf : sf );
-
-    mCanvas->refresh();
   }
   else // not dragging
   {
