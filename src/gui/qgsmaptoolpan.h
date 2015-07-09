@@ -17,7 +17,9 @@
 #define QGSMAPTOOLPAN_H
 
 #include "qgsmaptool.h"
+
 class QgsMapCanvas;
+class QgsRubberBand;
 
 
 /** \ingroup gui
@@ -29,6 +31,9 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
   public:
     //! constructor
     QgsMapToolPan( QgsMapCanvas* canvas );
+
+    //! Overridden mouse press event
+    virtual void canvasPressEvent( QMouseEvent * e ) override;
 
     //! Overridden mouse move event
     virtual void canvasMoveEvent( QMouseEvent * e ) override;
@@ -42,6 +47,12 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
     //! Flag to indicate a map canvas drag operation is taking place
     bool mDragging;
+
+    //! Zoom are rubberband for shift+select mode
+    QgsRubberBand* mZoomRubberBand;
+
+    //! Stores zoom rect for shift+select mode
+    QRect mZoomRect;
 
 };
 
