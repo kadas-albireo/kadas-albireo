@@ -34,7 +34,7 @@ class QgsScaleCalculator
      * Accessor for dpi used in scale calculations
      * @return int the dpi used for scale calculations.
      */
-    double dpi();
+    double dpi() const;
 
     /**
      * Set the map units
@@ -51,7 +51,7 @@ class QgsScaleCalculator
      * @param canvasWidth Width of the map canvas in pixel (physical) units
      * @return scale denominator of current map view
      */
-    double calculate( const QgsRectangle &mapExtent, int canvasWidth );
+    double calculate( const QgsRectangle &mapExtent, int canvasWidth ) const;
 
     /**
      * Calculate the distance between two points in geographic coordinates.
@@ -59,7 +59,7 @@ class QgsScaleCalculator
      * data.
      * @param mapExtent QgsRectangle containing the current map extent
      */
-    double calculateGeographicDistance( const QgsRectangle &mapExtent );
+    double calculateGeographicDistance( const QgsRectangle &mapExtent ) const;
 
 };
 

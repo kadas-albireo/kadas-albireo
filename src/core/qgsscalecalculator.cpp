@@ -32,7 +32,7 @@ void QgsScaleCalculator::setDpi( double dpi )
 {
   mDpi = dpi;
 }
-double QgsScaleCalculator::dpi()
+double QgsScaleCalculator::dpi() const
 {
   return mDpi;
 }
@@ -49,7 +49,7 @@ QGis::UnitType QgsScaleCalculator::mapUnits() const
   return mMapUnits;
 }
 
-double QgsScaleCalculator::calculate( const QgsRectangle &mapExtent, int canvasWidth )
+double QgsScaleCalculator::calculate( const QgsRectangle &mapExtent, int canvasWidth ) const
 {
   double conversionFactor = 0;
   double delta = 0;
@@ -90,7 +90,7 @@ double QgsScaleCalculator::calculate( const QgsRectangle &mapExtent, int canvasW
 }
 
 
-double QgsScaleCalculator::calculateGeographicDistance( const QgsRectangle &mapExtent )
+double QgsScaleCalculator::calculateGeographicDistance( const QgsRectangle &mapExtent ) const
 {
   // need to calculate the x distance in meters
   // We'll use the middle latitude for the calculation
