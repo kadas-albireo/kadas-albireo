@@ -177,6 +177,17 @@ class QgsMapSettings
      */
     const QgsCoordinateTransform* layerTransform( QgsMapLayer *layer ) const;
 
+    /**
+     * @brief Compute the extent such that its center is at the specified
+     * position (mapped to the destinatonCrs) and the zoom factor corresponds
+     * to the specified scale
+     * @param point The center, wrt the sourceCRS
+     * @param scale The desired zoom factor (the x part of 1:x)
+     * @param sourceCrs The source CRS
+     * @return An extent which can be passed to QgsMapCanvas::setExtent
+     */
+    QgsRectangle computeExtentForScale(const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs) const;
+
     //! returns current extent of layer set
     QgsRectangle fullExtent() const;
 
