@@ -17,7 +17,7 @@
      <x>0</x>
      <y>0</y>
      <width>1050</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="mProjectMenu">
@@ -196,13 +196,10 @@
     </property>
     <addaction name="mActionHelpContents"/>
     <addaction name="mActionHelpAPI"/>
-    <addaction name="mActionNeedSupport"/>
     <addaction name="separator"/>
     <addaction name="mActionQgisHomePage"/>
-    <addaction name="mActionCheckQgisVersion"/>
     <addaction name="separator"/>
     <addaction name="mActionAbout"/>
-    <addaction name="mActionSponsors"/>
    </widget>
    <widget class="QMenu" name="mSettingsMenu">
     <property name="title">
