@@ -1,11 +1,5 @@
 ########################################################
 # Files
-ADD_SUBDIRECTORY(allianz)
-ADD_SUBDIRECTORY(geogl)
-ADD_SUBDIRECTORY(sogis)
-ADD_SUBDIRECTORY(sourcepole)
-ADD_SUBDIRECTORY(community)
-ADD_SUBDIRECTORY(gbd)
 
 SET(SPLASH_SRCS splash.cpp)
 
