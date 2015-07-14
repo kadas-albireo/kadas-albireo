@@ -51,161 +51,7 @@ QgsAbout::~QgsAbout()
 void QgsAbout::init()
 {
   setPluginInfo();
-
-  // check internet connection in order to hide/show the developers map widget
-  int DEVELOPERS_MAP_INDEX = 5;
-  QTcpSocket socket;
-  QString host = "qgis.org";
-  int port = 80;
-  socket.connectToHost( host, port );
-  if ( socket.waitForConnected( 1000 ) )
-    setDevelopersMap();
-  else
-    mOptionsListWidget->item( DEVELOPERS_MAP_INDEX )->setHidden( true );
-
-  developersMapView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-  developersMapView->setContextMenuPolicy( Qt::NoContextMenu );
-
-  // set the 60x60 icon pixmap
-  QPixmap icon( QgsApplication::iconsPath() + "qgis-icon-60x60.png" );
-  qgisIcon->setPixmap( icon );
-
-  //read the authors file to populate the svn committers list
-  QStringList lines;
-
-  //
-  // Load the authors (svn committers) list
-  //
-  QFile file( QgsApplication::authorsFilePath() );
-  if ( file.open( QIODevice::ReadOnly ) )
-  {
-    QTextStream stream( &file );
-    // Always use UTF-8
-    stream.setCodec( "UTF-8" );
-    QString line;
-    while ( !stream.atEnd() )
-    {
-      line = stream.readLine(); // line of text excluding '\n'
-      //ignore the line if it starts with a hash....
-      if ( line.left( 1 ) == "#" )
-        continue;
-      QStringList myTokens = line.split( "\t", QString::SkipEmptyParts );
-      lines << myTokens[0];
-    }
-    file.close();
-    lstDevelopers->clear();
-    lstDevelopers->insertItems( 0, lines );
-
-    if ( lstDevelopers->count() > 0 )
-    {
-      lstDevelopers->setCurrentRow( 0 );
-    }
-  }
-
-  lines.clear();
-  //
-  // Now load up the contributors list
-  //
-  QFile file2( QgsApplication::contributorsFilePath() );
-  printf( "Reading contributors file %s.............................................\n",
-          file2.fileName().toLocal8Bit().constData() );
-  if ( file2.open( QIODevice::ReadOnly ) )
-  {
-    QTextStream stream( &file2 );
-    // Always use UTF-8
-    stream.setCodec( "UTF-8" );
-    QString line;
-    while ( !stream.atEnd() )
-    {
-      line = stream.readLine(); // line of text excluding '\n'
-      //ignore the line if it starts with a hash....
-      if ( line.left( 1 ) == "#" )
-        continue;
-      lines += line;
-    }
-    file2.close();
-    lstContributors->clear();
-    lstContributors->insertItems( 0, lines );
-    if ( lstContributors->count() > 0 )
-    {
-      lstContributors->setCurrentRow( 0 );
-    }
-  }
-
-
-
-  // read the DONORS file and populate the text widget
-  QFile donorsFile( QgsApplication::donorsFilePath() );
-#ifdef QGISDEBUG
-  printf( "Reading donors file %s.............................................\n",
-          donorsFile.fileName().toLocal8Bit().constData() );
-#endif
-  if ( donorsFile.open( QIODevice::ReadOnly ) )
-  {
-    QString donorsHTML = ""
-                         + tr( "<p>For a list of individuals and institutions who have contributed "
-                               "money to fund QGIS development and other project costs see "
-                               "<a href=\"http://qgis.org/en/site/about/sponsorship.html#list-of-donors\">"
-                               "http://qgis.org/en/site/about/sponsorship.html#list-of-donors</a></p>" );
-#if 0
-    QString website;
-    QTextStream donorsStream( &donorsFile );
-    // Always use UTF-8
-    donorsStream.setCodec( "UTF-8" );
-    QString sline;
-    while ( !donorsStream.atEnd() )
-    {
-      sline = donorsStream.readLine(); // line of text excluding '\n'
-      //ignore the line if it starts with a hash....
-      if ( sline.left( 1 ) == "#" )
-        continue;
-      QStringList myTokens = sline.split( "|", QString::SkipEmptyParts );
-      if ( myTokens.size() > 1 )
-      {
-        website = "<a href=\"" + myTokens[1].remove( ' ' ) + "\">" + myTokens[1] + "</a>";
-      }
-      else
-      {
-        website = "&nbsp;";
-      }
-      donorsHTML += "<tr>";
-      donorsHTML += "<td>" + myTokens[0] + "</td><td>" + website + "</td>";
-      // close the row
-      donorsHTML += "</tr>";
-    }
-    donorsHTML += "</table>";
-#endif
-
-    QString myStyle = QgsApplication::reportStyleSheet();
-    txtDonors->clear();
-    txtDonors->document()->setDefaultStyleSheet( myStyle );
-    txtDonors->setHtml( donorsHTML );
-    QgsDebugMsg( QString( "donorsHTML:%1" ).arg( donorsHTML.toAscii().constData() ) );
-  }
-
-  // read the TRANSLATORS file and populate the text widget
-  QFile translatorFile( QgsApplication::translatorsFilePath() );
-#ifdef QGISDEBUG
-  printf( "Reading translators file %s.............................................\n",
-          translatorFile.fileName().toLocal8Bit().constData() );
-#endif
-  if ( translatorFile.open( QIODevice::ReadOnly ) )
-  {
-    QString translatorHTML = "";
-    QTextStream translatorStream( &translatorFile );
-    // Always use UTF-8
-    translatorStream.setCodec( "UTF-8" );
-    QString myStyle = QgsApplication::reportStyleSheet();
-    translatorHTML += "<style>" + myStyle + "</style>";
-    while ( !translatorStream.atEnd() )
-    {
-      translatorHTML += translatorStream.readLine();
-    }
-    txtTranslators->setHtml( translatorHTML );
-    QgsDebugMsg( QString( "translatorHTML:%1" ).arg( translatorHTML.toAscii().constData() ) );
-  }
-  setWhatsNew();
-  setLicence();
+  QString myStyle = QgsApplication::reportStyleSheet();
 }
 
 void QgsAbout::setLicence()
@@ -219,7 +65,7 @@ void QgsAbout::setLicence()
   if ( licenceFile.open( QIODevice::ReadOnly ) )
   {
     QString content = licenceFile.readAll();
-    txtLicense->setText( content );
+    //txtLicense->setText( content );
   }
 }
 
@@ -233,9 +79,9 @@ void QgsAbout::setVersion( QString v )
 void QgsAbout::setWhatsNew()
 {
   QString myStyle = QgsApplication::reportStyleSheet();
-  txtWhatsNew->clear();
+  /*txtWhatsNew->clear();
   txtWhatsNew->document()->setDefaultStyleSheet( myStyle );
-  txtWhatsNew->setSource( "file:///" + QgsApplication::pkgDataPath() + "/doc/news.html" );
+  txtWhatsNew->setSource( "file:///" + QgsApplication::pkgDataPath() + "/doc/news.html" );*/
 }
 
 void QgsAbout::setPluginInfo()
@@ -280,7 +126,7 @@ void QgsAbout::on_btnQgisUser_clicked()
 
 void QgsAbout::on_btnQgisHome_clicked()
 {
-  openUrl( "http://qgis.org" );
+  openUrl( "http://qgisenterprise.com" );
 }
 
 void QgsAbout::openUrl( QString url )
@@ -327,7 +173,7 @@ void QgsAbout::on_developersMapView_linkClicked( const QUrl &url )
 
 void QgsAbout::setDevelopersMap()
 {
-  developersMapView->settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+  /*developersMapView->settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
   QUrl url = QUrl::fromLocalFile( QgsApplication::developersMapFilePath() );
-  developersMapView->load( url );
+  developersMapView->load( url );*/
 }

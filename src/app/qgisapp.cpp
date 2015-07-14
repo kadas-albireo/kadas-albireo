@@ -2734,7 +2734,7 @@ void QgisApp::about()
     QString versionString = "<html><body><div align='center'><table width='100%'>";
 
     versionString += "<tr>";
-    versionString += "<td>" + tr( "QGIS version" )       + "</td><td>" + QGis::QGIS_VERSION + "</td>";
+    versionString += "<td>" + tr( "QGIS version" )       + "</td><td>QGIS Enterprise</td>";
     versionString += "<td>" + tr( "QGIS code revision" ) + "</td><td>" + QGis::QGIS_DEV_VERSION + "</td>";
 
     versionString += "</tr><tr>";
