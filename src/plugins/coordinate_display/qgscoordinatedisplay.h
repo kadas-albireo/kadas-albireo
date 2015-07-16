@@ -44,7 +44,6 @@ class QgsCoordinateDisplay: public QObject, public QgisPlugin
   private slots:
     void displayCoordinates( const QgsPoint& p );
     void syncProjectCrs();
-    void updateLabel();
 };
 
 #endif // QGSCOORDINATEDISPLAY_H

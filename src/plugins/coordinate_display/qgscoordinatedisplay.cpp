@@ -95,7 +95,7 @@ void QgsCoordinateDisplay::initGui()
 
   connect( mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
-  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( updateLabel() ) );
+  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), mCoordinateLineEdit, SLOT( clear() ) );
 
   syncProjectCrs();
 }
@@ -127,7 +127,7 @@ void QgsCoordinateDisplay::displayCoordinates( const QgsPoint &p )
   QgsCoordinateConverter* conv = variant2ptr<QgsCoordinateConverter>( v );
   if ( conv )
   {
-    int dp = static_cast<int>( ceil( -1.0 * log10( mQGisIface->mapCanvas()->mapUnitsPerPixel() ) ) );
+    int dp = qMax( 0, static_cast<int>( ceil( -1.0 * log10( mQGisIface->mapCanvas()->mapUnitsPerPixel() ) ) ) );
     mCoordinateLineEdit->setText( conv->convert( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs(), dp ) );
   }
 }
@@ -147,9 +147,4 @@ void QgsCoordinateDisplay::syncProjectCrs()
   {
     mCRSSelectionCombo->setCurrentIndex( mCRSSelectionCombo->findText( "LV95" ) );
   }
-}
-
-void QgsCoordinateDisplay::updateLabel()
-{
-  displayCoordinates( mQGisIface->mapCanvas()->mouseLastXY() );
 }

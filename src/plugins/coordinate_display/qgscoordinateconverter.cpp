@@ -67,7 +67,7 @@ QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordi
     }
     case DecDeg:
     {
-      return QString( "%1%2, %3%4" ).arg( pOut.x(), 0, 'f', prec ).arg( QChar( 176 ) )
+      return QString( "%1%2,%3%4" ).arg( pOut.x(), 0, 'f', prec ).arg( QChar( 176 ) )
              .arg( pOut.y(), 0, 'f', prec ).arg( QChar( 176 ) );
     }
   }
@@ -90,7 +90,7 @@ QgsUTMCoordinateConverter::~QgsUTMCoordinateConverter()
 QString QgsUTMCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int /*prec*/ ) const
 {
   UTMCoo coo = getUTMCoordinate( p, sSrs );
-  return QString( "%1 %2 %3mE %4mN" ).arg( coo.zoneNumber ).arg( coo.zoneLetter ).arg( coo.easting ).arg( coo.northing );
+  return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
 }
 
 QgsUTMCoordinateConverter::UTMCoo QgsUTMCoordinateConverter::getUTMCoordinate( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
@@ -223,7 +223,7 @@ const int QgsMGRSCoordinateConverter::NUM_100K_SETS = 6;
 const QString QgsMGRSCoordinateConverter::SET_ORIGIN_COLUMN_LETTERS = "AJSAJS";
 const QString QgsMGRSCoordinateConverter::SET_ORIGIN_ROW_LETTERS = "AFAFAF";
 
-QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int prec ) const
+QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int /*prec*/ ) const
 {
   UTMCoo utm = getUTMCoordinate( p, sSrs );
 
@@ -233,16 +233,17 @@ QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordin
     setParm = NUM_100K_SETS;
   }
 
-  int setColumn = qFloor( utm.easting / 100000. );
-  int setRow = int( qFloor( utm.northing / 100000. ) ) % 20;
+  int setColumn = qFloor( utm.easting / 100000 );
+  int setRow = int( qFloor( utm.northing / 100000 ) ) % 20;
   QString letter100kID = getLetter100kID( setColumn, setRow, setParm );
-  QString seasting = QString::number( utm.easting );
-  QString snorthing = QString::number( utm.northing );
 
   if ( letter100kID.isEmpty() )
     return QString();
 
-  return utm.zoneNumber + utm.zoneLetter + letter100kID + seasting.mid( seasting.length() - 5, prec ) + snorthing.mid( snorthing.length() - 5, prec );
+  int easting = utm.easting % 100000;
+  int northing = utm.northing % 100000;
+
+  return QString( "%1%2%3 %4 %5" ).arg( utm.zoneNumber ).arg( utm.zoneLetter ).arg( letter100kID ).arg( easting, 5, 10, QChar( '0' ) ).arg( northing, 5, 10, QChar( '0' ) );
 }
 
 QString QgsMGRSCoordinateConverter::getLetter100kID( int column, int row, int parm ) const
