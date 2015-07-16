@@ -707,6 +707,9 @@ class CORE_EXPORT QgsGeometry
     QgsGeometry* buffer( double distance, GEOSBufferParams* params, QString* errorMsg ) const;
     static QgsGeometry* fromCollection( const QList<QgsGeometry *> & geoms, QString* errorMsg = 0 );
 
+    /** Creates and returns a new geometry engine*/
+    static QgsGeometryEngine* createGeometryEngine( const QgsAbstractGeometryV2* geometry );
+
   private:
 
     QgsGeometryPrivate* d; //implicitely shared data pointer

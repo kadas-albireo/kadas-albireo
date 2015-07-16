@@ -2326,6 +2326,11 @@ QgsGeometry* QgsGeometry::fromCollection( const QList<QgsGeometry *> & geoms, QS
   return new QgsGeometry( collection );
 }
 
+QgsGeometryEngine* QgsGeometry::createGeometryEngine( const QgsAbstractGeometryV2* geometry )
+{
+  return new QgsGeos( geometry );
+}
+
 QDataStream& operator<<( QDataStream& out, const QgsGeometry& geometry )
 {
   QByteArray byteArray = QByteArray::fromRawData(( char * )geometry.asWkb(), geometry.wkbSize() ); // does not copy data and does not take ownership
