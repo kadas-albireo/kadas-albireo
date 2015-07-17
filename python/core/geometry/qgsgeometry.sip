@@ -53,6 +53,13 @@ class QgsGeometry
      */
     void setGeometry( QgsAbstractGeometryV2* geometry /Transfer/ );
 
+    /** Returns true if the geometry is empty (ie, contains no underlying geometry
+        * accessible via @link geometry @endlink).
+        * @see geometry
+        * @note added in QGIS 2.10
+        */
+    bool isEmpty() const;
+
     /** Creates a new geometry from a WKT string */
     static QgsGeometry* fromWkt( QString wkt ) /Factory/;
     /** Creates a new geometry from a QgsPoint object*/
