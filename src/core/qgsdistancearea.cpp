@@ -261,6 +261,28 @@ double QgsDistanceArea::measure( QgsGeometry* geometry )
   if ( !geometry )
     return 0.0;
 
+  if ( !mEllipsoidalMode )
+  {
+    const QgsAbstractGeometryV2* geomV2 = geometry->geometry();
+    if ( !geomV2 )
+    {
+      return 0.0;
+    }
+    int geomDimension = geomV2->dimension();
+    if ( geomDimension <= 0 )
+    {
+      return 0.0;
+    }
+    else if ( geomDimension == 1 )
+    {
+      return geomV2->length();
+    }
+    else
+    {
+      return geomV2->area();
+    }
+  }
+
   const unsigned char* wkb = geometry->asWkb();
   if ( !wkb )
     return 0.0;
@@ -335,6 +357,16 @@ double QgsDistanceArea::measurePerimeter( QgsGeometry* geometry )
 {
   if ( !geometry )
     return 0.0;
+
+  if ( !mEllipsoidalMode )
+  {
+    const QgsAbstractGeometryV2* geomV2 = geometry->geometry();
+    if ( !geomV2 )
+    {
+      return 0.0;
+    }
+    return geomV2->length();
+  }
 
   const unsigned char* wkb = geometry->asWkb();
   if ( !wkb )
