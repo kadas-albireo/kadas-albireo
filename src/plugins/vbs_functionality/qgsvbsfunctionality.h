@@ -23,6 +23,7 @@
 #include <QObject>
 
 class QgsVBSCoordinateDisplayer;
+class QgsVBSCrsSelection;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -36,6 +37,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
   private:
     QgisInterface* mQGisIface;
     QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
+    QgsVBSCrsSelection* mCrsSelection;
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

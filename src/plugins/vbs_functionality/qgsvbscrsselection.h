@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.cpp                                                *
+ *  qgsvbscrsselection.h                                                   *
  *  -------------------                                                    *
- *  begin                : Jul 09, 2015                                    *
+ *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,30 +15,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsfunctionality.h"
-#include "qgsvbscoordinatedisplayer.h"
-#include "qgsvbscrsselection.h"
-#include "qgisinterface.h"
-#include "vbsfunctionality_plugin.h"
+#ifndef QGSVBSCRSSELECTION_H
+#define QGSVBSCRSSELECTION_H
 
-QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
-    : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
-    , mQGisIface( theQgisInterface )
-    , mCoordinateDisplayer( 0 )
-    , mCrsSelection( 0 )
-{
-}
+#include <QWidget>
 
-void QgsVBSFunctionality::initGui()
-{
-  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
-  mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
-}
+class QgisInterface;
+class QComboBox;
+class QLabel;
 
-void QgsVBSFunctionality::unload()
+class QgsVBSCrsSelection : public QWidget
 {
-  delete mCoordinateDisplayer;
-  mCoordinateDisplayer = 0;
-  delete mCrsSelection;
-  mCrsSelection = 0;
-}
+    Q_OBJECT
+  public:
+    QgsVBSCrsSelection( QgisInterface* iface, QWidget* parent = 0 );
+    ~QgsVBSCrsSelection();
+
+  private:
+    QgisInterface* mIface;
+    QLabel* mIconLabel;
+    QComboBox* mCrsSelectionCombo;
+
+  private slots:
+    void forceCrsTransformEnabled();
+    void syncCrsCombo();
+    void setMapCrs( int index );
+};
+
+#endif // QGSVBSCRSSELECTION_H
