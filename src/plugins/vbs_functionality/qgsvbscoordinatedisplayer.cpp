@@ -67,7 +67,7 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgisInterface *iface, QWid
   mCoordinateLineEdit->setFont( font );
   mCoordinateLineEdit->setReadOnly( true );
   mCoordinateLineEdit->setAlignment( Qt::AlignCenter );
-  mCoordinateLineEdit->setFixedWidth( 250 );
+  mCoordinateLineEdit->setFixedWidth( 200 );
   mCoordinateLineEdit->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   QHBoxLayout* layout = new QHBoxLayout( this );
@@ -122,8 +122,7 @@ void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
   QgsVBSCoordinateConverter* conv = variant2ptr<QgsVBSCoordinateConverter>( v );
   if ( conv )
   {
-    int dp = qMax( 0, static_cast<int>( qCeil( -1.0 * log10( mQGisIface->mapCanvas()->mapUnitsPerPixel() ) ) ) );
-    mCoordinateLineEdit->setText( conv->convert( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs(), dp ) );
+    mCoordinateLineEdit->setText( conv->convert( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs() ) );
   }
 }
 

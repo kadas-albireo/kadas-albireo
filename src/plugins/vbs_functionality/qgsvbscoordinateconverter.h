@@ -28,7 +28,7 @@ class QgsVBSCoordinateConverter : public QObject
   public:
     QgsVBSCoordinateConverter( QObject* parent ) : QObject( parent ) {}
     virtual ~QgsVBSCoordinateConverter() {}
-    virtual QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const = 0;
+    virtual QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const = 0;
 };
 
 
@@ -37,7 +37,7 @@ class QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
   public:
     QgsEPSGCoordinateConverter( const QString& targetEPSG, QObject* parent );
     ~QgsEPSGCoordinateConverter();
-    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const override;
+    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
   private:
     QgsCoordinateReferenceSystem* mDestSrs;
 };
@@ -49,7 +49,7 @@ class QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
     enum Format { DegMinSec, DegMin, DecDeg };
     QgsWGS84CoordinateConverter( Format format, QObject* parent );
     ~QgsWGS84CoordinateConverter();
-    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const override;
+    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
   private:
     Format mFormat;
     QgsCoordinateReferenceSystem* mDestSrs;
@@ -61,7 +61,7 @@ class QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
   public:
     QgsUTMCoordinateConverter( QObject* parent );
     ~QgsUTMCoordinateConverter();
-    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const override;
+    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
   private:
     QgsCoordinateReferenceSystem* mWgs84Srs;
 
@@ -82,7 +82,7 @@ class QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
 {
   public:
     QgsMGRSCoordinateConverter( QObject* parent ) : QgsUTMCoordinateConverter( parent ) {}
-    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const override;
+    QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
 
   private:
     static const int NUM_100K_SETS;

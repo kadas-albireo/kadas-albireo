@@ -59,16 +59,16 @@ QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordi
   {
     case DegMinSec:
     {
-      return pOut.toDegreesMinutesSeconds( prec );
+      return pOut.toDegreesMinutesSeconds( 1 );
     }
     case DegMin:
     {
-      return pOut.toDegreesMinutes( prec );
+      return pOut.toDegreesMinutes( 3 );
     }
     case DecDeg:
     {
-      return QString( "%1%2,%3%4" ).arg( pOut.x(), 0, 'f', prec ).arg( QChar( 176 ) )
-             .arg( pOut.y(), 0, 'f', prec ).arg( QChar( 176 ) );
+      return QString( "%1%2,%3%4" ).arg( pOut.x(), 0, 'f', 5 ).arg( QChar( 176 ) )
+             .arg( pOut.y(), 0, 'f', 5 ).arg( QChar( 176 ) );
     }
   }
   return "";
