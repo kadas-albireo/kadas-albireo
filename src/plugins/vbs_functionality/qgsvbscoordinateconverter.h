@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgscoordinateconverter.h                                               *
+ *  qgsvbscoordinateconverter.h                                            *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,24 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSCOORDINATECONVERTER_H
-#define QGSCOORDINATECONVERTER_H
+#ifndef QGSVBSCOORDINATECONVERTER_H
+#define QGSVBSCOORDINATECONVERTER_H
 
 #include <QObject>
 
 class QgsPoint;
 class QgsCoordinateReferenceSystem;
 
-class QgsCoordinateConverter : public QObject
+class QgsVBSCoordinateConverter : public QObject
 {
   public:
-    QgsCoordinateConverter( QObject* parent ) : QObject( parent ) {}
-    virtual ~QgsCoordinateConverter() {}
+    QgsVBSCoordinateConverter( QObject* parent ) : QObject( parent ) {}
+    virtual ~QgsVBSCoordinateConverter() {}
     virtual QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, int prec ) const = 0;
 };
 
 
-class QgsEPSGCoordinateConverter : public QgsCoordinateConverter
+class QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     QgsEPSGCoordinateConverter( const QString& targetEPSG, QObject* parent );
@@ -43,7 +43,7 @@ class QgsEPSGCoordinateConverter : public QgsCoordinateConverter
 };
 
 
-class QgsWGS84CoordinateConverter : public QgsCoordinateConverter
+class QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     enum Format { DegMinSec, DegMin, DecDeg };
@@ -56,7 +56,7 @@ class QgsWGS84CoordinateConverter : public QgsCoordinateConverter
 };
 
 
-class QgsUTMCoordinateConverter : public QgsCoordinateConverter
+class QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     QgsUTMCoordinateConverter( QObject* parent );
@@ -92,4 +92,4 @@ class QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
     QString getLetter100kID( int column, int row, int parm ) const;
 };
 
-#endif // QGSCOORDINATECONVERTER_H
+#endif // QGSVBSCOORDINATECONVERTER_H

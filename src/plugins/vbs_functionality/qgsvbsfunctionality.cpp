@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgscoordinatedisplay.h                                                 *
+ *  qgsvbsfunctionality.cpp                                                *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,35 +15,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSCOORDINATEDISPLAY_H
-#define QGSCOORDINATEDISPLAY_H
+#include "qgsvbsfunctionality.h"
+#include "qgsvbscoordinatedisplayer.h"
+#include "qgsvbscrsselection.h"
+#include "qgisinterface.h"
+#include "vbsfunctionality_plugin.h"
 
-#include "qgisplugin.h"
-
-#include <QObject>
-
-class QComboBox;
-class QLineEdit;
-class QgsPoint;
-
-class QgsCoordinateDisplay: public QObject, public QgisPlugin
+QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
+    : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
+    , mQGisIface( theQgisInterface )
+    , mCoordinateDisplayer( 0 )
 {
-    Q_OBJECT
-  public:
-    QgsCoordinateDisplay( QgisInterface * theInterface );
+}
 
-    void initGui();
-    void unload();
+void QgsVBSFunctionality::initGui()
+{
+  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
+}
 
-  private:
-    QgisInterface* mQGisIface;
-    QWidget* mContainerWidget;
-    QComboBox* mCRSSelectionCombo;
-    QLineEdit* mCoordinateLineEdit;
-
-  private slots:
-    void displayCoordinates( const QgsPoint& p );
-    void syncProjectCrs();
-};
-
-#endif // QGSCOORDINATEDISPLAY_H
+void QgsVBSFunctionality::unload()
+{
+  delete mCoordinateDisplayer;
+  mCoordinateDisplayer = 0;
+}

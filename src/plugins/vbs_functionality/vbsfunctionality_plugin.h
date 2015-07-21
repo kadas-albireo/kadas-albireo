@@ -1,5 +1,5 @@
 /***************************************************************************
- *  coordinatedisplay_plugin.h                                             *
+ *  vbsfunctionality_plugin.h                                              *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -18,12 +18,12 @@
 #ifndef VBSSEARCH_PLUGIN_H
 #define VBSSEARCH_PLUGIN_H
 
-static const QString sName = QObject::tr( "CoordinateDisplay" );
-static const QString sDescription = QObject::tr( "Display cursor coordinates in a chosen reference system" );
-static const QString sCategory = QObject::tr( "Vector" );
+static const QString sName = QObject::tr( "VBS Functionality" );
+static const QString sDescription = QObject::tr( "VBS Functionality" );
+static const QString sCategory = QObject::tr( "User Interface" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
-static const QString sPluginIcon = ":/coordinatedisplay/icons/icon.png";
+static const QString sPluginIcon = ":/vbsfunctionality/icons/icon.png";
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -44,7 +44,7 @@ static const QString sPluginIcon = ":/coordinatedisplay/icons/icon.png";
 // Class factory to return a new instance of the plugin class
 QGISEXTERN QgisPlugin * classFactory( QgisInterface * theQgisInterfacePointer )
 {
-  return new QgsCoordinateDisplay( theQgisInterfacePointer );
+  return new QgsVBSFunctionality( theQgisInterfacePointer );
 }
 // Return the name of the plugin - note that we do not user class members as
 // the class may not yet be insantiated when this method is called.

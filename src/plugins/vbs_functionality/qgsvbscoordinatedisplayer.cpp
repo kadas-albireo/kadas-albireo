@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgscoordinatedisplay.cpp                                               *
+ *  qgsvbscoordinatedisplayer.cpp                                          *
  *  -------------------                                                    *
- *  begin                : Jul 09, 2015                                    *
+ *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,13 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgscoordinatedisplay.h"
-#include "qgscoordinateconverter.h"
-#include "qgisinterface.h"
-#include "coordinatedisplay_plugin.h"
-#include "qgscoordinatereferencesystem.h"
+#include "qgsvbscoordinatedisplayer.h"
+#include "qgsvbscoordinateconverter.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
+#include "qgisinterface.h"
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -30,14 +28,6 @@
 #include <QMainWindow>
 #include <QStatusBar>
 
-QgsCoordinateDisplay::QgsCoordinateDisplay( QgisInterface * theQgisInterface )
-    : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
-    , mQGisIface( theQgisInterface )
-    , mContainerWidget( 0 )
-    , mCRSSelectionCombo( 0 )
-    , mCoordinateLineEdit( 0 )
-{
-}
 
 template<class T>
 static inline QVariant ptr2variant( T* ptr )
@@ -51,12 +41,16 @@ static inline T* variant2ptr( const QVariant& v )
   return reinterpret_cast<T*>( v.value<void*>() );
 }
 
-void QgsCoordinateDisplay::initGui()
-{
-  mContainerWidget = new QWidget();
-  mContainerWidget->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
-  mCRSSelectionCombo = new QComboBox( mContainerWidget );
+QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgisInterface *iface, QWidget *parent )
+    : QWidget( parent ), mQGisIface( iface )
+{
+  setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+
+  mIconLabel = new QLabel( this );
+  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mousecoordinates.png" ) );
+
+  mCRSSelectionCombo = new QComboBox( this );
   mCRSSelectionCombo->addItem( "LV03", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:21781", mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->addItem( "LV95", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:2056", mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->addItem( "DMS", ptr2variant( new QgsWGS84CoordinateConverter( QgsWGS84CoordinateConverter::DegMinSec, mCRSSelectionCombo ) ) );
@@ -66,27 +60,30 @@ void QgsCoordinateDisplay::initGui()
   mCRSSelectionCombo->addItem( "MGRS", ptr2variant( new QgsMGRSCoordinateConverter( mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
   mCRSSelectionCombo->setCurrentIndex( 0 );
-  mCoordinateLineEdit = new QLineEdit( mContainerWidget );
+
+  mCoordinateLineEdit = new QLineEdit( this );
   QFont font = mCoordinateLineEdit->font();
   font.setPointSize( 9 );
   mCoordinateLineEdit->setFont( font );
   mCoordinateLineEdit->setReadOnly( true );
   mCoordinateLineEdit->setAlignment( Qt::AlignCenter );
-  mCoordinateLineEdit->setFixedWidth( 300 );
+  mCoordinateLineEdit->setFixedWidth( 250 );
   mCoordinateLineEdit->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
-  QHBoxLayout* layout = new QHBoxLayout( mContainerWidget );
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 1 );
+  layout->addWidget( mIconLabel );
   layout->addWidget( mCRSSelectionCombo );
   layout->addWidget( mCoordinateLineEdit );
 
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mQGisIface->mainWindow() );
   Q_ASSERT( mainWindow );
   QStatusBar* statusBar = mainWindow->statusBar();
-
-  int idx = statusBar->children().indexOf( statusBar->findChild<QLabel*>( "mCoordsLabel" ) );
-  statusBar->insertPermanentWidget( idx, mContainerWidget, 0 );
-
   QLabel* coordsLabel = statusBar->findChild<QLabel*>( "mCoordsLabel" );
+
+  statusBar->insertPermanentWidget( statusBar->children().indexOf( coordsLabel ), this, 0 );
+
   if ( coordsLabel )
     coordsLabel->setVisible( false );
   QLineEdit* coordsEdit = statusBar->findChild<QLineEdit*>( "mCoordsEdit" );
@@ -100,7 +97,7 @@ void QgsCoordinateDisplay::initGui()
   syncProjectCrs();
 }
 
-void QgsCoordinateDisplay::unload()
+QgsVBSCoordinateDisplayer::~QgsVBSCoordinateDisplayer()
 {
   disconnect( mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   disconnect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
@@ -109,7 +106,7 @@ void QgsCoordinateDisplay::unload()
   Q_ASSERT( mainWindow );
   QStatusBar* statusBar = mainWindow->statusBar();
 
-  statusBar->removeWidget( mContainerWidget );
+  statusBar->removeWidget( this );
 
   QLabel* coordsLabel = statusBar->findChild<QLabel*>( "mCoordsLabel" );
   if ( coordsLabel )
@@ -117,22 +114,20 @@ void QgsCoordinateDisplay::unload()
   QLineEdit* coordsEdit = statusBar->findChild<QLineEdit*>( "mCoordsEdit" );
   if ( coordsEdit )
     coordsEdit->setVisible( true );
-
-  delete mContainerWidget;
 }
 
-void QgsCoordinateDisplay::displayCoordinates( const QgsPoint &p )
+void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 {
   QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
-  QgsCoordinateConverter* conv = variant2ptr<QgsCoordinateConverter>( v );
+  QgsVBSCoordinateConverter* conv = variant2ptr<QgsVBSCoordinateConverter>( v );
   if ( conv )
   {
-    int dp = qMax( 0, static_cast<int>( ceil( -1.0 * log10( mQGisIface->mapCanvas()->mapUnitsPerPixel() ) ) ) );
+    int dp = qMax( 0, static_cast<int>( qCeil( -1.0 * log10( mQGisIface->mapCanvas()->mapUnitsPerPixel() ) ) ) );
     mCoordinateLineEdit->setText( conv->convert( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs(), dp ) );
   }
 }
 
-void QgsCoordinateDisplay::syncProjectCrs()
+void QgsVBSCoordinateDisplayer::syncProjectCrs()
 {
   const QgsCoordinateReferenceSystem& crs = mQGisIface->mapCanvas()->mapSettings().destinationCrs();
   if ( crs.srsid() == 4326 )

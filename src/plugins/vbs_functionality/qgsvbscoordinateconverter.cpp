@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgscoordinateconverter.cpp                                             *
+ *  qgsvbscoordinateconverter.cpp                                          *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,14 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgscoordinateconverter.h"
+#include "qgsvbscoordinateconverter.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
 #include "qgspoint.h"
 #include <qmath.h>
 
 QgsEPSGCoordinateConverter::QgsEPSGCoordinateConverter( const QString &targetEPSG, QObject *parent )
-    : QgsCoordinateConverter( parent )
+    : QgsVBSCoordinateConverter( parent )
 {
   mDestSrs = new QgsCoordinateReferenceSystem( targetEPSG );
 }
@@ -32,16 +32,16 @@ QgsEPSGCoordinateConverter::~QgsEPSGCoordinateConverter()
   delete mDestSrs;
 }
 
-QString QgsEPSGCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int prec ) const
+QString QgsEPSGCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   QgsPoint pOut = QgsCoordinateTransform( sSrs, *mDestSrs ).transform( p );
-  return QString( "%1, %2" ).arg( pOut.x(), 0, 'f', prec ).arg( pOut.y(), 0, 'f', prec );
+  return QString( "%1, %2" ).arg( pOut.x(), 0, 'f', 0 ).arg( pOut.y(), 0, 'f', 0 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsWGS84CoordinateConverter::QgsWGS84CoordinateConverter( Format format, QObject *parent )
-    : QgsCoordinateConverter( parent )
+    : QgsVBSCoordinateConverter( parent )
 {
   mFormat = format;
   mDestSrs = new QgsCoordinateReferenceSystem( "EPSG:4326" );
@@ -52,7 +52,7 @@ QgsWGS84CoordinateConverter::~QgsWGS84CoordinateConverter()
   delete mDestSrs;
 }
 
-QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int prec ) const
+QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   QgsPoint pOut = QgsCoordinateTransform( sSrs, *mDestSrs ).transform( p );
   switch ( mFormat )
@@ -77,7 +77,7 @@ QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordi
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsUTMCoordinateConverter::QgsUTMCoordinateConverter( QObject *parent )
-    : QgsCoordinateConverter( parent )
+    : QgsVBSCoordinateConverter( parent )
 {
   mWgs84Srs = new QgsCoordinateReferenceSystem( "EPSG:4326" );
 }
@@ -87,7 +87,7 @@ QgsUTMCoordinateConverter::~QgsUTMCoordinateConverter()
   delete mWgs84Srs;
 }
 
-QString QgsUTMCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int /*prec*/ ) const
+QString QgsUTMCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   UTMCoo coo = getUTMCoordinate( p, sSrs );
   return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
@@ -223,7 +223,7 @@ const int QgsMGRSCoordinateConverter::NUM_100K_SETS = 6;
 const QString QgsMGRSCoordinateConverter::SET_ORIGIN_COLUMN_LETTERS = "AJSAJS";
 const QString QgsMGRSCoordinateConverter::SET_ORIGIN_ROW_LETTERS = "AFAFAF";
 
-QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs, int /*prec*/ ) const
+QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   UTMCoo utm = getUTMCoordinate( p, sSrs );
 

@@ -3,24 +3,30 @@
 # Files
 
 SET (coordinatedisplay_SRCS
-  qgscoordinatedisplay.cpp
-  qgscoordinateconverter.cpp
+  qgsvbsfunctionality.cpp
+  qgsvbscoordinatedisplayer.cpp
+  qgsvbscoordinateconverter.cpp
+  qgsvbscrsselection.cpp
 )
 
 SET (coordinatedisplay_HDRS
-  coordinatedisplay_plugin.h
-  qgscoordinateconverter.h
+  vbsfunctionality_plugin.h
+  qgsvbscoordinatedisplayer.h
+  qgsvbscoordinateconverter.h
 )
 
 SET (coordinatedisplay_MOC_HDRS
-  qgscoordinatedisplay.h
+  qgsvbsfunctionality.h
+  qgsvbscoordinatedisplayer.h
+  qgsvbscrsselection.h
 )
 
 SET (coordinatedisplay_UIS
 )
 
 SET (coordinatedisplay_RCCS
-  coordinatedisplay.qrc)
+  qgsvbsfunctionality.qrc
+)
 
 ########################################################
 # Build
