@@ -15,17 +15,23 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsmapcanvas.h"
 #include "qgsvbsfunctionality.h"
 #include "qgsvbscoordinatedisplayer.h"
 #include "qgsvbscrsselection.h"
 #include "qgisinterface.h"
+#include "maptools/qgsvbsmaptoolpinannotation.h"
 #include "vbsfunctionality_plugin.h"
+#include <QAction>
+#include <QToolBar>
 
 QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
     , mQGisIface( theQgisInterface )
     , mCoordinateDisplayer( 0 )
     , mCrsSelection( 0 )
+    , mActionPinAnnotation( 0 )
+    , mMapToolPinAnnotation( 0 )
 {
 }
 
@@ -33,6 +39,12 @@ void QgsVBSFunctionality::initGui()
 {
   mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
   mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
+  mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mQGisIface->mapCanvas() );
+  mActionPinAnnotation = new QAction( QIcon( ":/vbsfunctionality/icons/pin.svg" ), tr( "Add pin" ), this );
+  mActionPinAnnotation->setCheckable( true );
+  mMapToolPinAnnotation->setAction( mActionPinAnnotation );
+  connect( mActionPinAnnotation, SIGNAL( triggered() ), this, SLOT( activateMapToolPinAnnotation() ) );
+  mQGisIface->pluginToolBar()->addAction( mActionPinAnnotation );
 }
 
 void QgsVBSFunctionality::unload()
@@ -41,4 +53,13 @@ void QgsVBSFunctionality::unload()
   mCoordinateDisplayer = 0;
   delete mCrsSelection;
   mCrsSelection = 0;
+  delete mActionPinAnnotation;
+  mActionPinAnnotation = 0;
+  delete mMapToolPinAnnotation;
+  mMapToolPinAnnotation = 0;
+}
+
+void QgsVBSFunctionality::activateMapToolPinAnnotation()
+{
+  mQGisIface->mapCanvas()->setMapTool( mMapToolPinAnnotation );
 }

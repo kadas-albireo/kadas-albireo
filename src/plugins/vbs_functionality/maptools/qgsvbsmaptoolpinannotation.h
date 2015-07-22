@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.h                                                  *
+ *  qgsvbsmaptoolpin.h                                                     *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 22, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,36 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSFUNCTIONALITY_H
-#define QGSVBSFUNCTIONALITY_H
+#ifndef QGSVBSMAPTOOLPIN_H
+#define QGSVBSMAPTOOLPIN_H
 
-#include "qgisplugin.h"
+#include "qgsmaptoolannotation.h"
 
-#include <QObject>
-
-class QAction;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSCrsSelection;
-class QgsVBSMapToolPinAnnotation;
-
-class QgsVBSFunctionality: public QObject, public QgisPlugin
+class QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
 {
-    Q_OBJECT
   public:
-    QgsVBSFunctionality( QgisInterface * theInterface );
+    QgsVBSMapToolPinAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
 
-    void initGui();
-    void unload();
-
-  private:
-    QgisInterface* mQGisIface;
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
-    QgsVBSCrsSelection* mCrsSelection;
-    QAction* mActionPinAnnotation;
-    QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
-
-  private slots:
-    void activateMapToolPinAnnotation();
+  protected:
+    QgsAnnotationItem* createItem( QMouseEvent* e ) override;
 };
 
-#endif // QGSVBSFUNCTIONALITY_H
+#endif // QGSVBSMAPTOOLPIN_H
+

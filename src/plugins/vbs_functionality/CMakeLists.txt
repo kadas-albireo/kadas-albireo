@@ -7,12 +7,14 @@ SET (coordinatedisplay_SRCS
   qgsvbscoordinatedisplayer.cpp
   qgsvbscoordinateconverter.cpp
   qgsvbscrsselection.cpp
+  maptools/qgsvbsmaptoolpinannotation.cpp
 )
 
 SET (coordinatedisplay_HDRS
   vbsfunctionality_plugin.h
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
+  maptools/qgsvbsmaptoolpinannotation.h
 )
 
 SET (coordinatedisplay_MOC_HDRS

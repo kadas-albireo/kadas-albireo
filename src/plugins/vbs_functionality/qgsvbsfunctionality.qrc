@@ -3,5 +3,6 @@
         <file>icons/icon.png</file>
         <file>icons/mousecoordinates.png</file>
         <file>icons/mapcoordinates.png</file>
+        <file>icons/pin.svg</file>
     </qresource>
 </RCC>
