@@ -19,6 +19,7 @@
 #define QGSANNOTATIONITEM_H
 
 #include "qgsmapcanvasitem.h"
+#include "qgscoordinatereferencesystem.h"
 
 class QDomDocument;
 class QDomElement;
@@ -28,9 +29,19 @@ class QgsMarkerSymbolV2;
 
 /**An annotation item can be either placed either on screen corrdinates or on map coordinates.
   It may reference a feature and displays that associatiation with a balloon like appearance*/
-class GUI_EXPORT QgsAnnotationItem: public QgsMapCanvasItem
+class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 {
+    Q_OBJECT
   public:
+    enum FeatureFlags
+    {
+      ItemAllFeatures = 0,
+      ItemIsNotResizeable = 1,
+      ItemHasNoFrame = 2,
+      ItemHasNoMarker = 4,
+      ItemIsNotEditable = 8
+    };
+
     enum MouseMoveAction
     {
       NoAction,
@@ -68,15 +79,15 @@ class GUI_EXPORT QgsAnnotationItem: public QgsMapCanvasItem
     virtual void setMapPosition( const QgsPoint& pos );
     QgsPoint mapPosition() const { return mMapPosition; }
 
-    void setFrameSize( const QSizeF& size );
-    QSizeF frameSize() const { return mFrameSize; }
-
     void setOffsetFromReferencePoint( const QPointF& offset );
     QPointF offsetFromReferencePoint() const { return mOffsetFromReferencePoint; }
 
     /**Set symbol that is drawn on map position. Takes ownership*/
     void setMarkerSymbol( QgsMarkerSymbolV2* symbol );
     const QgsMarkerSymbolV2* markerSymbol() const {return mMarkerSymbol;}
+
+    void setFrameSize( const QSizeF& size );
+    QSizeF frameSize() const { return mFrameSize; }
 
     void setFrameBorderWidth( double w ) { mFrameBorderWidth = w; }
     double frameBorderWidth() const { return mFrameBorderWidth; }
@@ -93,21 +104,36 @@ class GUI_EXPORT QgsAnnotationItem: public QgsMapCanvasItem
     void _writeXML( QDomDocument& doc, QDomElement& itemElem ) const;
     void _readXML( const QDomDocument& doc, const QDomElement& annotationElem );
 
+    void setItemFlags( int flags ) { mFlags = flags; }
+    int itemFlags() const { return mFlags; }
+
   protected:
+    /**Flags specifying the features of the item*/
+    int mFlags;
+
     /**True: the item stays at the same map position, False: the item stays on same screen position*/
     bool mMapPositionFixed;
+
     /**Map position (in case mMapPositionFixed is true)*/
     QgsPoint mMapPosition;
+
+    /** The georeferenced position of the item. mMapPosition is this position always transformed to the
+     * current destination crs */
+    QgsPoint mGeoPos;
+    /**Coordinate reference system of position (in case mMapPositionFixed is true)*/
+    QgsCoordinateReferenceSystem mGeoPosCrs;
+
     /**Describes the shift of the item content box to the reference point*/
     QPointF mOffsetFromReferencePoint;
 
-    /**Size of the frame (without balloon)*/
-    QSizeF mFrameSize;
     /**Bounding rect (including item frame and balloon)*/
     QRectF mBoundingRect;
 
     /**Point symbol that is to be drawn at the map reference location*/
     QgsMarkerSymbolV2* mMarkerSymbol;
+
+    /**Size of the frame (without balloon)*/
+    QSizeF mFrameSize;
     /**Width of the frame*/
     double mFrameBorderWidth;
     /**Frame / balloon color*/
@@ -136,6 +162,9 @@ class GUI_EXPORT QgsAnnotationItem: public QgsMapCanvasItem
     QPointF pointOnLineWithDistance( const QPointF& startPoint, const QPointF& directionPoint, double distance ) const;
     /**Returns the symbol size scaled in (mapcanvas) pixels. Used for the counding rect calculation*/
     double scaledSymbolSize() const;
+
+  private slots:
+    void syncGeoPos();
 };
 
 #endif // QGSANNOTATIONITEM_H

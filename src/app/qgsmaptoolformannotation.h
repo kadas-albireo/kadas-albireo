@@ -23,11 +23,11 @@
 class APP_EXPORT QgsMapToolFormAnnotation: public QgsMapToolAnnotation
 {
   public:
-    QgsMapToolFormAnnotation( QgsMapCanvas* canvas );
-    ~QgsMapToolFormAnnotation();
+    QgsMapToolFormAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
 
   protected:
     QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    QDialog* createItemEditor( QgsAnnotationItem *item ) override;
 };
 
 #endif // QGSMAPTOOLFORMANNOTATION_H

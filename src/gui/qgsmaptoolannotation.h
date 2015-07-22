@@ -21,11 +21,10 @@
 #include "qgsmaptool.h"
 #include "qgsannotationitem.h"
 
-class APP_EXPORT QgsMapToolAnnotation: public QgsMapTool
+class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
 {
   public:
     QgsMapToolAnnotation( QgsMapCanvas* canvas );
-    ~QgsMapToolAnnotation();
 
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
@@ -34,10 +33,10 @@ class APP_EXPORT QgsMapToolAnnotation: public QgsMapTool
     void keyPressEvent( QKeyEvent* e ) override;
 
   protected:
-    /**Creates a new item. To be implemented by subclasses. Returns 0 by default*/
-    virtual QgsAnnotationItem* createItem( QMouseEvent* e );
-    /**Creates an editor widget (caller takes ownership)*/
-    QDialog* createItemEditor( QgsAnnotationItem* item );
+    /**Creates a new item. To be implemented by subclasses.*/
+    virtual QgsAnnotationItem* createItem( QMouseEvent* e ){ return 0; }
+    /**Creates an editor widget (caller takes ownership). To be implemented by subclasses.*/
+    virtual QDialog* createItemEditor( QgsAnnotationItem* /*item*/ ) { return 0; }
 
   private:
     /**Returns the topmost annotation item at the position (or 0 if none)*/

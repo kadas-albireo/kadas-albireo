@@ -61,6 +61,21 @@ QgsAnnotationWidget::QgsAnnotationWidget( QgsAnnotationItem* item, QWidget * par
       updateCenterIcon();
     }
 
+    if ( mItem->itemFlags() & QgsAnnotationItem::ItemHasNoMarker )
+    {
+      mMapMarkerLabel->setVisible( false );
+      mMapMarkerLabel->setVisible( false );
+    }
+    if ( mItem->itemFlags() & QgsAnnotationItem::ItemHasNoFrame )
+    {
+      mFrameWidthLabel->setVisible( false );
+      mFrameWidthSpinBox->setVisible( false );
+      mBackgroundColorLabel->setVisible( false );
+      mBackgroundColorButton->setVisible( false );
+      mFrameColorLabel->setVisible( false );
+      mFrameColorButton->setVisible( false );
+    }
+
     blockAllSignals( false );
   }
 }

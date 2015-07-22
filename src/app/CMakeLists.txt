@@ -54,7 +54,6 @@ SET(QGIS_APP_SRCS
   qgsmaptooladdpart.cpp
   qgsmaptooladdring.cpp
   qgsmaptoolfillring.cpp
-  qgsmaptoolannotation.cpp
   qgsmaptoolcapture.cpp
   qgsmaptoolchangelabelproperties.cpp
   qgsmaptooldeletering.cpp

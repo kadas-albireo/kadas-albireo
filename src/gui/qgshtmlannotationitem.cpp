@@ -46,13 +46,13 @@ QgsHtmlAnnotationItem::QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsVectorLay
   mWidgetContainer = new QGraphicsProxyWidget( this );
   mWidgetContainer->setWidget( mWebView );
 
-  QObject::connect( mWebView->page()->mainFrame(), SIGNAL( javaScriptWindowObjectCleared() ), this, SLOT( javascript() ) );
+  connect( mWebView->page()->mainFrame(), SIGNAL( javaScriptWindowObjectCleared() ), this, SLOT( javascript() ) );
 
   if ( mVectorLayer && mMapCanvas )
   {
-    QObject::connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
-    QObject::connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
-    QObject::connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+    connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
   }
 
   setFeatureForMapPosition();
@@ -164,9 +164,9 @@ void QgsHtmlAnnotationItem::readXML( const QDomDocument& doc, const QDomElement&
     mVectorLayer = dynamic_cast<QgsVectorLayer*>( QgsMapLayerRegistry::instance()->mapLayer( itemElem.attribute( "vectorLayer", "" ) ) );
     if ( mVectorLayer )
     {
-      QObject::connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
-      QObject::connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
-      QObject::connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+      connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
+      connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
+      connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
     }
   }
   mHasAssociatedFeature = itemElem.attribute( "hasFeature", "0" ).toInt();

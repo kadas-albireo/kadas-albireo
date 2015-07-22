@@ -24,7 +24,8 @@
 #include <QPen>
 
 QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
-    : QgsMapCanvasItem( mapCanvas )
+    : QObject( 0 ), QgsMapCanvasItem( mapCanvas )
+    , mFlags( ItemAllFeatures )
     , mMapPositionFixed( true )
     , mOffsetFromReferencePoint( QPointF( 50, -50 ) )
     , mBalloonSegment( -1 )
@@ -35,6 +36,9 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
   mFrameColor = QColor( 0, 0, 0 );
   mFrameBackgroundColor = QColor( 255, 255, 255 );
   setData( 0, "AnnotationItem" );
+
+  connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncGeoPos() ) );
+  connect( mMapCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( syncGeoPos() ) );
 }
 
 QgsAnnotationItem::~QgsAnnotationItem()
@@ -51,7 +55,8 @@ void QgsAnnotationItem::setMarkerSymbol( QgsMarkerSymbolV2* symbol )
 
 void QgsAnnotationItem::setMapPosition( const QgsPoint& pos )
 {
-  mMapPosition = pos;
+  mMapPosition = mGeoPos = pos;
+  mGeoPosCrs = mMapCanvas->mapSettings().destinationCrs();
   setPos( toCanvasCoordinates( mMapPosition ) );
 }
 
@@ -121,6 +126,10 @@ void QgsAnnotationItem::updateBoundingRect()
 
 void QgsAnnotationItem::updateBalloon()
 {
+  if ( mFlags & ItemHasNoFrame )
+  {
+    return;
+  }
   //first test if the point is in the frame. In that case we don't need a balloon.
   if ( !mMapPositionFixed ||
        ( mOffsetFromReferencePoint.x() < 0 && ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) > 0
@@ -176,6 +185,10 @@ void QgsAnnotationItem::updateBalloon()
 
 void QgsAnnotationItem::drawFrame( QPainter* p )
 {
+  if ( mFlags & ItemHasNoFrame )
+  {
+    return;
+  }
   QPen framePen( mFrameColor );
   framePen.setWidthF( mFrameBorderWidth );
 
@@ -210,7 +223,7 @@ void QgsAnnotationItem::setFrameSize( const QSizeF& size )
 
 void QgsAnnotationItem::drawMarkerSymbol( QPainter* p )
 {
-  if ( !p )
+  if ( !p || !mMarkerSymbol || ( mFlags & ItemHasNoMarker ) )
   {
     return;
   }
@@ -221,12 +234,9 @@ void QgsAnnotationItem::drawMarkerSymbol( QPainter* p )
     return;
   }
 
-  if ( mMarkerSymbol )
-  {
-    mMarkerSymbol->startRender( renderContext );
-    mMarkerSymbol->renderPoint( QPointF( 0, 0 ), 0, renderContext );
-    mMarkerSymbol->stopRender( renderContext );
-  }
+  mMarkerSymbol->startRender( renderContext );
+  mMarkerSymbol->renderPoint( QPointF( 0, 0 ), 0, renderContext );
+  mMarkerSymbol->stopRender( renderContext );
 }
 
 void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
@@ -292,50 +302,64 @@ QgsAnnotationItem::MouseMoveAction QgsAnnotationItem::moveActionForPosition( con
     return MoveMapPosition;
   }
 
-  bool left, right, up, down;
-  left = qAbs( itemPos.x() - mOffsetFromReferencePoint.x() ) < cursorSensitivity;
-  right = qAbs( itemPos.x() - ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) ) < cursorSensitivity;
-  up = qAbs( itemPos.y() - mOffsetFromReferencePoint.y() ) < cursorSensitivity;
-  down = qAbs( itemPos.y() - ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) ) < cursorSensitivity;
+  if (( mFlags & ItemIsNotResizeable ) == 0 )
+  {
+    bool left, right, up, down;
+    left = qAbs( itemPos.x() - mOffsetFromReferencePoint.x() ) < cursorSensitivity;
+    right = qAbs( itemPos.x() - ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) ) < cursorSensitivity;
+    up = qAbs( itemPos.y() - mOffsetFromReferencePoint.y() ) < cursorSensitivity;
+    down = qAbs( itemPos.y() - ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) ) < cursorSensitivity;
 
-  if ( left && up )
-  {
-    return ResizeFrameLeftUp;
-  }
-  else if ( right && up )
-  {
-    return ResizeFrameRightUp;
-  }
-  else if ( left && down )
-  {
-    return ResizeFrameLeftDown;
-  }
-  else if ( right && down )
-  {
-    return ResizeFrameRightDown;
-  }
-  if ( left )
-  {
-    return ResizeFrameLeft;
-  }
-  if ( right )
-  {
-    return ResizeFrameRight;
-  }
-  if ( up )
-  {
-    return ResizeFrameUp;
-  }
-  if ( down )
-  {
-    return ResizeFrameDown;
+    if ( left && up )
+    {
+      return ResizeFrameLeftUp;
+    }
+    else if ( right && up )
+    {
+      return ResizeFrameRightUp;
+    }
+    else if ( left && down )
+    {
+      return ResizeFrameLeftDown;
+    }
+    else if ( right && down )
+    {
+      return ResizeFrameRightDown;
+    }
+    if ( left )
+    {
+      return ResizeFrameLeft;
+    }
+    if ( right )
+    {
+      return ResizeFrameRight;
+    }
+    if ( up )
+    {
+      return ResizeFrameUp;
+    }
+    if ( down )
+    {
+      return ResizeFrameDown;
+    }
   }
 
-  //finally test if pos is in the frame area
-  if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() )
-       && itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+  if (( mFlags & ItemHasNoFrame ) == 0 )
   {
-    return MoveFramePosition;
+    //finally test if pos is in the frame area
+    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() )
+         && itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    {
+      return MoveFramePosition;
+    }
+  }
+  else
+  {
+    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() )
+         && itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    {
+      return MoveMapPosition;
+    }
   }
   return NoAction;
 }
@@ -392,6 +416,9 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   annotationElem.setAttribute( "mapPositionFixed", mMapPositionFixed );
   annotationElem.setAttribute( "mapPosX", qgsDoubleToString( mMapPosition.x() ) );
   annotationElem.setAttribute( "mapPosY", qgsDoubleToString( mMapPosition.y() ) );
+  annotationElem.setAttribute( "geoPosX", qgsDoubleToString( mGeoPos.x() ) );
+  annotationElem.setAttribute( "geoPosY", qgsDoubleToString( mGeoPos.y() ) );
+  annotationElem.setAttribute( "mapGeoPosAuthID", mGeoPosCrs.authid() );
   annotationElem.setAttribute( "offsetX", qgsDoubleToString( mOffsetFromReferencePoint.x() ) );
   annotationElem.setAttribute( "offsetY", qgsDoubleToString( mOffsetFromReferencePoint.y() ) );
   annotationElem.setAttribute( "frameWidth", QString::number( mFrameSize.width() ) );
@@ -404,6 +431,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   annotationElem.setAttribute( "frameColorAlpha", mFrameColor.alpha() );
   annotationElem.setAttribute( "frameBackgroundColor", mFrameBackgroundColor.name() );
   annotationElem.setAttribute( "frameBackgroundColorAlpha", mFrameBackgroundColor.alpha() );
+  annotationElem.setAttribute( "flags", mFlags );
   annotationElem.setAttribute( "visible", isVisible() );
   if ( mMarkerSymbol )
   {
@@ -427,10 +455,11 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   pos.setX( annotationElem.attribute( "canvasPosX", "0" ).toDouble() );
   pos.setY( annotationElem.attribute( "canvasPosY", "0" ).toDouble() );
   setPos( pos );
-  QgsPoint mapPos;
-  mapPos.setX( annotationElem.attribute( "mapPosX", "0" ).toDouble() );
-  mapPos.setY( annotationElem.attribute( "mapPosY", "0" ).toDouble() );
-  mMapPosition = mapPos;
+  mMapPosition.setX( annotationElem.attribute( "mapPosX", "0" ).toDouble() );
+  mMapPosition.setY( annotationElem.attribute( "mapPosY", "0" ).toDouble() );
+  mMapPosition.setX( annotationElem.attribute( "geoPosX", qgsDoubleToString( mMapPosition.x() ) ).toDouble() );
+  mMapPosition.setY( annotationElem.attribute( "geoPosY", qgsDoubleToString( mMapPosition.y() ) ).toDouble() );
+  mGeoPosCrs = QgsCoordinateReferenceSystem( annotationElem.attribute( "mapGeoPosAuthID", mMapCanvas->mapSettings().destinationCrs().authid() ) );
   mFrameBorderWidth = annotationElem.attribute( "frameBorderWidth", "0.5" ).toDouble();
   mFrameColor.setNamedColor( annotationElem.attribute( "frameColor", "#000000" ) );
   mFrameColor.setAlpha( annotationElem.attribute( "frameColorAlpha", "255" ).toInt() );
@@ -441,6 +470,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   mOffsetFromReferencePoint.setX( annotationElem.attribute( "offsetX", "0" ).toDouble() );
   mOffsetFromReferencePoint.setY( annotationElem.attribute( "offsetY", "0" ).toDouble() );
   mMapPositionFixed = annotationElem.attribute( "mapPositionFixed", "1" ).toInt();
+  mFlags = annotationElem.attribute( "flags", QString::number( ItemAllFeatures ) ).toInt();
   setVisible( annotationElem.attribute( "visible", "1" ).toInt() );
 
   //marker symbol
@@ -457,4 +487,18 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
 
   updateBoundingRect();
   updateBalloon();
+}
+
+void QgsAnnotationItem::syncGeoPos()
+{
+  if ( mMapPositionFixed )
+  {
+    mMapPosition = QgsCoordinateTransform( mGeoPosCrs, mMapCanvas->mapSettings().destinationCrs() ).transform( mGeoPos );
+    updatePosition();
+  }
+  else
+  {
+    updatePosition();
+    mGeoPos = QgsCoordinateTransform( mMapCanvas->mapSettings().destinationCrs(), mGeoPosCrs ).transform( mMapPosition );
+  }
 }

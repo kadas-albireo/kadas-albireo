@@ -25,7 +25,7 @@
 class QGraphicsProxyWidget;
 
 /**An annotation item that embedds a designer form showing the feature attribute*/
-class GUI_EXPORT QgsFormAnnotationItem: public QObject, public QgsAnnotationItem
+class GUI_EXPORT QgsFormAnnotationItem: public QgsAnnotationItem
 {
     Q_OBJECT
   public:

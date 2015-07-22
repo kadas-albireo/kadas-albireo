@@ -17,17 +17,9 @@
 
 #include "qgsmaptoolsvgannotation.h"
 #include "qgssvgannotationitem.h"
+#include "qgssvgannotationdialog.h"
 #include <QMouseEvent>
 
-QgsMapToolSvgAnnotation::QgsMapToolSvgAnnotation( QgsMapCanvas* canvas ): QgsMapToolAnnotation( canvas )
-{
-
-}
-
-QgsMapToolSvgAnnotation::~QgsMapToolSvgAnnotation()
-{
-
-}
 
 QgsAnnotationItem* QgsMapToolSvgAnnotation::createItem( QMouseEvent* e )
 {
@@ -36,4 +28,12 @@ QgsAnnotationItem* QgsMapToolSvgAnnotation::createItem( QMouseEvent* e )
   svgItem->setSelected( true );
   svgItem->setFrameSize( QSizeF( 200, 100 ) );
   return svgItem;
+}
+
+QDialog* QgsMapToolSvgAnnotation::createItemEditor( QgsAnnotationItem *item )
+{
+  QgsSvgAnnotationItem* svgItem = dynamic_cast<QgsSvgAnnotationItem*>( item );
+  if ( !svgItem )
+    return 0;
+  return new QgsSvgAnnotationDialog( svgItem );
 }
