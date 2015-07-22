@@ -1,3 +1,4 @@
+
 SET(QGIS_GUI_SRCS
 
 raster/qgsrasterminmaxwidget.cpp
@@ -115,6 +116,7 @@ layertree/qgslayertreeviewdefaultactions.cpp
 qgisgui.cpp
 qgisinterface.cpp
 qgsannotationitem.cpp
+qgsoverlayitem.cpp
 qgsactionmenu.cpp
 qgsattributedialog.cpp
 qgsattributeeditor.cpp
@@ -167,7 +169,6 @@ qgsfiledropedit.cpp
 qgsfilterlineedit.cpp
 qgsformannotationitem.cpp
 qgsgenericprojectionselector.cpp
-qgsgeometryrubberband.cpp
 qgshighlight.cpp
 qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
@@ -186,6 +187,7 @@ qgsmaplayerproxymodel.cpp
 qgsmapoverviewcanvas.cpp
 qgsmaptip.cpp
 qgsmaptool.cpp
+qgsmaptoolannotation.cpp
 qgsmaptoolemitpoint.cpp
 qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
@@ -236,6 +238,7 @@ ENDIF (WITH_TOUCH)
 SET(QGIS_GUI_MOC_HDRS
   qgisinterface.h
   qgsactionmenu.h
+  qgsannotationitem.h
   qgsattributedialog.h
   qgsattributeeditor.h
   qgsattributeform.h
@@ -294,6 +297,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptoolannotation.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
@@ -305,6 +309,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsnewmemorylayerdialog.h
   qgsnewvectorlayerdialog.h
   qgsoptionsdialogbase.h
+  qgsoverlayitem.h
   qgsowssourceselect.h
   qgspluginmanagerinterface.h
   qgsprevieweffect.h
@@ -434,7 +439,6 @@ ENDIF(MSVC)
 
 SET(QGIS_GUI_HDRS
   qgisgui.h
-  qgsannotationitem.h
   qgsattributeeditorcontext.h
   qgsattributeforminterface.h
   qgsattributeformlegacyinterface.h

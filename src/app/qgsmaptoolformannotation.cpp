@@ -17,19 +17,11 @@
 
 #include "qgsmaptoolformannotation.h"
 #include "qgsformannotationitem.h"
+#include "qgsformannotationdialog.h"
 #include "qgsmapcanvas.h"
 #include "qgsvectorlayer.h"
 #include <QMouseEvent>
 
-QgsMapToolFormAnnotation::QgsMapToolFormAnnotation( QgsMapCanvas* canvas ): QgsMapToolAnnotation( canvas )
-{
-
-}
-
-QgsMapToolFormAnnotation::~QgsMapToolFormAnnotation()
-{
-
-}
 
 QgsAnnotationItem* QgsMapToolFormAnnotation::createItem( QMouseEvent* e )
 {
@@ -51,3 +43,10 @@ QgsAnnotationItem* QgsMapToolFormAnnotation::createItem( QMouseEvent* e )
   return formItem;
 }
 
+QDialog* QgsMapToolFormAnnotation::createItemEditor( QgsAnnotationItem *item )
+{
+  QgsFormAnnotationItem* formItem = dynamic_cast<QgsFormAnnotationItem*>( item );
+  if ( !formItem )
+    return 0;
+  return new QgsFormAnnotationDialog( formItem );
+}

@@ -16,16 +16,9 @@
  ***************************************************************************/
 
 #include "qgsmaptoolannotation.h"
-#include "qgsformannotationdialog.h"
-#include "qgsformannotationitem.h"
-#include "qgshtmlannotationitem.h"
-#include "qgshtmlannotationdialog.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
-#include "qgstextannotationdialog.h"
 #include "qgstextannotationitem.h"
-#include "qgssvgannotationdialog.h"
-#include "qgssvgannotationitem.h"
 #include <QDialog>
 #include <QMouseEvent>
 
@@ -35,50 +28,6 @@ QgsMapToolAnnotation::QgsMapToolAnnotation( QgsMapCanvas* canvas )
     , mLastMousePosition( 0, 0 )
 {
   mCursor = QCursor( Qt::ArrowCursor );
-}
-
-QgsMapToolAnnotation::~QgsMapToolAnnotation()
-{
-}
-
-QgsAnnotationItem* QgsMapToolAnnotation::createItem( QMouseEvent *e )
-{
-  Q_UNUSED( e );
-  return 0;
-}
-
-QDialog* QgsMapToolAnnotation::createItemEditor( QgsAnnotationItem *item )
-{
-  if ( !item )
-  {
-    return 0;
-  }
-
-  QgsTextAnnotationItem* tItem = dynamic_cast<QgsTextAnnotationItem*>( item );
-  if ( tItem )
-  {
-    return new QgsTextAnnotationDialog( tItem );
-  }
-
-  QgsFormAnnotationItem* fItem = dynamic_cast<QgsFormAnnotationItem*>( item );
-  if ( fItem )
-  {
-    return new QgsFormAnnotationDialog( fItem );
-  }
-
-  QgsHtmlAnnotationItem* hItem = dynamic_cast<QgsHtmlAnnotationItem*>( item );
-  if ( hItem )
-  {
-    return new QgsHtmlAnnotationDialog( hItem );
-  }
-
-  QgsSvgAnnotationItem* sItem = dynamic_cast<QgsSvgAnnotationItem*>( item );
-  if ( sItem )
-  {
-    return new QgsSvgAnnotationDialog( sItem );
-  }
-
-  return 0;
 }
 
 void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent *e )
@@ -156,7 +105,9 @@ void QgsMapToolAnnotation::canvasMoveEvent( QMouseEvent * e )
   {
     if ( mCurrentMoveAction == QgsAnnotationItem::MoveMapPosition )
     {
-      sItem->setMapPosition( toMapCoordinates( e->pos() ) );
+      toMapCoordinates( e->pos() );
+      QgsPoint newpos = sItem->mapPosition() + (toMapCoordinates( e->pos() ) - toMapCoordinates( mLastMousePosition.toPoint() ));
+      sItem->setMapPosition( newpos );
       sItem->update();
     }
     else if ( mCurrentMoveAction == QgsAnnotationItem::MoveFramePosition )
@@ -236,7 +187,7 @@ void QgsMapToolAnnotation::canvasMoveEvent( QMouseEvent * e )
 void QgsMapToolAnnotation::canvasDoubleClickEvent( QMouseEvent * e )
 {
   QgsAnnotationItem* item = itemAtPos( e->posF() );
-  if ( !item )
+  if ( !item || (item->itemFlags() & QgsAnnotationItem::ItemIsNotEditable) )
   {
     return;
   }

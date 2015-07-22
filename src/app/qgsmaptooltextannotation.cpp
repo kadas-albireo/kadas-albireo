@@ -17,21 +17,12 @@
 
 #include "qgsmaptooltextannotation.h"
 #include "qgstextannotationitem.h"
+#include "qgstextannotationdialog.h"
 #include <QMouseEvent>
 
-QgsMapToolTextAnnotation::QgsMapToolTextAnnotation( QgsMapCanvas* canvas ): QgsMapToolAnnotation( canvas )
-{
-
-}
-
-QgsMapToolTextAnnotation::~QgsMapToolTextAnnotation()
-{
-
-}
 
 QgsAnnotationItem* QgsMapToolTextAnnotation::createItem( QMouseEvent* e )
 {
-  QgsPoint mapCoord = toMapCoordinates( e->pos() );
   QgsTextAnnotationItem* textItem = new QgsTextAnnotationItem( mCanvas );
   textItem->setMapPosition( toMapCoordinates( e->pos() ) );
   textItem->setFrameSize( QSizeF( 200, 100 ) );
@@ -39,3 +30,10 @@ QgsAnnotationItem* QgsMapToolTextAnnotation::createItem( QMouseEvent* e )
   return textItem;
 }
 
+QDialog* QgsMapToolTextAnnotation::createItemEditor( QgsAnnotationItem *item )
+{
+  QgsTextAnnotationItem* textItem = dynamic_cast<QgsTextAnnotationItem*>( item );
+  if ( !textItem )
+    return 0;
+  return new QgsTextAnnotationDialog( textItem );
+}
