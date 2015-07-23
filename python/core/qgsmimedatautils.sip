@@ -7,6 +7,7 @@ class QgsMimeDataUtils
 
     struct Uri
     {
+      Uri();
       Uri( QgsLayerItem* layer );
       Uri( QString& encData );
 
