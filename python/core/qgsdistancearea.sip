@@ -56,22 +56,22 @@ class QgsDistanceArea
     double ellipsoidInverseFlattening() const;
 
     //! general measurement (line distance or polygon area)
-    double measure( QgsGeometry* geometry );
+    double measure( const QgsGeometry* geometry ) const;
 
     //! measures perimeter of polygon
-    double measurePerimeter( QgsGeometry* geometry );
+    double measurePerimeter( const QgsGeometry* geometry ) const;
 
     //! measures line
-    double measureLine( const QList<QgsPoint>& points );
+    double measureLine( const QList<QgsPoint>& points ) const;
 
     //! measures line with one segment
-    double measureLine( const QgsPoint& p1, const QgsPoint& p2 );
+    double measureLine( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     //! measures polygon area
-    double measurePolygon( const QList<QgsPoint>& points );
+    double measurePolygon( const QList<QgsPoint>& points ) const;
 
     //! compute bearing - in radians
-    double bearing( const QgsPoint& p1, const QgsPoint& p2 );
+    double bearing( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     static QString textUnit( double value, int decimals, QGis::UnitType u, bool isArea, bool keepBaseUnit = false );
 
@@ -97,22 +97,22 @@ class QgsDistanceArea
       @return distance in meters
      */
     double computeDistanceBearing( const QgsPoint& p1, const QgsPoint& p2,
-                                   double* course1 = NULL, double* course2 = NULL );
+                                   double* course1 = NULL, double* course2 = NULL ) const;
 
     //! uses flat / planimetric / Euclidean distance
-    double computeDistanceFlat( const QgsPoint& p1, const QgsPoint& p2 );
+    double computeDistanceFlat( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     //! calculate distance with given coordinates (does not do a transform anymore)
-    double computeDistance( const QList<QgsPoint>& points );
+    double computeDistance( const QList<QgsPoint>& points ) const;
 
     /**
      calculates area of polygon on ellipsoid
      algorithm has been taken from GRASS: gis/area_poly1.c
 
     */
-    double computePolygonArea( const QList<QgsPoint>& points );
+    double computePolygonArea( const QList<QgsPoint>& points ) const;
 
-    double computePolygonFlatArea( const QList<QgsPoint>& points );
+    double computePolygonFlatArea( const QList<QgsPoint>& points ) const;
 
     /**
       precalculates some values
