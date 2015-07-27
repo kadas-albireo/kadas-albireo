@@ -20,6 +20,8 @@
 #include "qgscoordinatetransform.h"
 
 class QgsGeometry;
+class QgsAbstractGeometryV2;
+class QgsCurveV2;
 
 /** \ingroup core
 General purpose distance and area calculator.
@@ -87,35 +89,32 @@ class CORE_EXPORT QgsDistanceArea
     double ellipsoidInverseFlattening() const { return mInvFlattening; }
 
     //! general measurement (line distance or polygon area)
-    double measure( QgsGeometry* geometry );
+    double measure( const QgsGeometry* geometry ) const;
 
     //! measures perimeter of polygon
-    double measurePerimeter( QgsGeometry* geometry );
+    double measurePerimeter( const QgsGeometry* geometry ) const;
 
     //! measures line
-    double measureLine( const QList<QgsPoint>& points );
+    double measureLine( const QList<QgsPoint>& points ) const;
 
     //! measures line with one segment
-    double measureLine( const QgsPoint& p1, const QgsPoint& p2 );
+    double measureLine( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     //! measures polygon area
-    double measurePolygon( const QList<QgsPoint>& points );
+    double measurePolygon( const QList<QgsPoint>& points ) const;
 
     //! compute bearing - in radians
-    double bearing( const QgsPoint& p1, const QgsPoint& p2 );
+    double bearing( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     static QString textUnit( double value, int decimals, QGis::UnitType u, bool isArea, bool keepBaseUnit = false );
 
     //! Helper for conversion between physical units
-    void convertMeasurement( double &measure, QGis::UnitType &measureUnits, QGis::UnitType displayUnits, bool isArea );
+    void convertMeasurement( double &measure, QGis::UnitType &measureUnits, QGis::UnitType displayUnits, bool isArea ) const;
 
   protected:
-    //! measures line distance, line points are extracted from WKB
-    // @note available in python bindings
-    const unsigned char* measureLine( const unsigned char* feature, double* area, bool hasZptr = false );
     //! measures polygon area and perimeter, vertices are extracted from WKB
     // @note available in python bindings
-    const unsigned char* measurePolygon( const unsigned char* feature, double* area, double* perimeter, bool hasZptr = false );
+    const unsigned char* measurePolygon( const unsigned char* feature, double* area, double* perimeter, bool hasZptr = false ) const;
 
     /**
       calculates distance from two points on ellipsoid
@@ -128,22 +127,22 @@ class CORE_EXPORT QgsDistanceArea
       @return distance in meters
      */
     double computeDistanceBearing( const QgsPoint& p1, const QgsPoint& p2,
-                                   double* course1 = NULL, double* course2 = NULL );
+                                   double* course1 = NULL, double* course2 = NULL ) const;
 
     //! uses flat / planimetric / Euclidean distance
-    double computeDistanceFlat( const QgsPoint& p1, const QgsPoint& p2 );
+    double computeDistanceFlat( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
     //! calculate distance with given coordinates (does not do a transform anymore)
-    double computeDistance( const QList<QgsPoint>& points );
+    double computeDistance( const QList<QgsPoint>& points ) const;
 
     /**
      calculates area of polygon on ellipsoid
      algorithm has been taken from GRASS: gis/area_poly1.c
 
     */
-    double computePolygonArea( const QList<QgsPoint>& points );
+    double computePolygonArea( const QList<QgsPoint>& points ) const;
 
-    double computePolygonFlatArea( const QList<QgsPoint>& points );
+    double computePolygonFlatArea( const QList<QgsPoint>& points ) const;
 
     /**
       precalculates some values
@@ -169,8 +168,12 @@ class CORE_EXPORT QgsDistanceArea
 
     // utility functions for polygon area measurement
 
-    double getQ( double x );
-    double getQbar( double x );
+    double getQ( double x ) const;
+    double getQbar( double x ) const;
+
+    double measure( const QgsAbstractGeometryV2* geomV2 ) const;
+    double measureLine( const QgsCurveV2* curve ) const;
+    double measurePolygon( const QgsCurveV2* curve ) const;
 
     // temporary area measurement stuff
 
