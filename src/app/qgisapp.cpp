@@ -2460,9 +2460,13 @@ void QgisApp::initLayerTreeView()
   toolbarLayout->addWidget( btnRemoveItem );
   toolbarLayout->addStretch();
 
+  QWidget* layerTreeToolbar = new QWidget();
+  layerTreeToolbar->setLayout( toolbarLayout );
+  layerTreeToolbar->setObjectName( "layerTreeToolbar" );
+
   QVBoxLayout* vboxLayout = new QVBoxLayout;
   vboxLayout->setMargin( 0 );
-  vboxLayout->addLayout( toolbarLayout );
+  vboxLayout->addWidget( layerTreeToolbar );
   vboxLayout->addWidget( mLayerTreeView );
 
   QWidget* w = new QWidget;
