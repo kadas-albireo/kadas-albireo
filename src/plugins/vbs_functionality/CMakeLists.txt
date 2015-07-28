@@ -1,8 +1,7 @@
-
 ########################################################
 # Files
 
-SET (coordinatedisplay_SRCS
+SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
   qgsvbscoordinatedisplayer.cpp
   qgsvbscoordinateconverter.cpp
@@ -11,7 +10,7 @@ SET (coordinatedisplay_SRCS
   utils/qgsvbslltoutm.h
 )
 
-SET (coordinatedisplay_HDRS
+SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
@@ -19,42 +18,39 @@ SET (coordinatedisplay_HDRS
   utils/qgsvbslltoutm.cpp
 )
 
-SET (coordinatedisplay_MOC_HDRS
+SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscoordinatedisplayer.h
   qgsvbscrsselection.h
 )
 
-SET (coordinatedisplay_UIS
+SET (vbsfunctionality_UIS
 )
 
-SET (coordinatedisplay_RCCS
+SET (vbsfunctionality_RCCS
   qgsvbsfunctionality.qrc
 )
 
 ########################################################
 # Build
 
-QT4_WRAP_UI (coordinatedisplay_UIS_H  ${coordinatedisplay_UIS})
+QT4_WRAP_UI (vbsfunctionality_UIS_H  ${vbsfunctionality_UIS})
 
-QT4_WRAP_CPP (coordinatedisplay_MOC_SRCS  ${coordinatedisplay_MOC_HDRS})
+QT4_WRAP_CPP (vbsfunctionality_MOC_SRCS  ${vbsfunctionality_MOC_HDRS})
 
-QT4_ADD_RESOURCES(coordinatedisplay_RCC_SRCS ${coordinatedisplay_RCCS})
+QT4_ADD_RESOURCES(vbsfunctionality_RCC_SRCS ${vbsfunctionality_RCCS})
 
-ADD_LIBRARY (coordinatedisplay   MODULE ${coordinatedisplay_SRCS} ${coordinatedisplay_HDRS} ${coordinatedisplay_MOC_SRCS} ${coordinatedisplay_RCC_SRCS} ${coordinatedisplay_UIS_H})
+ADD_LIBRARY (vbsfunctionality   MODULE ${vbsfunctionality_SRCS} ${vbsfunctionality_HDRS} ${vbsfunctionality_MOC_SRCS} ${vbsfunctionality_RCC_SRCS} ${vbsfunctionality_UIS_H})
 
 INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
      ${CMAKE_BINARY_DIR}/src/ui
-     ${GEOS_INCLUDE_DIR}
-     ${GDAL_INCLUDE_DIR}
      ../../core
-     ../../core/symbology-ng
      ../../gui
-     ..
+     ../
 )
 
-TARGET_LINK_LIBRARIES(coordinatedisplay
+TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
 )
@@ -62,7 +58,7 @@ TARGET_LINK_LIBRARIES(coordinatedisplay
 ########################################################
 # Install
 
-INSTALL(TARGETS coordinatedisplay
+INSTALL(TARGETS vbsfunctionality
   RUNTIME DESTINATION ${QGIS_PLUGIN_DIR}
   LIBRARY DESTINATION ${QGIS_PLUGIN_DIR})
 
