@@ -45,6 +45,9 @@ void QgsVBSFunctionality::initGui()
   mMapToolPinAnnotation->setAction( mActionPinAnnotation );
   connect( mActionPinAnnotation, SIGNAL( triggered() ), this, SLOT( activateMapToolPinAnnotation() ) );
   mQGisIface->pluginToolBar()->addAction( mActionPinAnnotation );
+
+  QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
+  if ( layerTreeToolbar ) layerTreeToolbar->setVisible( false );
 }
 
 void QgsVBSFunctionality::unload()
@@ -57,6 +60,9 @@ void QgsVBSFunctionality::unload()
   mActionPinAnnotation = 0;
   delete mMapToolPinAnnotation;
   mMapToolPinAnnotation = 0;
+
+  QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
+  if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
 }
 
 void QgsVBSFunctionality::activateMapToolPinAnnotation()
