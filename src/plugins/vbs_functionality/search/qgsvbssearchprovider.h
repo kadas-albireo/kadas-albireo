@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.h                                                  *
+ *  qgsvbssearchprovider.h                                                 *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,40 +15,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSFUNCTIONALITY_H
-#define QGSVBSFUNCTIONALITY_H
-
-#include "qgisplugin.h"
+#ifndef QGSVBSSEARCHPROVIDER_H
+#define QGSVBSSEARCHPROVIDER_H
 
 #include <QObject>
+#include "qgspoint.h"
+#include "qgsrectangle.h"
+#include "qgscoordinatereferencesystem.h"
 
-class QAction;
-class QToolBar;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSCrsSelection;
-class QgsVBSMapToolPinAnnotation;
-class QgsVBSSearchBox;
-
-class QgsVBSFunctionality: public QObject, public QgisPlugin
+class QgsVBSSearchProvider : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSFunctionality( QgisInterface * theInterface );
+    struct SearchResult
+    {
+      QString category;
+      QString text;
+      QgsPoint pos;
+      QgsRectangle bbox;
+      QgsCoordinateReferenceSystem crs;
+      double zoomScale;
+    };
 
-    void initGui();
-    void unload();
+    virtual ~QgsVBSSearchProvider() {}
+    virtual void startSearch( const QString& searchtext ) = 0;
+    virtual void cancelSearch() {}
 
-  private:
-    QgisInterface* mQGisIface;
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
-    QgsVBSCrsSelection* mCrsSelection;
-    QAction* mActionPinAnnotation;
-    QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
-    QToolBar* mSearchToolbar;
-    QgsVBSSearchBox* mSearchBox;
-
-  private slots:
-    void activateMapToolPinAnnotation();
+  signals:
+    void searchResultFound( QgsVBSSearchProvider::SearchResult result );
+    void searchFinished();
 };
 
-#endif // QGSVBSFUNCTIONALITY_H
+Q_DECLARE_METATYPE( QgsVBSSearchProvider::SearchResult )
+
+#endif // QGSVBSSEARCHPROVIDER_H

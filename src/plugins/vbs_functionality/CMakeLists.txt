@@ -1,3 +1,5 @@
+FIND_PACKAGE(QJSON REQUIRED)
+
 ########################################################
 # Files
 
@@ -7,6 +9,9 @@ SET (vbsfunctionality_SRCS
   qgsvbscoordinateconverter.cpp
   qgsvbscrsselection.cpp
   maptools/qgsvbsmaptoolpinannotation.cpp
+  search/qgsvbssearchbox.cpp
+  search/qgsvbscoosearchprovider.cpp
+  search/qgsvbslocsearchprovider.cpp
   utils/qgsvbslltoutm.h
 )
 
@@ -21,6 +26,10 @@ SET (vbsfunctionality_HDRS
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscoordinatedisplayer.h
+  search/qgsvbssearchbox.h
+  search/qgsvbssearchprovider.h
+  search/qgsvbscoosearchprovider.h
+  search/qgsvbslocsearchprovider.h
   qgsvbscrsselection.h
 )
 
@@ -45,6 +54,7 @@ ADD_LIBRARY (vbsfunctionality   MODULE ${vbsfunctionality_SRCS} ${vbsfunctionali
 INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
      ${CMAKE_BINARY_DIR}/src/ui
+     ${QJSON_INCLUDE_DIR}
      ../../core
      ../../gui
      ../
@@ -53,6 +63,7 @@ INCLUDE_DIRECTORIES(
 TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
+  ${QJSON_LIBRARIES}
 )
 
 ########################################################

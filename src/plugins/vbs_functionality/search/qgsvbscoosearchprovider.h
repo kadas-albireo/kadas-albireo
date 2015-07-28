@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.h                                                  *
+ *  qgsvbscoosearchprovider.h                                              *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,40 +15,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSFUNCTIONALITY_H
-#define QGSVBSFUNCTIONALITY_H
+#ifndef QGSVBSCOOSEARCHPROVIDER_HPP
+#define QGSVBSCOOSEARCHPROVIDER_HPP
 
-#include "qgisplugin.h"
+#include "qgsvbssearchprovider.h"
+#include <QRegExp>
 
-#include <QObject>
-
-class QAction;
-class QToolBar;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSCrsSelection;
-class QgsVBSMapToolPinAnnotation;
-class QgsVBSSearchBox;
-
-class QgsVBSFunctionality: public QObject, public QgisPlugin
+class QgsVBSCooSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSFunctionality( QgisInterface * theInterface );
-
-    void initGui();
-    void unload();
+    QgsVBSCooSearchProvider();
+    void startSearch( const QString& searchtext ) override;
 
   private:
-    QgisInterface* mQGisIface;
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
-    QgsVBSCrsSelection* mCrsSelection;
-    QAction* mActionPinAnnotation;
-    QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
-    QToolBar* mSearchToolbar;
-    QgsVBSSearchBox* mSearchBox;
+    QRegExp mPatLVDD;
+    QRegExp mPatDM;
+    QRegExp mPatDMS;
+    QRegExp mPatUTM;
+    QRegExp mPatUTM2;
+    QRegExp mPatMGRS;
 
-  private slots:
-    void activateMapToolPinAnnotation();
+    static const QString sCategoryName;
 };
 
-#endif // QGSVBSFUNCTIONALITY_H
+#endif // QGSVBSCOOSEARCHPROVIDER_HPP

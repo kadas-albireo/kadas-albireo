@@ -21,6 +21,7 @@
 #include "qgsvbscrsselection.h"
 #include "qgisinterface.h"
 #include "maptools/qgsvbsmaptoolpinannotation.h"
+#include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
 #include <QAction>
 #include <QToolBar>
@@ -32,6 +33,8 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mCrsSelection( 0 )
     , mActionPinAnnotation( 0 )
     , mMapToolPinAnnotation( 0 )
+    , mSearchToolbar( 0 )
+    , mSearchBox( 0 )
 {
 }
 
@@ -45,6 +48,10 @@ void QgsVBSFunctionality::initGui()
   mMapToolPinAnnotation->setAction( mActionPinAnnotation );
   connect( mActionPinAnnotation, SIGNAL( triggered() ), this, SLOT( activateMapToolPinAnnotation() ) );
   mQGisIface->pluginToolBar()->addAction( mActionPinAnnotation );
+
+  mSearchToolbar = mQGisIface->addToolBar( "vbsSearchToolbar" );
+  mSearchBox = new QgsVBSSearchBox( mQGisIface, mSearchToolbar );
+  mSearchToolbar->addWidget( mSearchBox );
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( false );
@@ -60,6 +67,9 @@ void QgsVBSFunctionality::unload()
   mActionPinAnnotation = 0;
   delete mMapToolPinAnnotation;
   mMapToolPinAnnotation = 0;
+  delete mSearchToolbar;
+  mSearchToolbar = 0;
+  mSearchBox = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );

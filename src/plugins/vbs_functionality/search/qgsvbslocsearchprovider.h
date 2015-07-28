@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.h                                                  *
+ *  qgsvbslocsearchprovider.h                                              *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,40 +15,39 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSFUNCTIONALITY_H
-#define QGSVBSFUNCTIONALITY_H
 
-#include "qgisplugin.h"
+#ifndef QGSVBSLOCSEARCHPROVIDER_HPP
+#define QGSVBSLOCSEARCHPROVIDER_HPP
 
-#include <QObject>
+#include "qgsvbssearchprovider.h"
+#include <QMap>
+#include <QRegExp>
+#include <QTimer>
 
-class QAction;
-class QToolBar;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSCrsSelection;
-class QgsVBSMapToolPinAnnotation;
-class QgsVBSSearchBox;
+class QNetworkAccessManager;
+class QNetworkReply;
 
-class QgsVBSFunctionality: public QObject, public QgisPlugin
+class QgsVBSLocSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSFunctionality( QgisInterface * theInterface );
-
-    void initGui();
-    void unload();
+    QgsVBSLocSearchProvider();
+    void startSearch( const QString& searchtext ) override;
+    void cancelSearch() override;
 
   private:
-    QgisInterface* mQGisIface;
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
-    QgsVBSCrsSelection* mCrsSelection;
-    QAction* mActionPinAnnotation;
-    QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
-    QToolBar* mSearchToolbar;
-    QgsVBSSearchBox* mSearchBox;
+    static const int sSearchTimeout;
+    static const int sResultCountLimit;
+    static const QByteArray sGeoAdminUrl;
+    static const QByteArray sGeoAdminReferrer;
+
+    QNetworkReply* mNetReply;
+    QMap<QString, QString> mCategoryMap;
+    QRegExp mPatBox;
+    QTimer mTimeoutTimer;
 
   private slots:
-    void activateMapToolPinAnnotation();
+    void replyFinished();
 };
 
-#endif // QGSVBSFUNCTIONALITY_H
+#endif // QGSVBSLOCSEARCHPROVIDER_HPP
