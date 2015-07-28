@@ -66,6 +66,13 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
 
+
+      if ( rlayer || vlayer )
+      {
+        menu->addAction( actions->actionTransparency( mCanvas, menu ) );
+        menu->addSeparator();
+      }
+
       menu->addAction( actions->actionZoomToLayer( mCanvas, menu ) );
       menu->addAction( actions->actionShowInOverview( menu ) );
 
