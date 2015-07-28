@@ -8,6 +8,7 @@ SET (coordinatedisplay_SRCS
   qgsvbscoordinateconverter.cpp
   qgsvbscrsselection.cpp
   maptools/qgsvbsmaptoolpinannotation.cpp
+  utils/qgsvbslltoutm.h
 )
 
 SET (coordinatedisplay_HDRS
@@ -15,6 +16,7 @@ SET (coordinatedisplay_HDRS
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
   maptools/qgsvbsmaptoolpinannotation.h
+  utils/qgsvbslltoutm.cpp
 )
 
 SET (coordinatedisplay_MOC_HDRS
