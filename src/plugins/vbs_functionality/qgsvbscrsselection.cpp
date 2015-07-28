@@ -30,7 +30,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
     : QWidget( parent ), mIface( iface )
 {
   mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mapcoordinates.png" ) );
+  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mapcoordinates.svg" ) );
 
   mCrsSelectionCombo = new QComboBox( this );
   mCrsSelectionCombo->addItem( "CH1903 LV03", "EPSG:21781" );

@@ -23,7 +23,7 @@ static const QString sDescription = QObject::tr( "VBS Functionality" );
 static const QString sCategory = QObject::tr( "User Interface" );
 static const QString sPluginVersion = QObject::tr( "Version 0.1" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
-static const QString sPluginIcon = ":/vbsfunctionality/icons/icon.png";
+static const QString sPluginIcon = ":/vbsfunctionality/icons/icon.svg";
 
 //////////////////////////////////////////////////////////////////////////
 //

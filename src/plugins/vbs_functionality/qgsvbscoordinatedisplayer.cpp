@@ -48,7 +48,7 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgisInterface *iface, QWid
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mousecoordinates.png" ) );
+  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mousecoordinates.svg" ) );
 
   mCRSSelectionCombo = new QComboBox( this );
   mCRSSelectionCombo->addItem( "LV03", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:21781", mCRSSelectionCombo ) ) );

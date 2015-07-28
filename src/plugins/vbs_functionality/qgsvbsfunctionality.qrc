@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/vbsfunctionality">
-        <file>icons/icon.png</file>
-        <file>icons/mousecoordinates.png</file>
-        <file>icons/mapcoordinates.png</file>
+        <file>icons/icon.svg</file>
+        <file>icons/mousecoordinates.svg</file>
+        <file>icons/mapcoordinates.svg</file>
         <file>icons/pin.svg</file>
     </qresource>
 </RCC>
