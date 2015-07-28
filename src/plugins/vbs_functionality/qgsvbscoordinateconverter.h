@@ -62,20 +62,8 @@ class QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
     QgsUTMCoordinateConverter( QObject* parent );
     ~QgsUTMCoordinateConverter();
     QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
-  private:
-    QgsCoordinateReferenceSystem* mWgs84Srs;
-
   protected:
-    struct UTMCoo
-    {
-      int easting;
-      int northing;
-      int zoneNumber;
-      QString zoneLetter;
-    };
-
-    UTMCoo getUTMCoordinate( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const;
-    QString getHemisphereLetter( double lat ) const;
+    QgsCoordinateReferenceSystem* mWgs84Srs;
 };
 
 class QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
@@ -83,13 +71,6 @@ class QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
   public:
     QgsMGRSCoordinateConverter( QObject* parent ) : QgsUTMCoordinateConverter( parent ) {}
     QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
-
-  private:
-    static const int NUM_100K_SETS;
-    static const QString SET_ORIGIN_COLUMN_LETTERS;
-    static const QString SET_ORIGIN_ROW_LETTERS;
-
-    QString getLetter100kID( int column, int row, int parm ) const;
 };
 
 #endif // QGSVBSCOORDINATECONVERTER_H
