@@ -16,34 +16,35 @@
  ***************************************************************************/
 
 #include "qgsvbscrsselection.h"
+#include "qgsprojectionselectionwidget.h"
+#include "qgsgenericprojectionselector.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
 #include "qgisinterface.h"
-#include <QComboBox>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMainWindow>
+#include <QMenu>
 #include <QStatusBar>
 #include <QToolButton>
 
 QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
-    : QWidget( parent ), mIface( iface )
+    : QToolButton( parent ), mIface( iface )
 {
-  mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mapcoordinates.svg" ) );
+  QMenu* crsSelectionMenu = new QMenu( this );
+  crsSelectionMenu->addAction( QgsCoordinateReferenceSystem( "EPSG:21781" ).description(), this, SLOT( setMapCrs() ) )->setData( "EPSG:21781" );
+  crsSelectionMenu->addAction( QgsCoordinateReferenceSystem( "EPSG:2056" ).description(), this, SLOT( setMapCrs() ) )->setData( "EPSG:2056" );
+  crsSelectionMenu->addAction( QgsCoordinateReferenceSystem( "EPSG:4326" ).description(), this, SLOT( setMapCrs() ) )->setData( "EPSG:4326" );
+  crsSelectionMenu->addAction( QgsCoordinateReferenceSystem( "EPSG:3857" ).description(), this, SLOT( setMapCrs() ) )->setData( "EPSG:3857" );
+  crsSelectionMenu->addSeparator();
+  crsSelectionMenu->addAction( tr( "More..." ), this, SLOT( selectMapCrs() ) );
 
-  mCrsSelectionCombo = new QComboBox( this );
-  mCrsSelectionCombo->addItem( "CH1903 LV03", "EPSG:21781" );
-  mCrsSelectionCombo->addItem( "CH1903+ LV95", "EPSG:2056" );
-  mCrsSelectionCombo->addItem( "WGS84", "EPSG:4326" );
-  mCrsSelectionCombo->addItem( "WGS Web Mercator", "EPSG:3857" );
-  mCrsSelectionCombo->setCurrentIndex( 0 );
-
-  QHBoxLayout* layout = new QHBoxLayout( this );
-  layout->setContentsMargins( 0, 0, 0, 0 );
-  layout->setSpacing( 1 );
-  layout->addWidget( mIconLabel );
-  layout->addWidget( mCrsSelectionCombo );
+  setIcon( QIcon( ":/vbsfunctionality/icons/mapcoordinates.svg" ) );
+  setToolButtonStyle( Qt::ToolButtonTextBesideIcon );
+  setMenu( crsSelectionMenu );
+  setPopupMode( QToolButton::InstantPopup );
 
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
   Q_ASSERT( mainWindow );
@@ -65,10 +66,15 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
   if ( otfProjButton )
     otfProjButton->setVisible( false );
 
-  connect( mCrsSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setMapCrs( int ) ) );
-  connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsCombo() ) );
+  QgsCoordinateReferenceSystem crs( "EPSG:4326" );
+  mIface->mapCanvas()->setCrsTransformEnabled( true );
+  mIface->mapCanvas()->setDestinationCrs( crs );
+  setText( crs.description() );
+
+  connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
   connect( mIface->mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( forceCrsTransformEnabled() ) );
   connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsCombo() ) );
+
 }
 
 QgsVBSCrsSelection::~QgsVBSCrsSelection()
@@ -89,21 +95,31 @@ void QgsVBSCrsSelection::forceCrsTransformEnabled()
   mIface->mapCanvas()->setCrsTransformEnabled( true );
 }
 
-void QgsVBSCrsSelection::syncCrsCombo()
+void QgsVBSCrsSelection::syncCrsButton()
 {
   QString authid = mIface->mapCanvas()->mapSettings().destinationCrs().authid();
-  int idx = qMax( 0, mCrsSelectionCombo->findData( authid ) );
-  mCrsSelectionCombo->blockSignals( true );
-  mCrsSelectionCombo->setCurrentIndex( idx );
-  mCrsSelectionCombo->blockSignals( false );
-  setMapCrs( mCrsSelectionCombo->currentIndex() );
+  setText( authid );
 }
 
-void QgsVBSCrsSelection::setMapCrs( int index )
+void QgsVBSCrsSelection::selectMapCrs()
 {
-  QString crsid = mCrsSelectionCombo->itemData( index ).toString();
+  QgsProjectionSelectionWidget projSelector;
+  projSelector.dialog()->setSelectedAuthId( mIface->mapCanvas()->mapSettings().destinationCrs().authid() );
+  if ( projSelector.dialog()->exec() != QDialog::Accepted )
+  {
+    return;
+  }
+  QgsCoordinateReferenceSystem crs( projSelector.dialog()->selectedAuthId() );
   mIface->mapCanvas()->setCrsTransformEnabled( true );
-  QgsCoordinateReferenceSystem crs = QgsCoordinateReferenceSystem( crsid );
-  Q_ASSERT( crs.isValid() );
   mIface->mapCanvas()->setDestinationCrs( crs );
+  setText( crs.description() );
+}
+
+void QgsVBSCrsSelection::setMapCrs()
+{
+  QAction* action = qobject_cast<QAction*>( QObject::sender() );
+  QgsCoordinateReferenceSystem crs( action->data().toString() );
+  mIface->mapCanvas()->setCrsTransformEnabled( true );
+  mIface->mapCanvas()->setDestinationCrs( crs );
+  setText( crs.description() );
 }

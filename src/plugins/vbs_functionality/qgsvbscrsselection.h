@@ -18,13 +18,11 @@
 #ifndef QGSVBSCRSSELECTION_H
 #define QGSVBSCRSSELECTION_H
 
-#include <QWidget>
+#include <QToolButton>
 
 class QgisInterface;
-class QComboBox;
-class QLabel;
 
-class QgsVBSCrsSelection : public QWidget
+class QgsVBSCrsSelection : public QToolButton
 {
     Q_OBJECT
   public:
@@ -33,13 +31,12 @@ class QgsVBSCrsSelection : public QWidget
 
   private:
     QgisInterface* mIface;
-    QLabel* mIconLabel;
-    QComboBox* mCrsSelectionCombo;
 
   private slots:
     void forceCrsTransformEnabled();
-    void syncCrsCombo();
-    void setMapCrs( int index );
+    void syncCrsButton();
+    void setMapCrs();
+    void selectMapCrs();
 };
 
 #endif // QGSVBSCRSSELECTION_H
