@@ -96,16 +96,16 @@ void QgsVBSLocSearchProvider::replyFinished()
       QgsDebugMsg( "Box RegEx did not match " + itemAttrsMap["geom_st_box2d"].toString() );
       continue;
     }
+    QString origin = itemAttrsMap["origin"].toString();
 
     SearchResult searchResult;
     searchResult.bbox = QgsRectangle( mPatBox.cap( 1 ).toDouble(), mPatBox.cap( 2 ).toDouble(),
                                       mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
+    // When bbox is empty, fallback to pos + zoomScale is used
+    searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
+    searchResult.zoomScale = 1000;
 
-
-    searchResult.category = itemAttrsMap["origin"].toString();
-    if ( mCategoryMap.contains( searchResult.category ) )
-      searchResult.category = mCategoryMap[searchResult.category];
-
+    searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin] : origin;
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );

@@ -22,6 +22,7 @@
 #include "qgsvbssearchprovider.h"
 #include "qgsvbscoosearchprovider.h"
 #include "qgsvbslocsearchprovider.h"
+#include "qgsrubberband.h"
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QShortcut>
@@ -38,6 +39,7 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
     : QLineEdit( parent ), mIface( iface )
 {
   mNumRunningProviders = 0;
+  mRubberBand = 0;
 
   mPopup.setColumnCount( 1 );
   mPopup.setEditTriggers( QTreeWidget::NoEditTriggers );
@@ -197,6 +199,9 @@ void QgsVBSSearchBox::startSearch()
 
   m_searchButton.setVisible( false );
   m_clearButton.setVisible( true );
+  mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+  delete mRubberBand;
+  mRubberBand = 0;
 
   mPopup.setUpdatesEnabled( false );
   mPopup.clear();
@@ -217,6 +222,9 @@ for ( QgsVBSSearchProvider* provider : mSearchProviders )
   }
   clear();
   setSearchIcon();
+  mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+  delete mRubberBand;
+  mRubberBand = 0;
 }
 
 void QgsVBSSearchBox::searchProviderFinished()
@@ -303,6 +311,14 @@ void QgsVBSSearchBox::resultActivated()
     if ( result.bbox.isEmpty() )
     {
       zoomExtent = mIface->mapCanvas()->mapSettings().computeExtentForScale( result.pos, result.zoomScale, result.crs );
+      mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Point );
+      mRubberBand->setColor( Qt::yellow );
+      mRubberBand->setBorderColor( Qt::red );
+      mRubberBand->setIcon( QgsRubberBand::ICON_CIRCLE );
+      mRubberBand->setIconSize( 15 );
+      mRubberBand->setWidth( 4 );
+      QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
+      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
     }
     else
     {

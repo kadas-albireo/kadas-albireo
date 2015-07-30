@@ -30,6 +30,7 @@
 class QgsCoordinateReferenceSystem;
 class QgsPoint;
 class QgsRectangle;
+class QgsRubberBand;
 
 class QgsVBSSearchBox : public QLineEdit
 {
@@ -50,6 +51,7 @@ class QgsVBSSearchBox : public QLineEdit
     static const int sResultDataRole;
 
     QgisInterface* mIface;
+    QgsRubberBand* mRubberBand;
     QList<QgsVBSSearchProvider*> mSearchProviders;
     QTimer mTimer;
     QToolButton m_searchButton;
