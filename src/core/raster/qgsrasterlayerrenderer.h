@@ -46,6 +46,7 @@ class QgsRasterLayerRenderer : public QgsMapLayerRenderer
     QgsRasterViewPort* mRasterViewPort;
 
     QgsRasterPipe* mPipe;
+    QgsRenderContext* mRenderContext;
 };
 
 #endif // QGSRASTERLAYERRENDERER_H

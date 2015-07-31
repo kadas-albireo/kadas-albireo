@@ -30,6 +30,7 @@ QgsRasterLayerRenderer::QgsRasterLayerRenderer( QgsRasterLayer* layer, QgsRender
   mPainter = rendererContext.painter();
   const QgsMapToPixel& theQgsMapToPixel = rendererContext.mapToPixel();
   mMapToPixel = &theQgsMapToPixel;
+  mRenderContext = &rendererContext;
 
   QgsMapToPixel mapToPixel = theQgsMapToPixel;
   if ( mapToPixel.mapRotation() )
@@ -209,7 +210,19 @@ bool QgsRasterLayerRenderer::render()
   // Drawer to pipe?
   QgsRasterIterator iterator( mPipe->last() );
   QgsRasterDrawer drawer( &iterator );
+
+  QgsRasterDataProvider* provider = mPipe->provider();
+  if ( provider )
+  {
+    QObject::connect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
+  }
+
   drawer.draw( mPainter, mRasterViewPort, mMapToPixel );
+
+  if ( provider )
+  {
+    QObject::disconnect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
+  }
 
   QgsDebugMsg( QString( "total raster draw time (ms):     %1" ).arg( time.elapsed(), 5 ) );
 
