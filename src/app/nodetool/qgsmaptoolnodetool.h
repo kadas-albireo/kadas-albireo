@@ -108,6 +108,9 @@ class QgsMapToolNodeTool: public QgsMapToolEdit
          @return 0 in case of success*/
     int insertSegmentVerticesForSnap( const QList<QgsSnappingResult>& snapResults, QgsVectorLayer* editedLayer );
 
+    void selectPolygon( const QgsPoint& layerPoint );
+    void selectFeature( QgsFeatureId id );
+
     /** Snapper object that reads the settings from project and option
     and applies it to the map canvas*/
     QgsMapCanvasSnapper mSnapper;

@@ -182,24 +182,25 @@ void QgsMapToolNodeTool::canvasPressEvent( QMouseEvent * e )
       return;
 
     mSelectAnother = false;
-    mSnapper.snapToCurrentLayer( e->pos(), snapResults, QgsSnapper::SnapToVertexAndSegment, -1 );
 
-    if ( snapResults.size() < 1 )
+    if ( vlayer->geometryType() == QGis::Polygon )
     {
-      emit messageEmitted( tr( "could not snap to a segment on the current layer." ) );
-      return;
+      selectPolygon( toLayerCoordinates( vlayer, e->pos() ) );
     }
+    else //point/line
+    {
+      mSnapper.snapToCurrentLayer( e->pos(), snapResults, QgsSnapper::SnapToVertexAndSegment, -1 );
 
-    // remove previous warning
-    emit messageDiscarded();
+      if ( snapResults.size() < 1 )
+      {
+        emit messageEmitted( tr( "could not snap to a segment on the current layer." ) );
+        return;
+      }
 
-    mSelectedFeature = new QgsSelectedFeature( snapResults[0].snappedAtGeometry, vlayer, mCanvas );
-    connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( currentLayerChanged( QgsMapLayer* ) ) );
-    connect( mSelectedFeature, SIGNAL( destroyed() ), this, SLOT( selectedFeatureDestroyed() ) );
-    connect( vlayer, SIGNAL( editingStopped() ), this, SLOT( editingToggled() ) );
-    mIsPoint = vlayer->geometryType() == QGis::Point;
-    mNodeEditor = new QgsNodeEditor( vlayer, mSelectedFeature, mCanvas );
-    QgisApp::instance()->addDockWidget( Qt::LeftDockWidgetArea, mNodeEditor );
+      // remove previous warning
+      emit messageDiscarded();
+      selectFeature( snapResults[0].snappedAtGeometry );
+    }
   }
   else
   {
@@ -306,6 +307,11 @@ void QgsMapToolNodeTool::canvasPressEvent( QMouseEvent * e )
             }
           }
         }
+      }
+      else if ( vlayer->geometryType() == QGis::Polygon )
+      {
+        delete mSelectedFeature; mSelectedFeature = 0;
+        selectPolygon( layerCoordPoint );
       }
       else if ( !ctrlModifier )
       {
@@ -621,4 +627,59 @@ int QgsMapToolNodeTool::insertSegmentVerticesForSnap( const QList<QgsSnappingRes
   }
 
   return editedLayer->insertSegmentVerticesForSnap( transformedSnapResults );
+}
+
+void QgsMapToolNodeTool::selectPolygon( const QgsPoint& layerPoint )
+{
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
+  if ( !vlayer || vlayer->geometryType() != QGis::Polygon )
+  {
+    return;
+  }
+
+  QgsGeometry* pointGeom = QgsGeometry::fromPoint( layerPoint );
+
+  double searchRadius = QgsTolerance::vertexSearchRadius( mCanvas->currentLayer(), mCanvas->mapSettings() );
+  QgsRectangle selectRect( layerPoint.x() - searchRadius, layerPoint.y() - searchRadius,
+                           layerPoint.x() + searchRadius, layerPoint.y() + searchRadius );
+  QgsFeatureIterator fit = vlayer->getFeatures( QgsFeatureRequest().setFilterRect( selectRect ) );
+
+  QgsFeature f;
+  double minDist = -1;
+  QgsFeatureId minId = 0;
+  while ( fit.nextFeature( f ) )
+  {
+    if ( f.geometry() )
+    {
+      double currentDist = pointGeom->distance( *( f.geometry() ) );
+      if ( minDist < 0 || currentDist < minDist )
+      {
+        minId = f.id(); minDist = currentDist;
+      }
+    }
+  }
+
+  delete pointGeom;
+
+  if ( minDist >= 0 )
+  {
+    selectFeature( minId );
+  }
+}
+
+void QgsMapToolNodeTool::selectFeature( QgsFeatureId id )
+{
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
+  if ( !vlayer )
+  {
+    return;
+  }
+
+  mSelectedFeature = new QgsSelectedFeature( id, vlayer, mCanvas );
+  connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( currentLayerChanged( QgsMapLayer* ) ) );
+  connect( mSelectedFeature, SIGNAL( destroyed() ), this, SLOT( selectedFeatureDestroyed() ) );
+  connect( vlayer, SIGNAL( editingStopped() ), this, SLOT( editingToggled() ) );
+  mIsPoint = vlayer->geometryType() == QGis::Point;
+  mNodeEditor = new QgsNodeEditor( vlayer, mSelectedFeature, mCanvas );
+  QgisApp::instance()->addDockWidget( Qt::LeftDockWidgetArea, mNodeEditor );
 }
