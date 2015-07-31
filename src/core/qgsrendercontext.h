@@ -18,6 +18,7 @@
 #ifndef QGSRENDERCONTEXT_H
 #define QGSRENDERCONTEXT_H
 
+#include <QObject>
 #include <QColor>
 
 #include "qgscoordinatetransform.h"
@@ -36,11 +37,15 @@ class QgsMapSettings;
  * the conversion ratio between screen and map units, the extents /
  * bounding box to be rendered etc.
  **/
-class CORE_EXPORT QgsRenderContext
+class CORE_EXPORT QgsRenderContext: public QObject
 {
+    Q_OBJECT
   public:
     QgsRenderContext();
     ~QgsRenderContext();
+
+    QgsRenderContext( const QgsRenderContext& ct );
+    QgsRenderContext& operator=( const QgsRenderContext& ct );
 
     //! create initialized QgsRenderContext instance from given QgsMapSettings
     //! @note added in 2.4
@@ -93,7 +98,7 @@ class CORE_EXPORT QgsRenderContext
     void setMapToPixel( const QgsMapToPixel& mtp ) {mMapToPixel = mtp;}
     void setExtent( const QgsRectangle& extent ) {mExtent = extent;}
     void setDrawEditingInformation( bool b ) {mDrawEditingInformation = b;}
-    void setRenderingStopped( bool stopped ) {mRenderingStopped = stopped;}
+    void setRenderingStopped( bool stopped ) {mRenderingStopped = stopped; emit renderingAborted(); }
     void setScaleFactor( double factor ) {mScaleFactor = factor;}
     void setRasterScaleFactor( double factor ) {mRasterScaleFactor = factor;}
     void setRendererScale( double scale ) {mRendererScale = scale;}
@@ -117,6 +122,9 @@ class CORE_EXPORT QgsRenderContext
     //! Added in QGIS v2.4
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const { return mVectorSimplifyMethod; }
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod ) { mVectorSimplifyMethod = simplifyMethod; }
+
+  signals:
+    void renderingAborted();
 
   private:
 

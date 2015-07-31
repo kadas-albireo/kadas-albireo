@@ -555,6 +555,7 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
     emit statusChanged( tr( "Getting map via WMS." ) );
 
     QgsWmsImageDownloadHandler handler( dataSourceUri(), url, mSettings.authorization(), mCachedImage );
+    QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
     handler.downloadBlocking();
 
     //QTime t;
@@ -3188,9 +3189,15 @@ QgsWmsImageDownloadHandler::~QgsWmsImageDownloadHandler()
 
 void QgsWmsImageDownloadHandler::downloadBlocking()
 {
+  QObject::connect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
   mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+  QObject::disconnect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
 
-  Q_ASSERT( mCacheReply == 0 );
+  if ( mCacheReply )
+  {
+    mCacheReply->deleteLater();
+    mCacheReply = 0;
+  }
 }
 
 void QgsWmsImageDownloadHandler::cacheReplyFinished()

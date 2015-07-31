@@ -226,7 +226,7 @@ class CORE_EXPORT QgsRasterDataProvider : public QgsDataProvider, public QgsRast
     virtual QStringList subLayers() const override
     {
       return QStringList();
-    }
+  }
 
     /** \brief Returns the legend rendered as pixmap
      *
@@ -412,6 +412,8 @@ class CORE_EXPORT QgsRasterDataProvider : public QgsDataProvider, public QgsRast
       * Emitted theProgress is in percents (0.0-100.0) */
     void progress( int theType, double theProgress, QString theMessage );
     void progressUpdate( int theProgress );
+    /**Emitted in case readBlock should be canceled*/
+    void requestCanceled();
 
   protected:
     /** Read block of data

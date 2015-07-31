@@ -21,7 +21,7 @@
 #include "qgsmapsettings.h"
 
 QgsRenderContext::QgsRenderContext()
-    : mPainter( 0 ),
+    : QObject( 0 ), mPainter( 0 ),
     mCoordTransform( 0 ),
     mDrawEditingInformation( true ),
     mForceVectorOutput( false ),
@@ -39,6 +39,28 @@ QgsRenderContext::QgsRenderContext()
 
 QgsRenderContext::~QgsRenderContext()
 {
+}
+
+QgsRenderContext::QgsRenderContext( const QgsRenderContext& ct ): QObject( 0 )
+{
+  *this = ct;
+}
+
+QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
+{
+  mPainter = ct.mPainter;
+  mCoordTransform = ct.mCoordTransform;
+  mDrawEditingInformation = ct.mDrawEditingInformation;
+  mExtent = ct.mExtent;
+  mForceVectorOutput = ct.mForceVectorOutput;
+  mMapToPixel = ct.mMapToPixel;
+  mRenderingStopped = ct.mRenderingStopped;
+  mScaleFactor = ct.mScaleFactor;
+  mRasterScaleFactor = ct.mRasterScaleFactor;
+  mRendererScale = ct.mRendererScale;
+  mLabelingEngine = ct.mLabelingEngine;
+  mUseAdvancedEffects = ct.mUseAdvancedEffects;
+  return *this;
 }
 
 QgsRenderContext QgsRenderContext::fromMapSettings( const QgsMapSettings& mapSettings )
