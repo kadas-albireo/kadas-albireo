@@ -549,7 +549,7 @@ void QgsAttributeForm::initPython()
 
     QString form = QString( "%1 = sip.wrapinstance( %2, qgis.gui.QgsAttributeForm )" )
                    .arg( mPyFormVarName )
-                   .arg(( unsigned long ) this );
+                   .arg(( intptr_t ) this );
 
     QgsPythonRunner::run( form );
 

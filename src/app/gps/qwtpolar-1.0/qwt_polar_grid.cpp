@@ -17,11 +17,11 @@
 #include <qwt_round_scale_draw.h>
 #include <qpainter.h>
 #include <qpen.h>
-#include <float.h>
+#include <climits>
 
 static inline bool isClose( double value1, double value2 )
 {
-    return qAbs( value1 - value2 ) < DBL_EPSILON;
+    return qAbs( value1 - value2 ) < std::numeric_limits<double>::epsilon();
 }
 
 class QwtPolarGrid::AxisData

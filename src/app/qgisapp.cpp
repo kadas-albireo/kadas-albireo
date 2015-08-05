@@ -306,7 +306,7 @@ extern "C"
 
 #include "qgspythonutils.h"
 
-#ifndef Q_OS_WIN
+#ifndef __MSC_VER
 #include <dlfcn.h>
 #else
 #include <windows.h>
@@ -10471,7 +10471,7 @@ void QgisApp::tapAndHoldTriggered( QTapAndHoldGesture *gesture )
 }
 #endif
 
-#ifdef Q_OS_WIN
+#ifdef __MSC_VER
 LONG WINAPI QgisApp::qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo )
 {
   QString dumpName = QDir::toNativeSeparators(

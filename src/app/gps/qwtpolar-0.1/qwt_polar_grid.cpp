@@ -8,6 +8,7 @@
 
 #include <cfloat>
 #include <cmath>
+#include <limits>
 #include <qpainter.h>
 #include <qpen.h>
 #include "qwt_painter.h"
@@ -22,7 +23,7 @@
 
 static inline bool isClose( double value1, double value2 )
 {
-  return qwtAbs( value1 - value2 ) < DBL_EPSILON;
+  return qwtAbs( value1 - value2 ) < std::numeric_limits<double>::epsilon();
 }
 
 class QwtPolarGrid::AxisData

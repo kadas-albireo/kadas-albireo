@@ -1194,7 +1194,7 @@ QPointF QgsComposerMouseHandles::alignItem( double& alignX, double& alignY, doub
   //find nearest matches x
   double xItemLeft = left; //new left coordinate of the item
   double xAlignCoord = 0;
-  double smallestDiffX = DBL_MAX;
+  double smallestDiffX = std::numeric_limits<double>::max();
 
   checkNearestItem( left, xAlignCoordinates, smallestDiffX, 0, xItemLeft, xAlignCoord );
   checkNearestItem( midH, xAlignCoordinates, smallestDiffX, ( left - right ) / 2.0, xItemLeft, xAlignCoord );
@@ -1203,7 +1203,7 @@ QPointF QgsComposerMouseHandles::alignItem( double& alignX, double& alignY, doub
   //find nearest matches y
   double yItemTop = top; //new top coordinate of the item
   double yAlignCoord = 0;
-  double smallestDiffY = DBL_MAX;
+  double smallestDiffY = std::numeric_limits<double>::max();
 
   checkNearestItem( top, yAlignCoordinates, smallestDiffY, 0, yItemTop, yAlignCoord );
   checkNearestItem( midV, yAlignCoordinates, smallestDiffY, ( top - bottom ) / 2.0, yItemTop, yAlignCoord );

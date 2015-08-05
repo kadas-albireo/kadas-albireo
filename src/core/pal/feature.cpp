@@ -82,7 +82,7 @@ namespace pal
       , repeatDist( 0.0 )
       , alwaysShow( false )
   {
-    assert( finite( lx ) && finite( ly ) );
+    assert( std::isfinite( lx ) && std::isfinite( ly ) );
 
     uid = new char[strlen( geom_id ) +1];
     strcpy( uid, geom_id );
@@ -162,8 +162,8 @@ namespace pal
           holes[i]->x = new double[holes[i]->nbPoints];
           holes[i]->y = new double[holes[i]->nbPoints];
 
-          holes[i]->xmin = holes[i]->ymin = DBL_MAX;
-          holes[i]->xmax = holes[i]->ymax = -DBL_MAX;
+          holes[i]->xmin = holes[i]->ymin = std::numeric_limits<double>::max();
+          holes[i]->xmax = holes[i]->ymax = -std::numeric_limits<double>::max();
 
           coordSeq = GEOSGeom_getCoordSeq_r( geosctxt, interior );
 
@@ -197,8 +197,8 @@ namespace pal
     coordSeq = GEOSGeom_getCoordSeq_r( geosctxt, geom );
 
     // initialize bounding box
-    xmin = ymin = DBL_MAX;
-    xmax = ymax = -DBL_MAX;
+    xmin = ymin = std::numeric_limits<double>::max();
+    xmax = ymax = -std::numeric_limits<double>::max();
 
     // initialize coordinate arrays
     x = new double[nbPoints];
@@ -1387,7 +1387,7 @@ namespace pal
       if ( outside )
       {
         rnbp--;
-        ( *lPos )[i]->setCost( DBL_MAX ); // infinite cost => do not use
+        ( *lPos )[i]->setCost( std::numeric_limits<double>::max() ); // infinite cost => do not use
       }
       else   // this one is OK
       {

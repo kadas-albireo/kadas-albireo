@@ -16,7 +16,7 @@
 #include <QSettings>
 #include <QTextCodec>
 
-#include <cfloat> // for DBL_MAX
+#include <cfloat> // for std::numeric_limits<double>::max()
 #include <climits>
 
 #include "qgsvectordataprovider.h"
@@ -391,8 +391,8 @@ void QgsVectorDataProvider::fillMinMaxCache()
     }
     else if ( flds[i].type() == QVariant::Double )
     {
-      mCacheMinValues[i] = QVariant( DBL_MAX );
-      mCacheMaxValues[i] = QVariant( -DBL_MAX );
+      mCacheMinValues[i] = QVariant( std::numeric_limits<double>::max() );
+      mCacheMaxValues[i] = QVariant( -std::numeric_limits<double>::max() );
     }
     else
     {

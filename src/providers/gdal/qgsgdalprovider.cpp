@@ -700,7 +700,7 @@ void QgsGdalProvider::readBlock( int theBandNo, QgsRectangle  const & theExtent,
   // Attention: GDALCreateGenImgProjTransformer failes if source data source
   // is not georeferenced, e.g. matrix 0,1,0,0,0,1/-1
   // as a workaround in such case we have to set some different value - really ugly
-  myGeoTransform[0] = DBL_MIN;
+  myGeoTransform[0] = std::numeric_limits<double>::min();
   GDALSetGeoTransform( mGdalDataset, myGeoTransform );
 
   GDALSetGeoTransform( myGdalMemDataset, myMemGeoTransform );

@@ -117,7 +117,7 @@ bool QgsMapRendererJob::reprojectToLayerExtent( const QgsCoordinateTransform* ct
         // E.g. longitude -200 to +160 would be understood as +40 to +160 due to periodicity.
         // We could try to clamp coords to (-180,180) for lon resp. (-90,90) for lat,
         // but this seems like a safer choice.
-        extent = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
+        extent = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
       else
         extent = ct->transformBoundingBox( extent, QgsCoordinateTransform::ReverseTransform );
     }
@@ -126,8 +126,8 @@ bool QgsMapRendererJob::reprojectToLayerExtent( const QgsCoordinateTransform* ct
   {
     Q_UNUSED( cse );
     QgsDebugMsg( "Transform error caught" );
-    extent = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
-    r2     = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
+    extent = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
+    r2     = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
   }
 
   return split;

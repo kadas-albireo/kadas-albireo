@@ -24,7 +24,7 @@
 #include <QMetaType>
 #include <QVariant>
 #include <stdlib.h>
-#include <cfloat>
+#include <limits>
 #include <cmath>
 #include <qnumeric.h>
 
@@ -327,7 +327,7 @@ inline QString qgsDoubleToString( const double &a, const int &precision = 17 )
 //
 // compare two doubles (but allow some difference)
 //
-inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * DBL_EPSILON )
+inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * std::numeric_limits<double>::epsilon() )
 {
   const double diff = a - b;
   return diff > -epsilon && diff <= epsilon;
@@ -355,7 +355,7 @@ bool qgsVariantLessThan( const QVariant& lhs, const QVariant& rhs );
 
 bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs );
 
-QString qgsVsiPrefix( QString path );
+QString CORE_EXPORT qgsVsiPrefix( QString path );
 
 /** Allocates size bytes and returns a pointer to the allocated  memory.
     Works like C malloc() but prints debug message by QgsLogger if allocation fails.

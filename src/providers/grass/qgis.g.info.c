@@ -306,8 +306,8 @@ int main( int argc, char **argv )
       int row, col;
       void *ptr;
       double val;
-      double min = DBL_MAX;
-      double max = -DBL_MAX;
+      double min = std::numeric_limits<double>::max();
+      double max = -std::numeric_limits<double>::max();
       double sum = 0; // sum of values
       int count = 0; // count of non null values
       double mean = 0;

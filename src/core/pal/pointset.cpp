@@ -55,10 +55,10 @@ namespace pal
   PointSet::PointSet()
       : holeOf( NULL )
       , parent( NULL )
-      , xmin( DBL_MAX )
-      , xmax( -DBL_MAX )
-      , ymin( DBL_MAX )
-      , ymax( -DBL_MAX )
+      , xmin( std::numeric_limits<double>::max() )
+      , xmax( -std::numeric_limits<double>::max() )
+      , ymin( std::numeric_limits<double>::max() )
+      , ymax( -std::numeric_limits<double>::max() )
   {
     nbPoints = cHullSize =  0;
     x = NULL;
@@ -71,10 +71,10 @@ namespace pal
       : cHullSize( 0 )
       , holeOf( NULL )
       , parent( NULL )
-      , xmin( DBL_MAX )
-      , xmax( -DBL_MAX )
-      , ymin( DBL_MAX )
-      , ymax( -DBL_MAX )
+      , xmin( std::numeric_limits<double>::max() )
+      , xmax( -std::numeric_limits<double>::max() )
+      , ymin( std::numeric_limits<double>::max() )
+      , ymax( -std::numeric_limits<double>::max() )
   {
     this->nbPoints = nbPoints;
     this->x = new double[nbPoints];
@@ -109,10 +109,10 @@ namespace pal
 
   PointSet::PointSet( PointSet &ps )
       : parent( 0 )
-      , xmin( DBL_MAX )
-      , xmax( -DBL_MAX )
-      , ymin( DBL_MAX )
-      , ymax( -DBL_MAX )
+      , xmin( std::numeric_limits<double>::max() )
+      , xmax( -std::numeric_limits<double>::max() )
+      , ymin( std::numeric_limits<double>::max() )
+      , ymax( -std::numeric_limits<double>::max() )
   {
     int i;
 
@@ -380,7 +380,7 @@ namespace pal
         std::cout << "Hole: " << cHull[holeS] << " -> " << cHull[holeE] << std::endl;
         std::cout << "iterate from " << ( cHull[holeE] + 1 ) % nbp << "   to " << ( cHull[holeS] - 1 + nbp ) % nbp << std::endl;
 #endif
-        c = DBL_MAX;
+        c = std::numeric_limits<double>::max();
 
 
         // iterate on all shape points except points which are in the hole
@@ -640,17 +640,17 @@ namespace pal
     double width;
     double length;
 
-    double best_area = DBL_MAX;
+    double best_area = std::numeric_limits<double>::max();
     double best_alpha = -1;
     double best_bb[16];
     double best_length = 0;
     double best_width = 0;
 
 
-    bbox[0] =   DBL_MAX;
-    bbox[1] =   DBL_MAX;
-    bbox[2] = - DBL_MAX;
-    bbox[3] = - DBL_MAX;
+    bbox[0] =   std::numeric_limits<double>::max();
+    bbox[1] =   std::numeric_limits<double>::max();
+    bbox[2] = - std::numeric_limits<double>::max();
+    bbox[3] = - std::numeric_limits<double>::max();
 
 #ifdef _DEBUG_
     std::cout << "Compute_chull_bbox" << std::endl;
@@ -711,7 +711,7 @@ namespace pal
 
         alpha_seg = (( i / 4 > 0 ? ( i / 4 ) - 1 : 3 ) ) * M_PI / 2 + alpha;
 
-        best_cp = DBL_MAX;
+        best_cp = std::numeric_limits<double>::max();
         for ( j = 0; j < nbPoints; j++ )
         {
           cp = cross_product( bb[i+2], bb[i+3], bb[i], bb[i+1], x[cHull[j]], y[cHull[j]] );
@@ -822,7 +822,7 @@ namespace pal
     // Compute references points
     for ( i = 0; i < 8; i++ )
     {
-      dist[i] = DBL_MAX;
+      dist[i] = std::numeric_limits<double>::max();
       ok[i] = false;
       rpx[i] = px;
       rpy[i] = py;
@@ -922,7 +922,7 @@ namespace pal
     int a, b;
     int nbP = ( type == GEOS_POLYGON ? nbPoints : nbPoints - 1 );
 
-    double best_dist = DBL_MAX;
+    double best_dist = std::numeric_limits<double>::max();
     double d;
 
     for ( a = 0; a < nbP; a++ )

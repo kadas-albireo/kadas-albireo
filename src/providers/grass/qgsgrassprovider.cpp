@@ -555,8 +555,8 @@ void QgsGrassProvider::loadAttributes( GLAYER &layer )
         // Read columns' description
         for ( int i = 0; i < layer.nColumns; i++ )
         {
-          layer.minmax[i][0] = DBL_MAX;
-          layer.minmax[i][1] = -DBL_MAX;
+          layer.minmax[i][0] = std::numeric_limits<double>::max();
+          layer.minmax[i][1] = -std::numeric_limits<double>::max();
 
           dbColumn *column = db_get_table_column( databaseTable, i );
 
