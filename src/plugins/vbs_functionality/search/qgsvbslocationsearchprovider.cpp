@@ -92,8 +92,14 @@ void QgsVBSLocationSearchProvider::replyFinished()
     return;
   }
 
-  QVariantMap result = QJson::Parser().parse( mNetReply ).toMap();
-  foreach ( const QVariant& item, result["results"].toList() )
+  QByteArray replyText = mNetReply->readAll();
+  QJson::Parser parser;
+  QVariant result = parser.parse( replyText );
+  if ( result.isNull() )
+  {
+    QgsDebugMsg( QString( "Error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
+  }
+  foreach ( const QVariant& item, result.toMap()["results"].toList() )
   {
     QVariantMap itemMap = item.toMap();
     QVariantMap itemAttrsMap = itemMap["attrs"].toMap();
@@ -117,7 +123,6 @@ void QgsVBSLocationSearchProvider::replyFinished()
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );
     emit searchResultFound( searchResult );
-    QgsDebugMsg( QString( "Result found: %1 added to category %2" ).arg( searchResult.text ).arg( searchResult.category ) );
   }
   mNetReply->deleteLater();
   mNetReply = 0;
