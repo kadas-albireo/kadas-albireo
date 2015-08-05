@@ -12,6 +12,8 @@ SET (vbsfunctionality_SRCS
   search/qgsvbssearchbox.cpp
   search/qgsvbscoordinatesearchprovider.cpp
   search/qgsvbslocationsearchprovider.cpp
+  search/qgsvbslocaldatasearchprovider.cpp
+  search/qgsvbsremotedatasearchprovider.cpp
   utils/qgsvbslltoutm.h
 )
 
@@ -30,6 +32,8 @@ SET (vbsfunctionality_MOC_HDRS
   search/qgsvbssearchprovider.h
   search/qgsvbscoordinatesearchprovider.h
   search/qgsvbslocationsearchprovider.h
+  search/qgsvbslocaldatasearchprovider.h
+  search/qgsvbsremotedatasearchprovider.h
   qgsvbscrsselection.h
 )
 

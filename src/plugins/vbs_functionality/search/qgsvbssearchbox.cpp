@@ -22,6 +22,7 @@
 #include "qgsvbssearchprovider.h"
 #include "qgsvbscoordinatesearchprovider.h"
 #include "qgsvbslocationsearchprovider.h"
+#include "qgsvbslocaldatasearchprovider.h"
 #include "qgsrubberband.h"
 #include <QHeaderView>
 #include <QKeyEvent>
@@ -90,8 +91,10 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
                   std::max( msz.height(), m_searchButton.sizeHint().height() + frameWidth * 2 + 2 ) );
   setPlaceholderText( tr( "Search" ) );
 
-  addSearchProvider( new QgsVBSCoordinateSearchProvider(mIface) );
-  addSearchProvider( new QgsVBSLocationSearchProvider(mIface) );
+  qRegisterMetaType<QgsVBSSearchProvider::SearchResult>( "QgsVBSSearchProvider::SearchResult" );
+  addSearchProvider( new QgsVBSCoordinateSearchProvider( mIface ) );
+  addSearchProvider( new QgsVBSLocationSearchProvider( mIface ) );
+  addSearchProvider( new QgsVBSLocalDataSearchProvider( mIface ) );
 }
 
 QgsVBSSearchBox::~QgsVBSSearchBox()
