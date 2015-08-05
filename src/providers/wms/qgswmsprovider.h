@@ -581,6 +581,9 @@ class QgsWmsImageDownloadHandler : public QObject
     void cacheReplyFinished();
     void cacheReplyProgress( qint64 bytesReceived, qint64 bytesTotal );
 
+  signals:
+    void aborted();
+
   protected:
     void finish() { QMetaObject::invokeMethod( mEventLoop, "quit", Qt::QueuedConnection ); }
 

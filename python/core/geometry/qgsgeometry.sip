@@ -34,10 +34,11 @@ class QgsGeometry
     /** copy constructor will prompt a deep copy of the object */
     QgsGeometry( const QgsGeometry & );
 
-    /** Creates a geometry from an abstract geometry object.
+    /** Creates a geometry from an abstract geometry object. Ownership of
+     * geom is transferred.
      * @note added in QGIS 2.10
      */
-    QgsGeometry( QgsAbstractGeometryV2* geom );
+    QgsGeometry( QgsAbstractGeometryV2* geom /Transfer/ );
 
     //! Destructor
     ~QgsGeometry();
@@ -46,6 +47,18 @@ class QgsGeometry
      * @note added in QGIS 2.10
      */
     const QgsAbstractGeometryV2* geometry() const;
+
+    /** Sets the underlying geometry store. Ownership of geometry is transferred.
+     * @note added in QGIS 2.10
+     */
+    void setGeometry( QgsAbstractGeometryV2* geometry /Transfer/ );
+
+    /** Returns true if the geometry is empty (ie, contains no underlying geometry
+        * accessible via @link geometry @endlink).
+        * @see geometry
+        * @note added in QGIS 2.10
+        */
+    bool isEmpty() const;
 
     /** Creates a new geometry from a WKT string */
     static QgsGeometry* fromWkt( QString wkt ) /Factory/;
@@ -656,5 +669,8 @@ class QgsGeometry
     QgsPolygon smoothPolygon( const QgsPolygon &polygon, const unsigned int iterations = 1, const double offset = 0.25 ) const;
     /**Smooths a polyline using the Chaikin algorithm*/
     QgsPolyline smoothLine( const QgsPolyline &polyline, const unsigned int iterations = 1, const double offset = 0.25 ) const;
+
+    /** Creates and returns a new geometry engine*/
+    static QgsGeometryEngine* createGeometryEngine( const QgsAbstractGeometryV2* geometry ) /Factory/;
 }; // class QgsGeometry
 

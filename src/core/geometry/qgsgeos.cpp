@@ -16,10 +16,11 @@ email                : marco.hugentobler at sourcepole dot com
 #include "qgsgeos.h"
 #include "qgsabstractgeometryv2.h"
 #include "qgsgeometrycollectionv2.h"
-#include "qgsgeometryimport.h"
+#include "qgsgeometryfactory.h"
 #include "qgslinestringv2.h"
 #include "qgsmessagelog.h"
 #include "qgsmulticurvev2.h"
+#include "qgsmultilinestringv2.h"
 #include "qgsmultipointv2.h"
 #include "qgsmultipolygonv2.h"
 #include "qgslogger.h"
@@ -860,17 +861,17 @@ QgsAbstractGeometryV2* QgsGeos::fromGeos( const GEOSGeometry* geos )
     }
     case GEOS_MULTILINESTRING:
     {
-      QgsMultiCurveV2* multiCurve = new QgsMultiCurveV2();
+      QgsMultiLineStringV2* multiLineString = new QgsMultiLineStringV2();
       int nParts = GEOSGetNumGeometries_r( geosinit.ctxt, geos );
       for ( int i = 0; i < nParts; ++i )
       {
         QgsLineStringV2* line = sequenceToLinestring( GEOSGetGeometryN_r( geosinit.ctxt, geos, i ), hasZ, hasM );
         if ( line )
         {
-          multiCurve->addGeometry( line );
+          multiLineString->addGeometry( line );
         }
       }
-      return multiCurve;
+      return multiLineString;
     }
     case GEOS_MULTIPOLYGON:
     {
@@ -1231,6 +1232,28 @@ QgsAbstractGeometryV2* QgsGeos::buffer( double distance, int segments, QString* 
   return fromGeos( geos );
 }
 
+QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) const
+{
+  if ( !mGeos )
+  {
+    return 0;
+  }
+
+#if defined(GEOS_VERSION_MAJOR) && defined(GEOS_VERSION_MINOR) && \
+ ((GEOS_VERSION_MAJOR>3) || ((GEOS_VERSION_MAJOR==3) && (GEOS_VERSION_MINOR>=3)))
+
+  GEOSGeometry* geos = 0;
+  try
+  {
+    geos = GEOSBufferWithStyle_r( geosinit.ctxt, mGeos, distance, segments, endCapStyle, joinStyle, mitreLimit );
+  }
+  CATCH_GEOS( 0 );
+  return fromGeos( geos );
+#else
+  return 0;
+#endif //0
+}
+
 QgsAbstractGeometryV2* QgsGeos::simplify( double tolerance, QString* errorMsg ) const
 {
   if ( !mGeos )
@@ -1399,7 +1422,7 @@ GEOSCoordSequence* QgsGeos::createCoordinateSequence( const QgsCurveV2* curve )
   }
 
   bool hasZ = line->is3D();
-  bool hasM = line->isMeasure();
+  bool hasM = false; //line->isMeasure(); //disabled until geos supports m-coordinates
   int coordDims = 2;
   if ( hasZ )
   {
@@ -1456,7 +1479,7 @@ GEOSGeometry* QgsGeos::createGeosPoint( const QgsAbstractGeometryV2* point, int 
     {
       GEOSCoordSeq_setOrdinate_r( geosinit.ctxt, coordSeq, 0, 2, pt->z() );
     }
-    if ( pt->isMeasure() )
+    if ( 0 /*pt->isMeasure()*/ ) //disabled until geos supports m-coordinates
     {
       GEOSCoordSeq_setOrdinate_r( geosinit.ctxt, coordSeq, 0, 3, pt->m() );
     }
