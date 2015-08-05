@@ -764,6 +764,21 @@ static QVariant fcnRegexpMatch( const QVariantList& values, const QgsFeature*, Q
   return QVariant( str.contains( re ) ? 1 : 0 );
 }
 
+static QVariant fcnRegexpMatchi( const QVariantList& values, const QgsFeature*, QgsExpression* parent )
+{
+  QString str = getStringValue( values.at( 0 ), parent );
+  QString regexp = getStringValue( values.at( 1 ), parent );
+
+  QRegExp re( regexp );
+  if ( !re.isValid() )
+  {
+    parent->setEvalErrorString( QObject::tr( "Invalid regular expression '%1': %2" ).arg( regexp ).arg( re.errorString() ) );
+    return QVariant();
+  }
+  re.setCaseSensitivity( Qt::CaseInsensitive );
+  return QVariant( str.contains( re ) ? 1 : 0 );
+}
+
 static QVariant fcnRegexpSubstr( const QVariantList& values, const QgsFeature*, QgsExpression* parent )
 {
   QString str = getStringValue( values.at( 0 ), parent );
@@ -1733,6 +1748,7 @@ const QList<QgsExpression::Function*> &QgsExpression::Functions()
     << new StaticFunction( "coalesce", -1, fcnCoalesce, "Conditionals" )
     << new StaticFunction( "if", 3, fcnIf, "Conditionals", "", False, QStringList(), true )
     << new StaticFunction( "regexp_match", 2, fcnRegexpMatch, "Conditionals" )
+    << new StaticFunction( "regexp_matchi", 2, fcnRegexpMatchi, "Conditionals" )
     << new StaticFunction( "$now", 0, fcnNow, "Date and Time" )
     << new StaticFunction( "age", 2, fcnAge, "Date and Time" )
     << new StaticFunction( "year", 1, fcnYear, "Date and Time" )
