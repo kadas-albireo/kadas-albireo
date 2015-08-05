@@ -23,6 +23,8 @@
 #include "qgsrectangle.h"
 #include "qgscoordinatereferencesystem.h"
 
+class QgisInterface;
+
 class QgsVBSSearchProvider : public QObject
 {
     Q_OBJECT
@@ -36,14 +38,23 @@ class QgsVBSSearchProvider : public QObject
       QgsCoordinateReferenceSystem crs;
       double zoomScale;
     };
+    struct SearchRegion
+    {
+      QgsRectangle rect;
+      QgsCoordinateReferenceSystem crs;
+    };
 
+    QgsVBSSearchProvider( QgisInterface* iface ) : mIface( iface ) { }
     virtual ~QgsVBSSearchProvider() {}
-    virtual void startSearch( const QString& searchtext ) = 0;
+    virtual void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) = 0;
     virtual void cancelSearch() {}
 
   signals:
     void searchResultFound( QgsVBSSearchProvider::SearchResult result );
     void searchFinished();
+
+  protected:
+    QgisInterface* mIface;
 };
 
 Q_DECLARE_METATYPE( QgsVBSSearchProvider::SearchResult )

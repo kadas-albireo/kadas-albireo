@@ -16,12 +16,14 @@
  ***************************************************************************/
 
 #include "qgsvbscoordinatesearchprovider.h"
+#include "qgscoordinatetransform.h"
 #include "../utils/qgsvbslltoutm.h"
 
 
 const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
 
-QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( )
+QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgisInterface *iface )
+    : QgsVBSSearchProvider( iface )
 {
   mPatLVDD = QRegExp( QString::fromUtf8( "^(\\d+\\.?\\d*)(\u00B0)?[,\\s]\\s*(\\d+\\.?\\d*)(\u00B0)?$" ) );
   mPatDM = QRegExp( QString::fromUtf8( "^(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw])$" ) );
@@ -31,7 +33,7 @@ QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( )
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
 }
 
-void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext )
+void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
   SearchResult searchResult;
   searchResult.zoomScale = 1000;
@@ -161,6 +163,15 @@ void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext )
   else
   {
     valid = false;
+  }
+
+  if ( !searchRegion.rect.isEmpty() )
+  {
+    QgsPoint p = QgsCoordinateTransform( searchResult.crs, searchRegion.crs ).transform( searchResult.pos );
+    if ( !searchRegion.rect.contains( p ) )
+    {
+      valid = false;
+    }
   }
 
   if ( valid )

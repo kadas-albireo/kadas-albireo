@@ -31,8 +31,8 @@ class QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSLocationSearchProvider( );
-    void startSearch( const QString& searchtext ) override;
+    QgsVBSLocationSearchProvider( QgisInterface* iface );
+    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
     void cancelSearch() override;
 
   private:

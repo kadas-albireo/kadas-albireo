@@ -25,8 +25,8 @@ class QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSCoordinateSearchProvider( );
-    void startSearch( const QString& searchtext ) override;
+    QgsVBSCoordinateSearchProvider( QgisInterface* iface );
+    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
 
   private:
     QRegExp mPatLVDD;
