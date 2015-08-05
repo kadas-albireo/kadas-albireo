@@ -10,8 +10,8 @@ SET (vbsfunctionality_SRCS
   qgsvbscrsselection.cpp
   maptools/qgsvbsmaptoolpinannotation.cpp
   search/qgsvbssearchbox.cpp
-  search/qgsvbscoosearchprovider.cpp
-  search/qgsvbslocsearchprovider.cpp
+  search/qgsvbscoordinatesearchprovider.cpp
+  search/qgsvbslocationsearchprovider.cpp
   utils/qgsvbslltoutm.h
 )
 
@@ -28,8 +28,8 @@ SET (vbsfunctionality_MOC_HDRS
   qgsvbscoordinatedisplayer.h
   search/qgsvbssearchbox.h
   search/qgsvbssearchprovider.h
-  search/qgsvbscoosearchprovider.h
-  search/qgsvbslocsearchprovider.h
+  search/qgsvbscoordinatesearchprovider.h
+  search/qgsvbslocationsearchprovider.h
   qgsvbscrsselection.h
 )
 

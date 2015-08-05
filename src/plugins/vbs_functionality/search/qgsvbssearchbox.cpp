@@ -20,8 +20,8 @@
 #include "qgsmapcanvas.h"
 #include "qgscoordinatetransform.h"
 #include "qgsvbssearchprovider.h"
-#include "qgsvbscoosearchprovider.h"
-#include "qgsvbslocsearchprovider.h"
+#include "qgsvbscoordinatesearchprovider.h"
+#include "qgsvbslocationsearchprovider.h"
 #include "qgsrubberband.h"
 #include <QHeaderView>
 #include <QKeyEvent>
@@ -90,8 +90,8 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
                   std::max( msz.height(), m_searchButton.sizeHint().height() + frameWidth * 2 + 2 ) );
   setPlaceholderText( tr( "Search" ) );
 
-  addSearchProvider( new QgsVBSCooSearchProvider() );
-  addSearchProvider( new QgsVBSLocSearchProvider() );
+  addSearchProvider( new QgsVBSCoordinateSearchProvider(mIface) );
+  addSearchProvider( new QgsVBSLocationSearchProvider(mIface) );
 }
 
 QgsVBSSearchBox::~QgsVBSSearchBox()
