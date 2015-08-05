@@ -19,6 +19,7 @@
 #define QGSPOINT_H
 
 #include <qgis.h>
+#include <climits>
 
 #include <iostream>
 #include <QString>
@@ -195,7 +196,7 @@ class CORE_EXPORT QgsPoint
          * @returns true if points are equal within specified tolerance
          * @note added in QGIS 2.9
         */
-    bool compare( const QgsPoint &other, double epsilon = 4 * DBL_EPSILON ) const;
+    bool compare( const QgsPoint &other, double epsilon = 4 * std::numeric_limits<double>::epsilon() ) const;
 
     //! equality operator
     bool operator==( const QgsPoint &other );

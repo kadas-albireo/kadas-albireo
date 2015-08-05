@@ -1977,7 +1977,7 @@ void QgsComposition::setSnapLinesVisible( const bool visible )
 QGraphicsLineItem* QgsComposition::nearestSnapLine( const bool horizontal, const double x, const double y, const double tolerance,
     QList< QPair< QgsComposerItem*, QgsComposerItem::ItemPositionMode> >& snappedItems ) const
 {
-  double minSqrDist = DBL_MAX;
+  double minSqrDist = std::numeric_limits<double>::max();
   QGraphicsLineItem* item = 0;
   double currentXCoord = 0;
   double currentYCoord = 0;

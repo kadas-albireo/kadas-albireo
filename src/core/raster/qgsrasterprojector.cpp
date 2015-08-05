@@ -425,7 +425,7 @@ void QgsRasterProjector::calcSrcRowsCols()
   double myDestRowsPerMatrixCell = ( double )mDestRows / mCPRows;
   QgsDebugMsg( QString( "myDestColsPerMatrixCell = %1 myDestRowsPerMatrixCell = %2" ).arg( myDestColsPerMatrixCell ).arg( myDestRowsPerMatrixCell ) );
 
-  double myMinSize = DBL_MAX;
+  double myMinSize = std::numeric_limits<double>::max();
 
   for ( int i = 0; i < mCPRows - 1; i++ )
   {

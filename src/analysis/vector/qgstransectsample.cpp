@@ -512,7 +512,7 @@ QgsGeometry* QgsTransectSample::closestMultilineElement( const QgsPoint& pt, Qgs
     return 0;
   }
 
-  double minDist = DBL_MAX;
+  double minDist = std::numeric_limits<double>::max();
   double currentDist = 0;
   QgsGeometry* currentLine = 0;
   QgsGeometry* closestLine = 0;

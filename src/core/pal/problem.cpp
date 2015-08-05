@@ -1062,7 +1062,7 @@ namespace pal
       std::cout << "  ITERATION : " << it << " stop: " << stop_it << std::endl;
 #endif
       actualizeTabuCandidateList( m, it, nbOverlap, &candidateListSize, candidateBaseFactor, &candidateFactor, minCandidateListSize, reductionFactor, minTabuTSize, tabuFactor, &tenure, probSize );
-      delta_min     = DBL_MAX;
+      delta_min     = std::numeric_limits<double>::max();
       choosed_feat  = -1;
       choosed_label = -2;
       candidateId   = -1;
@@ -1394,7 +1394,7 @@ namespace pal
 
     double delta;
     double delta_min;
-    double delta_best = DBL_MAX;
+    double delta_best = std::numeric_limits<double>::max();
     double delta_tmp;
 
     int next_seed;
@@ -1430,7 +1430,7 @@ namespace pal
     {
       subseed = sub[seed];
       seedNbLp = featNbLp[subseed];
-      delta_min = DBL_MAX;
+      delta_min = std::numeric_limits<double>::max();
 #ifdef _DEBUG_FULL_
       std::cout << "New seed: " << seed << "/" << subseed << std::endl;
 #endif
@@ -1691,7 +1691,7 @@ namespace pal
 
     double delta;
     double delta_min;
-    double delta_best = DBL_MAX;
+    double delta_best = std::numeric_limits<double>::max();
     double delta_tmp;
 
     int next_seed;
@@ -1726,7 +1726,7 @@ namespace pal
     while ( seed != -1 )
     {
       seedNbLp = featNbLp[seed];
-      delta_min = DBL_MAX;
+      delta_min = std::numeric_limits<double>::max();
 
       next_seed = -1;
       retainedLabel = -2;

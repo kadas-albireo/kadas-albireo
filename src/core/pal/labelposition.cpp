@@ -360,10 +360,10 @@ namespace pal
     }
     else
     {
-      amin[0] = DBL_MAX;
-      amax[0] = -DBL_MAX;
-      amin[1] = DBL_MAX;
-      amax[1] = -DBL_MAX;
+      amin[0] = std::numeric_limits<double>::max();
+      amax[0] = -std::numeric_limits<double>::max();
+      amin[1] = std::numeric_limits<double>::max();
+      amax[1] = -std::numeric_limits<double>::max();
     }
     for ( int c = 0; c < 4; c++ )
     {
@@ -504,7 +504,7 @@ namespace pal
     double mx[4];
     double my[4];
 
-    double dist_min = DBL_MAX;
+    double dist_min = std::numeric_limits<double>::max();
     double dist;
 
     for ( i = 0; i < 4; i++ )

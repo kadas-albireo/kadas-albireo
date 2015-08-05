@@ -90,6 +90,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
     }
 
     drawImage( p, viewPort, img, topLeftCol, topLeftRow, theQgsMapToPixel );
+    QgsDebugMsg( "Block drawn" );
 
     delete block;
   }

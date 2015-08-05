@@ -26,6 +26,7 @@
 #include <cpl_string.h>
 #include <gdalwarper.h>
 #include <ogr_srs_api.h>
+#include <limits>
 
 #if defined(GDAL_VERSION_NUM) && GDAL_VERSION_NUM >= 1800
 #define TO8(x)   (x).toUtf8().constData()
@@ -147,7 +148,7 @@ int QgsRasterCalculator::processCalculation( QProgressDialog* p )
 
   GDALRasterBandH outputRasterBand = GDALGetRasterBand( outputDataset, 1 );
 
-  float outputNodataValue = -FLT_MAX;
+  float outputNodataValue = -std::numeric_limits<float>::max();
   GDALSetRasterNoDataValue( outputRasterBand, outputNodataValue );
 
   float* resultScanLine = ( float * ) CPLMalloc( sizeof( float ) * mNumOutputColumns );

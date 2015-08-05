@@ -544,7 +544,7 @@ void QgsDiagramProperties::apply()
 
     if ( !mFixedSizeCheckBox->isChecked() && !scaleAttributeValueOk )
     {
-      double maxVal = DBL_MIN;
+      double maxVal = std::numeric_limits<double>::min();
       QgsVectorDataProvider* provider = mLayer->dataProvider();
 
       if ( provider )
@@ -573,7 +573,7 @@ void QgsDiagramProperties::apply()
         }
       }
 
-      if ( maxVal != DBL_MIN )
+      if ( maxVal != std::numeric_limits<double>::min() )
       {
         QgisApp::instance()->messageBar()->pushMessage(
           tr( "Interpolation value" ),

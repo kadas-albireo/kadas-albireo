@@ -519,8 +519,8 @@ namespace pal
 #endif
 
     // Filtering label positions against obstacles
-    amin[0] = amin[1] = -DBL_MAX;
-    amax[0] = amax[1] = DBL_MAX;
+    amin[0] = amin[1] = -std::numeric_limits<double>::max();
+    amax[0] = amax[1] = std::numeric_limits<double>::max();
     FilterContext filterCtx;
     filterCtx.cdtsIndex = prob->candidates;
     filterCtx.scale = prob->scale;

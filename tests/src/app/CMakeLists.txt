@@ -1,4 +1,4 @@
-#####################################################
+####################################################
 # Don't forget to include output directory, otherwise
 # the UI file won't be wrapped!
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} 
@@ -75,10 +75,10 @@ MACRO (ADD_QGIS_TEST testname testsrc)
   IF(WITH_QWTPOLAR AND NOT WITH_INTERNAL_QWTPOLAR)
     TARGET_LINK_LIBRARIES(qgis_${testname} ${QWTPOLAR_LIBRARY})
   ENDIF(WITH_QWTPOLAR AND NOT WITH_INTERNAL_QWTPOLAR)
-  IF(WIN32)
+  IF(MSVC)
     ADD_DEFINITIONS(-DQWT_DLL)
     TARGET_LINK_LIBRARIES(qgis_${testname} DbgHelp)
-  ENDIF(WIN32)
+  ENDIF(MSVC)
   IF (APPLE)
     TARGET_LINK_LIBRARIES(qgis_${testname} ${APP_SERVICES_LIBRARY} )
   ENDIF(APPLE)

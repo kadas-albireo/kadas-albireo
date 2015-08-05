@@ -40,7 +40,7 @@
 
 #ifdef _MSC_VER
 #include <float.h>
-#define INFINITY (DBL_MAX+DBL_MAX)
+#define INFINITY (std::numeric_limits<double>::max()+std::numeric_limits<double>::max())
 #define NAN (INFINITY-INFINITY)
 #endif
 
