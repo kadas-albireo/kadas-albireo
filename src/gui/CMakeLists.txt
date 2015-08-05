@@ -116,7 +116,6 @@ layertree/qgslayertreeviewdefaultactions.cpp
 qgisgui.cpp
 qgisinterface.cpp
 qgsannotationitem.cpp
-qgsoverlayitem.cpp
 qgsactionmenu.cpp
 qgsattributedialog.cpp
 qgsattributeeditor.cpp
@@ -309,7 +308,6 @@ SET(QGIS_GUI_MOC_HDRS
   qgsnewmemorylayerdialog.h
   qgsnewvectorlayerdialog.h
   qgsoptionsdialogbase.h
-  qgsoverlayitem.h
   qgsowssourceselect.h
   qgspluginmanagerinterface.h
   qgsprevieweffect.h
