@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoosearchprovider.h                                              *
+ *  qgsvbscoordinatesearchprovider.h                                       *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,17 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCOOSEARCHPROVIDER_HPP
-#define QGSVBSCOOSEARCHPROVIDER_HPP
+#ifndef QGSVBSCOORDINATESEARCHPROVIDER_HPP
+#define QGSVBSCOORDINATESEARCHPROVIDER_HPP
 
 #include "qgsvbssearchprovider.h"
 #include <QRegExp>
 
-class QgsVBSCooSearchProvider : public QgsVBSSearchProvider
+class QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSCooSearchProvider();
+    QgsVBSCoordinateSearchProvider( );
     void startSearch( const QString& searchtext ) override;
 
   private:
@@ -39,4 +39,4 @@ class QgsVBSCooSearchProvider : public QgsVBSSearchProvider
     static const QString sCategoryName;
 };
 
-#endif // QGSVBSCOOSEARCHPROVIDER_HPP
+#endif // QGSVBSCOORDINATESEARCHPROVIDER_HPP

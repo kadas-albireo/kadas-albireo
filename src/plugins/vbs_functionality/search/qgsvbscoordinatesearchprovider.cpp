@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoosearchprovider.cpp                                            *
+ *  qgsvbscoordinatesearchprovider.cpp                                     *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,13 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscoosearchprovider.h"
+#include "qgsvbscoordinatesearchprovider.h"
 #include "../utils/qgsvbslltoutm.h"
 
 
-const QString QgsVBSCooSearchProvider::sCategoryName = QgsVBSCooSearchProvider::tr( "Coordinates" );
+const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
 
-QgsVBSCooSearchProvider::QgsVBSCooSearchProvider()
+QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( )
 {
   mPatLVDD = QRegExp( QString::fromUtf8( "^(\\d+\\.?\\d*)(\u00B0)?[,\\s]\\s*(\\d+\\.?\\d*)(\u00B0)?$" ) );
   mPatDM = QRegExp( QString::fromUtf8( "^(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw])$" ) );
@@ -31,7 +31,7 @@ QgsVBSCooSearchProvider::QgsVBSCooSearchProvider()
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
 }
 
-void QgsVBSCooSearchProvider::startSearch( const QString &searchtext )
+void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext )
 {
   SearchResult searchResult;
   searchResult.zoomScale = 1000;

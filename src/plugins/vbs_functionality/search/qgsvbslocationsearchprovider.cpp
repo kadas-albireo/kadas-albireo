@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslocsearchprovider.cpp                                            *
+ *  qgsvbslocationsearchprovider.cpp                                       *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbslocsearchprovider.h"
+#include "qgsvbslocationsearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgslogger.h"
 #include <QNetworkRequest>
@@ -23,13 +23,13 @@
 #include <qjson/parser.h>
 
 
-const int QgsVBSLocSearchProvider::sSearchTimeout = 2000;
-const int QgsVBSLocSearchProvider::sResultCountLimit = 100;
-const QByteArray QgsVBSLocSearchProvider::sGeoAdminUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer";
-const QByteArray QgsVBSLocSearchProvider::sGeoAdminReferrer = "http://localhost";
+const int QgsVBSLocationSearchProvider::sSearchTimeout = 2000;
+const int QgsVBSLocationSearchProvider::sResultCountLimit = 100;
+const QByteArray QgsVBSLocationSearchProvider::sGeoAdminUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer";
+const QByteArray QgsVBSLocationSearchProvider::sGeoAdminReferrer = "http://localhost";
 
 
-QgsVBSLocSearchProvider::QgsVBSLocSearchProvider()
+QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( )
 {
   mNetReply = 0;
 
@@ -60,7 +60,7 @@ void QgsVBSLocSearchProvider::startSearch( const QString &searchtext )
   mTimeoutTimer.start( sSearchTimeout );
 }
 
-void QgsVBSLocSearchProvider::cancelSearch()
+void QgsVBSLocationSearchProvider::cancelSearch()
 {
   if ( mNetReply )
   {
@@ -72,7 +72,7 @@ void QgsVBSLocSearchProvider::cancelSearch()
   }
 }
 
-void QgsVBSLocSearchProvider::replyFinished()
+void QgsVBSLocationSearchProvider::replyFinished()
 {
   if ( !mNetReply )
     return;

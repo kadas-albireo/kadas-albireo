@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslocsearchprovider.h                                              *
+ *  qgsvbslocationsearchprovider.h                                         *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 
-#ifndef QGSVBSLOCSEARCHPROVIDER_HPP
-#define QGSVBSLOCSEARCHPROVIDER_HPP
+#ifndef QGSVBSLOCATIONSEARCHPROVIDER_HPP
+#define QGSVBSLOCATIONSEARCHPROVIDER_HPP
 
 #include "qgsvbssearchprovider.h"
 #include <QMap>
@@ -27,11 +27,11 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class QgsVBSLocSearchProvider : public QgsVBSSearchProvider
+class QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSLocSearchProvider();
+    QgsVBSLocationSearchProvider( );
     void startSearch( const QString& searchtext ) override;
     void cancelSearch() override;
 
@@ -50,4 +50,4 @@ class QgsVBSLocSearchProvider : public QgsVBSSearchProvider
     void replyFinished();
 };
 
-#endif // QGSVBSLOCSEARCHPROVIDER_HPP
+#endif // QGSVBSLOCATIONSEARCHPROVIDER_HPP
