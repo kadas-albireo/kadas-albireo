@@ -3,8 +3,9 @@
         <file>icons/icon.svg</file>
         <file>icons/mousecoordinates.svg</file>
         <file>icons/mapcoordinates.svg</file>
-        <file>icons/pin.svg</file>
         <file>icons/search.svg</file>
         <file>icons/clear.svg</file>
+        <file>icons/pin_red.svg</file>
+        <file>icons/pin_blue.svg</file>
     </qresource>
 </RCC>

@@ -28,10 +28,10 @@ QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( QMouseEvent* e )
                          QgsAnnotationItem::ItemHasNoFrame |
                          QgsAnnotationItem::ItemHasNoMarker |
                          QgsAnnotationItem::ItemIsNotEditable );
-  QSize imageSize = QImageReader( ":/vbsfunctionality/icons/pin.svg" ).size();
+  QSize imageSize = QImageReader( ":/vbsfunctionality/icons/pin_red.svg" ).size();
   svgItem->setSelected( true );
-  svgItem->setFilePath( ":/vbsfunctionality/icons/pin.svg" );
+  svgItem->setFilePath( ":/vbsfunctionality/icons/pin_red.svg" );
   svgItem->setFrameSize( imageSize );
-  svgItem->setOffsetFromReferencePoint( QPointF( 0, -imageSize.height() ) );
+  svgItem->setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
   return svgItem;
 }
