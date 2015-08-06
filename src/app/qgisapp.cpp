@@ -9874,7 +9874,7 @@ void QgisApp::keyPressEvent( QKeyEvent * e )
   {
     stopRendering();
   }
-#if defined(Q_OS_WIN) && defined(QGISDEBUG)
+#if defined(__MSC_VER) && defined(QGISDEBUG)
   else if ( e->key() == Qt::Key_Backslash && e->modifiers() & Qt::ControlModifier )
   {
     qgisCrashDump( 0 );

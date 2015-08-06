@@ -78,7 +78,7 @@ QgsRasterBlock::QgsRasterBlock( QGis::DataType theDataType, int theWidth, int th
 
 QgsRasterBlock::~QgsRasterBlock()
 {
-  QgsDebugMsg( QString( "mData = %1" ).arg(( ulong )mData ) );
+  QgsDebugMsg( QString( "mData = %1" ).arg(( intptr_t )mData ) );
   qgsFree( mData );
   delete mImage;
   qgsFree( mNoDataBitmap );
@@ -145,7 +145,7 @@ bool QgsRasterBlock::reset( QGis::DataType theDataType, int theWidth, int theHei
   mHeight = theHeight;
   mHasNoDataValue = true;
   mNoDataValue = theNoDataValue;
-  QgsDebugMsg( QString( "mWidth= %1 mHeight = %2 mDataType = %3 mData = %4 mImage = %5" ).arg( mWidth ).arg( mHeight ).arg( mDataType ).arg(( ulong )mData ).arg(( ulong )mImage ) );
+  QgsDebugMsg( QString( "mWidth= %1 mHeight = %2 mDataType = %3 mData = %4 mImage = %5" ).arg( mWidth ).arg( mHeight ).arg( mDataType ).arg(( intptr_t )mData ).arg(( intptr_t )mImage ) );
   return true;
 }
 
@@ -177,7 +177,7 @@ QGis::DataType QgsRasterBlock::dataType( QImage::Format theFormat )
 
 bool QgsRasterBlock::isEmpty() const
 {
-  QgsDebugMsg( QString( "mWidth= %1 mHeight = %2 mDataType = %3 mData = %4 mImage = %5" ).arg( mWidth ).arg( mHeight ).arg( mDataType ).arg(( ulong )mData ).arg(( ulong )mImage ) );
+  QgsDebugMsg( QString( "mWidth= %1 mHeight = %2 mDataType = %3 mData = %4 mImage = %5" ).arg( mWidth ).arg( mHeight ).arg( mDataType ).arg(( intptr_t )mData ).arg(( intptr_t )mImage ) );
   if ( mWidth == 0 || mHeight == 0 ||
        ( typeIsNumeric( mDataType ) && mData == 0 ) ||
        ( typeIsColor( mDataType ) && mImage == 0 ) )
