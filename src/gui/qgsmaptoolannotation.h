@@ -31,10 +31,11 @@ class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasDoubleClickEvent( QMouseEvent * e ) override;
     void keyPressEvent( QKeyEvent* e ) override;
+    void deactivate() override;
 
   protected:
     /**Creates a new item. To be implemented by subclasses.*/
-    virtual QgsAnnotationItem* createItem( QMouseEvent* e ){ return 0; }
+    virtual QgsAnnotationItem* createItem( QMouseEvent* e ) { return 0; }
     /**Creates an editor widget (caller takes ownership). To be implemented by subclasses.*/
     virtual QDialog* createItemEditor( QgsAnnotationItem* /*item*/ ) { return 0; }
 

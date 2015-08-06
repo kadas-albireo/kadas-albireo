@@ -98,6 +98,13 @@ void QgsMapToolAnnotation::keyPressEvent( QKeyEvent* e )
   }
 }
 
+void QgsMapToolAnnotation::deactivate()
+{
+  QgsAnnotationItem* item = selectedItem();
+  if ( item )
+    item->setSelected( false );
+}
+
 void QgsMapToolAnnotation::canvasMoveEvent( QMouseEvent * e )
 {
   QgsAnnotationItem* sItem = selectedItem();
@@ -106,7 +113,7 @@ void QgsMapToolAnnotation::canvasMoveEvent( QMouseEvent * e )
     if ( mCurrentMoveAction == QgsAnnotationItem::MoveMapPosition )
     {
       toMapCoordinates( e->pos() );
-      QgsPoint newpos = sItem->mapPosition() + (toMapCoordinates( e->pos() ) - toMapCoordinates( mLastMousePosition.toPoint() ));
+      QgsPoint newpos = sItem->mapPosition() + ( toMapCoordinates( e->pos() ) - toMapCoordinates( mLastMousePosition.toPoint() ) );
       sItem->setMapPosition( newpos );
       sItem->update();
     }
@@ -187,7 +194,7 @@ void QgsMapToolAnnotation::canvasMoveEvent( QMouseEvent * e )
 void QgsMapToolAnnotation::canvasDoubleClickEvent( QMouseEvent * e )
 {
   QgsAnnotationItem* item = itemAtPos( e->posF() );
-  if ( !item || (item->itemFlags() & QgsAnnotationItem::ItemIsNotEditable) )
+  if ( !item || ( item->itemFlags() & QgsAnnotationItem::ItemIsNotEditable ) )
   {
     return;
   }
