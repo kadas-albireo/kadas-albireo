@@ -24,6 +24,7 @@
 
 class QgsVectorLayer;
 class QPaintEvent;
+class QSvgRenderer;
 
 /** \ingroup gui
  * A class for drawing transient features (e.g. digitising lines) on the map.
@@ -59,7 +60,11 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
       /**
        * A full box is used to highlight points (■)
        */
-      ICON_FULL_BOX
+      ICON_FULL_BOX,
+      /**
+       * An svg image is used to highlight points
+       */
+      ICON_SVG
     };
 
     /**
@@ -108,6 +113,14 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
      *  @param icon The icon to visualize point geometries
      */
     void setIcon( IconType icon );
+
+    /**
+     * Set the path to the svg file to use to draw points.
+     * Calling this function automatically calls setIcon(ICON_SVG)
+     * @param path The path to the svg
+     * @param drawOffset The offset where to draw the image origin
+     */
+    void setSvgIcon( const QString& path, const QPoint& drawOffset );
 
     /**
      * Set the size of the point icons
@@ -259,6 +272,8 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
 
     /** Icon to be shown. */
     IconType mIconType;
+    QSvgRenderer* mSvgRenderer;
+    QPoint mSvgOffset;
 
     /**
      * Nested lists used for multitypes

@@ -21,6 +21,7 @@
 #include "qgsmaprenderer.h"
 #include "qgsvectorlayer.h"
 #include <QPainter>
+#include <QSvgRenderer>
 
 /*!
   \class QgsRubberBand
@@ -31,6 +32,7 @@ QgsRubberBand::QgsRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomet
     : QgsMapCanvasItem( mapCanvas )
     , mIconSize( 5 )
     , mIconType( ICON_CIRCLE )
+    , mSvgRenderer( 0 )
     , mGeometryType( geometryType )
     , mTranslationOffsetX( 0.0 )
     , mTranslationOffsetY( 0.0 )
@@ -72,6 +74,7 @@ QgsRubberBand::QgsRubberBand()
 
 QgsRubberBand::~QgsRubberBand()
 {
+  delete mSvgRenderer;
 }
 
 /*!
@@ -112,7 +115,16 @@ void QgsRubberBand::setWidth( int width )
 
 void QgsRubberBand::setIcon( IconType icon )
 {
+  delete mSvgRenderer;
+  mSvgRenderer = 0;
   mIconType = icon;
+}
+
+void QgsRubberBand::setSvgIcon( const QString &path, const QPoint &drawOffset )
+{
+  setIcon( ICON_SVG );
+  mSvgRenderer = new QSvgRenderer( path );;
+  mSvgOffset = drawOffset;
 }
 
 void QgsRubberBand::setIconSize( int iconSize )
@@ -510,6 +522,15 @@ void QgsRubberBand::paint( QPainter* p )
               case ICON_CIRCLE:
                 p->drawEllipse( x - s, y - s, mIconSize, mIconSize );
                 break;
+
+              case ICON_SVG:
+                QRectF viewBox = mSvgRenderer->viewBoxF();
+                QRectF r( mSvgOffset.x(), mSvgOffset.y(), viewBox.width(), viewBox.height() );
+                p->save();
+                p->translate( pt );
+                mSvgRenderer->render( p, r );
+                p->restore();
+                break;
             }
           }
         }
@@ -538,7 +559,7 @@ void QgsRubberBand::updateRect()
   const QgsMapToPixel& m2p = *( mMapCanvas->getCoordinateTransform() );
 
   qreal res = m2p.mapUnitsPerPixel();
-  qreal w = ( ( mIconSize - 1 ) / 2 + mPen.width() ) / res;
+  qreal w = (( mIconSize - 1 ) / 2 + mPen.width() ) / res;
 
   QgsRectangle r;
   for ( int i = 0; i < mPoints.size(); ++i )
