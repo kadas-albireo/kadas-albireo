@@ -24,10 +24,15 @@
 #include "qgsvbslocationsearchprovider.h"
 #include "qgsvbslocaldatasearchprovider.h"
 #include "qgsrubberband.h"
+#include <QCheckBox>
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QShortcut>
 #include <QStyle>
+#include <QToolButton>
+#include <QTreeWidgetItem>
+#include <QVBoxLayout>
+#include <QImageReader>
 
 
 const int QgsVBSSearchBox::sEntryTypeRole = Qt::UserRole;
@@ -36,59 +41,101 @@ const int QgsVBSSearchBox::sCatCountRole = Qt::UserRole + 2;
 const int QgsVBSSearchBox::sResultDataRole = Qt::UserRole + 3;
 
 
+class QgsVBSSearchBox::PopupFrame : public QFrame
+{
+  public:
+    PopupFrame( QgsVBSSearchBox* parent ) : QFrame( parent, Qt::Popup )
+    {
+      setFrameStyle( QFrame::Box );
+      setStyleSheet( "PopupFrame{ background-color: white;}" );
+      setFocusPolicy( Qt::NoFocus );
+      hide();
+    }
+
+  private:
+    void closeEvent( QCloseEvent* ) override
+    {
+      qobject_cast<QgsVBSSearchBox*>( parentWidget() )->cancelSearch();
+      parentWidget()->clearFocus();
+    }
+};
+
+class QgsVBSSearchBox::TreeWidget : public QTreeWidget
+{
+  public:
+    TreeWidget( QWidget* parent = 0 ) : QTreeWidget( parent ) {}
+    bool event( QEvent *e ) {  return QTreeWidget::event( e ); }
+};
+
+
 QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
     : QLineEdit( parent ), mIface( iface )
 {
   mNumRunningProviders = 0;
   mRubberBand = 0;
 
-  mPopup.setColumnCount( 1 );
-  mPopup.setEditTriggers( QTreeWidget::NoEditTriggers );
-  mPopup.setFocusPolicy( Qt::NoFocus );
-  mPopup.setFocusProxy( parent );
-  mPopup.setFrameStyle( QFrame::Box );
-  mPopup.setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  mPopup.setMouseTracking( true );
-  mPopup.setRootIsDecorated( false );
-  mPopup.setSelectionBehavior( QTreeWidget::SelectRows );
-  mPopup.setUniformRowHeights( true );
-  mPopup.setWindowFlags( Qt::Popup );
-  mPopup.header()->hide();
-  mPopup.installEventFilter( this );
+  installEventFilter( this );
+
+  mPopup = new PopupFrame( this );
+  mPopup->setLayout( new QVBoxLayout );
+  mPopup->layout()->setContentsMargins( 1, 1, 1, 1 );
+  mPopup->layout()->setSpacing( 1 );
+  mPopup->installEventFilter( this );
+
+  mTreeWidget = new TreeWidget( mPopup );
+  mTreeWidget->setFocusPolicy( Qt::NoFocus );
+  mTreeWidget->setFrameStyle( QFrame::NoFrame );
+  mTreeWidget->setRootIsDecorated( false );
+  mTreeWidget->setColumnCount( 1 );
+  mTreeWidget->setEditTriggers( QTreeWidget::NoEditTriggers );
+  mTreeWidget->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  mTreeWidget->setMouseTracking( true );
+  mTreeWidget->setUniformRowHeights( true );
+  mTreeWidget->header()->hide();
+  mTreeWidget->installEventFilter( this );
+  mPopup->layout()->addWidget( mTreeWidget );
+
+  QFrame* line = new QFrame( mPopup );
+  line->setFrameShape( QFrame::HLine );
+  line->setFrameShadow( QFrame::Sunken );
+  mPopup->layout()->addWidget( line );
+
+  mVisibleOnlyCheckBox = new QCheckBox( tr( "Limit to visible area" ), mPopup );
+  mVisibleOnlyCheckBox->setFocusPolicy( Qt::NoFocus );
+  mPopup->layout()->addWidget( mVisibleOnlyCheckBox );
 
   mTimer.setSingleShot( true );
   mTimer.setInterval( 500 );
 
-  m_searchButton.setParent( this );
-  m_searchButton.setIcon( QIcon( ":/vbsfunctionality/icons/search.svg" ) );
-  m_searchButton.setIconSize( QSize( 16, 16 ) );
-  m_searchButton.setCursor( Qt::PointingHandCursor );
-  m_searchButton.setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
-  m_searchButton.setToolTip( tr( "Search" ) );
+  mSearchButton = new QToolButton( this );
+  mSearchButton->setIcon( QIcon( ":/vbsfunctionality/icons/search.svg" ) );
+  mSearchButton->setIconSize( QSize( 16, 16 ) );
+  mSearchButton->setCursor( Qt::PointingHandCursor );
+  mSearchButton->setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
+  mSearchButton->setToolTip( tr( "Search" ) );
 
-  m_clearButton.setParent( this );
-  m_clearButton.setIcon( QIcon( ":/vbsfunctionality/icons/clear.svg" ) );
-  m_clearButton.setIconSize( QSize( 16, 16 ) );
-  m_clearButton.setCursor( Qt::PointingHandCursor );
-  m_clearButton.setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
-  m_clearButton.setToolTip( tr( "Clear" ) );
-  m_clearButton.setVisible( false );
+  mClearButton = new QToolButton( this );
+  mClearButton->setIcon( QIcon( ":/vbsfunctionality/icons/clear.svg" ) );
+  mClearButton->setIconSize( QSize( 16, 16 ) );
+  mClearButton->setCursor( Qt::PointingHandCursor );
+  mClearButton->setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
+  mClearButton->setToolTip( tr( "Clear" ) );
+  mClearButton->setVisible( false );
+  mClearButton->installEventFilter( this );
 
-  installEventFilter( this );
-  connect( this, SIGNAL( textEdited( QString ) ), &mTimer, SLOT( start() ) );
-  connect( &m_searchButton, SIGNAL( clicked() ), this, SLOT( startSearch() ) );
-  connect( this, SIGNAL( returnPressed() ), this, SLOT( startSearch() ) );
+  connect( this, SIGNAL( textEdited( QString ) ), this, SLOT( textChanged() ) );
+  connect( mSearchButton, SIGNAL( clicked() ), this, SLOT( startSearch() ) );
   connect( &mTimer, SIGNAL( timeout() ), this, SLOT( startSearch() ) );
-  connect( &mPopup, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
-  connect( &mPopup, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
-  connect( this, SIGNAL( textEdited( QString ) ), this, SLOT( setSearchIcon() ) );
-  connect( &m_clearButton, SIGNAL( clicked() ), this, SLOT( clearSearch() ) );
+  connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
+  connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
+  connect( mTreeWidget, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
+  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( clearSearch() ) );
 
   int frameWidth = style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
-  setStyleSheet( QString( "QLineEdit { padding-right: %1px; } " ).arg( m_searchButton.sizeHint().width() + frameWidth + 5 ) );
+  setStyleSheet( QString( "QLineEdit { padding-right: %1px; } " ).arg( mSearchButton->sizeHint().width() + frameWidth + 5 ) );
   QSize msz = minimumSizeHint();
-  setMinimumSize( std::max( msz.width(), m_searchButton.sizeHint().height() + frameWidth * 2 + 2 ),
-                  std::max( msz.height(), m_searchButton.sizeHint().height() + frameWidth * 2 + 2 ) );
+  setMinimumSize( std::max( msz.width(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ),
+                  std::max( msz.height(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ) );
   setPlaceholderText( tr( "Search" ) );
 
   qRegisterMetaType<QgsVBSSearchProvider::SearchResult>( "QgsVBSSearchProvider::SearchResult" );
@@ -101,7 +148,6 @@ QgsVBSSearchBox::~QgsVBSSearchBox()
 {
   qDeleteAll( mSearchProviders );
 }
-
 
 void QgsVBSSearchBox::addSearchProvider( QgsVBSSearchProvider* provider )
 {
@@ -119,47 +165,40 @@ void QgsVBSSearchBox::removeSearchProvider( QgsVBSSearchProvider* provider )
 
 bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
 {
-  if ( obj == this )
+  if ( obj == mClearButton && ev->type() == QEvent::MouseButtonPress )
   {
-    if ( ev->type() == QEvent::KeyPress && static_cast<QKeyEvent*>( ev )->key() == Qt::Key_Escape )
-    {
-      setText( "" );
-      clearFocus();
-      return true;
-    }
+    clearSearch();
+    return true;
   }
-  else if ( obj == &mPopup )
+  else if ( ev->type() == QEvent::KeyPress )
   {
-    if ( ev->type() == QEvent::MouseButtonPress )
+    int key = static_cast<QKeyEvent*>( ev )->key();
+    if ( key == Qt::Key_Escape )
     {
-      mPopup.hide();
-      setFocus();
+      mPopup->close();
       return true;
     }
-    else if ( ev->type() == QEvent::KeyPress )
+    else if ( key == Qt::Key_Enter || key == Qt::Key_Return )
     {
-      int key = static_cast<QKeyEvent*>( ev )->key();
-      if ( key == Qt::Key_Up || key == Qt::Key_Down ||
-           key == Qt::Key_Home || key == Qt::Key_End ||
-           key == Qt::Key_PageUp || key == Qt::Key_PageDown )
+      if ( mTimer.isActive() )
       {
-        return false;
-      }
-      else if ( key == Qt::Key_Enter || key == Qt::Key_Return )
-      {
-        resultActivated();
-      }
-      else if ( key == Qt::Key_Escape )
-      {
-        setFocus();
-        mPopup.hide();
+        // Search text was changed
+        startSearch();
+        return true;
       }
       else
       {
-        setFocus();
-        event( ev );
+        return mTreeWidget->event( ev );
       }
-      return true;
+    }
+    if ( key != Qt::Key_Up && key != Qt::Key_Down &&
+         key != Qt::Key_PageUp && key != Qt::Key_PageDown )
+    {
+      return event( ev );
+    }
+    else
+    {
+      return mTreeWidget->event( ev );
     }
   }
   return false;
@@ -168,31 +207,39 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
 void QgsVBSSearchBox::resizeEvent( QResizeEvent * )
 {
   int frameWidth = style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
-  QSize sz = m_searchButton.sizeHint();
-  m_searchButton.move(( rect().right() - frameWidth - sz.width() - 4 ),
+  QSize sz = mSearchButton->sizeHint();
+  mSearchButton->move(( rect().right() - frameWidth - sz.width() - 4 ),
                       ( rect().bottom() + 1 - sz.height() ) / 2 );
-  sz = m_clearButton.sizeHint();
-  m_clearButton.move(( rect().right() - frameWidth - sz.width() - 4 ),
+  sz = mClearButton->sizeHint();
+  mClearButton->move(( rect().right() - frameWidth - sz.width() - 4 ),
                      ( rect().bottom() + 1 - sz.height() ) / 2 );
 }
 
-void QgsVBSSearchBox::setSearchIcon()
+void QgsVBSSearchBox::focusInEvent( QFocusEvent * )
 {
-  m_clearButton.setVisible( false );
-  m_searchButton.setVisible( true );
+  mPopup->resize( width(), 200 );
+  mPopup->move( mapToGlobal( QPoint( 0, height() ) ) );
+  mPopup->show();
+  if ( !mClearButton->isVisible() )
+    resultSelected();
+  selectAll();
+}
+
+void QgsVBSSearchBox::textChanged()
+{
+  mSearchButton->setVisible( true );
+  mClearButton->setVisible( false );
+  cancelSearch();
+  mTimer.start();
 }
 
 void QgsVBSSearchBox::startSearch()
 {
   mTimer.stop();
 
-  if ( mNumRunningProviders > 0 )
-  {
-  for ( QgsVBSSearchProvider* provider : mSearchProviders )
-    {
-      provider->cancelSearch();
-    }
-  }
+  mTreeWidget->blockSignals( true );
+  mTreeWidget->clear();
+  mTreeWidget->blockSignals( false );
 
   QString searchtext = text();
   if ( searchtext.size() < 3 )
@@ -200,56 +247,41 @@ void QgsVBSSearchBox::startSearch()
     return;
   }
 
-  m_searchButton.setVisible( false );
-  m_clearButton.setVisible( true );
-  mIface->mapCanvas()->scene()->removeItem( mRubberBand );
-  delete mRubberBand;
-  mRubberBand = 0;
-
-  mPopup.setUpdatesEnabled( false );
-  mPopup.clear();
-
   mNumRunningProviders = mSearchProviders.count();
 
-for ( QgsVBSSearchProvider* provider : mSearchProviders )
+  foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
   {
-    provider->startSearch( searchtext );
+    provider->startSearch( searchtext, QgsVBSSearchProvider::SearchRegion() );
   }
 }
 
 void QgsVBSSearchBox::clearSearch()
 {
-for ( QgsVBSSearchProvider* provider : mSearchProviders )
-  {
-    provider->cancelSearch();
-  }
   clear();
-  setSearchIcon();
   mIface->mapCanvas()->scene()->removeItem( mRubberBand );
   delete mRubberBand;
   mRubberBand = 0;
+  mPopup->close();
+  mTreeWidget->blockSignals( true );
+  mTreeWidget->clear();
+  mTreeWidget->blockSignals( false );
 }
 
 void QgsVBSSearchBox::searchProviderFinished()
 {
   --mNumRunningProviders;
-  if ( mNumRunningProviders == 0 )
-  {
-    mPopup.setUpdatesEnabled( true );
-    int w = std::max( width(), mPopup.width() );
-    mPopup.resize( w, 200 );
-    mPopup.move( mapToGlobal( QPoint( 0, height() ) ) );
-    mPopup.setFocus();
-    mPopup.expandAll();
-    mPopup.show();
-  }
+//  if ( mNumRunningProviders == 0 )
+//  {
+//    mTreeWidget->setUpdatesEnabled( true );
+//    mTreeWidget->expandAll();
+//  }
 }
 
 void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult result )
 {
   // Search category item
   QTreeWidgetItem* categoryItem = 0;
-  QTreeWidgetItem* root = mPopup.invisibleRootItem();
+  QTreeWidgetItem* root = mTreeWidget->invisibleRootItem();
   for ( int i = 0, n = root->childCount(); i < n; ++i )
   {
     if ( root->child( i )->data( 0, sCatNameRole ).toString() == result.category )
@@ -279,6 +311,7 @@ void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult resu
     font.setBold( true );
     categoryItem->setFont( 0, font );
     root->insertChild( pos, categoryItem );
+    categoryItem->setExpanded( true );
   }
 
   // Insert new result
@@ -296,14 +329,31 @@ void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult resu
 
 void QgsVBSSearchBox::resultSelected()
 {
-  // Nothing ATM
+  if ( mTreeWidget->currentItem() )
+  {
+    QTreeWidgetItem* item = mTreeWidget->currentItem();
+    if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
+    {
+      return;
+    }
+    QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
+    if ( !mRubberBand )
+      createRubberBand();
+    QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
+    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
+    blockSignals( true );
+    setText( result.text );
+    blockSignals( false );
+    mSearchButton->setVisible( true );
+    mClearButton->setVisible( false );
+  }
 }
 
 void QgsVBSSearchBox::resultActivated()
 {
-  if ( mPopup.isVisible() && mPopup.currentItem() )
+  if ( mTreeWidget->currentItem() )
   {
-    QTreeWidgetItem* item = mPopup.currentItem();
+    QTreeWidgetItem* item = mTreeWidget->currentItem();
     if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
     {
       return;
@@ -314,12 +364,8 @@ void QgsVBSSearchBox::resultActivated()
     if ( result.bbox.isEmpty() )
     {
       zoomExtent = mIface->mapCanvas()->mapSettings().computeExtentForScale( result.pos, result.zoomScale, result.crs );
-      mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Point );
-      mRubberBand->setColor( Qt::yellow );
-      mRubberBand->setBorderColor( Qt::red );
-      mRubberBand->setIcon( QgsRubberBand::ICON_CIRCLE );
-      mRubberBand->setIconSize( 15 );
-      mRubberBand->setWidth( 4 );
+      if ( !mRubberBand )
+        createRubberBand();
       QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
       mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
     }
@@ -330,6 +376,34 @@ void QgsVBSSearchBox::resultActivated()
     }
     mIface->mapCanvas()->setExtent( zoomExtent );
     mIface->mapCanvas()->refresh();
-    mPopup.hide();
+    blockSignals( true );
+    setText( result.text );
+    blockSignals( false );
+    mSearchButton->setVisible( false );
+    mClearButton->setVisible( true );
+    mPopup->close();
+  }
+}
+
+void QgsVBSSearchBox::createRubberBand()
+{
+  mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Point );
+  QSize imgSize = QImageReader( ":/vbsfunctionality/icons/pin_blue.svg" ).size();
+  mRubberBand->setSvgIcon( ":/vbsfunctionality/icons/pin_blue.svg", QPoint( -imgSize.width() / 2., -imgSize.height() ) );
+}
+
+void QgsVBSSearchBox::cancelSearch()
+{
+  foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
+  {
+    provider->cancelSearch();
+  }
+  // If the clear button is visible, the rubberband marks an activated search
+  // result, which can be cleared by pressing the clear button
+  if ( mRubberBand && !mClearButton->isVisible() )
+  {
+    mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+    delete mRubberBand;
+    mRubberBand = 0;
   }
 }

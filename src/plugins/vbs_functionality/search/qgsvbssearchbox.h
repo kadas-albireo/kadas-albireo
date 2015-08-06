@@ -23,10 +23,10 @@
 #include <QLineEdit>
 #include <QList>
 #include <QTimer>
-#include <QToolButton>
-#include <QTreeWidget>
 
 
+class QCheckBox;
+class QToolButton;
 class QgsCoordinateReferenceSystem;
 class QgsPoint;
 class QgsRectangle;
@@ -44,6 +44,9 @@ class QgsVBSSearchBox : public QLineEdit
     void removeSearchProvider( QgsVBSSearchProvider* provider );
 
   private:
+    class PopupFrame;
+    class TreeWidget;
+
     enum EntryType { EntryTypeCategory, EntryTypeResult };
     static const int sEntryTypeRole;
     static const int sCatNameRole;
@@ -54,22 +57,27 @@ class QgsVBSSearchBox : public QLineEdit
     QgsRubberBand* mRubberBand;
     QList<QgsVBSSearchProvider*> mSearchProviders;
     QTimer mTimer;
-    QToolButton m_searchButton;
-    QToolButton m_clearButton;
-    QTreeWidget mPopup;
+    QToolButton* mSearchButton;
+    QToolButton* mClearButton;
+    PopupFrame* mPopup;
+    TreeWidget* mTreeWidget;
+    QCheckBox* mVisibleOnlyCheckBox;
     int mNumRunningProviders;
 
     void resizeEvent( QResizeEvent* ) override;
     bool eventFilter( QObject* obj, QEvent* ev ) override;
+    void focusInEvent( QFocusEvent * ) override;
+    void createRubberBand();
+    void cancelSearch();
 
   private slots:
+    void textChanged();
     void startSearch();
     void clearSearch();
     void searchResultFound( QgsVBSSearchProvider::SearchResult result );
     void searchProviderFinished();
     void resultSelected();
     void resultActivated();
-    void setSearchIcon();
 };
 
 #endif // QGSVBSSEARCHBOX_H
