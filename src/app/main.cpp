@@ -47,7 +47,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-extern const char* splash_image[];
+extern SPLASH_IMPORT const char* splash_image[];
 
 #ifdef WIN32
 // Open files in binary mode
