@@ -59,8 +59,13 @@ void QgsVBSLocalDataSearchProvider::cancelSearch()
     mCrawler->abort();
 }
 
+
+const int QgsVBSLocalDataSearchCrawler::sResultCountLimit = 50;
+
 void QgsVBSLocalDataSearchCrawler::run()
 {
+  int resultCount = 0;
+
   QString escapedSearchText = mSearchText;
   escapedSearchText.replace( "'", "\\'" );
   foreach ( QgsMapLayer* layer, mLayers )
@@ -73,48 +78,79 @@ void QgsVBSLocalDataSearchCrawler::run()
     locker.unlock();
 
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( layer );
-    QgsFeatureRequest req;
-    if ( !mSearchRegion.rect.isEmpty() )
-    {
-      req.setFilterRect( QgsCoordinateTransform( mSearchRegion.crs, layer->crs() ).transform( mSearchRegion.rect ) );
-    }
+
     const QgsFields& fields = vlayer->pendingFields();
     QStringList conditions;
     for ( int idx = 0, nFields = fields.count(); idx < nFields; ++idx )
     {
       conditions.append( QString( "regexp_matchi( \"%1\" ,'%2')" ).arg( fields[idx].name(), escapedSearchText ) );
     }
-    req.setFilterExpression( conditions.join( " OR " ) );
-    QgsFeatureIterator it = vlayer->getFeatures( req );
-    QgsFeature f;
-    while ( it.nextFeature( f ) )
-    {
-      locker.relock();
-      if ( mAborted )
-      {
-        break;
-      }
-      locker.unlock();
+    QString exprText = conditions.join(" OR ");
 
-      QgsVBSSearchProvider::SearchResult result;
-      result.bbox = f.geometry()->boundingBox();
-      result.category = tr( "Local data" );
-      result.crs = vlayer->crs();
-      QgsGeometry* pt = f.geometry()->pointOnSurface();
-      if ( pt )
-      {
-        result.pos = pt->asPoint();
-        delete pt;
+    QgsFeatureRequest req;
+    QgsFeature feature;
+    if ( !mSearchRegion.rect.isEmpty() )
+    {
+      req.setFilterRect( QgsCoordinateTransform( mSearchRegion.crs, layer->crs() ).transform( mSearchRegion.rect ) );
+      QgsExpression expr(exprText);
+      expr.prepare(vlayer->pendingFields());
+      QgsFeatureIterator it = vlayer->getFeatures( req );
+      while ( it.nextFeature( feature ) && resultCount < sResultCountLimit ){
+        locker.relock();
+        if ( mAborted )
+        {
+          break;
+        }
+        locker.unlock();
+        if(expr.evaluate(feature).toBool()){
+          buildResult(feature, vlayer);
+          ++resultCount;
+        }
       }
-      else
+    }
+    else
+    {
+      req.setFilterExpression( exprText );
+      QgsFeatureIterator it = vlayer->getFeatures( req );
+      while ( it.nextFeature( feature ) && resultCount < sResultCountLimit )
       {
-        result.pos = result.bbox.center();
+        locker.relock();
+        if ( mAborted )
+        {
+          break;
+        }
+        locker.unlock();
+        buildResult(feature, vlayer);
+        ++resultCount;
       }
-      result.text = tr( "Layer %1, feature %2" ).arg( vlayer->name() ).arg( f.id() );
-      emit searchResultFound( result );
+    }
+    if(resultCount >= sResultCountLimit)
+    {
+      QgsDebugMsg("Stopping search due to result count limit hit");
+      break;
     }
   }
   emit searchFinished();
+}
+
+void QgsVBSLocalDataSearchCrawler::buildResult(const QgsFeature &feature, QgsVectorLayer* layer)
+{
+  QgsVBSSearchProvider::SearchResult result;
+  result.bbox = feature.geometry()->boundingBox();
+  result.category = tr( "Local data" );
+  result.crs = layer->crs();
+  QgsGeometry* pt = feature.geometry()->pointOnSurface();
+  if ( pt )
+  {
+    result.pos = pt->asPoint();
+    delete pt;
+  }
+  else
+  {
+    result.pos = result.bbox.center();
+  }
+  result.text = tr( "%1: Layer %2, feature %3" ).arg(mSearchText).arg( layer->name() ).arg( feature.id() );
+  emit searchResultFound( result );
 }
 
 void QgsVBSLocalDataSearchCrawler::abort()

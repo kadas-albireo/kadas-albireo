@@ -23,8 +23,9 @@
 #include <QMutex>
 #include <QPointer>
 
-
+class QgsFeature;
 class QgsMapLayer;
+class QgsVectorLayer;
 class QgsVBSLocalDataSearchCrawler;
 
 class QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
@@ -59,11 +60,15 @@ class QgsVBSLocalDataSearchCrawler : public QObject
     void searchFinished();
 
   private:
+    static const int sResultCountLimit;
+
     QString mSearchText;
     QgsVBSSearchProvider::SearchRegion mSearchRegion;
     QList<QgsMapLayer*> mLayers;
     QMutex mAbortMutex;
     bool mAborted;
+
+    void buildResult(const QgsFeature& feature, QgsVectorLayer *layer);
 };
 
 #endif // QGSVBSLOCALDATASEARCHPROVIDER_HPP

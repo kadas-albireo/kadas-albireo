@@ -1,9 +1,9 @@
 /***************************************************************************
- *  qgsvbsmaptoolpin.cpp                                                   *
- *  -------------------                                                    *
- *  begin                : Jul 22, 2015                                    *
- *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
- *  email                : smani@sourcepole.ch                             *
+                              qgsvbspinannotationitem.h
+                              ------------------------
+  begin                : August, 2015
+  copyright            : (C) 2015 by Sandro Mani
+  email                : smani@sourcepole.ch
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,15 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsmaptoolpinannotation.h"
-#include "qgsvbspinannotationitem.h"
-#include <QMouseEvent>
-#include <QImageReader>
+#ifndef QGSVBSPINANNOTATIONITEM_H
+#define QGSVBSPINANNOTATIONITEM_H
 
-QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( QMouseEvent* e )
+#include "qgssvgannotationitem.h"
+
+class QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
 {
-  QgsVBSPinAnnotationItem* pinItem = new QgsVBSPinAnnotationItem( mCanvas );
-  pinItem->setMapPosition( toMapCoordinates( e->pos() ) );
-  pinItem->setSelected( true );
-  return pinItem;
-}
+  public:
+
+    QgsVBSPinAnnotationItem( QgsMapCanvas* canvas );
+
+    void setMapPosition( const QgsPoint& pos ) override;
+    double getHeightAtCurrentPos();
+};
+
+#endif // QGSVBSPINANNOTATIONITEM_H

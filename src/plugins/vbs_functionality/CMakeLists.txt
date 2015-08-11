@@ -9,6 +9,7 @@ SET (vbsfunctionality_SRCS
   qgsvbscoordinateconverter.cpp
   qgsvbscrsselection.cpp
   maptools/qgsvbsmaptoolpinannotation.cpp
+  maptools/qgsvbspinannotationitem.cpp
   search/qgsvbssearchbox.cpp
   search/qgsvbscoordinatesearchprovider.cpp
   search/qgsvbslocationsearchprovider.cpp
@@ -22,7 +23,9 @@ SET (vbsfunctionality_HDRS
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
   maptools/qgsvbsmaptoolpinannotation.h
+  maptools/qgsvbspinannotationitem.h
   utils/qgsvbslltoutm.cpp
+  utils/qgsvbsspinner.cpp
 )
 
 SET (vbsfunctionality_MOC_HDRS
@@ -34,6 +37,7 @@ SET (vbsfunctionality_MOC_HDRS
   search/qgsvbslocationsearchprovider.h
   search/qgsvbslocaldatasearchprovider.h
   search/qgsvbsremotedatasearchprovider.h
+  utils/qgsvbsspinner.h
   qgsvbscrsselection.h
 )
 
