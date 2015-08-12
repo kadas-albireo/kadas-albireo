@@ -19,15 +19,20 @@
 #include "qgscoordinatetransform.h"
 #include "../utils/qgsvbslltoutm.h"
 
+#ifdef _WIN32
+#define utf8str(x) QString::fromWCharArray(L##x)
+#else
+#define utf8str(x) QString::fromUtf8(x)
+#endif
 
 const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
 
 QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgisInterface *iface )
     : QgsVBSSearchProvider( iface )
 {
-  mPatLVDD = QRegExp( QString::fromUtf8( "^(\\d+\\.?\\d*)(\u00B0)?[,\\s]\\s*(\\d+\\.?\\d*)(\u00B0)?$" ) );
-  mPatDM = QRegExp( QString::fromUtf8( "^(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u0027\u02BC\u2019]([NnSsEeWw])$" ) );
-  mPatDMS = QRegExp( QString::fromUtf8( "^(\\d+)\u00B0(\\d+)['\u2032\u0027\u02BC\u2019](\\d+\\.?\\d*)[\"\u2033]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+)['\u2032\u0027\u02BC\u2019](\\d+\\.?\\d*)[\"\u2033]([NnSsEeWw])$" ) );
+  mPatLVDD = QRegExp( utf8str( "^(\\d+\\.?\\d*)(\u00B0)?[,\\s]\\s*(\\d+\\.?\\d*)(\u00B0)?$" ) );
+  mPatDM = QRegExp( utf8str( "^(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u02BC\u2019]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+\\.?\\d*)[\"\u2032\u02BC\u2019]([NnSsEeWw])$" ) );
+  mPatDMS = QRegExp( utf8str( "^(\\d+)\u00B0(\\d+)['\u2032\u02BC\u2019](\\d+\\.?\\d*)[\"\u2033]([NnSsEeWw]),?[\\s]*(\\d+)\u00B0(\\d+)['\u2032\u02BC\u2019](\\d+\\.?\\d*)[\"\u2033]([NnSsEeWw])$" ) );
   mPatUTM = QRegExp( "^(\\d+\\.?\\d*)[,\\s]\\s*(\\d+\\.?\\d*)\\s*\\(\\w+\\s+(\\d+)([A-Za-z])\\)$" );
   mPatUTM2 = QRegExp( "^(\\d+)\\s*([A-Za-z])\\s+(\\d+\\.?\\d*)[,\\s]\\s*(\\d+\\.?\\d*)$" );
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );

@@ -44,7 +44,6 @@ QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *i
 void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , const SearchRegion &searchRegion )
 {
   QStringList remoteLayers;
-#warning TODO
 
   QUrl url( sGeoAdminUrl );
   url.addQueryItem( "type", "featuresearch" );

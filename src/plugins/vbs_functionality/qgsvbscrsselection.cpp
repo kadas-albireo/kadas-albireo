@@ -49,8 +49,8 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
   Q_ASSERT( mainWindow );
   QStatusBar* statusBar = mainWindow->statusBar();
-#warning "Looks like a compiler bug, below does not work"
-//  QWidget* otfProjButton = statusBar->findChild<QWidget*>( "mOnTheFlyProjectionStatusButton" );
+  // Looks like a compiler bug, below does not work
+  //  QWidget* otfProjButton = statusBar->findChild<QWidget*>( "mOnTheFlyProjectionStatusButton" );
   QToolButton* otfProjButton = 0;
   foreach ( QObject* child, statusBar->children() )
   {
