@@ -46,9 +46,9 @@ Section ""
 
 
 ;Desktop shortcut
-  Delete "$DESKTOP\QGIS Enterprise.lnk"
+  Delete "$DESKTOP\QGIS Enterprise 15.lnk"
   SetOutPath "$INSTDIR\bin"
-  CreateShortCut "$DESKTOP\QGIS Enterprise.lnk" "$INSTDIR\bin\qgis.bat" "" "$INSTDIR\apps\qgis\icons\QGIS.ico"
+  CreateShortCut "$DESKTOP\QGIS Enterprise 15.lnk" "$INSTDIR\bin\qgis.bat" "" "$INSTDIR\apps\qgis\icons\QGIS.ico"
 SectionEnd
 
 Section "Uninstall"
