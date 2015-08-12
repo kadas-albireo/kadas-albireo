@@ -306,7 +306,7 @@ extern "C"
 
 #include "qgspythonutils.h"
 
-#ifndef __MSC_VER
+#ifndef _MSC_VER
 #include <dlfcn.h>
 #else
 #include <windows.h>

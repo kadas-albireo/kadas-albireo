@@ -82,7 +82,11 @@ namespace pal
       , repeatDist( 0.0 )
       , alwaysShow( false )
   {
-    assert( std::isfinite( lx ) && std::isfinite( ly ) );
+#ifdef _MSC_VER
+    assert( _finite( lx ) && _finite( ly ) );
+#else
+	assert( std::isfinite( lx ) && std::isfinite( ly ) );
+#endif
 
     uid = new char[strlen( geom_id ) +1];
     strcpy( uid, geom_id );
