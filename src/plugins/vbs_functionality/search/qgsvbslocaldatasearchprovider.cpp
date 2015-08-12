@@ -85,25 +85,27 @@ void QgsVBSLocalDataSearchCrawler::run()
     {
       conditions.append( QString( "regexp_matchi( \"%1\" ,'%2')" ).arg( fields[idx].name(), escapedSearchText ) );
     }
-    QString exprText = conditions.join(" OR ");
+    QString exprText = conditions.join( " OR " );
 
     QgsFeatureRequest req;
     QgsFeature feature;
     if ( !mSearchRegion.rect.isEmpty() )
     {
       req.setFilterRect( QgsCoordinateTransform( mSearchRegion.crs, layer->crs() ).transform( mSearchRegion.rect ) );
-      QgsExpression expr(exprText);
-      expr.prepare(vlayer->pendingFields());
+      QgsExpression expr( exprText );
+      expr.prepare( vlayer->pendingFields() );
       QgsFeatureIterator it = vlayer->getFeatures( req );
-      while ( it.nextFeature( feature ) && resultCount < sResultCountLimit ){
+      while ( it.nextFeature( feature ) && resultCount < sResultCountLimit )
+      {
         locker.relock();
         if ( mAborted )
         {
           break;
         }
         locker.unlock();
-        if(expr.evaluate(feature).toBool()){
-          buildResult(feature, vlayer);
+        if ( expr.evaluate( feature ).toBool() )
+        {
+          buildResult( feature, vlayer );
           ++resultCount;
         }
       }
@@ -120,20 +122,20 @@ void QgsVBSLocalDataSearchCrawler::run()
           break;
         }
         locker.unlock();
-        buildResult(feature, vlayer);
+        buildResult( feature, vlayer );
         ++resultCount;
       }
     }
-    if(resultCount >= sResultCountLimit)
+    if ( resultCount >= sResultCountLimit )
     {
-      QgsDebugMsg("Stopping search due to result count limit hit");
+      QgsDebugMsg( "Stopping search due to result count limit hit" );
       break;
     }
   }
   emit searchFinished();
 }
 
-void QgsVBSLocalDataSearchCrawler::buildResult(const QgsFeature &feature, QgsVectorLayer* layer)
+void QgsVBSLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVectorLayer* layer )
 {
   QgsVBSSearchProvider::SearchResult result;
   result.bbox = feature.geometry()->boundingBox();
@@ -149,7 +151,7 @@ void QgsVBSLocalDataSearchCrawler::buildResult(const QgsFeature &feature, QgsVec
   {
     result.pos = result.bbox.center();
   }
-  result.text = tr( "%1: Layer %2, feature %3" ).arg(mSearchText).arg( layer->name() ).arg( feature.id() );
+  result.text = tr( "%1: Layer %2, feature %3" ).arg( mSearchText ).arg( layer->name() ).arg( feature.id() );
   emit searchResultFound( result );
 }
 

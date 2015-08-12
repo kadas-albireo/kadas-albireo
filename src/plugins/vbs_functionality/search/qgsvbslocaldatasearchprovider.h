@@ -68,7 +68,7 @@ class QgsVBSLocalDataSearchCrawler : public QObject
     QMutex mAbortMutex;
     bool mAborted;
 
-    void buildResult(const QgsFeature& feature, QgsVectorLayer *layer);
+    void buildResult( const QgsFeature& feature, QgsVectorLayer *layer );
 };
 
 #endif // QGSVBSLOCALDATASEARCHPROVIDER_HPP
