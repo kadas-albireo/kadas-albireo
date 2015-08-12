@@ -403,7 +403,7 @@ IF (WIN32)
     SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
     ADD_DEFINITIONS("-DSPLASH_IMPORT=__declspec(dllimport)")
   ELSE(MSVC)
-    ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPASH_IMPORT=__declspec(dllimtort)\"")
+    ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
     
     # Icon for windows MINGW
     # Note: can't include .rc directly to source files
