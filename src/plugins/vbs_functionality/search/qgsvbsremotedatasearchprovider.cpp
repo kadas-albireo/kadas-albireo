@@ -21,13 +21,13 @@
 #include "qgslogger.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QSettings>
 #include <qjson/parser.h>
 
 
 const int QgsVBSRemoteDataSearchProvider::sSearchTimeout = 2000;
 const int QgsVBSRemoteDataSearchProvider::sResultCountLimit = 100;
 const QByteArray QgsVBSRemoteDataSearchProvider::sGeoAdminUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer";
-const QByteArray QgsVBSRemoteDataSearchProvider::sGeoAdminReferrer = "http://localhost";
 
 
 QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *iface )
@@ -57,7 +57,7 @@ void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , co
   }
 
   QNetworkRequest req( url );
-  req.setRawHeader( "Referer", sGeoAdminReferrer );
+  req.setRawHeader( "Referer", QSettings().value( "/vbsfunctionality/referrer", "http://localhost" ).toByteArray() );
   mNetReply = QgsNetworkAccessManager::instance()->get( req );
   connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );

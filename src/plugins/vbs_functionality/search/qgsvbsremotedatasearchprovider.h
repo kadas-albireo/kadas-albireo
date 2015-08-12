@@ -39,7 +39,6 @@ class QgsVBSRemoteDataSearchProvider : public QgsVBSSearchProvider
     static const int sSearchTimeout;
     static const int sResultCountLimit;
     static const QByteArray sGeoAdminUrl;
-    static const QByteArray sGeoAdminReferrer;
 
     QNetworkReply* mNetReply;
     QRegExp mPatBox;
