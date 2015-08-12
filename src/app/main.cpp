@@ -47,9 +47,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-extern SPLASH_IMPORT const char* splash_image[];
+extern SPLASH_EXPORT const char* splash_image[];
 
-#ifdef WIN32
+#ifdef _WIN32
 // Open files in binary mode
 #include <fcntl.h> /*  _O_BINARY */
 #include <windows.h>
@@ -237,7 +237,7 @@ static void dumpBacktrace( unsigned int depth )
     close( stderr_fd );
     wait( &status );
   }
-#elif defined(Q_OS_WIN)
+#elif defined(_MSC_VER)
   void **buffer = new void *[ depth ];
 
   SymSetOptions( SYMOPT_DEFERRED_LOADS | SYMOPT_INCLUDE_32BIT_MODULES | SYMOPT_UNDNAME );
@@ -437,7 +437,7 @@ int main( int argc, char *argv[] )
   signal( SIGXFSZ, qgisCrash );
 #endif
 
-#ifdef Q_OS_WIN
+#ifdef __MSC_VER
   SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
 #endif
 
@@ -693,7 +693,7 @@ int main( int argc, char *argv[] )
     gdalShares << QCoreApplication::applicationDirPath().append( "/share/gdal" )
     << appResources.append( "/share/gdal" )
     << appResources.append( "/gdal" );
-    Q_FOREACH( const QString& gdalShare, gdalShares )
+    Q_FOREACH ( const QString& gdalShare, gdalShares )
     {
       if ( QFile::exists( gdalShare ) )
       {
