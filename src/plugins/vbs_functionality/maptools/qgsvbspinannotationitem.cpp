@@ -18,7 +18,7 @@
 #include "qgsvbspinannotationitem.h"
 #include "qgscoordinatetransform.h"
 #include "qgslogger.h"
-#include <gdal/gdal.h>
+#include <gdal.h>
 #include <QImageReader>
 #include <qmath.h>
 #include <QSettings>

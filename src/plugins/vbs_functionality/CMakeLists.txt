@@ -61,6 +61,7 @@ INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
      ${CMAKE_BINARY_DIR}/src/ui
      ${QJSON_INCLUDE_DIR}
+     ${GDAL_INCLUDE_DIR}
      ../../core
 ../../core/geometry
      ../../gui
