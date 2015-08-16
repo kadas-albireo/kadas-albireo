@@ -93,6 +93,7 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgisInterface *iface, QWid
   connect( mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
   connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), mCoordinateLineEdit, SLOT( clear() ) );
+  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( displayFormatChanged() ) );
 
   syncProjectCrs();
 }
@@ -116,14 +117,20 @@ QgsVBSCoordinateDisplayer::~QgsVBSCoordinateDisplayer()
     coordsEdit->setVisible( true );
 }
 
-void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
+QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
 {
   QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
   QgsVBSCoordinateConverter* conv = variant2ptr<QgsVBSCoordinateConverter>( v );
   if ( conv )
   {
-    mCoordinateLineEdit->setText( conv->convert( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs() ) );
+    return conv->convert( p, crs );
   }
+  return QString();
+}
+
+void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
+{
+  mCoordinateLineEdit->setText( getDisplayString( p, mQGisIface->mapCanvas()->mapSettings().destinationCrs() ) );
 }
 
 void QgsVBSCoordinateDisplayer::syncProjectCrs()

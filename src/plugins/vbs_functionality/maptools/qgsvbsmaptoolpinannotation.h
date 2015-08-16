@@ -20,13 +20,19 @@
 
 #include "qgsmaptoolannotation.h"
 
+class QgsVBSCoordinateDisplayer;
+
 class QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
 {
   public:
-    QgsVBSMapToolPinAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
+    QgsVBSMapToolPinAnnotation( QgsMapCanvas* canvas, QgsVBSCoordinateDisplayer* coordinateDisplayer )
+        : QgsMapToolAnnotation( canvas ), mCoordinateDisplayer( coordinateDisplayer ) {}
 
   protected:
     QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+
+  private:
+    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
 };
 
 #endif // QGSVBSMAPTOOLPIN_H

@@ -20,14 +20,23 @@
 
 #include "qgssvgannotationitem.h"
 
+class QgsVBSCoordinateDisplayer;
+
 class QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
 {
+    Q_OBJECT
   public:
 
-    QgsVBSPinAnnotationItem( QgsMapCanvas* canvas );
+    QgsVBSPinAnnotationItem( QgsMapCanvas* canvas, QgsVBSCoordinateDisplayer* coordinateDisplayer );
 
     void setMapPosition( const QgsPoint& pos ) override;
     double getHeightAtCurrentPos();
+
+  private:
+    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
+
+  private slots:
+    void updateToolTip();
 };
 
 #endif // QGSVBSPINANNOTATIONITEM_H

@@ -22,7 +22,7 @@
 
 QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( QMouseEvent* e )
 {
-  QgsVBSPinAnnotationItem* pinItem = new QgsVBSPinAnnotationItem( mCanvas );
+  QgsVBSPinAnnotationItem* pinItem = new QgsVBSPinAnnotationItem( mCanvas, mCoordinateDisplayer );
   pinItem->setMapPosition( toMapCoordinates( e->pos() ) );
   pinItem->setSelected( true );
   return pinItem;

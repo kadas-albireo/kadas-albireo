@@ -42,7 +42,7 @@ void QgsVBSFunctionality::initGui()
 {
   mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
   mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
-  mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mQGisIface->mapCanvas() );
+  mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mQGisIface->mapCanvas(), mCoordinateDisplayer );
   mActionPinAnnotation = new QAction( QIcon( ":/vbsfunctionality/icons/pin_red.svg" ), tr( "Add pin" ), this );
   mActionPinAnnotation->setCheckable( true );
   mMapToolPinAnnotation->setAction( mActionPinAnnotation );

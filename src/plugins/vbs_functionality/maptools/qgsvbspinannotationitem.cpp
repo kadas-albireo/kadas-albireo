@@ -17,13 +17,16 @@
 
 #include "qgsvbspinannotationitem.h"
 #include "qgscoordinatetransform.h"
+#include "../qgsvbscoordinatedisplayer.h"
 #include "qgslogger.h"
+#include "qgsmapcanvas.h"
 #include <gdal.h>
 #include <QImageReader>
 #include <qmath.h>
 #include <QSettings>
 
-QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas ): QgsSvgAnnotationItem( canvas )
+QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSCoordinateDisplayer *coordinateDisplayer )
+    : QgsSvgAnnotationItem( canvas ), mCoordinateDisplayer( coordinateDisplayer )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
                 QgsAnnotationItem::ItemHasNoFrame |
@@ -33,18 +36,26 @@ QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas ): QgsSvg
   setFilePath( ":/vbsfunctionality/icons/pin_red.svg" );
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
+  connect( mCoordinateDisplayer, SIGNAL( displayFormatChanged() ), this, SLOT( updateToolTip() ) );
+}
+
+void QgsVBSPinAnnotationItem::updateToolTip()
+{
+  QString posStr = mCoordinateDisplayer->getDisplayString( mGeoPos, mGeoPosCrs );
+  if ( posStr.isEmpty() )
+  {
+    posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
+  }
+  QString toolTipText = tr( "Position: %1\nHeight: %3" )
+                        .arg( posStr )
+                        .arg( getHeightAtCurrentPos() );
+  setToolTip( toolTipText );
 }
 
 void QgsVBSPinAnnotationItem::setMapPosition( const QgsPoint& pos )
 {
   QgsSvgAnnotationItem::setMapPosition( pos );
-
-  QString toolTipText = tr( "Position: %1 (%2)\nHeight: %3" )
-                        .arg( mGeoPos.toString() )
-                        .arg( mGeoPosCrs.authid() )
-                        .arg( getHeightAtCurrentPos() );
-
-  setToolTip( toolTipText );
+  updateToolTip();
 }
 
 double QgsVBSPinAnnotationItem::getHeightAtCurrentPos()

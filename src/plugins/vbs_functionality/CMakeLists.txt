@@ -23,19 +23,21 @@ SET (vbsfunctionality_HDRS
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
   maptools/qgsvbsmaptoolpinannotation.h
-  maptools/qgsvbspinannotationitem.h
   utils/qgsvbslltoutm.cpp
+  utils/qgsvbsspinner.cpp
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscoordinatedisplayer.h
+  maptools/qgsvbspinannotationitem.h
   search/qgsvbssearchbox.h
   search/qgsvbssearchprovider.h
   search/qgsvbscoordinatesearchprovider.h
   search/qgsvbslocationsearchprovider.h
   search/qgsvbslocaldatasearchprovider.h
   search/qgsvbsremotedatasearchprovider.h
+  utils/qgsvbsspinner.h
   qgsvbscrsselection.h
 )
 

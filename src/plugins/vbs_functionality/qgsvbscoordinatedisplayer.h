@@ -25,6 +25,7 @@ class QgisInterface;
 class QComboBox;
 class QLabel;
 class QLineEdit;
+class QgsCoordinateReferenceSystem;
 
 class QgsVBSCoordinateDisplayer : public QWidget
 {
@@ -32,12 +33,16 @@ class QgsVBSCoordinateDisplayer : public QWidget
   public:
     QgsVBSCoordinateDisplayer( QgisInterface* iface, QWidget* parent = 0 );
     ~QgsVBSCoordinateDisplayer();
+    QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
 
   private:
     QgisInterface* mQGisIface;
     QComboBox* mCRSSelectionCombo;
     QLabel* mIconLabel;
     QLineEdit* mCoordinateLineEdit;
+
+  signals:
+    void displayFormatChanged();
 
   private slots:
     void displayCoordinates( const QgsPoint& p );
