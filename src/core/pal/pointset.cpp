@@ -33,6 +33,7 @@
 #if defined(_VERBOSE_) || (_DEBUG_) || (_DEBUG_FULL_)
 #include <iostream>
 #endif
+#include <limits>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

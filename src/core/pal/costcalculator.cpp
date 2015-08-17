@@ -18,6 +18,7 @@
 #include <cmath>
 #include <cstring>
 #include <cfloat>
+#include <limits>
 
 #include <pal/layer.h>
 #include <pal/pal.h>
