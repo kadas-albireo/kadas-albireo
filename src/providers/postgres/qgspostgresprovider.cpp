@@ -1039,6 +1039,9 @@ bool QgsPostgresProvider::hasSufficientPermsAndCapabilities()
 
   //supports transactions
   mEnabledCapabilities |= QgsVectorDataProvider::TransactionSupport;
+
+  // supports circular geometries
+  mEnabledCapabilities |= QgsVectorDataProvider::CircularGeometries;
   return true;
 }
 

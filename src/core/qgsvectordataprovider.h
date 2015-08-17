@@ -93,8 +93,10 @@ class CORE_EXPORT QgsVectorDataProvider : public QgsDataProvider
       SimplifyGeometries =           1 << 14,
       /** supports topological simplification of geometries on provider side according to a distance tolerance */
       SimplifyGeometriesWithTopologicalValidation = 1 << 15,
-      /** supports transactions*/
-      TransactionSupport = 1 << 16
+      /** Supports transactions*/
+      TransactionSupport = 1 << 16,
+      /** Supports circular geometry types (circularstring, compoundcurve, curvepolygon)*/
+      CircularGeometries = 1 << 17
     };
 
     /** bitmask of all provider's editing capabilities */

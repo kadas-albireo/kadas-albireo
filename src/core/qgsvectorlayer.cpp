@@ -42,6 +42,7 @@
 #include "qgsclipper.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
+#include "qgscurvev2.h"
 #include "qgsdatasourceuri.h"
 #include "qgsexpressionfieldbuffer.h"
 #include "qgsfeature.h"
@@ -1053,6 +1054,27 @@ int QgsVectorLayer::addRing( const QList<QgsPoint>& ring )
   return utils.addRing( ring );
 }
 
+int QgsVectorLayer::addRing( QgsCurveV2* ring )
+{
+  if ( !mEditBuffer || !mDataProvider )
+  {
+    return 6;
+  }
+
+  if ( !ring )
+  {
+    return 1;
+  }
+
+  if ( !ring->isClosed() )
+  {
+    delete ring; return 2;
+  }
+
+  QgsVectorLayerEditUtils utils( this );
+  return utils.addRing( ring );
+}
+
 int QgsVectorLayer::addPart( const QList<QgsPoint> &points )
 {
   if ( !mEditBuffer || !mDataProvider )
@@ -1075,6 +1097,27 @@ int QgsVectorLayer::addPart( const QList<QgsPoint> &points )
   return utils.addPart( points, *mSelectedFeatureIds.constBegin() );
 }
 
+int QgsVectorLayer::addPart( QgsCurveV2* ring )
+{
+  if ( !mEditBuffer || !mDataProvider )
+    return 7;
+
+  //number of selected features must be 1
+
+  if ( mSelectedFeatureIds.size() < 1 )
+  {
+    QgsDebugMsg( "Number of selected features <1" );
+    return 4;
+  }
+  else if ( mSelectedFeatureIds.size() > 1 )
+  {
+    QgsDebugMsg( "Number of selected features >1" );
+    return 5;
+  }
+
+  QgsVectorLayerEditUtils utils( this );
+  return utils.addPart( ring, *mSelectedFeatureIds.constBegin() );
+}
 
 int QgsVectorLayer::translateFeature( QgsFeatureId featureId, double dx, double dy )
 {

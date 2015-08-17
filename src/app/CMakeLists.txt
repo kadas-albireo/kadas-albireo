@@ -115,6 +115,8 @@ SET(QGIS_APP_SRCS
   qgsvectorlayerproperties.cpp
   qgsvisibilitypresets.cpp
   qgshandlebadlayers.cpp
+  qgsmaptooladdcircularstring.cpp
+  qgsmaptoolcircularstringcurvepoint.cpp
 
   composer/qgsattributeselectiondialog.cpp
   composer/qgscomposer.cpp
@@ -235,6 +237,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsimplify.h
   qgsmaptoolsplitfeatures.h
   qgsmaptoolsplitparts.h
+  qgsmaptooladdcircularstring.h
 
   nodetool/qgsmaptoolnodetool.h
   nodetool/qgsselectedfeature.h
