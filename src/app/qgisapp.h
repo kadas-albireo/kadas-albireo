@@ -59,8 +59,6 @@ class QgsPoint;
 class QgsProviderRegistry;
 class QgsPythonUtils;
 class QgsRectangle;
-class QgsRedlining;
-class QgsRedliningLayer;
 class QgsSnappingUtils;
 class QgsUndoWidget;
 class QgsVectorLayer;
@@ -69,6 +67,8 @@ class QgsDoubleSpinBox;
 
 class QDomDocument;
 class QNetworkReply;
+class QNetworkProxy;
+class QAuthenticator;
 
 class QgsBrowserDockWidget;
 class QgsAdvancedDigitizingDockWidget;
@@ -599,8 +599,11 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     //! Set app stylesheet from settings
     void setAppStyleSheet( const QString& stylesheet );
 
+    //! request credentials for network manager
+    void namAuthenticationRequired( QNetworkReply *reply, QAuthenticator *auth );
+    void namProxyAuthenticationRequired( const QNetworkProxy &proxy, QAuthenticator *auth );
 #ifndef QT_NO_OPENSSL
-    void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
+    void namSslErrors( QNetworkReply *reply, const QList<QSslError> &errors );
 #endif
     void namRequestTimedOut( QNetworkReply *reply );
 
@@ -863,8 +866,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void fileSaveAs();
     //! Export project in dxf format
     void dxfExport();
-    //! Export project in kml format
-    void kmlExport();
     //! Open the project file corresponding to the
     //! text)= of the given action.
     void openProject( QAction *action );
@@ -916,8 +917,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void hideSelectedLayers();
     //reimplements method from base (gui) class
     void showSelectedLayers();
-    //! Returns the default redlining layer
-    QgsRedliningLayer* redliningLayer();
     //! Return pointer to the active layer
     QgsMapLayer *activeLayer();
     //! set the active layer
@@ -955,6 +954,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void newBookmark();
     //! activates the add feature tool
     void addFeature();
+    //! activates the add circular string tool
+    void circularStringCurvePoint();
     //! activates the move feature tool
     void moveFeature();
     //! activates the offset curve tool
@@ -1456,6 +1457,7 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
         QgsMapTool *mMeasureArea;
         QgsMapTool *mMeasureAngle;
         QgsMapTool *mAddFeature;
+        QgsMapTool *mCircularStringCurvePoint;
         QgsMapTool *mMoveFeature;
         QgsMapTool *mOffsetCurve;
         QgsMapTool *mReshapeFeatures;
@@ -1649,8 +1651,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QToolButton* mBtnFilterLegend;
 
     QgsSnappingUtils* mSnappingUtils;
-
-    QgsRedlining* mRedlining;
 
 #ifdef HAVE_TOUCH
     bool gestureEvent( QGestureEvent *event );

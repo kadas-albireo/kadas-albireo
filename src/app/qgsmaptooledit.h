@@ -20,6 +20,7 @@
 #include "qgsmaptooladvanceddigitizing.h"
 
 class QgsRubberBand;
+class QgsGeometryRubberBand;
 class QgsVectorLayer;
 class QKeyEvent;
 
@@ -42,7 +43,9 @@ class APP_EXPORT QgsMapToolEdit: public QgsMapToolAdvancedDigitizing
     */
     QgsRubberBand* createRubberBand( QGis::GeometryType geometryType = QGis::Line, bool alternativeBand = false );
 
-    /**Returns the current vector layer of the map canvas or 0*/
+    QgsGeometryRubberBand* createGeometryRubberBand( QGis::GeometryType geometryType = QGis::Line ) const;
+
+    /** Returns the current vector layer of the map canvas or 0*/
     QgsVectorLayer* currentVectorLayer();
 
     /**Adds vertices to other features to keep topology up to date, e.g. to neighbouring polygons.

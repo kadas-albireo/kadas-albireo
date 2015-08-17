@@ -63,7 +63,7 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
      */
     virtual bool removeGeometry( int nr );
 
-    virtual void transform( const QgsCoordinateTransform& ct ) override;
+    virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
 #if 0
     virtual void clip( const QgsRectangle& rect ) override;
@@ -78,8 +78,6 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     QDomElement asGML2( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QDomElement asGML3( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QString asJSON( int precision = 17 ) const override;
-    /**Exports geometry as a KML fragment*/
-    QString asKML( int precision = 17 ) const override;
 
     virtual QgsRectangle calculateBoundingBox() const override;
 

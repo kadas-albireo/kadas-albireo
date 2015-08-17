@@ -43,8 +43,6 @@ class CORE_EXPORT QgsLineStringV2: public QgsCurveV2
     QDomElement asGML2( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QDomElement asGML3( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QString asJSON( int precision = 17 ) const override;
-    /**Exports geometry as a KML fragment*/
-    QString asKML( int precision = 17 ) const override;
 
     //curve interface
     virtual double length() const override;
@@ -60,7 +58,7 @@ class CORE_EXPORT QgsLineStringV2: public QgsCurveV2
     void append( const QgsLineStringV2* line );
 
     void draw( QPainter& p ) const override;
-    void transform( const QgsCoordinateTransform& ct ) override;
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
 
     void addToPainterPath( QPainterPath& path ) const override;

@@ -175,11 +175,6 @@ QString QgsPointV2::asJSON( int precision ) const
          + "]}";
 }
 
-QString QgsPointV2::asKML( int precision ) const
-{
-  return QString( "<Point><coordinates>%1,%2</coordinates></Point>" ).arg( qgsDoubleToString( mX, precision ) ).arg( qgsDoubleToString( mY, precision ) );
-}
-
 void QgsPointV2::draw( QPainter& p ) const
 {
   p.drawRect( mX - 2, mY - 2, 4, 4 );
@@ -191,9 +186,9 @@ void QgsPointV2::clear()
   mX = mY = mZ = mM = 0.;
 }
 
-void QgsPointV2::transform( const QgsCoordinateTransform& ct )
+void QgsPointV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
-  ct.transformInPlace( mX, mY, mZ );
+  ct.transformInPlace( mX, mY, mZ, d );
 }
 
 void QgsPointV2::coordinateSequence( QList< QList< QList< QgsPointV2 > > >& coord ) const

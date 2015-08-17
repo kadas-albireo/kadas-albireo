@@ -16,6 +16,7 @@ email                : marco.hugentobler at sourcepole dot com
 #ifndef QGSABSTRACTGEOMETRYV2
 #define QGSABSTRACTGEOMETRYV2
 
+#include "qgscoordinatetransform.h"
 #include "qgsrectangle.h"
 #include "qgswkbtypes.h"
 #include <QString>
@@ -29,7 +30,7 @@ class QgsPointV2;
 class QgsConstWkbPtr;
 class QgsWkbPtr;
 class QPainter;
-struct QgsVertexId;
+class QgsVertexId;
 
 /**\ingroup core
  * \class QgsAbstractGeometryV2
@@ -176,15 +177,12 @@ class CORE_EXPORT QgsAbstractGeometryV2
      */
     virtual QString asJSON( int precision = 17 ) const = 0;
 
-    /**Exports geometry as a KML fragment*/
-    virtual QString asKML( int precision = 17 ) const { Q_UNUSED( precision ); return QString(); }// = 0;
-
     //render pipeline
 
     /** Transforms the geometry using a coordinate transform
      * @param ct coordinate transform
      */
-    virtual void transform( const QgsCoordinateTransform& ct ) = 0;
+    virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) = 0;
 
     /** Transforms the geometry using a QTransform object
      * @param t QTransform transformation

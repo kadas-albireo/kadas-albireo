@@ -8,6 +8,7 @@ SET(QGIS_APP_SRCS
   qgsaddattrdialog.cpp
   qgsaddtaborgroup.cpp
   qgsaddjoindialog.cpp
+  qgsannotationwidget.cpp
   qgsattributeactiondialog.cpp
   qgsattributetypedialog.cpp
   qgsattributetabledialog.cpp
@@ -29,6 +30,8 @@ SET(QGIS_APP_SRCS
   qgsdecorationgrid.cpp
   qgsdecorationgriddialog.cpp
   qgsdxfexportdialog.cpp
+  qgsformannotationdialog.cpp
+  qgshtmlannotationdialog.cpp
   qgsdelattrdialog.cpp
   qgsdiagramproperties.cpp
   qgsdisplayangle.cpp
@@ -36,7 +39,6 @@ SET(QGIS_APP_SRCS
   qgsfieldsproperties.cpp
   qgsidentifyresultsdialog.cpp
   qgsfeatureaction.cpp
-  qgskmlexportdialog.cpp
   qgslabeldialog.cpp
   qgslabelpropertydialog.cpp
   qgslabelengineconfigdialog.cpp
@@ -52,6 +54,7 @@ SET(QGIS_APP_SRCS
   qgsmaptooladdpart.cpp
   qgsmaptooladdring.cpp
   qgsmaptoolfillring.cpp
+  qgsmaptoolannotation.cpp
   qgsmaptoolcapture.cpp
   qgsmaptoolchangelabelproperties.cpp
   qgsmaptooldeletering.cpp
@@ -84,7 +87,6 @@ SET(QGIS_APP_SRCS
   qgsmaptoolsplitparts.cpp
   qgsmaptoolsvgannotation.cpp
   qgsmaptooltextannotation.cpp
-  qgsmaptoolsredlining.cpp
 
   nodetool/qgsmaptoolnodetool.cpp
   nodetool/qgsselectedfeature.cpp
@@ -102,17 +104,19 @@ SET(QGIS_APP_SRCS
   qgsprojectproperties.cpp
   qgsrastercalcdialog.cpp
   qgsrasterlayerproperties.cpp
-  qgsredlining.cpp
-  qgsredliningtextdialog.cpp
+  qgstextannotationdialog.cpp
   qgsshortcutsmanager.cpp
   qgsguivectorlayertools.h
   qgssnappingdialog.cpp
+  qgssvgannotationdialog.cpp
   qgsundowidget.cpp
   qgstipgui.cpp
   qgstipfactory.cpp
   qgsvectorlayerproperties.cpp
   qgsvisibilitypresets.cpp
   qgshandlebadlayers.cpp
+  qgsmaptooladdcircularstring.cpp
+  qgsmaptoolcircularstringcurvepoint.cpp
 
   composer/qgsattributeselectiondialog.cpp
   composer/qgscomposer.cpp
@@ -164,6 +168,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsaddattrdialog.h
   qgsaddjoindialog.h
   qgsaddtaborgroup.h
+  qgsannotationwidget.h
   qgsattributeactiondialog.h
   qgsattributetypedialog.h
   qgsattributetabledialog.h
@@ -190,9 +195,9 @@ SET (QGIS_APP_MOC_HDRS
   qgsfeatureaction.h
   qgsfieldcalculator.h
   qgsfieldsproperties.h
-
+  qgsformannotationdialog.h
+  qgshtmlannotationdialog.h
   qgsidentifyresultsdialog.h
-  qgskmlexportdialog.h
   qgslabeldialog.h
   qgslabelengineconfigdialog.h
   qgslabelinggui.h
@@ -212,7 +217,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptooldeletepart.h
   qgsmaptooldeletering.h
   qgsmaptoolfeatureaction.h
-  qgsmaptoollabel.h
   qgsmaptoolpinlabels.h
   qgsmaptoolshowhidelabels.h
   qgsmaptoolidentifyaction.h
@@ -233,7 +237,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsimplify.h
   qgsmaptoolsplitfeatures.h
   qgsmaptoolsplitparts.h
-  qgsmaptoolsredlining.h
+  qgsmaptooladdcircularstring.h
 
   nodetool/qgsmaptoolnodetool.h
   nodetool/qgsselectedfeature.h
@@ -247,10 +251,10 @@ SET (QGIS_APP_MOC_HDRS
   qgsprojectproperties.h
   qgsrastercalcdialog.h
   qgsrasterlayerproperties.h
-  qgsredlining.h
-  qgsredliningtextdialog.h
   qgssnappingdialog.h
   qgssponsors.h
+  qgssvgannotationdialog.h
+  qgstextannotationdialog.h
   qgstipgui.h
   qgstipfactory.h
   qgsundowidget.h
@@ -400,10 +404,10 @@ QT4_WRAP_CPP(QGIS_APP_MOC_SRCS ${QGIS_APP_MOC_HDRS})
 IF (WIN32)
   IF (MSVC)
     SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
-    ADD_DEFINITIONS("\"-DSPLASH_IMPORT=__declspec(dllimport)\"")
+    ADD_DEFINITIONS("-DSPLASH_IMPORT=__declspec(dllimport)")
   ELSE(MSVC)
     ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
-
+    
     # Icon for windows MINGW
     # Note: can't include .rc directly to source files
     # as it's ignored when used MinGW
@@ -430,7 +434,7 @@ IF(PEDANTIC)
     SET_SOURCE_FILES_PROPERTIES(
         qgisappinterface.cpp
         ${CMAKE_BINARY_DIR}/src/app/moc_qgisappinterface.cxx
-    PROPERTIES COMPILE_FLAGS "/wd4996"
+	PROPERTIES COMPILE_FLAGS "/wd4996"
     )
   ELSE(MSVC)
     SET_SOURCE_FILES_PROPERTIES(
@@ -554,11 +558,11 @@ IF (ANDROID)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} log)
 ENDIF (ANDROID)
 
-IF(MSVC)
+IF(WIN32)
   ADD_DEFINITIONS(-DQWT_DLL)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} DbgHelp)
   TARGET_LINK_LIBRARIES(qgis_app DbgHelp)
-ENDIF(MSVC)
+ENDIF(WIN32)
 
 IF (APPLE)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} ${APP_SERVICES_LIBRARY} )

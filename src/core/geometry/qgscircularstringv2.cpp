@@ -337,7 +337,7 @@ QgsLineStringV2* QgsCircularStringV2::curveToLine() const
 
   for ( int i = 0; i < ( nPoints - 2 ) ; i += 2 )
   {
-    segmentizePoints( pointN( i ), pointN( i + 1 ), pointN( i + 2 ), points );
+    segmentize( pointN( i ), pointN( i + 1 ), pointN( i + 2 ), points );
   }
 
   line->setPoints( points );
@@ -445,7 +445,7 @@ void QgsCircularStringV2::setPoints( const QList<QgsPointV2>& points )
   }
 }
 
-void QgsCircularStringV2::segmentizePoints( const QgsPointV2& p1, const QgsPointV2& p2, const QgsPointV2& p3, QList<QgsPointV2>& points ) const
+void QgsCircularStringV2::segmentize( const QgsPointV2& p1, const QgsPointV2& p2, const QgsPointV2& p3, QList<QgsPointV2>& points ) const
 {
   //adapted code from postgis
   double radius = 0;
@@ -577,7 +577,7 @@ void QgsCircularStringV2::draw( QPainter& p ) const
   p.drawPath( path );
 }
 
-void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct )
+void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
   double* zArray = mZ.data();
 
@@ -591,7 +591,7 @@ void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct )
       zArray[i] = 0;
     }
   }
-  ct.transformCoords( nPoints, mX.data(), mY.data(), zArray );
+  ct.transformCoords( nPoints, mX.data(), mY.data(), zArray, d );
   if ( !hasZ )
   {
     delete[] zArray;
@@ -636,7 +636,7 @@ void QgsCircularStringV2::addToPainterPath( QPainterPath& path ) const
   for ( int i = 0; i < ( nPoints - 2 ) ; i += 2 )
   {
     QList<QgsPointV2> pt;
-    segmentizePoints( QgsPointV2( mX[i], mY[i] ), QgsPointV2( mX[i + 1], mY[i + 1] ), QgsPointV2( mX[i + 2], mY[i + 2] ), pt );
+    segmentize( QgsPointV2( mX[i], mY[i] ), QgsPointV2( mX[i + 1], mY[i + 1] ), QgsPointV2( mX[i + 2], mY[i + 2] ), pt );
     for ( int j = 1; j < pt.size(); ++j )
     {
       path.lineTo( pt.at( j ).x(), pt.at( j ).y() );

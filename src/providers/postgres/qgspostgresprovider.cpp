@@ -1039,6 +1039,9 @@ bool QgsPostgresProvider::hasSufficientPermsAndCapabilities()
 
   //supports transactions
   mEnabledCapabilities |= QgsVectorDataProvider::TransactionSupport;
+
+  // supports circular geometries
+  mEnabledCapabilities |= QgsVectorDataProvider::CircularGeometries;
   return true;
 }
 
@@ -1558,7 +1561,6 @@ QString QgsPostgresProvider::geomParam( int offset ) const
       case QGis::WKBPolygon25D:
       case QGis::WKBUnknown:
       case QGis::WKBNoGeometry:
-      case QGis::WKBMixedGeometry:
         forceMulti = false;
         break;
 
