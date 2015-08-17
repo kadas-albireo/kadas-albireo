@@ -43,7 +43,7 @@
 #include <cfloat>
 #include <ctime>
 #include <list>
-#include <limits.h> //for INT_MAX
+#include <limits> //for INT_MAX
 
 #include <pal/pal.h>
 #include <pal/palstat.h>

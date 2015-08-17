@@ -43,6 +43,7 @@
 #include <cmath>
 #include <cstring>
 #include <cfloat>
+#include <limits>
 
 #include <pal/pal.h>
 #include <pal/layer.h>

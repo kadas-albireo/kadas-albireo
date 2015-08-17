@@ -2010,7 +2010,7 @@ bool QgsCoordinateReferenceSystem::syncDatumTransform( const QString& dbPath )
     {
       qWarning( "field %s not found", map[i].src );
       CSLDestroy( fieldnames );
-      fclose( fp );
+      VSIFClose( fp );
       return false;
     }
 
@@ -2062,7 +2062,7 @@ bool QgsCoordinateReferenceSystem::syncDatumTransform( const QString& dbPath )
   int openResult = sqlite3_open( dbPath.toUtf8().constData(), &db );
   if ( openResult != SQLITE_OK )
   {
-    fclose( fp );
+    VSIFClose( fp );
     return false;
   }
 
@@ -2070,7 +2070,7 @@ bool QgsCoordinateReferenceSystem::syncDatumTransform( const QString& dbPath )
   {
     qCritical( "Could not begin transaction: %s [%s]\n", QgsApplication::srsDbFilePath().toLocal8Bit().constData(), sqlite3_errmsg( db ) );
     sqlite3_close( db );
-    fclose( fp );
+    VSIFClose( fp );
     return false;
   }
 
@@ -2136,10 +2136,13 @@ bool QgsCoordinateReferenceSystem::syncDatumTransform( const QString& dbPath )
   if ( sqlite3_exec( db, "COMMIT", 0, 0, 0 ) != SQLITE_OK )
   {
     qCritical( "Could not commit transaction: %s [%s]\n", QgsApplication::srsDbFilePath().toLocal8Bit().constData(), sqlite3_errmsg( db ) );
+    sqlite3_close( db );
+    VSIFClose( fp );
     return false;
   }
 
   sqlite3_close( db );
+  VSIFClose( fp );
   return true;
 }
 
