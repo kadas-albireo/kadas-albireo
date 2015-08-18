@@ -457,8 +457,8 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   setPos( pos );
   mMapPosition.setX( annotationElem.attribute( "mapPosX", "0" ).toDouble() );
   mMapPosition.setY( annotationElem.attribute( "mapPosY", "0" ).toDouble() );
-  mMapPosition.setX( annotationElem.attribute( "geoPosX", qgsDoubleToString( mMapPosition.x() ) ).toDouble() );
-  mMapPosition.setY( annotationElem.attribute( "geoPosY", qgsDoubleToString( mMapPosition.y() ) ).toDouble() );
+  mGeoPos.setX( annotationElem.attribute( "geoPosX", qgsDoubleToString( mMapPosition.x() ) ).toDouble() );
+  mGeoPos.setY( annotationElem.attribute( "geoPosY", qgsDoubleToString( mMapPosition.y() ) ).toDouble() );
   mGeoPosCrs = QgsCoordinateReferenceSystem( annotationElem.attribute( "mapGeoPosAuthID", mMapCanvas->mapSettings().destinationCrs().authid() ) );
   mFrameBorderWidth = annotationElem.attribute( "frameBorderWidth", "0.5" ).toDouble();
   mFrameColor.setNamedColor( annotationElem.attribute( "frameColor", "#000000" ) );
@@ -485,6 +485,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
     }
   }
 
+  syncGeoPos();
   updateBoundingRect();
   updateBalloon();
 }
