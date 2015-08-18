@@ -38,10 +38,10 @@ class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
     virtual QgsAnnotationItem* createItem( QMouseEvent* e ) { return 0; }
     /**Creates an editor widget (caller takes ownership). To be implemented by subclasses.*/
     virtual QDialog* createItemEditor( QgsAnnotationItem* /*item*/ ) { return 0; }
-
-  private:
     /**Returns the topmost annotation item at the position (or 0 if none)*/
     QgsAnnotationItem* itemAtPos( const QPointF& pos );
+
+  private:
     QgsAnnotationItem* selectedItem();
     /**Returns a list of all annotationitems in the canvas*/
     QList<QgsAnnotationItem*> annotationItems();

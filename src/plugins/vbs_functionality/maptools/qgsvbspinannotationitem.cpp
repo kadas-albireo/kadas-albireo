@@ -21,8 +21,12 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include <gdal.h>
+#include <QApplication>
+#include <QClipboard>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QImageReader>
 #include <qmath.h>
+#include <QMenu>
 #include <QSettings>
 
 QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSCoordinateDisplayer *coordinateDisplayer )
@@ -124,4 +128,17 @@ double QgsVBSPinAnnotationItem::getHeightAtCurrentPos()
 
   return ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
          + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
+}
+
+void QgsVBSPinAnnotationItem::showContextMenu( const QPoint& screenPos )
+{
+  QMenu menu;
+  menu.addAction( tr( "Copy position" ), this, SLOT( copyPosition() ) );
+  menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
+  menu.exec( screenPos );
+}
+
+void QgsVBSPinAnnotationItem::copyPosition()
+{
+  QApplication::clipboard()->setText( toolTip() );
 }

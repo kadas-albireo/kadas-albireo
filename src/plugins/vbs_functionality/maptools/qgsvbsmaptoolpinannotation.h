@@ -30,6 +30,7 @@ class QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
 
   protected:
     QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    void canvasPressEvent( QMouseEvent *e ) override;
 
   private:
     QgsVBSCoordinateDisplayer* mCoordinateDisplayer;

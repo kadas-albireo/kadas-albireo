@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsmapcanvas.h"
 #include "qgsvbsmaptoolpinannotation.h"
 #include "qgsvbspinannotationitem.h"
 #include <QMouseEvent>
@@ -26,4 +27,20 @@ QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( QMouseEvent* e )
   pinItem->setMapPosition( toMapCoordinates( e->pos() ) );
   pinItem->setSelected( true );
   return pinItem;
+}
+
+void QgsVBSMapToolPinAnnotation::canvasPressEvent( QMouseEvent *e )
+{
+  if ( e->button() == Qt::RightButton )
+  {
+    QgsAnnotationItem* item = itemAtPos( e->posF() );
+    if ( dynamic_cast<QgsVBSPinAnnotationItem*>( item ) )
+    {
+      static_cast<QgsVBSPinAnnotationItem*>( item )->showContextMenu( mCanvas->mapToGlobal( e->pos() ) );
+    }
+  }
+  else
+  {
+    QgsMapToolAnnotation::canvasPressEvent( e );
+  }
 }

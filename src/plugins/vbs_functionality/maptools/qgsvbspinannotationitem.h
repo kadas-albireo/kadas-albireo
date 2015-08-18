@@ -31,11 +31,14 @@ class QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
 
     void setMapPosition( const QgsPoint& pos ) override;
     double getHeightAtCurrentPos();
+    void showContextMenu( const QPoint& screenPos );
 
   private:
     QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
 
+
   private slots:
+    void copyPosition();
     void updateToolTip();
 };
 
