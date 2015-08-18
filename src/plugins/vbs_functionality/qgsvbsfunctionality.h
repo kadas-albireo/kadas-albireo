@@ -28,6 +28,7 @@ class QgsVBSCoordinateDisplayer;
 class QgsVBSCrsSelection;
 class QgsVBSMapToolPinAnnotation;
 class QgsVBSSearchBox;
+class QgsMapTool;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -49,6 +50,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
 
   private slots:
     void activateMapToolPinAnnotation();
+    void onMapToolSet( QgsMapTool*tool );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

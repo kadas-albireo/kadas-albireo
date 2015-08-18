@@ -43,6 +43,7 @@ void QgsVBSFunctionality::initGui()
   mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
   mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
   mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mQGisIface->mapCanvas(), mCoordinateDisplayer );
+  connect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
   mActionPinAnnotation = new QAction( QIcon( ":/vbsfunctionality/icons/pin_red.svg" ), tr( "Add pin" ), this );
   mActionPinAnnotation->setCheckable( true );
   mMapToolPinAnnotation->setAction( mActionPinAnnotation );
@@ -59,6 +60,8 @@ void QgsVBSFunctionality::initGui()
 
 void QgsVBSFunctionality::unload()
 {
+  disconnect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
+
   delete mCoordinateDisplayer;
   mCoordinateDisplayer = 0;
   delete mCrsSelection;
@@ -78,4 +81,9 @@ void QgsVBSFunctionality::unload()
 void QgsVBSFunctionality::activateMapToolPinAnnotation()
 {
   mQGisIface->mapCanvas()->setMapTool( mMapToolPinAnnotation );
+}
+
+void QgsVBSFunctionality::onMapToolSet( QgsMapTool * tool )
+{
+  mActionPinAnnotation->setChecked( tool == mMapToolPinAnnotation );
 }
