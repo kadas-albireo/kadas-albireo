@@ -54,7 +54,7 @@ SectionEnd
 Section "Uninstall"
   Delete $INSTDIR\uninstall.exe
   RMDir /r "$INSTDIR"
-  Delete "$DESKTOP\QGIS Enterprise.lnk"
+  Delete "$DESKTOP\QGIS Enterprise 15.lnk"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${INSTALLATIONNAME}"
 SectionEnd
 
