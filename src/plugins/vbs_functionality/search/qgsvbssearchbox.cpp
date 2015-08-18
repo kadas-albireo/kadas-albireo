@@ -23,6 +23,7 @@
 #include "qgsvbscoordinatesearchprovider.h"
 #include "qgsvbslocationsearchprovider.h"
 #include "qgsvbslocaldatasearchprovider.h"
+#include "qgsvbsremotedatasearchprovider.h"
 #include "qgsrubberband.h"
 #include <QCheckBox>
 #include <QHeaderView>
@@ -125,6 +126,7 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
 
   connect( this, SIGNAL( textEdited( QString ) ), this, SLOT( textChanged() ) );
   connect( mSearchButton, SIGNAL( clicked() ), this, SLOT( startSearch() ) );
+  connect( mVisibleOnlyCheckBox, SIGNAL( toggled( bool ) ), this, SLOT( startSearch() ) );
   connect( &mTimer, SIGNAL( timeout() ), this, SLOT( startSearch() ) );
   connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
   connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
@@ -142,6 +144,7 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   addSearchProvider( new QgsVBSCoordinateSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSLocationSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSLocalDataSearchProvider( mIface ) );
+  addSearchProvider( new QgsVBSRemoteDataSearchProvider( mIface ) );
 }
 
 QgsVBSSearchBox::~QgsVBSSearchBox()
@@ -168,6 +171,11 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
   if ( obj == mClearButton && ev->type() == QEvent::MouseButtonPress )
   {
     clearSearch();
+    return true;
+  }
+  else if ( obj == this && ev->type() == QEvent::MouseButtonPress )
+  {
+    selectAll();
     return true;
   }
   else if ( ev->type() == QEvent::KeyPress )
@@ -249,9 +257,16 @@ void QgsVBSSearchBox::startSearch()
 
   mNumRunningProviders = mSearchProviders.count();
 
+  QgsVBSSearchProvider::SearchRegion searchRegion;
+  if ( mVisibleOnlyCheckBox->isChecked() )
+  {
+    searchRegion.crs = mIface->mapCanvas()->mapSettings().destinationCrs();
+    searchRegion.rect = mIface->mapCanvas()->mapSettings().visibleExtent();
+  }
+
   foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
   {
-    provider->startSearch( searchtext, QgsVBSSearchProvider::SearchRegion() );
+    provider->startSearch( searchtext, searchRegion );
   }
 }
 
