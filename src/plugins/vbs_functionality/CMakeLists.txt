@@ -63,7 +63,8 @@ INCLUDE_DIRECTORIES(
      ${QJSON_INCLUDE_DIR}
      ${GDAL_INCLUDE_DIR}
      ../../core
-../../core/geometry
+     ../../core/raster
+     ../../core/geometry
      ../../gui
      ../
 )

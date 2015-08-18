@@ -18,7 +18,11 @@
 #include "qgsvbsremotedatasearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsmaplayer.h"
+#include "qgsrasterlayer.h"
 #include "qgslogger.h"
+#include "qgsdatasourceuri.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
@@ -44,11 +48,23 @@ QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *i
 void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , const SearchRegion &searchRegion )
 {
   QStringList remoteLayers;
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
+  {
+    if ( layer->type() != QgsMapLayer::RasterLayer )
+    {
+      continue;
+    }
+    QgsRasterLayer* rasterLayer = static_cast<QgsRasterLayer*>( layer );
+    QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
+    if ( url.queryItemValue( "url" ).startsWith( "http://wmts.geo.admin.ch" ) )
+    {
+      remoteLayers.append( url.queryItemValue( "layers" ).split( "," ) );
+    }
+  }
 
   QUrl url( sGeoAdminUrl );
   url.addQueryItem( "type", "featuresearch" );
   url.addQueryItem( "searchText", searchtext );
-  url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
   url.addQueryItem( "features", remoteLayers.join( "," ) );
   if ( !searchRegion.rect.isEmpty() )
   {
@@ -87,8 +103,18 @@ void QgsVBSRemoteDataSearchProvider::replyFinished()
     emit searchFinished();
     return;
   }
+  QStringList bboxStr = mNetReply->request().url().queryItemValue( "bbox" ).split( "," );
+  QgsRectangle bbox;
+  if ( bboxStr.size() == 4 )
+  {
+    bbox.setXMinimum( bboxStr[0].toDouble() );
+    bbox.setYMinimum( bboxStr[1].toDouble() );
+    bbox.setXMaximum( bboxStr[2].toDouble() );
+    bbox.setYMaximum( bboxStr[3].toDouble() );
+  }
 
   QByteArray replyText = mNetReply->readAll();
+  QgsDebugMsg( replyText );
   QJson::Parser parser;
   QVariant result = parser.parse( replyText );
   if ( result.isNull() )
@@ -112,10 +138,14 @@ void QgsVBSRemoteDataSearchProvider::replyFinished()
     // When bbox is empty, fallback to pos + zoomScale is used
     searchResult.pos = QgsPoint( itemAttrsMap["lon"].toDouble(), itemAttrsMap["lat"].toDouble() );
     searchResult.pos = QgsCoordinateTransform( QgsCoordinateReferenceSystem( "EPSG:4326" ), QgsCoordinateReferenceSystem( "EPSG:21781" ) ).transform( searchResult.pos );
+    if ( !bbox.isEmpty() && !bbox.contains( searchResult.pos ) )
+    {
+      continue;
+    }
     searchResult.zoomScale = 1000;
 
     searchResult.category = tr( "Feature" );
-    searchResult.text = itemAttrsMap["label"].toString();
+    searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );
     emit searchResultFound( searchResult );
