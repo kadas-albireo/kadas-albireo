@@ -117,6 +117,7 @@ SET(QGIS_APP_SRCS
   qgshandlebadlayers.cpp
   qgsmaptooladdcircularstring.cpp
   qgsmaptoolcircularstringcurvepoint.cpp
+  qgsmaptoolcircularstringradius.cpp
 
   composer/qgsattributeselectiondialog.cpp
   composer/qgscomposer.cpp
@@ -210,6 +211,7 @@ SET (QGIS_APP_MOC_HDRS
 
   qgsmaptooladdfeature.h
   qgsmaptoolcapture.h
+  qgsmaptoolcircularstringradius.h
   qgsmaptooladdpart.h
   qgsmaptooladdring.h
   qgsmaptoolfillring.h
