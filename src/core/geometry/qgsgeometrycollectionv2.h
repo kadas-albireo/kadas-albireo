@@ -17,6 +17,7 @@ email                : marco.hugentobler at sourcepole dot com
 #define QGSGEOMETRYCOLLECTIONV2_H
 
 #include "qgsabstractgeometryv2.h"
+#include "qgspointv2.h"
 #include <QVector>
 
 /**\ingroup core
@@ -32,7 +33,7 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     QgsGeometryCollectionV2& operator=( const QgsGeometryCollectionV2& c );
     virtual ~QgsGeometryCollectionV2();
 
-    virtual QgsAbstractGeometryV2* clone() const override;
+    virtual QgsGeometryCollectionV2* clone() const override;
 
     /** Returns the number of geometries within the collection.
      */
@@ -96,6 +97,11 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
 
     /**Returns a geometry without curves. Caller takes ownership*/
     QgsAbstractGeometryV2* segmentize() const override;
+
+    virtual int vertexCount( int part = 0, int ring = 0 ) const override { return mGeometries[part]->vertexCount( 0, ring ); }
+    virtual int ringCount( int part = 0 ) const override { return mGeometries[part]->ringCount(); }
+    virtual int partCount() const override { return mGeometries.size(); }
+    virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const override { return mGeometries[id.part]->vertexAt( id ); }
 
   protected:
     QVector< QgsAbstractGeometryV2* > mGeometries;

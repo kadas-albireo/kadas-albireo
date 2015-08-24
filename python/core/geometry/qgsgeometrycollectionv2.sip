@@ -10,6 +10,8 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     //QgsGeometryCollectionV2& operator=( const QgsGeometryCollectionV2& c );
     virtual ~QgsGeometryCollectionV2();
 
+    virtual QgsGeometryCollectionV2* clone() const;
+
     int numGeometries() const;
     //const QgsAbstractGeometryV2* geometryN( int n ) const;
     QgsAbstractGeometryV2* geometryN( int n );
@@ -51,4 +53,9 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     virtual double area() const;
 
     bool hasCurvedSegments() const;
+
+    virtual int vertexCount(int part = 0, int ring = 0) const;
+    virtual int ringCount(int part = 0) const;
+    virtual int partCount() const;
+    virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const;
 };

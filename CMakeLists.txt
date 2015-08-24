@@ -589,6 +589,7 @@ ADD_DEFINITIONS("\"-DSERVER_EXPORT=${DLLIMPORT}\"")
 ADD_DEFINITIONS("\"-DSPLASH_EXPORT=${DLLIMPORT}\"")
 
 
+
 #############################################################
 # user-changeable settings which can be used to customize
 # layout of QGIS installation

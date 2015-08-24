@@ -41,6 +41,7 @@ class CORE_EXPORT QgsGeometryEngine
     virtual QgsAbstractGeometryV2* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) const = 0;
     virtual QgsAbstractGeometryV2* simplify( double tolerance, QString* errorMsg = 0 ) const = 0;
     virtual QgsAbstractGeometryV2* interpolate( double distance, QString* errorMsg = 0 ) const = 0;
+    virtual QgsAbstractGeometryV2* envelope( QString* errorMsg = 0 ) const = 0;
     virtual bool centroid( QgsPointV2& pt, QString* errorMsg = 0 ) const = 0;
     virtual bool pointOnSurface( QgsPointV2& pt, QString* errorMsg = 0 ) const = 0;
     virtual QgsAbstractGeometryV2* convexHull( QString* errorMsg = 0 ) const = 0;

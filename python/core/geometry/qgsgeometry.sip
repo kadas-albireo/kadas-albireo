@@ -46,7 +46,7 @@ class QgsGeometry
     /** Returns the underlying geometry store.
      * @note added in QGIS 2.10
      */
-    const QgsAbstractGeometryV2* geometry() const;
+    QgsAbstractGeometryV2* geometry() const;
 
     /** Sets the underlying geometry store. Ownership of geometry is transferred.
      * @note added in QGIS 2.10

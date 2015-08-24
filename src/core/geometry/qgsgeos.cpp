@@ -1310,6 +1310,21 @@ bool QgsGeos::centroid( QgsPointV2& pt, QString* errorMsg ) const
   return true;
 }
 
+QgsAbstractGeometryV2* QgsGeos::envelope( QString* errorMsg ) const
+{
+  if ( !mGeos )
+  {
+    return 0;
+  }
+  GEOSGeometry* geos = 0;
+  try
+  {
+    geos = GEOSEnvelope_r( geosinit.ctxt, mGeos );
+  }
+  CATCH_GEOS_WITH_ERRMSG( 0 );
+  return fromGeos( geos );
+}
+
 bool QgsGeos::pointOnSurface( QgsPointV2& pt, QString* errorMsg ) const
 {
   if ( !mGeos )
@@ -1838,7 +1853,7 @@ GEOSGeometry* QgsGeos::reshapeLine( const GEOSGeometry* line, const GEOSGeometry
   {
     GEOSGeometry* maxGeom = 0; //the longest geometry in the probabla list
     GEOSGeometry* currentGeom = 0;
-    double maxLength = -DBL_MAX;
+    double maxLength = -std::numeric_limits<double>::max();
     double currentLength = 0;
     for ( int i = 0; i < probableParts.size(); ++i )
     {
