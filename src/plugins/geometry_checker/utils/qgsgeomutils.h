@@ -37,12 +37,15 @@ namespace QgsGeomUtils
    * @param polyLine The polyline
    * @return The number of distinct points of the polyline
    */
-  inline int polyLineSize( const QgsAbstractGeometryV2* geom, int iPart, int iRing )
+  inline int polyLineSize( const QgsAbstractGeometryV2* geom, int iPart, int iRing, bool* isClosed = 0 )
   {
     int nVerts = geom->vertexCount( iPart, iRing );
     QgsPointV2 front = geom->vertexAt( QgsVertexId( iPart, iRing, 0 ) );
     QgsPointV2 back = geom->vertexAt( QgsVertexId( iPart, iRing, nVerts - 1 ) );
-    return back == front ? nVerts - 1 : nVerts;
+    bool closed = back == front;
+    if ( isClosed )
+      *isClosed = closed;
+    return closed ? nVerts - 1 : nVerts;
   }
 
   double sharedEdgeLength( const QgsAbstractGeometryV2* geom1, const QgsAbstractGeometryV2* geom2, double tol );
