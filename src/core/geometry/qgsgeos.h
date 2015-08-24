@@ -44,6 +44,7 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
     QgsAbstractGeometryV2* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) const override;
     QgsAbstractGeometryV2* simplify( double tolerance, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* interpolate( double distance, QString* errorMsg = 0 ) const override;
+    QgsAbstractGeometryV2* envelope( QString* errorMsg = 0 ) const override;
     bool centroid( QgsPointV2& pt, QString* errorMsg = 0 ) const override;
     bool pointOnSurface( QgsPointV2& pt, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* convexHull( QString* errorMsg = 0 ) const override;

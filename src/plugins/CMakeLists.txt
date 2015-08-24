@@ -17,6 +17,8 @@ ADD_SUBDIRECTORY(topology)
 ADD_SUBDIRECTORY(offline_editing)
 ADD_SUBDIRECTORY(heatmap)
 ADD_SUBDIRECTORY(vector_analysis)
+ADD_SUBDIRECTORY(geometry_checker)
+ADD_SUBDIRECTORY(geometry_snapper)
 
 IF (POSTGRES_FOUND)
   ADD_SUBDIRECTORY(spit)

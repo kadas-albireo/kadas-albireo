@@ -6,12 +6,13 @@ class QgsPointV2: public QgsAbstractGeometryV2
 
     public:
       QgsPointV2( double x = 0.0, double y = 0.0 );
+      QgsPointV2( const QgsPoint& p );
       QgsPointV2( QgsWKBTypes::Type type, double x = 0.0, double y = 0.0, double z = 0.0, double m = 0.0 );
 
       bool operator==( const QgsPointV2& pt ) const;
       bool operator!=( const QgsPointV2& pt ) const;
 
-      virtual QgsAbstractGeometryV2* clone() const;
+      virtual QgsPointV2* clone() const;
       void clear();
 
       double x() const;
@@ -55,4 +56,9 @@ class QgsPointV2: public QgsAbstractGeometryV2
 
       double closestSegment( const QgsPointV2& pt, QgsPointV2& segmentPt,  QgsVertexId& vertexAfter, bool* leftOf, double epsilon ) const;
       bool nextVertex( QgsVertexId& id, QgsPointV2& vertex ) const;
+
+      virtual int vertexCount(int part = 0, int ring = 0) const;
+      virtual int ringCount(int part = 0) const;
+      virtual int partCount() const;
+      virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const;
 };
