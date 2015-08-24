@@ -12,7 +12,7 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
 
     virtual QString geometryType() const;
     virtual int dimension() const;
-    virtual QgsAbstractGeometryV2* clone() const;
+    virtual QgsCurvePolygonV2* clone() const;
     void clear();
 
 
@@ -30,14 +30,13 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
     //surface interface
     virtual double area() const;
     virtual double length() const;
-    QgsPointV2 centroid() const;
     QgsPointV2 pointOnSurface() const;
     QgsPolygonV2* surfaceToPolygon() const;
 
     //curve polygon interface
     int numInteriorRings() const;
-    const QgsCurveV2* exteriorRing() const;
-    const QgsCurveV2* interiorRing( int i ) const;
+    QgsCurveV2* exteriorRing() const;
+    QgsCurveV2* interiorRing( int i ) const;
     virtual QgsPolygonV2* toPolygon() const;
 
     /**Sets exterior ring (takes ownership)*/
@@ -62,4 +61,9 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
 
     bool hasCurvedSegments() const;
     QgsAbstractGeometryV2* segmentize() const /Factory/;
+
+    virtual int vertexCount(int part = 0, int ring = 0) const;
+    virtual int ringCount(int part = 0) const;
+    virtual int partCount() const;
+
 };

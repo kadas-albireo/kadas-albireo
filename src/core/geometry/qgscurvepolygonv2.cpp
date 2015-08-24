@@ -67,7 +67,7 @@ QgsCurvePolygonV2& QgsCurvePolygonV2::operator=( const QgsCurvePolygonV2 & p )
   return *this;
 }
 
-QgsAbstractGeometryV2* QgsCurvePolygonV2::clone() const
+QgsCurvePolygonV2* QgsCurvePolygonV2::clone() const
 {
   return new QgsCurvePolygonV2( *this );
 }
@@ -348,11 +348,6 @@ double QgsCurvePolygonV2::length() const
   return length;
 }
 
-QgsPointV2 QgsCurvePolygonV2::centroid() const
-{
-  return QgsPointV2( 0, 0 );
-}
-
 QgsPointV2 QgsCurvePolygonV2::pointOnSurface() const
 {
   return QgsPointV2( 0, 0 );
@@ -396,12 +391,12 @@ int QgsCurvePolygonV2::numInteriorRings() const
   return mInteriorRings.size();
 }
 
-const QgsCurveV2* QgsCurvePolygonV2::exteriorRing() const
+QgsCurveV2* QgsCurvePolygonV2::exteriorRing() const
 {
   return mExteriorRing;
 }
 
-const QgsCurveV2* QgsCurvePolygonV2::interiorRing( int i ) const
+QgsCurveV2* QgsCurvePolygonV2::interiorRing( int i ) const
 {
   if ( i >= mInteriorRings.size() )
   {
@@ -658,4 +653,14 @@ bool QgsCurvePolygonV2::hasCurvedSegments() const
 QgsAbstractGeometryV2* QgsCurvePolygonV2::segmentize() const
 {
   return toPolygon();
+}
+
+int QgsCurvePolygonV2::vertexCount( int /*part*/, int ring ) const
+{
+  return ring == 0 ? mExteriorRing->vertexCount() : mInteriorRings[ring - 1]->vertexCount();
+}
+
+QgsPointV2 QgsCurvePolygonV2::vertexAt( const QgsVertexId& id ) const
+{
+  return id.ring == 0 ? mExteriorRing->vertexAt( id ) : mInteriorRings[id.ring - 1]->vertexAt( id );
 }

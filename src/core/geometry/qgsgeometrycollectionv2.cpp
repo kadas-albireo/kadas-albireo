@@ -59,7 +59,7 @@ QgsGeometryCollectionV2::~QgsGeometryCollectionV2()
   clear();
 }
 
-QgsAbstractGeometryV2* QgsGeometryCollectionV2::clone() const
+QgsGeometryCollectionV2 *QgsGeometryCollectionV2::clone() const
 {
   return new QgsGeometryCollectionV2( *this );
 }
@@ -111,6 +111,7 @@ bool QgsGeometryCollectionV2::removeGeometry( int nr )
   {
     return false;
   }
+  delete mGeometries[nr];
   mGeometries.remove( nr );
   return true;
 }
