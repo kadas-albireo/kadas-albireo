@@ -54,7 +54,6 @@ SET(QGIS_APP_SRCS
   qgsmaptooladdpart.cpp
   qgsmaptooladdring.cpp
   qgsmaptoolfillring.cpp
-  qgsmaptoolannotation.cpp
   qgsmaptoolcapture.cpp
   qgsmaptoolchangelabelproperties.cpp
   qgsmaptooldeletering.cpp
@@ -401,7 +400,7 @@ QT4_WRAP_CPP(QGIS_APP_MOC_SRCS ${QGIS_APP_MOC_HDRS})
 IF (WIN32)
   IF (MSVC)
     SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
-    ADD_DEFINITIONS("-DSPLASH_IMPORT=__declspec(dllimport)")
+    ADD_DEFINITIONS("\"-DSPLASH_IMPORT=__declspec(dllimport)\"")
   ELSE(MSVC)
     ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
     
@@ -555,11 +554,11 @@ IF (ANDROID)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} log)
 ENDIF (ANDROID)
 
-IF(WIN32)
+IF(MSVC)
   ADD_DEFINITIONS(-DQWT_DLL)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} DbgHelp)
   TARGET_LINK_LIBRARIES(qgis_app DbgHelp)
-ENDIF(WIN32)
+ENDIF(MSVC)
 
 IF (APPLE)
   TARGET_LINK_LIBRARIES(${QGIS_APP_NAME} ${APP_SERVICES_LIBRARY} )
