@@ -355,6 +355,7 @@ void QgsCompoundCurveV2::addCurve( QgsCurveV2* c )
     {
       setZMTypeFromSubGeometry( c, QgsWKBTypes::CompoundCurve );
     }
+    mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
   }
 }
 
@@ -399,6 +400,7 @@ void QgsCompoundCurveV2::addVertex( const QgsPointV2& pt )
     line = static_cast<QgsLineStringV2*>( lastCurve );
   }
   line->addVertex( pt );
+  mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
 }
 
 void QgsCompoundCurveV2::draw( QPainter& p ) const
@@ -462,7 +464,12 @@ bool QgsCompoundCurveV2::insertVertex( const QgsVertexId& position, const QgsPoi
   {
     return false;
   }
-  return mCurves[curveId]->insertVertex( curveIds.at( 0 ).second, vertex );
+  bool success = mCurves[curveId]->insertVertex( curveIds.at( 0 ).second, vertex );
+  if ( success )
+  {
+    mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
+  }
+  return success;
 }
 
 bool QgsCompoundCurveV2::moveVertex( const QgsVertexId& position, const QgsPointV2& newPos )
@@ -473,8 +480,13 @@ bool QgsCompoundCurveV2::moveVertex( const QgsVertexId& position, const QgsPoint
   {
     mCurves[idIt->first]->moveVertex( idIt->second, newPos );
   }
-  mBoundingBox = QgsRectangle(); //bbox changed
-  return curveIds.size() > 0;
+
+  bool success = curveIds.size() > 0;
+  if ( success )
+  {
+    mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
+  }
+  return success;
 }
 
 bool QgsCompoundCurveV2::deleteVertex( const QgsVertexId& position )
@@ -485,7 +497,12 @@ bool QgsCompoundCurveV2::deleteVertex( const QgsVertexId& position )
   {
     mCurves[idIt->first]->deleteVertex( idIt->second );
   }
-  return curveIds.size() > 0;
+  bool success = curveIds.size() > 0;
+  if ( success )
+  {
+    mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
+  }
+  return success;
 }
 
 QList< QPair<int, QgsVertexId> > QgsCompoundCurveV2::curveVertexId( const QgsVertexId& id ) const
