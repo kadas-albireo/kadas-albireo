@@ -690,6 +690,7 @@ bool QgsCircularStringV2::insertVertex( const QgsVertexId& position, const QgsPo
   {
     insertVertexBetween( position.vertex, position.vertex + 1, position.vertex - 1 );
   }
+  mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
   return true;
 }
 
@@ -710,7 +711,7 @@ bool QgsCircularStringV2::moveVertex( const QgsVertexId& position, const QgsPoin
   {
     mM[position.vertex] = newPos.m();
   }
-  mBoundingBox = QgsRectangle(); //set bounding box invalid
+  mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
   return true;
 }
 
@@ -737,7 +738,7 @@ bool QgsCircularStringV2::deleteVertex( const QgsVertexId& position )
     deleteVertex( position.vertex );
     deleteVertex( position.vertex - 1 );
   }
-
+  mBoundingBox = QgsRectangle(); //set bounding box invalid so it needs to be recalculated next time
   return true;
 }
 

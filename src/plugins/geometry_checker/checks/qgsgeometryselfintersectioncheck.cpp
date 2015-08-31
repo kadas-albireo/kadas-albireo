@@ -100,7 +100,8 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
 
   const QgsGeometryUtils::SelfIntersection& inter = static_cast<QgsGeometrySelfIntersectionCheckError*>( error )->intersection();
   // Check if error still applies
-  int nVerts = QgsGeomUtils::polyLineSize( geom, vidx.part, vidx.ring );
+  bool ringIsClosed = false;
+  int nVerts = QgsGeomUtils::polyLineSize( geom, vidx.part, vidx.ring, &ringIsClosed );
   if ( inter.segment1 >= nVerts || inter.segment2 >= nVerts )
   {
     error->setObsolete();
@@ -124,7 +125,6 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
   }
   else if ( method == ToMultiObject || method == ToSingleObjects )
   {
-    bool ringIsClosed = geom->vertexAt( QgsVertexId( vidx.part, vidx.ring, 0 ) ) == geom->vertexAt( QgsVertexId( vidx.part, vidx.ring, nVerts - 1 ) );
     // Extract rings
     QList<QgsPointV2> ring1, ring2;
     bool ring1EndsWithS = false;
@@ -192,7 +192,6 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
       {
         // If ring is exterior, build two polygons, and reassign interiors as necessary
         poly->setExteriorRing( ringGeom1 );
-        changes[feature.id()].append( Change( ChangeRing, ChangeChanged, QgsVertexId( vidx.part, vidx.ring ) ) );
 
         QgsCurvePolygonV2* poly2 = new QgsCurvePolygonV2();
         poly2->setExteriorRing( ringGeom2 );
@@ -222,7 +221,9 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
           if ( dynamic_cast<QgsGeometryCollectionV2*>( geom ) )
           {
             static_cast<QgsGeometryCollectionV2*>( geom )->addGeometry( poly2 );
+            changes[feature.id()].append( Change( ChangeRing, ChangeChanged, QgsVertexId( vidx.part, vidx.ring ) ) );
             changes[feature.id()].append( Change( ChangePart, ChangeAdded, QgsVertexId( geom->partCount() - 1 ) ) );
+            mFeaturePool->updateFeature( feature );
           }
           // Otherwise, create multipolygon
           else
@@ -240,7 +241,9 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
           QgsFeature newFeature;
           newFeature.setAttributes( feature.attributes() );
           newFeature.setGeometry( poly2 );
+          mFeaturePool->updateFeature( feature );
           mFeaturePool->addFeature( newFeature );
+          changes[feature.id()].append( Change( ChangeRing, ChangeChanged, QgsVertexId( vidx.part, vidx.ring ) ) );
           changes[newFeature.id()].append( Change( ChangeFeature, ChangeAdded ) );
         }
       }
