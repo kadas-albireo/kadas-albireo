@@ -46,28 +46,28 @@ QgsCredentials::~QgsCredentials()
 {
 }
 
-bool QgsCredentials::get( QString realm, QString &username, QString &password, QString message )
+bool QgsCredentials::get( QString realm, QString &username, QString &password, QString message, bool interactive )
 {
-  if ( mCredentialCache.contains( realm ) )
+  // If the requested credentials are  the same as the ones in the cache,
+  // the entry in the cache is likely wrong (QNetworkAccessManager also caches
+  // the credentials, and only asks for new ones if the cached ones did not work).
+
+  bool haveCache = mCredentialCache.contains( realm );
+  if ( haveCache )
   {
     QPair<QString, QString> credentials = mCredentialCache.take( realm );
     username = credentials.first;
     password = credentials.second;
     QgsDebugMsg( QString( "retrieved realm:%1 username:%2 password:%3" ).arg( realm ).arg( username ).arg( password ) );
-
-    if ( !password.isNull() )
-      return true;
   }
 
-  if ( request( realm, username, password, message ) )
+  if ( interactive )
   {
-    QgsDebugMsg( QString( "requested realm:%1 username:%2 password:%3" ).arg( realm ).arg( username ).arg( password ) );
-    return true;
+    return request( realm, username, password, message );
   }
   else
   {
-    QgsDebugMsg( QString( "unset realm:%1" ).arg( realm ) );
-    return false;
+    return haveCache;
   }
 }
 

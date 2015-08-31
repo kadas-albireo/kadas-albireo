@@ -40,7 +40,7 @@ class CORE_EXPORT QgsCredentials
     //! virtual destructor
     virtual ~QgsCredentials();
 
-    bool get( QString realm, QString &username, QString &password, QString message = QString::null );
+    bool get( QString realm, QString &username, QString &password, QString message = QString::null, bool interactive = true );
     void put( QString realm, QString username, QString password );
 
     //! retrieves instance

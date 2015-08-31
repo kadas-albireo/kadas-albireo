@@ -67,8 +67,6 @@ class QgsDoubleSpinBox;
 
 class QDomDocument;
 class QNetworkReply;
-class QNetworkProxy;
-class QAuthenticator;
 
 class QgsBrowserDockWidget;
 class QgsAdvancedDigitizingDockWidget;
@@ -599,11 +597,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     //! Set app stylesheet from settings
     void setAppStyleSheet( const QString& stylesheet );
 
-    //! request credentials for network manager
-    void namAuthenticationRequired( QNetworkReply *reply, QAuthenticator *auth );
-    void namProxyAuthenticationRequired( const QNetworkProxy &proxy, QAuthenticator *auth );
 #ifndef QT_NO_OPENSSL
-    void namSslErrors( QNetworkReply *reply, const QList<QSslError> &errors );
+    void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
 #endif
     void namRequestTimedOut( QNetworkReply *reply );
 
