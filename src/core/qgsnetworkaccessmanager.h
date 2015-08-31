@@ -86,14 +86,22 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
     void requestTimedOut( QNetworkReply * );
+    void sslErrorsConformationRequired( const QUrl& url, const QList<QSslError> &errors, bool* ok );
 
   private slots:
     void abortRequest();
+    void getCredentials( const QNetworkReply &reply, QAuthenticator * auth );
+    void getProxyCredentials( const QNetworkProxy &proxy, QAuthenticator * auth );
+#ifndef QT_NO_OPENSSL
+    void handleSSLErrors( QNetworkReply *reply, const QList<QSslError> &errors );
+#endif
 
   protected:
     virtual QNetworkReply *createRequest( QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0 ) override;
 
   private:
+    class QgsSSLIgnoreList;
+
     QList<QNetworkProxyFactory*> mProxyFactories;
     QNetworkProxy mFallbackProxy;
     QStringList mExcludedURLs;

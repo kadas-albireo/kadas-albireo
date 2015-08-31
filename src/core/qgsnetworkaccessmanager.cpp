@@ -22,15 +22,38 @@
 #include <qgsnetworkaccessmanager.h>
 
 #include <qgsapplication.h>
+#include <qgscredentials.h>
 #include <qgsmessagelog.h>
 #include <qgslogger.h>
 #include <qgis.h>
 
+#include <QAuthenticator>
 #include <QUrl>
 #include <QSettings>
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkDiskCache>
+#include <QSslError>
+#include <QMessageBox>
+
+class QgsNetworkAccessManager::QgsSSLIgnoreList
+{
+  public:
+    static void lock() { instance().mMutex.lock(); }
+    static void unlock() { instance().mMutex.unlock(); }
+    static QSet<QSslError::SslError>& ignoreErrors() { return instance().mIgnoreErrors; }
+
+  private:
+    static QgsSSLIgnoreList& instance()
+    {
+      static QgsSSLIgnoreList i;
+      return i;
+    }
+
+    QMutex mMutex;
+    QSet<QSslError::SslError> mIgnoreErrors;
+};
+
 
 class QgsNetworkProxyFactory : public QNetworkProxyFactory
 {
@@ -186,6 +209,99 @@ void QgsNetworkAccessManager::abortRequest()
   emit requestTimedOut( reply );
 }
 
+void QgsNetworkAccessManager::getCredentials( const QNetworkReply &reply, QAuthenticator *auth )
+{
+  QgsCredentials::instance()->lock();
+  QString realm = QString( "%1 at %2" ).arg( auth->realm() ).arg( reply.url().host() );
+  QString username = auth->user();
+  QString password = auth->password();
+  bool isGuiThread = thread() == instance()->thread();
+
+  if ( username.isEmpty() && password.isEmpty() && reply.request().hasRawHeader( "Authorization" ) )
+  {
+    QByteArray header( reply.request().rawHeader( "Authorization" ) );
+    if ( header.startsWith( "Basic " ) )
+    {
+      QByteArray auth( QByteArray::fromBase64( header.mid( 6 ) ) );
+      int pos = auth.indexOf( ":" );
+      if ( pos >= 0 )
+      {
+        username = auth.left( pos );
+        password = auth.mid( pos + 1 );
+      }
+    }
+  }
+
+  if ( QgsCredentials::instance()->get( realm, username, password, tr( "Authentication required" ), isGuiThread ) )
+  {
+    auth->setUser( username );
+    auth->setPassword( password );
+    QgsCredentials::instance()->put( realm, username, password );
+  }
+  QgsCredentials::instance()->unlock();
+}
+
+void QgsNetworkAccessManager::getProxyCredentials( const QNetworkProxy &proxy, QAuthenticator *auth )
+{
+  QSettings settings;
+  if ( !settings.value( "proxy/proxyEnabled", false ).toBool() ||
+       settings.value( "proxy/proxyType", "" ).toString() == "DefaultProxy" )
+  {
+    auth->setUser( "" );
+    return;
+  }
+
+  QgsCredentials::instance()->lock();
+  QString realm = QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() );
+  QString username = auth->user();
+  QString password = auth->password();
+  bool isGuiThread = thread() == instance()->thread();
+
+  if ( QgsCredentials::instance()->get( realm, username, password, tr( "Proxy authentication required" ), isGuiThread ) )
+  {
+    auth->setUser( username );
+    auth->setPassword( password );
+    QgsCredentials::instance()->put( realm, username, password );
+  }
+  QgsCredentials::instance()->unlock();
+}
+
+#ifndef QT_NO_OPENSSL
+void QgsNetworkAccessManager::handleSSLErrors( QNetworkReply *reply, const QList<QSslError> &errors )
+{
+  QgsSSLIgnoreList::lock();
+  QList<QSslError> newErrors;
+  foreach ( QSslError error, errors )
+  {
+    if ( error.error() == QSslError::NoError )
+      continue;
+    if ( !QgsSSLIgnoreList::ignoreErrors().contains( error.error() ) )
+    {
+      newErrors.append( error );
+    }
+  }
+  bool isGuiThread = thread() == instance()->thread();
+  if ( newErrors.isEmpty() )
+  {
+    reply->ignoreSslErrors();
+  }
+  else if ( isGuiThread )
+  {
+    bool ok = false;
+    emit sslErrorsConformationRequired( reply->url(), newErrors, &ok );
+    if ( ok )
+    {
+      foreach ( QSslError error, newErrors )
+      {
+        QgsSSLIgnoreList::ignoreErrors().insert( error.error() );
+      }
+      reply->ignoreSslErrors();
+    }
+  }
+  QgsSSLIgnoreList::unlock();
+}
+#endif
+
 QString QgsNetworkAccessManager::cacheLoadControlName( QNetworkRequest::CacheLoadControl theControl )
 {
   switch ( theControl )
@@ -240,22 +356,22 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 
   if ( this != instance() )
   {
-    Qt::ConnectionType connectionType = thread() == instance()->thread() ? Qt::AutoConnection : Qt::BlockingQueuedConnection;
+    Qt::ConnectionType connectionType = thread() == instance()->thread() ? Qt::DirectConnection : Qt::BlockingQueuedConnection;
 
     connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             instance(), SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             connectionType );
+             this, SLOT( getCredentials( QNetworkReply, QAuthenticator* ) ) );
 
     connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             instance(), SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             connectionType );
+             this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
 
     connect( this, SIGNAL( requestTimedOut( QNetworkReply* ) ),
              instance(), SIGNAL( requestTimedOut( QNetworkReply* ) ) );
 
 #ifndef QT_NO_OPENSSL
     connect( this, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
-             instance(), SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
+             this, SLOT( handleSSLErrors( QNetworkReply*, QList<QSslError> ) ) );
+    connect( this, SIGNAL( sslErrorsConformationRequired( const QUrl& url, QList<QSslError>, bool* ) ),
+             instance(), SIGNAL( sslErrorsConformationRequired( const QUrl& url, QList<QSslError>, bool* ) ),
              connectionType );
 #endif
   }
