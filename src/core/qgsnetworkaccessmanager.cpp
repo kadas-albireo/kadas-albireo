@@ -209,17 +209,17 @@ void QgsNetworkAccessManager::abortRequest()
   emit requestTimedOut( reply );
 }
 
-void QgsNetworkAccessManager::getCredentials( const QNetworkReply &reply, QAuthenticator *auth )
+void QgsNetworkAccessManager::getCredentials( QNetworkReply *reply, QAuthenticator * auth )
 {
   QgsCredentials::instance()->lock();
-  QString realm = QString( "%1 at %2" ).arg( auth->realm() ).arg( reply.url().host() );
+  QString realm = QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() );
   QString username = auth->user();
   QString password = auth->password();
   bool isGuiThread = thread() == instance()->thread();
 
-  if ( username.isEmpty() && password.isEmpty() && reply.request().hasRawHeader( "Authorization" ) )
+  if ( username.isEmpty() && password.isEmpty() && reply->request().hasRawHeader( "Authorization" ) )
   {
-    QByteArray header( reply.request().rawHeader( "Authorization" ) );
+    QByteArray header( reply->request().rawHeader( "Authorization" ) );
     if ( header.startsWith( "Basic " ) )
     {
       QByteArray auth( QByteArray::fromBase64( header.mid( 6 ) ) );
@@ -354,24 +354,25 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 
   mUseSystemProxy = false;
 
+  connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
+           this, SLOT( getCredentials( QNetworkReply*, QAuthenticator* ) ) );
+  connect( this, SIGNAL( proxyAuthenticationRequired( QNetworkProxy, QAuthenticator* ) ),
+           this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
+#ifndef QT_NO_OPENSSL
+  connect( this, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
+           this, SLOT( handleSSLErrors( QNetworkReply*, QList<QSslError> ) ) );
+#endif
+
   if ( this != instance() )
   {
     Qt::ConnectionType connectionType = thread() == instance()->thread() ? Qt::DirectConnection : Qt::BlockingQueuedConnection;
-
-    connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             this, SLOT( getCredentials( QNetworkReply, QAuthenticator* ) ) );
-
-    connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
 
     connect( this, SIGNAL( requestTimedOut( QNetworkReply* ) ),
              instance(), SIGNAL( requestTimedOut( QNetworkReply* ) ) );
 
 #ifndef QT_NO_OPENSSL
-    connect( this, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
-             this, SLOT( handleSSLErrors( QNetworkReply*, QList<QSslError> ) ) );
-    connect( this, SIGNAL( sslErrorsConformationRequired( const QUrl& url, QList<QSslError>, bool* ) ),
-             instance(), SIGNAL( sslErrorsConformationRequired( const QUrl& url, QList<QSslError>, bool* ) ),
+    connect( this, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
+             instance(), SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
              connectionType );
 #endif
   }

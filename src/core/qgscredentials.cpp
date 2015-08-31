@@ -48,10 +48,6 @@ QgsCredentials::~QgsCredentials()
 
 bool QgsCredentials::get( QString realm, QString &username, QString &password, QString message, bool interactive )
 {
-  // If the requested credentials are  the same as the ones in the cache,
-  // the entry in the cache is likely wrong (QNetworkAccessManager also caches
-  // the credentials, and only asks for new ones if the cached ones did not work).
-
   bool haveCache = mCredentialCache.contains( realm );
   if ( haveCache )
   {
