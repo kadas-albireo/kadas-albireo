@@ -90,7 +90,7 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
 
   private slots:
     void abortRequest();
-    void getCredentials( const QNetworkReply &reply, QAuthenticator * auth );
+    void getCredentials( QNetworkReply *reply, QAuthenticator * auth );
     void getProxyCredentials( const QNetworkProxy &proxy, QAuthenticator * auth );
 #ifndef QT_NO_OPENSSL
     void handleSSLErrors( QNetworkReply *reply, const QList<QSslError> &errors );

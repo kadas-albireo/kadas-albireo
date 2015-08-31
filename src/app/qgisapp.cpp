@@ -10175,8 +10175,8 @@ void QgisApp::namSetup()
   namUpdate();
 
 #ifndef QT_NO_OPENSSL
-  connect( nam, SIGNAL( sslErrorsConformationRequired( QList<QSslError>, bool* ) ),
-           this, SLOT( namConfirmSslErrors( QList<QSslError>, bool* ) ) );
+  connect( nam, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
+           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ) );
 #endif
   connect( nam, SIGNAL( requestTimedOut( QNetworkReply* ) ),
            this, SLOT( namRequestTimedOut( QNetworkReply* ) ) );
