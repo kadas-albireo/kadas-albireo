@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgstextannotationitem.h"
+#include "qgstextannotationdialog.h"
 #include <QDomDocument>
 #include <QPainter>
 
@@ -79,6 +80,11 @@ void QgsTextAnnotationItem::paint( QPainter * painter )
   {
     drawSelectionBoxes( painter );
   }
+}
+
+void QgsTextAnnotationItem::_showItemEditor()
+{
+  QgsTextAnnotationDialog( this ).exec();
 }
 
 void QgsTextAnnotationItem::writeXML( QDomDocument& doc ) const

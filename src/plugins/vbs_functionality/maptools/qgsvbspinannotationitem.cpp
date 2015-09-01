@@ -41,6 +41,7 @@ QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSC
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
   connect( mCoordinateDisplayer, SIGNAL( displayFormatChanged() ), this, SLOT( updateToolTip() ) );
+  setCursor( Qt::ClosedHandCursor );
 }
 
 void QgsVBSPinAnnotationItem::updateToolTip()

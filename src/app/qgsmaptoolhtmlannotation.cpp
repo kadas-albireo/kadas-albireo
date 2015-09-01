@@ -17,7 +17,6 @@
 
 #include "qgsmaptoolhtmlannotation.h"
 #include "qgshtmlannotationitem.h"
-#include "qgshtmlannotationdialog.h"
 #include "qgsmapcanvas.h"
 #include "qgsvectorlayer.h"
 #include <QMouseEvent>
@@ -41,12 +40,4 @@ QgsAnnotationItem* QgsMapToolHtmlAnnotation::createItem( QMouseEvent* e )
   formItem->setSelected( true );
   formItem->setFrameSize( QSizeF( 200, 100 ) );
   return formItem;
-}
-
-QDialog* QgsMapToolHtmlAnnotation::createItemEditor( QgsAnnotationItem *item )
-{
-  QgsHtmlAnnotationItem* htmlItem = dynamic_cast<QgsHtmlAnnotationItem*>( item );
-  if ( !htmlItem )
-    return 0;
-  return new QgsHtmlAnnotationDialog( htmlItem );
 }

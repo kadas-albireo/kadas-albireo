@@ -18,6 +18,7 @@
 #include "qgshtmlannotationitem.h"
 #include "qgsattributeeditor.h"
 #include "qgsfeature.h"
+#include "qgshtmlannotationdialog.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
@@ -183,6 +184,11 @@ void QgsHtmlAnnotationItem::readXML( const QDomDocument& doc, const QDomElement&
     setHTMLPage( mHtmlFile );
   }
   updateVisibility();
+}
+
+void QgsHtmlAnnotationItem::_showItemEditor()
+{
+  QgsHtmlAnnotationDialog( this ).exec();
 }
 
 void QgsHtmlAnnotationItem::setFeatureForMapPosition()

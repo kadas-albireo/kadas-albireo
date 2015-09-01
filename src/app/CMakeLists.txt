@@ -8,7 +8,6 @@ SET(QGIS_APP_SRCS
   qgsaddattrdialog.cpp
   qgsaddtaborgroup.cpp
   qgsaddjoindialog.cpp
-  qgsannotationwidget.cpp
   qgsattributeactiondialog.cpp
   qgsattributetypedialog.cpp
   qgsattributetabledialog.cpp
@@ -30,8 +29,6 @@ SET(QGIS_APP_SRCS
   qgsdecorationgrid.cpp
   qgsdecorationgriddialog.cpp
   qgsdxfexportdialog.cpp
-  qgsformannotationdialog.cpp
-  qgshtmlannotationdialog.cpp
   qgsdelattrdialog.cpp
   qgsdiagramproperties.cpp
   qgsdisplayangle.cpp
@@ -103,11 +100,9 @@ SET(QGIS_APP_SRCS
   qgsprojectproperties.cpp
   qgsrastercalcdialog.cpp
   qgsrasterlayerproperties.cpp
-  qgstextannotationdialog.cpp
   qgsshortcutsmanager.cpp
   qgsguivectorlayertools.h
   qgssnappingdialog.cpp
-  qgssvgannotationdialog.cpp
   qgsundowidget.cpp
   qgstipgui.cpp
   qgstipfactory.cpp
@@ -165,7 +160,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsaddattrdialog.h
   qgsaddjoindialog.h
   qgsaddtaborgroup.h
-  qgsannotationwidget.h
   qgsattributeactiondialog.h
   qgsattributetypedialog.h
   qgsattributetabledialog.h
@@ -192,8 +186,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsfeatureaction.h
   qgsfieldcalculator.h
   qgsfieldsproperties.h
-  qgsformannotationdialog.h
-  qgshtmlannotationdialog.h
+
   qgsidentifyresultsdialog.h
   qgslabeldialog.h
   qgslabelengineconfigdialog.h
@@ -249,8 +242,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsrasterlayerproperties.h
   qgssnappingdialog.h
   qgssponsors.h
-  qgssvgannotationdialog.h
-  qgstextannotationdialog.h
   qgstipgui.h
   qgstipfactory.h
   qgsundowidget.h
@@ -403,7 +394,7 @@ IF (WIN32)
     ADD_DEFINITIONS("\"-DSPLASH_IMPORT=__declspec(dllimport)\"")
   ELSE(MSVC)
     ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
-    
+
     # Icon for windows MINGW
     # Note: can't include .rc directly to source files
     # as it's ignored when used MinGW
@@ -430,7 +421,7 @@ IF(PEDANTIC)
     SET_SOURCE_FILES_PROPERTIES(
         qgisappinterface.cpp
         ${CMAKE_BINARY_DIR}/src/app/moc_qgisappinterface.cxx
-	PROPERTIES COMPILE_FLAGS "/wd4996"
+    PROPERTIES COMPILE_FLAGS "/wd4996"
     )
   ELSE(MSVC)
     SET_SOURCE_FILES_PROPERTIES(

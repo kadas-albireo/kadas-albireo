@@ -69,6 +69,9 @@ class QgsAnnotationItem: QgsMapCanvasItem
     void _writeXML( QDomDocument& doc, QDomElement& itemElem ) const;
     void _readXML( const QDomDocument& doc, const QDomElement& annotationElem );
 
+    void showItemEditor();
+    virtual void showContextMenu( const QPoint& screenPos );
+
   protected:
     void updateBoundingRect();
     /**Check where to attach the balloon connection between frame and map point*/
@@ -85,4 +88,7 @@ class QgsAnnotationItem: QgsMapCanvasItem
     QPointF pointOnLineWithDistance( const QPointF& startPoint, const QPointF& directionPoint, double distance ) const;
     /**Returns the symbol size scaled in (mapcanvas) pixels. Used for the counding rect calculation*/
     double scaledSymbolSize() const;
+
+  private:
+    virtual void _showItemEditor() = 0;
 };

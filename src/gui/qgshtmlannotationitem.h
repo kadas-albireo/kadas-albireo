@@ -74,6 +74,7 @@ class GUI_EXPORT QgsHtmlAnnotationItem: public QgsAnnotationItem
     QString mHtmlSource;
 
     QString replaceText( QString displayText, QgsVectorLayer *layer, QgsFeature &feat );
+    void _showItemEditor() override;
 };
 
 #endif // QGSHTMLANNOTATIONITEM_H

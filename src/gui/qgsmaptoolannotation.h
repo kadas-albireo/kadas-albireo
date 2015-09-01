@@ -27,29 +27,9 @@ class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
     QgsMapToolAnnotation( QgsMapCanvas* canvas );
 
     void canvasPressEvent( QMouseEvent * e ) override;
-    void canvasReleaseEvent( QMouseEvent * e ) override;
-    void canvasMoveEvent( QMouseEvent * e ) override;
-    void canvasDoubleClickEvent( QMouseEvent * e ) override;
-    void keyPressEvent( QKeyEvent* e ) override;
-    void deactivate() override;
 
   protected:
-    /**Creates a new item. To be implemented by subclasses.*/
     virtual QgsAnnotationItem* createItem( QMouseEvent* e ) { return 0; }
-    /**Creates an editor widget (caller takes ownership). To be implemented by subclasses.*/
-    virtual QDialog* createItemEditor( QgsAnnotationItem* /*item*/ ) { return 0; }
-    /**Returns the topmost annotation item at the position (or 0 if none)*/
-    QgsAnnotationItem* itemAtPos( const QPointF& pos );
-
-  private:
-    QgsAnnotationItem* selectedItem();
-    /**Returns a list of all annotationitems in the canvas*/
-    QList<QgsAnnotationItem*> annotationItems();
-    /**Switches visibility states of text items*/
-    void toggleTextItemVisibilities();
-
-    QgsAnnotationItem::MouseMoveAction mCurrentMoveAction;
-    QPointF mLastMousePosition;
 };
 
 #endif // QGSMAPTOOLANNOTATION_H

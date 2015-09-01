@@ -71,6 +71,8 @@ class GUI_EXPORT QgsFormAnnotationItem: public QgsAnnotationItem
     QString mDesignerForm;
 
     QWidget* createDesignerWidget( const QString& filePath );
+
+    void _showItemEditor() override;
 };
 
 #endif // QGSFORMANNOTATIONITEM_H

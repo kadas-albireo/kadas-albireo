@@ -1,9 +1,9 @@
 /***************************************************************************
-                              qgssvgannotationitem.h
+                              qgsgeoimageannotationitem.h
                               ------------------------
-  begin                : November, 2012
-  copyright            : (C) 2012 by Marco Hugentobler
-  email                : marco dot hugentobler at sourcepole dot ch
+  begin                : August, 2015
+  copyright            : (C) 2015 by Sandro Mani
+  email                : smani@sourcepole.ch
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,32 +15,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSSVGANNOTATIONITEM_H
-#define QGSSVGANNOTATIONITEM_H
+#ifndef QGSGEOIMAGEANNOTATIONITEM_H
+#define QGSGEOIMAGEANNOTATIONITEM_H
 
 #include "qgsannotationitem.h"
 #include <QSvgRenderer>
 
-class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
+class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 {
   public:
+    static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath );
 
-    QgsSvgAnnotationItem( QgsMapCanvas* canvas );
-    ~QgsSvgAnnotationItem();
+    QgsGeoImageAnnotationItem( QgsMapCanvas* canvas );
+    void setFilePath( const QString& filePath );
+
 
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
 
-    void setFilePath( const QString& file );
-    QString filePath() const { return mFilePath; }
-
   private:
-    QSvgRenderer mSvgRenderer;
     QString mFilePath;
+    QImage mImage;
+
+    static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos );
 
     void _showItemEditor() override;
 };
 
-#endif // QGSSVGANNOTATIONITEM_H
+#endif // QGSGEOIMAGEANNOTATIONITEM_H

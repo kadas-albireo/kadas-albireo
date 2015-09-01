@@ -27,7 +27,6 @@ class APP_EXPORT QgsMapToolFormAnnotation: public QgsMapToolAnnotation
 
   protected:
     QgsAnnotationItem* createItem( QMouseEvent* e ) override;
-    QDialog* createItemEditor( QgsAnnotationItem *item ) override;
 };
 
 #endif // QGSMAPTOOLFORMANNOTATION_H

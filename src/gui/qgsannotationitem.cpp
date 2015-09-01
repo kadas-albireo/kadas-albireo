@@ -302,8 +302,14 @@ QgsAnnotationItem::MouseMoveAction QgsAnnotationItem::moveActionForPosition( con
     return MoveMapPosition;
   }
 
-  if (( mFlags & ItemIsNotResizeable ) == 0 )
+  if (( mFlags & ItemIsNotResizeable ) == 0 &&
+      QRectF( mOffsetFromReferencePoint.x() - cursorSensitivity,
+              mOffsetFromReferencePoint.y() - cursorSensitivity,
+              mFrameSize.width() + cursorSensitivity,
+              mFrameSize.height() + cursorSensitivity ).contains( itemPos )
+     )
   {
+
     bool left, right, up, down;
     left = qAbs( itemPos.x() - mOffsetFromReferencePoint.x() ) < cursorSensitivity;
     right = qAbs( itemPos.x() - ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) ) < cursorSensitivity;
@@ -347,21 +353,93 @@ QgsAnnotationItem::MouseMoveAction QgsAnnotationItem::moveActionForPosition( con
   if (( mFlags & ItemHasNoFrame ) == 0 )
   {
     //finally test if pos is in the frame area
-    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() )
-         && itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
+         itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
     {
       return MoveFramePosition;
     }
   }
   else
   {
-    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() )
-         && itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
+         itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
     {
       return MoveMapPosition;
     }
   }
   return NoAction;
+}
+
+void QgsAnnotationItem::handleMoveAction( MouseMoveAction moveAction, const QPointF &newPos, const QPointF &oldPos )
+{
+  if ( moveAction == QgsAnnotationItem::MoveMapPosition )
+  {
+    QgsPoint newMapPos = mMapCanvas->getCoordinateTransform()->toMapCoordinates( newPos.toPoint() );
+    QgsPoint oldMapPos = mMapCanvas->getCoordinateTransform()->toMapCoordinates( oldPos.toPoint() );
+    setMapPosition( mMapPosition + ( newMapPos - oldMapPos ) );
+    update();
+  }
+  else if ( moveAction == QgsAnnotationItem::MoveFramePosition )
+  {
+    if ( mMapPositionFixed )
+    {
+      setOffsetFromReferencePoint( mOffsetFromReferencePoint + ( newPos - oldPos ) );
+    }
+    else
+    {
+      QPointF newCanvasPos = pos() + ( newPos - oldPos );
+      setMapPosition( mMapCanvas->getCoordinateTransform()->toMapCoordinates( newCanvasPos.toPoint() ) );
+    }
+    update();
+  }
+  else if ( moveAction != QgsAnnotationItem::NoAction )
+  {
+    //handle the frame resize actions
+    double xmin = mOffsetFromReferencePoint.x();
+    double ymin = mOffsetFromReferencePoint.y();
+    double xmax = xmin + mFrameSize.width();
+    double ymax = ymin + mFrameSize.height();
+
+    if ( moveAction == QgsAnnotationItem::ResizeFrameRight ||
+         moveAction == QgsAnnotationItem::ResizeFrameRightDown ||
+         moveAction == QgsAnnotationItem::ResizeFrameRightUp )
+    {
+      xmax += newPos.x() - oldPos.x();
+    }
+    if ( moveAction == QgsAnnotationItem::ResizeFrameLeft ||
+         moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
+         moveAction == QgsAnnotationItem::ResizeFrameLeftUp )
+    {
+      xmin += newPos.x() - oldPos.x();
+    }
+    if ( moveAction == QgsAnnotationItem::ResizeFrameUp ||
+         moveAction == QgsAnnotationItem::ResizeFrameLeftUp ||
+         moveAction == QgsAnnotationItem::ResizeFrameRightUp )
+    {
+      ymin += newPos.y() - oldPos.y();
+    }
+    if ( moveAction == QgsAnnotationItem::ResizeFrameDown ||
+         moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
+         moveAction == QgsAnnotationItem::ResizeFrameRightDown )
+    {
+      ymax += newPos.y() - oldPos.y();
+    }
+
+    //switch min / max if necessary
+    double tmp;
+    if ( xmax < xmin )
+    {
+      tmp = xmax; xmax = xmin; xmin = tmp;
+    }
+    if ( ymax < ymin )
+    {
+      tmp = ymax; ymax = ymin; ymin = tmp;
+    }
+
+    setOffsetFromReferencePoint( QPointF( xmin, ymin ) );
+    setFrameSize( QSizeF( xmax - xmin, ymax - ymin ) );
+    update();
+  }
 }
 
 Qt::CursorShape QgsAnnotationItem::cursorShapeForAction( MouseMoveAction moveAction ) const
@@ -488,6 +566,14 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   syncGeoPos();
   updateBoundingRect();
   updateBalloon();
+}
+
+void QgsAnnotationItem::showItemEditor()
+{
+  if (( mFlags & ItemIsNotEditable ) == 0 )
+  {
+    _showItemEditor();
+  }
 }
 
 void QgsAnnotationItem::syncGeoPos()
