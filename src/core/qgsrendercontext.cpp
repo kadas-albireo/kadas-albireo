@@ -21,18 +21,19 @@
 #include "qgsmapsettings.h"
 
 QgsRenderContext::QgsRenderContext()
-    : QObject( 0 ), mPainter( 0 ),
-    mCoordTransform( 0 ),
-    mDrawEditingInformation( true ),
-    mForceVectorOutput( false ),
-    mUseAdvancedEffects( true ),
-    mRenderingStopped( false ),
-    mScaleFactor( 1.0 ),
-    mRasterScaleFactor( 1.0 ),
-    mRendererScale( 1.0 ),
-    mLabelingEngine( NULL ),
-    mShowSelection( true ),
-    mUseRenderingOptimization( true )
+    : QObject( 0 ), mPainter( 0 )
+    , mCoordTransform( 0 )
+    , mDrawEditingInformation( true )
+    , mForceVectorOutput( false )
+    , mUseAdvancedEffects( true )
+    , mRenderingStopped( false )
+    , mScaleFactor( 1.0 )
+    , mRasterScaleFactor( 1.0 )
+    , mRendererScale( 1.0 )
+    , mLabelingEngine( NULL )
+    , mShowSelection( true )
+    , mUseRenderingOptimization( true )
+    , mGeometry( 0 )
 {
   mVectorSimplifyMethod.setSimplifyHints( QgsVectorSimplifyMethod::NoSimplification );
 }

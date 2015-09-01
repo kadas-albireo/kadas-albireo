@@ -28,6 +28,7 @@
 
 class QPainter;
 
+class QgsAbstractGeometryV2;
 class QgsLabelingEngineInterface;
 class QgsMapSettings;
 
@@ -123,6 +124,9 @@ class CORE_EXPORT QgsRenderContext: public QObject
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const { return mVectorSimplifyMethod; }
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod ) { mVectorSimplifyMethod = simplifyMethod; }
 
+    const QgsAbstractGeometryV2* geometry() const { return mGeometry; }
+    void setGeometry( const QgsAbstractGeometryV2* geometry ) { mGeometry = geometry; }
+
   signals:
     void renderingAborted();
 
@@ -173,6 +177,9 @@ class CORE_EXPORT QgsRenderContext: public QObject
 
     /**Simplification object which holds the information about how to simplify the features for fast rendering */
     QgsVectorSimplifyMethod mVectorSimplifyMethod;
+
+    /** Pointer to the (unsegmentized) geometry*/
+    const QgsAbstractGeometryV2* mGeometry;
 };
 
 #endif
