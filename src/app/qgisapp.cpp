@@ -71,6 +71,7 @@
 #include <qgsnetworkaccessmanager.h>
 #include <qgsapplication.h>
 #include <qgscomposition.h>
+#include <qgsgeoimageannotationitem.h>
 
 #include <QNetworkReply>
 #include <QNetworkProxy>
@@ -4323,6 +4324,12 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
     }
   }
 
+  // Handle georeferenced images (with EXIF tags)
+  if ( QgsGeoImageAnnotationItem::create( mMapCanvas, fileName ) )
+  {
+    return true;
+  }
+
   // try to load it as raster
   if ( QgsRasterLayer::isValidRasterFileName( fileName ) )
   {
@@ -5747,6 +5754,13 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   {
     QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mMapCanvas );
     newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
+  }
+
+  QDomNodeList geoImageItemList = doc.elementsByTagName( "GeoImageAnnotationItem" );
+  for ( int i = 0; i < geoImageItemList.size(); ++i )
+  {
+    QgsGeoImageAnnotationItem* newGeoImageItem = new QgsGeoImageAnnotationItem( mMapCanvas );
+    newGeoImageItem->readXML( doc, geoImageItemList.at( i ).toElement() );
   }
   return true;
 }
@@ -9558,8 +9572,6 @@ void QgisApp::refreshActionFeatureAction()
 // this is a slot for action from GUI to add raster layer
 void QgisApp::addRasterLayer()
 {
-  QString fileFilters;
-
   QStringList selectedFiles;
   QString e;//only for parameter correctness
   QString title = tr( "Open a GDAL Supported Raster Data Source" );
@@ -9572,7 +9584,17 @@ void QgisApp::addRasterLayer()
     return;
   }
 
-  addRasterLayers( selectedFiles );
+  // Handle georeferenced images (with EXIF tags)
+  QStringList rasterFiles;
+  foreach ( const QString& file, selectedFiles )
+  {
+    if ( !QgsGeoImageAnnotationItem::create( mMapCanvas, file ) )
+    {
+      rasterFiles.append( file );
+    }
+  }
+
+  addRasterLayers( rasterFiles );
 
 }// QgisApp::addRasterLayer()
 

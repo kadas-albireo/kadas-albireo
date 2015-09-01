@@ -17,7 +17,6 @@
 
 #include "qgsmaptooltextannotation.h"
 #include "qgstextannotationitem.h"
-#include "qgstextannotationdialog.h"
 #include <QMouseEvent>
 
 
@@ -28,12 +27,4 @@ QgsAnnotationItem* QgsMapToolTextAnnotation::createItem( QMouseEvent* e )
   textItem->setFrameSize( QSizeF( 200, 100 ) );
   textItem->setSelected( true );
   return textItem;
-}
-
-QDialog* QgsMapToolTextAnnotation::createItemEditor( QgsAnnotationItem *item )
-{
-  QgsTextAnnotationItem* textItem = dynamic_cast<QgsTextAnnotationItem*>( item );
-  if ( !textItem )
-    return 0;
-  return new QgsTextAnnotationDialog( textItem );
 }

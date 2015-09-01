@@ -40,6 +40,8 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
 
   private:
     QTextDocument* mDocument;
+
+    void _showItemEditor() override;
 };
 
 #endif // QGSTEXTANNOTATIONITEM_H

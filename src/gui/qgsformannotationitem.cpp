@@ -23,6 +23,7 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmaptool.h"
 #include "qgsvectorlayer.h"
+#include "qgsformannotationdialog.h"
 #include <QDomElement>
 #include <QDir>
 #include <QFile>
@@ -217,6 +218,11 @@ void QgsFormAnnotationItem::readXML( const QDomDocument& doc, const QDomElement&
     mWidgetContainer->setWidget( mDesignerWidget );
   }
   updateVisibility();
+}
+
+void QgsFormAnnotationItem::_showItemEditor()
+{
+  QgsFormAnnotationDialog( this ).exec();
 }
 
 void QgsFormAnnotationItem::setFeatureForMapPosition()

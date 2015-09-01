@@ -57,6 +57,7 @@ class QgsMapLayer;
 class QgsHighlight;
 class QgsVectorLayer;
 
+class QgsAnnotationItem;
 class QgsLabelingResults;
 class QgsMapRenderer;
 class QgsMapRendererCache;
@@ -396,6 +397,18 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
      */
     void setSnappingUtils( QgsSnappingUtils* utils );
 
+
+    /** Returns the annotation item at the specified position.
+     * @param pos The position.
+     * @return The annotation item at the specified position, or 0 if none.
+     */
+    QgsAnnotationItem* annotationItemAtPos( const QPoint &pos ) const;
+
+    /** Returns the selected annotation item.
+     * @return The selected annotation item, or 0 if none.
+     */
+    QgsAnnotationItem* selectedAnnotationItem() const;
+
   public slots:
 
     /**Repaints the canvas map*/
@@ -547,6 +560,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! Overridden standard event to be gestures aware
     bool event( QEvent * e ) override;
 #endif
+
+    //! Overridden context menu event
+    void contextMenuEvent( QContextMenuEvent *event ) override;
 
     //! Overridden key press event
     void keyPressEvent( QKeyEvent * e ) override;

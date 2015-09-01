@@ -166,11 +166,14 @@ qgsfieldproxymodel.cpp
 qgsfiledropedit.cpp
 qgsfilterlineedit.cpp
 qgsformannotationitem.cpp
+qgsformannotationdialog.cpp
 qgsgenericprojectionselector.cpp
 qgsgeometryrubberband.cpp
 qgshighlight.cpp
 qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
+qgshtmlannotationdialog.cpp
+qgsgeoimageannotationitem.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
@@ -222,7 +225,9 @@ qgssearchquerybuilder.cpp
 qgsslider.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
+qgssvgannotationdialog.cpp
 qgstextannotationitem.cpp
+qgstextannotationdialog.cpp
 qgsvertexmarker.cpp
 qgsunitselectionwidget.cpp
 )
@@ -238,6 +243,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgisinterface.h
   qgsactionmenu.h
   qgsannotationitem.h
+  qgsannotationwidget.h
   qgsattributedialog.h
   qgsattributeeditor.h
   qgsattributeform.h
@@ -283,6 +289,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsformannotationitem.h
   qgsgenericprojectionselector.h
   qgshtmlannotationitem.h
+  qgsgeoimageannotationitem.h
   qgsidentifymenu.h
   qgslegendinterface.h
   qgslonglongvalidator.h
@@ -329,6 +336,11 @@ SET(QGIS_GUI_MOC_HDRS
   qgsslider.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
+
+  qgsformannotationdialog.h
+  qgshtmlannotationdialog.h
+  qgssvgannotationdialog.h
+  qgstextannotationdialog.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
@@ -454,6 +466,7 @@ SET(QGIS_GUI_HDRS
   qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
   qgsrubberband.h
+  qgsannotationwidget.cpp
   qgssvgannotationitem.h
   qgstextannotationitem.h
   qgsvectorlayertools.h
@@ -503,6 +516,8 @@ ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilder.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilderdialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionselectiondialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgssublayersdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui_qgsformannotationdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui_qgstextannotationdialogbase.h
 )
 
 IF(ENABLE_MODELTEST)
@@ -595,6 +610,7 @@ TARGET_LINK_LIBRARIES(qgis_gui
   ${QT_QTUITOOLS_LIBRARY}
   ${QWT_LIBRARY}
   ${QSCINTILLA_LIBRARY}
+  exiv2
 )
 
 IF(WIN32)

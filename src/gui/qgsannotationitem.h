@@ -68,7 +68,9 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     /**Returns the mouse move behaviour for a given position
       @param pos the position in scene coordinates*/
-    QgsAnnotationItem::MouseMoveAction moveActionForPosition( const QPointF& pos ) const;
+    MouseMoveAction moveActionForPosition( const QPointF& pos ) const;
+    /**Handles the mouse move action*/
+    void handleMoveAction( MouseMoveAction moveAction, const QPointF &newPos, const QPointF &oldPos );
     /**Returns suitable cursor shape for mouse move action*/
     Qt::CursorShape cursorShapeForAction( MouseMoveAction moveAction ) const;
 
@@ -106,6 +108,9 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     void setItemFlags( int flags ) { mFlags = flags; }
     int itemFlags() const { return mFlags; }
+
+    void showItemEditor();
+    virtual void showContextMenu( const QPoint& /*screenPos*/ ) {}
 
   protected:
     /**Flags specifying the features of the item*/
@@ -162,6 +167,9 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     QPointF pointOnLineWithDistance( const QPointF& startPoint, const QPointF& directionPoint, double distance ) const;
     /**Returns the symbol size scaled in (mapcanvas) pixels. Used for the counding rect calculation*/
     double scaledSymbolSize() const;
+
+  private:
+    virtual void _showItemEditor() = 0;
 
   private slots:
     void syncGeoPos();

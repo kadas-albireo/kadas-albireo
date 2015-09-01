@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgssvgannotationitem.h"
+#include "qgssvgannotationdialog.h"
 #include "qgsproject.h"
 #include <QDomDocument>
 #include <QDomElement>
@@ -95,6 +96,11 @@ void QgsSvgAnnotationItem::paint( QPainter* painter )
   {
     drawSelectionBoxes( painter );
   }
+}
+
+void QgsSvgAnnotationItem::_showItemEditor()
+{
+  QgsSvgAnnotationDialog( this ).exec();
 }
 
 void QgsSvgAnnotationItem::setFilePath( const QString& file )
