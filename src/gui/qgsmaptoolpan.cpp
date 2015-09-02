@@ -27,29 +27,59 @@ QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas )
     : QgsMapTool( canvas )
     , mDragging( false )
     , mZoomRubberBand( 0 )
+    , mAnnotationPickClick( false )
+    , mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
   mToolName = tr( "Pan" );
-  // set cursor
-  QBitmap panBmp = QBitmap::fromData( QSize( 16, 16 ), pan_bits );
-  QBitmap panBmpMask = QBitmap::fromData( QSize( 16, 16 ), pan_mask_bits );
-  mCursor = QCursor( panBmp, panBmpMask, 5, 5 );
+  mPanCursor = QCursor( QBitmap::fromData( QSize( 16, 16 ), pan_bits ),  QBitmap::fromData( QSize( 16, 16 ), pan_mask_bits ), 5, 5 );
+  mCursor = mPanCursor;
+}
+
+void QgsMapToolPan::canvasDoubleClickEvent( QMouseEvent *e )
+{
+  QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
+  if ( selItem && selItem == mCanvas->annotationItemAtPos( e->pos() ) )
+  {
+    if ( mAnnotationMoveAction != QgsAnnotationItem::NoAction )
+    {
+      mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+    }
+    selItem->showItemEditor();
+  }
 }
 
 void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
 {
-  if (( e->buttons() & Qt::LeftButton ) && ( e->modifiers() & Qt::ShiftModifier ) != 0 )
+  if (( e->buttons() & Qt::LeftButton ) )
   {
-    mZoomRubberBand = new QgsRubberBand( mCanvas, QGis::Polygon );
-    mZoomRubberBand->setColor( QColor( 0, 0, 255, 63 ) );
-    mZoomRect.setTopLeft( e->pos() );
-    mZoomRect.setBottomRight( e->pos() );
-    mZoomRubberBand->setToCanvasRectangle( mZoomRect );
-    mZoomRubberBand->show();
+    if (( e->modifiers() & Qt::ShiftModifier ) != 0 )
+    {
+      mZoomRubberBand = new QgsRubberBand( mCanvas, QGis::Polygon );
+      mZoomRubberBand->setColor( QColor( 0, 0, 255, 63 ) );
+      mZoomRect.setTopLeft( e->pos() );
+      mZoomRect.setBottomRight( e->pos() );
+      mZoomRubberBand->setToCanvasRectangle( mZoomRect );
+      mZoomRubberBand->show();
+    }
+    else
+    {
+      mAnnotationPickClick = true;
+      mMouseMoveLastXY = e->pos();
+
+      QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+      if ( e->button() == Qt::LeftButton && selectedItem && selectedItem == mCanvas->annotationItemAtPos( e->pos() ) )
+      {
+        mAnnotationMoveAction = selectedItem->moveActionForPosition( e->posF() );
+      }
+    }
   }
 }
 
 void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 {
+  QgsAnnotationItem* selAnnotationItem = mCanvas->selectedAnnotationItem();
+  mAnnotationPickClick = false;
+
   if (( e->buttons() & Qt::LeftButton ) )
   {
     if ( mZoomRubberBand )
@@ -57,11 +87,29 @@ void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
       mZoomRect.setBottomRight( e->pos() );
       mZoomRubberBand->setToCanvasRectangle( mZoomRect );
     }
+    else if ( selAnnotationItem && mAnnotationMoveAction != QgsAnnotationItem::NoAction )
+    {
+      selAnnotationItem->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
+      mMouseMoveLastXY = e->pos();
+    }
     else
     {
       mDragging = true;
       mCanvas->panAction( e );
     }
+  }
+
+  if ( selAnnotationItem )
+  {
+    QgsAnnotationItem::MouseMoveAction moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
+    if ( moveAction != QgsAnnotationItem::NoAction )
+      setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
+    else
+      setCursor( mPanCursor );
+  }
+  else
+  {
+    setCursor( mPanCursor );
   }
 }
 
@@ -87,12 +135,23 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
       mCanvas->panActionEnd( e->pos() );
       mDragging = false;
     }
-    else // add pan to mouse cursor
+    else if ( mAnnotationPickClick )
     {
-      // transform the mouse pos to map coordinates
-      QgsPoint center = mCanvas->getCoordinateTransform()->toMapPoint( e->x(), e->y() );
-      mCanvas->setCenter( center );
-      mCanvas->refresh();
+      QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
+      QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+      if ( selectedItem )
+      {
+        selectedItem->setSelected( false );
+      }
+      if ( annotationItem )
+      {
+        annotationItem->setSelected( true );
+        QgsAnnotationItem::MouseMoveAction moveAction = annotationItem->moveActionForPosition( e -> pos() );
+        if ( moveAction != QgsAnnotationItem::NoAction )
+          setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
+      }
+      mAnnotationMoveAction = QgsAnnotationItem::NoAction;
     }
+    mAnnotationMoveAction = QgsAnnotationItem::NoAction;
   }
 }

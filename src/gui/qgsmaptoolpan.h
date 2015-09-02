@@ -17,6 +17,7 @@
 #define QGSMAPTOOLPAN_H
 
 #include "qgsmaptool.h"
+#include "qgsannotationitem.h"
 
 class QgsMapCanvas;
 class QgsRubberBand;
@@ -31,6 +32,9 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
   public:
     //! constructor
     QgsMapToolPan( QgsMapCanvas* canvas );
+
+    //! Overridden mouse double click event
+    virtual void canvasDoubleClickEvent( QMouseEvent *e ) override;
 
     //! Overridden mouse press event
     virtual void canvasPressEvent( QMouseEvent * e ) override;
@@ -53,6 +57,18 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
     //! Stores zoom rect for shift+select mode
     QRect mZoomRect;
+
+    //!Flag to indicate whether mouseRelease is a click (i.e. no moves inbetween)
+    bool mAnnotationPickClick;
+
+    //! Current annotation move action
+    QgsAnnotationItem::MouseMoveAction mAnnotationMoveAction;
+
+    //! Previous mouse position during move
+    QPointF mMouseMoveLastXY;
+
+    //! The pan cursor
+    QCursor mPanCursor;
 
 };
 

@@ -9,6 +9,12 @@ class QgsMapToolPan : QgsMapTool
     //! constructor
     QgsMapToolPan( QgsMapCanvas* canvas );
 
+    //! Overridden mouse double click event
+    virtual void canvasDoubleClickEvent(QMouseEvent *e);
+
+    //! Overridden mouse press event
+    virtual void canvasPressEvent( QMouseEvent * e );
+
     //! Overridden mouse move event
     virtual void canvasMoveEvent( QMouseEvent * e );
 
