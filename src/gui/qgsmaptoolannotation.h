@@ -29,7 +29,7 @@ class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
     void canvasPressEvent( QMouseEvent * e ) override;
 
   protected:
-    virtual QgsAnnotationItem* createItem( QMouseEvent* e ) { return 0; }
+    virtual QgsAnnotationItem* createItem( QMouseEvent* ) { return 0; }
 };
 
 #endif // QGSMAPTOOLANNOTATION_H

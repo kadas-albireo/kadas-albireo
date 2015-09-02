@@ -62,7 +62,6 @@ email                : sherman at mrcc.com
 #include "qgspallabeling.h"
 #include "qgsproject.h"
 #include "qgsrubberband.h"
-#include "qgstextannotationitem.h"
 #include "qgsvectorlayer.h"
 #include <math.h>
 
@@ -1199,31 +1198,6 @@ void QgsMapCanvas::keyPressEvent( QKeyEvent * e )
         refresh();
         break;
 #endif
-      case Qt::Key_T:
-        if ( e->modifiers() == Qt::ControlModifier )
-        {
-          foreach ( QGraphicsItem* item, items() )
-          {
-            if ( dynamic_cast<QgsTextAnnotationItem*>( item ) )
-            {
-              item->setVisible( !item->isVisible() );
-            }
-          }
-          break;
-        }
-        // Fall-through
-
-      case Qt::Key_Delete:
-      case Qt::Key_Backspace:
-      {
-        QgsAnnotationItem* selAnnotationItem = selectedAnnotationItem();
-        if ( selAnnotationItem )
-        {
-          delete selAnnotationItem;
-          break;
-        }
-      }
-      // Fall-through
 
       default:
         // Pass it on

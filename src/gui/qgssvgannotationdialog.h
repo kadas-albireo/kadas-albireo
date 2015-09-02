@@ -23,7 +23,7 @@
 class QgsSvgAnnotationItem;
 class QgsAnnotationWidget;
 
-class APP_EXPORT QgsSvgAnnotationDialog: public QDialog, private Ui::QgsFormAnnotationDialogBase
+class GUI_EXPORT QgsSvgAnnotationDialog: public QDialog, private Ui::QgsFormAnnotationDialogBase
 {
     Q_OBJECT
   public:
