@@ -38,7 +38,7 @@ class CORE_EXPORT QgsCredentials
 {
   public:
     //! virtual destructor
-    virtual ~QgsCredentials();
+    virtual ~QgsCredentials() {}
 
     bool get( QString realm, QString &username, QString &password, QString message = QString::null, bool interactive = true );
     void put( QString realm, QString username, QString password );
@@ -67,7 +67,7 @@ class CORE_EXPORT QgsCredentials
     QMutex *mutex() { return &mMutex; }
 
   protected:
-    QgsCredentials();
+    QgsCredentials() {}
 
     //! request a password
     virtual bool request( QString realm, QString &username, QString &password, QString message = QString::null ) = 0;
