@@ -38,32 +38,28 @@ QgsCredentials *QgsCredentials::instance()
   return new QgsCredentialsConsole();
 }
 
-QgsCredentials::QgsCredentials()
-{
-}
-
-QgsCredentials::~QgsCredentials()
-{
-}
-
 bool QgsCredentials::get( QString realm, QString &username, QString &password, QString message, bool interactive )
 {
-  bool haveCache = mCredentialCache.contains( realm );
-  if ( haveCache )
-  {
-    QPair<QString, QString> credentials = mCredentialCache.take( realm );
-    username = credentials.first;
-    password = credentials.second;
-    QgsDebugMsg( QString( "retrieved realm:%1 username:%2 password:%3" ).arg( realm ).arg( username ).arg( password ) );
-  }
+  QMap< QString, QPair<QString, QString> >::iterator it = mCredentialCache.find( realm );
 
-  if ( interactive )
+  // If credentials are cached and not equal to the passed ones, try with those
+  if ( it != mCredentialCache.end() && username != it.value().first && password != it.value().second )
   {
+    QgsDebugMsg( QString( "using cached credentials realm:%1 username:%2 password:%3" ).arg( realm ).arg( username ).arg( password ) );
+    username = it.value().first;
+    password = it.value().second;
+    return true;
+  }
+  // Else, if in interactive mode, request credentials from user
+  else if ( interactive )
+  {
+    QgsDebugMsg( "Requesting credentials from user" );
     return request( realm, username, password, message );
   }
+  // Else, fail
   else
   {
-    return haveCache;
+    return false;
   }
 }
 
