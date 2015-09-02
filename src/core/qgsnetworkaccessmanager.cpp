@@ -453,3 +453,20 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 #endif
 }
 
+QNetworkRequest QgsNetworkAccessManager::requestWithUserInfo( const QNetworkRequest& req )
+{
+  // HACK for NTLM SSO: if no authorization info is provided, try setting an
+  // empty username and some random password (i.e. sso) as user info to fool
+  // QNetworkAccessManager for NTLM SSO authorization, see
+  // http://stackoverflow.com/questions/14706851/ntlmv2-authentication-in-qt
+  QUrl url = req.url();
+  bool trySSO = QSettings().value( "/qgis/networkAndProxy/attemptSSO", false ).toBool();
+  if ( trySSO && url.userInfo().isEmpty() && req.rawHeader( "Authorization" ).isEmpty() )
+  {
+    url.setUserInfo( ":sso" );
+  }
+  QNetworkRequest adjustedRequest( req );
+  adjustedRequest.setUrl( url );
+  return adjustedRequest;
+}
+

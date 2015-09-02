@@ -82,6 +82,47 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
 
     bool useSystemProxy() { return mUseSystemProxy; }
 
+    QNetworkReply *head( const QNetworkRequest &request )
+    {
+      return QNetworkAccessManager::head( requestWithUserInfo( request ) );
+    }
+    QNetworkReply *get( const QNetworkRequest &request )
+    {
+      return QNetworkAccessManager::get( requestWithUserInfo( request ) );
+    }
+    QNetworkReply *post( const QNetworkRequest &request, QIODevice *data )
+    {
+      return QNetworkAccessManager::post( requestWithUserInfo( request ), data );
+    }
+    QNetworkReply *post( const QNetworkRequest &request, const QByteArray &data )
+    {
+      return QNetworkAccessManager::post( requestWithUserInfo( request ), data );
+    }
+    QNetworkReply *post( const QNetworkRequest &request, QHttpMultiPart *multiPart )
+    {
+      return QNetworkAccessManager::post( requestWithUserInfo( request ), multiPart );
+    }
+    QNetworkReply *put( const QNetworkRequest &request, QIODevice *data )
+    {
+      return QNetworkAccessManager::put( requestWithUserInfo( request ), data );
+    }
+    QNetworkReply *put( const QNetworkRequest &request, const QByteArray &data )
+    {
+      return QNetworkAccessManager::put( requestWithUserInfo( request ), data );
+    }
+    QNetworkReply *put( const QNetworkRequest &request, QHttpMultiPart *multiPart )
+    {
+      return QNetworkAccessManager::put( requestWithUserInfo( request ), multiPart );
+    }
+    QNetworkReply *deleteResource( const QNetworkRequest &request )
+    {
+      return QNetworkAccessManager::deleteResource( requestWithUserInfo( request ) );
+    }
+    QNetworkReply *sendCustomRequest( const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = 0 )
+    {
+      return QNetworkAccessManager::sendCustomRequest( requestWithUserInfo( request ), verb, data );
+    }
+
   signals:
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
@@ -106,6 +147,8 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
     QNetworkProxy mFallbackProxy;
     QStringList mExcludedURLs;
     bool mUseSystemProxy;
+
+    QNetworkRequest requestWithUserInfo( const QNetworkRequest& req );
 };
 
 #endif // QGSNETWORKACCESSMANAGER_H
