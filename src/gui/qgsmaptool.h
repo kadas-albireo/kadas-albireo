@@ -105,8 +105,6 @@ class GUI_EXPORT QgsMapTool : public QObject
 
     /** Set a user defined cursor */
     virtual void setCursor( QCursor cursor );
-    /** Returns the current cursor */
-    const QCursor& cursor() const { return mCursor; }
 
     /** Check whether this MapTool performs a zoom or pan operation.
      * If it does, we will be able to perform the zoom  and then

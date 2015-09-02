@@ -74,16 +74,11 @@ class QgsMapCanvas::CanvasProperties
 
     CanvasProperties()
         : mouseButtonDown( false )
-        , mouseClick( false )
         , panSelectorDown( false )
-        , annotationMoveAction( QgsAnnotationItem::NoAction )
     { }
 
     //!Flag to indicate status of mouse button
     bool mouseButtonDown;
-
-    //!Flag to indicate whether mouseRelease is a click (i.e. no moves inbetween)
-    bool mouseClick;
 
     //! Last seen point of the mouse
     QPoint mouseLastXY;
@@ -93,9 +88,6 @@ class QgsMapCanvas::CanvasProperties
 
     //! Flag to indicate the pan selector key is held down by user
     bool panSelectorDown;
-
-    //! Current annotation move action
-    QgsAnnotationItem::MouseMoveAction annotationMoveAction;
 };
 
 
@@ -1283,17 +1275,8 @@ void QgsMapCanvas::keyReleaseEvent( QKeyEvent * e )
 
 void QgsMapCanvas::mouseDoubleClickEvent( QMouseEvent * e )
 {
-  QgsAnnotationItem* selItem = selectedAnnotationItem();
-  if ( selItem && selItem == annotationItemAtPos( e->pos() ) )
-  {
-    if ( mCanvasProperties->annotationMoveAction != QgsAnnotationItem::NoAction )
-    {
-      mCanvasProperties->annotationMoveAction = QgsAnnotationItem::NoAction;
-    }
-    selItem->showItemEditor();
-  }
   // call handler of current map tool
-  else if ( mMapTool )
+  if ( mMapTool )
   {
     mMapTool->canvasDoubleClickEvent( e );
   }
@@ -1302,15 +1285,8 @@ void QgsMapCanvas::mouseDoubleClickEvent( QMouseEvent * e )
 
 void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
 {
-  mCanvasProperties->mouseClick = true;
-
-  QgsAnnotationItem* selectedItem = selectedAnnotationItem();
-  if ( e->button() == Qt::LeftButton && selectedItem && selectedItem == annotationItemAtPos( e->pos() ) )
-  {
-    mCanvasProperties->annotationMoveAction = selectedItem->moveActionForPosition( e->posF() );
-  }
   //use middle mouse button for panning, map tools won't receive any events in that case
-  else if ( e->button() == Qt::MidButton )
+  if ( e->button() == Qt::MidButton )
   {
     mCanvasProperties->panSelectorDown = true;
     mCanvasProperties->rubberStartPoint = mCanvasProperties->mouseLastXY;
@@ -1324,8 +1300,7 @@ void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
     }
   }
 
-  if ( mCanvasProperties->panSelectorDown ||
-       mCanvasProperties->annotationMoveAction != QgsAnnotationItem::NoAction )
+  if ( mCanvasProperties->panSelectorDown )
   {
     return;
   }
@@ -1338,29 +1313,8 @@ void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
 
 void QgsMapCanvas::mouseReleaseEvent( QMouseEvent * e )
 {
-  if ( mCanvasProperties->mouseClick )
-  {
-    QgsAnnotationItem* annotationItem = annotationItemAtPos( e->pos() );
-    QgsAnnotationItem* selectedItem = selectedAnnotationItem();
-    if ( selectedItem )
-    {
-      selectedItem->setSelected( false );
-    }
-    if ( annotationItem )
-    {
-      annotationItem->setSelected( true );
-      QgsAnnotationItem::MouseMoveAction moveAction = annotationItem->moveActionForPosition( e -> pos() );
-      if ( moveAction != QgsAnnotationItem::NoAction )
-        setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
-    }
-    mCanvasProperties->annotationMoveAction = QgsAnnotationItem::NoAction;
-  }
-  else if ( mCanvasProperties->annotationMoveAction != QgsAnnotationItem::NoAction )
-  {
-    mCanvasProperties->annotationMoveAction = QgsAnnotationItem::NoAction;
-  }
   //use middle mouse button for panning, map tools won't receive any events in that case
-  else if ( e->button() == Qt::MidButton )
+  if ( e->button() == Qt::MidButton )
   {
     mCanvasProperties->panSelectorDown = false;
     panActionEnd( mCanvasProperties->mouseLastXY );
@@ -1529,16 +1483,9 @@ void QgsMapCanvas::zoomWithCenter( int x, int y, bool zoomIn )
 
 void QgsMapCanvas::mouseMoveEvent( QMouseEvent * e )
 {
-  QPointF prevPos = mCanvasProperties->mouseLastXY;
-  mCanvasProperties->mouseClick = false;
   mCanvasProperties->mouseLastXY = e->pos();
-  QgsAnnotationItem* selAnnotationItem = selectedAnnotationItem();
 
-  if ( selAnnotationItem && mCanvasProperties->annotationMoveAction != QgsAnnotationItem::NoAction )
-  {
-    selAnnotationItem->handleMoveAction( mCanvasProperties->annotationMoveAction, e->posF(), prevPos );
-  }
-  else if ( mCanvasProperties->panSelectorDown )
+  if ( mCanvasProperties->panSelectorDown )
   {
     panAction( e );
   }
@@ -1549,19 +1496,6 @@ void QgsMapCanvas::mouseMoveEvent( QMouseEvent * e )
     {
       mMapTool->canvasMoveEvent( e );
     }
-  }
-
-  if ( selAnnotationItem )
-  {
-    QgsAnnotationItem::MouseMoveAction moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
-    if ( moveAction != QgsAnnotationItem::NoAction )
-      setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
-    else
-      setCursor( mMapTool ? mMapTool->cursor() : QCursor( Qt::ArrowCursor ) );
-  }
-  else
-  {
-    setCursor( mMapTool ? mMapTool->cursor() : QCursor( Qt::ArrowCursor ) );
   }
 
   // show x y on status bar
