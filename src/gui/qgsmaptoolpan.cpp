@@ -18,6 +18,7 @@
 #include "qgscursors.h"
 #include "qgsmaptopixel.h"
 #include "qgsrubberband.h"
+#include "qgstextannotationitem.h"
 #include <QBitmap>
 #include <QCursor>
 #include <QMouseEvent>
@@ -154,4 +155,40 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
     }
     mAnnotationMoveAction = QgsAnnotationItem::NoAction;
   }
+}
+
+void QgsMapToolPan::keyPressEvent( QKeyEvent *e )
+{
+  switch ( e->key() )
+  {
+    case Qt::Key_T:
+      if ( e->modifiers() == Qt::ControlModifier )
+      {
+        foreach ( QGraphicsItem* item, mCanvas->items() )
+        {
+          if ( dynamic_cast<QgsTextAnnotationItem*>( item ) )
+          {
+            item->setVisible( !item->isVisible() );
+          }
+        }
+        e->ignore();
+        break;
+      }
+      // Fall-through
+
+    case Qt::Key_Delete:
+    case Qt::Key_Backspace:
+    {
+      QgsAnnotationItem* selAnnotationItem = mCanvas->selectedAnnotationItem();
+      if ( selAnnotationItem )
+      {
+        delete selAnnotationItem;
+        e->ignore();
+        break;
+      }
+    }
+    default:
+      break;
+  }
+  // Fall-through
 }

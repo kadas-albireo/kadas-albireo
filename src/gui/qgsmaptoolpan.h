@@ -45,6 +45,9 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     //! Overridden mouse release event
     virtual void canvasReleaseEvent( QMouseEvent * e ) override;
 
+    //! Overridden key press event
+    virtual void keyPressEvent( QKeyEvent *e ) override;
+
     virtual bool isTransient() override { return true; }
 
   private:

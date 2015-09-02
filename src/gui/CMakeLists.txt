@@ -303,7 +303,6 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
-  qgsmaptoolannotation.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
@@ -462,6 +461,7 @@ SET(QGIS_GUI_HDRS
   qgsmapcanvassnapper.h
   qgsmapcanvassnappingutils.h
   qgsmaptip.h
+  qgsmaptoolannotation.h
   qgsmaptoolpan.h
   qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
