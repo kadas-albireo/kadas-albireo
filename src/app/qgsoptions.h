@@ -198,6 +198,8 @@ class APP_EXPORT QgsOptions : public QgsOptionsDialogBase, private Ui::QgsOption
     void on_mButtonImportColors_clicked();
     void on_mButtonExportColors_clicked();
 
+    void on_mSSOCheckBox_toggled( bool state );
+
   private:
     QStringList i18nList();
     void initContrastEnhancement( QComboBox *cbox, QString name, QString defaultVal );

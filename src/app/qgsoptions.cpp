@@ -255,6 +255,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   // WMS/WMS-C default max retry in case of tile request errors
   mDefaultTileMaxRetrySpinBox->setValue( settings.value( "/qgis/defaultTileMaxRetry", "3" ).toInt() );
 
+  // SSO checkbox
+  mSSOCheckBox->setChecked( settings.value( "/qgis/networkAndProxy/attemptSSO", false ).toBool() );
+
   //Web proxy settings
   grpProxy->setChecked( settings.value( "proxy/proxyEnabled", "0" ).toBool() );
   leProxyHost->setText( settings.value( "proxy/proxyHost", "" ).toString() );
@@ -2118,4 +2121,9 @@ void QgsOptions::on_mButtonExportColors_clicked()
     QMessageBox::critical( 0, tr( "Error exporting" ), tr( "Error writing palette file" ) );
     return;
   }
+}
+
+void QgsOptions::on_mSSOCheckBox_toggled( bool state )
+{
+  QSettings().setValue( "/qgis/networkAndProxy/attemptSSO", state );
 }
