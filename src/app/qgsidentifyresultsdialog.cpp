@@ -66,7 +66,7 @@ static QString& insertLinkAnchors( QString& value )
   // http://alanstorm.com/url_regex_explained
   static QRegExp urlRegEx( "(\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^!\"#$%&'()*+,\\-./:;<=>?@[\\\\\\]^_`{|}~\\s]|/))))" );
   static QRegExp protoRegEx( "^(?:f|ht)tps?://" );
-  static QRegExp emailRegEx( "([\\w._%+-]+@[\\w.-]+\.[A-Za-z])" );
+  static QRegExp emailRegEx( "([\\w._%+-]+@[\\w.-]+\\.[A-Za-z])" );
 
   int offset = 0;
   while ( urlRegEx.indexIn( value, offset ) != -1 )
