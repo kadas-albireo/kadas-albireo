@@ -20,7 +20,7 @@
 #include "qgsvbscoordinatedisplayer.h"
 #include "qgsvbscrsselection.h"
 #include "qgisinterface.h"
-#include "maptools/qgsvbsmaptoolpinannotation.h"
+#include "pinannotation/qgsvbsmaptoolpinannotation.h"
 #include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
 #include <QAction>

@@ -8,8 +8,8 @@ SET (vbsfunctionality_SRCS
   qgsvbscoordinatedisplayer.cpp
   qgsvbscoordinateconverter.cpp
   qgsvbscrsselection.cpp
-  maptools/qgsvbsmaptoolpinannotation.cpp
-  maptools/qgsvbspinannotationitem.cpp
+  pinannotation/qgsvbsmaptoolpinannotation.cpp
+  pinannotation/qgsvbspinannotationitem.cpp
   search/qgsvbssearchbox.cpp
   search/qgsvbscoordinatesearchprovider.cpp
   search/qgsvbslocationsearchprovider.cpp
@@ -22,14 +22,14 @@ SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
-  maptools/qgsvbsmaptoolpinannotation.h
+  pinannotation/qgsvbsmaptoolpinannotation.h
   utils/qgsvbslltoutm.cpp
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscoordinatedisplayer.h
-  maptools/qgsvbspinannotationitem.h
+  pinannotation/qgsvbspinannotationitem.h
   search/qgsvbssearchbox.h
   search/qgsvbssearchprovider.h
   search/qgsvbscoordinatesearchprovider.h
