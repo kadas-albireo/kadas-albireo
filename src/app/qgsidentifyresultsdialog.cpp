@@ -52,6 +52,7 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <QWebFrame>
+#include <QTextDocument>
 
 //graph
 #include <qwt_plot.h>
@@ -60,6 +61,27 @@
 #include <qwt_legend.h>
 #include "qgsvectorcolorrampv2.h" // for random colors
 
+static QString& insertLinkAnchors( QString& value )
+{
+  // http://alanstorm.com/url_regex_explained
+  static QRegExp urlRegEx( "(\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^!\"#$%&'()*+,\\-./:;<=>?@[\\\\\\]^_`{|}~\\s]|/))))" );
+  static QRegExp protoRegEx( "^(?:f|ht)tps?://" );
+
+  int offset = 0;
+  while ( urlRegEx.indexIn( value, offset ) != -1 )
+  {
+    QString url = urlRegEx.cap( 1 );
+    QString protoUrl = url;
+    if ( protoRegEx.indexIn( protoUrl ) == -1 )
+    {
+      protoUrl.prepend( "http://" );
+    }
+    QString anchor = QString( "<a href=\"%1\">%2</a>" ).arg( Qt::escape( protoUrl ) ).arg( Qt::escape( url ) );
+    value.replace( urlRegEx.pos( 1 ), url.length(), anchor );
+    offset = urlRegEx.pos( 1 ) + anchor.length();
+  }
+  return value;
+}
 
 QgsIdentifyResultsWebView::QgsIdentifyResultsWebView( QWidget *parent ) : QWebView( parent )
 {
@@ -462,8 +484,12 @@ void QgsIdentifyResultsDialog::addFeature( QgsVectorLayer *vlayer, const QgsFeat
     if ( i >= fields.count() )
       continue;
 
+    if ( vlayer->editorWidgetV2( i ) == "Hidden" )
+      continue;
+
     QString value = fields[i].displayString( attrs[i] );
     QTreeWidgetItem *attrItem = new QTreeWidgetItem( QStringList() << QString::number( i ) << value );
+    featItem->addChild( attrItem );
 
     attrItem->setData( 0, Qt::DisplayRole, vlayer->attributeDisplayName( i ) );
     attrItem->setData( 0, Qt::UserRole, fields[i].name() );
@@ -471,15 +497,12 @@ void QgsIdentifyResultsDialog::addFeature( QgsVectorLayer *vlayer, const QgsFeat
 
     attrItem->setData( 1, Qt::UserRole, value );
 
-    if ( vlayer->editorWidgetV2( i ) == "Hidden" )
-    {
-      delete attrItem;
-      continue;
-    }
-
     value = representValue( vlayer, fields[i].name(), attrs[i] );
+    QLabel* valueLabel = new QLabel( insertLinkAnchors( value ) );
+    valueLabel->setOpenExternalLinks( true );
+    attrItem->treeWidget()->setItemWidget( attrItem, 1, valueLabel );
 
-    attrItem->setData( 1, Qt::DisplayRole, value );
+    attrItem->setData( 1, Qt::DisplayRole, "" );
 
     if ( fields[i].name() == vlayer->displayField() )
     {
@@ -488,7 +511,6 @@ void QgsIdentifyResultsDialog::addFeature( QgsVectorLayer *vlayer, const QgsFeat
       featureLabeled = true;
     }
 
-    featItem->addChild( attrItem );
   }
 
   if ( !featureLabeled )
@@ -1468,7 +1490,9 @@ void QgsIdentifyResultsDialog::attributeValueChanged( QgsFeatureId fid, int idx,
         if ( item->data( 0, Qt::UserRole + 1 ).toInt() == idx )
         {
           value = representValue( vlayer, fld.name(), val );
-          item->setData( 1, Qt::DisplayRole, value );
+          QLabel* valueLabel = new QLabel( insertLinkAnchors( value ) );
+          valueLabel->setOpenExternalLinks( true );
+          item->treeWidget()->setItemWidget( item, 1, valueLabel );
           return;
         }
       }
