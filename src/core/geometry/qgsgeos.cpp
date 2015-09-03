@@ -1233,7 +1233,7 @@ QgsAbstractGeometryV2* QgsGeos::buffer( double distance, int segments, QString* 
   return fromGeos( geos );
 }
 
-QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) const
+QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit, QString* errorMsg ) const
 {
   if ( !mGeos )
   {
@@ -1248,7 +1248,7 @@ QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCa
   {
     geos = GEOSBufferWithStyle_r( geosinit.ctxt, mGeos, distance, segments, endCapStyle, joinStyle, mitreLimit );
   }
-  CATCH_GEOS( 0 );
+  CATCH_GEOS_WITH_ERRMSG( 0 );
   return fromGeos( geos );
 #else
   return 0;
