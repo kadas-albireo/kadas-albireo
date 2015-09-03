@@ -1199,7 +1199,7 @@ QgsGeometry* QgsGeometry::buffer( double distance, int segments, int endCapStyle
   }
 
   QgsGeos g( d->geometry );
-  QgsAbstractGeometryV2* geom = g.buffer( distance, segments, endCapStyle, joinStyle, mitreLimit );
+  QgsAbstractGeometryV2* geom = g.buffer( distance, segments, endCapStyle, joinStyle, mitreLimit, errorMsg );
   if ( !geom )
   {
     return 0;
