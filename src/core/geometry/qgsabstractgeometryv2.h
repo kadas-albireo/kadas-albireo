@@ -288,6 +288,10 @@ class CORE_EXPORT QgsAbstractGeometryV2
     virtual int ringCount( int part = 0 ) const = 0;
     virtual int partCount() const = 0;
 
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    virtual double vertexAngle( const QgsVertexId& vertex ) const = 0;
+
   protected:
     QgsWKBTypes::Type mWkbType;
     mutable QgsRectangle mBoundingBox;

@@ -66,4 +66,7 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
     virtual int ringCount(int part = 0) const;
     virtual int partCount() const;
 
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const;
 };
