@@ -124,7 +124,9 @@ class CORE_EXPORT QgsRenderContext: public QObject
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const { return mVectorSimplifyMethod; }
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod ) { mVectorSimplifyMethod = simplifyMethod; }
 
+    /** Returns pointer to the unsegmentized geometry*/
     const QgsAbstractGeometryV2* geometry() const { return mGeometry; }
+    /** Sets pointer to original (unsegmentized) geometry*/
     void setGeometry( const QgsAbstractGeometryV2* geometry ) { mGeometry = geometry; }
 
   signals:

@@ -85,6 +85,9 @@ class CORE_EXPORT QgsPointV2: public QgsAbstractGeometryV2
     virtual int partCount() const override { return 1; }
     virtual QgsPointV2 vertexAt( const QgsVertexId& /*id*/ ) const override { return *this; }
 
+    /** Angle undefined. Always returns 0.0*/
+    double vertexAngle( const QgsVertexId& vertex ) const override { Q_UNUSED( vertex ); return 0.0; }
+
   private:
     double mX;
     double mY;
