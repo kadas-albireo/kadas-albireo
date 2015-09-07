@@ -98,6 +98,7 @@ SET(QGIS_CORE_SRCS
   qgsgeometryvalidator.cpp
   qgsgml.cpp
   qgsgmlschema.cpp
+  qgskmlexport.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
