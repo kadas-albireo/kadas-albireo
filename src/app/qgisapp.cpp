@@ -71,7 +71,6 @@
 #include <qgsnetworkaccessmanager.h>
 #include <qgsapplication.h>
 #include <qgscomposition.h>
-#include <qgsgeoimageannotationitem.h>
 
 #include <QNetworkReply>
 #include <QNetworkProxy>
@@ -139,6 +138,8 @@
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
 #include "qgsguivectorlayertools.h"
+#include "qgskmlexport.h"
+#include "qgskmlexportdialog.h"
 #include "qgslabelinggui.h"
 #include "qgslayerdefinition.h"
 #include "qgslayertree.h"
@@ -307,7 +308,7 @@ extern "C"
 
 #include "qgspythonutils.h"
 
-#ifndef _MSC_VER
+#ifndef Q_OS_WIN
 #include <dlfcn.h>
 #else
 #include <windows.h>
@@ -1104,6 +1105,7 @@ void QgisApp::createActions()
   connect( mActionShowComposerManager, SIGNAL( triggered() ), this, SLOT( showComposerManager() ) );
   connect( mActionExit, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
   connect( mActionDxfExport, SIGNAL( triggered() ), this, SLOT( dxfExport() ) );
+  connect( mActionKMLExport, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
 
   // Edit Menu Items
 
@@ -2461,13 +2463,9 @@ void QgisApp::initLayerTreeView()
   toolbarLayout->addWidget( btnRemoveItem );
   toolbarLayout->addStretch();
 
-  QWidget* layerTreeToolbar = new QWidget();
-  layerTreeToolbar->setLayout( toolbarLayout );
-  layerTreeToolbar->setObjectName( "layerTreeToolbar" );
-
   QVBoxLayout* vboxLayout = new QVBoxLayout;
   vboxLayout->setMargin( 0 );
-  vboxLayout->addWidget( layerTreeToolbar );
+  vboxLayout->addLayout( toolbarLayout );
   vboxLayout->addWidget( mLayerTreeView );
 
   QWidget* w = new QWidget;
@@ -4242,6 +4240,30 @@ void QgisApp::dxfExport()
   }
 }
 
+void QgisApp::kmlExport()
+{
+  QgsKMLExportDialog d( mMapCanvas->mapSettings().layers() );
+  if ( d.exec() == QDialog::Accepted )
+  {
+    QgsKMLExport kmlExport;
+    kmlExport.setLayers( d.selectedLayers() );
+
+    QString fileName = d.saveFile();
+    QFile kmlFile( fileName );
+
+    QApplication::setOverrideCursor( Qt::BusyCursor );
+    if ( kmlExport.writeToDevice( &kmlFile ) == 0 )
+    {
+      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
+    }
+    else
+    {
+      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
+    }
+    QApplication::restoreOverrideCursor();
+  }
+}
+
 void QgisApp::openLayerDefinition( const QString & path )
 {
   QString errorMessage;
@@ -4322,12 +4344,6 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
       CPLPopErrorHandler();
       return true;
     }
-  }
-
-  // Handle georeferenced images (with EXIF tags)
-  if ( QgsGeoImageAnnotationItem::create( mMapCanvas, fileName ) )
-  {
-    return true;
   }
 
   // try to load it as raster
@@ -5754,13 +5770,6 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   {
     QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mMapCanvas );
     newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList geoImageItemList = doc.elementsByTagName( "GeoImageAnnotationItem" );
-  for ( int i = 0; i < geoImageItemList.size(); ++i )
-  {
-    QgsGeoImageAnnotationItem* newGeoImageItem = new QgsGeoImageAnnotationItem( mMapCanvas );
-    newGeoImageItem->readXML( doc, geoImageItemList.at( i ).toElement() );
   }
   return true;
 }
@@ -9572,6 +9581,8 @@ void QgisApp::refreshActionFeatureAction()
 // this is a slot for action from GUI to add raster layer
 void QgisApp::addRasterLayer()
 {
+  QString fileFilters;
+
   QStringList selectedFiles;
   QString e;//only for parameter correctness
   QString title = tr( "Open a GDAL Supported Raster Data Source" );
@@ -9584,17 +9595,7 @@ void QgisApp::addRasterLayer()
     return;
   }
 
-  // Handle georeferenced images (with EXIF tags)
-  QStringList rasterFiles;
-  foreach ( const QString& file, selectedFiles )
-  {
-    if ( !QgsGeoImageAnnotationItem::create( mMapCanvas, file ) )
-    {
-      rasterFiles.append( file );
-    }
-  }
-
-  addRasterLayers( rasterFiles );
+  addRasterLayers( selectedFiles );
 
 }// QgisApp::addRasterLayer()
 
@@ -9896,7 +9897,7 @@ void QgisApp::keyPressEvent( QKeyEvent * e )
   {
     stopRendering();
   }
-#if defined(__MSC_VER) && defined(QGISDEBUG)
+#if defined(Q_OS_WIN) && defined(QGISDEBUG)
   else if ( e->key() == Qt::Key_Backslash && e->modifiers() & Qt::ControlModifier )
   {
     qgisCrashDump( 0 );
@@ -10196,27 +10197,153 @@ void QgisApp::namSetup()
 
   namUpdate();
 
-#ifndef QT_NO_OPENSSL
-  connect( nam, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
-           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ) );
-#endif
+  connect( nam, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
+           this, SLOT( namAuthenticationRequired( QNetworkReply *, QAuthenticator * ) ) );
+
+  connect( nam, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
+           this, SLOT( namProxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ) );
+
   connect( nam, SIGNAL( requestTimedOut( QNetworkReply* ) ),
            this, SLOT( namRequestTimedOut( QNetworkReply* ) ) );
+
+#ifndef QT_NO_OPENSSL
+  connect( nam, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
+           this, SLOT( namSslErrors( QNetworkReply *, const QList<QSslError> & ) ) );
+#endif
+}
+
+void QgisApp::namAuthenticationRequired( QNetworkReply *reply, QAuthenticator *auth )
+{
+  QString username = auth->user();
+  QString password = auth->password();
+
+  if ( username.isEmpty() && password.isEmpty() && reply->request().hasRawHeader( "Authorization" ) )
+  {
+    QByteArray header( reply->request().rawHeader( "Authorization" ) );
+    if ( header.startsWith( "Basic " ) )
+    {
+      QByteArray auth( QByteArray::fromBase64( header.mid( 6 ) ) );
+      int pos = auth.indexOf( ":" );
+      if ( pos >= 0 )
+      {
+        username = auth.left( pos );
+        password = auth.mid( pos + 1 );
+      }
+    }
+  }
+
+  {
+    QMutexLocker lock( QgsCredentials::instance()->mutex() );
+
+    for ( ;; )
+    {
+      bool ok = QgsCredentials::instance()->get(
+                  QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+                  username, password,
+                  tr( "Authentication required" ) );
+      if ( !ok )
+        return;
+
+      if ( reply->isFinished() )
+        return;
+
+      if ( auth->user() != username || ( password != auth->password() && !password.isNull() ) )
+        break;
+
+      // credentials didn't change - stored ones probably wrong? clear password and retry
+      QgsCredentials::instance()->put(
+        QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+        username, QString::null );
+    }
+
+    // save credentials
+    QgsCredentials::instance()->put(
+      QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+      username, password
+    );
+  }
+
+  auth->setUser( username );
+  auth->setPassword( password );
+}
+
+void QgisApp::namProxyAuthenticationRequired( const QNetworkProxy &proxy, QAuthenticator *auth )
+{
+  QSettings settings;
+  if ( !settings.value( "proxy/proxyEnabled", false ).toBool() ||
+       settings.value( "proxy/proxyType", "" ).toString() == "DefaultProxy" )
+  {
+    auth->setUser( "" );
+    return;
+  }
+
+  QString username = auth->user();
+  QString password = auth->password();
+
+  {
+    QMutexLocker lock( QgsCredentials::instance()->mutex() );
+
+    for ( ;; )
+    {
+      bool ok = QgsCredentials::instance()->get(
+                  QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+                  username, password,
+                  tr( "Proxy authentication required" ) );
+      if ( !ok )
+        return;
+
+      if ( auth->user() != username || ( password != auth->password() && !password.isNull() ) )
+        break;
+
+      // credentials didn't change - stored ones probably wrong? clear password and retry
+      QgsCredentials::instance()->put(
+        QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+        username, QString::null );
+    }
+
+    QgsCredentials::instance()->put(
+      QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+      username, password
+    );
+  }
+
+  auth->setUser( username );
+  auth->setPassword( password );
 }
 
 #ifndef QT_NO_OPENSSL
-void QgisApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &errors, bool *ok )
+void QgisApp::namSslErrors( QNetworkReply *reply, const QList<QSslError> &errors )
 {
-  QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( url.toString() );
+  QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( reply->request().url().toString() );
+  bool otherError = false;
+  static QSet<QSslError::SslError> ignoreErrors;
+
   foreach ( QSslError error, errors )
   {
+    if ( error.error() == QSslError::NoError )
+      continue;
+
+    QgsDebugMsg( QString( "SSL error %1: %2" ).arg( error.error() ).arg( error.errorString() ) );
+
+    otherError = otherError || !ignoreErrors.contains( error.error() );
+
     msg += "\n" + error.errorString();
   }
+
   msg += tr( "\n\nAlways ignore these errors?" );
-  *ok = QMessageBox::warning( this,
-                              tr( "%1 SSL errors occured", "number of errors", errors.size() ),
-                              msg,
-                              QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes;
+
+  if ( !otherError ||
+       QMessageBox::warning( this,
+                             tr( "%n SSL errors occured", "number of errors", errors.size() ),
+                             msg,
+                             QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Ok )
+  {
+    foreach ( QSslError error, errors )
+    {
+      ignoreErrors << error.error();
+    }
+    reply->ignoreSslErrors();
+  }
 }
 #endif
 
@@ -10367,7 +10494,7 @@ void QgisApp::tapAndHoldTriggered( QTapAndHoldGesture *gesture )
 }
 #endif
 
-#ifdef __MSC_VER
+#ifdef Q_OS_WIN
 LONG WINAPI QgisApp::qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo )
 {
   QString dumpName = QDir::toNativeSeparators(

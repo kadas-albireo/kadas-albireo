@@ -29,7 +29,7 @@ class QgsPointV2;
 class QgsConstWkbPtr;
 class QgsWkbPtr;
 class QPainter;
-struct QgsVertexId;
+class QgsVertexId;
 
 /**\ingroup core
  * \class QgsAbstractGeometryV2
@@ -175,6 +175,9 @@ class CORE_EXPORT QgsAbstractGeometryV2
      * @see asGML3
      */
     virtual QString asJSON( int precision = 17 ) const = 0;
+
+    /**Exports geometry as a KML fragment*/
+    virtual QString asKML( int precision = 17 ) const { Q_UNUSED( precision ); return QString(); }// = 0;
 
     //render pipeline
 

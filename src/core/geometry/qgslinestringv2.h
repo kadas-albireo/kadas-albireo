@@ -43,6 +43,8 @@ class CORE_EXPORT QgsLineStringV2: public QgsCurveV2
     QDomElement asGML2( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QDomElement asGML3( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QString asJSON( int precision = 17 ) const override;
+    /**Exports geometry as a KML fragment*/
+    QString asKML( int precision = 17 ) const override;
 
     //curve interface
     virtual double length() const override;
