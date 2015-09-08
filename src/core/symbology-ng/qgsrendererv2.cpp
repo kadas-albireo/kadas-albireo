@@ -209,7 +209,8 @@ QgsFeatureRendererV2::QgsFeatureRendererV2( QString type )
 
 QgsFeatureRendererV2* QgsFeatureRendererV2::defaultRenderer( QGis::GeometryType geomType )
 {
-  return new QgsSingleSymbolRendererV2( QgsSymbolV2::defaultSymbol( geomType ) );
+  QgsSymbolV2* symbol = QgsSymbolV2::defaultSymbol( geomType );
+  return symbol ? new QgsSingleSymbolRendererV2( symbol ) : 0;
 }
 
 void QgsFeatureRendererV2::startRender( QgsRenderContext& context, const QgsVectorLayer* vlayer )
