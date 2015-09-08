@@ -21,6 +21,7 @@
 #include "qgisplugin.h"
 
 #include <QObject>
+#include <QPointer>
 
 class QAction;
 class QToolBar;
@@ -29,6 +30,8 @@ class QgsVBSCrsSelection;
 class QgsVBSMapToolPinAnnotation;
 class QgsVBSSearchBox;
 class QgsMapTool;
+class QgsMapLayer;
+class QgsMessageBarItem;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -47,10 +50,12 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
     QToolBar* mSearchToolbar;
     QgsVBSSearchBox* mSearchBox;
+    QPointer<QgsMessageBarItem> mReprojMsgItem;
 
   private slots:
     void activateMapToolPinAnnotation();
     void onMapToolSet( QgsMapTool*tool );
+    void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

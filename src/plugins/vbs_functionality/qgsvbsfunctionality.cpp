@@ -15,7 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgslegendinterface.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaplayer.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsmessagebaritem.h"
 #include "qgsvbsfunctionality.h"
 #include "qgsvbscoordinatedisplayer.h"
 #include "qgsvbscrsselection.h"
@@ -35,6 +39,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mMapToolPinAnnotation( 0 )
     , mSearchToolbar( 0 )
     , mSearchBox( 0 )
+    , mReprojMsgItem( 0 )
 {
 }
 
@@ -56,6 +61,9 @@ void QgsVBSFunctionality::initGui()
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( false );
+
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
+  connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
 }
 
 void QgsVBSFunctionality::unload()
@@ -86,4 +94,28 @@ void QgsVBSFunctionality::activateMapToolPinAnnotation()
 void QgsVBSFunctionality::onMapToolSet( QgsMapTool * tool )
 {
   mActionPinAnnotation->setChecked( tool == mMapToolPinAnnotation );
+}
+
+void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )
+{
+  if ( !mReprojMsgItem.isNull() )
+  {
+    mQGisIface->messageBar()->popWidget( mReprojMsgItem.data() );
+  }
+  QString destAuthId = mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid();
+  QStringList reprojLayers;
+  // Look at legend interface instead of maplayerregistry, to only check layers
+  // the user can actually see (i.e. not the redlining layer)
+  foreach ( QgsMapLayer* layer, mQGisIface->legendInterface()->layers() + newLayers )
+  {
+    if ( layer->crs().authid() != destAuthId )
+    {
+      reprojLayers.append( layer->name() );
+    }
+  }
+  if ( !reprojLayers.isEmpty() )
+  {
+    mReprojMsgItem = mQGisIface->messageBar()->createMessage( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ) );
+    mQGisIface->messageBar()->pushItem( mReprojMsgItem.data() );
+  }
 }
