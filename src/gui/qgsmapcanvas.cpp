@@ -1490,7 +1490,9 @@ void QgsMapCanvas::setMapTool( QgsMapTool* tool )
   if ( mMapTool )
   {
     disconnect( mMapTool, SIGNAL( destroyed() ), this, SLOT( mapToolDestroyed() ) );
-    mMapTool->deactivate();
+    QgsMapTool* oldTool = mMapTool;
+    mMapTool = 0;
+    oldTool->deactivate();
   }
 
   if ( tool->isTransient() && mMapTool && !mMapTool->isTransient() )
@@ -1523,10 +1525,10 @@ void QgsMapCanvas::unsetMapTool( QgsMapTool* tool )
 {
   if ( mMapTool && mMapTool == tool )
   {
-    mMapTool->deactivate();
     mMapTool = NULL;
+    tool->deactivate();
     emit mapToolSet( NULL );
-    emit mapToolSet( NULL, mMapTool );
+    emit mapToolSet( NULL, tool );
     setCursor( Qt::ArrowCursor );
   }
 
