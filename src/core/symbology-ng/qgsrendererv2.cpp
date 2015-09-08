@@ -239,6 +239,9 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
     return;
   }
 
+  const QgsGeometry* segmentizedGeometry = geom;
+  bool deleteSegmentizedGeometry = false;
+
   //convert curve types to normal point/line/polygon ones
   switch ( QgsWKBTypes::flatType( geom->geometry()->wkbType() ) )
   {
@@ -253,14 +256,14 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
       {
         return;
       }
-      feature.setGeometry( new QgsGeometry( g ) );
-      geom = feature.constGeometry();
+      segmentizedGeometry = new QgsGeometry( g );
+      deleteSegmentizedGeometry = true;
     }
     default:
       break;
   }
 
-  switch ( QgsWKBTypes::flatType( geom->geometry()->wkbType() ) )
+  switch ( QgsWKBTypes::flatType( segmentizedGeometry->geometry()->wkbType() ) )
   {
     case QgsWKBTypes::Point:
     {
@@ -270,11 +273,8 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
         break;
       }
       QPointF pt;
-      _getPoint( pt, context, geom->asWkb() );
+      _getPoint( pt, context, segmentizedGeometry->asWkb() );
       (( QgsMarkerSymbolV2* )symbol )->renderPoint( pt, &feature, context, layer, selected );
-
-      //if ( drawVertexMarker )
-      //  renderVertexMarker( pt, context );
     }
     break;
     case QgsWKBTypes::LineString:
@@ -285,11 +285,8 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
         break;
       }
       QPolygonF pts;
-      _getLineString( pts, context, geom->asWkb() );
+      _getLineString( pts, context, segmentizedGeometry->asWkb() );
       (( QgsLineSymbolV2* )symbol )->renderPolyline( pts, &feature, context, layer, selected );
-
-      if ( drawVertexMarker )
-        renderVertexMarkerPolyline( pts, context );
     }
     break;
     case QgsWKBTypes::Polygon:
@@ -301,11 +298,8 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
       }
       QPolygonF pts;
       QList<QPolygonF> holes;
-      _getPolygon( pts, holes, context, geom->asWkb() );
+      _getPolygon( pts, holes, context, segmentizedGeometry->asWkb() );
       (( QgsFillSymbolV2* )symbol )->renderPolygon( pts, ( holes.count() ? &holes : NULL ), &feature, context, layer, selected );
-
-      if ( drawVertexMarker )
-        renderVertexMarkerPolygon( pts, ( holes.count() ? &holes : NULL ), context );
     }
     break;
 
@@ -317,7 +311,7 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
         break;
       }
 
-      QgsConstWkbPtr wkbPtr( geom->asWkb() + 1 + sizeof( int ) );
+      QgsConstWkbPtr wkbPtr( segmentizedGeometry->asWkb() + 1 + sizeof( int ) );
       unsigned int num;
       wkbPtr >> num;
       const unsigned char* ptr = wkbPtr;
@@ -327,9 +321,6 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
       {
         ptr = QgsConstWkbPtr( _getPoint( pt, context, ptr ) );
         (( QgsMarkerSymbolV2* )symbol )->renderPoint( pt, &feature, context, layer, selected );
-
-        //if ( drawVertexMarker )
-        //  renderVertexMarker( pt, context );
       }
     }
     break;
@@ -343,7 +334,7 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
         break;
       }
 
-      QgsConstWkbPtr wkbPtr( geom->asWkb() + 1 + sizeof( int ) );
+      QgsConstWkbPtr wkbPtr( segmentizedGeometry->asWkb() + 1 + sizeof( int ) );
       unsigned int num;
       wkbPtr >> num;
       const unsigned char* ptr = wkbPtr;
@@ -353,9 +344,6 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
       {
         ptr = QgsConstWkbPtr( _getLineString( pts, context, ptr ) );
         (( QgsLineSymbolV2* )symbol )->renderPolyline( pts, &feature, context, layer, selected );
-
-        if ( drawVertexMarker )
-          renderVertexMarkerPolyline( pts, context );
       }
     }
     break;
@@ -369,7 +357,7 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
         break;
       }
 
-      QgsConstWkbPtr wkbPtr( geom->asWkb() + 1 + sizeof( int ) );
+      QgsConstWkbPtr wkbPtr( segmentizedGeometry->asWkb() + 1 + sizeof( int ) );
       unsigned int num;
       wkbPtr >> num;
       const unsigned char* ptr = wkbPtr;
@@ -380,14 +368,39 @@ void QgsFeatureRendererV2::renderFeatureWithSymbol( QgsFeature& feature, QgsSymb
       {
         ptr = _getPolygon( pts, holes, context, ptr );
         (( QgsFillSymbolV2* )symbol )->renderPolygon( pts, ( holes.count() ? &holes : NULL ), &feature, context, layer, selected );
-
-        if ( drawVertexMarker )
-          renderVertexMarkerPolygon( pts, ( holes.count() ? &holes : NULL ), context );
       }
       break;
     }
     default:
       QgsDebugMsg( QString( "feature %1: unsupported wkb type 0x%2 for rendering" ).arg( feature.id() ).arg( geom->wkbType(), 0, 16 ) );
+  }
+
+  if ( drawVertexMarker )
+  {
+    const QgsCoordinateTransform* ct = context.coordinateTransform();
+    const QgsMapToPixel& mtp = context.mapToPixel();
+
+    QgsPointV2 vertexPoint;
+    QgsVertexId vertexId;
+    double x, y, z;
+    QPointF mapPoint;
+    while ( geom->geometry()->nextVertex( vertexId, vertexPoint ) )
+    {
+      //transform
+      x = vertexPoint.x(); y = vertexPoint.y(); z = vertexPoint.z();
+      if ( ct )
+      {
+        ct->transformInPlace( x, y, z );
+      }
+      mapPoint.setX( x ); mapPoint.setY( y );
+      mtp.transformInPlace( mapPoint.rx(), mapPoint.ry() );
+      renderVertexMarker( mapPoint, context );
+    }
+  }
+
+  if ( deleteSegmentizedGeometry )
+  {
+    delete segmentizedGeometry;
   }
 }
 
