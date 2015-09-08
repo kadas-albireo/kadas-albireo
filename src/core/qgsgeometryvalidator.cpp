@@ -318,6 +318,7 @@ void QgsGeometryValidator::run()
 
     case QGis::WKBNoGeometry:
     case QGis::WKBUnknown:
+    case QGis::WKBMixedGeometry:
       QgsDebugMsg( QObject::tr( "Unknown geometry type" ) );
       emit errorFound( QgsGeometry::Error( QObject::tr( "Unknown geometry type %1" ).arg( mG.wkbType() ) ) );
       mErrorCount++;

@@ -1141,6 +1141,7 @@ void QgsGPSInformationWidget::updateCloseFeatureButton( QgsMapLayer * lyr )
       case QGis::WKBMultiPolygon25D:
       case QGis::WKBUnknown:
       case QGis::WKBNoGeometry:
+      case QGis::WKBMixedGeometry:
         ;
     }
     mBtnCloseFeature->setEnabled( enable );

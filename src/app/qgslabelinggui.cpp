@@ -136,6 +136,7 @@ QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, 
       stackedPlacement->setCurrentWidget( pagePolygon );
       break;
     case QGis::NoGeometry:
+    case QGis::AnyGeometry:
       break;
     case QGis::UnknownGeometry:
       qFatal( "unknown geometry type unexpected" );

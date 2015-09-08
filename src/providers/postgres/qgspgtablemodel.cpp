@@ -250,6 +250,7 @@ QIcon QgsPgTableModel::iconForWkbType( QGis::WkbType type )
     case QGis::WKBNoGeometry:
       return QgsApplication::getThemeIcon( "/mIconTableLayer.png" );
     case QGis::WKBUnknown:
+    case QGis::WKBMixedGeometry:
       break;
   }
   return QgsApplication::getThemeIcon( "/mIconLayer.png" );
