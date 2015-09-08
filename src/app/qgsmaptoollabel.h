@@ -27,6 +27,7 @@ class QgsRubberBand;
 /**Base class for map tools that modify label properties*/
 class APP_EXPORT QgsMapToolLabel: public QgsMapTool
 {
+    Q_OBJECT
   public:
     QgsMapToolLabel( QgsMapCanvas* canvas );
     ~QgsMapToolLabel();
@@ -53,6 +54,8 @@ class APP_EXPORT QgsMapToolLabel: public QgsMapTool
       @param rotationCol out: attribute column for data defined label rotation*/
     bool layerIsRotatable( QgsMapLayer *layer, int& rotationCol ) const;
 
+    virtual void deactivate() override;
+
   protected:
     QgsRubberBand* mLabelRubberBand;
     QgsRubberBand* mFeatureRubberBand;
@@ -66,7 +69,7 @@ class APP_EXPORT QgsMapToolLabel: public QgsMapTool
       @param e mouse event
       @param p out: label position
       @return true in case of success, false if no label at this location*/
-    bool labelAtPosition( QMouseEvent* e, QgsLabelPosition& p );
+    bool labelAtPosition( const QPoint &pos, QgsLabelPosition& p );
 
     /**Finds out rotation point of current label position
       @param ignoreUpsideDown treat label as right-side-up
@@ -75,9 +78,6 @@ class APP_EXPORT QgsMapToolLabel: public QgsMapTool
 
     /**Creates label / feature / fixpoint rubber bands for the current label position*/
     void createRubberBands();
-
-    /**Removes label / feature / fixpoint rubber bands*/
-    void deleteRubberBands();
 
     /**Returns vector layer for current label position*/
     QgsVectorLayer* currentLayer();
@@ -147,6 +147,10 @@ class APP_EXPORT QgsMapToolLabel: public QgsMapTool
       @return true if data defined show/hide is enabled on the layer
       */
     bool dataDefinedShowHide( QgsVectorLayer* vlayer, const QgsFeatureId &featureId, int& show, bool& showSuccess, int& showCol ) const;
+
+  protected slots:
+    /**Removes label / feature / fixpoint rubber bands*/
+    void deleteRubberBands();
 
   private:
     QgsPalLayerSettings mInvalidLabelSettings;

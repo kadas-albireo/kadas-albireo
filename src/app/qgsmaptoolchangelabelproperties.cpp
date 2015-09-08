@@ -20,6 +20,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsrubberband.h"
 #include "qgsvectorlayer.h"
+#include <QMouseEvent>
 
 QgsMapToolChangeLabelProperties::QgsMapToolChangeLabelProperties( QgsMapCanvas* canvas ): QgsMapToolLabel( canvas )
 {
@@ -33,7 +34,7 @@ void QgsMapToolChangeLabelProperties::canvasPressEvent( QMouseEvent *e )
 {
   deleteRubberBands();
 
-  if ( !labelAtPosition( e, mCurrentLabelPos ) )
+  if ( !labelAtPosition( e->pos(), mCurrentLabelPos ) )
   {
     return;
   }
