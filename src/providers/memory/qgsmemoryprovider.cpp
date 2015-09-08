@@ -60,6 +60,8 @@ QgsMemoryProvider::QgsMemoryProvider( QString uri )
     mWkbType = QGis::WKBMultiLineString;
   else if ( geometry == "multipolygon" )
     mWkbType = QGis::WKBMultiPolygon;
+  else if ( geometry == "mixed" )
+    mWkbType = QGis::WKBMixedGeometry;
   else
     mWkbType = QGis::WKBUnknown;
 
@@ -278,7 +280,7 @@ const QgsFields & QgsMemoryProvider::fields() const
 
 bool QgsMemoryProvider::isValid()
 {
-  return ( mWkbType != QGis::WKBUnknown );
+  return true;
 }
 
 QgsCoordinateReferenceSystem QgsMemoryProvider::crs()
