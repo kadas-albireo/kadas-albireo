@@ -130,8 +130,7 @@ QgsRendererV2PropertiesDialog::QgsRendererV2PropertiesDialog( QgsVectorLayer* la
   }
 
   // no renderer found... this mustn't happen
-  Q_ASSERT( false && "there must be a renderer!" );
-
+  QgsDebugMsg( "No renderer!" );
 }
 
 
