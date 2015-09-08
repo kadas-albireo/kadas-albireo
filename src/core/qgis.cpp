@@ -24,6 +24,7 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
+#include <QTextDocument>
 #include "qgsconfig.h"
 #include "qgslogger.h"
 
@@ -249,6 +250,38 @@ bool qgsVariantLessThan( const QVariant& lhs, const QVariant& rhs )
 bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs )
 {
   return ! qgsVariantLessThan( lhs, rhs );
+}
+
+QString qgsInsertLinkAnchors( const QString& text )
+{
+  QString value = text;
+  // http://alanstorm.com/url_regex_explained
+  static QRegExp urlRegEx( "(\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^!\"#$%&'()*+,\\-./:;<=>?@[\\\\\\]^_`{|}~\\s]|/))))" );
+  static QRegExp protoRegEx( "^(?:f|ht)tps?://" );
+  static QRegExp emailRegEx( "([\\w._%+-]+@[\\w.-]+\\.[A-Za-z]+)" );
+
+  int offset = 0;
+  while ( urlRegEx.indexIn( value, offset ) != -1 )
+  {
+    QString url = urlRegEx.cap( 1 );
+    QString protoUrl = url;
+    if ( protoRegEx.indexIn( protoUrl ) == -1 )
+    {
+      protoUrl.prepend( "http://" );
+    }
+    QString anchor = QString( "<a href=\"%1\">%2</a>" ).arg( Qt::escape( protoUrl ) ).arg( Qt::escape( url ) );
+    value.replace( urlRegEx.pos( 1 ), url.length(), anchor );
+    offset = urlRegEx.pos( 1 ) + anchor.length();
+  }
+  offset = 0;
+  while ( emailRegEx.indexIn( value, offset ) != -1 )
+  {
+    QString email = emailRegEx.cap( 1 );
+    QString anchor = QString( "<a href=\"mailto:%1\">%1</a>" ).arg( Qt::escape( email ) ).arg( Qt::escape( email ) );
+    value.replace( emailRegEx.pos( 1 ), email.length(), anchor );
+    offset = emailRegEx.pos( 1 ) + anchor.length();
+  }
+  return value;
 }
 
 QString qgsVsiPrefix( QString path )

@@ -358,6 +358,8 @@ bool qgsVariantLessThan( const QVariant& lhs, const QVariant& rhs );
 
 bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs );
 
+QString CORE_EXPORT qgsInsertLinkAnchors( const QString& text );
+
 QString CORE_EXPORT qgsVsiPrefix( QString path );
 
 /** Allocates size bytes and returns a pointer to the allocated  memory.

@@ -173,6 +173,7 @@ class QGis
     static double DEFAULT_HIGHLIGHT_MIN_WIDTH_MM;
 };
 
+QString qgsInsertLinkAnchors( const QString& text );
 
 /** Wkt string that represents a geographic coord sys
  * @note added to replace GEOWkt

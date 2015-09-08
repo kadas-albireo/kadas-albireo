@@ -34,11 +34,11 @@ from urllib2 import build_opener, install_opener, ProxyHandler
 from PyQt4.QtCore import QSettings, Qt, SIGNAL, SLOT
 from PyQt4.QtGui import (QApplication, QColor, QCursor, QDialog,
                          QDialogButtonBox, QMessageBox, QTreeWidgetItem,
-                         QWidget)
+                         QWidget, QLabel)
 
 from qgis.core import (QgsApplication, QgsCoordinateReferenceSystem,
                        QgsCoordinateTransform, QgsGeometry, QgsPoint,
-                       QgsProviderRegistry)
+                       QgsProviderRegistry, qgsInsertLinkAnchors)
 from qgis.gui import QgsRubberBand
 
 from owslib.csw import CatalogueServiceWeb
@@ -486,8 +486,12 @@ class MetaSearchDialog(QDialog, BASE_CLASS):
             else:
                 item.setText(0, 'unknown')
             if self.catalog.records[rec].title:
-                item.setText(1,
-                             normalize_text(self.catalog.records[rec].title))
+                titleText = qgsInsertLinkAnchors(
+                    normalize_text(self.catalog.records[rec].title))
+                label = QLabel(titleText)
+                label.setOpenExternalLinks(True)
+                item.treeWidget().setItemWidget(item, 1, label)
+
             if self.catalog.records[rec].identifier:
                 set_item_data(item, 'identifier',
                               self.catalog.records[rec].identifier)
@@ -751,6 +755,12 @@ class MetaSearchDialog(QDialog, BASE_CLASS):
 
         record = cat.records[identifier]
         record.xml_url = cat.request
+        record.title = qgsInsertLinkAnchors(record.title)
+        record.abstract = qgsInsertLinkAnchors(record.abstract)
+        record.creator = qgsInsertLinkAnchors(record.creator)
+        record.contributor = qgsInsertLinkAnchors(record.contributor)
+        record.publisher = qgsInsertLinkAnchors(record.publisher)
+        record.rights = [qgsInsertLinkAnchors(entry) for entry in record.rights]
 
         crd = RecordDialog()
         metadata = render_template('en', self.context,
