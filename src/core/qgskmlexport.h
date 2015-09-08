@@ -14,12 +14,13 @@ class QgsKMLExport
     QgsKMLExport();
     ~QgsKMLExport();
 
-    void setLayers( const QList<QgsMapLayer*>& layers ){ mLayers = layers; }
+    void setLayers( const QList<QgsMapLayer*>& layers ) { mLayers = layers; }
     int writeToDevice( QIODevice *d );
 
   private:
     QList<QgsMapLayer*> mLayers;
 
+    void writeSchemas( QTextStream& outStream );
     bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream );
 };
 
