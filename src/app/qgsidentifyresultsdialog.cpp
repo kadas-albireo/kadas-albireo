@@ -52,7 +52,6 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <QWebFrame>
-#include <QTextDocument>
 
 //graph
 #include <qwt_plot.h>
@@ -60,37 +59,6 @@
 #include <qwt_symbol.h>
 #include <qwt_legend.h>
 #include "qgsvectorcolorrampv2.h" // for random colors
-
-static QString& insertLinkAnchors( QString& value )
-{
-  // http://alanstorm.com/url_regex_explained
-  static QRegExp urlRegEx( "(\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^!\"#$%&'()*+,\\-./:;<=>?@[\\\\\\]^_`{|}~\\s]|/))))" );
-  static QRegExp protoRegEx( "^(?:f|ht)tps?://" );
-  static QRegExp emailRegEx( "([\\w._%+-]+@[\\w.-]+\\.[A-Za-z])" );
-
-  int offset = 0;
-  while ( urlRegEx.indexIn( value, offset ) != -1 )
-  {
-    QString url = urlRegEx.cap( 1 );
-    QString protoUrl = url;
-    if ( protoRegEx.indexIn( protoUrl ) == -1 )
-    {
-      protoUrl.prepend( "http://" );
-    }
-    QString anchor = QString( "<a href=\"%1\">%2</a>" ).arg( Qt::escape( protoUrl ) ).arg( Qt::escape( url ) );
-    value.replace( urlRegEx.pos( 1 ), url.length(), anchor );
-    offset = urlRegEx.pos( 1 ) + anchor.length();
-  }
-  offset = 0;
-  while ( emailRegEx.indexIn( value, offset ) != -1 )
-  {
-    QString email = emailRegEx.cap( 1 );
-    QString anchor = QString( "<a href=\"mailto:%1\">%1</a>" ).arg( Qt::escape( email ) ).arg( Qt::escape( email ) );
-    value.replace( emailRegEx.pos( 1 ), email.length(), anchor );
-    offset = emailRegEx.pos( 1 ) + anchor.length();
-  }
-  return value;
-}
 
 QgsIdentifyResultsWebView::QgsIdentifyResultsWebView( QWidget *parent ) : QWebView( parent )
 {
@@ -507,7 +475,7 @@ void QgsIdentifyResultsDialog::addFeature( QgsVectorLayer *vlayer, const QgsFeat
     attrItem->setData( 1, Qt::UserRole, value );
 
     value = representValue( vlayer, fields[i].name(), attrs[i] );
-    QLabel* valueLabel = new QLabel( insertLinkAnchors( value ) );
+    QLabel* valueLabel = new QLabel( qgsInsertLinkAnchors( value ) );
     valueLabel->setOpenExternalLinks( true );
     attrItem->treeWidget()->setItemWidget( attrItem, 1, valueLabel );
 
@@ -1499,7 +1467,7 @@ void QgsIdentifyResultsDialog::attributeValueChanged( QgsFeatureId fid, int idx,
         if ( item->data( 0, Qt::UserRole + 1 ).toInt() == idx )
         {
           value = representValue( vlayer, fld.name(), val );
-          QLabel* valueLabel = new QLabel( insertLinkAnchors( value ) );
+          QLabel* valueLabel = new QLabel( qgsInsertLinkAnchors( value ) );
           valueLabel->setOpenExternalLinks( true );
           item->treeWidget()->setItemWidget( item, 1, valueLabel );
           return;
