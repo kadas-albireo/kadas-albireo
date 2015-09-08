@@ -72,6 +72,7 @@
 #include <qgsapplication.h>
 #include <qgscomposition.h>
 #include <qgsgeoimageannotationitem.h>
+#include <qgsredlining.h>
 
 #include <QNetworkReply>
 #include <QNetworkProxy>
@@ -754,6 +755,9 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   // set handler for missing layers (will be owned by QgsProject)
   QgsProject::instance()->setBadLayerHandler( new QgsHandleBadLayersHandler() );
 
+  //Redlining
+  new QgsRedlining( this );
+
 #if 0
   // Set the background color for toolbox and overview as they default to
   // white instead of the window color
@@ -838,6 +842,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
 #ifdef ANDROID
   toggleFullScreen();
 #endif
+
 } // QgisApp ctor
 
 QgisApp::QgisApp()
@@ -1580,7 +1585,8 @@ void QgisApp::createToolBars()
   << mVectorToolBar
   << mDatabaseToolBar
   << mWebToolBar
-  << mLabelToolBar;
+  << mLabelToolBar
+  << mRedliningToolBar;
 
   QList<QAction*> toolbarMenuActions;
   // Set action names so that they can be used in customization

@@ -100,6 +100,7 @@ SET(QGIS_APP_SRCS
   qgsprojectproperties.cpp
   qgsrastercalcdialog.cpp
   qgsrasterlayerproperties.cpp
+  qgsredlining.cpp
   qgsshortcutsmanager.cpp
   qgsguivectorlayertools.h
   qgssnappingdialog.cpp
@@ -207,6 +208,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptooldeletepart.h
   qgsmaptooldeletering.h
   qgsmaptoolfeatureaction.h
+  qgsmaptoollabel.h
   qgsmaptoolpinlabels.h
   qgsmaptoolshowhidelabels.h
   qgsmaptoolidentifyaction.h
@@ -240,6 +242,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsprojectproperties.h
   qgsrastercalcdialog.h
   qgsrasterlayerproperties.h
+  qgsredlining.h
   qgssnappingdialog.h
   qgssponsors.h
   qgstipgui.h

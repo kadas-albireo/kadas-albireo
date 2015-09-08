@@ -479,6 +479,12 @@
         <file>themes/default/bubble.svg</file>
         <file>themes/default/mIconClear.png</file>
         <file>flags/zh.png</file>
+        <file>themes/default/redlining_text.svg</file>
+        <file>themes/default/redlining_circle.svg</file>
+        <file>themes/default/redlining_line.svg</file>
+        <file>themes/default/redlining_point.svg</file>
+        <file>themes/default/redlining_polygon.svg</file>
+        <file>themes/default/mActionEditLabel.svg</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

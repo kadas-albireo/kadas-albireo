@@ -43,6 +43,7 @@ SET(QGIS_CORE_SRCS
   symbology-ng/qgspointdisplacementrenderer.cpp
   symbology-ng/qgsvectorfieldsymbollayer.cpp
   symbology-ng/qgscolorbrewerpalette.cpp
+  symbology-ng/qgsredliningrendererv2.cpp
 
   diagram/qgsdiagram.cpp
   diagram/qgspiediagram.cpp
@@ -279,7 +280,7 @@ SET(QGIS_CORE_SRCS
   raster/qgssinglebandpseudocolorrenderer.cpp
   raster/qgsbrightnesscontrastfilter.cpp
   raster/qgshuesaturationfilter.cpp
-  
+
   geometry/qgsabstractgeometryv2.cpp
   geometry/qgscircularstringv2.cpp
   geometry/qgscompoundcurvev2.cpp
@@ -666,10 +667,11 @@ SET(QGIS_CORE_HDRS
   symbology-ng/qgssymbolv2.h
   symbology-ng/qgsvectorcolorrampv2.h
   symbology-ng/qgsvectorfieldsymbollayer.h
+  symbology-ng/qgsredliningrendererv2.h
 
   layertree/qgslayertree.h
   layertree/qgslayertreeutils.h
-  
+
   geometry/qgsgeometry.h
   geometry/qgsabstractgeometryv2.h
   geometry/qgswkbtypes.h
