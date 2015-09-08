@@ -35,6 +35,8 @@ int QgsKMLExport::writeToDevice( QIODevice *d )
   outStream << "<kml xmlns=\"http://www.opengis.net/kml/2.2\">" << "\n";
   outStream << "<Document>" << "\n";
 
+  writeSchemas( outStream );
+
   QList<QgsMapLayer*>::iterator layerIt = mLayers.begin();
   QgsMapLayer* ml = 0;
   for ( ; layerIt != mLayers.end(); ++layerIt )
@@ -57,6 +59,27 @@ int QgsKMLExport::writeToDevice( QIODevice *d )
   return 0;
 }
 
+void QgsKMLExport::writeSchemas( QTextStream& outStream )
+{
+  QList<QgsMapLayer*>::const_iterator layerIt = mLayers.constBegin();
+  for ( ; layerIt != mLayers.constEnd(); ++layerIt )
+  {
+    const QgsVectorLayer* vl = dynamic_cast<const QgsVectorLayer*>( *layerIt );
+    if ( !vl )
+    {
+      continue;
+    }
+    outStream << QString( "<Schema name=\"%1\" id=\"%1\">" ).arg( vl->name() ) << "\n";
+    const QgsFields& layerFields = vl->pendingFields();
+    for ( int i = 0; i < layerFields.size(); ++i )
+    {
+      const QgsField& field = layerFields.at( i );
+      outStream << QString( "<SimpleField name=\"%1\" type=\"%2\"></SimpleField>" ).arg( field.name() ).arg( QVariant::typeToName( field.type() ) ) << "\n";
+    }
+    outStream << QString( "</Schema> " ) << "\n";
+  }
+}
+
 bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream )
 {
   if ( !vl )
@@ -76,6 +99,23 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
     outStream << "<Placemark>" << "\n";
     if ( f.geometry() )
     {
+      //attributes
+      outStream << QString( "<ExtendedData><SchemaData schemaUrl=\"#%1\">" ).arg( vl->name() ) << "\n";
+
+      const QgsFields* fields = f.fields();
+
+
+      const QgsAttributes& attributes = f.attributes();
+      QgsAttributes::const_iterator attIt = attributes.constBegin();
+
+      int fieldIndex = 0;
+      for ( ; attIt != attributes.constEnd(); ++attIt )
+      {
+        outStream << QString( "<SimpleData name=\"%1\">%2</SimpleData>" ).arg( fields->at( fieldIndex ).name() ).arg( attIt->toString() ) << "\n";
+        ++fieldIndex;
+      }
+      outStream << QString( "</SchemaData></ExtendedData>" );
+
       geom = f.geometry()->geometry();
       if ( geom )
       {
