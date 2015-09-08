@@ -51,6 +51,7 @@ class QGis
       WKBMultiLineString,
       WKBMultiPolygon,
       WKBNoGeometry, //attributes only
+      WKBMixedGeometry,
       WKBPoint25D,
       WKBLineString25D,
       WKBPolygon25D,
@@ -72,7 +73,8 @@ class QGis
       Line,
       Polygon,
       UnknownGeometry,
-      NoGeometry
+      NoGeometry,
+      AnyGeometry
     };
 
     //! description strings for geometry types

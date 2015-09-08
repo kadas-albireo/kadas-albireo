@@ -60,6 +60,7 @@ class CORE_EXPORT QGis
       WKBMultiLineString,
       WKBMultiPolygon,
       WKBNoGeometry = 100, //attributes only
+      WKBMixedGeometry = 101,
       WKBPoint25D = 0x80000001,
       WKBLineString25D,
       WKBPolygon25D,
@@ -142,6 +143,7 @@ class CORE_EXPORT QGis
       {
         case WKBUnknown:            return 0;
         case WKBNoGeometry:         return 0;
+        case WKBMixedGeometry:      return 0;
         case WKBPoint25D:           return 3;
         case WKBLineString25D:      return 3;
         case WKBPolygon25D:         return 3;
@@ -158,7 +160,8 @@ class CORE_EXPORT QGis
       Line,
       Polygon,
       UnknownGeometry,
-      NoGeometry
+      NoGeometry,
+      AnyGeometry
     };
 
     //! description strings for geometry types

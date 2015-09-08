@@ -42,6 +42,7 @@ class CORE_EXPORT QgsWKBTypes
       MultiCurve = 11,
       MultiSurface = 12,
       NoGeometry = 100, //attributes only
+      MixedGeometry = 101,
       PointZ = 1001,
       LineStringZ = 1002,
       PolygonZ = 1003,
@@ -92,7 +93,8 @@ class CORE_EXPORT QgsWKBTypes
       LineGeometry,
       PolygonGeometry,
       UnknownGeometry,
-      NullGeometry
+      NullGeometry,
+      AnyGeometry
     };
 
     struct wkbEntry

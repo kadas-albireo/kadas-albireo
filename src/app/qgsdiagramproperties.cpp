@@ -177,6 +177,7 @@ QgsDiagramProperties::QgsDiagramProperties( QgsVectorLayer* layer, QWidget* pare
         break;
       case QGis::UnknownGeometry:
       case QGis::NoGeometry:
+      case QGis::AnyGeometry:
         break;
     }
     mBackgroundColorButton->setColor( QColor( 255, 255, 255, 255 ) );

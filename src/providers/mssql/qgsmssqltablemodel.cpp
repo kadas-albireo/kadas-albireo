@@ -310,6 +310,7 @@ QIcon QgsMssqlTableModel::iconForWkbType( QGis::WkbType type )
     case QGis::WKBNoGeometry:
       return QgsApplication::getThemeIcon( "/mIconTableLayer.png" );
     case QGis::WKBUnknown:
+    case QGis::WKBMixedGeometry:
       break;
   }
   return QgsApplication::getThemeIcon( "/mIconLayer.png" );
@@ -488,6 +489,9 @@ QString QgsMssqlTableModel::displayStringForWkbType( QGis::WkbType type )
 
     case QGis::WKBUnknown:
       return tr( "Unknown Geometry" );
+
+    case QGis::WKBMixedGeometry:
+      return tr( "Mixed Geometry" );
   }
 
   Q_ASSERT( !"unexpected wkbType" );
