@@ -21,10 +21,13 @@ class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
 {
     Q_OBJECT
   public:
-    QgsMapToolAddFeature( QgsMapCanvas* canvas );
+    QgsMapToolAddFeature( QgsMapCanvas* canvas, CaptureMode captureMode = CaptureNone, QGis::WkbType forceWkbType = QGis::WKBUnknown );
     virtual ~QgsMapToolAddFeature();
     void canvasMapReleaseEvent( QgsMapMouseEvent * e ) override;
 
     bool addFeature( QgsVectorLayer *vlayer, QgsFeature *f, bool showModal = true );
     void activate() override;
+
+  private:
+    QGis::WkbType mForceWkbType;
 };
