@@ -28,6 +28,8 @@ QgsMapToolMoveLabel::QgsMapToolMoveLabel( QgsMapCanvas* canvas )
     , mClickOffsetY( 0 )
 {
   mToolName = tr( "Move label" );
+  // Rubberband does not scale properly
+  connect( mCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( deleteRubberBands() ) );
 }
 
 QgsMapToolMoveLabel::~QgsMapToolMoveLabel()
@@ -38,7 +40,7 @@ void QgsMapToolMoveLabel::canvasPressEvent( QMouseEvent * e )
 {
   deleteRubberBands();
 
-  if ( !labelAtPosition( e, mCurrentLabelPos ) )
+  if ( !labelAtPosition( e->pos(), mCurrentLabelPos ) )
   {
     return;
   }
@@ -67,7 +69,7 @@ void QgsMapToolMoveLabel::canvasPressEvent( QMouseEvent * e )
 
 void QgsMapToolMoveLabel::canvasMoveEvent( QMouseEvent * e )
 {
-  if ( mLabelRubberBand )
+  if ( e->buttons() != 0 &&  mLabelRubberBand )
   {
     QgsPoint pointCanvasCoords = toMapCoordinates( e->pos() );
     double offsetX = pointCanvasCoords.x() - mStartPointMapCoords.x();
@@ -87,8 +89,6 @@ void QgsMapToolMoveLabel::canvasReleaseEvent( QMouseEvent * e )
   {
     return;
   }
-
-  deleteRubberBands();
 
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( mCurrentLabelPos.layerID );
   if ( !layer )
@@ -179,6 +179,3 @@ void QgsMapToolMoveLabel::canvasReleaseEvent( QMouseEvent * e )
   if ( mCanvas )
     mCanvas->refresh();
 }
-
-
-

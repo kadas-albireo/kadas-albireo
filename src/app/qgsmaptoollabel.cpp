@@ -32,6 +32,8 @@ QgsMapToolLabel::QgsMapToolLabel( QgsMapCanvas* canvas )
     , mFixPointRubberBand( 0 )
     , mCurrentLayer( 0 )
 {
+  // The rubberbands are incorrect when the zoom scale changes, just delete them...
+  connect( mCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( deleteRubberBands() ) );
 }
 
 QgsMapToolLabel::~QgsMapToolLabel()
@@ -41,9 +43,9 @@ QgsMapToolLabel::~QgsMapToolLabel()
   delete mFixPointRubberBand;
 }
 
-bool QgsMapToolLabel::labelAtPosition( QMouseEvent* e, QgsLabelPosition& p )
+bool QgsMapToolLabel::labelAtPosition( const QPoint& pos, QgsLabelPosition& p )
 {
-  QgsPoint pt = toMapCoordinates( e->pos() );
+  QgsPoint pt = toMapCoordinates( pos );
   const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
   if ( labelingResults )
   {
@@ -508,6 +510,12 @@ bool QgsMapToolLabel::layerIsRotatable( QgsMapLayer* layer, int& rotationCol ) c
   }
 
   return false;
+}
+
+void QgsMapToolLabel::deactivate()
+{
+  QgsMapTool::deactivate();
+  deleteRubberBands();
 }
 
 bool QgsMapToolLabel::dataDefinedRotation( QgsVectorLayer* vlayer, const QgsFeatureId &featureId, double& rotation, bool& rotationSuccess, bool ignoreXY ) const

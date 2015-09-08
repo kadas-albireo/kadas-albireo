@@ -48,7 +48,7 @@ void QgsMapToolRotateLabel::canvasPressEvent( QMouseEvent *e )
 {
   deleteRubberBands();
 
-  if ( !labelAtPosition( e, mCurrentLabelPos ) )
+  if ( !labelAtPosition( e->pos(), mCurrentLabelPos ) )
   {
     return;
   }
