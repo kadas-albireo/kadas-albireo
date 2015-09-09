@@ -73,7 +73,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
 
   connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
   connect( mIface->mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( forceCrsTransformEnabled() ) );
-  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsCombo() ) );
+  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
 
 }
 
