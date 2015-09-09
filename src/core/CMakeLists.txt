@@ -302,8 +302,6 @@ SET(QGIS_CORE_SRCS
   geometry/qgsmultisurfacev2.cpp
   geometry/qgswkbptr.cpp
   geometry/qgswkbtypes.cpp
-
-  geosextra/geos_c_extra.cpp
 )
 
 IF(ENABLE_MODELTEST)
@@ -452,8 +450,6 @@ SET(QGIS_CORE_MOC_HDRS
   layertree/qgslayertreemodellegendnode.h
   layertree/qgslayertreenode.h
   layertree/qgslayertreeregistrybridge.h
-
-  geosextra/geos_c_extra.h
 )
 
 IF (NOT QT5_BUILD)
@@ -490,6 +486,8 @@ ENDIF(MSVC)
 SET(QGIS_CORE_HDRS
   ${CMAKE_BINARY_DIR}/qgsconfig.h
   ../plugins/qgisplugin.h
+
+  geosextra/geos_c_extra.h
 
   qgis.h
   qgsattributeaction.h
