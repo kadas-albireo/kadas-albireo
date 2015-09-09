@@ -27,6 +27,7 @@ class QgisApp;
 class QgsCurvePolygonV2;
 class QgsColorButtonV2;
 class QgsRubberBand;
+class QgsSelectedFeature;
 class QgsVectorLayer;
 
 class QgsRedlining : public QObject
@@ -42,7 +43,6 @@ class QgsRedlining : public QObject
     QgisApp* mApp;
     QToolButton* mBtnNewObject;
     QAction* mActionEditObject;
-    QAction* mActionEditLabel;
     QgsColorButtonV2* mBtnOutlineColor;
     QgsColorButtonV2* mBtnFillColor;
     QSpinBox* mSpinBorderSize;
@@ -55,7 +55,7 @@ class QgsRedlining : public QObject
   private slots:
     void createLayer();
     void deactivateTool();
-    void editLabel();
+    void editObject();
     void newPoint();
     void newLine();
     void newPolygon();
@@ -70,7 +70,7 @@ class QgsRedlining : public QObject
 class QgsRedliningCircleMapTool : public QgsMapTool
 {
   public:
-    QgsRedliningCircleMapTool( QgsMapCanvas* canvas );
+    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
     ~QgsRedliningCircleMapTool();
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasPressEvent( QMouseEvent * e ) override;
@@ -78,6 +78,7 @@ class QgsRedliningCircleMapTool : public QgsMapTool
     bool isEditTool() { return true; }
 
   private:
+    QgsVectorLayer* mLayer;
     QPoint mPressPos;
     QgsCurvePolygonV2* mGeometry;
     QgsRubberBand* mRubberBand;
@@ -86,18 +87,26 @@ class QgsRedliningCircleMapTool : public QgsMapTool
 class QgsRedliningTextTool : public QgsMapTool
 {
   public:
-    QgsRedliningTextTool( QgsMapCanvas* canvas ) : QgsMapTool( canvas ) {}
+    QgsRedliningTextTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
+        : QgsMapTool( canvas ), mLayer( layer ) {}
     void canvasReleaseEvent( QMouseEvent * e ) override;
     bool isEditTool() { return true; }
+  private:
+    QgsVectorLayer* mLayer;
 };
 
-class QgsRedliningEditTextTool : public QgsMapToolMoveLabel
+class QgsRedliningEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsRedliningEditTextTool( QgsMapCanvas* canvas ) : QgsMapToolMoveLabel( canvas ) {}
+    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+    ~QgsRedliningEditTool();
     void canvasPressEvent( QMouseEvent *e ) override;
+    void canvasReleaseEvent( QMouseEvent *e ) override;
+    void canvasMoveEvent( QMouseEvent* e );
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
+    void keyPressEvent( QKeyEvent *e ) override;
+    bool isEditTool() { return true; }
 
   public slots:
     void onStyleChanged();
@@ -105,6 +114,18 @@ class QgsRedliningEditTextTool : public QgsMapToolMoveLabel
   signals:
     void featureSelected( const QgsFeatureId& fid );
     void updateFeatureStyle( const QgsFeatureId& fid );
+
+  private:
+    QgsVectorLayer* mLayer;
+    enum Mode { NoSelection, TextSelected, FeatureSelected } mMode;
+    QgsLabelPosition mCurrentLabel;
+    QgsRubberBand* mRubberBand;
+    QgsSelectedFeature* mCurrentFeature;
+    int mCurrentVertex;
+    QgsPoint mPressPos;
+    QgsPoint mPrevPos;
+
+    void clearCurrent( bool refresh = true );
 };
 
 #endif // QGSREDLINING_H
