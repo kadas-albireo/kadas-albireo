@@ -117,7 +117,6 @@ void QgsRedlining::createLayer()
                                          << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
                                          << QgsField( "text_y", QVariant::Double, "double", 20, 15 ) );
   mLayer->setRendererV2( new QgsRedliningRendererV2 );
-#warning "Make invisible"
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );

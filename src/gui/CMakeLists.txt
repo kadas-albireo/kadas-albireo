@@ -516,8 +516,8 @@ ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilder.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilderdialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionselectiondialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgssublayersdialogbase.h
-${CMAKE_CURRENT_BINARY_DIR}/../ui_qgsformannotationdialogbase.h
-${CMAKE_CURRENT_BINARY_DIR}/../ui_qgstextannotationdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsformannotationdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgstextannotationdialogbase.h
 )
 
 IF(ENABLE_MODELTEST)
