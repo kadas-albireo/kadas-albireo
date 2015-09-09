@@ -295,11 +295,10 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
 
   int idx = mPoints.size();
 
-  switch ( geom->wkbType() )
+  switch ( QgsWKBTypes::flatType( geom->geometry()->wkbType() ) )
   {
 
-    case QGis::WKBPoint:
-    case QGis::WKBPoint25D:
+    case QgsWKBTypes::Point:
     {
       QgsPoint pt;
       if ( layer )
@@ -315,8 +314,7 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
     }
     break;
 
-    case QGis::WKBMultiPoint:
-    case QGis::WKBMultiPoint25D:
+    case QgsWKBTypes::MultiPoint:
     {
       QgsMultiPoint mpt = geom->asMultiPoint();
       for ( int i = 0; i < mpt.size(); ++i, ++idx )
@@ -336,8 +334,9 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
     }
     break;
 
-    case QGis::WKBLineString:
-    case QGis::WKBLineString25D:
+    case QgsWKBTypes::LineString:
+    case QgsWKBTypes::CircularString:
+    case QgsWKBTypes::CompoundCurve:
     {
       QgsPolyline line = geom->asPolyline();
       for ( int i = 0; i < line.count(); i++ )
@@ -354,8 +353,8 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
     }
     break;
 
-    case QGis::WKBMultiLineString:
-    case QGis::WKBMultiLineString25D:
+    case QgsWKBTypes::MultiLineString:
+    case QgsWKBTypes::MultiCurve:
     {
 
       QgsMultiPolyline mline = geom->asMultiPolyline();
@@ -383,8 +382,8 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
     }
     break;
 
-    case QGis::WKBPolygon:
-    case QGis::WKBPolygon25D:
+    case QgsWKBTypes::Polygon:
+    case QgsWKBTypes::CurvePolygon:
     {
       QgsPolygon poly = geom->asPolygon();
       QgsPolyline line = poly[0];
@@ -402,8 +401,7 @@ void QgsRubberBand::addGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
     }
     break;
 
-    case QGis::WKBMultiPolygon:
-    case QGis::WKBMultiPolygon25D:
+    case QgsWKBTypes::MultiPolygon:
     {
 
       QgsMultiPolygon multipoly = geom->asMultiPolygon();
@@ -607,6 +605,12 @@ void QgsRubberBand::setTranslationOffset( double dx, double dy )
   mTranslationOffsetX = dx;
   mTranslationOffsetY = dy;
   updateRect();
+}
+
+void QgsRubberBand::translationOffset( double &dx, double &dy ) const
+{
+  dx = mTranslationOffsetX;
+  dy = mTranslationOffsetY;
 }
 
 int QgsRubberBand::size() const
