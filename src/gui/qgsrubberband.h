@@ -231,6 +231,13 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
     void setTranslationOffset( double dx, double dy );
 
     /**
+     * @brief Returns the translation offset
+     * @param dx Output parameter for the x translation
+     * @param dy Output parameter for the y translation
+     */
+    void translationOffset( double& dx, double& dy ) const;
+
+    /**
      * Returns number of geometries
      *  @return number of geometries
      */
