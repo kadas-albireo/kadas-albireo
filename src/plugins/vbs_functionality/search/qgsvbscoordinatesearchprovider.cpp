@@ -17,7 +17,7 @@
 
 #include "qgsvbscoordinatesearchprovider.h"
 #include "qgscoordinatetransform.h"
-#include "../utils/qgsvbslltoutm.h"
+#include "qgslatlontoutm.h"
 
 const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
 
@@ -102,13 +102,13 @@ void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, con
   }
   else if ( mPatUTM.exactMatch( searchtext ) )
   {
-    QgsVBSLLToUTM::UTMCoo utm;
+    QgsLatLonToUTM::UTMCoo utm;
     utm.easting = mPatUTM.cap( 1 ).toInt();
     utm.northing = mPatUTM.cap( 2 ).toInt();
     utm.zoneNumber = mPatUTM.cap( 3 ).toInt();
     utm.zoneLetter = mPatUTM.cap( 4 );
     bool ok = false;
-    searchResult.pos = QgsVBSLLToUTM::UTM2LL( utm, ok );
+    searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
     if ( !ok )
     {
       valid = false;
@@ -119,13 +119,13 @@ void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, con
   }
   else if ( mPatUTM2.exactMatch( searchtext ) )
   {
-    QgsVBSLLToUTM::UTMCoo utm;
+    QgsLatLonToUTM::UTMCoo utm;
     utm.easting = mPatUTM2.cap( 3 ).toInt();
     utm.northing = mPatUTM2.cap( 4 ).toInt();
     utm.zoneNumber = mPatUTM2.cap( 1 ).toInt();
     utm.zoneLetter = mPatUTM2.cap( 2 );
     bool ok = false;
-    searchResult.pos = QgsVBSLLToUTM::UTM2LL( utm, ok );
+    searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
     if ( !ok )
     {
       valid = false;
@@ -136,21 +136,21 @@ void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, con
   }
   else if ( mPatMGRS.exactMatch( searchtext ) )
   {
-    QgsVBSLLToUTM::MGRSCoo mgrs;
+    QgsLatLonToUTM::MGRSCoo mgrs;
     mgrs.easting = mPatMGRS.cap( 4 ).toInt();
     mgrs.northing = mPatMGRS.cap( 5 ).toInt();
     mgrs.zoneNumber = mPatMGRS.cap( 1 ).toInt();
     mgrs.zoneLetter = mPatMGRS.cap( 2 );
     mgrs.letter100kID = mPatMGRS.cap( 3 );
     bool ok = false;
-    QgsVBSLLToUTM::UTMCoo utm = QgsVBSLLToUTM::MGRS2UTM( mgrs, ok );
+    QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::MGRS2UTM( mgrs, ok );
     if ( !ok )
     {
       valid = false;
     }
     else
     {
-      searchResult.pos = QgsVBSLLToUTM::UTM2LL( utm, ok );
+      searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
       if ( !ok )
       {
         valid = false;

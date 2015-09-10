@@ -103,6 +103,7 @@ SET(QGIS_CORE_SRCS
   qgslabel.cpp
   qgslabelattributes.cpp
   qgslabelsearchtree.cpp
+  qgslatlontoutm.cpp
   qgslegacyhelpers.cpp
   qgslegendrenderer.cpp
   qgslegendsettings.cpp
@@ -525,6 +526,7 @@ SET(QGIS_CORE_HDRS
   qgslabel.h
   qgslabelattributes.h
   qgslabelsearchtree.h
+  qgslatlontoutm.h
   qgslegacyhelpers.h
   qgslegendrenderer.h
   qgslegendsettings.h

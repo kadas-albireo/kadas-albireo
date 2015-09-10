@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslltoutm.h                                                        *
+ *  qgslatlontoutm.h                                                       *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,14 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSLLTOUTM_H
-#define QGSVBSLLTOUTM_H
+#ifndef QGSLATLONTOUTM_H
+#define QGSLATLONTOUTM_H
 
 #include <QString>
 
 class QgsPoint;
 
-class QgsVBSLLToUTM
+class QgsLatLonToUTM
 {
   public:
     struct UTMCoo
@@ -57,4 +57,4 @@ class QgsVBSLLToUTM
     static double getMinNorthing( int zoneLetter );
 };
 
-#endif // QGSVBSLLTOUTM_H
+#endif // QGSLATLONTOUTM_H

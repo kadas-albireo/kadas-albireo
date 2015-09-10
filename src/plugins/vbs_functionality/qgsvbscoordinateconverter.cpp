@@ -19,7 +19,7 @@
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
 #include "qgspoint.h"
-#include "utils/qgsvbslltoutm.h"
+#include "qgslatlontoutm.h"
 
 QgsEPSGCoordinateConverter::QgsEPSGCoordinateConverter( const QString &targetEPSG, QObject *parent )
     : QgsVBSCoordinateConverter( parent )
@@ -90,7 +90,7 @@ QgsUTMCoordinateConverter::~QgsUTMCoordinateConverter()
 QString QgsUTMCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   QgsPoint pLatLong = QgsCoordinateTransform( sSrs, *mWgs84Srs ).transform( p );
-  QgsVBSLLToUTM::UTMCoo coo = QgsVBSLLToUTM::LL2UTM( pLatLong );
+  QgsLatLonToUTM::UTMCoo coo = QgsLatLonToUTM::LL2UTM( pLatLong );
   return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
 }
 
@@ -99,8 +99,8 @@ QString QgsUTMCoordinateConverter::convert( const QgsPoint &p, const QgsCoordina
 QString QgsMGRSCoordinateConverter::convert( const QgsPoint &p, const QgsCoordinateReferenceSystem &sSrs ) const
 {
   QgsPoint pLatLong = QgsCoordinateTransform( sSrs, *mWgs84Srs ).transform( p );
-  QgsVBSLLToUTM::UTMCoo utm = QgsVBSLLToUTM::LL2UTM( pLatLong );
-  QgsVBSLLToUTM::MGRSCoo mgrs = QgsVBSLLToUTM::UTM2MGRS( utm );
+  QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( pLatLong );
+  QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
   if ( mgrs.letter100kID.isEmpty() )
     return QString();
 

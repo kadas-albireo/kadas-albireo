@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslltoutm.cpp                                                      *
+ *  qgslatlontoutm.cpp                                                      *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,16 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbslltoutm.h"
+#include "qgslatlontoutm.h"
 #include "qgspoint.h"
 #include <qmath.h>
 
 
-const int QgsVBSLLToUTM::NUM_100K_SETS = 6;
-const QString QgsVBSLLToUTM::SET_ORIGIN_COLUMN_LETTERS = "AJSAJS";
-const QString QgsVBSLLToUTM::SET_ORIGIN_ROW_LETTERS = "AFAFAF";
+const int QgsLatLonToUTM::NUM_100K_SETS = 6;
+const QString QgsLatLonToUTM::SET_ORIGIN_COLUMN_LETTERS = "AJSAJS";
+const QString QgsLatLonToUTM::SET_ORIGIN_ROW_LETTERS = "AFAFAF";
 
-QgsPoint QgsVBSLLToUTM::UTM2LL( const UTMCoo &utm, bool& ok )
+QgsPoint QgsLatLonToUTM::UTM2LL( const UTMCoo &utm, bool& ok )
 {
   ok = false;
 
@@ -80,7 +80,7 @@ QgsPoint QgsVBSLLToUTM::UTM2LL( const UTMCoo &utm, bool& ok )
   return QgsPoint( lon, lat );
 }
 
-QgsVBSLLToUTM::UTMCoo QgsVBSLLToUTM::LL2UTM( const QgsPoint &pLatLong )
+QgsLatLonToUTM::UTMCoo QgsLatLonToUTM::LL2UTM( const QgsPoint &pLatLong )
 {
   const double a = 6378137.0; //ellip.radius;
   const double eccSqr = 0.00669438; //ellip.eccsq;
@@ -155,7 +155,7 @@ QgsVBSLLToUTM::UTMCoo QgsVBSLLToUTM::LL2UTM( const QgsPoint &pLatLong )
   return coo;
 }
 
-QString QgsVBSLLToUTM::getHemisphereLetter( double lat )
+QString QgsLatLonToUTM::getHemisphereLetter( double lat )
 {
   if (( 84 >= lat ) && ( lat >= 72 ) )
     return "X";
@@ -202,7 +202,7 @@ QString QgsVBSLLToUTM::getHemisphereLetter( double lat )
   return "Z";
 }
 
-QgsVBSLLToUTM::MGRSCoo QgsVBSLLToUTM::UTM2MGRS( const UTMCoo &utmcoo )
+QgsLatLonToUTM::MGRSCoo QgsLatLonToUTM::UTM2MGRS( const UTMCoo &utmcoo )
 {
   int setParm = utmcoo.zoneNumber % NUM_100K_SETS;
   if ( setParm == 0 )
@@ -222,7 +222,7 @@ QgsVBSLLToUTM::MGRSCoo QgsVBSLLToUTM::UTM2MGRS( const UTMCoo &utmcoo )
   return mgrscoo;
 }
 
-QgsVBSLLToUTM::UTMCoo QgsVBSLLToUTM::MGRS2UTM( const MGRSCoo &mgrs, bool& ok )
+QgsLatLonToUTM::UTMCoo QgsLatLonToUTM::MGRS2UTM( const MGRSCoo &mgrs, bool& ok )
 {
   UTMCoo utm;
   utm.zoneLetter = mgrs.zoneLetter;
@@ -330,7 +330,7 @@ QgsVBSLLToUTM::UTMCoo QgsVBSLLToUTM::MGRS2UTM( const MGRSCoo &mgrs, bool& ok )
   return utm;
 }
 
-double QgsVBSLLToUTM::getMinNorthing( int zoneLetter )
+double QgsLatLonToUTM::getMinNorthing( int zoneLetter )
 {
   double northing;
   switch ( zoneLetter )
@@ -401,7 +401,7 @@ double QgsVBSLLToUTM::getMinNorthing( int zoneLetter )
   return northing;
 }
 
-QString QgsVBSLLToUTM::getLetter100kID( int column, int row, int parm )
+QString QgsLatLonToUTM::getLetter100kID( int column, int row, int parm )
 {
   // colOrigin and rowOrigin are the letters at the origin of the set
   int index = parm - 1;

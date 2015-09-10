@@ -15,7 +15,6 @@ SET (vbsfunctionality_SRCS
   search/qgsvbslocationsearchprovider.cpp
   search/qgsvbslocaldatasearchprovider.cpp
   search/qgsvbsremotedatasearchprovider.cpp
-  utils/qgsvbslltoutm.h
 )
 
 SET (vbsfunctionality_HDRS
@@ -23,7 +22,6 @@ SET (vbsfunctionality_HDRS
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
   pinannotation/qgsvbsmaptoolpinannotation.h
-  utils/qgsvbslltoutm.cpp
 )
 
 SET (vbsfunctionality_MOC_HDRS
