@@ -313,6 +313,7 @@ void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
 QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLayer *layer )
     : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 )
 {
+  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
 }
 
 QgsRedliningEditTool::~QgsRedliningEditTool()
@@ -336,7 +337,6 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
       {
         mCurrentLabel = labelPos;
         mMode = TextSelected;
-        emit featureSelected( mCurrentLabel.featureId );
         mRubberBand = new QgsRubberBand( mCanvas, QGis::Line );
         const QgsRectangle& rect = mCurrentLabel.labelRect;
         mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
@@ -347,6 +347,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
         mRubberBand->setColor( QColor( 0, 255, 0, 150 ) );
         mRubberBand->setWidth( 3 );
         mRubberBand->setLineStyle( Qt::DotLine );
+        emit featureSelected( mCurrentLabel.featureId );
         return;
       }
     }
@@ -427,10 +428,12 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   {
     double dx, dy;
     mRubberBand->translationOffset( dx, dy );
-    double x = mCurrentLabel.labelRect.xMinimum() + dx;
-    double y = mCurrentLabel.labelRect.yMinimum() + dy;
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), x );
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), y );
+    mCurrentLabel.labelRect.setXMinimum( mCurrentLabel.labelRect.xMinimum() + dx );
+    mCurrentLabel.labelRect.setYMinimum( mCurrentLabel.labelRect.yMinimum() + dy );
+    mCurrentLabel.labelRect.setXMaximum( mCurrentLabel.labelRect.xMaximum() + dx );
+    mCurrentLabel.labelRect.setYMaximum( mCurrentLabel.labelRect.yMaximum() + dy );
+    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), mCurrentLabel.labelRect.xMinimum() );
+    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), mCurrentLabel.labelRect.yMinimum() );
     mCanvas->refresh();
   }
   else if ( mMode == FeatureSelected )
@@ -489,6 +492,7 @@ void QgsRedliningEditTool::onStyleChanged()
 
 void QgsRedliningEditTool::clearCurrent( bool refresh )
 {
+  mMode = NoSelection;
   delete mRubberBand;
   mRubberBand = 0;
   delete mCurrentFeature;
@@ -497,5 +501,38 @@ void QgsRedliningEditTool::clearCurrent( bool refresh )
   if ( refresh )
   {
     mCanvas->refresh();
+  }
+}
+
+void QgsRedliningEditTool::updateLabelBoundingBox()
+{
+  if ( mMode == TextSelected )
+  {
+    // Try to find the label again
+    QgsPoint p( mCurrentLabel.labelRect.xMinimum(), mCurrentLabel.labelRect.yMinimum() );
+
+    const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
+    if ( labelingResults )
+    {
+      foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( p ) )
+      {
+        if ( labelPos.layerID == mCurrentLabel.layerID &&
+             labelPos.featureId == mCurrentLabel.featureId &&
+             labelPos.labelRect != mCurrentLabel.labelRect )
+        {
+          mCurrentLabel = labelPos;
+          mRubberBand->reset();
+          const QgsRectangle& rect = mCurrentLabel.labelRect;
+          mRubberBand->setTranslationOffset( 0, 0 );
+          mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
+          mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMaximum() ) );
+          mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMaximum() ) );
+          mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMinimum() ) );
+          mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
+          return;
+        }
+      }
+    }
+    // Label disappeared? Should not happen
   }
 }

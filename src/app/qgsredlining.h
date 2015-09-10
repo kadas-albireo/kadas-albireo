@@ -126,6 +126,9 @@ class QgsRedliningEditTool : public QgsMapTool
     QgsPoint mPrevPos;
 
     void clearCurrent( bool refresh = true );
+
+  private slots:
+    void updateLabelBoundingBox();
 };
 
 #endif // QGSREDLINING_H
