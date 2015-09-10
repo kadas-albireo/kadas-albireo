@@ -19,6 +19,8 @@
 #include "qgssymbolv2.h"
 #include <QScopedPointer>
 
+class QgsAbstractGeometryV2;
+
 class CORE_EXPORT QgsRedliningRendererV2 : public QgsFeatureRendererV2
 {
   public:
@@ -43,6 +45,8 @@ class CORE_EXPORT QgsRedliningRendererV2 : public QgsFeatureRendererV2
     QScopedPointer<QgsMarkerSymbolV2> mMarkerSymbol;
     QScopedPointer<QgsLineSymbolV2> mLineSymbol;
     QScopedPointer<QgsFillSymbolV2> mFillSymbol;
+
+    void drawVertexMarkers( QgsAbstractGeometryV2* geom, QgsRenderContext& context );
 };
 
 #endif // QGSREDLININGRENDERERV2_H
