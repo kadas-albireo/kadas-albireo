@@ -19,6 +19,7 @@
 #include "qgslogger.h"
 #include "qgsfeature.h"
 #include "qgsgeometry.h"
+#include "qgspointv2.h"
 
 
 QgsRedliningRendererV2::QgsRedliningRendererV2()
@@ -109,7 +110,7 @@ bool QgsRedliningRendererV2::renderFeature( QgsFeature& feature, QgsRenderContex
       mLineSymbol->renderPolyline( pts, &feature, context, layer, selected );
 
       if ( drawVertexMarker )
-        renderVertexMarkerPolyline( pts, context );
+        drawVertexMarkers( feature.geometry()->geometry(), context );
       break;
     }
     case QgsWKBTypes::Polygon:
@@ -120,7 +121,7 @@ bool QgsRedliningRendererV2::renderFeature( QgsFeature& feature, QgsRenderContex
       mFillSymbol->renderPolygon( pts, ( holes.count() ? &holes : NULL ), &feature, context, layer, selected );
 
       if ( drawVertexMarker )
-        renderVertexMarkerPolygon( pts, ( holes.count() ? &holes : NULL ), context );
+        drawVertexMarkers( feature.geometry()->geometry(), context );
       break;
     }
     default:
@@ -135,4 +136,25 @@ void QgsRedliningRendererV2::stopRender( QgsRenderContext& context )
   mMarkerSymbol->stopRender( context );
   mLineSymbol->stopRender( context );
   mFillSymbol->stopRender( context );
+}
+
+void QgsRedliningRendererV2::drawVertexMarkers( QgsAbstractGeometryV2 *geom, QgsRenderContext& context )
+{
+  const QgsCoordinateTransform* ct = context.coordinateTransform();
+  const QgsMapToPixel& mtp = context.mapToPixel();
+
+  QgsPointV2 vertexPoint;
+  QgsVertexId vertexId;
+  double x, y, z;
+  while ( geom->nextVertex( vertexId, vertexPoint ) )
+  {
+    //transform
+    x = vertexPoint.x(); y = vertexPoint.y(); z = vertexPoint.z();
+    if ( ct )
+    {
+      ct->transformInPlace( x, y, z );
+    }
+    mtp.transformInPlace( x, y );
+    renderVertexMarker( QPointF( x, y ), context );
+  }
 }

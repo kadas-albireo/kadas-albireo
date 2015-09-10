@@ -596,7 +596,7 @@ void QgsFeatureRendererV2::setVertexMarkerAppearance( int type, int size )
   mCurrentVertexMarkerSize = size;
 }
 
-void QgsFeatureRendererV2::renderVertexMarker( QPointF& pt, QgsRenderContext& context )
+void QgsFeatureRendererV2::renderVertexMarker( const QPointF& pt, QgsRenderContext& context )
 {
   QgsVectorLayer::drawVertexMarker( pt.x(), pt.y(), *context.painter(),
                                     ( QgsVectorLayer::VertexMarkerType ) mCurrentVertexMarkerType,
