@@ -33,6 +33,19 @@
 #include <QSettings>
 #include <QUuid>
 
+class QgsRedlining::RedliningLayer : public QgsVectorLayer
+{
+  public:
+    RedliningLayer() : QgsVectorLayer(
+          QString( "mixed?crs=EPSG:4326&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
+          "Redlining",
+          "memory" )
+    {
+      mLayerType = QgsMapLayer::RedliningLayer;
+    }
+};
+
+
 QgsRedlining::QgsRedlining( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
 {
@@ -102,8 +115,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
 
 void QgsRedlining::createLayer()
 {
-  QString layerProperties = QString( "mixed?crs=EPSG:4326&memoryid=%1" ).arg( QUuid::createUuid().toString() );
-  mLayer = new QgsVectorLayer( layerProperties, "Redlining", QString( "memory" ) );
+  mLayer = new RedliningLayer;
   mLayer->setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   mLayer->dataProvider()->addAttributes( QList<QgsField>()
                                          << QgsField( "size", QVariant::Int, "integer", 2 )

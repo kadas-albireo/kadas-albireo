@@ -53,8 +53,8 @@ QgsMapLayer::QgsMapLayer( QgsMapLayer::LayerType type,
     : mValid( false ) // assume the layer is invalid
     , mDataSource( source )
     , mLayerOrigName( lyrname ) // store the original name
-    , mID( "" )
     , mLayerType( type )
+    , mID( "" )
     , mBlendMode( QPainter::CompositionMode_SourceOver ) // Default to normal blending
     , mLegend( 0 )
     , mStyleManager( new QgsMapLayerStyleManager( this ) )
