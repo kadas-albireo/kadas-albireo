@@ -130,7 +130,16 @@ void QgsLayerTreeMapCanvasBridge::setCanvasLayers()
     setCanvasLayers( mRoot, layers );
 
   QList<QgsLayerTreeLayer*> layerNodes = mRoot->findLayers();
-  int currentLayerCount = layerNodes.count();
+  int redliningLayerCount = 0;
+  // Exclude redlining layers from count
+  foreach ( QgsLayerTreeLayer* node, layerNodes )
+  {
+    if ( node->layer()->type() == QgsMapLayer::RedliningLayer )
+    {
+      ++redliningLayerCount;
+    }
+  }
+  int currentLayerCount = layerNodes.count() - redliningLayerCount;
   bool firstLayers = mAutoSetupOnFirstLayer && mLastLayerCount == 0 && currentLayerCount != 0;
 
   if ( firstLayers )

@@ -40,6 +40,8 @@ class QgsRedlining : public QObject
     void styleChanged();
 
   private:
+    class RedliningLayer;
+
     QgisApp* mApp;
     QToolButton* mBtnNewObject;
     QAction* mActionEditObject;
@@ -47,7 +49,7 @@ class QgsRedlining : public QObject
     QgsColorButtonV2* mBtnFillColor;
     QSpinBox* mSpinBorderSize;
 
-    QgsVectorLayer* mLayer;
+    RedliningLayer* mLayer;
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );

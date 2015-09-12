@@ -39,6 +39,8 @@ QgsMimeDataUtils::Uri::Uri( QgsLayerItem* layerItem )
     case QgsMapLayer::PluginLayer:
       layerType = "plugin";
       break;
+    case QgsMapLayer::RedliningLayer:
+      layerType = "redlining";
   }
 }
 

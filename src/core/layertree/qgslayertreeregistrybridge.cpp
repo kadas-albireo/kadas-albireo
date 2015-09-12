@@ -66,8 +66,24 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     }
   }
 
+  // Modify insertion point to the first possible slot below any redlining layer
+  int ins = mInsertionPointIndex;
+  QList<QgsLayerTreeNode*> childNodes = mInsertionPointGroup->children();
+  for ( int i = childNodes.size() - 1; i >= ins; --i )
+  {
+    if ( childNodes[i]->nodeType() == QgsLayerTreeNode::NodeLayer )
+    {
+      QgsLayerTreeLayer* layerNode = static_cast<QgsLayerTreeLayer*>( childNodes[i] );
+      if ( layerNode->layer()->type() == QgsMapLayer::RedliningLayer && i <= ins )
+      {
+        ins = i + 1;
+        break;
+      }
+    }
+  }
+
   // add new layers to the right place
-  mInsertionPointGroup->insertChildNodes( mInsertionPointIndex, nodes );
+  mInsertionPointGroup->insertChildNodes( ins, nodes );
 
   // tell other components that layers have been added - this signal is used in QGIS to auto-select the first layer
   emit addedLayersToLayerTree( layers );

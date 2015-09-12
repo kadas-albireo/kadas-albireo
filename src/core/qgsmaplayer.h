@@ -56,7 +56,8 @@ class CORE_EXPORT QgsMapLayer : public QObject
     {
       VectorLayer,
       RasterLayer,
-      PluginLayer
+      PluginLayer,
+      RedliningLayer
     };
 
     /** Constructor
@@ -606,6 +607,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /** \brief Error */
     QgsError mError;
 
+    /** Type of the layer (eg. vector, raster) */
+    QgsMapLayer::LayerType mLayerType;
+
   private:
     /** layer's spatial reference system.
         private to make sure setCrs must be used and layerCrsChanged() is emitted */
@@ -619,9 +623,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Unique ID of this layer - used to refer to this layer in map layer registry */
     QString mID;
-
-    /** Type of the layer (eg. vector, raster) */
-    QgsMapLayer::LayerType mLayerType;
 
     /** Blend mode for the layer */
     QPainter::CompositionMode mBlendMode;

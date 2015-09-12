@@ -63,6 +63,11 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
     else if ( QgsLayerTree::isLayer( node ) )
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
+      if ( layer->type() == QgsMapLayer::RedliningLayer )
+      {
+        delete menu;
+        return 0;
+      }
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
 
