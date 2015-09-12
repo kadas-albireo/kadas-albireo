@@ -1,6 +1,7 @@
 #include "qgskmlexport.h"
 #include "qgsabstractgeometryv2.h"
 #include "qgsgeometry.h"
+#include "qgskmlpallabeling.h"
 #include "qgsvectorlayer.h"
 #include <QIODevice>
 #include <QTextCodec>
@@ -16,7 +17,7 @@ QgsKMLExport::~QgsKMLExport()
 
 }
 
-int QgsKMLExport::writeToDevice( QIODevice *d )
+int QgsKMLExport::writeToDevice( QIODevice *d, const QgsRectangle& bbox, double scale, QGis::UnitType mapUnits )
 {
   if ( !d )
   {
@@ -28,6 +29,8 @@ int QgsKMLExport::writeToDevice( QIODevice *d )
     return 2;
   }
 
+
+
   QTextStream outStream( d );
   outStream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
@@ -36,6 +39,9 @@ int QgsKMLExport::writeToDevice( QIODevice *d )
   outStream << "<Document>" << "\n";
 
   writeSchemas( outStream );
+
+  QgsKMLPalLabeling labeling( &outStream, bbox, scale, mapUnits );
+  QgsRenderContext& rc = labeling.renderContext();
 
   QList<QgsMapLayer*>::iterator layerIt = mLayers.begin();
   QgsMapLayer* ml = 0;
@@ -50,10 +56,21 @@ int QgsKMLExport::writeToDevice( QIODevice *d )
 
     if ( ml->type() == QgsMapLayer::VectorLayer )
     {
-      writeVectorLayerFeatures( dynamic_cast<QgsVectorLayer*>( ml ), outStream );
+      QgsVectorLayer* vl = dynamic_cast<QgsVectorLayer*>( ml );
+
+      QStringList attributes;
+      const QgsFields& fields = vl->pendingFields();
+      for ( int i = 0; i < fields.size(); ++i )
+      {
+        attributes.append( fields.at( i ).name() );
+      }
+
+      bool labelLayer = labeling.prepareLayer( vl, attributes, rc ) != 0;
+      writeVectorLayerFeatures( vl, outStream, labelLayer, labeling, rc );
     }
   }
 
+  labeling.drawLabeling( rc );
   outStream << "</Document>" << "\n";
   outStream << "</kml>";
   return 0;
@@ -80,7 +97,7 @@ void QgsKMLExport::writeSchemas( QTextStream& outStream )
   }
 }
 
-bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream )
+bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc )
 {
   if ( !vl )
   {
@@ -124,6 +141,11 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
       }
     }
     outStream << "</Placemark>" << "\n";
+
+    if ( labelLayer )
+    {
+      labeling.registerFeature( vl->id(), f, rc, vl->name() );
+    }
   }
 
   return true;
