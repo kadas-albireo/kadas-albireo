@@ -43,7 +43,6 @@ SET(QGIS_CORE_SRCS
   symbology-ng/qgspointdisplacementrenderer.cpp
   symbology-ng/qgsvectorfieldsymbollayer.cpp
   symbology-ng/qgscolorbrewerpalette.cpp
-  symbology-ng/qgsredliningrendererv2.cpp
 
   diagram/qgsdiagram.cpp
   diagram/qgspiediagram.cpp
@@ -99,11 +98,12 @@ SET(QGIS_CORE_SRCS
   qgsgeometryvalidator.cpp
   qgsgml.cpp
   qgsgmlschema.cpp
+  qgskmlexport.cpp
+  qgskmlpallabeling.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
   qgslabelsearchtree.cpp
-  qgslatlontoutm.cpp
   qgslegacyhelpers.cpp
   qgslegendrenderer.cpp
   qgslegendsettings.cpp
@@ -281,7 +281,7 @@ SET(QGIS_CORE_SRCS
   raster/qgssinglebandpseudocolorrenderer.cpp
   raster/qgsbrightnesscontrastfilter.cpp
   raster/qgshuesaturationfilter.cpp
-
+  
   geometry/qgsabstractgeometryv2.cpp
   geometry/qgscircularstringv2.cpp
   geometry/qgscompoundcurvev2.cpp
@@ -303,6 +303,8 @@ SET(QGIS_CORE_SRCS
   geometry/qgsmultisurfacev2.cpp
   geometry/qgswkbptr.cpp
   geometry/qgswkbtypes.cpp
+
+  geosextra/geos_c_extra.cpp
 )
 
 IF(ENABLE_MODELTEST)
@@ -451,6 +453,8 @@ SET(QGIS_CORE_MOC_HDRS
   layertree/qgslayertreemodellegendnode.h
   layertree/qgslayertreenode.h
   layertree/qgslayertreeregistrybridge.h
+
+  geosextra/geos_c_extra.h
 )
 
 IF (NOT QT5_BUILD)
@@ -488,8 +492,6 @@ SET(QGIS_CORE_HDRS
   ${CMAKE_BINARY_DIR}/qgsconfig.h
   ../plugins/qgisplugin.h
 
-  geosextra/geos_c_extra.h
-
   qgis.h
   qgsattributeaction.h
   qgscachedfeatureiterator.h
@@ -526,7 +528,6 @@ SET(QGIS_CORE_HDRS
   qgslabel.h
   qgslabelattributes.h
   qgslabelsearchtree.h
-  qgslatlontoutm.h
   qgslegacyhelpers.h
   qgslegendrenderer.h
   qgslegendsettings.h
@@ -667,11 +668,10 @@ SET(QGIS_CORE_HDRS
   symbology-ng/qgssymbolv2.h
   symbology-ng/qgsvectorcolorrampv2.h
   symbology-ng/qgsvectorfieldsymbollayer.h
-  symbology-ng/qgsredliningrendererv2.h
 
   layertree/qgslayertree.h
   layertree/qgslayertreeutils.h
-
+  
   geometry/qgsgeometry.h
   geometry/qgsabstractgeometryv2.h
   geometry/qgswkbtypes.h
