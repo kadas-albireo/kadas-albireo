@@ -105,10 +105,10 @@ void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& ne
   QString destAuthId = mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid();
   QStringList reprojLayers;
   // Look at legend interface instead of maplayerregistry, to only check layers
-  // the user can actually see (i.e. not the redlining layer)
+  // the user can actually see
   foreach ( QgsMapLayer* layer, mQGisIface->legendInterface()->layers() + newLayers )
   {
-    if ( layer->crs().authid() != destAuthId )
+    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->crs().authid() != destAuthId )
     {
       reprojLayers.append( layer->name() );
     }
