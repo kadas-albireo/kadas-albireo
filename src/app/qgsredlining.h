@@ -53,9 +53,10 @@ class QgsRedlining : public QObject
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );
+    RedliningLayer *getOrCreateLayer();
 
   private slots:
-    void createLayer();
+    void clearLayer();
     void deactivateTool();
     void editObject();
     void newPoint();
@@ -67,6 +68,8 @@ class QgsRedlining : public QObject
     void saveOutlineWidth();
     void syncStyleWidgets( const QgsFeatureId& fid );
     void updateFeatureStyle( const QgsFeatureId& fid );
+    void readProject( const QDomDocument&doc );
+    void writeProject( QDomDocument&doc );
 };
 
 class QgsRedliningCircleMapTool : public QgsMapTool
