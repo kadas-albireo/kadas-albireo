@@ -6627,6 +6627,10 @@ bool QgisApp::toggleEditing( QgsMapLayer *layer, bool allowCancel )
       vlayer->triggerRepaint();
     }
   }
+  else if ( vlayer->isModified() && vlayer->type() == QgsMapLayer::RedliningLayer )
+  {
+    vlayer->commitChanges();
+  }
   else if ( vlayer->isModified() )
   {
     QMessageBox::StandardButtons buttons = QMessageBox::Save | QMessageBox::Discard;
