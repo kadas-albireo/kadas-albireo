@@ -134,7 +134,7 @@ void QgsLayerTreeMapCanvasBridge::setCanvasLayers()
   // Exclude redlining layers from count
   foreach ( QgsLayerTreeLayer* node, layerNodes )
   {
-    if ( node->layer()->type() == QgsMapLayer::RedliningLayer )
+    if ( node->layer() && node->layer()->type() == QgsMapLayer::RedliningLayer )
     {
       ++redliningLayerCount;
     }
