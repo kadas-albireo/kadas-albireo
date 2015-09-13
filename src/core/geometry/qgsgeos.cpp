@@ -143,6 +143,7 @@ class GEOSGeomScopedPtr
     GEOSGeomScopedPtr( GEOSGeometry* geom = 0 ) : mGeom( geom ) {}
     ~GEOSGeomScopedPtr() { GEOSGeom_destroy_r( geosinit.ctxt, mGeom ); }
     GEOSGeometry* get() const { return mGeom; }
+    operator bool() const { return mGeom != 0; }
     void reset( GEOSGeometry* geom )
     {
       GEOSGeom_destroy_r( geosinit.ctxt, mGeom );
@@ -167,6 +168,18 @@ QgsGeos::~QgsGeos()
   GEOSPreparedGeom_destroy_r( geosinit.ctxt, mGeosPrepared );
   GEOSGeometryPrecisionReducer_destroy( mPrecisionReducer );
   GEOSPrecisionModel_destroy( mPrecisionModel );
+}
+
+inline GEOSGeometry* QgsGeos::getReducedGeometry( GEOSGeometry* geom ) const
+{
+#ifdef HAVE_GEOS_CPP
+  //reduce precision
+  GEOSGeometry* reduced = GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geom );
+  GEOSGeom_destroy_r( geosinit.ctxt, geom );
+  return reduced;
+#else
+  return geom;
+#endif
 }
 
 void QgsGeos::geometryChanged()
@@ -225,7 +238,7 @@ QgsAbstractGeometryV2* QgsGeos::combine( const QList< const QgsAbstractGeometryV
   geosGeometries.resize( geomList.size() );
   for ( int i = 0; i < geomList.size(); ++i )
   {
-    geosGeometries[i] = asGeos( geomList.at( i ) );
+    geosGeometries[i] = getReducedGeometry( asGeos( geomList.at( i ) ) );
   }
 
   GEOSGeometry* geomUnion = 0;
@@ -1080,17 +1093,11 @@ QgsAbstractGeometryV2* QgsGeos::overlay( const QgsAbstractGeometryV2& geom, Over
     return 0;
   }
 
-  GEOSGeometry* gG = asGeos( &geom );
-  if ( !gG )
+  GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
+  if ( !geosGeom )
   {
     return 0;
   }
-  GEOSGeomScopedPtr geosGeom;
-  geosGeom.reset( gG );
-
-  //reduce precision
-  GEOSGeomScopedPtr pg2;
-  pg2.reset( GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geosGeom.get() ) );
 
   try
   {
@@ -1098,16 +1105,16 @@ QgsAbstractGeometryV2* QgsGeos::overlay( const QgsAbstractGeometryV2& geom, Over
     switch ( op )
     {
       case INTERSECTION:
-        opGeom.reset( GEOSIntersection_r( geosinit.ctxt, mGeos, pg2.get() ) );
+        opGeom.reset( GEOSIntersection_r( geosinit.ctxt, mGeos, geosGeom.get() ) );
         break;
       case DIFFERENCE:
-        opGeom.reset( GEOSDifference_r( geosinit.ctxt, mGeos, pg2.get() ) );
+        opGeom.reset( GEOSDifference_r( geosinit.ctxt, mGeos, geosGeom.get() ) );
         break;
       case UNION:
-        opGeom.reset( GEOSUnion_r( geosinit.ctxt, mGeos, pg2.get() ) );
+        opGeom.reset( GEOSUnion_r( geosinit.ctxt, mGeos, geosGeom.get() ) );
         break;
       case SYMDIFFERENCE:
-        opGeom.reset( GEOSSymDifference_r( geosinit.ctxt, mGeos, pg2.get() ) );
+        opGeom.reset( GEOSSymDifference_r( geosinit.ctxt, mGeos, geosGeom.get() ) );
         break;
       default:    //unknown op
         return 0;
@@ -1132,19 +1139,13 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
     return false;
   }
 
-  GEOSGeometry* gG = asGeos( &geom );
-  if ( !gG )
+  GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
+  if ( !geosGeom )
   {
     return false;
   }
-  GEOSGeomScopedPtr geosGeom;
-  geosGeom.reset( gG );
 
   bool result = false;
-
-  GEOSGeomScopedPtr pg2;
-  pg2.reset( GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geosGeom.get() ) );
-
   try
   {
     if ( mGeosPrepared ) //use faster version with prepared geometry
@@ -1152,25 +1153,25 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
       switch ( r )
       {
         case INTERSECTS:
-          result = ( GEOSPreparedIntersects_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedIntersects_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case TOUCHES:
-          result = ( GEOSPreparedTouches_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedTouches_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case CROSSES:
-          result = ( GEOSPreparedCrosses_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedCrosses_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case WITHIN:
-          result = ( GEOSPreparedWithin_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedWithin_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case CONTAINS:
-          result = ( GEOSPreparedContains_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedContains_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case DISJOINT:
-          result = ( GEOSPreparedDisjoint_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedDisjoint_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         case OVERLAPS:
-          result = ( GEOSPreparedOverlaps_r( geosinit.ctxt, mGeosPrepared, pg2.get() ) == 1 );
+          result = ( GEOSPreparedOverlaps_r( geosinit.ctxt, mGeosPrepared, geosGeom.get() ) == 1 );
           break;
         default:
           return false;
@@ -1181,25 +1182,25 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
     switch ( r )
     {
       case INTERSECTS:
-        result = ( GEOSIntersects_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSIntersects_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case TOUCHES:
-        result = ( GEOSTouches_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSTouches_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case CROSSES:
-        result = ( GEOSCrosses_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSCrosses_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case WITHIN:
-        result = ( GEOSWithin_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSWithin_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case CONTAINS:
-        result = ( GEOSContains_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSContains_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case DISJOINT:
-        result = ( GEOSDisjoint_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSDisjoint_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       case OVERLAPS:
-        result = ( GEOSOverlaps_r( geosinit.ctxt, mGeos, pg2.get() ) == 1 );
+        result = ( GEOSOverlaps_r( geosinit.ctxt, mGeos, geosGeom.get() ) == 1 );
         break;
       default:
         return false;
@@ -1395,13 +1396,12 @@ bool QgsGeos::isEqual( const QgsAbstractGeometryV2& geom, QString* errorMsg ) co
 
   try
   {
-    GEOSGeometry* geosGeom = asGeos( &geom );
+    GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
     if ( !geosGeom )
     {
       return false;
     }
-    bool equal = GEOSEquals_r( geosinit.ctxt, mGeos, geosGeom );
-    GEOSGeom_destroy_r( geosinit.ctxt, geosGeom );
+    bool equal = GEOSEquals_r( geosinit.ctxt, mGeos, geosGeom.get() );
     return equal;
   }
   CATCH_GEOS_WITH_ERRMSG( false );
