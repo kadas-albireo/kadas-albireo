@@ -110,11 +110,17 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
   mApp->redliningToolBar()->addWidget( mBtnFillColor );
 
-  connect( mApp, SIGNAL( newProject() ), this, SLOT( createLayer() ) );
+  connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+  connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
+  connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
 }
 
-void QgsRedlining::createLayer()
+QgsRedlining::RedliningLayer* QgsRedlining::getOrCreateLayer()
 {
+  if ( mLayer )
+  {
+    return mLayer;
+  }
   mLayer = new RedliningLayer;
   mLayer->setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   mLayer->dataProvider()->addAttributes( QList<QgsField>()
@@ -139,11 +145,19 @@ void QgsRedlining::createLayer()
   mLayer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
   mLayer->setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~outline" );
   mLayer->setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
+
+  return mLayer;
+}
+
+void QgsRedlining::clearLayer()
+{
+  mLayer = 0;
+  mLayerRefCount = 0;
 }
 
 void QgsRedlining::editObject()
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), mLayer );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
   connect( this, SIGNAL( styleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -167,12 +181,12 @@ void QgsRedlining::newPolygon()
 
 void QgsRedlining::newCircle()
 {
-  activateTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), mLayer ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newText()
 {
-  activateTool( new QgsRedliningTextTool( mApp->mapCanvas(), mLayer ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningTextTool( mApp->mapCanvas(), getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
@@ -181,7 +195,7 @@ void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
   connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
   if ( mLayerRefCount == 0 )
   {
-    mApp->mapCanvas()->setCurrentLayer( mLayer );
+    mApp->mapCanvas()->setCurrentLayer( getOrCreateLayer() );
     mLayer->startEditing();
   }
   ++mLayerRefCount;
@@ -191,17 +205,24 @@ void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
 void QgsRedlining::deactivateTool()
 {
   QgsMapTool* tool = qobject_cast<QgsMapTool*>( QObject::sender() );
-  --mLayerRefCount;
-  if ( mLayerRefCount == 0 )
+  if ( mLayer )
   {
-    mLayer->commitChanges();
-    mApp->mapCanvas()->setCurrentLayer( 0 );
+    --mLayerRefCount;
+    if ( mLayerRefCount == 0 )
+    {
+      mLayer->commitChanges();
+      mApp->mapCanvas()->setCurrentLayer( 0 );
+    }
   }
   tool->deleteLater();
 }
 
 void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
 {
+  if ( !mLayer )
+  {
+    return;
+  }
   QgsFeature f;
   if ( !mLayer->getFeatures( QgsFeatureRequest( fid ) ).nextFeature( f ) )
   {
@@ -220,6 +241,10 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
 
 void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
 {
+  if ( !mLayer )
+  {
+    return;
+  }
   QgsFeature f;
   if ( !mLayer->getFeatures( QgsFeatureRequest( fid ) ).nextFeature( f ) )
   {
@@ -244,6 +269,69 @@ void QgsRedlining::saveOutlineWidth()
 {
   QSettings().setValue( "/Redlining/size", mSpinBorderSize->value() );
   emit styleChanged();
+}
+
+void QgsRedlining::readProject( const QDomDocument& doc )
+{
+  clearLayer();
+  getOrCreateLayer();
+
+  QDomNodeList nl = doc.elementsByTagName( "Redlining" );
+  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  {
+    return;
+  }
+  QDomElement redliningElement = nl.at( 0 ).toElement();
+  QgsFeatureList features;
+  QDomNodeList nodes = redliningElement.childNodes();
+  for ( int iNode = 0, nNodes = nodes.size(); iNode < nNodes; ++iNode )
+  {
+    QDomElement redliningItemElem = nodes.at( iNode ).toElement();
+    if ( redliningItemElem.nodeName() == "RedliningItem" )
+    {
+      QgsFeature feature( mLayer->dataProvider()->fields() );
+      feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
+      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "#FF0000" ) );
+      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "#0000FF" ) );
+      feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
+      feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
+      feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
+      feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
+      features.append( feature );
+    }
+  }
+  mLayer->dataProvider()->addFeatures( features );
+  mLayer->updateFields();
+  mApp->mapCanvas()->refresh();
+}
+
+void QgsRedlining::writeProject( QDomDocument& doc )
+{
+  getOrCreateLayer();
+
+  QDomNodeList nl = doc.elementsByTagName( "qgis" );
+  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  {
+    return;
+  }
+  QDomElement qgisElem = nl.at( 0 ).toElement();
+
+  QDomElement redliningElem = doc.createElement( "Redlining" );
+  QgsFeatureIterator it = mLayer->getFeatures();
+  QgsFeature feature;
+  while ( it.nextFeature( feature ) )
+  {
+    QDomElement redliningItemElem = doc.createElement( "RedliningItem" );
+    redliningItemElem.setAttribute( "size", feature.attribute( "size" ).toString() );
+    redliningItemElem.setAttribute( "outline", feature.attribute( "outline" ).toString() );
+    redliningItemElem.setAttribute( "fill", feature.attribute( "fill" ).toString() );
+    redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
+    redliningItemElem.setAttribute( "text_x", feature.attribute( "text_x" ).toString() );
+    redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
+    redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
+    redliningElem.appendChild( redliningItemElem );
+  }
+  qgisElem.appendChild( redliningElem );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
