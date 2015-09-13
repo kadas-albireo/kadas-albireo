@@ -41,7 +41,7 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
     QgsAbstractGeometryV2* combine( const QList< const QgsAbstractGeometryV2* >, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* symDifference( const QgsAbstractGeometryV2& geom, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* buffer( double distance, int segments, QString* errorMsg = 0 ) const override;
-    QgsAbstractGeometryV2* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit, QString* errorMsg = 0 ) const override;
+    QgsAbstractGeometryV2* buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit ) const override;
     QgsAbstractGeometryV2* simplify( double tolerance, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* interpolate( double distance, QString* errorMsg = 0 ) const override;
     QgsAbstractGeometryV2* envelope( QString* errorMsg = 0 ) const override;
@@ -136,6 +136,9 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
     static int lineContainedInLine( const GEOSGeometry* line1, const GEOSGeometry* line2 );
     static int pointContainedInLine( const GEOSGeometry* point, const GEOSGeometry* line );
     static int geomDigits( const GEOSGeometry* geom );
+
+  private:
+    inline GEOSGeometry *getReducedGeometry( GEOSGeometry* geom ) const;
 };
 
 #endif // QGSGEOS_H
