@@ -27,6 +27,7 @@
 #include "qgssymbolv2.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgslogger.h"
+#include "qgslatlontoutm.h"
 
 #include <QPainter>
 #include <QPen>
@@ -1050,6 +1051,32 @@ void QgsComposerMapGrid::drawCoordinateAnnotations( QPainter* p, const QList< QP
     drawCoordinateAnnotation( p, it->second.p1(), currentAnnotationString, QgsComposerMapGrid::Longitude );
     drawCoordinateAnnotation( p, it->second.p2(), currentAnnotationString, QgsComposerMapGrid::Longitude );
   }
+  if ( mGridAnnotationFormat == QgsComposerMapGrid::UTM || mGridAnnotationFormat == QgsComposerMapGrid::MGRS )
+  {
+    int nHLines = hLines.size();
+    int nVLines = vLines.size();
+    for ( int iHLine = 0; iHLine < nHLines; ++iHLine )
+    {
+      for ( int iVLine = 0; iVLine < nVLines; ++iVLine )
+      {
+        const QPair<double, QLineF>& hLine = hLines[iHLine];
+        const QPair<double, QLineF>& vLine = vLines[iVLine];
+        QPointF pos( vLine.second.p1().x(), hLine.second.p1().y() );
+        QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( QgsPoint( vLine.first, hLine.first ) );
+        QString zoneLabel;
+        if ( mGridAnnotationFormat == QgsComposerMapGrid::MGRS )
+        {
+          QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
+          zoneLabel = QString( "%1%2%3" ).arg( mgrs.zoneNumber ).arg( mgrs.zoneLetter ).arg( mgrs.letter100kID );
+        }
+        else
+        {
+          zoneLabel = QString( "%1%2" ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
+        }
+        drawAnnotation( p, pos, 0, zoneLabel );
+      }
+    }
+  }
 }
 
 void QgsComposerMapGrid::drawCoordinateAnnotation( QPainter* p, const QPointF& pos, QString annotationString, const AnnotationCoordinate coordinateType ) const
@@ -1436,6 +1463,17 @@ QString QgsComposerMapGrid::gridAnnotationString( double value, QgsComposerMapGr
   else if ( mGridAnnotationFormat == QgsComposerMapGrid::DegreeMinuteSecondPadded )
   {
     annotationString = p.toDegreesMinutesSeconds( mGridAnnotationPrecision, true, true );
+  }
+  else if ( mGridAnnotationFormat == QgsComposerMapGrid::UTM )
+  {
+    QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( p );
+    return coord == QgsComposerMapGrid::Longitude ? QString::number( utm.easting ) : QString::number( utm.northing );
+  }
+  else if ( mGridAnnotationFormat == QgsComposerMapGrid::MGRS )
+  {
+    QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( p );
+    QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
+    return coord == QgsComposerMapGrid::Longitude ? QString::number( mgrs.easting ) : QString::number( mgrs.northing );
   }
 
   QStringList split = annotationString.split( "," );
