@@ -1,5 +1,8 @@
 FIND_PACKAGE(QJSON REQUIRED)
 
+SET(SMTPEMAIL_INCLUDE_DIR "" CACHE PATH "Path to SMTPEmail headers")
+SET(SMTPEMAIL_LIBRARY "SMTPEmail" CACHE FILEPATH "Path to SMTPEmail library")
+
 ########################################################
 # Files
 
@@ -67,13 +70,14 @@ INCLUDE_DIRECTORIES(
      ../../core/geometry
      ../../gui
      ../
+     ${SMTPEMAIL_INCLUDE_DIR}
 )
 
 TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
-  SMTPEmail
+  ${SMTPEMAIL_LIBRARY}
 )
 
 ########################################################
