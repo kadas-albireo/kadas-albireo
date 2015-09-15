@@ -23,6 +23,7 @@
 #include "qgsvbsfunctionality.h"
 #include "qgsvbscoordinatedisplayer.h"
 #include "qgsvbscrsselection.h"
+#include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
 #include "search/qgsvbssearchbox.h"
@@ -64,6 +65,8 @@ void QgsVBSFunctionality::initGui()
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
+
+  QgsVBSCrashHandler::installCrashHandler();
 }
 
 void QgsVBSFunctionality::unload()

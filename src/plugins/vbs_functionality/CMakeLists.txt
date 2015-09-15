@@ -7,6 +7,7 @@ SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
   qgsvbscoordinatedisplayer.cpp
   qgsvbscoordinateconverter.cpp
+  qgsvbscrashhandler.cpp
   qgsvbscrsselection.cpp
   pinannotation/qgsvbsmaptoolpinannotation.cpp
   pinannotation/qgsvbspinannotationitem.cpp
@@ -26,6 +27,7 @@ SET (vbsfunctionality_HDRS
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
+  qgsvbscrashhandler.h
   qgsvbscoordinatedisplayer.h
   pinannotation/qgsvbspinannotationitem.h
   search/qgsvbssearchbox.h
@@ -71,6 +73,7 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
+  SMTPEmail
 )
 
 ########################################################
@@ -79,4 +82,3 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
 INSTALL(TARGETS vbsfunctionality
   RUNTIME DESTINATION ${QGIS_PLUGIN_DIR}
   LIBRARY DESTINATION ${QGIS_PLUGIN_DIR})
-
