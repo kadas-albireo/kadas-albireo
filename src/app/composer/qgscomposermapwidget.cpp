@@ -82,6 +82,8 @@ QgsComposerMapWidget::QgsComposerMapWidget( QgsComposerMap* composerMap )
   mAnnotationFormatComboBox->insertItem( 5, tr( "Degree, minute, second" ) );
   mAnnotationFormatComboBox->insertItem( 6, tr( "Degree, minute, second with suffix" ) );
   mAnnotationFormatComboBox->insertItem( 7, tr( "Degree, minute, second aligned" ) );
+  mAnnotationFormatComboBox->insertItem( 8, tr( "UTM" ) );
+  mAnnotationFormatComboBox->insertItem( 9, tr( "MGRS" ) );
 
   mAnnotationFontColorButton->setColorDialogTitle( tr( "Select font color" ) );
   mAnnotationFontColorButton->setAllowAlpha( true );
@@ -1499,6 +1501,12 @@ void QgsComposerMapWidget::setGridItems( const QgsComposerMapGrid* grid )
     case QgsComposerMapGrid::DegreeMinuteSecondPadded:
       mAnnotationFormatComboBox->setCurrentIndex( 7 );
       break;
+    case QgsComposerMapGrid::UTM:
+      mAnnotationFormatComboBox->setCurrentIndex( 8 );
+      break;
+    case QgsComposerMapGrid::MGRS:
+      mAnnotationFormatComboBox->setCurrentIndex( 9 );
+      break;
   }
   mDistanceToMapFrameSpinBox->setValue( grid->annotationFrameDistance() );
   mCoordinatePrecisionSpinBox->setValue( grid->annotationPrecision() );
@@ -2145,6 +2153,12 @@ void QgsComposerMapWidget::on_mAnnotationFormatComboBox_currentIndexChanged( int
       break;
     case 7:
       grid->setAnnotationFormat( QgsComposerMapGrid::DegreeMinuteSecondPadded );
+      break;
+    case 8:
+      grid->setAnnotationFormat( QgsComposerMapGrid::UTM );
+      break;
+    case 9:
+      grid->setAnnotationFormat( QgsComposerMapGrid::MGRS );
       break;
   }
 
