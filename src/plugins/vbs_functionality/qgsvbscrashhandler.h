@@ -18,34 +18,12 @@
 #ifndef QGSVBSCRASHHANDLER_H
 #define QGSVBSCRASHHANDLER_H
 
-#include <QDialog>
-
-class QPlainTextEdit;
-
-class QgsVBSCrashHandler : public QDialog
-{
-    Q_OBJECT
-
-  public:
-    explicit QgsVBSCrashHandler( const QString& coredumpFile, const QString &coredumpError, QWidget *parent = 0 );
-
-#ifdef __MSC_VER
-    static LONG WINAPI crashHandler( struct _EXCEPTION_POINTERS *ExceptionInfo );
-#else
-    static void crashHandler( int sig );
-#endif
-    static void installCrashHandler();
-
-  private:
-    QPlainTextEdit* mTextEditUserMessage;
-    QPushButton* mButtonSubmit;
-    QPushButton* mButtonClose;
-    QString mCoredumpFile;
-    QString mCoredumpError;
-    int m_pid;
-
-  private slots:
-    void submitCrashReport();
+class QgsVBSCrashHandler {
+public:
+	QgsVBSCrashHandler();
+	~QgsVBSCrashHandler();
+private:
+	bool mHandlerInstalled;
 };
 
 #endif // QGSVBSCRASHHANDLER_H

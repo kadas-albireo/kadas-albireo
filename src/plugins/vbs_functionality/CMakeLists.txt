@@ -1,7 +1,9 @@
 FIND_PACKAGE(QJSON REQUIRED)
 
-SET(SMTPEMAIL_INCLUDE_DIR "" CACHE PATH "Path to SMTPEmail headers")
-SET(SMTPEMAIL_LIBRARY "SMTPEmail" CACHE FILEPATH "Path to SMTPEmail library")
+IF(MSVC)
+SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
+SET(CRASHRPT_LIBRARY "CrashRpt1403.lib" CACHE FILEPATH "Path to CrashRpt library")
+ENDIF(MSVC)
 
 ########################################################
 # Files
@@ -72,14 +74,14 @@ INCLUDE_DIRECTORIES(
      ../../core/geometry
      ../../gui
      ../
-     ${SMTPEMAIL_INCLUDE_DIR}
+     ${CRASHRPT_INCLUDE_DIR}
 )
 
 TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
-  ${SMTPEMAIL_LIBRARY}
+  ${CRASHRPT_LIBRARY}
 )
 
 ########################################################

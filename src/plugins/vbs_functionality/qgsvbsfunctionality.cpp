@@ -41,6 +41,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mSearchToolbar( 0 )
     , mSearchBox( 0 )
     , mReprojMsgItem( 0 )
+    , mCrashHandler( 0 )
 {
 }
 
@@ -66,7 +67,7 @@ void QgsVBSFunctionality::initGui()
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
 
-  QgsVBSCrashHandler::installCrashHandler();
+  mCrashHandler = new QgsVBSCrashHandler();
 }
 
 void QgsVBSFunctionality::unload()
@@ -84,6 +85,8 @@ void QgsVBSFunctionality::unload()
   delete mSearchToolbar;
   mSearchToolbar = 0;
   mSearchBox = 0;
+  delete mCrashHandler;
+  mCrashHandler = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );

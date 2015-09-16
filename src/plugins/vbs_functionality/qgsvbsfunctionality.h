@@ -32,6 +32,7 @@ class QgsVBSSearchBox;
 class QgsMapTool;
 class QgsMapLayer;
 class QgsMessageBarItem;
+class QgsVBSCrashHandler;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -51,6 +52,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QToolBar* mSearchToolbar;
     QgsVBSSearchBox* mSearchBox;
     QPointer<QgsMessageBarItem> mReprojMsgItem;
+    QgsVBSCrashHandler* mCrashHandler;
 
   private slots:
     void activateMapToolPinAnnotation();
