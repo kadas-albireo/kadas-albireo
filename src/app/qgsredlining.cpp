@@ -309,7 +309,7 @@ void QgsRedlining::readProject( const QDomDocument& doc )
 
 void QgsRedlining::writeProject( QDomDocument& doc )
 {
-  if(!mLayer)
+  if ( !mLayer )
   {
     return;
   }
@@ -490,11 +490,6 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
     }
     return;
   }
-
-  // Else, nothing is selected
-  mMode = NoSelection;
-  delete mCurrentFeature;
-  mCurrentFeature = 0;
 }
 
 void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
