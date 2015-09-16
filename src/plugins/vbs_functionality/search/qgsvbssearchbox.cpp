@@ -27,6 +27,7 @@
 #include "qgsvbslocationsearchprovider.h"
 #include "qgsvbslocaldatasearchprovider.h"
 #include "qgsvbsremotedatasearchprovider.h"
+#include "qgsvbsworldlocationsearchprovider.h"
 #include "qgsrubberband.h"
 #include <QCheckBox>
 #include <QHeaderView>
@@ -254,6 +255,7 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   addSearchProvider( new QgsVBSLocationSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSLocalDataSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSRemoteDataSearchProvider( mIface ) );
+  addSearchProvider( new QgsVBSWorldLocationSearchProvider( mIface ) );
 }
 
 QgsVBSSearchBox::~QgsVBSSearchBox()
