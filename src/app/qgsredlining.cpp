@@ -274,13 +274,15 @@ void QgsRedlining::saveOutlineWidth()
 void QgsRedlining::readProject( const QDomDocument& doc )
 {
   clearLayer();
-  getOrCreateLayer();
 
   QDomNodeList nl = doc.elementsByTagName( "Redlining" );
   if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
+
+  getOrCreateLayer();
+
   QDomElement redliningElement = nl.at( 0 ).toElement();
   QgsFeatureList features;
   QDomNodeList nodes = redliningElement.childNodes();
@@ -307,7 +309,10 @@ void QgsRedlining::readProject( const QDomDocument& doc )
 
 void QgsRedlining::writeProject( QDomDocument& doc )
 {
-  getOrCreateLayer();
+  if(!mLayer)
+  {
+    return;
+  }
 
   QDomNodeList nl = doc.elementsByTagName( "qgis" );
   if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
