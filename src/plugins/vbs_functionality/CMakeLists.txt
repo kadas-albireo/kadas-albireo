@@ -14,6 +14,8 @@ SET (vbsfunctionality_SRCS
   qgsvbscoordinateconverter.cpp
   qgsvbscrashhandler.cpp
   qgsvbscrsselection.cpp
+  multimap/qgsvbsmapwidget.cpp
+  multimap/qgsvbsmultimapmanager.cpp
   pinannotation/qgsvbsmaptoolpinannotation.cpp
   pinannotation/qgsvbspinannotationitem.cpp
   search/qgsvbssearchbox.cpp
@@ -36,6 +38,8 @@ SET (vbsfunctionality_MOC_HDRS
   qgsvbscrashhandler.h
   qgsvbscoordinatedisplayer.h
   pinannotation/qgsvbspinannotationitem.h
+  multimap/qgsvbsmapwidget.h
+  multimap/qgsvbsmultimapmanager.h
   search/qgsvbssearchbox.h
   search/qgsvbssearchprovider.h
   search/qgsvbscoordinatesearchprovider.h

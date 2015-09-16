@@ -12,5 +12,7 @@
         <file>icons/search_filter_circle.svg</file>
         <file>icons/search_filter_none.svg</file>
         <file>icons/search_filter_poly.svg</file>
+        <file>icons/sync_views.svg</file>
+        <file>icons/add_map_view.svg</file>
     </qresource>
 </RCC>

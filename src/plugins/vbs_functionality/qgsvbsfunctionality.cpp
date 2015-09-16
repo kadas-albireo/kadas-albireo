@@ -25,6 +25,7 @@
 #include "qgsvbscrsselection.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
+#include "multimap/qgsvbsmultimapmanager.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
 #include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
@@ -42,6 +43,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mSearchBox( 0 )
     , mReprojMsgItem( 0 )
     , mCrashHandler( 0 )
+    , mMultiMapManager( 0 )
 {
 }
 
@@ -68,6 +70,8 @@ void QgsVBSFunctionality::initGui()
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
 
   mCrashHandler = new QgsVBSCrashHandler();
+
+  mMultiMapManager = new QgsVBSMultiMapManager( mQGisIface, this );
 }
 
 void QgsVBSFunctionality::unload()
@@ -87,6 +91,8 @@ void QgsVBSFunctionality::unload()
   mSearchBox = 0;
   delete mCrashHandler;
   mCrashHandler = 0;
+  delete mMultiMapManager;
+  mMultiMapManager = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
