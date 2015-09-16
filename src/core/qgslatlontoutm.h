@@ -22,7 +22,7 @@
 
 class QgsPoint;
 
-class QgsLatLonToUTM
+class CORE_EXPORT QgsLatLonToUTM
 {
   public:
     struct UTMCoo
