@@ -36,7 +36,7 @@ QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgisInterface *i
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
 }
 
-void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
+void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &/*searchRegion*/ )
 {
   SearchResult searchResult;
   searchResult.zoomScale = 1000;
@@ -166,15 +166,6 @@ void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, con
   else
   {
     valid = false;
-  }
-
-  if ( !searchRegion.rect.isEmpty() )
-  {
-    QgsPoint p = QgsCoordinateTransform( searchResult.crs, searchRegion.crs ).transform( searchResult.pos );
-    if ( !searchRegion.rect.contains( p ) )
-    {
-      valid = false;
-    }
   }
 
   if ( valid )

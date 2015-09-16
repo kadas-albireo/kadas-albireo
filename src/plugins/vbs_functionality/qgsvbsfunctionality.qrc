@@ -7,5 +7,10 @@
         <file>icons/clear.svg</file>
         <file>icons/pin_red.svg</file>
         <file>icons/pin_blue.svg</file>
+        <file>icons/search_filter.svg</file>
+        <file>icons/search_filter_rect.svg</file>
+        <file>icons/search_filter_circle.svg</file>
+        <file>icons/search_filter_none.svg</file>
+        <file>icons/search_filter_poly.svg</file>
     </qresource>
 </RCC>

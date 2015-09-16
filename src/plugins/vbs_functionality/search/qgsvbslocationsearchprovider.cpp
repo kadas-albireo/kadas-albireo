@@ -48,17 +48,12 @@ QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgisInterface *iface
   connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
 }
 
-void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &searchRegion )
+void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
   QUrl url( sGeoAdminUrl );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
-  if ( !searchRegion.rect.isEmpty() )
-  {
-    QgsRectangle bbox = QgsCoordinateTransform( searchRegion.crs, QgsCoordinateReferenceSystem( "EPSG:21781" ) ).transform( searchRegion.rect );
-    url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( bbox.xMinimum() ).arg( bbox.yMinimum() ).arg( bbox.xMaximum() ).arg( bbox.yMaximum() ) );
-  }
 
   QNetworkRequest req( url );
   req.setRawHeader( "Referer", QSettings().value( "/vbsfunctionality/referrer", "http://localhost" ).toByteArray() );

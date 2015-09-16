@@ -18,6 +18,8 @@
 #include "qgsvbslocaldatasearchprovider.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayer.h"
+#include "qgslinestringv2.h"
+#include "qgspolygonv2.h"
 #include "qgisinterface.h"
 #include "qgslegendinterface.h"
 #include "qgsfeaturerequest.h"
@@ -89,9 +91,19 @@ void QgsVBSLocalDataSearchCrawler::run()
 
     QgsFeatureRequest req;
     QgsFeature feature;
-    if ( !mSearchRegion.rect.isEmpty() )
+    if ( !mSearchRegion.polygon.isEmpty() )
     {
-      req.setFilterRect( QgsCoordinateTransform( mSearchRegion.crs, layer->crs() ).transform( mSearchRegion.rect ) );
+      QgsLineStringV2* exterior = new QgsLineStringV2();
+      QgsCoordinateTransform ct( mSearchRegion.crs, layer->crs() );
+      foreach ( const QgsPoint& p, mSearchRegion.polygon )
+      {
+        exterior->addVertex( QgsPointV2( ct.transform( p ) ) );
+      }
+      QgsPolygonV2* poly = new QgsPolygonV2();
+      poly->setExteriorRing( exterior );
+      QgsGeometry filterGeom( poly );
+
+      req.setFilterRect( filterGeom.boundingBox() );
       QgsExpression expr( exprText );
       expr.prepare( vlayer->pendingFields() );
       QgsFeatureIterator it = vlayer->getFeatures( req );
@@ -103,7 +115,7 @@ void QgsVBSLocalDataSearchCrawler::run()
           break;
         }
         locker.unlock();
-        if ( expr.evaluate( feature ).toBool() )
+        if ( expr.evaluate( feature ).toBool() && filterGeom.contains( feature.geometry() ) )
         {
           buildResult( feature, vlayer );
           ++resultCount;

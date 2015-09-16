@@ -20,9 +20,9 @@
 
 #include "qgisinterface.h"
 #include "qgsvbssearchprovider.h"
-#include <QLineEdit>
 #include <QList>
 #include <QTimer>
+#include <QWidget>
 
 
 class QCheckBox;
@@ -32,7 +32,7 @@ class QgsPoint;
 class QgsRectangle;
 class QgsRubberBand;
 
-class QgsVBSSearchBox : public QLineEdit
+class QgsVBSSearchBox : public QWidget
 {
     Q_OBJECT
 
@@ -44,8 +44,9 @@ class QgsVBSSearchBox : public QLineEdit
     void removeSearchProvider( QgsVBSSearchProvider* provider );
 
   private:
-    class PopupFrame;
+    class LineEdit;
     class TreeWidget;
+    class FilterTool;
 
     enum EntryType { EntryTypeCategory, EntryTypeResult };
     static const int sEntryTypeRole;
@@ -55,18 +56,17 @@ class QgsVBSSearchBox : public QLineEdit
 
     QgisInterface* mIface;
     QgsRubberBand* mRubberBand;
+    QgsRubberBand* mFilterRubberBand;
     QList<QgsVBSSearchProvider*> mSearchProviders;
     QTimer mTimer;
+    LineEdit* mSearchBox;
+    QToolButton* mFilterButton;
     QToolButton* mSearchButton;
     QToolButton* mClearButton;
-    PopupFrame* mPopup;
     TreeWidget* mTreeWidget;
-    QCheckBox* mVisibleOnlyCheckBox;
     int mNumRunningProviders;
 
-    void resizeEvent( QResizeEvent* ) override;
     bool eventFilter( QObject* obj, QEvent* ev ) override;
-    void focusInEvent( QFocusEvent * ) override;
     void createRubberBand();
     void cancelSearch();
 
@@ -78,6 +78,9 @@ class QgsVBSSearchBox : public QLineEdit
     void searchProviderFinished();
     void resultSelected();
     void resultActivated();
+    void clearFilter();
+    void setFilterTool();
+    void filterToolFinished();
 };
 
 #endif // QGSVBSSEARCHBOX_H

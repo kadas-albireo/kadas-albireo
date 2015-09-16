@@ -16,8 +16,11 @@
  ***************************************************************************/
 
 #include "qgsapplication.h"
+#include "qgscircularstringv2.h"
+#include "qgscurvepolygonv2.h"
 #include "qgsvbssearchbox.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaptool.h"
 #include "qgscoordinatetransform.h"
 #include "qgsvbssearchprovider.h"
 #include "qgsvbscoordinatesearchprovider.h"
@@ -28,6 +31,8 @@
 #include <QCheckBox>
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QLineEdit>
+#include <QMenu>
 #include <QShortcut>
 #include <QStyle>
 #include <QToolButton>
@@ -41,51 +46,127 @@ const int QgsVBSSearchBox::sCatNameRole = Qt::UserRole + 1;
 const int QgsVBSSearchBox::sCatCountRole = Qt::UserRole + 2;
 const int QgsVBSSearchBox::sResultDataRole = Qt::UserRole + 3;
 
-
-class QgsVBSSearchBox::PopupFrame : public QFrame
+// Overridden to make event() public
+class QgsVBSSearchBox::LineEdit : public QLineEdit
 {
   public:
-    PopupFrame( QgsVBSSearchBox* parent ) : QFrame( parent, Qt::Popup )
-    {
-      setFrameStyle( QFrame::Box );
-      setStyleSheet( "PopupFrame{ background-color: white;}" );
-      setFocusPolicy( Qt::NoFocus );
-      hide();
-    }
-
-  private:
-    void closeEvent( QCloseEvent* ) override
-    {
-      qobject_cast<QgsVBSSearchBox*>( parentWidget() )->cancelSearch();
-      parentWidget()->clearFocus();
-    }
+    LineEdit( QWidget* parent ) : QLineEdit( parent ) {}
+    bool event( QEvent *e ) override { return QLineEdit::event( e ); }
 };
 
-class QgsVBSSearchBox::TreeWidget : public QTreeWidget
+// Overridden to make event() public
+class QgsVBSSearchBox::TreeWidget: public QTreeWidget
 {
   public:
-    TreeWidget( QWidget* parent = 0 ) : QTreeWidget( parent ) {}
-    bool event( QEvent *e ) {  return QTreeWidget::event( e ); }
+    TreeWidget( QWidget* parent ) : QTreeWidget( parent ) {}
+    bool event( QEvent *e ) override { return QTreeWidget::event( e ); }
+};
+
+
+class QgsVBSSearchBox::FilterTool : public QgsMapTool
+{
+  public:
+    enum Mode { Circle, Rect, Poly };
+
+    FilterTool( QgsMapCanvas* canvas, Mode mode, QgsRubberBand* rubberBand )
+        : QgsMapTool( canvas ), mMode( mode ), mRubberBand( rubberBand ), mCapturing( false )
+    {
+      setCursor( Qt::CrossCursor );
+    }
+
+    void canvasPressEvent( QMouseEvent * e ) override
+    {
+      if ( mCapturing && mMode == Poly )
+      {
+        if ( e->button() == Qt::RightButton )
+        {
+          mCapturing = false;
+          mCanvas->unsetMapTool( this );
+        }
+        else
+        {
+          mRubberBand->addPoint( toMapCoordinates( e->pos() ) );
+        }
+      }
+      else if ( e->button() == Qt::LeftButton )
+      {
+        mPressPos = e->pos();
+        mCapturing = true;
+        if ( mMode == Poly )
+        {
+          mRubberBand->addPoint( toMapCoordinates( e->pos() ) );
+          mRubberBand->addPoint( toMapCoordinates( e->pos() ) );
+        }
+      }
+    }
+    void canvasMoveEvent( QMouseEvent * e ) override
+    {
+      if ( mCapturing )
+      {
+        if ( mMode == Circle )
+        {
+          QPoint diff = mPressPos - e->pos();
+          double r = qSqrt( diff.x() * diff.x() + diff.y() + diff.y() );
+          QgsCircularStringV2* exterior = new QgsCircularStringV2();
+          exterior->setPoints(
+            QList<QgsPointV2>() << toMapCoordinates( QPoint( mPressPos.x() + r, mPressPos.y() ) )
+            << toMapCoordinates( mPressPos )
+            << toMapCoordinates( QPoint( mPressPos.x() + r, mPressPos.y() ) ) );
+          QgsCurvePolygonV2 geom;
+          geom.setExteriorRing( exterior );
+          QgsGeometry g( geom.segmentize() );
+          mRubberBand->setToGeometry( &g, 0 );
+        }
+        else if ( mMode == Rect )
+        {
+          mRubberBand->setToCanvasRectangle( QRect( mPressPos, e->pos() ).normalized() );
+        }
+        else if ( mMode == Poly )
+        {
+          mRubberBand->movePoint( mRubberBand->partSize( 0 ) - 1, toMapCoordinates( e->pos() ) );
+        }
+      }
+    }
+    void canvasReleaseEvent( QMouseEvent * /*e*/ ) override
+    {
+      if ( mMode != Poly )
+      {
+        mCapturing = false;
+        mCanvas->unsetMapTool( this );
+      }
+    }
+    void deactivate() override
+    {
+      // Deactivated while capture, clear rubberband
+      if ( mCapturing )
+        mRubberBand->reset( QGis::Polygon );
+      QgsMapTool::deactivate();
+    }
+    bool isEditTool() override { return true; }
+
+  private:
+    Mode mMode;
+    QgsRubberBand* mRubberBand;
+    bool mCapturing;
+    QPoint mPressPos;
 };
 
 
 QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
-    : QLineEdit( parent ), mIface( iface )
+    : QWidget( parent ), mIface( iface )
 {
   mNumRunningProviders = 0;
   mRubberBand = 0;
+  mFilterRubberBand = 0;
 
-  installEventFilter( this );
+  mSearchBox = new LineEdit( this );
 
-  mPopup = new PopupFrame( this );
-  mPopup->setLayout( new QVBoxLayout );
-  mPopup->layout()->setContentsMargins( 1, 1, 1, 1 );
-  mPopup->layout()->setSpacing( 1 );
-  mPopup->installEventFilter( this );
+  mSearchBox->installEventFilter( this );
 
-  mTreeWidget = new TreeWidget( mPopup );
+  mTreeWidget = new TreeWidget( mSearchBox );
+  mTreeWidget->setWindowFlags( Qt::Popup );
   mTreeWidget->setFocusPolicy( Qt::NoFocus );
-  mTreeWidget->setFrameStyle( QFrame::NoFrame );
+  mTreeWidget->setFrameStyle( QFrame::Box );
   mTreeWidget->setRootIsDecorated( false );
   mTreeWidget->setColumnCount( 1 );
   mTreeWidget->setEditTriggers( QTreeWidget::NoEditTriggers );
@@ -94,28 +175,19 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   mTreeWidget->setUniformRowHeights( true );
   mTreeWidget->header()->hide();
   mTreeWidget->installEventFilter( this );
-  mPopup->layout()->addWidget( mTreeWidget );
-
-  QFrame* line = new QFrame( mPopup );
-  line->setFrameShape( QFrame::HLine );
-  line->setFrameShadow( QFrame::Sunken );
-  mPopup->layout()->addWidget( line );
-
-  mVisibleOnlyCheckBox = new QCheckBox( tr( "Limit to visible area" ), mPopup );
-  mVisibleOnlyCheckBox->setFocusPolicy( Qt::NoFocus );
-  mPopup->layout()->addWidget( mVisibleOnlyCheckBox );
+  mTreeWidget->hide();
 
   mTimer.setSingleShot( true );
   mTimer.setInterval( 500 );
 
-  mSearchButton = new QToolButton( this );
+  mSearchButton = new QToolButton( mSearchBox );
   mSearchButton->setIcon( QIcon( ":/vbsfunctionality/icons/search.svg" ) );
   mSearchButton->setIconSize( QSize( 16, 16 ) );
   mSearchButton->setCursor( Qt::PointingHandCursor );
   mSearchButton->setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
   mSearchButton->setToolTip( tr( "Search" ) );
 
-  mClearButton = new QToolButton( this );
+  mClearButton = new QToolButton( mSearchBox );
   mClearButton->setIcon( QIcon( ":/vbsfunctionality/icons/clear.svg" ) );
   mClearButton->setIconSize( QSize( 16, 16 ) );
   mClearButton->setCursor( Qt::PointingHandCursor );
@@ -124,21 +196,58 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   mClearButton->setVisible( false );
   mClearButton->installEventFilter( this );
 
-  connect( this, SIGNAL( textEdited( QString ) ), this, SLOT( textChanged() ) );
+  QMenu* filterMenu = new QMenu( mSearchBox );
+  QActionGroup* filterActionGroup = new QActionGroup( filterMenu );
+  QAction* noFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_none.svg" ), tr( "No filter" ), filterMenu );
+  filterActionGroup->addAction( noFilterAction );
+  connect( noFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( clearFilter() ) );
+
+  QAction* circleFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_circle.svg" ), tr( "Filter by radius" ), filterMenu );
+  circleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterTool::Circle ) ) );
+  filterActionGroup->addAction( circleFilterAction );
+  connect( circleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
+
+  QAction* rectangleFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_rect.svg" ), tr( "Filter by rectangle" ), filterMenu );
+  rectangleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterTool::Rect ) ) );
+  filterActionGroup->addAction( rectangleFilterAction );
+  connect( rectangleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
+
+  QAction* polygonFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_poly.svg" ), tr( "Filter by polygon" ), filterMenu );
+  polygonFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterTool::Poly ) ) );
+  filterActionGroup->addAction( polygonFilterAction );
+  connect( polygonFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
+
+  filterMenu->addActions( QList<QAction*>() << noFilterAction << circleFilterAction << rectangleFilterAction << polygonFilterAction );
+
+  mFilterButton = new QToolButton( this );
+  mFilterButton->setDefaultAction( noFilterAction );
+  mFilterButton->setIconSize( QSize( 16, 16 ) );
+  mFilterButton->setPopupMode( QToolButton::InstantPopup );
+  mFilterButton->setCursor( Qt::PointingHandCursor );
+  mFilterButton->setToolTip( tr( "Select Filter" ) );
+  mFilterButton->setMenu( filterMenu );
+  connect( filterMenu, SIGNAL( triggered( QAction* ) ), mFilterButton, SLOT( setDefaultAction( QAction* ) ) );
+
+  setLayout( new QHBoxLayout );
+  layout()->addWidget( mSearchBox );
+  layout()->addWidget( mFilterButton );
+  layout()->setContentsMargins( 0, 0, 0, 0 );
+  layout()->setSpacing( 2 );
+
+  connect( mSearchBox, SIGNAL( textEdited( QString ) ), this, SLOT( textChanged() ) );
   connect( mSearchButton, SIGNAL( clicked() ), this, SLOT( startSearch() ) );
-  connect( mVisibleOnlyCheckBox, SIGNAL( toggled( bool ) ), this, SLOT( startSearch() ) );
   connect( &mTimer, SIGNAL( timeout() ), this, SLOT( startSearch() ) );
   connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
   connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
   connect( mTreeWidget, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
   connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( clearSearch() ) );
 
-  int frameWidth = style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
-  setStyleSheet( QString( "QLineEdit { padding-right: %1px; } " ).arg( mSearchButton->sizeHint().width() + frameWidth + 5 ) );
-  QSize msz = minimumSizeHint();
-  setMinimumSize( std::max( msz.width(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ),
-                  std::max( msz.height(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ) );
-  setPlaceholderText( tr( "Search" ) );
+  int frameWidth = mSearchBox->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
+  mSearchBox->setStyleSheet( QString( "QLineEdit { padding-right: %1px; } " ).arg( mSearchButton->sizeHint().width() + frameWidth + 5 ) );
+  QSize msz = mSearchBox->minimumSizeHint();
+  mSearchBox->setMinimumSize( std::max( msz.width(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ),
+                              std::max( msz.height(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ) );
+  mSearchBox->setPlaceholderText( tr( "Search" ) );
 
   qRegisterMetaType<QgsVBSSearchProvider::SearchResult>( "QgsVBSSearchProvider::SearchResult" );
   addSearchProvider( new QgsVBSCoordinateSearchProvider( mIface ) );
@@ -168,22 +277,58 @@ void QgsVBSSearchBox::removeSearchProvider( QgsVBSSearchProvider* provider )
 
 bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
 {
-  if ( obj == mClearButton && ev->type() == QEvent::MouseButtonPress )
+  if ( obj == mSearchBox && ev->type() == QEvent::FocusIn )
+  {
+    mTreeWidget->resize( mSearchBox->width(), 200 );
+    mTreeWidget->move( mSearchBox->mapToGlobal( QPoint( 0, mSearchBox->height() ) ) );
+    mTreeWidget->show();
+    if ( !mClearButton->isVisible() )
+      resultSelected();
+    if ( mFilterRubberBand )
+      mFilterRubberBand->setVisible( true );
+    return true;
+  }
+  else if ( obj == mSearchBox && ev->type() == QEvent::MouseButtonPress )
+  {
+    mSearchBox->selectAll();
+    return true;
+  }
+  else if ( obj == mSearchBox && ev->type() == QEvent::Resize )
+  {
+    int frameWidth = mSearchBox->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
+    QRect r = mSearchBox->rect();
+    QSize sz = mSearchButton->sizeHint();
+    mSearchButton->move(( r.right() - frameWidth - sz.width() - 4 ),
+                        ( r.bottom() + 1 - sz.height() ) / 2 );
+    sz = mClearButton->sizeHint();
+    mClearButton->move(( r.right() - frameWidth - sz.width() - 4 ),
+                       ( r.bottom() + 1 - sz.height() ) / 2 );
+    return true;
+  }
+  else if ( obj == mClearButton && ev->type() == QEvent::MouseButtonPress )
   {
     clearSearch();
     return true;
   }
-  else if ( obj == this && ev->type() == QEvent::MouseButtonPress )
+  else if ( obj == mTreeWidget && ev->type() == QEvent::Close )
   {
-    selectAll();
+    cancelSearch();
+    mSearchBox->clearFocus();
+    if ( mFilterRubberBand )
+      mFilterRubberBand->setVisible( false );
     return true;
   }
-  else if ( ev->type() == QEvent::KeyPress )
+  else if ( obj == mTreeWidget && ev->type() == QEvent::MouseButtonPress )
+  {
+    mTreeWidget->close();
+    return true;
+  }
+  else if ( obj == mTreeWidget && ev->type() == QEvent::KeyPress )
   {
     int key = static_cast<QKeyEvent*>( ev )->key();
     if ( key == Qt::Key_Escape )
     {
-      mPopup->close();
+      mTreeWidget->close();
       return true;
     }
     else if ( key == Qt::Key_Enter || key == Qt::Key_Return )
@@ -194,43 +339,17 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
         startSearch();
         return true;
       }
-      else
-      {
-        return mTreeWidget->event( ev );
-      }
     }
-    if ( key != Qt::Key_Up && key != Qt::Key_Down &&
-         key != Qt::Key_PageUp && key != Qt::Key_PageDown )
-    {
-      return event( ev );
-    }
-    else
-    {
+    else if ( key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_PageUp || key == Qt::Key_PageDown )
       return mTreeWidget->event( ev );
-    }
+    else
+      return mSearchBox->event( ev );
+  }
+  else
+  {
+    return QWidget::eventFilter( obj, ev );
   }
   return false;
-}
-
-void QgsVBSSearchBox::resizeEvent( QResizeEvent * )
-{
-  int frameWidth = style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
-  QSize sz = mSearchButton->sizeHint();
-  mSearchButton->move(( rect().right() - frameWidth - sz.width() - 4 ),
-                      ( rect().bottom() + 1 - sz.height() ) / 2 );
-  sz = mClearButton->sizeHint();
-  mClearButton->move(( rect().right() - frameWidth - sz.width() - 4 ),
-                     ( rect().bottom() + 1 - sz.height() ) / 2 );
-}
-
-void QgsVBSSearchBox::focusInEvent( QFocusEvent * )
-{
-  mPopup->resize( width(), 200 );
-  mPopup->move( mapToGlobal( QPoint( 0, height() ) ) );
-  mPopup->show();
-  if ( !mClearButton->isVisible() )
-    resultSelected();
-  selectAll();
 }
 
 void QgsVBSSearchBox::textChanged()
@@ -249,34 +368,36 @@ void QgsVBSSearchBox::startSearch()
   mTreeWidget->clear();
   mTreeWidget->blockSignals( false );
 
-  QString searchtext = text();
+  QString searchtext = mSearchBox->text();
   if ( searchtext.size() < 3 )
-  {
     return;
-  }
 
   mNumRunningProviders = mSearchProviders.count();
 
   QgsVBSSearchProvider::SearchRegion searchRegion;
-  if ( mVisibleOnlyCheckBox->isChecked() )
+  if ( mFilterRubberBand )
   {
+    for ( int i = 0, n = mFilterRubberBand->partSize( 0 ); i < n; ++i )
+    {
+      searchRegion.polygon.append( *mFilterRubberBand->getPoint( 0, i ) );
+    }
+    searchRegion.polygon.append( *mFilterRubberBand->getPoint( 0, 0 ) );
     searchRegion.crs = mIface->mapCanvas()->mapSettings().destinationCrs();
-    searchRegion.rect = mIface->mapCanvas()->mapSettings().visibleExtent();
   }
 
   foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
-  {
     provider->startSearch( searchtext, searchRegion );
-  }
 }
 
 void QgsVBSSearchBox::clearSearch()
 {
-  clear();
+  mSearchBox->clear();
+  mSearchButton->setVisible( true );
+  mClearButton->setVisible( false );
   mIface->mapCanvas()->scene()->removeItem( mRubberBand );
   delete mRubberBand;
   mRubberBand = 0;
-  mPopup->close();
+  mTreeWidget->close();
   mTreeWidget->blockSignals( true );
   mTreeWidget->clear();
   mTreeWidget->blockSignals( false );
@@ -285,11 +406,6 @@ void QgsVBSSearchBox::clearSearch()
 void QgsVBSSearchBox::searchProviderFinished()
 {
   --mNumRunningProviders;
-//  if ( mNumRunningProviders == 0 )
-//  {
-//    mTreeWidget->setUpdatesEnabled( true );
-//    mTreeWidget->expandAll();
-//  }
 }
 
 void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult result )
@@ -300,9 +416,7 @@ void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult resu
   for ( int i = 0, n = root->childCount(); i < n; ++i )
   {
     if ( root->child( i )->data( 0, sCatNameRole ).toString() == result.category )
-    {
       categoryItem = root->child( i );
-    }
   }
 
   // If category does not exist, create it
@@ -348,19 +462,19 @@ void QgsVBSSearchBox::resultSelected()
   {
     QTreeWidgetItem* item = mTreeWidget->currentItem();
     if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
-    {
       return;
-    }
+
     QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
     if ( !mRubberBand )
       createRubberBand();
     QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
     mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
-    blockSignals( true );
-    setText( result.text );
-    blockSignals( false );
+    mSearchBox->blockSignals( true );
+    mSearchBox->setText( result.text );
+    mSearchBox->blockSignals( false );
     mSearchButton->setVisible( true );
     mClearButton->setVisible( false );
+    mIface->mapCanvas()->refresh();
   }
 }
 
@@ -370,9 +484,7 @@ void QgsVBSSearchBox::resultActivated()
   {
     QTreeWidgetItem* item = mTreeWidget->currentItem();
     if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
-    {
       return;
-    }
 
     QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
     QgsRectangle zoomExtent;
@@ -391,12 +503,12 @@ void QgsVBSSearchBox::resultActivated()
     }
     mIface->mapCanvas()->setExtent( zoomExtent );
     mIface->mapCanvas()->refresh();
-    blockSignals( true );
-    setText( result.text );
-    blockSignals( false );
+    mSearchBox->blockSignals( true );
+    mSearchBox->setText( result.text );
+    mSearchBox->blockSignals( false );
     mSearchButton->setVisible( false );
     mClearButton->setVisible( true );
-    mPopup->close();
+    mTreeWidget->close();
   }
 }
 
@@ -418,7 +530,52 @@ void QgsVBSSearchBox::cancelSearch()
   if ( mRubberBand && !mClearButton->isVisible() )
   {
     mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+    mIface->mapCanvas()->refresh();
     delete mRubberBand;
     mRubberBand = 0;
+  }
+}
+
+void QgsVBSSearchBox::clearFilter()
+{
+  if ( mFilterRubberBand != 0 )
+  {
+    delete mFilterRubberBand;
+    mFilterRubberBand = 0;
+    // Trigger a new search since the filter changed
+    startSearch();
+  }
+}
+
+void QgsVBSSearchBox::setFilterTool()
+{
+  QAction* action = qobject_cast<QAction*>( QObject::sender() );
+  FilterTool::Mode mode = static_cast<FilterTool::Mode>( action->data().toInt() );
+  delete mFilterRubberBand;
+  mFilterRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Polygon );
+  mFilterRubberBand->setFillColor( QColor( 254, 178, 76, 63 ) );
+  mFilterRubberBand->setBorderColor( QColor( 254, 58, 29, 100 ) );
+  FilterTool* tool = new FilterTool( mIface->mapCanvas(), mode, mFilterRubberBand );
+  mIface->mapCanvas()->setMapTool( tool );
+  action->setCheckable( true );
+  action->setChecked( true );
+  connect( tool, SIGNAL( deactivated() ), this, SLOT( filterToolFinished() ) );
+  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
+}
+
+void QgsVBSSearchBox::filterToolFinished()
+{
+  mFilterButton->defaultAction()->setChecked( false );
+  mFilterButton->defaultAction()->setCheckable( false );
+  if ( mFilterRubberBand && mFilterRubberBand->partSize( 0 ) > 0 )
+  {
+    mSearchBox->setFocus();
+    // Trigger a new search since the filter changed
+    startSearch();
+  }
+  else
+  {
+    mFilterButton->setDefaultAction( mFilterButton->menu()->actions().first() );
+    clearFilter();
   }
 }

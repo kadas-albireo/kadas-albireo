@@ -66,10 +66,23 @@ void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , co
   url.addQueryItem( "type", "featuresearch" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "features", remoteLayers.join( "," ) );
-  if ( !searchRegion.rect.isEmpty() )
+  if ( !searchRegion.polygon.isEmpty() )
   {
-    QgsRectangle bbox = QgsCoordinateTransform( searchRegion.crs, QgsCoordinateReferenceSystem( "EPSG:21781" ) ).transform( searchRegion.rect );
-    url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( bbox.xMinimum() ).arg( bbox.yMinimum() ).arg( bbox.xMaximum() ).arg( bbox.yMaximum() ) );
+    // TODO: FeatureSearch currently does not allow spatial filtering, below might need to be adapted
+    // if spatial filtering is not implmeneted there via geometry/geometryType...
+    QString geometryStr = "{\"rings\":[[";
+    QgsCoordinateTransform ct( searchRegion.crs, QgsCoordinateReferenceSystem( "EPSG:21781" ) );
+    for ( int i = 0, n = searchRegion.polygon.size(); i < n; ++i )
+    {
+      if ( i > 0 )
+        geometryStr += ", ";
+      QgsPoint p = ct.transform( searchRegion.polygon.at( i ) );
+      geometryStr += QString( "[%1, %2]" ).arg( p.x() ).arg( p.y() );
+    }
+    geometryStr += "]]}";
+    url.addQueryItem( "geometry", geometryStr );
+    url.addQueryItem( "geometryType", "esriGeometryPolygon" );
+
   }
 
   QNetworkRequest req( url );

@@ -19,7 +19,7 @@
 #define QGSVBSSEARCHPROVIDER_H
 
 #include <QObject>
-#include "qgspoint.h"
+#include "qgsgeometry.h"
 #include "qgsrectangle.h"
 #include "qgscoordinatereferencesystem.h"
 
@@ -40,7 +40,7 @@ class QgsVBSSearchProvider : public QObject
     };
     struct SearchRegion
     {
-      QgsRectangle rect;
+      QgsPolyline polygon;
       QgsCoordinateReferenceSystem crs;
     };
 
