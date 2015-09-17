@@ -128,6 +128,7 @@ void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& ne
   if ( !reprojLayers.isEmpty() )
   {
     mReprojMsgItem = mQGisIface->messageBar()->createMessage( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ) );
+    mReprojMsgItem->setDuration( 10 );
     mQGisIface->messageBar()->pushItem( mReprojMsgItem.data() );
   }
 }
