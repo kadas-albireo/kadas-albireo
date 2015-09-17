@@ -24,6 +24,7 @@
 #include "qgsmaptoolmovelabel.h"
 #include "qgsredliningrendererv2.h"
 #include "qgsrubberband.h"
+#include "qgssymbollayerv2utils.h"
 #include "nodetool/qgsselectedfeature.h"
 #include "qgsvectorlayer.h"
 #include "qgsvectordataprovider.h"
@@ -95,8 +96,9 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mApp->redliningToolBar()->addWidget( new QLabel( tr( "Outline:" ) ) );
 
   mBtnOutlineColor = new QgsColorButtonV2();
+  mBtnOutlineColor->setAllowAlpha( true );
   mBtnOutlineColor->setProperty( "settings_key", "outline_color" );
-  QColor initialOutlineColor = QColor( QSettings().value( "/Redlining/outline_color", QColor( Qt::black ).name() ).toString() );
+  QColor initialOutlineColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/outline_color", "0,0,0,255" ).toString() );
   mBtnOutlineColor->setColor( initialOutlineColor );
   connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
   mApp->redliningToolBar()->addWidget( mBtnOutlineColor );
@@ -104,8 +106,9 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mApp->redliningToolBar()->addWidget( new QLabel( tr( "Fill:" ) ) );
 
   mBtnFillColor = new QgsColorButtonV2();
+  mBtnFillColor->setAllowAlpha( true );
   mBtnFillColor->setProperty( "settings_key", "fill_color" );
-  QColor initialFillColor = QColor( QSettings().value( "/Redlining/fill_color", QColor( Qt::red ).name() ).toString() );
+  QColor initialFillColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/fill_color", "255,0,0,255" ).toString() );
   mBtnFillColor->setColor( initialFillColor );
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
   mApp->redliningToolBar()->addWidget( mBtnFillColor );
@@ -125,8 +128,8 @@ QgsRedlining::RedliningLayer* QgsRedlining::getOrCreateLayer()
   mLayer->setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   mLayer->dataProvider()->addAttributes( QList<QgsField>()
                                          << QgsField( "size", QVariant::Int, "integer", 2 )
-                                         << QgsField( "outline", QVariant::String, "string", 7 )
-                                         << QgsField( "fill", QVariant::String, "string", 7 )
+                                         << QgsField( "outline", QVariant::String, "string", 15 )
+                                         << QgsField( "fill", QVariant::String, "string", 15 )
                                          << QgsField( "text", QVariant::String, "string", 128 )
                                          << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
                                          << QgsField( "text_y", QVariant::Double, "double", 20, 15 ) );
@@ -252,8 +255,8 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   }
   const QgsFields& fields = mLayer->pendingFields();
   mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mSpinBorderSize->value() );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), mBtnOutlineColor->color().name() );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), mBtnFillColor->color().name() );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mBtnOutlineColor->color() ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
   mApp->mapCanvas()->refresh();
 }
 
@@ -261,7 +264,7 @@ void QgsRedlining::saveColor()
 {
   QgsColorButtonV2* btn = qobject_cast<QgsColorButtonV2*>( QObject::sender() );
   QString key = QString( "/Redlining/" ) + btn->property( "settings_key" ).toString();
-  QSettings().setValue( key, btn->color().name() );
+  QSettings().setValue( key, QgsSymbolLayerV2Utils::encodeColor( btn->color() ) );
   emit styleChanged();
 }
 
@@ -293,8 +296,8 @@ void QgsRedlining::readProject( const QDomDocument& doc )
     {
       QgsFeature feature( mLayer->dataProvider()->fields() );
       feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
-      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "#FF0000" ) );
-      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "#0000FF" ) );
+      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "255,0,0,255" ) );
+      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "0,0,255,255" ) );
       feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
       feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
       feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
