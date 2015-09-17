@@ -184,7 +184,9 @@ class QgsComposerMapGrid : QgsComposerMapItem
       DegreeMinuteNoSuffix, /*< degree/minutes, use - for S/W coordinates */
       DegreeMinutePadded, /*< degree/minutes, with minutes using leading zeros were required */
       DegreeMinuteSecondNoSuffix, /*< degree/minutes/seconds, use - for S/W coordinates */
-      DegreeMinuteSecondPadded /*< degree/minutes/seconds, with minutes using leading zeros were required */
+      DegreeMinuteSecondPadded, /*< degree/minutes/seconds, with minutes using leading zeros were required */
+      UTM, /*< Universal Transverse Mercator format */
+      MGRS /*< Military Grid Reference System */
     };
 
     /** Border sides for annotations
