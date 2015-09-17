@@ -21,6 +21,9 @@
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaptoolpan.h"
+#include "qgsproject.h"
+#include "layertree/qgslayertreegroup.h"
+#include "layertree/qgslayertreelayer.h"
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMenu>
@@ -37,11 +40,12 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   mLayerSelectionMenu = new QMenu( mLayerSelectionButton );
   mLayerSelectionButton->setMenu( mLayerSelectionMenu );
 
-  mSyncViewButton = new QToolButton( this );
-  mSyncViewButton->setToolTip( tr( "Syncronize with main view" ) );
-  mSyncViewButton->setCheckable( true );
-  mSyncViewButton->setIcon( QIcon( ":/vbsfunctionality/icons/sync_views.svg" ) );
-  connect( mSyncViewButton, SIGNAL( toggled( bool ) ), this, SLOT( syncCanvasExtents() ) );
+  mLockViewButton = new QToolButton( this );
+  mLockViewButton->setToolTip( tr( "Lock with main view" ) );
+  mLockViewButton->setCheckable( true );
+  mLockViewButton->setIcon( QIcon( ":/images/themes/default/locked.svg" ) );
+  mLockViewButton->setIconSize( QSize( 16, 16 ) );
+  connect( mLockViewButton, SIGNAL( toggled( bool ) ), this, SLOT( setCanvasLocked( bool ) ) );
 
   mTitleLineEdit = new QLineEdit( title, this );
   connect( mTitleLineEdit, SIGNAL( textChanged( QString ) ), this, SLOT( setWindowTitle( QString ) ) );
@@ -55,7 +59,7 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   QWidget* titleWidget = new QWidget( this );
   titleWidget->setLayout( new QHBoxLayout() );
   titleWidget->layout()->addWidget( mLayerSelectionButton );
-  titleWidget->layout()->addWidget( mSyncViewButton );
+  titleWidget->layout()->addWidget( mLockViewButton );
   static_cast<QHBoxLayout*>( titleWidget->layout() )->addWidget( new QWidget( this ), 1 ); // spacer
   titleWidget->layout()->addWidget( mTitleLineEdit );
   static_cast<QHBoxLayout*>( titleWidget->layout() )->addWidget( new QWidget( this ), 1 ); // spacer
@@ -82,14 +86,13 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   connect( mIface->mapCanvas(), SIGNAL( mapUnitsChanged() ), this, SLOT( updateMapProjection() ) );
   connect( mIface->mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( updateMapProjection() ) );
   connect( mIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
-  connect( mMapCanvas, SIGNAL( extentsChanged() ), this, SLOT( syncMainCanvasExtents() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
 
   updateLayerSelectionMenu();
   mMapCanvas->setRenderFlag( false );
   updateMapProjection();
-  syncCanvasExtents();
+  mMapCanvas->setExtent( mIface->mapCanvas()->extent() );
   mMapCanvas->setRenderFlag( true );
 }
 
@@ -106,25 +109,48 @@ QStringList QgsVBSMapWidget::getLayers() const
   return layers;
 }
 
-void QgsVBSMapWidget::syncCanvasExtents()
+QgsRectangle QgsVBSMapWidget::getMapExtent() const
 {
-  if ( mSyncViewButton->isChecked() )
+  return mMapCanvas->extent();
+}
+
+void QgsVBSMapWidget::setMapExtent( const QgsRectangle& extent )
+{
+  mMapCanvas->setExtent( extent );
+  mMapCanvas->refresh();
+}
+
+bool QgsVBSMapWidget::getLocked() const
+{
+  return mLockViewButton->isChecked();
+}
+
+void QgsVBSMapWidget::setLocked( bool locked )
+{
+  mLockViewButton->setChecked( locked );
+}
+
+void QgsVBSMapWidget::setCanvasLocked( bool locked )
+{
+  if ( locked )
   {
-    blockSignals( true );
-    mMapCanvas->setExtent( mIface->mapCanvas()->extent() );
-    blockSignals( false );
-    mMapCanvas->refresh();
+    mMapCanvas->setEnabled( false );
+    syncCanvasExtents();
+  }
+  else
+  {
+    mMapCanvas->setEnabled( true );
   }
 }
 
-void QgsVBSMapWidget::syncMainCanvasExtents()
+void QgsVBSMapWidget::syncCanvasExtents()
 {
-  if ( mSyncViewButton->isChecked() )
+  if ( mLockViewButton->isChecked() )
   {
-    mIface->mapCanvas()->blockSignals( true );
-    mIface->mapCanvas()->setExtent( mMapCanvas->extent() );
-    mIface->mapCanvas()->blockSignals( false );
-    mIface->mapCanvas()->refresh();
+    QgsPoint center = mIface->mapCanvas()->extent().center();
+    double w = width() * mIface->mapCanvas()->mapUnitsPerPixel();
+    double h = height() * mIface->mapCanvas()->mapUnitsPerPixel();
+    setMapExtent( QgsRectangle( center.x() - .5 * w, center.y() - .5 * h, center.x() + .5 * w, center.y() + .5 * h ) );
   }
 }
 
@@ -132,8 +158,12 @@ void QgsVBSMapWidget::updateLayerSelectionMenu()
 {
   QList<QgsMapLayer*> currentLayers = mMapCanvas->layers();
   mLayerSelectionMenu->clear();
-  foreach ( QgsMapLayer* layer, mIface->mapCanvas()->layers()/*QgsMapLayerRegistry::instance()->mapLayers()*/ )
+  // Use layerTreeRoot to get layers ordered as in the layer tree
+  foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
   {
+    QgsMapLayer* layer = layerTreeLayer->layer();
+    if ( !layer )
+      continue;
     QAction* layerAction = new QAction( layer->name(), mLayerSelectionMenu );
     layerAction->setData( layer->id() );
     layerAction->setCheckable( true );
@@ -141,13 +171,12 @@ void QgsVBSMapWidget::updateLayerSelectionMenu()
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SLOT( updateLayerSet() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
-  mInitialLayers.clear();
   updateLayerSet();
+  mInitialLayers.clear();
 }
 
 void QgsVBSMapWidget::updateLayerSet()
 {
-  bool wasEmpty = mMapCanvas->layers().isEmpty();
   QList<QgsMapCanvasLayer> layerSet;
   foreach ( QAction* layerAction, mLayerSelectionMenu->actions() )
   {
@@ -157,11 +186,6 @@ void QgsVBSMapWidget::updateLayerSet()
     }
   }
   mMapCanvas->setLayerSet( layerSet );
-  if ( wasEmpty )
-  {
-    mMapCanvas->setExtent( mIface->mapCanvas()->extent() );
-    mMapCanvas->refresh();
-  }
 }
 
 void QgsVBSMapWidget::updateMapProjection()

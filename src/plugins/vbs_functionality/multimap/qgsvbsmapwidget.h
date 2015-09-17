@@ -22,6 +22,7 @@
 
 class QgisInterface;
 class QgsMapCanvas;
+class QgsRectangle;
 class QToolButton;
 class QMenu;
 class QLineEdit;
@@ -36,12 +37,18 @@ class QgsVBSMapWidget : public QDockWidget
     int getNumber() const { return mNumber; }
     QStringList getLayers() const;
 
+    QgsRectangle getMapExtent() const;
+    void setMapExtent( const QgsRectangle& extent );
+
+    bool getLocked() const;
+    void setLocked( bool locked );
+
   private:
     QgisInterface* mIface;
     int mNumber;
     QToolButton* mLayerSelectionButton;
     QMenu* mLayerSelectionMenu;
-    QToolButton* mSyncViewButton;
+    QToolButton* mLockViewButton;
     QToolButton* mCloseButton;
     QLineEdit* mTitleLineEdit;
     QgsMapCanvas* mMapCanvas;
@@ -50,8 +57,8 @@ class QgsVBSMapWidget : public QDockWidget
     void showEvent( QShowEvent * ) override;
 
   private slots:
+    void setCanvasLocked( bool locked );
     void syncCanvasExtents();
-    void syncMainCanvasExtents();
     void updateLayerSelectionMenu();
     void updateLayerSet();
     void updateMapProjection();

@@ -124,16 +124,22 @@ void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
   QDomElement mapViewsElem = doc.createElement( "MapViews" );
   foreach ( QgsVBSMapWidget* mapWidget, mMapWidgets )
   {
+    QByteArray ba;
+    QDataStream ds( &ba, QIODevice::WriteOnly );
+
     QDomElement mapWidgetItemElem = doc.createElement( "MapView" );
-    mapWidgetItemElem.setAttribute( "geometry", QString( mapWidget->saveGeometry().toBase64() ) );
+    mapWidgetItemElem.setAttribute( "width", mapWidget->width() );
+    mapWidgetItemElem.setAttribute( "height", mapWidget->height() );
     mapWidgetItemElem.setAttribute( "floating", mapWidget->isFloating() );
+    mapWidgetItemElem.setAttribute( "islocked", mapWidget->getLocked() );
     mapWidgetItemElem.setAttribute( "area", mainWindow->dockWidgetArea( mapWidget ) );
     mapWidgetItemElem.setAttribute( "title", mapWidget->windowTitle() );
     mapWidgetItemElem.setAttribute( "number", mapWidget->getNumber() );
-    QByteArray layers;
-    QDataStream ds( &layers, QIODevice::WriteOnly );
     ds << mapWidget->getLayers();
-    mapWidgetItemElem.setAttribute( "layers", QString( layers.toBase64() ) );
+    mapWidgetItemElem.setAttribute( "layers", QString( ba.toBase64() ) );
+    ba.clear();
+    ds << mapWidget->getMapExtent().toRectF();
+    mapWidgetItemElem.setAttribute( "extent", QString( ba.toBase64() ) );
     mapViewsElem.appendChild( mapWidgetItemElem );
   }
   qgisElem.appendChild( mapViewsElem );
@@ -156,19 +162,30 @@ void QgsVBSMultiMapManager::readProjectSettings( const QDomDocument& doc )
     QDomElement mapWidgetItemElem = nodes.at( iNode ).toElement();
     if ( mapWidgetItemElem.nodeName() == "MapView" )
     {
-      QByteArray layers( QByteArray::fromBase64( mapWidgetItemElem.attribute( "layers" ).toAscii() ) );
-      QStringList layersList;
-      QDataStream ds( &layers, QIODevice::ReadOnly ); ds >> layersList;
+      QDomNamedNodeMap attributes = mapWidgetItemElem.attributes();
+      QByteArray ba;
+      QDataStream ds( &ba, QIODevice::ReadOnly );
       QgsVBSMapWidget* mapWidget = new QgsVBSMapWidget(
-        mapWidgetItemElem.attribute( "number" ).toInt(),
-        mapWidgetItemElem.attribute( "title" ),
+        attributes.namedItem( "number" ).nodeValue().toInt(),
+        attributes.namedItem( "title" ).nodeValue(),
         mIface );
       mapWidget->setAttribute( Qt::WA_DeleteOnClose );
+      ba = QByteArray::fromBase64( attributes.namedItem( "layers" ).nodeValue().toAscii() );
+      QStringList layersList;
+      ds >> layersList;
       mapWidget->setInitialLayers( layersList );
-      connect( mapWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( mapWidgetDestroyed() ) );
-      mIface->addDockWidget( static_cast<Qt::DockWidgetArea>( mapWidgetItemElem.attribute( "area" ).toInt() ), mapWidget );
-      mapWidget->setFloating( mapWidgetItemElem.attribute( "floating" ).toInt() );
-      mapWidget->restoreGeometry( QByteArray::fromBase64( mapWidgetItemElem.attribute( "geometry" ).toAscii() ) );
+      connect( mapWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( mapWidgetDestroyed( QObject* ) ) );
+      // Compiler bug?! If I pass it directly, value is always false
+      bool islocked = attributes.namedItem( "islocked" ).nodeValue().toInt();
+      mapWidget->setLocked( islocked );
+      mapWidget->setFloating( attributes.namedItem( "floating" ).nodeValue().toInt() );
+      mapWidget->setFixedWidth( attributes.namedItem( "width" ).nodeValue().toInt() );
+      mapWidget->setFixedHeight( attributes.namedItem( "height" ).nodeValue().toInt() );
+      ba = QByteArray::fromBase64( attributes.namedItem( "extent" ).nodeValue().toAscii() );
+      QRectF extent;
+      ds >> extent;
+      mapWidget->setMapExtent( QgsRectangle( extent ) );
+      mIface->addDockWidget( static_cast<Qt::DockWidgetArea>( attributes.namedItem( "area" ).nodeValue().toInt() ), mapWidget );
       mMapWidgets.append( mapWidget );
     }
   }
