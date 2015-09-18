@@ -6,7 +6,7 @@
 
 class QTextStream;
 
-class QgsKMLPalLabeling: public QgsPalLabeling
+class CORE_EXPORT QgsKMLPalLabeling: public QgsPalLabeling
 {
   public:
     QgsKMLPalLabeling( QTextStream* outStream, const QgsRectangle& bbox, double scale, QGis::UnitType mapUnits );

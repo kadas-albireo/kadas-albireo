@@ -4252,7 +4252,7 @@ void QgisApp::kmlExport()
     QFile kmlFile( fileName );
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( &kmlFile, mMapCanvas->extent(), mMapCanvas->scale(), mMapCanvas->mapUnits() ) == 0 )
+    if ( kmlExport.writeToDevice( &kmlFile, mMapCanvas->mapSettings() ) == 0 )
     {
       messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
     }
