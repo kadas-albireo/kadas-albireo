@@ -58,6 +58,7 @@ QgsColorButtonV2::QgsColorButtonV2( QWidget *parent, QString cdt, QgsColorScheme
 
   setAcceptDrops( true );
   setMinimumSize( QSize( 24, 16 ) );
+  setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
   connect( this, SIGNAL( clicked() ), this, SLOT( buttonClicked() ) );
 
   //setup dropdown menu
@@ -69,16 +70,6 @@ QgsColorButtonV2::QgsColorButtonV2( QWidget *parent, QString cdt, QgsColorScheme
 
 QgsColorButtonV2::~QgsColorButtonV2()
 {
-}
-
-QSize QgsColorButtonV2::sizeHint() const
-{
-  //make sure height of button looks good under different platforms
-#ifdef Q_OS_WIN
-  return QSize( 120, 22 );
-#else
-  return QSize( 120, 28 );
-#endif
 }
 
 const QPixmap& QgsColorButtonV2::transparentBackground()
