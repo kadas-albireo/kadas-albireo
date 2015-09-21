@@ -130,6 +130,15 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
     outStream << "<Placemark>" << "\n";
     if ( f.geometry() )
     {
+      // name (from labeling expression)
+      if ( vl->customProperty( "labeling/enabled", false ).toBool() == true &&
+           !vl->customProperty( "labeling/fieldName" ).isNull() )
+      {
+        QString expr = QString( "\"%1\"" ).arg( vl->customProperty( "labeling/fieldName" ).toString() );
+        outStream << QString( "<name>%1</name>" )
+        .arg( QgsExpression( expr ).evaluate( f ).toString() );
+      }
+
       //style
       addStyle( outStream, f, *renderer, rc );
 
