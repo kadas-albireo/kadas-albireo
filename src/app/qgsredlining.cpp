@@ -490,6 +490,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
 {
   clearCurrent( true );
   mPrevPos = mPressPos = toMapCoordinates( e->pos() );
+  QgsPoint pressLayerPot = toLayerCoordinates( mLayer, mPressPos );
 
   // First, look for a label below the cursor
   const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
@@ -519,7 +520,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
 
   // Then, look for a feature below the cursor
   double r = QgsTolerance::vertexSearchRadius( mCanvas->currentLayer(), mCanvas->mapSettings() );
-  QgsRectangle selectRect( mPressPos.x() - r, mPressPos.y() - r, mPressPos.x() + r, mPressPos.y() + r );
+  QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
   QgsFeature feature;
   QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest().setFilterRect( selectRect ) );
   if ( fit.nextFeature( feature ) )
