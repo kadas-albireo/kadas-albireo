@@ -163,7 +163,7 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
       if ( geom )
       {
         geom->transform( ct ); //KML must be WGS84
-        outStream << geom->asKML( 3 );
+        outStream << geom->asKML( 6 );
       }
       delete geom;
     }
