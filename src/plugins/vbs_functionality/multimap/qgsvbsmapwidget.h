@@ -26,6 +26,8 @@ class QgsRectangle;
 class QToolButton;
 class QMenu;
 class QLineEdit;
+class QLabel;
+class QStackedWidget;
 
 
 class QgsVBSMapWidget : public QDockWidget
@@ -51,12 +53,15 @@ class QgsVBSMapWidget : public QDockWidget
     QMenu* mLayerSelectionMenu;
     QToolButton* mLockViewButton;
     QToolButton* mCloseButton;
+    QStackedWidget* mTitleStackedWidget;
+    QLabel* mTitleLabel;
     QLineEdit* mTitleLineEdit;
     QgsMapCanvas* mMapCanvas;
     QStringList mInitialLayers;
     bool mUnsetFixedSize;
 
     void showEvent( QShowEvent * ) override;
+    bool eventFilter( QObject *obj, QEvent *ev ) override;
 
   private slots:
     void setCanvasLocked( bool locked );

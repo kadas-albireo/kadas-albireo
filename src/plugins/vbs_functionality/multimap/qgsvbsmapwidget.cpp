@@ -25,8 +25,10 @@
 #include "layertree/qgslayertreegroup.h"
 #include "layertree/qgslayertreelayer.h"
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
+#include <QStackedWidget>
 #include <QToolButton>
 
 QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterface* iface, QWidget *parent )
@@ -35,24 +37,36 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   QSettings settings;
 
   mLayerSelectionButton = new QToolButton( this );
+  mLayerSelectionButton->setAutoRaise( true );
   mLayerSelectionButton->setText( tr( "Layers" ) );
   mLayerSelectionButton->setPopupMode( QToolButton::InstantPopup );
   mLayerSelectionMenu = new QMenu( mLayerSelectionButton );
   mLayerSelectionButton->setMenu( mLayerSelectionMenu );
 
   mLockViewButton = new QToolButton( this );
+  mLockViewButton->setAutoRaise( true );
   mLockViewButton->setToolTip( tr( "Lock with main view" ) );
   mLockViewButton->setCheckable( true );
   mLockViewButton->setIcon( QIcon( ":/images/themes/default/locked.svg" ) );
-  mLockViewButton->setIconSize( QSize( 16, 16 ) );
+  mLockViewButton->setIconSize( QSize( 12, 12 ) );
   connect( mLockViewButton, SIGNAL( toggled( bool ) ), this, SLOT( setCanvasLocked( bool ) ) );
+
+  mTitleStackedWidget = new QStackedWidget( this );
+  mTitleLabel = new QLabel( title );
+  mTitleLabel->setCursor( Qt::IBeamCursor );
+  mTitleStackedWidget->addWidget( mTitleLabel );
 
   mTitleLineEdit = new QLineEdit( title, this );
   connect( mTitleLineEdit, SIGNAL( textChanged( QString ) ), this, SLOT( setWindowTitle( QString ) ) );
+  mTitleStackedWidget->addWidget( mTitleLineEdit );
+
+  mTitleLabel->installEventFilter( this );
+  mTitleLineEdit->installEventFilter( this );
 
   mCloseButton = new QToolButton( this );
+  mCloseButton->setAutoRaise( true );
   mCloseButton->setIcon( QIcon( ":/images/themes/default/mActionRemove.svg" ) );
-  mCloseButton->setIconSize( QSize( 16, 16 ) );
+  mCloseButton->setIconSize( QSize( 12, 12 ) );
   mCloseButton->setToolTip( tr( "Close" ) );
   connect( mCloseButton, SIGNAL( clicked( bool ) ), this, SLOT( close() ) );
 
@@ -61,7 +75,7 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   titleWidget->layout()->addWidget( mLayerSelectionButton );
   titleWidget->layout()->addWidget( mLockViewButton );
   static_cast<QHBoxLayout*>( titleWidget->layout() )->addWidget( new QWidget( this ), 1 ); // spacer
-  titleWidget->layout()->addWidget( mTitleLineEdit );
+  titleWidget->layout()->addWidget( mTitleStackedWidget );
   static_cast<QHBoxLayout*>( titleWidget->layout() )->addWidget( new QWidget( this ), 1 ); // spacer
   titleWidget->layout()->addWidget( mCloseButton );
   titleWidget->layout()->setContentsMargins( 0, 0, 0, 0 );
@@ -211,5 +225,25 @@ void QgsVBSMapWidget::showEvent( QShowEvent * )
     setFixedSize( QSize() );
     setMinimumSize( 200, 200 );
     setMaximumSize( QWIDGETSIZE_MAX, QWIDGETSIZE_MAX );
+  }
+}
+
+bool QgsVBSMapWidget::eventFilter( QObject *obj, QEvent *ev )
+{
+  if ( obj == mTitleLabel && ev->type() == QEvent::MouseButtonPress )
+  {
+    mTitleStackedWidget->setCurrentWidget( mTitleLineEdit );
+    mTitleLineEdit->setFocus();
+    mTitleLineEdit->selectAll();
+    return true;
+  }
+  else if ( obj == mTitleLineEdit && ev->type() == QEvent::FocusOut )
+  {
+    mTitleStackedWidget->setCurrentWidget( mTitleLabel );
+    return true;
+  }
+  else
+  {
+    return QObject::eventFilter( obj, ev );
   }
 }
