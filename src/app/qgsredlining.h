@@ -129,6 +129,7 @@ class QgsRedliningEditTool : public QgsMapTool
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
     void keyPressEvent( QKeyEvent *e ) override;
     bool isEditTool() { return true; }
+    void deactivate() override;
 
   public slots:
     void onStyleChanged();
@@ -142,7 +143,7 @@ class QgsRedliningEditTool : public QgsMapTool
     enum Mode { NoSelection, TextSelected, FeatureSelected } mMode;
     QgsLabelPosition mCurrentLabel;
     QgsRubberBand* mRubberBand;
-    QgsSelectedFeature* mCurrentFeature;
+    QPointer<QgsSelectedFeature> mCurrentFeature;
     int mCurrentVertex;
     bool mIsRectangle;
     QgsPoint mPressPos;
