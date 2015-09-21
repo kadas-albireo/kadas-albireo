@@ -107,12 +107,26 @@ class CORE_EXPORT QgsLayerTreeGroup : public QgsLayerTreeNode
     void setWMSCheckable( bool enable ) { mWMSCheckable = enable; }
     bool wmsCheckable() const { return mWMSCheckable; }
 
+    //! Return whether the group is mutually exclusive (only one child can be checked at a time)
+    //! @note added in 2.12
+    bool isMutuallyExclusive() const;
+    //! Set whether the group is mutually exclusive (only one child can be checked at a time).
+    //! The initial child index determines which child should be initially checked. The default value
+    //! of -1 will determine automatically (either first one currently checked or none)
+    //! @note added in 2.12
+    void setIsMutuallyExclusive( bool enabled, int initialChildIndex = -1 );
+
   protected slots:
     void layerDestroyed();
     void nodeVisibilityChanged( QgsLayerTreeNode* node );
 
   protected:
+    //! Set check state of this group from its children
     void updateVisibilityFromChildren();
+    //! Set check state of children (when this group's check state changes) - if not mutually exclusive
+    void updateChildVisibility();
+    //! Set check state of children - if mutually exclusive
+    void updateChildVisibilityMutuallyExclusive();
 
   protected:
     QString mName;
@@ -127,6 +141,12 @@ class CORE_EXPORT QgsLayerTreeGroup : public QgsLayerTreeNode
     bool mWMSPublishLegend;
     bool mWMSPublishMetadata;
     bool mWMSCheckable;
+
+    //! Whether the group is mutually exclusive (i.e. only one child can be checked at a time)
+    bool mMutuallyExclusive;
+    //! Keeps track which child has been most recently selected
+    //! (so if the whole group is unchecked and checked again, we know which child to check)
+    int mMutuallyExclusiveChildIndex;
 };
 
 
