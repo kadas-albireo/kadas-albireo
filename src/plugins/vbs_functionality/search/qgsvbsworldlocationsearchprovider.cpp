@@ -27,7 +27,7 @@
 
 const int QgsVBSWorldLocationSearchProvider::sSearchTimeout = 2000;
 const int QgsVBSWorldLocationSearchProvider::sResultCountLimit = 50;
-const QByteArray QgsVBSWorldLocationSearchProvider::sGeoAdminUrl = "http://cm004695.lt.admin.ch/MGDIServices/Service/SearchServer.svc/Search?searchtext=frib&type=locations";
+const QByteArray QgsVBSWorldLocationSearchProvider::sGeoAdminUrl = "http://cm004695.lt.admin.ch/MGDIServices/Service/SearchServer.svc/Search";
 
 
 QgsVBSWorldLocationSearchProvider::QgsVBSWorldLocationSearchProvider( QgisInterface *iface )
