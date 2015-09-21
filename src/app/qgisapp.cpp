@@ -140,6 +140,8 @@
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
 #include "qgsguivectorlayertools.h"
+#include "qgskmlexport.h"
+#include "qgskmlexportdialog.h"
 #include "qgslabelinggui.h"
 #include "qgslayerdefinition.h"
 #include "qgslayertree.h"
@@ -1109,6 +1111,7 @@ void QgisApp::createActions()
   connect( mActionShowComposerManager, SIGNAL( triggered() ), this, SLOT( showComposerManager() ) );
   connect( mActionExit, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
   connect( mActionDxfExport, SIGNAL( triggered() ), this, SLOT( dxfExport() ) );
+  connect( mActionKMLExport, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
 
   // Edit Menu Items
 
@@ -4243,6 +4246,30 @@ void QgisApp::dxfExport()
     else
     {
       messageBar()->pushMessage( tr( "DXF export failed" ), QgsMessageBar::CRITICAL, 4 );
+    }
+    QApplication::restoreOverrideCursor();
+  }
+}
+
+void QgisApp::kmlExport()
+{
+  QgsKMLExportDialog d( mMapCanvas->mapSettings().layers() );
+  if ( d.exec() == QDialog::Accepted )
+  {
+    QgsKMLExport kmlExport;
+    kmlExport.setLayers( d.selectedLayers() );
+
+    QString fileName = d.saveFile();
+    QFile kmlFile( fileName );
+
+    QApplication::setOverrideCursor( Qt::BusyCursor );
+    if ( kmlExport.writeToDevice( &kmlFile, mMapCanvas->mapSettings() ) == 0 )
+    {
+      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
+    }
+    else
+    {
+      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
     }
     QApplication::restoreOverrideCursor();
   }

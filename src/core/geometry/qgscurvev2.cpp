@@ -93,3 +93,15 @@ QgsPointV2 QgsCurveV2::vertexAt( const QgsVertexId& id ) const
   pointAt( id.vertex, v, type );
   return v;
 }
+
+QString QgsCurveV2::asKML( int precision ) const
+{
+  QgsLineStringV2* lineString = curveToLine();
+  if ( !lineString )
+  {
+    return QString();
+  }
+  QString kml = lineString->asKML( precision );
+  delete lineString;
+  return kml;
+}

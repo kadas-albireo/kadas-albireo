@@ -176,6 +176,9 @@ class CORE_EXPORT QgsAbstractGeometryV2
      */
     virtual QString asJSON( int precision = 17 ) const = 0;
 
+    /**Exports geometry as a KML fragment*/
+    virtual QString asKML( int precision = 17 ) const { Q_UNUSED( precision ); return QString(); }// = 0;
+
     //render pipeline
 
     /** Transforms the geometry using a coordinate transform

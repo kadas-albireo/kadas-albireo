@@ -51,6 +51,7 @@ class CORE_EXPORT QgsCurvePolygonV2: public QgsSurfaceV2
     QDomElement asGML2( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QDomElement asGML3( QDomDocument& doc, int precision = 17, const QString& ns = "gml" ) const override;
     QString asJSON( int precision = 17 ) const override;
+    QString asKML( int precision = 17 ) const override;
 
     //surface interface
     virtual double area() const override;
