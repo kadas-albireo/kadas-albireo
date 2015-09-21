@@ -42,7 +42,16 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
 bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &wgs84Pos )
 {
   // Read EXIF position
-  Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open( filePath.toLocal8Bit().data() );
+  Exiv2::Image::AutoPtr image;
+  try
+  {
+    image = Exiv2::ImageFactory::open( filePath.toLocal8Bit().data() );
+  }
+  catch ( const Exiv2::Error& )
+  {
+    return false;
+  }
+
   if ( image.get() == 0 )
   {
     return false;
