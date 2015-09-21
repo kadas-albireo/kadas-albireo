@@ -313,6 +313,7 @@ QString QgsGeometryCollectionV2::asKML( int precision ) const
     kml.append( mGeometries.at( i )->asKML( precision ) );
   }
   kml.append( "/<MultiGeometry>" );
+  return kml;
 }
 
 QgsRectangle QgsGeometryCollectionV2::calculateBoundingBox() const
