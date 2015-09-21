@@ -33,7 +33,7 @@ class QgsVBSMapWidget : public QDockWidget
     Q_OBJECT
   public:
     QgsVBSMapWidget( int number, const QString& title, QgisInterface* iface, QWidget* parent = 0 );
-    void setInitialLayers( const QStringList& initialLayers ) { mInitialLayers = initialLayers; }
+    void setInitialLayers( const QStringList& initialLayers, bool updateMenu = false );
     int getNumber() const { return mNumber; }
     QStringList getLayers() const;
 

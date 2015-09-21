@@ -96,6 +96,13 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   mMapCanvas->setRenderFlag( true );
 }
 
+void QgsVBSMapWidget::setInitialLayers( const QStringList &initialLayers, bool updateMenu )
+{
+  mInitialLayers = initialLayers;
+  if ( updateMenu )
+    updateLayerSelectionMenu();
+}
+
 QStringList QgsVBSMapWidget::getLayers() const
 {
   QStringList layers;

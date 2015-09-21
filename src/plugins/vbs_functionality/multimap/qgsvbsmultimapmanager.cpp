@@ -20,6 +20,8 @@
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsproject.h"
+#include "layertree/qgslayertreegroup.h"
+#include "layertree/qgslayertreelayer.h"
 #include <QAction>
 #include <QMainWindow>
 #include <QToolBar>
@@ -93,6 +95,14 @@ void QgsVBSMultiMapManager::addMapWidget()
     initialSize.setHeight( nBottom > 0 ? bottomAreaHeight : mIface->mapCanvas()->height() / 2 );
     initialSize.setWidth( mIface->mapCanvas()->width() / ( nBottom + 1 ) );
   }
+
+  // Set initial layers
+  QStringList initialLayers;
+  foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
+  {
+    initialLayers.append( layerTreeLayer->layer()->id() );
+  }
+  mapWidget->setInitialLayers( initialLayers, true );
 
   mapWidget->setFixedSize( initialSize );
   mIface->addDockWidget( addArea, mapWidget );
