@@ -21,9 +21,15 @@
 #include "qgslayertreeview.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
+#include "qgsproject.h"
+#include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
 
 #include <QAction>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QSlider>
+#include <QWidgetAction>
 
 QgsLayerTreeViewDefaultActions::QgsLayerTreeViewDefaultActions( QgsLayerTreeView* view )
     : QObject( view )
@@ -94,6 +100,56 @@ QAction* QgsLayerTreeViewDefaultActions::actionZoomToGroup( QgsMapCanvas* canvas
   a->setData( QVariant::fromValue( reinterpret_cast<void*>( canvas ) ) );
   connect( a, SIGNAL( triggered() ), this, SLOT( zoomToGroup() ) );
   return a;
+}
+
+QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canvas, QObject* parent )
+{
+  QgsMapLayer* layer = mView->currentLayer();
+  if ( !layer )
+    return 0;
+
+  int curValue = 0;
+  if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
+  {
+    curValue = static_cast<QgsVectorLayer*>( layer )->layerTransparency();
+  }
+  else if ( layer->type() == QgsMapLayer::RasterLayer )
+  {
+    curValue = 100 - static_cast<QgsRasterLayer*>( layer )->renderer()->opacity() * 100;
+  }
+
+  QWidget* transpWidget = new QWidget();
+  QHBoxLayout* transpLayout = new QHBoxLayout( transpWidget );
+
+  QLabel* transpLabel = new QLabel( tr( "Transparency:" ) );
+  transpLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+  transpLayout->addWidget( transpLabel );
+
+  QSlider* transpSlider = new QSlider( Qt::Horizontal );
+  transpSlider->setRange( 0, 100 );
+  transpSlider->setValue( curValue );
+  transpSlider->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  transpSlider->setProperty( "mapcanvas", QVariant::fromValue( reinterpret_cast<void*>( canvas ) ) );
+  connect( transpSlider, SIGNAL( sliderReleased() ), this, SLOT( setLayerTransparency() ) );
+  transpLayout->addWidget( transpSlider );
+
+  QWidgetAction* transpAction = new QWidgetAction( parent );
+  transpAction->setDefaultWidget( transpWidget );
+  return transpAction;
+}
+
+QAction* QgsLayerTreeViewDefaultActions::actionUseAsHightMap( QObject *parent )
+{
+  QgsMapLayer* layer = mView->currentLayer();
+  if ( !layer )
+    return 0;
+  QAction* heightmapAction = new QAction( tr( "Use as heightmap" ), parent );
+  heightmapAction->setCheckable( true );
+  QString currentHeightmap = QgsProject::instance()->readEntry( "Heightmap", "layer" );
+  heightmapAction->setChecked( currentHeightmap == layer->id() );
+  heightmapAction->setProperty( "layerid", layer->id() );
+  connect( heightmapAction, SIGNAL( toggled( bool ) ), this, SLOT( setHeightMapLayer( bool ) ) );
+  return heightmapAction;
 }
 
 QAction* QgsLayerTreeViewDefaultActions::actionMakeTopLevel( QObject* parent )
@@ -205,6 +261,35 @@ void QgsLayerTreeViewDefaultActions::zoomToGroup()
   zoomToGroup( canvas );
 }
 
+void QgsLayerTreeViewDefaultActions::setLayerTransparency()
+{
+  QSlider* slider = qobject_cast<QSlider*>( QObject::sender() );
+  int value = slider->value();
+  QgsMapCanvas* canvas = reinterpret_cast<QgsMapCanvas*>( slider->property( "mapcanvas" ).value<void*>() );
+  QgsMapLayer* layer = mView->currentLayer();
+  if ( !layer )
+    return;
+
+  if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
+  {
+    static_cast<QgsVectorLayer*>( layer )->setLayerTransparency( value );
+    mView->refreshLayerSymbology( layer->id() );
+    canvas->clearCache( layer->id() );
+    canvas->refresh();
+  }
+  else if ( layer->type() == QgsMapLayer::RasterLayer )
+  {
+    static_cast<QgsRasterLayer*>( layer )->renderer()->setOpacity( 1. - value / 100. );
+    mView->refreshLayerSymbology( layer->id() );
+    canvas->clearCache( layer->id() );
+    canvas->refresh();
+  }
+}
+
+void QgsLayerTreeViewDefaultActions::setHeightMapLayer( bool active )
+{
+  QgsProject::instance()->writeEntry( "Heightmap", "layer", active ? QObject::sender()->property( "layerid" ).toString() : "" );
+}
 
 void QgsLayerTreeViewDefaultActions::zoomToLayers( QgsMapCanvas* canvas, const QList<QgsMapLayer*>& layers )
 {
