@@ -193,26 +193,57 @@ void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRe
   {
     return;
   }
+  QgsExpression* expr;
 
   outStream << "<Style>";
   if ( s->type() == QgsSymbolV2::Line )
   {
     double width = 1;
-    QgsLineSymbolLayerV2* lineSymbolLayer = dynamic_cast<QgsLineSymbolLayerV2*>( s->symbolLayer( 0 ) );
-    if ( lineSymbolLayer )
+    expr = s->symbolLayer( 0 )->expression( "width" );
+    if ( expr )
     {
+      width = expr->evaluate( f ).toDouble( ) * QgsSymbolLayerV2Utils::lineWidthScaleFactor( rc, QgsSymbolV2::MM );
+    }
+    else if ( dynamic_cast<QgsLineSymbolLayerV2*>( s->symbolLayer( 0 ) ) )
+    {
+      QgsLineSymbolLayerV2* lineSymbolLayer = static_cast<QgsLineSymbolLayerV2*>( s->symbolLayer( 0 ) );
       width = lineSymbolLayer->width() * QgsSymbolLayerV2Utils::lineWidthScaleFactor( rc, lineSymbolLayer->widthUnit() );
     }
 
     QColor c = s->symbolLayer( 0 )->color();
+    expr = s->symbolLayer( 0 )->expression( "color" );
+    if ( expr )
+    {
+      c = QgsSymbolLayerV2Utils::decodeColor( expr->evaluate( f ).toString() );
+    }
+
     outStream << QString( "<LineStyle><color>%1</color><width>%2</width></LineStyle>" ).arg( convertColor( c ) ).arg( QString::number( width ) );
   }
   else if ( s->type() == QgsSymbolV2::Fill )
   {
-    QColor outlineColor = s->symbolLayer( 0 )->outlineColor();
+    double width = 1;
+    expr = s->symbolLayer( 0 )->expression( "width_border" );
+    if ( expr )
+    {
+      width = expr->evaluate( f ).toDouble( ) * QgsSymbolLayerV2Utils::lineWidthScaleFactor( rc, QgsSymbolV2::MM );
+    }
+
+    QColor outlineColor = outlineColor = s->symbolLayer( 0 )->outlineColor();
+    expr = s->symbolLayer( 0 )->expression( "color_border" );
+    if ( expr )
+    {
+      outlineColor = QgsSymbolLayerV2Utils::decodeColor( expr->evaluate( f ).toString() );
+    }
+
     QColor fillColor = s->symbolLayer( 0 )->fillColor();
-    outStream << QString( "<LineStyle><color>%1</color></LineStyle><PolyStyle><fill>1</fill><color>%2</color></PolyStyle>" )
-    .arg( convertColor( outlineColor ) ).arg( convertColor( fillColor ) );
+    expr = s->symbolLayer( 0 )->expression( "color" );
+    if ( expr )
+    {
+      fillColor = QgsSymbolLayerV2Utils::decodeColor( expr->evaluate( f ).toString() );
+    }
+
+    outStream << QString( "<LineStyle><width>%1</width><color>%2</color></LineStyle><PolyStyle><fill>1</fill><color>%3</color></PolyStyle>" )
+    .arg( width ).arg( convertColor( outlineColor ) ).arg( convertColor( fillColor ) );
   }
   outStream << "</Style>\n";
 }

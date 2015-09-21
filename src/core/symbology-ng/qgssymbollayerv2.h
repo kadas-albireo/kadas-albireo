@@ -131,6 +131,7 @@ class CORE_EXPORT QgsSymbolLayerV2
     virtual Qt::PenStyle dxfPenStyle() const;
     virtual QColor dxfBrushColor( const QgsSymbolV2RenderContext& context ) const;
     virtual Qt::BrushStyle dxfBrushStyle() const;
+    virtual QgsExpression* expression( const QString& property ) const;
 
   protected:
     QgsSymbolLayerV2( QgsSymbolV2::SymbolType type, bool locked = false )
@@ -149,7 +150,6 @@ class CORE_EXPORT QgsSymbolLayerV2
     static const bool selectFillStyle = false;   // Fill symbol uses symbol layer style..
 
     virtual void prepareExpressions( const QgsFields* fields, double scale = -1.0 );
-    virtual QgsExpression* expression( const QString& property ) const;
     /**Saves data defined properties to string map*/
     void saveDataDefinedProperties( QgsStringMap& stringMap ) const;
     /**Copies data defined properties of this layer to another symbol layer*/
