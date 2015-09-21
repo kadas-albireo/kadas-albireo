@@ -65,6 +65,8 @@ class GUI_EXPORT QgsColorButtonV2 : public QToolButton
 
     virtual ~QgsColorButtonV2();
 
+    virtual QSize minimumSizeHint() const override;
+
     /**Return the currently selected color.
      * @returns currently selected color
      * @see setColor

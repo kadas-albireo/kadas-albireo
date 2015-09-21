@@ -57,7 +57,7 @@ QgsColorButtonV2::QgsColorButtonV2( QWidget *parent, QString cdt, QgsColorScheme
   mColorSchemeRegistry = registry ? registry : QgsColorSchemeRegistry::instance();
 
   setAcceptDrops( true );
-  setMinimumSize( QSize( 24, 16 ) );
+  setMinimumSize( QSize( 24, 22 ) );
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
   connect( this, SIGNAL( clicked() ), this, SLOT( buttonClicked() ) );
 
@@ -71,6 +71,12 @@ QgsColorButtonV2::QgsColorButtonV2( QWidget *parent, QString cdt, QgsColorScheme
 QgsColorButtonV2::~QgsColorButtonV2()
 {
 }
+
+QSize QgsColorButtonV2::minimumSizeHint() const
+{
+  return QSize( 24, 22 );
+}
+
 
 const QPixmap& QgsColorButtonV2::transparentBackground()
 {
