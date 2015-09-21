@@ -657,6 +657,12 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
   }
 }
 
+void QgsRedliningEditTool::deactivate()
+{
+  QgsMapTool::deactivate();
+  clearCurrent();
+}
+
 void QgsRedliningEditTool::onStyleChanged()
 {
   if ( mMode == TextSelected )
@@ -675,7 +681,7 @@ void QgsRedliningEditTool::clearCurrent( bool refresh )
   delete mRubberBand;
   mRubberBand = 0;
   mIsRectangle = false;
-  delete mCurrentFeature;
+  delete mCurrentFeature.data();
   mCurrentFeature = 0;
   mCurrentVertex = -1;
   if ( refresh )
