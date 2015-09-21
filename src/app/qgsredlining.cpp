@@ -41,7 +41,7 @@ class QgsRedlining::RedliningLayer : public QgsVectorLayer
 {
   public:
     RedliningLayer() : QgsVectorLayer(
-          QString( "mixed?crs=EPSG:4326&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
+          QString( "mixed?crs=EPSG:3857&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
           "Redlining",
           "memory" )
     {
