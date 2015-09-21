@@ -248,10 +248,10 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
   mSpinBorderSize->setValue( f.attribute( "size" ).toInt() );
   mSpinBorderSize->blockSignals( false );
   mBtnOutlineColor->blockSignals( true );
-  mBtnOutlineColor->setColor( QColor( f.attribute( "outline" ).toString() ) );
+  mBtnOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
   mBtnOutlineColor->blockSignals( false );
   mBtnFillColor->blockSignals( true );
-  mBtnFillColor->setColor( QColor( f.attribute( "fill" ).toString() ) );
+  mBtnFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "fill" ).toString() ) );
   mBtnFillColor->blockSignals( false );
 }
 
