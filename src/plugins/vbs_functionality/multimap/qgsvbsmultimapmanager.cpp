@@ -50,7 +50,7 @@ QgsVBSMultiMapManager::~QgsVBSMultiMapManager()
 void QgsVBSMultiMapManager::addMapWidget()
 {
   int highestNumber = 1;
-  foreach ( QgsVBSMapWidget* mapWidget, mMapWidgets )
+  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
   {
     if ( mapWidget->getNumber() >= highestNumber )
     {
@@ -67,7 +67,7 @@ void QgsVBSMultiMapManager::addMapWidget()
   double rightAreaWidth = 0;
   double bottomAreaHeight = 0;
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
-  foreach ( QgsVBSMapWidget* mapWidget, mMapWidgets )
+  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
   {
     Qt::DockWidgetArea area = mainWindow->dockWidgetArea( mapWidget );
     if ( area == Qt::RightDockWidgetArea )
@@ -107,18 +107,21 @@ void QgsVBSMultiMapManager::addMapWidget()
   mapWidget->setFixedSize( initialSize );
   mIface->addDockWidget( addArea, mapWidget );
   mapWidget->resize( initialSize );
-  mMapWidgets.append( mapWidget );
+  mMapWidgets.append( QPointer<QgsVBSMapWidget>( mapWidget ) );
 }
 
 void QgsVBSMultiMapManager::clearMapWidgets()
 {
-  qDeleteAll( mMapWidgets );
+  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
+  {
+    delete mapWidget.data();
+  }
   mMapWidgets.clear();
 }
 
-void QgsVBSMultiMapManager::mapWidgetDestroyed( QObject *mapWidget )
+void QgsVBSMultiMapManager::mapWidgetDestroyed( QObject */*mapWidget*/ )
 {
-  mMapWidgets.removeAll( qobject_cast<QgsVBSMapWidget*>( mapWidget ) );
+  mMapWidgets.removeAll( QPointer<QgsVBSMapWidget>( 0 ) );
 }
 
 void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
