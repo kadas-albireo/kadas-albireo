@@ -48,6 +48,7 @@
     <addaction name="mActionSaveProjectAs"/>
     <addaction name="mActionSaveMapAsImage"/>
     <addaction name="mActionDxfExport"/>
+    <addaction name="mActionKMLExport"/>
     <addaction name="separator"/>
     <addaction name="mActionNewPrintComposer"/>
     <addaction name="mActionShowComposerManager"/>
@@ -2289,6 +2290,14 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>New temporary scratch layer</string>
+   </property>
+  </action>
+  <action name="mActionKMLExport">
+   <property name="text">
+    <string>KML Export...</string>
+   </property>
+   <property name="toolTip">
+    <string>KML Export</string>
    </property>
   </action>
  </widget>

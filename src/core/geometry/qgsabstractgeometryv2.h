@@ -29,7 +29,7 @@ class QgsPointV2;
 class QgsConstWkbPtr;
 class QgsWkbPtr;
 class QPainter;
-class QgsVertexId;
+struct QgsVertexId;
 
 /**\ingroup core
  * \class QgsAbstractGeometryV2

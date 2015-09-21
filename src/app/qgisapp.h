@@ -862,6 +862,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void fileSaveAs();
     //! Export project in dxf format
     void dxfExport();
+    //! Export project in kml format
+    void kmlExport();
     //! Open the project file corresponding to the
     //! text)= of the given action.
     void openProject( QAction *action );
