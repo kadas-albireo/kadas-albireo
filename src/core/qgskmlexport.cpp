@@ -61,7 +61,7 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings )
       continue;
     }
 
-    if ( ml->type() == QgsMapLayer::VectorLayer )
+    if ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer )
     {
       QgsVectorLayer* vl = dynamic_cast<QgsVectorLayer*>( ml );
 
