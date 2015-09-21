@@ -61,6 +61,7 @@ class QgsRedlining : public QObject
     void editObject();
     void newPoint();
     void newLine();
+    void newRectangle();
     void newPolygon();
     void newCircle();
     void newText();
@@ -72,21 +73,37 @@ class QgsRedlining : public QObject
     void writeProject( QDomDocument&doc );
 };
 
-class QgsRedliningCircleMapTool : public QgsMapTool
+class QgsRedliningNewShapeMapTool : public QgsMapTool
 {
   public:
-    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
-    ~QgsRedliningCircleMapTool();
-    void canvasMoveEvent( QMouseEvent * e ) override;
+    QgsRedliningNewShapeMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+    ~QgsRedliningNewShapeMapTool();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     bool isEditTool() { return true; }
 
-  private:
+  protected:
     QgsVectorLayer* mLayer;
     QPoint mPressPos;
     QgsCurvePolygonV2* mGeometry;
     QgsRubberBand* mRubberBand;
+};
+
+class QgsRedliningRectangleMapTool : public QgsRedliningNewShapeMapTool
+{
+  public:
+    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
+        : QgsRedliningNewShapeMapTool( canvas, layer ) {}
+    void canvasMoveEvent( QMouseEvent * e ) override;
+    void canvasReleaseEvent( QMouseEvent * e ) override;
+};
+
+class QgsRedliningCircleMapTool : public QgsRedliningNewShapeMapTool
+{
+  public:
+    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
+        : QgsRedliningNewShapeMapTool( canvas, layer ) {}
+    void canvasMoveEvent( QMouseEvent * e ) override;
 };
 
 class QgsRedliningTextTool : public QgsMapTool
@@ -127,6 +144,7 @@ class QgsRedliningEditTool : public QgsMapTool
     QgsRubberBand* mRubberBand;
     QgsSelectedFeature* mCurrentFeature;
     int mCurrentVertex;
+    bool mIsRectangle;
     QgsPoint mPressPos;
     QgsPoint mPrevPos;
 
