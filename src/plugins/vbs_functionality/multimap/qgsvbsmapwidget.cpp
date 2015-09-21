@@ -30,7 +30,7 @@
 #include <QToolButton>
 
 QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterface* iface, QWidget *parent )
-    : QDockWidget( parent ), mIface( iface ), mNumber( number )
+    : QDockWidget( parent ), mIface( iface ), mNumber( number ), mUnsetFixedSize( true )
 {
   QSettings settings;
 
@@ -204,8 +204,12 @@ void QgsVBSMapWidget::updateMapProjection()
 
 void QgsVBSMapWidget::showEvent( QShowEvent * )
 {
-  // Clear previously set fixed size - which was just used to enforce the initial dimensions...
-  setFixedSize( QSize() );
-  setMinimumSize( 100, 100 );
-  setMaximumSize( QWIDGETSIZE_MAX, QWIDGETSIZE_MAX );
+  if ( mUnsetFixedSize )
+  {
+    // Clear previously set fixed size - which was just used to enforce the initial dimensions...
+    mUnsetFixedSize = false;
+    setFixedSize( QSize() );
+    setMinimumSize( 200, 200 );
+    setMaximumSize( QWIDGETSIZE_MAX, QWIDGETSIZE_MAX );
+  }
 }

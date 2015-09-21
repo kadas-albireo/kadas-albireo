@@ -43,6 +43,7 @@ class QgsVBSMapWidget : public QDockWidget
     bool getLocked() const;
     void setLocked( bool locked );
 
+
   private:
     QgisInterface* mIface;
     int mNumber;
@@ -53,6 +54,7 @@ class QgsVBSMapWidget : public QDockWidget
     QLineEdit* mTitleLineEdit;
     QgsMapCanvas* mMapCanvas;
     QStringList mInitialLayers;
+    bool mUnsetFixedSize;
 
     void showEvent( QShowEvent * ) override;
 
