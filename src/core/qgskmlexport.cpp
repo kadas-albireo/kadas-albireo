@@ -124,11 +124,10 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
 
   QgsFeatureIterator it = vl->getFeatures();
   QgsFeature f;
-  QgsAbstractGeometryV2* geom = 0;
   while ( it.nextFeature( f ) )
   {
     outStream << "<Placemark>" << "\n";
-    if ( f.geometry() )
+    if ( f.geometry() && f.geometry()->geometry() )
     {
       // name (from labeling expression)
       if ( vl->customProperty( "labeling/enabled", false ).toBool() == true &&
@@ -159,12 +158,14 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
       }
       outStream << QString( "</SchemaData></ExtendedData>" );
 
-      geom = f.geometry()->geometry();
+      // Segmentize immediately, since otherwise for instance circles are distorted if segmentation occurs after transformation
+      QgsAbstractGeometryV2* geom = f.geometry()->geometry()->segmentize();
       if ( geom )
       {
         geom->transform( ct ); //KML must be WGS84
         outStream << geom->asKML( 3 );
       }
+      delete geom;
     }
     outStream << "</Placemark>" << "\n";
 
