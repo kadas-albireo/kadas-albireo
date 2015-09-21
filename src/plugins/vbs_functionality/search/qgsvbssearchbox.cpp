@@ -162,8 +162,6 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
 
   mSearchBox = new LineEdit( this );
 
-  mSearchBox->installEventFilter( this );
-
   mTreeWidget = new TreeWidget( mSearchBox );
   mTreeWidget->setWindowFlags( Qt::Popup );
   mTreeWidget->setFocusPolicy( Qt::NoFocus );
@@ -175,7 +173,6 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   mTreeWidget->setMouseTracking( true );
   mTreeWidget->setUniformRowHeights( true );
   mTreeWidget->header()->hide();
-  mTreeWidget->installEventFilter( this );
   mTreeWidget->hide();
 
   mTimer.setSingleShot( true );
@@ -256,6 +253,9 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   addSearchProvider( new QgsVBSLocalDataSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSRemoteDataSearchProvider( mIface ) );
   addSearchProvider( new QgsVBSWorldLocationSearchProvider( mIface ) );
+
+  mSearchBox->installEventFilter( this );
+  mTreeWidget->installEventFilter( this );
 }
 
 QgsVBSSearchBox::~QgsVBSSearchBox()
