@@ -42,13 +42,16 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
 
 QgsSymbolV2* QgsRedliningRendererV2::originalSymbolForFeature( QgsFeature& feature )
 {
-  switch ( QGis::flatType( QGis::singleType( feature.geometry()->wkbType() ) ) )
+  switch ( QgsWKBTypes::flatType( QgsWKBTypes::singleType( feature.geometry()->geometry()->wkbType() ) ) )
   {
-    case QGis::WKBPoint:
+    case QgsWKBTypes::Point:
       return mMarkerSymbol.data();
-    case QGis::WKBLineString:
+    case QgsWKBTypes::LineString:
+    case QgsWKBTypes::CircularString:
+    case QgsWKBTypes::CompoundCurve:
       return mLineSymbol.data();
-    case QGis::WKBPolygon:
+    case QgsWKBTypes::Polygon:
+    case QgsWKBTypes::CurvePolygon:
       return mFillSymbol.data();
     default:
       return 0;
