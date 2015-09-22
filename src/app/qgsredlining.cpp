@@ -612,8 +612,9 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     mCurrentLabel.labelRect.setYMinimum( mCurrentLabel.labelRect.yMinimum() + dy );
     mCurrentLabel.labelRect.setXMaximum( mCurrentLabel.labelRect.xMaximum() + dx );
     mCurrentLabel.labelRect.setYMaximum( mCurrentLabel.labelRect.yMaximum() + dy );
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), mCurrentLabel.labelRect.xMinimum() );
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), mCurrentLabel.labelRect.yMinimum() );
+    QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( mCurrentLabel.labelRect.xMinimum(), mCurrentLabel.labelRect.yMinimum() ) );
+    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), pos.x() );
+    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), pos.y() );
     mCanvas->refresh();
   }
   else if ( mMode == FeatureSelected )
