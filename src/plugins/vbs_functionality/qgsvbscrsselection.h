@@ -33,7 +33,6 @@ class QgsVBSCrsSelection : public QToolButton
     QgisInterface* mIface;
 
   private slots:
-    void forceCrsTransformEnabled();
     void syncCrsButton();
     void setMapCrs();
     void selectMapCrs();

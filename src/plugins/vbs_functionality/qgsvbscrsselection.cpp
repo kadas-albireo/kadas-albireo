@@ -66,13 +66,11 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
   if ( otfProjButton )
     otfProjButton->setVisible( false );
 
-  QgsCoordinateReferenceSystem crs( "EPSG:4326" );
-  mIface->mapCanvas()->setCrsTransformEnabled( true );
+  QgsCoordinateReferenceSystem crs( "EPSG:217432681" );
   mIface->mapCanvas()->setDestinationCrs( crs );
   setText( crs.description() );
 
   connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
-  connect( mIface->mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( forceCrsTransformEnabled() ) );
   connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
 
 }
@@ -88,11 +86,6 @@ QgsVBSCrsSelection::~QgsVBSCrsSelection()
   QToolButton* otfProjButton = statusBar->findChild<QToolButton*>( "mOnTheFlyProjectionStatusButton" );
   if ( otfProjButton )
     otfProjButton->setVisible( true );
-}
-
-void QgsVBSCrsSelection::forceCrsTransformEnabled()
-{
-  mIface->mapCanvas()->setCrsTransformEnabled( true );
 }
 
 void QgsVBSCrsSelection::syncCrsButton()
