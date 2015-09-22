@@ -150,9 +150,10 @@ void QgsVBSLocalDataSearchCrawler::run()
 void QgsVBSLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVectorLayer* layer )
 {
   QgsVBSSearchProvider::SearchResult result;
-  result.bbox = feature.geometry()->boundingBox();
+  result.pos = feature.geometry()->boundingBox().center();
   result.category = tr( "Local data" );
   result.crs = layer->crs();
+  result.zoomScale = 1000;
   QgsGeometry* pt = feature.geometry()->pointOnSurface();
   if ( pt )
   {
