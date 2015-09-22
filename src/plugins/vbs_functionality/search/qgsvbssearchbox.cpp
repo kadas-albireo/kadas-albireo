@@ -572,6 +572,7 @@ void QgsVBSSearchBox::filterToolFinished()
   if ( mFilterRubberBand && mFilterRubberBand->partSize( 0 ) > 0 )
   {
     mSearchBox->setFocus();
+    mSearchBox->selectAll();
     // Trigger a new search since the filter changed
     startSearch();
   }
