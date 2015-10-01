@@ -159,14 +159,7 @@ QString QgsLineStringV2::asKML( int precision ) const
   }
   bool z = is3D();
   kml.append( "<altituteMode>" );
-  if ( !z )
-  {
-    kml.append( "relativeToGround" );
-  }
-  else
-  {
-    kml.append( "absolute" );
-  }
+  kml.append( "relativeToGround" );
   kml.append( "</altituteMode>" );
   kml.append( "<coordinates>" );
 
