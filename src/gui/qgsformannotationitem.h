@@ -28,6 +28,8 @@ class QGraphicsProxyWidget;
 class GUI_EXPORT QgsFormAnnotationItem: public QgsAnnotationItem
 {
     Q_OBJECT
+    QGS_ANNOTATION_ITEM( QgsFormAnnotationItem, "FormAnnotationItem" )
+
   public:
     QgsFormAnnotationItem( QgsMapCanvas* canvas, QgsVectorLayer* vlayer = 0, bool hasFeature = false, int feature = 0 );
     ~QgsFormAnnotationItem();

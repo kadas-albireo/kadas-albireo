@@ -36,6 +36,7 @@
 #include <QSettings>
 #include <QWidget>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsHtmlAnnotationItem )
 
 QgsHtmlAnnotationItem::QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsVectorLayer* vlayer, bool hasFeature, int feature )
     : QgsAnnotationItem( canvas ), mWidgetContainer( 0 ), mWebView( 0 ), mVectorLayer( vlayer ),

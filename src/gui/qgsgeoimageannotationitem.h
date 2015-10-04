@@ -23,6 +23,8 @@
 
 class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 {
+    QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem, "GeoImageAnnotationItem" )
+
   public:
     static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath , QString *errMsg = 0 );
 

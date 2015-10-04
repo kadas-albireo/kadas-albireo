@@ -20,6 +20,8 @@
 #include <QDomDocument>
 #include <QPainter>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsTextAnnotationItem )
+
 QgsTextAnnotationItem::QgsTextAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotationItem( canvas ), mDocument( new QTextDocument( QObject::tr( "QGIS rocks!" ) ) )
 {
   mDocument->setUseDesignMetrics( true );

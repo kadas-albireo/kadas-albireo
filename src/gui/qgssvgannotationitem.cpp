@@ -21,6 +21,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsSvgAnnotationItem )
 
 QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotationItem( canvas )
 {

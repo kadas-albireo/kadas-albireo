@@ -25,6 +25,8 @@
 #include <QPainter>
 #include <QPen>
 
+QList< QPair<QString,QgsAnnotationItem::AnnotationItemFactory_t> > QgsAnnotationItem::sRegisteredAnnotations;
+
 QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
     : QObject( 0 ), QgsMapCanvasItem( mapCanvas )
     , mFlags( ItemAllFeatures )

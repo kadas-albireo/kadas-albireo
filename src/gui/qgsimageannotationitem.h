@@ -22,6 +22,7 @@
 
 class GUI_EXPORT QgsImageAnnotationItem: public QgsAnnotationItem
 {
+    QGS_ANNOTATION_ITEM( QgsImageAnnotationItem, "ImageAnnotationItem" )
   public:
 
     QgsImageAnnotationItem( QgsMapCanvas* canvas );

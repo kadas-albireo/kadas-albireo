@@ -30,6 +30,7 @@ class QGraphicsProxyWidget;
 class GUI_EXPORT QgsHtmlAnnotationItem: public QgsAnnotationItem
 {
     Q_OBJECT
+    QGS_ANNOTATION_ITEM( QgsHtmlAnnotationItem, "HtmlAnnotationItem" )
   public:
     QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsVectorLayer* vlayer = 0, bool hasFeature = false, int feature = 0 );
     ~QgsHtmlAnnotationItem();

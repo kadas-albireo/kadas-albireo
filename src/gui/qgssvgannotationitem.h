@@ -23,6 +23,7 @@
 
 class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
 {
+    QGS_ANNOTATION_ITEM( QgsSvgAnnotationItem, "SVGAnnotationItem" )
   public:
 
     QgsSvgAnnotationItem( QgsMapCanvas* canvas );

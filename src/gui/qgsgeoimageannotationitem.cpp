@@ -25,6 +25,7 @@
 #include <QDesktopServices>
 #include <exiv2/exiv2.hpp>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem )
 
 QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, QString* errMsg )
 {

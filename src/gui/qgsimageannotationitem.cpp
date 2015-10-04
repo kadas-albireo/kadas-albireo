@@ -22,6 +22,8 @@
 #include <QDomElement>
 #include <QPainter>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsImageAnnotationItem )
+
 QgsImageAnnotationItem::QgsImageAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotationItem( canvas )
 {
   setItemFlags( ItemHasNoMarker | ItemHasNoFrame );
