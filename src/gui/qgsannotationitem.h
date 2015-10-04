@@ -27,6 +27,14 @@ class QDialog;
 class QgsVectorLayer;
 class QgsMarkerSymbolV2;
 
+#define QGS_ANNOTATION_ITEM(classname, xmlname) \
+  static QgsAnnotationItem* classname##Factory(QgsMapCanvas* mapCanvas){ return new classname(mapCanvas); } \
+  static AnnotationItemRegisterer* registerAnnotationItem(){ static AnnotationItemRegisterer reg(xmlname, classname##Factory); return &reg; } \
+  static AnnotationItemRegisterer* sAnnotationItemRegistryItem;
+
+#define REGISTER_QGS_ANNOTATION_ITEM(classname) classname::AnnotationItemRegisterer* classname::sAnnotationItemRegistryItem = classname::registerAnnotationItem();
+
+
 /**An annotation item can be either placed either on screen corrdinates or on map coordinates.
   It may reference a feature and displays that associatiation with a balloon like appearance*/
 class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
@@ -56,6 +64,10 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ResizeFrameLeftDown,
       ResizeFrameRightDown
     };
+
+    typedef QgsAnnotationItem*( *AnnotationItemFactory_t )( QgsMapCanvas* );
+    typedef QPair<QString, AnnotationItemFactory_t> AnnotationRegistryItem;
+    static const QList<AnnotationRegistryItem>& registeredAnnotations() { return sRegisteredAnnotations; }
 
     QgsAnnotationItem( QgsMapCanvas* mapCanvas );
     virtual ~QgsAnnotationItem();
@@ -113,6 +125,14 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     virtual void showContextMenu( const QPoint& screenPos );
 
   protected:
+    static QList< QPair<QString, AnnotationItemFactory_t> > sRegisteredAnnotations;
+
+    struct AnnotationItemRegisterer
+    {
+      AnnotationItemRegisterer( const QString& name, AnnotationItemFactory_t factory )
+      { sRegisteredAnnotations.append( qMakePair( name, factory ) ); }
+    };
+
     /**Flags specifying the features of the item*/
     int mFlags;
 

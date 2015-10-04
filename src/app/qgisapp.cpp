@@ -111,9 +111,7 @@
 #include "qgsexception.h"
 #include "qgsexpressionselectiondialog.h"
 #include "qgsfeature.h"
-#include "qgsformannotationitem.h"
 #include "qgsfieldcalculator.h"
-#include "qgsgeoimageannotationitem.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
 #include "qgsgpsrouteeditor.h"
@@ -186,11 +184,6 @@
 #include "qgssnappingdialog.h"
 #include "qgssourceselectdialog.h"
 #include "qgssponsors.h"
-#include "qgssvgannotationitem.h"
-#include "qgspinannotationitem.h"
-#include "qgsimageannotationitem.h"
-#include "qgstemporaryfile.h"
-#include "qgstextannotationitem.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
 #include "qgsvectordataprovider.h"
@@ -4687,57 +4680,14 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
     return false;
   }
 
-  QDomNodeList textItemList = doc.elementsByTagName( "TextAnnotationItem" );
-  for ( int i = 0; i < textItemList.size(); ++i )
+  foreach ( const QgsAnnotationItem::AnnotationRegistryItem& item, QgsAnnotationItem::registeredAnnotations() )
   {
-    QgsTextAnnotationItem* newTextItem = new QgsTextAnnotationItem( mapCanvas() );
-    newTextItem->readXML( doc, textItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList formItemList = doc.elementsByTagName( "FormAnnotationItem" );
-  for ( int i = 0; i < formItemList.size(); ++i )
-  {
-    QgsFormAnnotationItem* newFormItem = new QgsFormAnnotationItem( mapCanvas() );
-    newFormItem->readXML( doc, formItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList htmlItemList = doc.elementsByTagName( "HtmlAnnotationItem" );
-  for ( int i = 0; i < htmlItemList.size(); ++i )
-  {
-    QgsHtmlAnnotationItem* newHtmlItem = new QgsHtmlAnnotationItem( mapCanvas() );
-    newHtmlItem->readXML( doc, htmlItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList svgItemList = doc.elementsByTagName( "SVGAnnotationItem" );
-  for ( int i = 0; i < svgItemList.size(); ++i )
-  {
-    QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mapCanvas() );
-    newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList pinItemList = doc.elementsByTagName( "PinAnnotationItem" );
-  for ( int i = 0; i < pinItemList.size(); ++i )
-  {
-    QgsCoordinateUtils::TargetFormat format;
-    QString epsg;
-    getCoordinateDisplayFormat( format, epsg );
-    QgsPinAnnotationItem* newPinItem = new QgsPinAnnotationItem( mapCanvas(), format, epsg );
-    connect( this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ), newPinItem, SLOT( changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat, QString ) ) );
-    newPinItem->readXML( doc, svgItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList imageItemList = doc.elementsByTagName( "ImageAnnotationItem" );
-  for ( int i = 0; i < imageItemList.size(); ++i )
-  {
-    QgsImageAnnotationItem* newImageItem = new QgsImageAnnotationItem( mapCanvas() );
-    newImageItem->readXML( doc, imageItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList geoImageItemList = doc.elementsByTagName( "GeoImageAnnotationItem" );
-  for ( int i = 0; i < geoImageItemList.size(); ++i )
-  {
-    QgsGeoImageAnnotationItem* newGeoImageItem = new QgsGeoImageAnnotationItem( mapCanvas() );
-    newGeoImageItem->readXML( doc, geoImageItemList.at( i ).toElement() );
+    QDomNodeList itemList = doc.elementsByTagName( item.first );
+    for ( int i = 0; i < itemList.size(); ++i )
+    {
+      QgsAnnotationItem* newItem = item.second( mMapCanvas );
+      newItem->readXML( doc, itemList.at( i ).toElement() );
+    }
   }
   return true;
 }

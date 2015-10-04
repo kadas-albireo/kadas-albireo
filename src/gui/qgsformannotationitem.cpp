@@ -34,6 +34,8 @@
 #include <QUiLoader>
 #include <QWidget>
 
+REGISTER_QGS_ANNOTATION_ITEM( QgsFormAnnotationItem )
+
 QgsFormAnnotationItem::QgsFormAnnotationItem( QgsMapCanvas* canvas, QgsVectorLayer* vlayer, bool hasFeature, int feature )
     : QgsAnnotationItem( canvas ), mWidgetContainer( 0 ), mDesignerWidget( 0 ), mVectorLayer( vlayer ),
     mHasAssociatedFeature( hasFeature ), mFeature( feature )

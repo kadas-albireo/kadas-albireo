@@ -24,6 +24,7 @@
 /**An annotation item that displays formated text*/
 class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
 {
+    QGS_ANNOTATION_ITEM( QgsTextAnnotationItem, "TextAnnotationItem" )
   public:
     QgsTextAnnotationItem( QgsMapCanvas* canvas );
     ~QgsTextAnnotationItem();
