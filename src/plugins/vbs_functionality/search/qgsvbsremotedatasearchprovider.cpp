@@ -31,7 +31,6 @@
 
 const int QgsVBSRemoteDataSearchProvider::sSearchTimeout = 2000;
 const int QgsVBSRemoteDataSearchProvider::sResultCountLimit = 100;
-const QByteArray QgsVBSRemoteDataSearchProvider::sGeoAdminUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer";
 
 
 QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *iface )
@@ -62,7 +61,7 @@ void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , co
     }
   }
 
-  QUrl url( sGeoAdminUrl );
+  QUrl url( QSettings().value("vbsfunctionality/search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer").toString() );
   url.addQueryItem( "type", "featuresearch" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "features", remoteLayers.join( "," ) );

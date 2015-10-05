@@ -27,7 +27,6 @@
 
 const int QgsVBSLocationSearchProvider::sSearchTimeout = 2000;
 const int QgsVBSLocationSearchProvider::sResultCountLimit = 50;
-const QByteArray QgsVBSLocationSearchProvider::sGeoAdminUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer";
 
 
 QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgisInterface *iface )
@@ -50,7 +49,7 @@ QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgisInterface *iface
 
 void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( sGeoAdminUrl );
+  QUrl url( QSettings().value("vbsfunctionality/search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer").toString() );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
