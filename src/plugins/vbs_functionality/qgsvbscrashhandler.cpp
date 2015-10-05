@@ -22,6 +22,7 @@
 #ifdef _MSC_VER
 #include <CrashRpt.h>
 #endif
+#include <QSettings>
 
 #ifdef _MSC_VER
 // Define the callback function that will be called on crash
@@ -45,16 +46,15 @@ QgsVBSCrashHandler::QgsVBSCrashHandler()
     info.cb = sizeof(CR_INSTALL_INFO);
     info.pszAppName = _strdup(QString("QGIS %1").arg(QGis::QGIS_RELEASE_NAME).toLocal8Bit().data());
     info.pszAppVersion = _strdup(QString("%1 (%2)").arg(QGis::QGIS_VERSION).arg(QGis::QGIS_DEV_VERSION).toLocal8Bit().data());
-	info.pszUrl = _strdup(QString("http://www.sourcepole.com").toLocal8Bit().data());
-	info.pszEmailTo = _strdup(QString("smani@sourcepole.ch").toLocal8Bit().data());
-	info.pszEmailSubject = _strdup(QString("QGIS %1 Error Report").arg(QGis::QGIS_RELEASE_NAME).toLocal8Bit().data());
+	info.pszUrl = _strdup(QSettings().value("/vbsfunctionality/crashrpt_url", "http://cm004695.lt.admin.ch/MgdiServices/CrashReport.svc/Send").toString().toLocal8Bit().data());
     info.dwFlags = 0;
     info.dwFlags |= CR_INST_ALL_POSSIBLE_HANDLERS; // Install all available exception handlers.
     info.dwFlags |= CR_INST_APP_RESTART; // Restart on crash
 	info.dwFlags |= CR_INST_AUTO_THREAD_HANDLERS; // Automatically install handlers to threads
 	info.dwFlags |= CR_INST_SHOW_ADDITIONAL_INFO_FIELDS;
-    info.uPriorities[CR_HTTP] = CR_NEGATIVE_PRIORITY; // Disabled
-    info.uPriorities[CR_SMTP] = 1;
+	info.dwFlags |= CR_INST_SEND_QUEUED_REPORTS;
+    info.uPriorities[CR_HTTP] = 1;
+    info.uPriorities[CR_SMTP] = CR_NEGATIVE_PRIORITY; // Disabled
     info.uPriorities[CR_SMAPI] = CR_NEGATIVE_PRIORITY; // Disabled
  
     int nResult;
