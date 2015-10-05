@@ -19,6 +19,7 @@ ADD_SUBDIRECTORY(heatmap)
 ADD_SUBDIRECTORY(vbs_functionality)
 ADD_SUBDIRECTORY(geometry_checker)
 ADD_SUBDIRECTORY(geometry_snapper)
+ADD_SUBDIRECTORY(crash)
 
 IF (POSTGRES_FOUND)
   ADD_SUBDIRECTORY(spit)

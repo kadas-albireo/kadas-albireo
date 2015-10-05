@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/crash">
+        <file>crash.svg</file>
+    </qresource>
+</RCC>
