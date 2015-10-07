@@ -66,7 +66,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
   if ( otfProjButton )
     otfProjButton->setVisible( false );
 
-  QgsCoordinateReferenceSystem crs( "EPSG:217432681" );
+  QgsCoordinateReferenceSystem crs( "EPSG:21781" );
   mIface->mapCanvas()->setDestinationCrs( crs );
   setText( crs.description() );
 
