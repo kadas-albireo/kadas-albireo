@@ -423,7 +423,7 @@ void QgsRedliningRectangleMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   if ( mRubberBand )
   {
     QgsFeature f( mLayer->pendingFields() );
-    f.setAttribute( "flags", "rect" );
+    f.setAttribute( "flags", "rect:" + mCanvas->mapSettings().destinationCrs().authid() );
     f.setGeometry( new QgsGeometry( mGeometry ) );
     mLayer->addFeature( f );
     mCanvas->refresh();
@@ -534,7 +534,15 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
     mRubberBand->setLineStyle( Qt::DotLine );
     mRubberBand->setToGeometry( feature.geometry(), mLayer );
     mCurrentFeature = new QgsSelectedFeature( feature.id(), mLayer, mCanvas );
-    mIsRectangle = feature.attribute( "flags" ).toString().split( "," ).contains( "rect" );
+    mIsRectangle = false;
+    foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
+    {
+      if ( flag.startsWith( "rect" ) )
+      {
+        mIsRectangle = true;
+        mRectangleCRS = flag.mid( 5 );
+      }
+    }
 
     // Check if a vertex was clicked
     int beforeVertex = -1, afterVertex = -1;
@@ -570,20 +578,22 @@ void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
       mCurrentFeature->geometry()->moveVertex( layerPos, mCurrentVertex );
       if ( mIsRectangle )
       {
+        QgsCoordinateTransform t( mCurrentFeature->vlayer()->crs(), QgsCoordinateReferenceSystem( mRectangleCRS ) );
         int n = mCurrentFeature->vertexMap().size() - 1;
         int iPrev = ( mCurrentVertex - 1 + n ) % n;
         int iNext = ( mCurrentVertex + 1 + n ) % n;
-        QgsPoint pPrev = mCurrentFeature->vertexMap()[iPrev]->pointV1();
-        QgsPoint pNext = mCurrentFeature->vertexMap()[iNext]->pointV1();
-        if ( qFuzzyCompare( pPrev.x(), p.x() ) )
+        QgsPoint pPrev = t.transform( mCurrentFeature->vertexMap()[iPrev]->pointV1() );
+        QgsPoint pNext = t.transform( mCurrentFeature->vertexMap()[iNext]->pointV1() );
+        QgsPoint pCurr = t.transform( layerPos );
+        if (( mCurrentVertex % 2 ) == 0 )
         {
-          mCurrentFeature->geometry()->moveVertex( QgsPoint( layerPos.x(), pPrev.y() ), iPrev );
-          mCurrentFeature->geometry()->moveVertex( QgsPoint( pNext.x(), layerPos.y() ), iNext );
+          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pCurr.x(), pPrev.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
+          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pNext.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
         }
         else
         {
-          mCurrentFeature->geometry()->moveVertex( QgsPoint( pPrev.x(), layerPos.y() ), iPrev );
-          mCurrentFeature->geometry()->moveVertex( QgsPoint( layerPos.x(), pNext.y() ), iNext );
+          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pPrev.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
+          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pCurr.x(), pNext.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
         }
       }
     }
