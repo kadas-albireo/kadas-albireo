@@ -68,6 +68,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
 
   QgsCoordinateReferenceSystem crs( "EPSG:21781" );
   mIface->mapCanvas()->setDestinationCrs( crs );
+  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
   setText( crs.description() );
 
   connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
@@ -105,6 +106,7 @@ void QgsVBSCrsSelection::selectMapCrs()
   QgsCoordinateReferenceSystem crs( projSelector.dialog()->selectedAuthId() );
   mIface->mapCanvas()->setCrsTransformEnabled( true );
   mIface->mapCanvas()->setDestinationCrs( crs );
+  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
   setText( crs.description() );
 }
 
@@ -114,5 +116,6 @@ void QgsVBSCrsSelection::setMapCrs()
   QgsCoordinateReferenceSystem crs( action->data().toString() );
   mIface->mapCanvas()->setCrsTransformEnabled( true );
   mIface->mapCanvas()->setDestinationCrs( crs );
+  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
   setText( crs.description() );
 }
