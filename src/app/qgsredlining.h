@@ -146,6 +146,7 @@ class QgsRedliningEditTool : public QgsMapTool
     QPointer<QgsSelectedFeature> mCurrentFeature;
     int mCurrentVertex;
     bool mIsRectangle;
+    QString mRectangleCRS;
     QgsPoint mPressPos;
     QgsPoint mPrevPos;
 
