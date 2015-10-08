@@ -110,6 +110,17 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
   mApp->redliningToolBar()->addWidget( mBtnOutlineColor );
 
+  mOutlineStyleCombo = new QComboBox();
+  mOutlineStyleCombo->setProperty( "settings_key", "outline_style" );
+  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
+  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
+  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DashLine ), QString(), Qt::DashLine );
+  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DashDotLine ), QString(), Qt::DashDotLine );
+  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
+  mOutlineStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
+  connect( mOutlineStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
+  mApp->redliningToolBar()->addWidget( mOutlineStyleCombo );
+
   mApp->redliningToolBar()->addWidget( new QLabel( tr( "Fill:" ) ) );
 
   mBtnFillColor = new QgsColorButtonV2();
@@ -119,6 +130,20 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mBtnFillColor->setColor( initialFillColor );
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
   mApp->redliningToolBar()->addWidget( mBtnFillColor );
+
+  mFillStyleCombo = new QComboBox();
+  mFillStyleCombo->setProperty( "settings_key", "fill_style" );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::HorPattern ), QString(), Qt::HorPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::VerPattern ), QString(), Qt::VerPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::BDiagPattern ), QString(), Qt::BDiagPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::DiagCrossPattern ), QString(), Qt::DiagCrossPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::FDiagPattern ), QString(), Qt::FDiagPattern );
+  mFillStyleCombo->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
+  mFillStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
+  connect( mFillStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
+  mApp->redliningToolBar()->addWidget( mFillStyleCombo );
 
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
@@ -137,6 +162,8 @@ QgsRedlining::RedliningLayer* QgsRedlining::getOrCreateLayer()
                                          << QgsField( "size", QVariant::Int, "integer", 2 )
                                          << QgsField( "outline", QVariant::String, "string", 15 )
                                          << QgsField( "fill", QVariant::String, "string", 15 )
+                                         << QgsField( "outline_style", QVariant::Int, "integer", 1 )
+                                         << QgsField( "fill_style", QVariant::Int, "integer", 1 )
                                          << QgsField( "text", QVariant::String, "string", 128 )
                                          << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
                                          << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
@@ -253,6 +280,12 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
   mBtnFillColor->blockSignals( true );
   mBtnFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "fill" ).toString() ) );
   mBtnFillColor->blockSignals( false );
+  mOutlineStyleCombo->blockSignals( true );
+  mOutlineStyleCombo->setCurrentIndex( mOutlineStyleCombo->findData( QgsSymbolLayerV2Utils::decodePenStyle( f.attribute( "outline_style" ).toString() ) ) );
+  mOutlineStyleCombo->blockSignals( true );
+  mFillStyleCombo->blockSignals( true );
+  mFillStyleCombo->setCurrentIndex( mFillStyleCombo->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( f.attribute( "fill_style" ).toString() ) ) );
+  mFillStyleCombo->blockSignals( true );
 }
 
 void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
@@ -270,6 +303,8 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mSpinBorderSize->value() );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mBtnOutlineColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mFillStyleCombo->itemData( mFillStyleCombo->currentIndex() ).toInt() ) ) );
   mApp->mapCanvas()->refresh();
 }
 
@@ -284,6 +319,14 @@ void QgsRedlining::saveColor()
 void QgsRedlining::saveOutlineWidth()
 {
   QSettings().setValue( "/Redlining/size", mSpinBorderSize->value() );
+  emit styleChanged();
+}
+
+void QgsRedlining::saveStyle()
+{
+  QComboBox* combo = qobject_cast<QComboBox*>( QObject::sender() );
+  QString key = QString( "/Redlining/" ) + combo->property( "settings_key" ).toString();
+  QSettings().setValue( key, combo->currentIndex() );
   emit styleChanged();
 }
 
@@ -311,6 +354,8 @@ void QgsRedlining::readProject( const QDomDocument& doc )
       feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
       feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "255,0,0,255" ) );
       feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "0,0,255,255" ) );
+      feature.setAttribute( "outline_style", redliningElement.attribute( "outline_style", "1" ) );
+      feature.setAttribute( "fill_style", redliningElement.attribute( "fill_style", "1" ) );
       feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
       feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
       feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
@@ -347,6 +392,8 @@ void QgsRedlining::writeProject( QDomDocument& doc )
     redliningItemElem.setAttribute( "size", feature.attribute( "size" ).toString() );
     redliningItemElem.setAttribute( "outline", feature.attribute( "outline" ).toString() );
     redliningItemElem.setAttribute( "fill", feature.attribute( "fill" ).toString() );
+    redliningItemElem.setAttribute( "outline_style", feature.attribute( "outline_style" ).toString() );
+    redliningItemElem.setAttribute( "fill_style", feature.attribute( "fill_style" ).toString() );
     redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
     redliningItemElem.setAttribute( "text_x", feature.attribute( "text_x" ).toString() );
     redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
@@ -355,6 +402,34 @@ void QgsRedlining::writeProject( QDomDocument& doc )
     redliningElem.appendChild( redliningItemElem );
   }
   qgisElem.appendChild( redliningElem );
+}
+
+QIcon QgsRedlining::createOutlineStyleIcon( Qt::PenStyle style )
+{
+  QPixmap pixmap( 16, 16 );
+  pixmap.fill( Qt::transparent );
+  QPainter painter( &pixmap );
+  painter.setRenderHint( QPainter::Antialiasing );
+  QPen pen;
+  pen.setStyle( style );
+  pen.setColor( Qt::black );
+  pen.setWidth( 1 );
+  painter.setPen( pen );
+  painter.drawLine( 0, 8, 16, 8 );
+  return pixmap;
+}
+
+QIcon QgsRedlining::createFillStyleIcon( Qt::BrushStyle style )
+{
+  QPixmap pixmap( 16, 16 );
+  pixmap.fill( Qt::transparent );
+  QPainter painter( &pixmap );
+  painter.setRenderHint( QPainter::Antialiasing );
+  QBrush brush;
+  brush.setStyle( style );
+  brush.setColor( Qt::black );
+  painter.fillRect( 0, 0, 16, 16, brush );
+  return pixmap;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
