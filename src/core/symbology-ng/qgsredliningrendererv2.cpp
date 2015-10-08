@@ -35,9 +35,12 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "\"size\"" );
+  mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "line_style", "\"outline_style\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "width_border", "\"size\"" );
+  mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "border_style", "\"outline_style\"" );
+  mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_style", "\"fill_style\"" );
 }
 
 QgsSymbolV2* QgsRedliningRendererV2::originalSymbolForFeature( QgsFeature& feature )

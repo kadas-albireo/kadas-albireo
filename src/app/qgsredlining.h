@@ -21,6 +21,7 @@
 #include "qgsmaptoolmovelabel.h"
 
 class QAction;
+class QComboBox;
 class QSpinBox;
 class QToolButton;
 class QgisApp;
@@ -48,12 +49,16 @@ class QgsRedlining : public QObject
     QgsColorButtonV2* mBtnOutlineColor;
     QgsColorButtonV2* mBtnFillColor;
     QSpinBox* mSpinBorderSize;
+    QComboBox* mOutlineStyleCombo;
+    QComboBox* mFillStyleCombo;
 
     RedliningLayer* mLayer;
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );
     RedliningLayer *getOrCreateLayer();
+    static QIcon createOutlineStyleIcon( Qt::PenStyle style );
+    static QIcon createFillStyleIcon( Qt::BrushStyle style );
 
   private slots:
     void clearLayer();
@@ -67,6 +72,7 @@ class QgsRedlining : public QObject
     void newText();
     void saveColor();
     void saveOutlineWidth();
+    void saveStyle();
     void syncStyleWidgets( const QgsFeatureId& fid );
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
