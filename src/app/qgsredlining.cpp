@@ -24,31 +24,16 @@
 #include "qgsmaptooladdfeature.h"
 #include "qgsmaptoolmovelabel.h"
 #include "qgspolygonv2.h"
+#include "qgsredlininglayer.h"
 #include "qgsredliningrendererv2.h"
 #include "qgsrubberband.h"
 #include "qgssymbollayerv2utils.h"
 #include "nodetool/qgsselectedfeature.h"
 #include "nodetool/qgsvertexentry.h"
-#include "qgsvectorlayer.h"
-#include "qgsvectordataprovider.h"
 #include "qgsproject.h"
 
 #include <QInputDialog>
 #include <QSettings>
-#include <QUuid>
-
-class QgsRedlining::RedliningLayer : public QgsVectorLayer
-{
-  public:
-    RedliningLayer() : QgsVectorLayer(
-          QString( "mixed?crs=EPSG:3857&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
-          "Redlining",
-          "memory" )
-    {
-      mLayerType = QgsMapLayer::RedliningLayer;
-    }
-};
-
 
 QgsRedlining::QgsRedlining( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
@@ -150,39 +135,19 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
 }
 
-QgsRedlining::RedliningLayer* QgsRedlining::getOrCreateLayer()
+QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
 {
   if ( mLayer )
   {
     return mLayer;
   }
-  mLayer = new RedliningLayer;
-  mLayer->setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
-  mLayer->dataProvider()->addAttributes( QList<QgsField>()
-                                         << QgsField( "size", QVariant::Int, "integer", 2 )
-                                         << QgsField( "outline", QVariant::String, "string", 15 )
-                                         << QgsField( "fill", QVariant::String, "string", 15 )
-                                         << QgsField( "outline_style", QVariant::Int, "integer", 1 )
-                                         << QgsField( "fill_style", QVariant::Int, "integer", 1 )
-                                         << QgsField( "text", QVariant::String, "string", 128 )
-                                         << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
-                                         << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
-                                         << QgsField( "flags", QVariant::String, "string", 32 ) );
-  mLayer->setRendererV2( new QgsRedliningRendererV2 );
-
+  mLayer = new QgsRedliningLayer();
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
+
   // QueuedConnection to delay execution of the slot until the signal-emitting function has exited,
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
-
-  mLayer->setCustomProperty( "labeling", "pal" );
-  mLayer->setCustomProperty( "labeling/enabled", true );
-  mLayer->setCustomProperty( "labeling/fieldName", "text" );
-  mLayer->setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
-  mLayer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
-  mLayer->setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~outline" );
-  mLayer->setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
 
   return mLayer;
 }
@@ -196,7 +161,7 @@ void QgsRedlining::clearLayer()
 void QgsRedlining::editObject()
 {
   QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
-  connect( this, SIGNAL( styleChanged() ), tool, SLOT( onStyleChanged() ) );
+  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
   activateTool( tool, qobject_cast<QAction*>( QObject::sender() ) );
@@ -262,6 +227,7 @@ void QgsRedlining::deactivateTool()
 
 void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
 {
+  QTextStream( stdout ) << "syncStyleWidgets" << endl;
   if ( !mLayer )
   {
     return;
@@ -282,10 +248,10 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
   mBtnFillColor->blockSignals( false );
   mOutlineStyleCombo->blockSignals( true );
   mOutlineStyleCombo->setCurrentIndex( mOutlineStyleCombo->findData( QgsSymbolLayerV2Utils::decodePenStyle( f.attribute( "outline_style" ).toString() ) ) );
-  mOutlineStyleCombo->blockSignals( true );
+  mOutlineStyleCombo->blockSignals( false );
   mFillStyleCombo->blockSignals( true );
   mFillStyleCombo->setCurrentIndex( mFillStyleCombo->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( f.attribute( "fill_style" ).toString() ) ) );
-  mFillStyleCombo->blockSignals( true );
+  mFillStyleCombo->blockSignals( false );
 }
 
 void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
@@ -313,13 +279,13 @@ void QgsRedlining::saveColor()
   QgsColorButtonV2* btn = qobject_cast<QgsColorButtonV2*>( QObject::sender() );
   QString key = QString( "/Redlining/" ) + btn->property( "settings_key" ).toString();
   QSettings().setValue( key, QgsSymbolLayerV2Utils::encodeColor( btn->color() ) );
-  emit styleChanged();
+  emit featureStyleChanged();
 }
 
 void QgsRedlining::saveOutlineWidth()
 {
   QSettings().setValue( "/Redlining/size", mSpinBorderSize->value() );
-  emit styleChanged();
+  emit featureStyleChanged();
 }
 
 void QgsRedlining::saveStyle()
@@ -327,46 +293,18 @@ void QgsRedlining::saveStyle()
   QComboBox* combo = qobject_cast<QComboBox*>( QObject::sender() );
   QString key = QString( "/Redlining/" ) + combo->property( "settings_key" ).toString();
   QSettings().setValue( key, combo->currentIndex() );
-  emit styleChanged();
+  emit featureStyleChanged();
 }
 
 void QgsRedlining::readProject( const QDomDocument& doc )
 {
   clearLayer();
-
   QDomNodeList nl = doc.elementsByTagName( "Redlining" );
   if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
-
-  getOrCreateLayer();
-
-  QDomElement redliningElement = nl.at( 0 ).toElement();
-  QgsFeatureList features;
-  QDomNodeList nodes = redliningElement.childNodes();
-  for ( int iNode = 0, nNodes = nodes.size(); iNode < nNodes; ++iNode )
-  {
-    QDomElement redliningItemElem = nodes.at( iNode ).toElement();
-    if ( redliningItemElem.nodeName() == "RedliningItem" )
-    {
-      QgsFeature feature( mLayer->dataProvider()->fields() );
-      feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
-      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "255,0,0,255" ) );
-      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "0,0,255,255" ) );
-      feature.setAttribute( "outline_style", redliningElement.attribute( "outline_style", "1" ) );
-      feature.setAttribute( "fill_style", redliningElement.attribute( "fill_style", "1" ) );
-      feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
-      feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
-      feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
-      feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
-      feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
-      features.append( feature );
-    }
-  }
-  mLayer->dataProvider()->addFeatures( features );
-  mLayer->updateFields();
-  mApp->mapCanvas()->refresh();
+  getOrCreateLayer()->read( nl.at( 0 ).toElement() );
 }
 
 void QgsRedlining::writeProject( QDomDocument& doc )
@@ -384,23 +322,7 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   QDomElement qgisElem = nl.at( 0 ).toElement();
 
   QDomElement redliningElem = doc.createElement( "Redlining" );
-  QgsFeatureIterator it = mLayer->getFeatures();
-  QgsFeature feature;
-  while ( it.nextFeature( feature ) )
-  {
-    QDomElement redliningItemElem = doc.createElement( "RedliningItem" );
-    redliningItemElem.setAttribute( "size", feature.attribute( "size" ).toString() );
-    redliningItemElem.setAttribute( "outline", feature.attribute( "outline" ).toString() );
-    redliningItemElem.setAttribute( "fill", feature.attribute( "fill" ).toString() );
-    redliningItemElem.setAttribute( "outline_style", feature.attribute( "outline_style" ).toString() );
-    redliningItemElem.setAttribute( "fill_style", feature.attribute( "fill_style" ).toString() );
-    redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
-    redliningItemElem.setAttribute( "text_x", feature.attribute( "text_x" ).toString() );
-    redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
-    redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
-    redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
-    redliningElem.appendChild( redliningItemElem );
-  }
+  mLayer->write( redliningElem );
   qgisElem.appendChild( redliningElem );
 }
 
@@ -752,6 +674,7 @@ void QgsRedliningEditTool::deactivate()
 
 void QgsRedliningEditTool::onStyleChanged()
 {
+  QTextStream( stdout ) << "onStyleChanged" << endl;
   if ( mMode == TextSelected )
   {
     emit updateFeatureStyle( mCurrentLabel.featureId );
