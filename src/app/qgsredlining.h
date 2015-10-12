@@ -27,6 +27,7 @@ class QToolButton;
 class QgisApp;
 class QgsCurvePolygonV2;
 class QgsColorButtonV2;
+class QgsRedliningLayer;
 class QgsRubberBand;
 class QgsSelectedFeature;
 class QgsVectorLayer;
@@ -38,11 +39,9 @@ class QgsRedlining : public QObject
     QgsRedlining( QgisApp* app );
 
   signals:
-    void styleChanged();
+    void featureStyleChanged();
 
   private:
-    class RedliningLayer;
-
     QgisApp* mApp;
     QToolButton* mBtnNewObject;
     QAction* mActionEditObject;
@@ -52,11 +51,11 @@ class QgsRedlining : public QObject
     QComboBox* mOutlineStyleCombo;
     QComboBox* mFillStyleCombo;
 
-    RedliningLayer* mLayer;
+    QgsRedliningLayer* mLayer;
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );
-    RedliningLayer *getOrCreateLayer();
+    QgsRedliningLayer *getOrCreateLayer();
     static QIcon createOutlineStyleIcon( Qt::PenStyle style );
     static QIcon createFillStyleIcon( Qt::BrushStyle style );
 

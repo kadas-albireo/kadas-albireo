@@ -150,6 +150,7 @@ SET(QGIS_CORE_SRCS
   qgsprovidermetadata.cpp
   qgsproviderregistry.cpp
   qgspythonrunner.cpp
+  qgsredlininglayer.cpp
   qgsrelation.cpp
   qgsrelationmanager.cpp
   qgsrenderchecker.cpp
@@ -393,6 +394,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgspluginlayer.h
   qgspointlocator.h
   qgsproject.h
+  qgsredlininglayer.h
   qgsrendercontext.h
   qgsrunprocess.h
   qgsrelationmanager.h
