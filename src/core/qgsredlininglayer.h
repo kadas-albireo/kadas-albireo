@@ -18,7 +18,7 @@
 
 #include "qgsvectorlayer.h"
 
-class QgsRedliningLayer : public QgsVectorLayer
+class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
 {
     Q_OBJECT
   public:
