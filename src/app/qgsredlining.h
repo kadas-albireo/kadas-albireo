@@ -76,7 +76,7 @@ class QgsRedlining : public QObject
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
-    void checkLayerRemoved(const QString& layerId);
+    void checkLayerRemoved( const QString& layerId );
 };
 
 class QgsRedliningNewShapeMapTool : public QgsMapTool
