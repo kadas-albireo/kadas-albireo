@@ -62,6 +62,9 @@ class QgisInterface : QObject
     //! Start a blank project
     virtual void newProject( bool thePromptToSaveFlag = false ) = 0;
 
+    //! Returns the default redlining layer
+    virtual QgsRedliningLayer* redliningLayer() = 0;
+
     //! Get pointer to the active layer (layer selected in the legend)
     virtual QgsMapLayer *activeLayer() = 0;
 

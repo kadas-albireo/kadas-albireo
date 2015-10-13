@@ -35,6 +35,7 @@ class QgsMapLayer;
 class QgsMessageBar;
 class QgsPluginManagerInterface;
 class QgsRasterLayer;
+class QgsRedliningLayer;
 class QgsSnappingUtils;
 class QgsVectorLayer;
 class QgsVectorLayerTools;
@@ -107,6 +108,9 @@ class GUI_EXPORT QgisInterface : public QObject
     virtual bool addProject( QString theProject ) = 0;
     //! Start a blank project
     virtual void newProject( bool thePromptToSaveFlag = false ) = 0;
+
+    //! Returns the default redlining layer
+    virtual QgsRedliningLayer* redliningLayer() = 0;
 
     //! Get pointer to the active layer (layer selected in the legend)
     virtual QgsMapLayer *activeLayer() = 0;

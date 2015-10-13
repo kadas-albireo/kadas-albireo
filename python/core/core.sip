@@ -87,6 +87,7 @@
 %Include qgsprovidermetadata.sip
 %Include qgsproviderregistry.sip
 %Include qgspythonrunner.sip
+%Include qgsredlininglayer.sip
 %Include qgsrectangle.sip
 %Include qgsrelation.sip
 %Include qgsrelationmanager.sip

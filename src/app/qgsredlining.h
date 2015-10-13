@@ -37,6 +37,7 @@ class QgsRedlining : public QObject
     Q_OBJECT
   public:
     QgsRedlining( QgisApp* app );
+    QgsRedliningLayer *getOrCreateLayer();
 
   signals:
     void featureStyleChanged();
@@ -55,7 +56,6 @@ class QgsRedlining : public QObject
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );
-    QgsRedliningLayer *getOrCreateLayer();
     static QIcon createOutlineStyleIcon( Qt::PenStyle style );
     static QIcon createFillStyleIcon( Qt::BrushStyle style );
 

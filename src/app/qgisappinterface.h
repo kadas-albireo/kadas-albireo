@@ -74,6 +74,9 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     //! Start a new blank project
     void newProject( bool thePromptToSaveFlag = false ) override;
 
+    //! Returns the default redlining layer
+    virtual QgsRedliningLayer* redliningLayer() override;
+
     //! Get pointer to the active layer (layer selected in the legend)
     QgsMapLayer *activeLayer() override;
 
