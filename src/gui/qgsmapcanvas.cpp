@@ -587,6 +587,12 @@ void QgsMapCanvas::clearCache()
     mCache->clear();
 }
 
+void QgsMapCanvas::clearCache( const QString &layerId )
+{
+  if ( mCache )
+    mCache->clearCacheImage( layerId );
+}
+
 void QgsMapCanvas::setParallelRenderingEnabled( bool enabled )
 {
   mUseParallelRendering = enabled;
