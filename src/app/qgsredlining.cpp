@@ -133,6 +133,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL(layerWillBeRemoved(QString)), this, SLOT(checkLayerRemoved(QString)));
 }
 
 QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
@@ -325,6 +326,14 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   QDomElement redliningElem = doc.createElement( "Redlining" );
   mLayer->write( redliningElem );
   qgisElem.appendChild( redliningElem );
+}
+
+void QgsRedlining::checkLayerRemoved(const QString &layerId)
+{
+  if(layerId == mLayer->id())
+  {
+    mLayer = 0;
+  }
 }
 
 QIcon QgsRedlining::createOutlineStyleIcon( Qt::PenStyle style )

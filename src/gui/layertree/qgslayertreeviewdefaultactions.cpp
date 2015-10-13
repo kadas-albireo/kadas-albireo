@@ -242,7 +242,7 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
   if ( !layer )
     return;
 
-  if ( layer->type() == QgsMapLayer::VectorLayer )
+  if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
   {
     static_cast<QgsVectorLayer*>( layer )->setLayerTransparency( value );
     mView->refreshLayerSymbology( layer->id() );
