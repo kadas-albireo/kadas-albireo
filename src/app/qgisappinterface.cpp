@@ -144,6 +144,11 @@ void QgisAppInterface::newProject( bool thePromptToSaveFlag )
   qgis->fileNew( thePromptToSaveFlag );
 }
 
+QgsRedliningLayer* QgisAppInterface::redliningLayer()
+{
+  return qgis->redliningLayer();
+}
+
 QgsMapLayer *QgisAppInterface::activeLayer()
 {
   return qgis->activeLayer();

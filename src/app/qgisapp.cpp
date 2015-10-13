@@ -758,7 +758,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   QgsProject::instance()->setBadLayerHandler( new QgsHandleBadLayersHandler() );
 
   //Redlining
-  new QgsRedlining( this );
+  mRedlining = new QgsRedlining( this );
 
 #if 0
   // Set the background color for toolbox and overview as they default to
@@ -7975,6 +7975,11 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
 #else
   QDesktopServices::openUrl( url );
 #endif
+}
+
+QgsRedliningLayer* QgisApp::redliningLayer()
+{
+  return mRedlining->getOrCreateLayer();
 }
 
 /** Get a pointer to the currently selected map layer */

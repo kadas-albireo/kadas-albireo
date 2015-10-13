@@ -59,6 +59,8 @@ class QgsPoint;
 class QgsProviderRegistry;
 class QgsPythonUtils;
 class QgsRectangle;
+class QgsRedlining;
+class QgsRedliningLayer;
 class QgsSnappingUtils;
 class QgsUndoWidget;
 class QgsVectorLayer;
@@ -915,6 +917,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void hideSelectedLayers();
     //reimplements method from base (gui) class
     void showSelectedLayers();
+    //! Returns the default redlining layer
+    QgsRedliningLayer* redliningLayer();
     //! Return pointer to the active layer
     QgsMapLayer *activeLayer();
     //! set the active layer
@@ -1646,6 +1650,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QToolButton* mBtnFilterLegend;
 
     QgsSnappingUtils* mSnappingUtils;
+
+    QgsRedlining* mRedlining;
 
 #ifdef HAVE_TOUCH
     bool gestureEvent( QGestureEvent *event );
