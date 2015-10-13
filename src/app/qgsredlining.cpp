@@ -530,7 +530,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
   QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
   QgsFeature feature;
   QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest().setFilterRect( selectRect ) );
-  if ( fit.nextFeature( feature ) )
+  if ( fit.nextFeature( feature ) && feature.attribute("text").toString().isEmpty() )
   {
     mMode = FeatureSelected;
     emit featureSelected( feature.id() );
