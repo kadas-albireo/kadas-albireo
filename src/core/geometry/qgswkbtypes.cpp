@@ -136,13 +136,53 @@ bool QgsWKBTypes::hasM( Type type )
   return it->mHasM;
 }
 
+QgsWKBTypes::Type QgsWKBTypes::addZ( QgsWKBTypes::Type type )
+{
+  if ( hasZ( type ) )
+    return type;
+  else if ( type == Unknown )
+    return Unknown;
+  else if ( type == NoGeometry )
+    return NoGeometry;
+
+  //upgrade with z dimension
+  Type flat = flatType( type );
+  if ( hasM( type ) )
+    return ( QgsWKBTypes::Type )( flat + 3000 );
+  else
+    return ( QgsWKBTypes::Type )( flat + 1000 );
+}
+
+QgsWKBTypes::Type QgsWKBTypes::addM( QgsWKBTypes::Type type )
+{
+  if ( hasM( type ) )
+    return type;
+  else if ( type == Unknown )
+    return Unknown;
+  else if ( type == NoGeometry )
+    return NoGeometry;
+  else if ( type == Point25D ||
+            type == LineString25D ||
+            type == Polygon25D ||
+            type == MultiPoint25D ||
+            type == MultiLineString25D ||
+            type == MultiPolygon25D )
+    return type; //can't add M dimension to these types
+
+  //upgrade with m dimension
+  Type flat = flatType( type );
+  if ( hasZ( type ) )
+    return ( QgsWKBTypes::Type )( flat + 3000 );
+  else
+    return ( QgsWKBTypes::Type )( flat + 2000 );
+}
+
 QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
 {
   QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> entries;
   //register the known wkb types
   entries.insert( Unknown, wkbEntry( "Unknown", false, Unknown, Unknown, Unknown, UnknownGeometry, false, false ) );
   entries.insert( NoGeometry, wkbEntry( "NoGeometry", false, NoGeometry, NoGeometry, NoGeometry, NullGeometry, false, false ) );
-  entries.insert( MixedGeometry, wkbEntry( "MixedGeometry", false, MixedGeometry, MixedGeometry, MixedGeometry, AnyGeometry, false, false ) );
   //point
   entries.insert( Point, wkbEntry( "Point", false, MultiPoint, Point, Point, PointGeometry, false, false ) );
   entries.insert( PointZ, wkbEntry( "PointZ", false, MultiPointZ, PointZ, Point, PointGeometry, true, false ) );
