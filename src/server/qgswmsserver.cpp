@@ -46,6 +46,7 @@
 #include "qgsogcutils.h"
 #include "qgsfeature.h"
 #include "qgseditorwidgetregistry.h"
+#include "qgsserverlogger.h"
 
 #include <QImage>
 #include <QPainter>
@@ -1286,9 +1287,14 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   applyOpacities( layersList, bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
 
   if ( hitTest )
+  {
     runHitTest( &thePainter, *hitTest );
+  }
   else
-    mMapRenderer->render( &thePainter );
+  {
+    bool logRenderTime = QgsServerLogger::instance()->logLevel() < 1;
+    mMapRenderer->render( &thePainter, 0, logRenderTime );
+  }
 
   if ( mConfigParser )
   {
@@ -1416,11 +1422,11 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
   }
   else
   {
-      infoPoint = new QgsPoint();
-      if( !infoPointToMapCoordinates( i, j, infoPoint, mMapRenderer ) )
-      {
-          return 5;
-      }
+    infoPoint = new QgsPoint();
+    if ( !infoPointToMapCoordinates( i, j, infoPoint, mMapRenderer ) )
+    {
+      return 5;
+    }
   }
 
   //get the layer registered in QgsMapLayerRegistry and apply possible filters
@@ -1556,9 +1562,9 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
         QgsRasterLayer* rasterLayer = dynamic_cast<QgsRasterLayer*>( currentLayer );
         if ( rasterLayer )
         {
-          if( !infoPoint )
+          if ( !infoPoint )
           {
-              continue;
+            continue;
           }
           QgsPoint layerInfoPoint = mMapRenderer->mapToLayerCoordinates( currentLayer, *infoPoint );
           if ( featureInfoFromRasterLayer( rasterLayer, &layerInfoPoint, result, layerElement, version, infoFormat ) != 0 )

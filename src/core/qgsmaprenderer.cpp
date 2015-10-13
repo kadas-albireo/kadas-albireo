@@ -231,7 +231,7 @@ void QgsMapRenderer::adjustExtentToSize()
 }
 
 
-void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale )
+void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool logRenderTime )
 {
   //Lock render method for concurrent threads (e.g. from globe)
   QMutexLocker renderLock( &mRenderMutex );
@@ -272,12 +272,6 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale )
   mDrawing = true;
 
   const QgsCoordinateTransform *ct;
-
-#ifdef QGISDEBUG
-  QgsDebugMsg( "Starting to render layer stack." );
-  QTime renderTime;
-  renderTime.start();
-#endif
 
   if ( mOverview )
     mRenderContext.setDrawEditingInformation( !mOverview );
@@ -422,6 +416,12 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale )
 
       mRenderContext.setCoordinateTransform( ct );
 
+      QTime t;
+      if ( logRenderTime )
+      {
+        t.start();
+      }
+
       //decide if we have to scale the raster
       //this is necessary in case QGraphicsScene is used
       bool scaleRaster = false;
@@ -545,13 +545,17 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale )
       }
 
       disconnect( ml, SIGNAL( drawingProgress( int, int ) ), this, SLOT( onDrawingProgress( int, int ) ) );
+
+      if ( logRenderTime )
+      {
+        QgsMessageLog::logMessage( "Layer " + ml->name() +  " rendered in " + QString::number( t.elapsed() ) + " ms", "Rendering", QgsMessageLog::INFO );
+      }
     }
     else // layer not visible due to scale
     {
       QgsDebugMsg( "Layer not rendered because it is not within the defined "
                    "visibility scale range" );
     }
-
   } // while (li.hasPrevious())
 
   QgsDebugMsg( "Done rendering map layers" );
@@ -620,9 +624,6 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale )
     mLabelingEngine->drawLabeling( mRenderContext );
     mLabelingEngine->exit();
   }
-
-  QgsDebugMsg( "Rendering completed in (seconds): " + QString( "%1" ).arg( renderTime.elapsed() / 1000.0 ) );
-
   mDrawing = false;
 }
 
@@ -773,8 +774,8 @@ bool QgsMapRenderer::splitLayersExtent( QgsMapLayer* layer, QgsRectangle& extent
     {
       Q_UNUSED( cse );
       QgsDebugMsg( "Transform error caught" );
-      extent = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
-      r2     = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
+      extent = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
+      r2     = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
     }
   }
   return split;

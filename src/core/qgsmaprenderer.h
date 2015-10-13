@@ -176,7 +176,7 @@ class CORE_EXPORT QgsMapRenderer : public QObject
     //! starts rendering
     //! @param painter painter to render to
     //! @param forceWidthScale Force a specific scale factor for line widths and marker sizes. Automatically calculated from output device DPI if 0
-    void render( QPainter* painter, double* forceWidthScale = 0 );
+    void render( QPainter* painter, double* forceWidthScale = 0, bool logRenderTime = false );
 
     //! sets extent and checks whether suitable (returns false if not)
     bool setExtent( const QgsRectangle& extent );
