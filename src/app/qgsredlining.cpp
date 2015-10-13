@@ -133,7 +133,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL(layerWillBeRemoved(QString)), this, SLOT(checkLayerRemoved(QString)));
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWillBeRemoved( QString ) ), this, SLOT( checkLayerRemoved( QString ) ) );
 }
 
 QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
@@ -272,7 +272,7 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mFillStyleCombo->itemData( mFillStyleCombo->currentIndex() ).toInt() ) ) );
-  mApp->mapCanvas()->clearCache(mLayer->id());
+  mApp->mapCanvas()->clearCache( mLayer->id() );
   mApp->mapCanvas()->refresh();
 }
 
@@ -328,9 +328,9 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   qgisElem.appendChild( redliningElem );
 }
 
-void QgsRedlining::checkLayerRemoved(const QString &layerId)
+void QgsRedlining::checkLayerRemoved( const QString &layerId )
 {
-  if(layerId == mLayer->id())
+  if ( layerId == mLayer->id() )
   {
     mLayer = 0;
   }
@@ -530,7 +530,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
   QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
   QgsFeature feature;
   QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest().setFilterRect( selectRect ) );
-  if ( fit.nextFeature( feature ) && feature.attribute("text").toString().isEmpty() )
+  if ( fit.nextFeature( feature ) && feature.attribute( "text" ).toString().isEmpty() )
   {
     mMode = FeatureSelected;
     emit featureSelected( feature.id() );
