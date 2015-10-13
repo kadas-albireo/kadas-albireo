@@ -16,6 +16,7 @@
 #include "qgsredliningrendererv2.h"
 #include "qgssymbolv2.h"
 #include "qgssymbollayerv2.h"
+#include "qgsellipsesymbollayerv2.h"
 #include "qgslogger.h"
 #include "qgsfeature.h"
 #include "qgsgeometry.h"
@@ -25,6 +26,7 @@
 QgsRedliningRendererV2::QgsRedliningRendererV2()
     : QgsFeatureRendererV2( "redliningSymbol" )
     , mMarkerSymbol( new QgsMarkerSymbolV2() )
+    , mEllipseSymbol( new QgsMarkerSymbolV2( QgsSymbolLayerV2List() << new QgsEllipseSymbolLayerV2() ) )
     , mLineSymbol( new QgsLineSymbolV2() )
     , mFillSymbol( new QgsFillSymbolV2() )
 {
@@ -32,10 +34,21 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "size", "2 * \"size\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 10.0" );
+
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "size", "2 * \"size\"" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 10.0" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "width_expression", "regexp_substr(\"flags\",'w=(\\d+\\.?\\d*)')" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "height_expression", "regexp_substr(\"flags\",'h=(\\d+\\.?\\d*)')" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "rotation_expression", "regexp_substr(\"flags\",'r=(\\d+\\.?\\d*)')" );
+  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "symbol_name_expression", "regexp_substr(\"flags\",'symbol=(\\w+)')" );
+
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "\"size\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "line_style", "\"outline_style\"" );
+
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "width_border", "\"size\"" );
@@ -48,7 +61,12 @@ QgsSymbolV2* QgsRedliningRendererV2::originalSymbolForFeature( QgsFeature& featu
   switch ( QgsWKBTypes::flatType( QgsWKBTypes::singleType( feature.geometry()->geometry()->wkbType() ) ) )
   {
     case QgsWKBTypes::Point:
-      return mMarkerSymbol.data();
+    {
+      if ( feature.attribute( "flags" ).toString().contains( "symbol=" ) )
+        return mEllipseSymbol.data();
+      else
+        return mMarkerSymbol.data();
+    }
     case QgsWKBTypes::LineString:
     case QgsWKBTypes::CircularString:
     case QgsWKBTypes::CompoundCurve:
@@ -106,7 +124,10 @@ bool QgsRedliningRendererV2::renderFeature( QgsFeature& feature, QgsRenderContex
     {
       QPointF pt;
       _getPoint( pt, context, geom->asWkb( wkbSize ) );
-      mMarkerSymbol->renderPoint( pt, &feature, context, layer, selected );
+      if ( feature.attribute( "flags" ).toString().contains( "symbol=" ) )
+        mEllipseSymbol->renderPoint( pt, &feature, context, layer, selected );
+      else
+        mMarkerSymbol->renderPoint( pt, &feature, context, layer, selected );
       break;
     }
     case QgsWKBTypes::LineString:

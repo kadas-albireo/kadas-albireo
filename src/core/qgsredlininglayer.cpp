@@ -52,7 +52,7 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
   setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
 }
 
-void QgsRedliningLayer::addFeature( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle )
+void QgsRedliningLayer::addFeature( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags )
 {
   QgsFeature f( pendingFields() );
   f.setGeometry( geometry );
@@ -61,6 +61,7 @@ void QgsRedliningLayer::addFeature( QgsGeometry *geometry, const QColor &outline
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( fill ) );
   f.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( outlineStyle ) );
   f.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( fillStyle ) );
+  f.setAttribute( "flags", flags );
   dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
