@@ -101,6 +101,9 @@ class CORE_EXPORT QgsCurvePolygonV2: public QgsSurfaceV2
         @return rotation in radians, clockwise from north*/
     double vertexAngle( const QgsVertexId& vertex ) const override;
 
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
+
   protected:
 
     QgsCurveV2* mExteriorRing;

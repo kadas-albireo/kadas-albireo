@@ -288,6 +288,22 @@ class CORE_EXPORT QgsAbstractGeometryV2
         @return rotation in radians, clockwise from north*/
     virtual double vertexAngle( const QgsVertexId& vertex ) const = 0;
 
+    /** Adds a z-dimension to the geometry, initialized to a preset value.
+     * @param zValue initial z-value for all nodes
+     * @returns true on success
+     * @note added in QGIS 2.12
+     * @see addMValue
+     */
+    virtual bool addZValue( double zValue = 0 ) = 0;
+
+    /** Adds a measure to the geometry, initialized to a preset value.
+     * @param mValue initial m-value for all nodes
+     * @returns true on success
+     * @note added in QGIS 2.12
+     * @see addZValue
+     */
+    virtual bool addMValue( double mValue = 0 ) = 0;
+
   protected:
     QgsWKBTypes::Type mWkbType;
     mutable QgsRectangle mBoundingBox;

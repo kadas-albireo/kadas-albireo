@@ -59,4 +59,7 @@ class QgsLineStringV2: public QgsCurveV2
     /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
         @return rotation in radians, clockwise from north*/
     double vertexAngle( const QgsVertexId& vertex ) const;
+
+    virtual bool addZValue( double zValue = 0 );
+    virtual bool addMValue( double mValue = 0 );
 };

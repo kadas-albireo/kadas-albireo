@@ -88,6 +88,9 @@ class CORE_EXPORT QgsPointV2: public QgsAbstractGeometryV2
     /** Angle undefined. Always returns 0.0*/
     double vertexAngle( const QgsVertexId& vertex ) const override { Q_UNUSED( vertex ); return 0.0; }
 
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
+
   private:
     double mX;
     double mY;
