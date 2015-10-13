@@ -55,11 +55,13 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QPointer<QgsMessageBarItem> mReprojMsgItem;
     QgsVBSCrashHandler* mCrashHandler;
     QgsVBSMultiMapManager* mMultiMapManager;
+    QAction* mActionOvlImport;
 
   private slots:
     void activateMapToolPinAnnotation();
     void onMapToolSet( QgsMapTool*tool );
     void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
+    void importOVL();
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

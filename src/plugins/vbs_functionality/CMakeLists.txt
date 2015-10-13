@@ -1,4 +1,5 @@
 FIND_PACKAGE(QJSON REQUIRED)
+FIND_PACKAGE(QuaZip REQUIRED)
 
 IF(MSVC)
 SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
@@ -16,6 +17,7 @@ SET (vbsfunctionality_SRCS
   qgsvbscrsselection.cpp
   multimap/qgsvbsmapwidget.cpp
   multimap/qgsvbsmultimapmanager.cpp
+  ovl/qgsvbsovlimporter.cpp
   pinannotation/qgsvbsmaptoolpinannotation.cpp
   pinannotation/qgsvbspinannotationitem.cpp
   search/qgsvbssearchbox.cpp
@@ -30,6 +32,7 @@ SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
   qgsvbscoordinatedisplayer.h
   qgsvbscoordinateconverter.h
+  ovl/qgsvbsovlimporter.h
   pinannotation/qgsvbsmaptoolpinannotation.h
 )
 
@@ -72,6 +75,7 @@ INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
      ${CMAKE_BINARY_DIR}/src/ui
      ${QJSON_INCLUDE_DIR}
+     ${QUAZIP_INCLUDE_DIR}
      ${GDAL_INCLUDE_DIR}
      ../../core
      ../../core/raster
@@ -85,6 +89,7 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
+  ${QUAZIP_LIBRARIES}
   ${CRASHRPT_LIBRARY}
 )
 

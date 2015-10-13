@@ -43,6 +43,7 @@ class CORE_EXPORT QgsRedliningRendererV2 : public QgsFeatureRendererV2
 
   protected:
     QScopedPointer<QgsMarkerSymbolV2> mMarkerSymbol;
+    QScopedPointer<QgsMarkerSymbolV2> mEllipseSymbol;
     QScopedPointer<QgsLineSymbolV2> mLineSymbol;
     QScopedPointer<QgsFillSymbolV2> mFillSymbol;
 

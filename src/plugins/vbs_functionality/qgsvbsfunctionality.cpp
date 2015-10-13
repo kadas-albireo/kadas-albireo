@@ -26,6 +26,7 @@
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
 #include "multimap/qgsvbsmultimapmanager.h"
+#include "ovl/qgsvbsovlimporter.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
 #include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
@@ -44,6 +45,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mReprojMsgItem( 0 )
     , mCrashHandler( 0 )
     , mMultiMapManager( 0 )
+    , mActionOvlImport( 0 )
 {
 }
 
@@ -72,6 +74,10 @@ void QgsVBSFunctionality::initGui()
   mCrashHandler = new QgsVBSCrashHandler();
 
   mMultiMapManager = new QgsVBSMultiMapManager( mQGisIface, this );
+
+  mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
+  connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
+  mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
 }
 
 void QgsVBSFunctionality::unload()
@@ -93,6 +99,8 @@ void QgsVBSFunctionality::unload()
   mCrashHandler = 0;
   delete mMultiMapManager;
   mMultiMapManager = 0;
+  delete mActionOvlImport;
+  mActionOvlImport = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
@@ -131,4 +139,9 @@ void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& ne
     mReprojMsgItem->setDuration( 10 );
     mQGisIface->messageBar()->pushItem( mReprojMsgItem.data() );
   }
+}
+
+void QgsVBSFunctionality::importOVL()
+{
+  QgsVBSOvlImporter( mQGisIface, mQGisIface->mainWindow() ).import();
 }
