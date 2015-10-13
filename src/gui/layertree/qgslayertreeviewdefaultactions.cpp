@@ -246,14 +246,14 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
   {
     static_cast<QgsVectorLayer*>( layer )->setLayerTransparency( value );
     mView->refreshLayerSymbology( layer->id() );
-    canvas->clearCache();
+    canvas->clearCache( layer->id() );
     canvas->refresh();
   }
   else if ( layer->type() == QgsMapLayer::RasterLayer )
   {
     static_cast<QgsRasterLayer*>( layer )->renderer()->setOpacity( 1. - value / 100. );
     mView->refreshLayerSymbology( layer->id() );
-    canvas->clearCache();
+    canvas->clearCache( layer->id() );
     canvas->refresh();
   }
 }

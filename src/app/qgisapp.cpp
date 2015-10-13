@@ -6561,7 +6561,7 @@ void QgisApp::pasteStyle( QgsMapLayer * destinationLayer )
       }
 
       mLayerTreeView->refreshLayerSymbology( selectionLayer->id() );
-      mMapCanvas->clearCache();
+      mMapCanvas->clearCache( selectionLayer->id() );
       mMapCanvas->refresh();
     }
   }
