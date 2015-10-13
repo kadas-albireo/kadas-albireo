@@ -40,6 +40,7 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
                                  << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
                                  << QgsField( "flags", QVariant::String, "string", 32 ) );
   setRendererV2( new QgsRedliningRendererV2 );
+  updateFields();
 
   setCustomProperty( "labeling", "pal" );
   setCustomProperty( "labeling/enabled", true );
