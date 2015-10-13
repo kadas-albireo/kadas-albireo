@@ -53,14 +53,26 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
 
 void QgsRedliningLayer::addFeature( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle )
 {
-  const QgsFields& fields = pendingFields();
-  QgsFeature f( fields );
+  QgsFeature f( pendingFields() );
   f.setGeometry( geometry );
   f.setAttribute( "size", outlineSize );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( outline ) );
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( fill ) );
   f.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( outlineStyle ) );
   f.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( fillStyle ) );
+  dataProvider()->addFeatures( QgsFeatureList() << f );
+}
+
+void QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font )
+{
+  QgsFeature f( pendingFields() );
+  f.setGeometry( new QgsGeometry( pos.clone() ) );
+  f.setAttribute( "text", text );
+  f.setAttribute( "text_x", pos.x() );
+  f.setAttribute( "text_y", pos.y() );
+  f.setAttribute( "size", font.pixelSize() );
+  f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
+  dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
 void QgsRedliningLayer::read( const QDomElement& redliningElem )
