@@ -321,7 +321,7 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
     else if ( clsid == "{4B866664-04FF-41A9-B741-15E705BA6DAD}" ) // Circle
       shape = "circle";
 
-    QString flags = QString( "shape=%1,w=%2,h=%3,r=%4" ).arg( shape ).arg( width ).arg( height ).arg( rotation );
+    QString flags = QString( "symbol=%1,w=%2,h=%3,r=%4" ).arg( shape ).arg( width ).arg( height ).arg( rotation );
     mIface->redliningLayer()->addFeature( new QgsGeometry( point.clone() ), outline, fill, lineSize, lineStyle, fillStyle, flags );
   }
 }
