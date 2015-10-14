@@ -661,12 +661,14 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( mCurrentLabel.labelRect.xMinimum(), mCurrentLabel.labelRect.yMinimum() ) );
     mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), pos.x() );
     mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), pos.y() );
+    mCanvas->clearCache( mLayer->id() );
     mCanvas->refresh();
   }
   else if ( mMode == FeatureSelected )
   {
     mLayer->changeGeometry( mCurrentFeature->featureId(), mCurrentFeature->geometry() );
     mCurrentFeature->deselectVertex( mCurrentVertex );
+    mCanvas->clearCache( mLayer->id() );
     mCanvas->refresh();
   }
 }
