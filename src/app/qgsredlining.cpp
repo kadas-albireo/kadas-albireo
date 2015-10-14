@@ -38,9 +38,20 @@
 QgsRedlining::QgsRedlining( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
 {
+  QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
+
   QAction* actionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
   actionNewPoint->setCheckable( true );
   connect( actionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint() ) );
+
+  QAction* actionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
+  actionNewSquare->setCheckable( true );
+  connect( actionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare() ) );
+
+  QAction* actionNewTriangle = new QAction( QIcon( ":/images/themes/default/redlining_triangle.svg" ), tr( "Triangle" ), this );
+  actionNewTriangle->setCheckable( true );
+  connect( actionNewTriangle, SIGNAL( triggered( bool ) ), this, SLOT( newTriangle() ) );
+
   QAction* actionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Line" ), this );
   actionNewLine->setCheckable( true );
   connect( actionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine() ) );
@@ -59,8 +70,13 @@ QgsRedlining::QgsRedlining( QgisApp* app )
 
   mBtnNewObject = new QToolButton();
   mBtnNewObject->setToolTip( tr( "New Object" ) );
+  QMenu* menuNewMarker = new QMenu();
+  menuNewMarker->addAction( actionNewPoint );
+  menuNewMarker->addAction( actionNewSquare );
+  menuNewMarker->addAction( actionNewTriangle );
+  actionNewMarker->setMenu( menuNewMarker );
   QMenu* menuNewObject = new QMenu();
-  menuNewObject->addAction( actionNewPoint );
+  menuNewObject->addAction( actionNewMarker );
   menuNewObject->addAction( actionNewLine );
   menuNewObject->addAction( actionNewRectangle );
   menuNewObject->addAction( actionNewPolygon );
@@ -68,7 +84,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   menuNewObject->addAction( actionNewText );
   mBtnNewObject->setMenu( menuNewObject );
   mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
-  mBtnNewObject->setDefaultAction( menuNewObject->actions().first() );
+  mBtnNewObject->setDefaultAction( actionNewPoint );
   connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
   mApp->redliningToolBar()->addWidget( mBtnNewObject );
 
@@ -170,7 +186,17 @@ void QgsRedlining::editObject()
 
 void QgsRedlining::newPoint()
 {
-  activateTool( new QgsMapToolAddFeature( mApp->mapCanvas(), QgsMapToolCapture::CapturePoint, QGis::WKBPoint ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), qobject_cast<QAction*>( QObject::sender() ) );
+}
+
+void QgsRedlining::newSquare()
+{
+  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "rectangle" ), qobject_cast<QAction*>( QObject::sender() ) );
+}
+
+void QgsRedlining::newTriangle()
+{
+  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "triangle" ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newLine()
@@ -239,7 +265,7 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
     return;
   }
   mSpinBorderSize->blockSignals( true );
-  mSpinBorderSize->setValue( f.attribute( "size" ).toInt() );
+  mSpinBorderSize->setValue( 2 * f.attribute( "size" ).toInt() );
   mSpinBorderSize->blockSignals( false );
   mBtnOutlineColor->blockSignals( true );
   mBtnOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
@@ -267,7 +293,7 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
     return;
   }
   const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mSpinBorderSize->value() );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), 0.5 * mSpinBorderSize->value() );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mBtnOutlineColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );
@@ -404,6 +430,17 @@ void QgsRedliningNewShapeMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void QgsRedliningPointMapTool::canvasReleaseEvent( QMouseEvent *e )
+{
+  QgsFeature f( mLayer->pendingFields() );
+  QString flags = QString( "symbol=%1,w=5*\"size\",h=5*\"size\",r=0" ).arg( mShape );
+  f.setAttribute( "flags", flags );
+  f.setGeometry( new QgsGeometry( new QgsPointV2( toLayerCoordinates( mLayer, e->pos() ) ) ) );
+  mLayer->addFeature( f );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void QgsRedliningRectangleMapTool::canvasMoveEvent( QMouseEvent *e )
 {
   if ( mRubberBand )
@@ -419,7 +456,7 @@ void QgsRedliningRectangleMapTool::canvasMoveEvent( QMouseEvent *e )
       << toLayerCoordinates( mLayer, QPoint( rect.x() + rect.width(), rect.y() + rect.height() ) )
       << toLayerCoordinates( mLayer, QPoint( rect.x(), rect.y() + rect.height() ) )
       << toLayerCoordinates( mLayer, QPoint( rect.x(), rect.y() ) ) );
-    mGeometry->setExteriorRing( exterior );
+    static_cast<QgsPolygonV2*>( mGeometry )->setExteriorRing( exterior );
     QgsGeometry geom( mGeometry->clone() );
     mRubberBand->setToGeometry( &geom, mLayer );
   }
@@ -455,7 +492,7 @@ void QgsRedliningCircleMapTool::canvasMoveEvent( QMouseEvent *e )
       QList<QgsPointV2>() << toLayerCoordinates( mLayer, QPoint( mPressPos.x() + r, mPressPos.y() ) )
       << toLayerCoordinates( mLayer, QPoint( mPressPos.x(), mPressPos.y() ) )
       << toLayerCoordinates( mLayer, QPoint( mPressPos.x() + r, mPressPos.y() ) ) );
-    mGeometry->setExteriorRing( exterior );
+    static_cast<QgsCurvePolygonV2*>( mGeometry )->setExteriorRing( exterior );
     QgsGeometry geom( mGeometry->segmentize() );
     mRubberBand->setToGeometry( &geom, mLayer );
   }

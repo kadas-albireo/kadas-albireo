@@ -25,24 +25,18 @@
 
 QgsRedliningRendererV2::QgsRedliningRendererV2()
     : QgsFeatureRendererV2( "redliningSymbol" )
-    , mMarkerSymbol( new QgsMarkerSymbolV2() )
-    , mEllipseSymbol( new QgsMarkerSymbolV2( QgsSymbolLayerV2List() << new QgsEllipseSymbolLayerV2() ) )
+    , mMarkerSymbol( new QgsMarkerSymbolV2( QgsSymbolLayerV2List() << new QgsEllipseSymbolLayerV2() ) )
     , mLineSymbol( new QgsLineSymbolV2() )
     , mFillSymbol( new QgsFillSymbolV2() )
 {
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "size", "2 * \"size\"" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 10.0" );
-
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "size", "2 * \"size\"" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 10.0" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "width_expression", "regexp_substr(\"flags\",'w=(\\d+\\.?\\d*)')" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "height_expression", "regexp_substr(\"flags\",'h=(\\d+\\.?\\d*)')" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "rotation_expression", "regexp_substr(\"flags\",'r=(\\d+\\.?\\d*)')" );
-  mEllipseSymbol->symbolLayers().front()->setDataDefinedProperty( "symbol_name_expression", "regexp_substr(\"flags\",'symbol=(\\w+)')" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_color", "\"fill\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_color", "\"outline\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_style", "\"outline_style\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "eval(regexp_substr(\"flags\",'w=([^,]+)'))" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "height", "eval(regexp_substr(\"flags\",'h=([^,]+)'))" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "rotation", "eval(regexp_substr(\"flags\",'r=([^,]+)'))" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "symbol_name", "regexp_substr(\"flags\",'symbol=(\\\\w+)')" );
 
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
@@ -61,12 +55,7 @@ QgsSymbolV2* QgsRedliningRendererV2::originalSymbolForFeature( QgsFeature& featu
   switch ( QgsWKBTypes::flatType( QgsWKBTypes::singleType( feature.geometry()->geometry()->wkbType() ) ) )
   {
     case QgsWKBTypes::Point:
-    {
-      if ( feature.attribute( "flags" ).toString().contains( "symbol=" ) )
-        return mEllipseSymbol.data();
-      else
-        return mMarkerSymbol.data();
-    }
+      return mMarkerSymbol.data();
     case QgsWKBTypes::LineString:
     case QgsWKBTypes::CircularString:
     case QgsWKBTypes::CompoundCurve:
@@ -124,10 +113,7 @@ bool QgsRedliningRendererV2::renderFeature( QgsFeature& feature, QgsRenderContex
     {
       QPointF pt;
       _getPoint( pt, context, geom->asWkb( wkbSize ) );
-      if ( feature.attribute( "flags" ).toString().contains( "symbol=" ) )
-        mEllipseSymbol->renderPoint( pt, &feature, context, layer, selected );
-      else
-        mMarkerSymbol->renderPoint( pt, &feature, context, layer, selected );
+      mMarkerSymbol->renderPoint( pt, &feature, context, layer, selected );
       break;
     }
     case QgsWKBTypes::LineString:

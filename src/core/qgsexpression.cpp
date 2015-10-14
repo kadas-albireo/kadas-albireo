@@ -1375,6 +1375,12 @@ static QVariant fcnFormatDate( const QVariantList& values, const QgsFeature*, Qg
   return dt.toString( format );
 }
 
+static QVariant fcnEval( const QVariantList& values, const QgsFeature* f, QgsExpression* parent )
+{
+  QString expr = getStringValue( values.at( 0 ), parent );
+  return QgsExpression( expr ).evaluate( f );
+}
+
 static QVariant fcnColorRgb( const QVariantList &values, const QgsFeature *, QgsExpression *parent )
 {
   int red = getIntValue( values.at( 0 ), parent );
@@ -1777,6 +1783,7 @@ const QList<QgsExpression::Function*> &QgsExpression::Functions()
     << new StaticFunction( "format", -1, fcnFormatString, "String" )
     << new StaticFunction( "format_number", 2, fcnFormatNumber, "String" )
     << new StaticFunction( "format_date", 2, fcnFormatDate, "String" )
+    << new StaticFunction( "eval", 1, fcnEval, "String" )
     << new StaticFunction( "color_rgb", 3, fcnColorRgb, "Color" )
     << new StaticFunction( "color_rgba", 4, fncColorRgba, "Color" )
     << new StaticFunction( "ramp_color", 2, fcnRampColor, "Color" )

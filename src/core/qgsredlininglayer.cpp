@@ -30,7 +30,7 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
 
   setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   dataProvider()->addAttributes( QList<QgsField>()
-                                 << QgsField( "size", QVariant::Int, "integer", 2 )
+                                 << QgsField( "size", QVariant::Double, "real", 2, 2 )
                                  << QgsField( "outline", QVariant::String, "string", 15 )
                                  << QgsField( "fill", QVariant::String, "string", 15 )
                                  << QgsField( "outline_style", QVariant::Int, "integer", 1 )
@@ -38,7 +38,7 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
                                  << QgsField( "text", QVariant::String, "string", 128 )
                                  << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
                                  << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
-                                 << QgsField( "flags", QVariant::String, "string", 32 ) );
+                                 << QgsField( "flags", QVariant::String, "string", 64 ) );
   setRendererV2( new QgsRedliningRendererV2 );
   updateFields();
 
