@@ -416,7 +416,6 @@ void QgsRedliningNewShapeMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     QgsFeature f( mLayer->pendingFields() );
     f.setGeometry( new QgsGeometry( mGeometry ) );
     mLayer->addFeature( f );
-    mCanvas->refresh();
     mGeometry = 0; // no delete since ownership taken by QgsGeometry above
     delete mRubberBand;
     mRubberBand = 0;
@@ -465,7 +464,6 @@ void QgsRedliningRectangleMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     f.setAttribute( "flags", "rect:" + mCanvas->mapSettings().destinationCrs().authid() );
     f.setGeometry( new QgsGeometry( mGeometry ) );
     mLayer->addFeature( f );
-    mCanvas->refresh();
     mGeometry = 0; // no delete since ownership taken by QgsGeometry above
     delete mRubberBand;
     mRubberBand = 0;
@@ -507,7 +505,6 @@ void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
     f.setAttribute( "text_y", pos.y() );
     f.setGeometry( new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
     mLayer->addFeature( f );
-    mCanvas->refresh();
   }
 }
 
