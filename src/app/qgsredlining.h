@@ -64,6 +64,8 @@ class QgsRedlining : public QObject
     void deactivateTool();
     void editObject();
     void newPoint();
+    void newSquare();
+    void newTriangle();
     void newLine();
     void newRectangle();
     void newPolygon();
@@ -91,8 +93,19 @@ class QgsRedliningNewShapeMapTool : public QgsMapTool
   protected:
     QgsVectorLayer* mLayer;
     QPoint mPressPos;
-    QgsCurvePolygonV2* mGeometry;
+    QgsAbstractGeometryV2* mGeometry;
     QgsRubberBand* mRubberBand;
+};
+
+class QgsRedliningPointMapTool : public QgsRedliningNewShapeMapTool
+{
+  public:
+    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape )
+        : QgsRedliningNewShapeMapTool( canvas, layer ), mShape( shape ) {}
+    void canvasPressEvent( QMouseEvent * /*e*/ ) override {}
+    void canvasReleaseEvent( QMouseEvent * e ) override;
+  private:
+    QString mShape;
 };
 
 class QgsRedliningRectangleMapTool : public QgsRedliningNewShapeMapTool
