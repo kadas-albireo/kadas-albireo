@@ -108,7 +108,7 @@ void QgsVBSOvlImporter::import( QString filename ) const
     }
     else
     {
-      QgsDebugMsg( QString( "Unhandeled clsid %1" ).arg( clsid ) );
+      QgsDebugMsg( QString( "Unhandled clsid %1" ).arg( clsid ) );
     }
 
     object = object.nextSiblingElement( "object" );
