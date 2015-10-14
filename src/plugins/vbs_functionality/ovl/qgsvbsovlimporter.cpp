@@ -309,7 +309,7 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
     }
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
     poly->setExteriorRing( ring );
-    mIface->redliningLayer()->addFeature( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
+    mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
   }
   else
   {
@@ -322,7 +322,7 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
       shape = "circle";
 
     QString flags = QString( "symbol=%1,w=%2,h=%3,r=%4" ).arg( shape ).arg( width ).arg( height ).arg( rotation );
-    mIface->redliningLayer()->addFeature( new QgsGeometry( point.clone() ), outline, fill, lineSize, lineStyle, fillStyle, flags );
+    mIface->redliningLayer()->addShape( new QgsGeometry( point.clone() ), outline, fill, lineSize, lineStyle, fillStyle, flags );
   }
 }
 
@@ -369,7 +369,7 @@ void QgsVBSOvlImporter::parseLine( QDomElement &object ) const
   }
 
   // TODO: roundable, startDelimiter, endDelimiter, tooltip
-  mIface->redliningLayer()->addFeature( new QgsGeometry( line ), outline, Qt::black, lineSize, lineStyle, Qt::SolidPattern );
+  mIface->redliningLayer()->addShape( new QgsGeometry( line ), outline, Qt::black, lineSize, lineStyle, Qt::SolidPattern );
 }
 
 void QgsVBSOvlImporter::parsePolygon( QDomElement &object ) const
@@ -412,7 +412,7 @@ void QgsVBSOvlImporter::parsePolygon( QDomElement &object ) const
   ring->addVertex( points.first() );
   poly->setExteriorRing( ring );
 
-  mIface->redliningLayer()->addFeature( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
+  mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
 }
 
 void QgsVBSOvlImporter::parseText( QDomElement &object ) const

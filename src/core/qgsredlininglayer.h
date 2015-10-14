@@ -23,8 +23,8 @@ class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
     Q_OBJECT
   public:
     QgsRedliningLayer();
-    void addFeature( QgsGeometry* geometry, const QColor& outline, const QColor& fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle , const QString &flags = QString() );
-    void addText( const QString &text, const QgsPointV2 &pos, const QColor& color, const QFont& font );
+    bool addShape( QgsGeometry* geometry, const QColor& outline, const QColor& fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle , const QString &flags = QString() );
+    bool addText( const QString &text, const QgsPointV2 &pos, const QColor& color, const QFont& font );
     void read( const QDomElement& redliningElem );
     void write( QDomElement& redliningElem );
 };
