@@ -45,11 +45,13 @@ QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
   setCustomProperty( "labeling", "pal" );
   setCustomProperty( "labeling/enabled", true );
   setCustomProperty( "labeling/fieldName", "text" );
-  setCustomProperty( "labeling/fontSize", 10 );
   setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
   setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
   setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~outline" );
   setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
+  setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
+  setCustomProperty( "labeling/dataDefined/Italic", "1~~1~~regexp_substr(\"flags\",'italic=([^,]+)')~~" );
+  setCustomProperty( "labeling/dataDefined/Family", "1~~1~~regexp_substr(\"flags\",'family=([^,]+)')~~" );
 }
 
 bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags )
@@ -74,6 +76,7 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   f.setAttribute( "text_y", pos.y() );
   f.setAttribute( "size", font.pixelSize() );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
+  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ) );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
