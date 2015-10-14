@@ -149,7 +149,6 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWillBeRemoved( QString ) ), this, SLOT( checkLayerRemoved( QString ) ) );
 }
 
 QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
@@ -165,6 +164,7 @@ QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
   // QueuedConnection to delay execution of the slot until the signal-emitting function has exited,
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
+  connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( deactivateTool() ) );
 
   return mLayer;
 }
@@ -235,21 +235,24 @@ void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
   }
   ++mLayerRefCount;
   mApp->mapCanvas()->setMapTool( tool );
+  mRedliningTool = tool;
 }
 
 void QgsRedlining::deactivateTool()
 {
-  QgsMapTool* tool = qobject_cast<QgsMapTool*>( QObject::sender() );
-  if ( mLayer )
+  if ( mRedliningTool )
   {
-    --mLayerRefCount;
-    if ( mLayerRefCount == 0 )
+    if ( mLayer )
     {
-      mLayer->commitChanges();
-      mApp->mapCanvas()->setCurrentLayer( 0 );
+      --mLayerRefCount;
+      if ( mLayerRefCount == 0 )
+      {
+        mLayer->commitChanges();
+        mApp->mapCanvas()->setCurrentLayer( 0 );
+      }
     }
+    mRedliningTool->deleteLater();
   }
-  tool->deleteLater();
 }
 
 void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
@@ -352,14 +355,6 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   QDomElement redliningElem = doc.createElement( "Redlining" );
   mLayer->write( redliningElem );
   qgisElem.appendChild( redliningElem );
-}
-
-void QgsRedlining::checkLayerRemoved( const QString &layerId )
-{
-  if ( layerId == mLayer->id() )
-  {
-    mLayer = 0;
-  }
 }
 
 QIcon QgsRedlining::createOutlineStyleIcon( Qt::PenStyle style )
