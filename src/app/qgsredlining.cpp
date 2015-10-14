@@ -26,13 +26,13 @@
 #include "qgspolygonv2.h"
 #include "qgsredlininglayer.h"
 #include "qgsredliningrendererv2.h"
+#include "qgsredliningtextdialog.h"
 #include "qgsrubberband.h"
 #include "qgssymbollayerv2utils.h"
 #include "nodetool/qgsselectedfeature.h"
 #include "nodetool/qgsvertexentry.h"
 #include "qgsproject.h"
 
-#include <QInputDialog>
 #include <QSettings>
 
 QgsRedlining::QgsRedlining( QgisApp* app )
@@ -495,14 +495,16 @@ void QgsRedliningCircleMapTool::canvasMoveEvent( QMouseEvent *e )
 
 void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
 {
-  QString text = QInputDialog::getText( 0, tr( "Enter text" ), tr( "Label text:" ) );
-  if ( !text.isEmpty() )
+  QgsRedliningTextDialog textDialog( "", "" );
+  if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
   {
     QgsPoint pos = toLayerCoordinates( mLayer, e->pos() );
     QgsFeature f( mLayer->pendingFields() );
-    f.setAttribute( "text", text );
+    f.setAttribute( "text", textDialog.currentText() );
     f.setAttribute( "text_x", pos.x() );
     f.setAttribute( "text_y", pos.y() );
+    QFont font = textDialog.currentFont();
+    f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ) );
     f.setGeometry( new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
     mLayer->addFeature( f );
   }
@@ -675,13 +677,17 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
 
 void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
 {
-  if ( mMode == TextSelected )
+  QgsFeature feature;
+  if ( mMode == TextSelected && mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature ) )
   {
-    bool ok = false;
-    QString text = QInputDialog::getText( 0, tr( "Enter text" ), tr( "Label text:" ), QLineEdit::Normal, mCurrentLabel.labelText, &ok );
-    if ( ok )
+    QgsRedliningTextDialog textDialog( mCurrentLabel.labelText, mCurrentLabel.labelFont.toString() );
+    if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
     {
-      mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "text" ), text );
+      mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "text" ), textDialog.currentText() );
+      QFont font = textDialog.currentFont();
+      QString flags = QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() );
+      QgsDebugMsg( flags );
+      mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "flags" ), flags );
       mCanvas->refresh();
     }
     return;
