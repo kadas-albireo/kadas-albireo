@@ -52,7 +52,8 @@ class QgsRedlining : public QObject
     QComboBox* mOutlineStyleCombo;
     QComboBox* mFillStyleCombo;
 
-    QgsRedliningLayer* mLayer;
+    QPointer<QgsRedliningLayer> mLayer;
+    QPointer<QgsMapTool> mRedliningTool;
     int mLayerRefCount;
 
     void activateTool( QgsMapTool* tool, QAction *action );
@@ -78,7 +79,6 @@ class QgsRedlining : public QObject
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
-    void checkLayerRemoved( const QString& layerId );
 };
 
 class QgsRedliningNewShapeMapTool : public QgsMapTool
