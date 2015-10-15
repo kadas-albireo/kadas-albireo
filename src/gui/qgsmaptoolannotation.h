@@ -18,10 +18,12 @@
 #ifndef QGSMAPTOOLANNOTATION_H
 #define QGSMAPTOOLANNOTATION_H
 
-#include "qgsmaptool.h"
-#include "qgsannotationitem.h"
+#include "qgsmaptoolpan.h"
 
-class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
+
+class QgsAnnotationItem;
+
+class GUI_EXPORT QgsMapToolAnnotation : public QgsMapToolPan
 {
   public:
     QgsMapToolAnnotation( QgsMapCanvas* canvas );
@@ -29,7 +31,7 @@ class GUI_EXPORT QgsMapToolAnnotation: public QgsMapTool
     void canvasPressEvent( QMouseEvent * e ) override;
 
   protected:
-    virtual QgsAnnotationItem* createItem( QMouseEvent* ) { return 0; }
+    virtual QgsAnnotationItem* createItem( const QPoint &/*pos*/ ) { return 0; }
 };
 
 #endif // QGSMAPTOOLANNOTATION_H

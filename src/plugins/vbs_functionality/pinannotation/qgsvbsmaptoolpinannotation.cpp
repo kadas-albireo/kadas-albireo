@@ -17,12 +17,13 @@
 
 #include "qgsvbsmaptoolpinannotation.h"
 #include "qgsvbspinannotationitem.h"
+#include "qgsmapcanvas.h"
 #include <QMouseEvent>
 
-QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( QMouseEvent* e )
+QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( const QPoint &pos )
 {
   QgsVBSPinAnnotationItem* pinItem = new QgsVBSPinAnnotationItem( mCanvas, mCoordinateDisplayer );
-  pinItem->setMapPosition( toMapCoordinates( e->pos() ) );
+  pinItem->setMapPosition( toMapCoordinates( pos ) );
   pinItem->setSelected( true );
   return pinItem;
 }

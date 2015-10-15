@@ -29,7 +29,7 @@ class QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
         : QgsMapToolAnnotation( canvas ), mCoordinateDisplayer( coordinateDisplayer ) {}
 
   protected:
-    QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    QgsAnnotationItem* createItem( const QPoint &pos ) override;
 
   private:
     QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
