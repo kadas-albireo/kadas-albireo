@@ -84,6 +84,7 @@ SET(QGIS_APP_SRCS
   qgsmaptoolsplitparts.cpp
   qgsmaptoolsvgannotation.cpp
   qgsmaptooltextannotation.cpp
+  qgsmaptoolsredlining.cpp
 
   nodetool/qgsmaptoolnodetool.cpp
   nodetool/qgsselectedfeature.cpp
@@ -232,6 +233,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsimplify.h
   qgsmaptoolsplitfeatures.h
   qgsmaptoolsplitparts.h
+  qgsmaptoolsredlining.h
 
   nodetool/qgsmaptoolnodetool.h
   nodetool/qgsselectedfeature.h
