@@ -26,7 +26,7 @@ class APP_EXPORT QgsMapToolSvgAnnotation: public QgsMapToolAnnotation
     QgsMapToolSvgAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
 
   protected:
-    QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    QgsAnnotationItem* createItem( const QPoint &pos ) override;
 };
 
 #endif // QGSMAPTOOLSVGANNOTATION_H

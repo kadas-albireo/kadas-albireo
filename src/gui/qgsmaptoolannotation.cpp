@@ -23,17 +23,23 @@
 #include <QMouseEvent>
 
 QgsMapToolAnnotation::QgsMapToolAnnotation( QgsMapCanvas* canvas )
-    : QgsMapTool( canvas )
+    : QgsMapToolPan( canvas )
 {
   mCursor = QCursor( Qt::ArrowCursor );
 }
 
 void QgsMapToolAnnotation::canvasPressEvent( QMouseEvent * e )
 {
-  QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-  if ( selectedItem )
+  QgsAnnotationItem* itemAtPos = mCanvas->annotationItemAtPos( e->pos() );
+  if ( e->button() == Qt::LeftButton && !itemAtPos )
   {
-    selectedItem->setSelected( false );
+    QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+    if ( selectedItem )
+      selectedItem->setSelected( false );
+    createItem( e->pos() );
   }
-  createItem( e );
+  else
+  {
+    QgsMapToolPan::canvasPressEvent( e );
+  }
 }

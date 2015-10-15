@@ -26,7 +26,7 @@ class APP_EXPORT QgsMapToolFormAnnotation: public QgsMapToolAnnotation
     QgsMapToolFormAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
 
   protected:
-    QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    QgsAnnotationItem* createItem( const QPoint& pos ) override;
 };
 
 #endif // QGSMAPTOOLFORMANNOTATION_H

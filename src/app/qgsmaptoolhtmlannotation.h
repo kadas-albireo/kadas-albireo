@@ -26,7 +26,7 @@ class APP_EXPORT QgsMapToolHtmlAnnotation: public QgsMapToolAnnotation
     QgsMapToolHtmlAnnotation( QgsMapCanvas* canvas ) : QgsMapToolAnnotation( canvas ) {}
 
   protected:
-    QgsAnnotationItem* createItem( QMouseEvent* e ) override;
+    QgsAnnotationItem* createItem( const QPoint &pos ) override;
 };
 
 #endif // QgsMapToolHtmlAnnotation_H

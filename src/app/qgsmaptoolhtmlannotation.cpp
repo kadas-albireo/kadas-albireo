@@ -22,7 +22,7 @@
 #include <QMouseEvent>
 
 
-QgsAnnotationItem* QgsMapToolHtmlAnnotation::createItem( QMouseEvent* e )
+QgsAnnotationItem* QgsMapToolHtmlAnnotation::createItem( const QPoint &pos )
 {
   //try to associate the current vector layer and a feature to the form item
   QgsVectorLayer* currentVectorLayer = 0;
@@ -36,7 +36,7 @@ QgsAnnotationItem* QgsMapToolHtmlAnnotation::createItem( QMouseEvent* e )
   }
 
   QgsHtmlAnnotationItem* formItem = new QgsHtmlAnnotationItem( mCanvas, currentVectorLayer );
-  formItem->setMapPosition( toMapCoordinates( e->pos() ) );
+  formItem->setMapPosition( toMapCoordinates( pos ) );
   formItem->setSelected( true );
   formItem->setFrameSize( QSizeF( 200, 100 ) );
   return formItem;

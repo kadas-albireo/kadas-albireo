@@ -20,10 +20,10 @@
 #include <QMouseEvent>
 
 
-QgsAnnotationItem* QgsMapToolTextAnnotation::createItem( QMouseEvent* e )
+QgsAnnotationItem* QgsMapToolTextAnnotation::createItem( const QPoint &pos )
 {
   QgsTextAnnotationItem* textItem = new QgsTextAnnotationItem( mCanvas );
-  textItem->setMapPosition( toMapCoordinates( e->pos() ) );
+  textItem->setMapPosition( toMapCoordinates( pos ) );
   textItem->setFrameSize( QSizeF( 200, 100 ) );
   textItem->setSelected( true );
   return textItem;

@@ -20,10 +20,10 @@
 #include <QMouseEvent>
 
 
-QgsAnnotationItem* QgsMapToolSvgAnnotation::createItem( QMouseEvent* e )
+QgsAnnotationItem* QgsMapToolSvgAnnotation::createItem( const QPoint &pos )
 {
   QgsSvgAnnotationItem* svgItem = new QgsSvgAnnotationItem( mCanvas );
-  svgItem->setMapPosition( toMapCoordinates( e->pos() ) );
+  svgItem->setMapPosition( toMapCoordinates( pos ) );
   svgItem->setSelected( true );
   svgItem->setFrameSize( QSizeF( 200, 100 ) );
   return svgItem;
