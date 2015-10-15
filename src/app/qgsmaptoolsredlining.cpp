@@ -311,7 +311,8 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   else if ( mMode == FeatureSelected )
   {
     mLayer->changeGeometry( mCurrentFeature->featureId(), mCurrentFeature->geometry() );
-    mCurrentFeature->deselectVertex( mCurrentVertex );
+    if ( mCurrentVertex >= 0 )
+      mCurrentFeature->selectVertex( mCurrentVertex );
     mCanvas->clearCache( mLayer->id() );
     mCanvas->refresh();
   }
@@ -348,8 +349,19 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
     }
     else if ( mMode == FeatureSelected )
     {
-      mLayer->deleteFeature( mCurrentFeature->featureId() );
-      clearCurrent();
+      if ( mCurrentFeature && mCurrentVertex >= 0 )
+      {
+        mCurrentFeature->deleteSelectedVertexes();
+        mCurrentVertex = -1;
+        mRubberBand->setToGeometry( mCurrentFeature->geometry(), mCurrentFeature->vlayer() );
+        mCanvas->clearCache( mLayer->id() );
+        mCanvas->refresh();
+      }
+      else
+      {
+        mLayer->deleteFeature( mCurrentFeature->featureId() );
+        clearCurrent();
+      }
       e->ignore();
     }
   }
@@ -380,6 +392,8 @@ void QgsRedliningEditTool::clearCurrent( bool refresh )
   delete mRubberBand;
   mRubberBand = 0;
   mIsRectangle = false;
+  if ( mCurrentFeature && mCurrentVertex >= 0 )
+    mCurrentFeature->deselectVertex( mCurrentVertex );
   delete mCurrentFeature.data();
   mCurrentFeature = 0;
   mCurrentVertex = -1;
