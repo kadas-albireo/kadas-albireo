@@ -21,9 +21,9 @@
 
 #include <QUuid>
 
-QgsRedliningLayer::QgsRedliningLayer() : QgsVectorLayer(
+QgsRedliningLayer::QgsRedliningLayer( const QString& name ) : QgsVectorLayer(
       QString( "mixed?crs=EPSG:3857&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
-      "Redlining",
+      name,
       "memory" )
 {
   mLayerType = QgsMapLayer::RedliningLayer;

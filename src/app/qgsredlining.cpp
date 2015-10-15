@@ -153,7 +153,7 @@ QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
   {
     return mLayer;
   }
-  mLayer = new QgsRedliningLayer();
+  mLayer = new QgsRedliningLayer( tr( "Redlining" ) );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 
