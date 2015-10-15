@@ -1171,12 +1171,13 @@ QByteArray* QgsWMSServer::getPrint( const QString& formatString )
 
   applyOpacities( layersList, bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
 
-
-  QgsComposition* c = mConfigParser->createPrintComposition( mParameters[ "TEMPLATE" ], mMapRenderer, QMap<QString, QString>( mParameters ) );
+  QStringList highlightLayers;
+  QgsComposition* c = mConfigParser->createPrintComposition( mParameters[ "TEMPLATE" ], mMapRenderer, QMap<QString, QString>( mParameters ), highlightLayers );
   if ( !c )
   {
     restoreLayerFilters( originalLayerFilters );
     clearFeatureSelections( selectedLayerIdList );
+    QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
     return 0;
   }
 
@@ -1241,6 +1242,7 @@ QByteArray* QgsWMSServer::getPrint( const QString& formatString )
   restoreOpacities( bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
   restoreLayerFilters( originalLayerFilters );
   clearFeatureSelections( selectedLayerIdList );
+  QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
 
   delete c;
   return ba;
@@ -1276,6 +1278,10 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   QPainter thePainter( theImage );
   thePainter.setRenderHint( QPainter::Antialiasing ); //make it look nicer
 
+  QStringList layerSet = mMapRenderer->layerSet();
+  QStringList highlightLayers = QgsWMSConfigParser::addHighlightLayers( mParameters, layerSet );
+  mMapRenderer->setLayerSet( layerSet );
+
   QMap<QString, QString> originalLayerFilters = applyRequestedLayerFilters( layersList );
   QStringList selectedLayerIdList = applyFeatureSelections( layersList );
 
@@ -1305,6 +1311,7 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   restoreOpacities( bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
   restoreLayerFilters( originalLayerFilters );
   clearFeatureSelections( selectedLayerIdList );
+  QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
 
   // QgsDebugMsg( "clearing filters" );
   if ( !hitTest )
