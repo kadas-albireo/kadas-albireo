@@ -31,6 +31,9 @@
 QgsRedlining::QgsRedlining( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
 {
+
+  QToolBar* redliningToolbar = mApp->addToolBar( tr( "Redlining" ) );
+
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
   QAction* actionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
@@ -79,22 +82,22 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
   mBtnNewObject->setDefaultAction( actionNewPoint );
   connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
-  mApp->redliningToolBar()->addWidget( mBtnNewObject );
+  redliningToolbar->addWidget( mBtnNewObject );
 
   mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
   mActionEditObject->setToolTip( tr( "Edit Object" ) );
   mActionEditObject->setCheckable( true );
-  mApp->redliningToolBar()->addAction( mActionEditObject );
+  redliningToolbar->addAction( mActionEditObject );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
-  mApp->redliningToolBar()->addWidget( new QLabel( tr( "Border/Size:" ) ) );
+  redliningToolbar->addWidget( new QLabel( tr( "Border/Size:" ) ) );
   mSpinBorderSize = new QSpinBox();
   mSpinBorderSize->setRange( 1, 20 );
   mSpinBorderSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
   connect( mSpinBorderSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
-  mApp->redliningToolBar()->addWidget( mSpinBorderSize );
+  redliningToolbar->addWidget( mSpinBorderSize );
 
-  mApp->redliningToolBar()->addWidget( new QLabel( tr( "Outline:" ) ) );
+  redliningToolbar->addWidget( new QLabel( tr( "Outline:" ) ) );
 
   mBtnOutlineColor = new QgsColorButtonV2();
   mBtnOutlineColor->setAllowAlpha( true );
@@ -102,7 +105,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   QColor initialOutlineColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/outline_color", "0,0,0,255" ).toString() );
   mBtnOutlineColor->setColor( initialOutlineColor );
   connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
-  mApp->redliningToolBar()->addWidget( mBtnOutlineColor );
+  redliningToolbar->addWidget( mBtnOutlineColor );
 
   mOutlineStyleCombo = new QComboBox();
   mOutlineStyleCombo->setProperty( "settings_key", "outline_style" );
@@ -113,9 +116,9 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
   mOutlineStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
   connect( mOutlineStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
-  mApp->redliningToolBar()->addWidget( mOutlineStyleCombo );
+  redliningToolbar->addWidget( mOutlineStyleCombo );
 
-  mApp->redliningToolBar()->addWidget( new QLabel( tr( "Fill:" ) ) );
+  redliningToolbar->addWidget( new QLabel( tr( "Fill:" ) ) );
 
   mBtnFillColor = new QgsColorButtonV2();
   mBtnFillColor->setAllowAlpha( true );
@@ -123,7 +126,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   QColor initialFillColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/fill_color", "255,0,0,255" ).toString() );
   mBtnFillColor->setColor( initialFillColor );
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
-  mApp->redliningToolBar()->addWidget( mBtnFillColor );
+  redliningToolbar->addWidget( mBtnFillColor );
 
   mFillStyleCombo = new QComboBox();
   mFillStyleCombo->setProperty( "settings_key", "fill_style" );
@@ -137,7 +140,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
   mFillStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
   connect( mFillStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
-  mApp->redliningToolBar()->addWidget( mFillStyleCombo );
+  redliningToolbar->addWidget( mFillStyleCombo );
 
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );

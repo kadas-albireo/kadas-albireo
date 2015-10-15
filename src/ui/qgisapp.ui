@@ -185,7 +185,7 @@
    </widget>
    <widget class="QMenu" name="mPluginMenu">
     <property name="title">
-     <string>&amp;Plugins</string>
+     <string>Pl&amp;ugins</string>
     </property>
     <addaction name="mActionManagePlugins"/>
     <addaction name="separator"/>
@@ -204,7 +204,7 @@
    </widget>
    <widget class="QMenu" name="mSettingsMenu">
     <property name="title">
-     <string>&amp;Settings</string>
+     <string>Settin&amp;gs</string>
     </property>
     <addaction name="mActionProjectProperties"/>
     <addaction name="mActionCustomProjection"/>
@@ -222,7 +222,7 @@
    </widget>
    <widget class="QMenu" name="mVectorMenu">
     <property name="title">
-     <string>Vect&amp;or</string>
+     <string>Ve&amp;ctor</string>
     </property>
     <widget class="QMenu" name="menuOpenStreetMap">
      <property name="title">
@@ -498,17 +498,6 @@
   <widget class="QToolBar" name="mWebToolBar">
    <property name="windowTitle">
     <string>Web</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QToolBar" name="mRedliningToolBar">
-   <property name="windowTitle">
-    <string>Redlining</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -2294,7 +2283,7 @@ Acts on currently active editable layer</string>
   </action>
   <action name="mActionKMLExport">
    <property name="text">
-    <string>KML Export...</string>
+    <string>&amp;KML Export...</string>
    </property>
    <property name="toolTip">
     <string>KML Export</string>
