@@ -708,11 +708,11 @@ int QgsSLDConfigParser::WMSPrecision() const
   return -1;
 }
 
-QgsComposition* QgsSLDConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap ) const
+QgsComposition* QgsSLDConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap, QStringList& highlightLayers ) const
 {
   if ( mFallbackParser )
   {
-    return mFallbackParser->createPrintComposition( composerTemplate, mapRenderer, parameterMap );
+    return mFallbackParser->createPrintComposition( composerTemplate, mapRenderer, parameterMap, highlightLayers );
   }
   return 0;
 }
