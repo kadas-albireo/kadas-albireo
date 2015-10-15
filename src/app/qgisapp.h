@@ -428,7 +428,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QToolBar *vectorToolBar() { return mVectorToolBar; }
     QToolBar *databaseToolBar() { return mDatabaseToolBar; }
     QToolBar *webToolBar() { return mWebToolBar; }
-    QToolBar *redliningToolBar() { return mRedliningToolBar; }
 
     //! return CAD dock widget
     QgsAdvancedDigitizingDockWidget *cadDockWidget() { return mAdvancedDigitizingDockWidget; }

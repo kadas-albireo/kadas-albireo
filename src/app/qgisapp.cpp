@@ -1588,8 +1588,7 @@ void QgisApp::createToolBars()
   << mVectorToolBar
   << mDatabaseToolBar
   << mWebToolBar
-  << mLabelToolBar
-  << mRedliningToolBar;
+  << mLabelToolBar;
 
   QList<QAction*> toolbarMenuActions;
   // Set action names so that they can be used in customization
