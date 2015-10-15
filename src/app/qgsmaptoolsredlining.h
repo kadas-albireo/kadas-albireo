@@ -115,6 +115,7 @@ class QgsRedliningEditTool : public QgsMapTool
     QgsPoint mPrevPos;
 
     void clearCurrent( bool refresh = true );
+    void checkVertexSelection();
 
   private slots:
     void updateLabelBoundingBox();

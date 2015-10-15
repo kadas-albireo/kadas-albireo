@@ -169,41 +169,67 @@ QgsRedliningEditTool::~QgsRedliningEditTool()
 
 void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
 {
-  clearCurrent( true );
   mPrevPos = mPressPos = toMapCoordinates( e->pos() );
   QgsPoint pressLayerPot = toLayerCoordinates( mLayer, mPressPos );
 
-  // First, look for a label below the cursor
   const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
-  if ( labelingResults )
+  QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( mPressPos ) : QList<QgsLabelPosition>();
+
+  double r = QgsTolerance::vertexSearchRadius( mCanvas->currentLayer(), mCanvas->mapSettings() );
+  QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
+  QgsFeature feature;
+
+  // Check whether we can keep the same selection as before
+  if ( mMode == TextSelected && labelingResults )
   {
-    foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( mPressPos ) )
+    foreach ( const QgsLabelPosition& labelPos, labelPositions )
     {
-      if ( labelPos.layerID == mLayer->id() )
+      if ( labelPos.layerID == mLayer->id() && labelPos.labelRect == mCurrentLabel.labelRect )
       {
-        mCurrentLabel = labelPos;
-        mMode = TextSelected;
-        mRubberBand = new QgsRubberBand( mCanvas, QGis::Line );
-        const QgsRectangle& rect = mCurrentLabel.labelRect;
-        mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
-        mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMaximum() ) );
-        mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMaximum() ) );
-        mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMinimum() ) );
-        mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
-        mRubberBand->setColor( QColor( 0, 255, 0, 150 ) );
-        mRubberBand->setWidth( 3 );
-        mRubberBand->setLineStyle( Qt::DotLine );
-        emit featureSelected( mCurrentLabel.featureId );
+        return;
+      }
+    }
+  }
+  else if ( mMode == FeatureSelected )
+  {
+    QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest( selectRect ).setFlags( QgsFeatureRequest::NoGeometry | QgsFeatureRequest::SubsetOfAttributes ) );
+    while ( fit.nextFeature( feature ) )
+    {
+      if ( feature.id() == mCurrentFeature->featureId() )
+      {
+        checkVertexSelection();
         return;
       }
     }
   }
 
+  // Else, start anew
+  clearCurrent( true );
+
+  // First, look for a label below the cursor
+  foreach ( const QgsLabelPosition& labelPos, labelPositions )
+  {
+    if ( labelPos.layerID == mLayer->id() )
+    {
+      mCurrentLabel = labelPos;
+      mMode = TextSelected;
+      mRubberBand = new QgsRubberBand( mCanvas, QGis::Line );
+      const QgsRectangle& rect = mCurrentLabel.labelRect;
+      mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
+      mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMaximum() ) );
+      mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMaximum() ) );
+      mRubberBand->addPoint( QgsPoint( rect.xMaximum(), rect.yMinimum() ) );
+      mRubberBand->addPoint( QgsPoint( rect.xMinimum(), rect.yMinimum() ) );
+      mRubberBand->setColor( QColor( 0, 255, 0, 150 ) );
+      mRubberBand->setWidth( 3 );
+      mRubberBand->setLineStyle( Qt::DotLine );
+      emit featureSelected( mCurrentLabel.featureId );
+      return;
+    }
+  }
+
   // Then, look for a feature below the cursor
-  double r = QgsTolerance::vertexSearchRadius( mCanvas->currentLayer(), mCanvas->mapSettings() );
-  QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
-  QgsFeature feature;
-  QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest().setFilterRect( selectRect ) );
+  QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest( selectRect ) );
   if ( fit.nextFeature( feature ) && feature.attribute( "text" ).toString().isEmpty() )
   {
     mMode = FeatureSelected;
@@ -224,21 +250,25 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
         mRectangleCRS = flag.mid( 5 );
       }
     }
-
-    // Check if a vertex was clicked
-    int beforeVertex = -1, afterVertex = -1;
-    double dist2;
-    QgsPoint layerPos = toLayerCoordinates( mLayer, mPressPos );
-    mCurrentFeature->geometry()->closestVertex( layerPos, mCurrentVertex, beforeVertex, afterVertex, dist2 );
-    if ( mCurrentVertex != -1 && qSqrt( dist2 ) < QgsTolerance::vertexSearchRadius( mLayer, mCanvas->mapSettings() ) )
-    {
-      mCurrentFeature->selectVertex( mCurrentVertex );
-    }
-    else
-    {
-      mCurrentVertex = -1;
-    }
+    checkVertexSelection();
     return;
+  }
+}
+
+void QgsRedliningEditTool::checkVertexSelection()
+{
+  // Check if a vertex was clicked
+  int beforeVertex = -1, afterVertex = -1;
+  double dist2;
+  QgsPoint layerPos = toLayerCoordinates( mLayer, mPressPos );
+  mCurrentFeature->geometry()->closestVertex( layerPos, mCurrentVertex, beforeVertex, afterVertex, dist2 );
+  if ( mCurrentVertex != -1 && qSqrt( dist2 ) < QgsTolerance::vertexSearchRadius( mLayer, mCanvas->mapSettings() ) )
+  {
+    mCurrentFeature->selectVertex( mCurrentVertex );
+  }
+  else
+  {
+    mCurrentVertex = -1;
   }
 }
 
