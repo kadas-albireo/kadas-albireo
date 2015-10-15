@@ -618,6 +618,9 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   legendLayerSelectionChanged();
   mSaveRollbackInProgress = false;
 
+  //Redlining
+  mRedlining = new QgsRedlining( this );
+
   // initialize the plugin manager
   mPluginManager = new QgsPluginManager( this, restorePlugins );
 
@@ -756,9 +759,6 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
 
   // set handler for missing layers (will be owned by QgsProject)
   QgsProject::instance()->setBadLayerHandler( new QgsHandleBadLayersHandler() );
-
-  //Redlining
-  mRedlining = new QgsRedlining( this );
 
 #if 0
   // Set the background color for toolbox and overview as they default to
