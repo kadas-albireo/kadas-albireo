@@ -16,6 +16,7 @@
 #include "qgsmaptoolsredlining.h"
 #include "qgscircularstringv2.h"
 #include "qgscurvepolygonv2.h"
+#include "qgsgeometryutils.h"
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspallabeling.h"
@@ -318,7 +319,7 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   }
 }
 
-void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
+void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
 {
   QgsFeature feature;
   if ( mMode == TextSelected && mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature ) )
@@ -334,6 +335,31 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
       mCanvas->refresh();
     }
     return;
+  }
+  else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() != QGis::Point )
+  {
+    QgsSnapper snapper( mCanvas->mapSettings() );
+    snapper.setSnapMode( QgsSnapper::SnapWithResultsWithinTolerances );
+    QgsSnapper::SnapLayer snapLayer;
+    snapLayer.mLayer = mLayer;
+    snapLayer.mSnapTo = QgsSnapper::SnapToSegment;
+    snapLayer.mTolerance = 10;
+    snapLayer.mUnitType = QgsTolerance::Pixels;
+    snapper.setSnapLayers( QList<QgsSnapper::SnapLayer>() << snapLayer );
+    QList<QgsSnappingResult> results;
+    snapper.snapMapPoint( toMapCoordinates( e->pos() ), results );
+    foreach ( const QgsSnappingResult& result, results )
+    {
+      if ( result.snappedAtGeometry == mCurrentFeature->featureId() && result.afterVertexNr != -1 )
+      {
+        QgsPoint layerCoord = toLayerCoordinates( mLayer, results.first().snappedVertex );
+        mLayer->insertVertex( layerCoord.x(), layerCoord.y(), mCurrentFeature->featureId(), result.afterVertexNr );
+        mRubberBand->setToGeometry( mCurrentFeature->geometry(), mCurrentFeature->vlayer() );
+        mCanvas->clearCache( mLayer->id() );
+        mCanvas->refresh();
+        break;
+      }
+    }
   }
 }
 
