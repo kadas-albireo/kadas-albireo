@@ -366,7 +366,7 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
     }
     return;
   }
-  else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() != QGis::Point )
+  else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() != QGis::Point && !mIsRectangle )
   {
     QgsSnapper snapper( mCanvas->mapSettings() );
     snapper.setSnapMode( QgsSnapper::SnapWithResultsWithinTolerances );
@@ -407,11 +407,14 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
     {
       if ( mCurrentFeature && mCurrentVertex >= 0 )
       {
-        mCurrentFeature->deleteSelectedVertexes();
-        mCurrentVertex = -1;
-        mRubberBand->setToGeometry( mCurrentFeature->geometry(), mCurrentFeature->vlayer() );
-        mCanvas->clearCache( mLayer->id() );
-        mCanvas->refresh();
+        if ( !mIsRectangle )
+        {
+          mCurrentFeature->deleteSelectedVertexes();
+          mCurrentVertex = -1;
+          mRubberBand->setToGeometry( mCurrentFeature->geometry(), mCurrentFeature->vlayer() );
+          mCanvas->clearCache( mLayer->id() );
+          mCanvas->refresh();
+        }
       }
       else
       {
