@@ -62,4 +62,11 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
         @return rotation in radians, clockwise from north*/
     double vertexAngle( const QgsVertexId& vertex ) const;
+
+  protected:
+
+    /** Returns whether child type names are omitted from Wkt representations of the collection
+     * @note added in QGIS 2.12
+     */
+    virtual bool wktOmitChildType() const;
 };
