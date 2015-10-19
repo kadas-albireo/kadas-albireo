@@ -110,7 +110,8 @@ class QgsSLDConfigParser : public QgsWMSConfigParser
     QgsComposition* createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap, QStringList& highlightLayers ) const;
 
     /**Creates a composition from the project file (probably delegated to the fallback parser)*/
-    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap*>& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList ) const override;
+    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap*>& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList,
+                                     QList<const QgsComposerHtml *>& htmlFrameList, QList< QgsComposerPicture* >& pictureList ) const override;
 
     /**Adds print capabilities to xml document. ParentElem usually is the <Capabilities> element*/
     void printCapabilities( QDomElement& parentElement, QDomDocument& doc ) const override;
