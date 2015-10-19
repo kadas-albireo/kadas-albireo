@@ -60,7 +60,8 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
     int WMSPrecision() const override;
 
     //printing
-    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList ) const override;
+    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList,
+                                     QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList, QList< QgsComposerPicture* >& pictureList ) const override;
 
     void printCapabilities( QDomElement& parentElement, QDomDocument& doc ) const override;
 

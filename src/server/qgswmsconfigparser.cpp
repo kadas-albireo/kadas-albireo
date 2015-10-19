@@ -30,6 +30,7 @@
 #include "qgscomposermapgrid.h"
 #include "qgscomposerhtml.h"
 #include "qgscomposerframe.h"
+#include "qgscomposerpicture.h"
 #include "qgscomposition.h"
 
 #include "qgslayertreegroup.h"
@@ -51,8 +52,9 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
   QList<QgsComposerLegend*> composerLegends;
   QList<QgsComposerLabel*> composerLabels;
   QList<const QgsComposerHtml*> composerHtmls;
+  QList< QgsComposerPicture* > composerPictures;
 
-  QgsComposition* c = initComposition( composerTemplate, mapRenderer, composerMaps, composerLegends, composerLabels, composerHtmls );
+  QgsComposition* c = initComposition( composerTemplate, mapRenderer, composerMaps, composerLegends, composerLabels, composerHtmls, composerPictures );
   if ( !c )
   {
     return 0;
@@ -270,6 +272,25 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     }
 
     currentLabel->setText( title );
+  }
+
+  //replace urls in composer pictures
+  foreach ( QgsComposerPicture* currentPicture, composerPictures )
+  {
+    QString url = parameterMap.value( currentPicture->id().toUpper() );
+    if ( url.isEmpty() )
+    {
+      if ( parameterMap.contains( currentPicture->id().toUpper() ) )
+      {
+        c->removeItem( currentPicture );
+        delete currentPicture;
+      }
+      continue;
+    }
+    else
+    {
+      currentPicture->setPicturePath( url );
+    }
   }
 
   //replace html url

@@ -395,7 +395,8 @@ int QgsWMSProjectParser::WMSPrecision() const
   return WMSPrecision;
 }
 
-QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlList ) const
+QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList,
+    QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlList, QList< QgsComposerPicture* >& pictureList ) const
 {
   //Create composition from xml
   QDomElement composerElem = composerByName( composerTemplate );
@@ -441,6 +442,11 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
       mapList.push_back( map );
       continue;
     }
+    QgsComposerPicture* picture = dynamic_cast< QgsComposerPicture*>( *itemIt );
+    if ( picture )
+    {
+      pictureList.push_back( picture );
+    }
     QgsComposerLegend* legend = dynamic_cast< QgsComposerLegend *>( *itemIt );
     if ( legend )
     {
@@ -470,7 +476,7 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
           {
             continue;
           }
-          
+
           QgsLayerTreeLayer* nodeLayer = root->findLayer( layerId );
           if ( !nodeLayer )
           {
