@@ -517,16 +517,16 @@ QList<QgsMapLayer*> QgsWFSProjectParser::mapLayerFromTypeName( const QString& aT
     QString type = elem.attribute( "type" );
     if ( type == "vector" )
     {
-      QgsMapLayer *mLayer = mProjectParser->createLayerFromElement( elem );
-      QgsVectorLayer* layer = dynamic_cast<QgsVectorLayer*>( mLayer );
-      if ( !layer )
-        continue;
-
-      QString typeName = layer->name();
+      QString typeName = mProjectParser->layerName( elem );
       typeName = typeName.replace( " ", "_" );
 
-      if ( wfsLayersId.contains( layer->id() ) && ( aTypeName == "" || typeNameList.contains( typeName ) ) )
-        layerList.push_back( mLayer );
+      QString layerId = mProjectParser->layerId( elem );
+
+      if ( wfsLayersId.contains( layerId ) && ( aTypeName == "" || typeNameList.contains( typeName ) ) )
+      {
+        QgsMapLayer* layer = mProjectParser->createLayerFromElement( elem );
+        layerList.push_back( layer );
+      }
     }
   }
   return layerList;
