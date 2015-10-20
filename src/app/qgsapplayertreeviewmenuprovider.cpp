@@ -176,9 +176,12 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
           // disable duplication of plugin layers
           duplicateLayersAction->setEnabled( false );
         }
+      }
 
-        addCustomLayerActions( menu, layer );
+      addCustomLayerActions( menu, layer );
 
+      if ( layer->type() != QgsMapLayer::RedliningLayer )
+      {
         if ( layer && QgsProject::instance()->layerIsEmbedded( layer->id() ).isEmpty() )
           menu->addAction( tr( "&Properties" ), QgisApp::instance(), SLOT( layerProperties() ) );
 
