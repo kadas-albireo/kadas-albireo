@@ -36,6 +36,7 @@ SET(QGIS_APP_SRCS
   qgsfieldsproperties.cpp
   qgsidentifyresultsdialog.cpp
   qgsfeatureaction.cpp
+  qgsgpsrouteeditor.cpp
   qgskmlexportdialog.cpp
   qgslabeldialog.cpp
   qgslabelpropertydialog.cpp
@@ -190,6 +191,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsfeatureaction.h
   qgsfieldcalculator.h
   qgsfieldsproperties.h
+  qgsgpsrouteeditor.h
 
   qgsidentifyresultsdialog.h
   qgskmlexportdialog.h

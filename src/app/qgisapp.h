@@ -47,6 +47,7 @@ class QgsComposerManager;
 class QgsContrastEnhancement;
 class QgsCustomLayerOrderWidget;
 class QgsGeometry;
+class QgsGPSRouteEditor;
 class QgsFeature;
 class QgsLayerTreeMapCanvasBridge;
 class QgsLayerTreeView;
@@ -1651,6 +1652,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QgsSnappingUtils* mSnappingUtils;
 
     QgsRedlining* mRedlining;
+
+    QgsGPSRouteEditor* mGpsRouteEditor;
 
 #ifdef HAVE_TOUCH
     bool gestureEvent( QGestureEvent *event );

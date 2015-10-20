@@ -136,6 +136,7 @@
 #include "qgsfeature.h"
 #include "qgsformannotationitem.h"
 #include "qgsfieldcalculator.h"
+#include "qgsgpsrouteeditor.h"
 #include "qgshtmlannotationitem.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
@@ -621,6 +622,9 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   //Redlining
   mRedlining = new QgsRedlining( this );
 
+  //GPS route editor
+  mGpsRouteEditor = new QgsGPSRouteEditor( this );
+
   // initialize the plugin manager
   mPluginManager = new QgsPluginManager( this, restorePlugins );
 
@@ -976,6 +980,9 @@ QgisApp::~QgisApp()
   delete mComposerManager;
 
   delete mVectorLayerTools;
+
+  delete mRedlining;
+  delete mGpsRouteEditor;
 
   deletePrintComposers();
   removeAnnotationItems();
