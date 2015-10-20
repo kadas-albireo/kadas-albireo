@@ -49,7 +49,7 @@ void QgsVBSOvlImporter::import( QString filename ) const
   QuaZipFile geogrid( filename, "geogrid50.xml" );
   if ( !geogrid.open( QIODevice::ReadOnly ) )
   {
-    QMessageBox::warning( mIface->mainWindow(), tr( "Error" ), tr( "The OVL file could not be opened:\n%1" ).arg( QFileInfo( filename ).fileName() ) );
+    QMessageBox::warning( mIface->mainWindow(), tr( "Error" ), tr( "Cannot open file for reading: %1" ).arg( QFileInfo( filename ).fileName() ) );
     return;
   }
   QDomDocument doc;
@@ -309,7 +309,7 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
     }
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
     poly->setExteriorRing( ring );
-    mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
+    mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle, QString(), tooltip );
   }
   else
   {
@@ -322,7 +322,7 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
       shape = "circle";
 
     QString flags = QString( "symbol=%1,w=%2,h=%3,r=%4" ).arg( shape ).arg( width ).arg( height ).arg( rotation );
-    mIface->redliningLayer()->addShape( new QgsGeometry( point.clone() ), outline, fill, lineSize, lineStyle, fillStyle, flags );
+    mIface->redliningLayer()->addShape( new QgsGeometry( point.clone() ), outline, fill, lineSize, lineStyle, fillStyle, flags, tooltip );
   }
 }
 
@@ -368,8 +368,8 @@ void QgsVBSOvlImporter::parseLine( QDomElement &object ) const
     line->addVertex( points.front() );
   }
 
-  // TODO: roundable, startDelimiter, endDelimiter, tooltip
-  mIface->redliningLayer()->addShape( new QgsGeometry( line ), outline, Qt::black, lineSize, lineStyle, Qt::SolidPattern );
+  // TODO: roundable, startDelimiter, endDelimiter
+  mIface->redliningLayer()->addShape( new QgsGeometry( line ), outline, Qt::black, lineSize, lineStyle, Qt::SolidPattern, QString(), tooltip );
 }
 
 void QgsVBSOvlImporter::parsePolygon( QDomElement &object ) const
@@ -405,14 +405,14 @@ void QgsVBSOvlImporter::parsePolygon( QDomElement &object ) const
 
   applyDimm( dimmFactor, dimmColor, &outline, &fill );
 
-  // TODO: roundable, tooltip
+  // TODO: roundable
   QgsPolygonV2* poly = new QgsPolygonV2();
   QgsLineStringV2* ring = new QgsLineStringV2();
   ring->setPoints( points );
   ring->addVertex( points.first() );
   poly->setExteriorRing( ring );
 
-  mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle );
+  mIface->redliningLayer()->addShape( new QgsGeometry( poly ), outline, fill, lineSize, lineStyle, fillStyle, QString(), tooltip );
 }
 
 void QgsVBSOvlImporter::parseText( QDomElement &object ) const
@@ -458,7 +458,7 @@ void QgsVBSOvlImporter::parseText( QDomElement &object ) const
 
   applyDimm( dimmFactor, dimmColor, &color );
 
-  mIface->redliningLayer()->addText( text, point, color, font );
+  mIface->redliningLayer()->addText( text, point, color, font, tooltip );
 }
 
 Qt::PenStyle QgsVBSOvlImporter::convertLineStyle( int lineStyle )
