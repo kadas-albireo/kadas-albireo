@@ -160,7 +160,7 @@ QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
   // QueuedConnection to delay execution of the slot until the signal-emitting function has exited,
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
-  connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( deactivateTool() ) );
+  connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearLayer() ) );
 
   return mLayer;
 }
@@ -169,6 +169,7 @@ void QgsRedlining::clearLayer()
 {
   mLayer = 0;
   mLayerRefCount = 0;
+  deactivateTool();
 }
 
 void QgsRedlining::editObject()
@@ -244,7 +245,10 @@ void QgsRedlining::deactivateTool()
       if ( mLayerRefCount == 0 )
       {
         mLayer->commitChanges();
-        mApp->mapCanvas()->setCurrentLayer( 0 );
+        if ( mApp->mapCanvas()->currentLayer() == mLayer )
+        {
+          mApp->mapCanvas()->setCurrentLayer( 0 );
+        }
       }
     }
     mRedliningTool->deleteLater();
