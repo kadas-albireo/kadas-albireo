@@ -38,7 +38,8 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name ) : QgsVectorLayer(
                                  << QgsField( "text", QVariant::String, "string", 128 )
                                  << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
                                  << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
-                                 << QgsField( "flags", QVariant::String, "string", 64 ) );
+                                 << QgsField( "flags", QVariant::String, "string", 64 )
+                                 << QgsField( "tooltip", QVariant::String, "string", 128 ) );
   setRendererV2( new QgsRedliningRendererV2 );
   updateFields();
 
@@ -52,9 +53,10 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name ) : QgsVectorLayer(
   setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Italic", "1~~1~~regexp_substr(\"flags\",'italic=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Family", "1~~1~~regexp_substr(\"flags\",'family=([^,]+)')~~" );
+  setDisplayField( "tooltip" );
 }
 
-bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags )
+bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip )
 {
   QgsFeature f( pendingFields() );
   f.setGeometry( geometry );
@@ -64,10 +66,11 @@ bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, 
   f.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( outlineStyle ) );
   f.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( fillStyle ) );
   f.setAttribute( "flags", flags );
+  f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font )
+bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip )
 {
   QgsFeature f( pendingFields() );
   f.setGeometry( new QgsGeometry( pos.clone() ) );
@@ -77,6 +80,7 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   f.setAttribute( "size", font.pixelSize() );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
   f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ) );
+  f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
@@ -99,6 +103,7 @@ void QgsRedliningLayer::read( const QDomElement& redliningElem )
       feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
       feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
       feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
+      feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip") );
       feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
       features.append( feature );
     }
@@ -125,6 +130,7 @@ void QgsRedliningLayer::write( QDomElement &redliningElem )
     redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
     redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
     redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
+    redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip").toString() );
     redliningElem.appendChild( redliningItemElem );
   }
 }
