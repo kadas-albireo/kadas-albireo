@@ -195,6 +195,16 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
     int partSize( int geometryIndex ) const;
 
     /**
+     * Returns the midpoint of the part:
+     * - for points, the point itself
+     * - for polylines, the point at mid-length
+     * - for polygons, the centroid
+     * @param geometryIndex The index of the feature part
+     * @return the midpoint
+     */
+    QgsPoint partMidpoint( int geometryIndex ) const;
+
+    /**
      * Sets this rubber band to the geometry of an existing feature.
      * This is useful for feature highlighting.
      * In contrast to {@link addGeometry}, this method does also change the geometry type of the rubberband.
@@ -255,6 +265,12 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
      *  @param j   The vertex index within geometry i
      */
     const QgsPoint *getPoint( int i, int j = 0 ) const;
+
+    /**
+     * Return current point list
+     * @return The current point list
+     */
+    const QList< QList <QgsPoint> >& getPoints() const { return mPoints; }
 
     /**
      * Returns the rubberband as a Geometry.

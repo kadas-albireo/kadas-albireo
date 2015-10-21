@@ -624,6 +624,68 @@ int QgsRubberBand::partSize( int geometryIndex ) const
   return mPoints[geometryIndex].size();
 }
 
+QgsPoint QgsRubberBand::partMidpoint( int geometryIndex ) const
+{
+  int n = mPoints.size() <= geometryIndex ? 0 : mPoints[geometryIndex].size();
+  if ( n == 0 )
+  {
+    return QgsPoint( 0, 0 );
+  }
+
+  if ( mGeometryType == QGis::Point )
+  {
+    return mPoints[geometryIndex][0];
+  }
+  else if ( mGeometryType == QGis::Line )
+  {
+    if ( n < 2 )
+    {
+      return mPoints[geometryIndex][0];
+    }
+    double totLen = 0;
+    QList<double> cumLength;
+    cumLength.append( 0 );
+    for ( int i = 0; i < n - 1; ++i )
+    {
+      double len = qSqrt( mPoints[geometryIndex][i].sqrDist( mPoints[geometryIndex][i + 1] ) );
+      cumLength.append( cumLength.back() + len );
+      totLen += len;
+    }
+    for ( int i = 0; i < n - 1; ++i )
+    {
+      if ( cumLength[i + 1] > .5 * totLen )
+      {
+        double k = ( .5 * totLen - cumLength[i] ) / ( cumLength[i + 1] - cumLength[i] );
+        return mPoints[geometryIndex][i] + ( mPoints[geometryIndex][i + 1] - mPoints[geometryIndex][i] ) * k;
+      }
+    }
+    return mPoints[geometryIndex][0];
+  }
+  else if ( mGeometryType == QGis::Polygon )
+  {
+    if ( n < 2 )
+    {
+      return mPoints[geometryIndex].front();
+    }
+
+    double A = 0.;
+    double Cx = 0.;
+    double Cy = 0.;
+    int i = n - 1, j = 0;
+    for ( ; j < n; i = j++ )
+    {
+      const QgsPoint& vi = mPoints[geometryIndex][i];
+      const QgsPoint& vj = mPoints[geometryIndex][j];
+      double d = vi.x() * vj.y() - vj.x() * vi.y();
+      A += d;
+      Cx += ( vi.x() + vj.x() ) * d;
+      Cy += ( vi.y() + vj.y() ) * d;
+    }
+
+    return A < 1E-12 ? mPoints[geometryIndex].front() : QgsPoint( Cx / ( 3. * A ), Cy / ( 3. * A ) );
+  }
+}
+
 int QgsRubberBand::numberOfVertices() const
 {
   int count = 0;
