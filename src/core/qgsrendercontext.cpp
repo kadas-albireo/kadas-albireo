@@ -17,7 +17,7 @@
 
 
 #include "qgsrendercontext.h"
-
+#include "qgsabstractgeometryv2.h"
 #include "qgsmapsettings.h"
 
 QgsRenderContext::QgsRenderContext()
@@ -61,6 +61,7 @@ QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
   mRendererScale = ct.mRendererScale;
   mLabelingEngine = ct.mLabelingEngine;
   mUseAdvancedEffects = ct.mUseAdvancedEffects;
+  mGeometry = ct.mGeometry;
   return *this;
 }
 
