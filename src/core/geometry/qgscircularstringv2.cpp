@@ -622,13 +622,6 @@ void QgsCircularStringV2::transform( const QTransform& t )
   }
 }
 
-#if 0
-void QgsCircularStringV2::clip( const QgsRectangle& rect )
-{
-  //todo...
-}
-#endif
-
 void QgsCircularStringV2::addToPainterPath( QPainterPath& path ) const
 {
   int nPoints = numPoints();

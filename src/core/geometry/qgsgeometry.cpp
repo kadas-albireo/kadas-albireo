@@ -1591,18 +1591,6 @@ void QgsGeometry::mapToPixel( const QgsMapToPixel& mtp )
   }
 }
 
-#if 0
-void QgsGeometry::clip( const QgsRectangle& rect )
-{
-  if ( d && d->geometry )
-  {
-    detach();
-    d->geometry->clip( rect );
-    removeWkbGeos();
-  }
-}
-#endif
-
 void QgsGeometry::draw( QPainter& p ) const
 {
   if ( d && d->geometry )
