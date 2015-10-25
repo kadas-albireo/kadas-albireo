@@ -63,17 +63,6 @@ bool QgsAbstractGeometryV2::isMeasure() const
   return ( mWkbType >= 2001 && mWkbType <= 3012 );
 }
 
-#if 0
-void QgsAbstractGeometryV2::clip( const QgsRectangle& rect )
-{
-  // TODO
-  // - Implementation
-  // - API doc in header
-
-  // Don't insert Q_UNUSED, so we have a warning that reminds us of this TODO
-}
-#endif
-
 void QgsAbstractGeometryV2::setZMTypeFromSubGeometry( const QgsAbstractGeometryV2* subgeom, QgsWKBTypes::Type baseGeomType )
 {
   if ( !subgeom )
