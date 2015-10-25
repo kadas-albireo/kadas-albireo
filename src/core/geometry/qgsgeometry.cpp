@@ -1478,7 +1478,7 @@ int QgsGeometry::avoidIntersections( QMap<QgsVectorLayer*, QSet< QgsFeatureId > 
 
 void QgsGeometry::validateGeometry( QList<Error> &errors )
 {
-//todo // QgsGeometryValidator::validateGeometry( this, errors );
+  QgsGeometryValidator::validateGeometry( this, errors );
 }
 
 bool QgsGeometry::isGeosValid() const
