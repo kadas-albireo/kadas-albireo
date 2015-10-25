@@ -542,6 +542,7 @@ int QgsGeometry::addRing( QgsCurveV2* ring )
 {
   if ( !d || !d->geometry )
   {
+    delete ring;
     return 1;
   }
 
@@ -1201,7 +1202,7 @@ QgsGeometry* QgsGeometry::buffer( double distance, int segments, int endCapStyle
   }
 
   QgsGeos g( d->geometry );
-  QgsAbstractGeometryV2* geom = g.buffer( distance, segments, endCapStyle, joinStyle, mitreLimit );
+  QgsAbstractGeometryV2* geom = g.buffer( distance, segments, endCapStyle, joinStyle, mitreLimit, errorMsg );
   if ( !geom )
   {
     return 0;
@@ -2261,6 +2262,7 @@ void QgsGeometry::filterGeometryCollection( QgsWKBTypes::Type type )
 
 QgsGeometry* QgsGeometry::buffer( double distance, GEOSBufferParams* params, QString* errorMsg ) const
 {
+  Q_UNUSED( errorMsg )
   if ( !d || !d->geometry )
   {
     return 0;
@@ -2286,6 +2288,7 @@ QgsGeometry* QgsGeometry::buffer( double distance, GEOSBufferParams* params, QSt
 
 QgsGeometry* QgsGeometry::fromCollection( const QList<QgsGeometry *> & geoms, QString* errorMsg )
 {
+  Q_UNUSED( errorMsg )
   if ( geoms.size() < 1 )
   {
     return 0;
