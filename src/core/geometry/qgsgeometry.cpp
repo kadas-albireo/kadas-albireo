@@ -146,7 +146,9 @@ QgsAbstractGeometryV2* QgsGeometry::geometry() const
 void QgsGeometry::setGeometry( QgsAbstractGeometryV2* geometry )
 {
   detach( false );
+  delete d->geometry;
   d->geometry = geometry;
+  removeWkbGeos();
 }
 
 bool QgsGeometry::isEmpty() const
