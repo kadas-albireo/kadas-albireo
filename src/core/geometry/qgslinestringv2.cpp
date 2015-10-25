@@ -345,7 +345,7 @@ void QgsLineStringV2::transform( const QTransform& t )
 
 bool QgsLineStringV2::insertVertex( const QgsVertexId& position, const QgsPointV2& vertex )
 {
-  if ( position.vertex < 0 || position.vertex > mCoords.size() )
+  if ( position.vertex < 0 || position.vertex >= mCoords.size() )
   {
     return false;
   }
