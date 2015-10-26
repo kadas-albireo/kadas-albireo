@@ -235,7 +235,7 @@ void QgsRubberBand::removeLastPoint( int geometryIndex, bool doUpdate/* = true*/
 /*!
   Update the line between the last added point and the mouse position.
   */
-void QgsRubberBand::movePoint( const QgsPoint & p, int geometryIndex )
+void QgsRubberBand::movePoint( const QgsPoint & p, int geometryIndex, bool doUpdate )
 {
   if ( mPoints.size() < geometryIndex + 1 )
   {
@@ -249,11 +249,14 @@ void QgsRubberBand::movePoint( const QgsPoint & p, int geometryIndex )
 
   mPoints[geometryIndex].last() = p;
 
-  updateRect();
-  update();
+  if ( doUpdate )
+  {
+    updateRect();
+    update();
+  }
 }
 
-void QgsRubberBand::movePoint( int index, const QgsPoint& p, int geometryIndex )
+void QgsRubberBand::movePoint( int index, const QgsPoint& p, int geometryIndex, bool doUpdate )
 {
   if ( mPoints.size() < geometryIndex + 1 )
   {
@@ -267,8 +270,11 @@ void QgsRubberBand::movePoint( int index, const QgsPoint& p, int geometryIndex )
 
   mPoints[geometryIndex][index] = p;
 
-  updateRect();
-  update();
+  if ( doUpdate )
+  {
+    updateRect();
+    update();
+  }
 }
 
 void QgsRubberBand::setToGeometry( QgsGeometry* geom, QgsVectorLayer* layer )
@@ -682,8 +688,12 @@ QgsPoint QgsRubberBand::partMidpoint( int geometryIndex ) const
       Cy += ( vi.y() + vj.y() ) * d;
     }
 
-    return A < 1E-12 ? mPoints[geometryIndex].front() : QgsPoint( Cx / ( 3. * A ), Cy / ( 3. * A ) );
+    if ( qAbs( A ) < 1E-12 )
+      return mPoints[geometryIndex].front();
+    else
+      return QgsPoint( Cx / ( 3. * A ), Cy / ( 3. * A ) );
   }
+  return QgsPoint( 0, 0 );
 }
 
 int QgsRubberBand::numberOfVertices() const
