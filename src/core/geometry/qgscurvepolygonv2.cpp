@@ -442,7 +442,7 @@ bool QgsCurvePolygonV2::removeInteriorRing( int nr )
   {
     return false;
   }
-  mInteriorRings.removeAt( nr );
+  delete mInteriorRings.takeAt( nr );
   return true;
 }
 
