@@ -1381,8 +1381,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>495</width>
-                <height>411</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -1809,7 +1809,7 @@
                   <item>
                    <widget class="QgsCollapsibleGroupBox" name="mSimplifyDrawingGroupBox">
                     <property name="title">
-                     <string>Enable feature simplification by default for newly added layers</string>
+                     <string>Enable feature si&amp;mplification by default for newly added layers</string>
                     </property>
                     <property name="flat">
                      <bool>true</bool>
@@ -2420,8 +2420,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>149</width>
-                <height>233</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_46">
@@ -2525,8 +2525,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>501</width>
-                <height>316</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -2863,7 +2863,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>628</width>
+                <width>645</width>
                 <height>605</height>
                </rect>
               </property>
@@ -3042,7 +3042,7 @@
                   <item row="5" column="1">
                    <widget class="QRadioButton" name="radMeters">
                     <property name="text">
-                     <string>Meters</string>
+                     <string>&amp;Meters</string>
                     </property>
                    </widget>
                   </item>
@@ -3154,6 +3154,13 @@
                     </property>
                     <property name="text">
                      <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="4">
+                   <widget class="QRadioButton" name="mMilRadioButton">
+                    <property name="text">
+                     <string>Angular Mil</string>
                     </property>
                    </widget>
                   </item>

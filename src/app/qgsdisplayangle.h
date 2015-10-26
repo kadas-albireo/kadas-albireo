@@ -38,6 +38,7 @@ class APP_EXPORT QgsDisplayAngle: public QDialog, private Ui::QgsDisplayAngleBas
     //! The value we're showing
     double mValue;
 
+  private slots:
     //! Updates UI according to user settings.
     void updateUi();
 };
