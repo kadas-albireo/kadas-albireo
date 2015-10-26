@@ -277,6 +277,7 @@
 #include "qgsmaptoolsimplify.h"
 #include "qgsmeasuretool.h"
 #include "qgsmeasurecircletool.h"
+#include "qgsmeasureheightprofiletool.h"
 #include "qgsmaptoolpinlabels.h"
 #include "qgsmaptoolshowhidelabels.h"
 #include "qgsmaptoolmovelabel.h"
@@ -926,6 +927,7 @@ QgisApp::QgisApp()
 QgisApp::~QgisApp()
 {
   mMapCanvas->stopRendering();
+  mMapCanvas->setMapTool( 0 );
 
   delete mInternalClipboard;
   delete mQgisInterface;
@@ -1173,6 +1175,7 @@ void QgisApp::createActions()
   connect( mActionMeasure, SIGNAL( triggered() ), this, SLOT( measure() ) );
   connect( mActionMeasureArea, SIGNAL( triggered() ), this, SLOT( measureArea() ) );
   connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle() ) );
+  connect( mActionMeasureHeightProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile() ) );
   connect( mActionMeasureAngle, SIGNAL( triggered() ), this, SLOT( measureAngle() ) );
   connect( mActionZoomFullExtent, SIGNAL( triggered() ), this, SLOT( zoomFull() ) );
   connect( mActionZoomToLayer, SIGNAL( triggered() ), this, SLOT( zoomToLayerExtent() ) );
@@ -1405,6 +1408,7 @@ void QgisApp::createActionGroups()
   mMapToolGroup->addAction( mActionMeasure );
   mMapToolGroup->addAction( mActionMeasureArea );
   mMapToolGroup->addAction( mActionMeasureCircle );
+  mMapToolGroup->addAction( mActionMeasureHeightProfile );
   mMapToolGroup->addAction( mActionMeasureAngle );
   mMapToolGroup->addAction( mActionAddFeature );
   mMapToolGroup->addAction( mActionMoveFeature );
@@ -1655,6 +1659,7 @@ void QgisApp::createToolBars()
   bt->addAction( mActionMeasure );
   bt->addAction( mActionMeasureArea );
   bt->addAction( mActionMeasureCircle );
+  bt->addAction( mActionMeasureHeightProfile );
   bt->addAction( mActionMeasureAngle );
 
   QAction* defMeasureAction = mActionMeasure;
@@ -1664,6 +1669,7 @@ void QgisApp::createToolBars()
     case 1: defMeasureAction = mActionMeasureArea; break;
     case 2: defMeasureAction = mActionMeasureAngle; break;
     case 3: defMeasureAction = mActionMeasureCircle; break;
+    case 4: defMeasureAction = mActionMeasureHeightProfile; break;
   }
   bt->setDefaultAction( defMeasureAction );
   QAction* measureAction = mAttributesToolBar->insertWidget( mActionMapTips, bt );
@@ -2063,6 +2069,7 @@ void QgisApp::setTheme( QString theThemeName )
   mActionMeasureArea->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureArea.png" ) );
   mActionMeasureAngle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureAngle.png" ) );
   mActionMeasureCircle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureCircle.png" ) );
+  mActionMeasureHeightProfile->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureHeightProfile.png" ) );
   mActionMapTips->setIcon( QgsApplication::getThemeIcon( "/mActionMapTips.png" ) );
   mActionShowBookmarks->setIcon( QgsApplication::getThemeIcon( "/mActionShowBookmarks.png" ) );
   mActionNewBookmark->setIcon( QgsApplication::getThemeIcon( "/mActionNewBookmark.png" ) );
@@ -2230,6 +2237,8 @@ void QgisApp::createCanvasTools()
   mMapTools.mMeasureArea->setAction( mActionMeasureArea );
   mMapTools.mMeasureCircle = new QgsMeasureCircleTool( mMapCanvas );
   mMapTools.mMeasureCircle->setAction( mActionMeasureCircle );
+  mMapTools.mMeasureHeightProfile = new QgsMeasureHeightProfileTool( mMapCanvas );
+  mMapTools.mMeasureHeightProfile->setAction( mActionMeasureHeightProfile );
   mMapTools.mMeasureAngle = new QgsMapToolMeasureAngle( mMapCanvas );
   mMapTools.mMeasureAngle->setAction( mActionMeasureAngle );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mMapCanvas );
@@ -4883,6 +4892,11 @@ void QgisApp::measureArea()
 void QgisApp::measureCircle()
 {
   mMapCanvas->setMapTool( mMapTools.mMeasureCircle );
+}
+
+void QgisApp::measureHeightProfile()
+{
+  mMapCanvas->setMapTool( mMapTools.mMeasureHeightProfile );
 }
 
 void QgisApp::measureAngle()
@@ -10324,6 +10338,8 @@ void QgisApp::toolButtonActionTriggered( QAction *action )
     settings.setValue( "/UI/measureTool", 2 );
   else if ( action == mActionMeasureCircle )
     settings.setValue( "/UI/measureCircle", 3 );
+  else if ( action == mActionMeasureHeightProfile )
+    settings.setValue( "/UI/measureHeightProfile", 4 );
   else if ( action == mActionTextAnnotation )
     settings.setValue( "/UI/annotationTool", 0 );
   else if ( action == mActionFormAnnotation )
