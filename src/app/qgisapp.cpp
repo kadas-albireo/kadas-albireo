@@ -276,6 +276,7 @@
 #include "qgsmaptoolzoom.h"
 #include "qgsmaptoolsimplify.h"
 #include "qgsmeasuretool.h"
+#include "qgsmeasurecircletool.h"
 #include "qgsmaptoolpinlabels.h"
 #include "qgsmaptoolshowhidelabels.h"
 #include "qgsmaptoolmovelabel.h"
@@ -1171,6 +1172,7 @@ void QgisApp::createActions()
   connect( mActionFeatureAction, SIGNAL( triggered() ), this, SLOT( doFeatureAction() ) );
   connect( mActionMeasure, SIGNAL( triggered() ), this, SLOT( measure() ) );
   connect( mActionMeasureArea, SIGNAL( triggered() ), this, SLOT( measureArea() ) );
+  connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle() ) );
   connect( mActionMeasureAngle, SIGNAL( triggered() ), this, SLOT( measureAngle() ) );
   connect( mActionZoomFullExtent, SIGNAL( triggered() ), this, SLOT( zoomFull() ) );
   connect( mActionZoomToLayer, SIGNAL( triggered() ), this, SLOT( zoomToLayerExtent() ) );
@@ -1402,6 +1404,7 @@ void QgisApp::createActionGroups()
   mMapToolGroup->addAction( mActionDeselectAll );
   mMapToolGroup->addAction( mActionMeasure );
   mMapToolGroup->addAction( mActionMeasureArea );
+  mMapToolGroup->addAction( mActionMeasureCircle );
   mMapToolGroup->addAction( mActionMeasureAngle );
   mMapToolGroup->addAction( mActionAddFeature );
   mMapToolGroup->addAction( mActionMoveFeature );
@@ -1651,6 +1654,7 @@ void QgisApp::createToolBars()
   bt->setPopupMode( QToolButton::MenuButtonPopup );
   bt->addAction( mActionMeasure );
   bt->addAction( mActionMeasureArea );
+  bt->addAction( mActionMeasureCircle );
   bt->addAction( mActionMeasureAngle );
 
   QAction* defMeasureAction = mActionMeasure;
@@ -1659,6 +1663,7 @@ void QgisApp::createToolBars()
     case 0: defMeasureAction = mActionMeasure; break;
     case 1: defMeasureAction = mActionMeasureArea; break;
     case 2: defMeasureAction = mActionMeasureAngle; break;
+    case 3: defMeasureAction = mActionMeasureCircle; break;
   }
   bt->setDefaultAction( defMeasureAction );
   QAction* measureAction = mAttributesToolBar->insertWidget( mActionMapTips, bt );
@@ -2057,6 +2062,7 @@ void QgisApp::setTheme( QString theThemeName )
   mActionMeasure->setIcon( QgsApplication::getThemeIcon( "/mActionMeasure.png" ) );
   mActionMeasureArea->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureArea.png" ) );
   mActionMeasureAngle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureAngle.png" ) );
+  mActionMeasureCircle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureCircle.png" ) );
   mActionMapTips->setIcon( QgsApplication::getThemeIcon( "/mActionMapTips.png" ) );
   mActionShowBookmarks->setIcon( QgsApplication::getThemeIcon( "/mActionShowBookmarks.png" ) );
   mActionNewBookmark->setIcon( QgsApplication::getThemeIcon( "/mActionNewBookmark.png" ) );
@@ -2218,10 +2224,12 @@ void QgisApp::createCanvasTools()
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
   mMapTools.mFeatureAction = new QgsMapToolFeatureAction( mMapCanvas );
   mMapTools.mFeatureAction->setAction( mActionFeatureAction );
-  mMapTools.mMeasureDist = new QgsMeasureTool( mMapCanvas, false /* area */ );
+  mMapTools.mMeasureDist = new QgsMeasureTool( mMapCanvas, false );
   mMapTools.mMeasureDist->setAction( mActionMeasure );
-  mMapTools.mMeasureArea = new QgsMeasureTool( mMapCanvas, true /* area */ );
+  mMapTools.mMeasureArea = new QgsMeasureTool( mMapCanvas, true );
   mMapTools.mMeasureArea->setAction( mActionMeasureArea );
+  mMapTools.mMeasureCircle = new QgsMeasureCircleTool( mMapCanvas );
+  mMapTools.mMeasureCircle->setAction( mActionMeasureCircle );
   mMapTools.mMeasureAngle = new QgsMapToolMeasureAngle( mMapCanvas );
   mMapTools.mMeasureAngle->setAction( mActionMeasureAngle );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mMapCanvas );
@@ -4870,6 +4878,11 @@ void QgisApp::measure()
 void QgisApp::measureArea()
 {
   mMapCanvas->setMapTool( mMapTools.mMeasureArea );
+}
+
+void QgisApp::measureCircle()
+{
+  mMapCanvas->setMapTool( mMapTools.mMeasureCircle );
 }
 
 void QgisApp::measureAngle()
@@ -10309,6 +10322,8 @@ void QgisApp::toolButtonActionTriggered( QAction *action )
     settings.setValue( "/UI/measureTool", 1 );
   else if ( action == mActionMeasureAngle )
     settings.setValue( "/UI/measureTool", 2 );
+  else if ( action == mActionMeasureCircle )
+    settings.setValue( "/UI/measureCircle", 3 );
   else if ( action == mActionTextAnnotation )
     settings.setValue( "/UI/annotationTool", 0 );
   else if ( action == mActionFormAnnotation )

@@ -77,6 +77,7 @@
      </property>
      <addaction name="mActionMeasure"/>
      <addaction name="mActionMeasureArea"/>
+     <addaction name="mActionMeasureCircle"/>
      <addaction name="mActionMeasureAngle"/>
     </widget>
     <widget class="QMenu" name="menuDecorations">
@@ -2287,6 +2288,21 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>KML Export</string>
+   </property>
+  </action>
+  <action name="mActionMeasureCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMeasureCircle.png</normaloff>:/images/themes/default/mActionMeasureCircle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Measure &amp;Circle</string>
+   </property>
+   <property name="toolTip">
+    <string>Measure Circle</string>
    </property>
   </action>
  </widget>

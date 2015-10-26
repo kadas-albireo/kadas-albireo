@@ -1075,6 +1075,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void measure();
     //! Measure area
     void measureArea();
+    //! Measure circle
+    void measureCircle();
     //! Measure angle
     void measureAngle();
 
@@ -1455,6 +1457,7 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
         QgsMapTool *mFeatureAction;
         QgsMapTool *mMeasureDist;
         QgsMapTool *mMeasureArea;
+        QgsMapTool *mMeasureCircle;
         QgsMapTool *mMeasureAngle;
         QgsMapTool *mAddFeature;
         QgsMapTool *mMoveFeature;
