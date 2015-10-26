@@ -179,13 +179,13 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
      * Moves the rubber band point specified by index. Note that if the rubber band is
      * not used to track the last mouse position, the first point of the rubber band has two vertices
      */
-    void movePoint( const QgsPoint & p, int geometryIndex = 0 );
+    void movePoint( const QgsPoint & p, int geometryIndex = 0, bool doUpdate = true );
 
     /**
      * Moves the rubber band point specified by index. Note that if the rubber band is
      * not used to track the last mouse position, the first point of the rubber band has two vertices
      */
-    void movePoint( int index, const QgsPoint& p, int geometryIndex = 0 );
+    void movePoint( int index, const QgsPoint& p, int geometryIndex = 0 , bool doUpdate = true );
 
     /**
      * Returns number of vertices in feature part
