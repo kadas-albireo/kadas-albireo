@@ -42,7 +42,6 @@ class CORE_EXPORT QgsWKBTypes
       MultiCurve = 11,
       MultiSurface = 12,
       NoGeometry = 100, //attributes only
-      MixedGeometry = 101,
       PointZ = 1001,
       LineStringZ = 1002,
       PolygonZ = 1003,
@@ -93,13 +92,12 @@ class CORE_EXPORT QgsWKBTypes
       LineGeometry,
       PolygonGeometry,
       UnknownGeometry,
-      NullGeometry,
-      AnyGeometry
+      NullGeometry
     };
 
     struct wkbEntry
     {
-      wkbEntry( QString name, bool isMultiType, Type multiType, Type singleType, Type flatType, GeometryType geometryType,
+      wkbEntry( const QString& name, bool isMultiType, Type multiType, Type singleType, Type flatType, GeometryType geometryType,
                 bool hasZ, bool hasM ):
           mName( name ), mIsMultiType( isMultiType ), mMultiType( multiType ), mSingleType( singleType ), mFlatType( flatType ), mGeometryType( geometryType ),
           mHasZ( hasZ ), mHasM( hasM ) {}

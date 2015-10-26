@@ -52,7 +52,7 @@ email                : marco.hugentobler at sourcepole dot com
 class GEOSException
 {
   public:
-    GEOSException( QString theMsg )
+    GEOSException( const QString& theMsg )
     {
       if ( theMsg == "Unknown exception thrown"  && lastMsg.isNull() )
       {
@@ -231,7 +231,7 @@ QgsAbstractGeometryV2* QgsGeos::combine( const QgsAbstractGeometryV2& geom, QStr
   return overlay( geom, UNION, errorMsg );
 }
 
-QgsAbstractGeometryV2* QgsGeos::combine( const QList< const QgsAbstractGeometryV2* > geomList, QString* errorMsg ) const
+QgsAbstractGeometryV2* QgsGeos::combine( const QList< const QgsAbstractGeometryV2* >& geomList, QString* errorMsg ) const
 {
 
   QVector< GEOSGeometry* > geosGeometries;
