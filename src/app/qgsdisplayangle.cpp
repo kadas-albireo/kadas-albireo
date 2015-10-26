@@ -26,6 +26,12 @@ QgsDisplayAngle::QgsDisplayAngle( QgsMapToolMeasureAngle * tool, Qt::WindowFlags
     , mValue( 0.0 )
 {
   setupUi( this );
+  mComboBoxUnit->addItem( tr( "Degrees" ), "degrees" );
+  mComboBoxUnit->addItem( tr( "Radians" ), "radians" );
+  mComboBoxUnit->addItem( tr( "Gradians" ), "gon" );
+  mComboBoxUnit->addItem( tr( "Angular Mil" ), "mil" );
+  mComboBoxUnit->setCurrentIndex( mComboBoxUnit->findData( QSettings().value( "/qgis/measure/angleunits", "degrees" ) ) );
+  connect( mComboBoxUnit, SIGNAL( currentIndexChanged( int ) ), this, SLOT( updateUi() ) );
 }
 
 QgsDisplayAngle::~QgsDisplayAngle()
@@ -41,23 +47,30 @@ void QgsDisplayAngle::setValueInRadians( double value )
 void QgsDisplayAngle::updateUi()
 {
   QSettings settings;
-  QString unitString = settings.value( "/qgis/measure/angleunits", "degrees" ).toString();
+
+  QString unitString = mComboBoxUnit->itemData( mComboBoxUnit->currentIndex() ).toString();
+  settings.setValue( "/qgis/measure/angleunits", unitString );
   int decimals = settings.value( "/qgis/measure/decimalplaces", "3" ).toInt();
 
   if ( unitString == "degrees" )
   {
-    mAngleLineEdit->setText( tr( "%1 degrees" ).arg( QLocale::system().toString( mValue * 180 / M_PI ),
+    mAngleLineEdit->setText( tr( "%1" ).arg( QLocale::system().toString( mValue * 180 / M_PI ),
                              'f', decimals ) );
   }
   else if ( unitString == "radians" )
   {
-    mAngleLineEdit->setText( tr( "%1 radians" ).arg( QLocale::system().toString( mValue ),
+    mAngleLineEdit->setText( tr( "%1" ).arg( QLocale::system().toString( mValue ),
                              'f', decimals ) );
 
   }
   else if ( unitString == "gon" )
   {
-    mAngleLineEdit->setText( tr( "%1 gon" ).arg( QLocale::system().toString( mValue / M_PI * 200 ),
+    mAngleLineEdit->setText( tr( "%1" ).arg( QLocale::system().toString( mValue / M_PI * 200 ),
+                             'f', decimals ) );
+  }
+  else if ( unitString == "mil" )
+  {
+    mAngleLineEdit->setText( tr( "%1" ).arg( QLocale::system().toString( mValue * 3200. / M_PI ),
                              'f', decimals ) );
   }
 }

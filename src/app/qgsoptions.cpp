@@ -460,9 +460,14 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   angleButtonGroup->addButton( mDegreesRadioButton );
   angleButtonGroup->addButton( mRadiansRadioButton );
   angleButtonGroup->addButton( mGonRadioButton );
+  angleButtonGroup->addButton( mMilRadioButton );
 
   QString myAngleUnitsTxt = settings.value( "/qgis/measure/angleunits", "degrees" ).toString();
-  if ( myAngleUnitsTxt == "gon" )
+  if ( myAngleUnitsTxt == "mil" )
+  {
+    mMilRadioButton->setChecked( true );
+  }
+  else if ( myAngleUnitsTxt == "gon" )
   {
     mGonRadioButton->setChecked( true );
   }
@@ -1232,6 +1237,10 @@ void QgsOptions::saveOptions()
   else if ( mGonRadioButton->isChecked() )
   {
     angleUnitString = "gon";
+  }
+  else if ( mMilRadioButton->isChecked() )
+  {
+    angleUnitString = "mil";
   }
   settings.setValue( "/qgis/measure/angleunits", angleUnitString );
 
