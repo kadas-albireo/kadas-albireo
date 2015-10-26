@@ -79,6 +79,7 @@
      <addaction name="mActionMeasureArea"/>
      <addaction name="mActionMeasureCircle"/>
      <addaction name="mActionMeasureAngle"/>
+     <addaction name="mActionMeasureHeightProfile"/>
     </widget>
     <widget class="QMenu" name="menuDecorations">
      <property name="title">
@@ -2303,6 +2304,21 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>Measure Circle</string>
+   </property>
+  </action>
+  <action name="mActionMeasureHeightProfile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMeasureHeightProfile.png</normaloff>:/images/themes/default/mActionMeasureHeightProfile.png</iconset>
+   </property>
+   <property name="text">
+    <string>Measure &amp;Height Profile</string>
+   </property>
+   <property name="toolTip">
+    <string>Measure Height Profile</string>
    </property>
   </action>
  </widget>

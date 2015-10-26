@@ -310,6 +310,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QAction *actionFeatureAction() { return mActionFeatureAction; }
     QAction *actionMeasure() { return mActionMeasure; }
     QAction *actionMeasureArea() { return mActionMeasureArea; }
+    QAction *actionMeasureCircle() { return mActionMeasureCircle; }
+    QAction *actionMeasureHeightProfile() { return mActionMeasureHeightProfile; }
     QAction *actionZoomFullExtent() { return mActionZoomFullExtent; }
     QAction *actionZoomToLayer() { return mActionZoomToLayer; }
     QAction *actionZoomToSelected() { return mActionZoomToSelected; }
@@ -1077,6 +1079,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void measureArea();
     //! Measure circle
     void measureCircle();
+    //! Measure height profile
+    void measureHeightProfile();
     //! Measure angle
     void measureAngle();
 
@@ -1458,6 +1462,7 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
         QgsMapTool *mMeasureDist;
         QgsMapTool *mMeasureArea;
         QgsMapTool *mMeasureCircle;
+        QgsMapTool *mMeasureHeightProfile;
         QgsMapTool *mMeasureAngle;
         QgsMapTool *mAddFeature;
         QgsMapTool *mMoveFeature;

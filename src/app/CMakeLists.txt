@@ -93,8 +93,10 @@ SET(QGIS_APP_SRCS
   nodetool/qgsnodeeditor.cpp
 
   qgsmeasuredialog.cpp
+  qgsmeasureheightprofiledialog.cpp
   qgsmeasuretool.cpp
   qgsmeasurecircletool.cpp
+  qgsmeasureheightprofiletool.cpp
   qgsmergeattributesdialog.cpp
   qgsoptions.cpp
   qgspointrotationitem.cpp
@@ -243,8 +245,10 @@ SET (QGIS_APP_MOC_HDRS
   nodetool/qgsnodeeditor.h
 
   qgsmeasuredialog.h
+  qgsmeasureheightprofiledialog.h
   qgsmeasuretool.h
   qgsmeasurecircletool.h
+  qgsmeasureheightprofiletool.h
   qgsmergeattributesdialog.h
   qgsoptions.h
   qgsprojectlayergroupdialog.h
