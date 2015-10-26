@@ -1410,6 +1410,7 @@ QList<QgsGeometry*> QgsGeometry::asGeometryCollection() const
   if ( gc )
   {
     int numGeom = gc->numGeometries();
+    geometryList.reserve( numGeom );
     for ( int i = 0; i < numGeom; ++i )
     {
       geometryList.append( new QgsGeometry( gc->geometryN( i )->clone() ) );
@@ -1667,7 +1668,7 @@ int QgsGeometry::vertexNrFromVertexId( const QgsVertexId& id ) const
 {
   if ( !d || !d->geometry )
   {
-    return false;
+    return -1;
   }
 
   QList< QList< QList< QgsPointV2 > > > coords;
