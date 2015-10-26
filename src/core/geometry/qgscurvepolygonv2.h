@@ -94,7 +94,7 @@ class CORE_EXPORT QgsCurvePolygonV2: public QgsSurfaceV2
 
     virtual int vertexCount( int /*part*/ = 0, int ring = 0 ) const override;
     virtual int ringCount( int /*part*/ = 0 ) const override { return ( mExteriorRing != 0 ) + mInteriorRings.size(); }
-    virtual int partCount() const override { return ringCount() > 0; }
+    virtual int partCount() const override { return ringCount() > 0 ? 1 : 0; }
     virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const override;
 
     /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
