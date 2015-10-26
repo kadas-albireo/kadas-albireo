@@ -36,12 +36,14 @@ QgsMeasureDialog::QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f )
 {
   setupUi( this );
 
+  mMeasureArea = tool->measureArea();
+
   QPushButton *nb = new QPushButton( tr( "&New" ) );
   buttonBox->addButton( nb, QDialogButtonBox::ActionRole );
   connect( nb, SIGNAL( clicked() ), this, SLOT( restart() ) );
-
-  mMeasureArea = tool->measureArea();
-  mTotal = 0.;
+  connect( buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
+  connect( buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
+  connect( this, SIGNAL( finished( int ) ), this, SLOT( finish() ) );
 
   mUnitsCombo->addItem( QGis::tr( QGis::Meters ) );
   mUnitsCombo->addItem( QGis::tr( QGis::Feet ) );
@@ -52,12 +54,13 @@ QgsMeasureDialog::QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f )
   QSettings settings;
   QString units = settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
   mUnitsCombo->setCurrentIndex( mUnitsCombo->findText( QGis::tr( QGis::fromLiteral( units ) ), Qt::MatchFixedString ) );
-
-  updateSettings();
-
   connect( mUnitsCombo, SIGNAL( currentIndexChanged( const QString & ) ), this, SLOT( unitsChanged( const QString & ) ) );
 
   groupBox->setCollapsed( true );
+
+  restoreGeometry( settings.value( "/Windows/Measure/geometry" ).toByteArray() );
+
+  updateSettings();
 }
 
 void QgsMeasureDialog::updateSettings()
@@ -71,14 +74,7 @@ void QgsMeasureDialog::updateSettings()
   mDa.setSourceCrs( mTool->canvas()->mapSettings().destinationCrs().srsid() );
   mDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
   // Only use ellipsoidal calculation when project wide transformation is enabled.
-  if ( mTool->canvas()->mapSettings().hasCrsTransformEnabled() )
-  {
-    mDa.setEllipsoidalMode( true );
-  }
-  else
-  {
-    mDa.setEllipsoidalMode( false );
-  }
+  mDa.setEllipsoidalMode( mTool->canvas()->mapSettings().hasCrsTransformEnabled() );
 
   QgsDebugMsg( "****************" );
   QgsDebugMsg( QString( "Ellipsoid ID : %1" ).arg( mDa.ellipsoid() ) );
@@ -87,175 +83,57 @@ void QgsMeasureDialog::updateSettings()
   QgsDebugMsg( QString( "Display units: %1" ).arg( QGis::toLiteral( mDisplayUnits ) ) );
   QgsDebugMsg( QString( "Canvas units : %1" ).arg( QGis::toLiteral( mCanvasUnits ) ) );
 
-  mTotal = 0;
   updateUi();
 }
 
 void QgsMeasureDialog::unitsChanged( const QString &units )
 {
   mDisplayUnits = QGis::fromTr( units );
-  mTable->clear();
-  mTotal = 0.;
   updateUi();
 }
 
 void QgsMeasureDialog::restart()
 {
   mTool->restart();
-
-  mTable->clear();
-  mTotal = 0.;
   updateUi();
 }
 
-
-void QgsMeasureDialog::mouseMove( QgsPoint &point )
+void QgsMeasureDialog::finish()
 {
-  mLastMousePoint = point;
-  // show current distance/area while moving the point
-  // by creating a temporary copy of point array
-  // and adding moving point at the end
-  if ( mMeasureArea && mTool->points().size() >= 2 )
+  QSettings().setValue( "/Windows/Measure/geometry", saveGeometry() );
+  mTool->restart();
+  mTool->deactivate();
+}
+
+void QgsMeasureDialog::addPart()
+{
+  QTreeWidgetItem * item = new QTreeWidgetItem( mTable, QStringList() << formatValue( 0, mMeasureArea ) );
+  item->setTextAlignment( 0, Qt::AlignRight );
+  mTable->scrollToItem( item );
+}
+
+void QgsMeasureDialog::removePoint()
+{
+  if ( !mMeasureArea )
   {
-    QList<QgsPoint> tmpPoints = mTool->points();
-    tmpPoints.append( point );
-    double area = mDa.measurePolygon( tmpPoints );
-    editTotal->setText( formatArea( area ) );
+    QTreeWidgetItem* parent = mTable->topLevelItem( mTable->topLevelItemCount() - 1 );
+    delete parent->takeChild( parent->childCount() - 1 );
   }
-  else if ( !mMeasureArea && mTool->points().size() >= 1 )
-  {
-    QgsPoint p1( mTool->points().last() ), p2( point );
-    double d = mDa.measureLine( p1, p2 );
-
-    editTotal->setText( formatDistance( mTotal + d ) );
-
-    QGis::UnitType displayUnits;
-    // Meters or feet?
-    convertMeasurement( d, displayUnits, false );
-
-    // Set moving
-    QTreeWidgetItem *item = mTable->topLevelItem( mTable->topLevelItemCount() - 1 );
-    item->setText( 0, QLocale::system().toString( d, 'f', mDecimalPlaces ) );
-    QgsDebugMsg( QString( "Final result is %1" ).arg( item->text( 0 ) ) );
-  }
+  updateMeasurements();
 }
 
-void QgsMeasureDialog::addPoint( QgsPoint &p )
+QString QgsMeasureDialog::formatValue( double value, bool measureArea )
 {
-  Q_UNUSED( p );
-
-  int numPoints = mTool->points().size();
-  if ( mMeasureArea && numPoints > 2 )
-  {
-    double area = mDa.measurePolygon( mTool->points() );
-    editTotal->setText( formatArea( area ) );
-  }
-  else if ( !mMeasureArea && numPoints >= 1 )
-  {
-    if ( !mTool->done() )
-    {
-      QTreeWidgetItem * item = new QTreeWidgetItem( QStringList( QLocale::system().toString( 0.0, 'f', mDecimalPlaces ) ) );
-      item->setTextAlignment( 0, Qt::AlignRight );
-      mTable->addTopLevelItem( item );
-      mTable->scrollToItem( item );
-    }
-    if ( numPoints > 1 )
-    {
-      mTotal = mDa.measureLine( mTool->points() );
-      editTotal->setText( formatDistance( mTotal ) );
-    }
-  }
-  QgsDebugMsg( "Exiting" );
-}
-
-void QgsMeasureDialog::removeLastPoint()
-{
-  int numPoints = mTool->points().size();
-  if ( mMeasureArea )
-  {
-    if ( numPoints > 1 )
-    {
-      QList<QgsPoint> tmpPoints = mTool->points();
-      tmpPoints.append( mLastMousePoint );
-      double area = mDa.measurePolygon( tmpPoints );
-      editTotal->setText( formatArea( area ) );
-    }
-    else
-    {
-      editTotal->setText( formatArea( 0 ) );
-    }
-  }
-  else if ( !mMeasureArea && numPoints >= 1 )
-  {
-    //remove final row
-    delete mTable->takeTopLevelItem( mTable->topLevelItemCount() - 1 );
-
-    QgsPoint p1( mTool->points().last() );
-    double d = mDa.measureLine( p1, mLastMousePoint );
-
-    mTotal = mDa.measureLine( mTool->points() );
-    editTotal->setText( formatDistance( mTotal + d ) );
-
-    QGis::UnitType displayUnits;
-    // Meters or feet?
-    convertMeasurement( d, displayUnits, false );
-
-    QTreeWidgetItem *item = mTable->topLevelItem( mTable->topLevelItemCount() - 1 );
-    item->setText( 0, QLocale::system().toString( d, 'f', mDecimalPlaces ) );
-  }
-}
-
-void QgsMeasureDialog::on_buttonBox_rejected( void )
-{
-  restart();
-  QDialog::close();
-}
-
-void QgsMeasureDialog::closeEvent( QCloseEvent *e )
-{
-  saveWindowLocation();
-  e->accept();
-}
-
-void QgsMeasureDialog::restorePosition()
-{
-  QSettings settings;
-  restoreGeometry( settings.value( "/Windows/Measure/geometry" ).toByteArray() );
-  int wh;
-  if ( mMeasureArea )
-    wh = settings.value( "/Windows/Measure/hNoTable", 70 ).toInt();
-  else
-    wh = settings.value( "/Windows/Measure/h", 200 ).toInt();
-  resize( width(), wh );
-  updateUi();
-}
-
-void QgsMeasureDialog::saveWindowLocation()
-{
-  QSettings settings;
-  settings.setValue( "/Windows/Measure/geometry", saveGeometry() );
-  const QString &key = mMeasureArea ? "/Windows/Measure/hNoTable" : "/Windows/Measure/h";
-  settings.setValue( key, height() );
-}
-
-QString QgsMeasureDialog::formatDistance( double distance )
-{
-  QSettings settings;
-  bool baseUnit = settings.value( "/qgis/measure/keepbaseunit", false ).toBool();
+  bool baseUnit = QSettings().value( "/qgis/measure/keepbaseunit", false ).toBool();
 
   QGis::UnitType newDisplayUnits;
-  convertMeasurement( distance, newDisplayUnits, false );
-  return QgsDistanceArea::textUnit( distance, mDecimalPlaces, newDisplayUnits, false, baseUnit );
+  convertMeasurement( value, newDisplayUnits, measureArea );
+  return QgsDistanceArea::textUnit( value, mDecimalPlaces, newDisplayUnits, measureArea, baseUnit );
 }
 
-QString QgsMeasureDialog::formatArea( double area )
+double QgsMeasureDialog::measureGeometry( const QList<QgsPoint> &points, bool measureArea ) const
 {
-  QSettings settings;
-  bool baseUnit = settings.value( "/qgis/measure/keepbaseunit", false ).toBool();
-
-  QGis::UnitType newDisplayUnits;
-  convertMeasurement( area, newDisplayUnits, true );
-  return QgsDistanceArea::textUnit( area, mDecimalPlaces, newDisplayUnits, true, baseUnit );
+  return measureArea ? mDa.measurePolygon( points ) : mDa.measureLine( points );
 }
 
 void QgsMeasureDialog::updateUi()
@@ -296,46 +174,22 @@ void QgsMeasureDialog::updateUi()
   QGis::UnitType newDisplayUnits;
   double dummy = 1.0;
   convertMeasurement( dummy, newDisplayUnits, true );
-  mTable->setHeaderLabels( QStringList( tr( "Segments [%1]" ).arg( QGis::tr( newDisplayUnits ) ) ) );
+  mTable->setHeaderLabels( QStringList() << tr( "Parts" ) );
 
-  if ( mMeasureArea )
+  mTable->clear();
+  const QList< QList< QgsPoint > >& points = mTool->getPoints();
+  double total = 0.;
+  for ( int i = 0, n = points.size(); i < n; ++i )
   {
-    double area = 0.0;
-    if ( mTool->points().size() > 1 )
-    {
-      area = mDa.measurePolygon( mTool->points() );
-    }
-    mTable->hide(); // Hide the table, only show summary.
-    editTotal->setText( formatArea( area ) );
+    double value = measureGeometry( points[i], mMeasureArea );
+    QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << formatValue( value, mMeasureArea ) );
+    item->setTextAlignment( 0, Qt::AlignRight );
+    mTable->addTopLevelItem( item );
+    total += value;
   }
-  else
-  {
-    QList<QgsPoint>::const_iterator it;
-    bool b = true; // first point
+  editTotal->setText( formatValue( total, mMeasureArea ) );
 
-    QgsPoint p1, p2;
-
-    for ( it = mTool->points().constBegin(); it != mTool->points().constEnd(); ++it )
-    {
-      p2 = *it;
-      if ( !b )
-      {
-        double d  = mDa.measureLine( p1, p2 );
-        QGis::UnitType dummyUnits;
-        convertMeasurement( d, dummyUnits, false );
-
-        QTreeWidgetItem *item = new QTreeWidgetItem( QStringList( QLocale::system().toString( d, 'f', mDecimalPlaces ) ) );
-        item->setTextAlignment( 0, Qt::AlignRight );
-        mTable->addTopLevelItem( item );
-        mTable->scrollToItem( item );
-      }
-      p1 = p2;
-      b = false;
-    }
-    mTotal = mDa.measureLine( mTool->points() );
-    mTable->show(); // Show the table with items
-    editTotal->setText( formatDistance( mTotal ) );
-  }
+  mTool->updateLabels();
 }
 
 void QgsMeasureDialog::convertMeasurement( double &measure, QGis::UnitType &u, bool isArea )
@@ -350,4 +204,29 @@ void QgsMeasureDialog::convertMeasurement( double &measure, QGis::UnitType &u, b
 
   mDa.convertMeasurement( measure, myUnits, mDisplayUnits, isArea );
   u = myUnits;
+}
+
+void QgsMeasureDialog::updateMeasurements()
+{
+  if ( mTool->getPoints().isEmpty() )
+  {
+    return;
+  }
+
+  QTreeWidgetItem *item = mTable->topLevelItem( mTable->topLevelItemCount() - 1 );
+  double value = measureGeometry( mTool->getPoints().last(), mMeasureArea );
+  item->setText( 0, formatValue( value, mMeasureArea ) );
+  item->setData( 0, Qt::UserRole, value );
+  double total = 0;
+  for ( int i = 0, n = mTable->topLevelItemCount(); i < n; ++i )
+  {
+    total += mTable->topLevelItem( i )->data( 0, Qt::UserRole ).toDouble();
+  }
+  editTotal->setText( formatValue( total, mMeasureArea ) );
+}
+
+QString QgsMeasureDialog::getPartMeasurement( int partIdx ) const
+{
+  QTreeWidgetItem* item = mTable->topLevelItem( partIdx );
+  return item ? item->text( 0 ) : "0";
 }

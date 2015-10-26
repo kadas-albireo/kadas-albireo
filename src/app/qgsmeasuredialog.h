@@ -23,8 +23,8 @@
 #include "qgsdistancearea.h"
 #include "qgscontexthelp.h"
 
-class QCloseEvent;
 class QgsMeasureTool;
+class QCloseEvent;
 
 class APP_EXPORT QgsMeasureDialog : public QDialog, private Ui::QgsMeasureBase
 {
@@ -35,30 +35,27 @@ class APP_EXPORT QgsMeasureDialog : public QDialog, private Ui::QgsMeasureBase
     //! Constructor
     QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f = 0 );
 
-    //! Save position
-    void saveWindowLocation( void );
+    //! Update table for new part
+    void addPart();
 
-    //! Restore last window position/size
-    void restorePosition( void );
+    //! Update table for removed point
+    void removePoint();
 
-    //! Add new point
-    void addPoint( QgsPoint &point );
+    //! Updates the measurements in the UI
+    void updateMeasurements();
 
-    //! Mose move
-    void mouseMove( QgsPoint &point );
+    //! Return the measurement for the specified part
+    QString getPartMeasurement( int partIdx ) const;
 
-    //! Remove last point
-    void removeLastPoint();
+    //! measures the specified geometry
+    double measureGeometry( const QList<QgsPoint>& points, bool measureArea ) const;
+
+    //! formats measured value to most appropriate units
+    QString formatValue( double value , bool measureArea );
 
   public slots:
-    //! Reject
-    void on_buttonBox_rejected( void );
-
     //! Reset and start new
     void restart();
-
-    //! Close event
-    void closeEvent( QCloseEvent *e ) override;
 
     //! Show the help for the dialog
     void on_buttonBox_helpRequested() { QgsContextHelp::run( metaObject()->className() ); }
@@ -68,22 +65,14 @@ class APP_EXPORT QgsMeasureDialog : public QDialog, private Ui::QgsMeasureBase
 
   private slots:
     void unitsChanged( const QString &units );
+    void finish();
 
   private:
-
-    //! formats distance to most appropriate units
-    QString formatDistance( double distance );
-
-    //! formats area to most appropriate units
-    QString formatArea( double area );
-
     //! shows/hides table, shows correct units
     void updateUi();
 
     //! Converts the measurement, depending on settings in options and current transformation
     void convertMeasurement( double &measure, QGis::UnitType &u, bool isArea );
-
-    double mTotal;
 
     //! indicates whether we're measuring distances or areas
     bool mMeasureArea;
@@ -102,8 +91,6 @@ class APP_EXPORT QgsMeasureDialog : public QDialog, private Ui::QgsMeasureBase
 
     //! pointer to measure tool which owns this dialog
     QgsMeasureTool* mTool;
-
-    QgsPoint mLastMousePoint;
 };
 
 #endif
