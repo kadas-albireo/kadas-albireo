@@ -19,11 +19,10 @@
 
 #include "qgsmaptool.h"
 
-class QgsDistanceArea;
 class QgsMapCanvas;
 class QgsMeasureDialog;
 class QgsRubberBand;
-
+class QGraphicsTextItem;
 
 
 class APP_EXPORT QgsMeasureTool : public QgsMapTool
@@ -36,28 +35,19 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
 
     ~QgsMeasureTool();
 
-    //! returns whether measuring distance or area
-    bool measureArea() { return mMeasureArea; }
-
-    //! When we have added our last point, and not following
-    bool done() { return mDone; }
-
     //! Reset and start new
     void restart();
 
-    //! Add new point
-    void addPoint( QgsPoint &point );
+    //! returns whether measuring distance or area
+    bool measureArea() { return mMeasureArea; }
 
-    //! Returns reference to array of the points
-    const QList<QgsPoint>& points();
+    //! Get the current points
+    const QList< QList<QgsPoint> >& getPoints() const;
 
     // Inherited from QgsMapTool
 
     //! Mouse move event for overriding
     virtual void canvasMoveEvent( QMouseEvent * e ) override;
-
-    //! Mouse press event for overriding
-    virtual void canvasPressEvent( QMouseEvent * e ) override;
 
     //! Mouse release event for overriding
     virtual void canvasReleaseEvent( QMouseEvent * e ) override;
@@ -70,14 +60,15 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
 
     virtual void keyPressEvent( QKeyEvent* e ) override;
 
+    //! update measurement labels
+    void updateLabels();
+
   public slots:
     //! updates the projections we're using
     void updateSettings();
 
+
   protected:
-
-    QList<QgsPoint> mPoints;
-
     QgsMeasureDialog* mDialog;
 
     //! Rubberband widget tracking the lines being drawn
@@ -86,15 +77,21 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
     //! Rubberband widget tracking the added nodes to line
     QgsRubberBand *mRubberBandPoints;
 
+    //! The current geometry part of the rubber band
+    int mCurrentPart;
+
     //! indicates whether we're measuring distances or areas
     bool mMeasureArea;
-
-    //! indicates whether we've just done a right mouse click
-    bool mDone;
 
     //! indicates whether we've recently warned the user about having the wrong
     // project projection
     bool mWrongProjectProjection;
+
+    //! text labels with measurements
+    QList< QGraphicsTextItem* > mTextLabels;
+
+    //! Add new point
+    void addPoint( QgsPoint &point );
 
     //! Returns the snapped (map) coordinate
     //@param p (pixel) coordinate
@@ -102,6 +99,12 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
 
     /**Removes the last vertex from mRubberBand*/
     void undo();
+
+    /**Update label text*/
+    virtual void updateLabel( int idx );
+
+  private slots:
+    void updateLabelPositions();
 };
 
 #endif
