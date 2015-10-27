@@ -268,7 +268,7 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
     return;
   }
   mSpinBorderSize->blockSignals( true );
-  mSpinBorderSize->setValue( 2 * f.attribute( "size" ).toInt() );
+  mSpinBorderSize->setValue( f.attribute( "size" ).toInt() );
   mSpinBorderSize->blockSignals( false );
   mBtnOutlineColor->blockSignals( true );
   mBtnOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
@@ -296,7 +296,7 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
     return;
   }
   const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), 0.5 * mSpinBorderSize->value() );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mSpinBorderSize->value() );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mBtnOutlineColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );

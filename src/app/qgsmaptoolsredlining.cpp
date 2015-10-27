@@ -70,7 +70,7 @@ void QgsRedliningNewShapeMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
 void QgsRedliningPointMapTool::canvasReleaseEvent( QMouseEvent *e )
 {
   QgsFeature f( mLayer->pendingFields() );
-  QString flags = QString( "symbol=%1,w=5*\"size\",h=5*\"size\",r=0" ).arg( mShape );
+  QString flags = QString( "symbol=%1,w=3*\"size\",h=3*\"size\",r=0" ).arg( mShape );
   f.setAttribute( "flags", flags );
   f.setGeometry( new QgsGeometry( new QgsPointV2( toLayerCoordinates( mLayer, e->pos() ) ) ) );
   mLayer->addFeature( f );
