@@ -53,6 +53,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name ) : QgsVectorLayer(
   setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Italic", "1~~1~~regexp_substr(\"flags\",'italic=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Family", "1~~1~~regexp_substr(\"flags\",'family=([^,]+)')~~" );
+  setCustomProperty( "labeling/dataDefined/Rotation", "1~~1~~regexp_substr(\"flags\",'rotation=([^,]+)')~~" );
   setDisplayField( "tooltip" );
 }
 
@@ -70,8 +71,10 @@ bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, 
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip )
+bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip, double rotation )
 {
+  while ( rotation <= -180 ) rotation += 360.;
+  while ( rotation > 180 ) rotation -= 360.;
   QgsFeature f( pendingFields() );
   f.setGeometry( new QgsGeometry( pos.clone() ) );
   f.setAttribute( "text", text );
@@ -79,7 +82,7 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   f.setAttribute( "text_y", pos.y() );
   f.setAttribute( "size", font.pixelSize() );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
-  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ) );
+  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( rotation ) );
   f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }

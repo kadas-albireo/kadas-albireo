@@ -16,7 +16,7 @@
 #include "qgsredliningtextdialog.h"
 #include <QSettings>
 
-QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, QString fontstr, QWidget *parent )
+QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, QString fontstr, double rotation, QWidget *parent )
     : QDialog( parent )
 {
   ui.setupUi( this );
@@ -33,6 +33,7 @@ QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, QString fon
   textFont.setItalic( false );
   textFont.setPointSize( font().pointSize() );
   ui.fontComboBox->setCurrentFont( textFont );
+  ui.spinBoxRotation->setValue( rotation );
 
   connect( this, SIGNAL( accepted() ), this, SLOT( saveFont() ) );
 }
@@ -43,6 +44,11 @@ QFont QgsRedliningTextDialog::currentFont() const
   font.setBold( ui.checkBoxBold->isChecked() );
   font.setItalic( ui.checkBoxItalic->isChecked() );
   return font;
+}
+
+double QgsRedliningTextDialog::rotation() const
+{
+  return ui.spinBoxRotation->value();
 }
 
 void QgsRedliningTextDialog::saveFont()
