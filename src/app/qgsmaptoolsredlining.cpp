@@ -138,7 +138,7 @@ void QgsRedliningCircleMapTool::canvasMoveEvent( QMouseEvent *e )
 
 void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
 {
-  QgsRedliningTextDialog textDialog( "", "" );
+  QgsRedliningTextDialog textDialog( "", "", 0 );
   if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
   {
     QgsPoint pos = toLayerCoordinates( mLayer, e->pos() );
@@ -147,7 +147,7 @@ void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
     f.setAttribute( "text_x", pos.x() );
     f.setAttribute( "text_y", pos.y() );
     QFont font = textDialog.currentFont();
-    f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ) );
+    f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( textDialog.rotation() ) );
     f.setGeometry( new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
     mLayer->addFeature( f );
   }
@@ -328,12 +328,25 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   if ( mMode == TextSelected )
   {
     double dx, dy;
+    double bboxOffsetX = mCurrentLabel.cornerPoints[0].x() - mCurrentLabel.labelRect.xMinimum();
+    double bboxOffsetY = mCurrentLabel.cornerPoints[0].y() - mCurrentLabel.labelRect.yMinimum();
     mRubberBand->translationOffset( dx, dy );
-    mCurrentLabel.labelRect.setXMinimum( mCurrentLabel.labelRect.xMinimum() + dx );
-    mCurrentLabel.labelRect.setYMinimum( mCurrentLabel.labelRect.yMinimum() + dy );
-    mCurrentLabel.labelRect.setXMaximum( mCurrentLabel.labelRect.xMaximum() + dx );
-    mCurrentLabel.labelRect.setYMaximum( mCurrentLabel.labelRect.yMaximum() + dy );
-    QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( mCurrentLabel.labelRect.xMinimum(), mCurrentLabel.labelRect.yMinimum() ) );
+    QgsRectangle& rect = mCurrentLabel.labelRect;
+    rect.setXMinimum( rect.xMinimum() + dx );
+    rect.setYMinimum( rect.yMinimum() + dy );
+    rect.setXMaximum( rect.xMaximum() + dx );
+    rect.setYMaximum( rect.yMaximum() + dy );
+    mCurrentLabel.cornerPoints[0] += QgsVector( dx, dy );
+    mCurrentLabel.cornerPoints[1] += QgsVector( dx, dy );
+    mCurrentLabel.cornerPoints[2] += QgsVector( dx, dy );
+    mCurrentLabel.cornerPoints[3] += QgsVector( dx, dy );
+    mRubberBand->setTranslationOffset( 0, 0 );
+    mRubberBand->movePoint( 0, QgsPoint( rect.xMinimum(), rect.yMinimum() ), 0, false );
+    mRubberBand->movePoint( 1, QgsPoint( rect.xMinimum(), rect.yMaximum() ), 0, false );
+    mRubberBand->movePoint( 2, QgsPoint( rect.xMaximum(), rect.yMaximum() ), 0, false );
+    mRubberBand->movePoint( 3, QgsPoint( rect.xMaximum(), rect.yMinimum() ), 0, false );
+    mRubberBand->movePoint( 4, QgsPoint( rect.xMinimum(), rect.yMinimum() ), 0, false );
+    QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( rect.xMinimum() + bboxOffsetX, rect.yMinimum() + bboxOffsetY ) );
     mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), pos.x() );
     mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), pos.y() );
     mCanvas->clearCache( mLayer->id() );
@@ -354,12 +367,12 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
   QgsFeature feature;
   if ( mMode == TextSelected && mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature ) )
   {
-    QgsRedliningTextDialog textDialog( mCurrentLabel.labelText, mCurrentLabel.labelFont.toString() );
+    QgsRedliningTextDialog textDialog( mCurrentLabel.labelText, mCurrentLabel.labelFont.toString(), mCurrentLabel.rotation / M_PI * 180. );
     if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
     {
       mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "text" ), textDialog.currentText() );
       QFont font = textDialog.currentFont();
-      QString flags = QString( "family=%1,italic=%2,bold=%3" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() );
+      QString flags = QString( "family=%1,italic=%2,bold=%3,rotation=%4" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( textDialog.rotation() );
       QgsDebugMsg( flags );
       mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "flags" ), flags );
       mCanvas->refresh();
