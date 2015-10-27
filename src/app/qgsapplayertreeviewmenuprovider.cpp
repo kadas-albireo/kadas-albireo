@@ -79,6 +79,7 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
       if ( rlayer )
       {
         menu->addAction( tr( "&Zoom to Best Scale (100%)" ), QgisApp::instance(), SLOT( legendLayerZoomNative() ) );
+        menu->addAction( actions->actionUseAsHightMap( menu ) );
 
         if ( rlayer->rasterType() != QgsRasterLayer::Palette )
           menu->addAction( tr( "&Stretch Using Current Extent" ), QgisApp::instance(), SLOT( legendLayerStretchUsingCurrentExtent() ) );

@@ -20,6 +20,8 @@
 #include "../qgsvbscoordinatedisplayer.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsproject.h"
 #include <gdal.h>
 #include <QApplication>
 #include <QClipboard>
@@ -27,6 +29,7 @@
 #include <QImageReader>
 #include <qmath.h>
 #include <QMenu>
+#include <QMessageBox>
 #include <QSettings>
 
 QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSCoordinateDisplayer *coordinateDisplayer )
@@ -64,16 +67,18 @@ void QgsVBSPinAnnotationItem::setMapPosition( const QgsPoint& pos )
 
 double QgsVBSPinAnnotationItem::getHeightAtCurrentPos()
 {
-  QString rasterFile = QSettings().value( "/vbsfunctionality/heightmap" ).toString();
-  if ( rasterFile.isEmpty() )
+  QString layerid = QgsProject::instance()->property( "heightmap" ).toString();
+  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
+  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-    QgsDebugMsg( QString( "No raster specified" ) );
+    QMessageBox::warning( 0, tr( "Error" ), tr( "No heightmap is defined in the project. Right-click a raster layer in the layer tree and select it to be used as heightmap." ) );
     return 0;
   }
+  QString rasterFile = layer->source();
   GDALDatasetH raster = GDALOpen( rasterFile.toLocal8Bit().data(), GA_ReadOnly );
   if ( !raster )
   {
-    QgsDebugMsg( QString( "Failed to open raster file: %1" ).arg( rasterFile ) );
+    QMessageBox::warning( 0, tr( "Error" ), tr( "Failed to open raster file: %1" ).arg( rasterFile ) );
     return 0;
   }
 
