@@ -30,6 +30,7 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
     , mFillSymbol( new QgsFillSymbolV2() )
 {
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_color", "\"fill\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_style", "\"fill_style\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_color", "\"outline\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_style", "\"outline_style\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 4" );

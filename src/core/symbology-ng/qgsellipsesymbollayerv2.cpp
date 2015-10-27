@@ -34,6 +34,7 @@ QgsEllipseSymbolLayerV2::QgsEllipseSymbolLayerV2()
     , mFillColor( Qt::white )
     , mOutlineColor( Qt::black )
     , mOutlineStyle( Qt::SolidLine )
+    , mFillStyle( Qt::SolidPattern )
     , mOutlineWidth( 0 )
     , mOutlineWidthUnit( QgsSymbolV2::MM )
 {
@@ -42,7 +43,7 @@ QgsEllipseSymbolLayerV2::QgsEllipseSymbolLayerV2()
   mPen.setWidth( 1.0 );
   mPen.setJoinStyle( Qt::MiterJoin );
   mBrush.setColor( mFillColor );
-  mBrush.setStyle( Qt::SolidPattern );
+  mBrush.setStyle( mFillStyle );
   mOffset = QPointF( 0, 0 );
 
   mAngle = 0;
@@ -94,6 +95,10 @@ QgsSymbolLayerV2* QgsEllipseSymbolLayerV2::create( const QgsStringMap& propertie
   else if ( properties.contains( "line_style" ) )
   {
     layer->setOutlineStyle( QgsSymbolLayerV2Utils::decodePenStyle( properties["line_style"] ) );
+  }
+  if ( properties.contains( "fill_style" ) )
+  {
+    layer->setFillStyle( QgsSymbolLayerV2Utils::decodeBrushStyle( properties["fill_style"] ) );
   }
   if ( properties.contains( "outline_width" ) )
   {
@@ -186,6 +191,10 @@ QgsSymbolLayerV2* QgsEllipseSymbolLayerV2::create( const QgsStringMap& propertie
   {
     layer->setDataDefinedProperty( "outline_style", properties[ "outline_style_expression" ] );
   }
+  if ( properties.contains( "fill_style_expression" ) )
+  {
+    layer->setDataDefinedProperty( "fill_style", properties[ "fill_style_expression" ] );
+  }
   if ( properties.contains( "fill_color_expression" ) )
   {
     layer->setDataDefinedProperty( "fill_color", properties["fill_color_expression"] );
@@ -248,6 +257,7 @@ void QgsEllipseSymbolLayerV2::renderPoint( const QPointF& point, QgsSymbolV2Rend
 {
   QgsExpression* outlineWidthExpression = expression( "outline_width" );
   QgsExpression* outlineStyleExpression = expression( "outline_style" );
+  QgsExpression* fillStyleExpression = expression( "fill_style" );
   QgsExpression* fillColorExpression = expression( "fill_color" );
   QgsExpression* outlineColorExpression = expression( "outline_color" );
   QgsExpression* widthExpression = expression( "width" );
@@ -265,6 +275,11 @@ void QgsEllipseSymbolLayerV2::renderPoint( const QPointF& point, QgsSymbolV2Rend
   {
     Qt::PenStyle style = QgsSymbolLayerV2Utils::decodePenStyle( outlineStyleExpression->evaluate( const_cast<QgsFeature*>( context.feature() ) ).toString() );
     mPen.setStyle( style );
+  }
+  if ( fillStyleExpression )
+  {
+    Qt::BrushStyle style = QgsSymbolLayerV2Utils::decodeBrushStyle( fillStyleExpression->evaluate( const_cast<QgsFeature*>( context.feature() ) ).toString() );
+    mBrush.setStyle( style );
   }
   if ( fillColorExpression )
   {
@@ -341,6 +356,7 @@ void QgsEllipseSymbolLayerV2::startRender( QgsSymbolV2RenderContext& context )
   mPen.setStyle( mOutlineStyle );
   mPen.setWidthF( mOutlineWidth * QgsSymbolLayerV2Utils::lineWidthScaleFactor( context.renderContext(), mOutlineWidthUnit, mOutlineWidthMapUnitScale ) );
   mBrush.setColor( mFillColor );
+  mBrush.setStyle( mFillStyle );
   prepareExpressions( context.fields(), context.renderContext().rendererScale() );
 }
 
@@ -478,6 +494,7 @@ QgsStringMap QgsEllipseSymbolLayerV2::properties() const
   map["symbol_height_map_unit_scale"] = QgsSymbolLayerV2Utils::encodeMapUnitScale( mSymbolHeightMapUnitScale );
   map["angle"] = QString::number( mAngle );
   map["outline_style"] = QgsSymbolLayerV2Utils::encodePenStyle( mOutlineStyle );
+  map["fill_style"] = QgsSymbolLayerV2Utils::encodeBrushStyle( mFillStyle );
   map["outline_width"] = QString::number( mOutlineWidth );
   map["outline_width_unit"] = QgsSymbolLayerV2Utils::encodeOutputUnit( mOutlineWidthUnit );
   map["outline_width_map_unit_scale"] = QgsSymbolLayerV2Utils::encodeMapUnitScale( mOutlineWidthMapUnitScale );

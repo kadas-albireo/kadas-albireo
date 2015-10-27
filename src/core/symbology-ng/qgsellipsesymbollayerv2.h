@@ -54,6 +54,9 @@ class CORE_EXPORT QgsEllipseSymbolLayerV2: public QgsMarkerSymbolLayerV2
     Qt::PenStyle outlineStyle() const { return mOutlineStyle; }
     void setOutlineStyle( Qt::PenStyle outlineStyle ) { mOutlineStyle = outlineStyle; }
 
+    Qt::BrushStyle fillStyle() const { return mFillStyle; }
+    void setFillStyle( Qt::BrushStyle fillStyle ) { mFillStyle = fillStyle; }
+
     void setOutlineWidth( double w ) { mOutlineWidth = w; }
     double outlineWidth() const { return mOutlineWidth; }
 
@@ -98,6 +101,7 @@ class CORE_EXPORT QgsEllipseSymbolLayerV2: public QgsMarkerSymbolLayerV2
     QColor mFillColor;
     QColor mOutlineColor;
     Qt::PenStyle mOutlineStyle;
+    Qt::BrushStyle mFillStyle;
     double mOutlineWidth;
     QgsSymbolV2::OutputUnit mOutlineWidthUnit;
     QgsMapUnitScale mOutlineWidthMapUnitScale;
