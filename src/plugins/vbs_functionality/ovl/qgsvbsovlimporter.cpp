@@ -174,7 +174,7 @@ void QgsVBSOvlImporter::parseGraphicDimmAttributes( QDomElement &attribute, QCol
 void QgsVBSOvlImporter::parseGraphicSinglePointAttributes( QDomElement &attribute, double& width, double& height, double& rotation )
 {
   height = attribute.firstChildElement( "height" ).text().toDouble();
-  width = attribute.firstChildElement( "height" ).text().toDouble();
+  width = attribute.firstChildElement( "width" ).text().toDouble();
   rotation = attribute.firstChildElement( "rotation" ).text().toDouble();
 }
 
@@ -458,7 +458,7 @@ void QgsVBSOvlImporter::parseText( QDomElement &object ) const
 
   applyDimm( dimmFactor, dimmColor, &color );
 
-  mIface->redliningLayer()->addText( text, point, color, font, tooltip );
+  mIface->redliningLayer()->addText( text, point, color, font, tooltip, rotation );
 }
 
 Qt::PenStyle QgsVBSOvlImporter::convertLineStyle( int lineStyle )
