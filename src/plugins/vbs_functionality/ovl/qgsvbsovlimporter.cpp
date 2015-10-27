@@ -313,6 +313,8 @@ void QgsVBSOvlImporter::parseRectangleTriangleCircle( QDomElement &object ) cons
   }
   else
   {
+    width = ( width * 25.4 ) / mIface->mapCanvas()->mapSettings().outputDpi();
+    height = ( height * 25.4 ) / mIface->mapCanvas()->mapSettings().outputDpi();
     QString shape;
     if ( clsid == "{E2CCBD8B-E6DC-4B30-894F-D082A434922B}" ) // Rectangle
       shape = "rectangle";
