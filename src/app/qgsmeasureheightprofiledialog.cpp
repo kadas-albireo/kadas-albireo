@@ -15,11 +15,14 @@
  ***************************************************************************/
 
 #include "qgscoordinatetransform.h"
+#include "qgsmaplayerregistry.h"
 #include "qgsmeasureheightprofiledialog.h"
 #include "qgsmeasureheightprofiletool.h"
 #include "qgslogger.h"
+#include "qgsproject.h"
 #include <gdal.h>
 #include <QDialogButtonBox>
+#include <QMessageBox>
 #include <QSpinBox>
 #include <QGridLayout>
 #include <QLabel>
@@ -89,21 +92,25 @@ void QgsMeasureHeightProfileDialog::finish()
   QSettings().setValue( "/Windows/MeasureHeightProfile/geometry", saveGeometry() );
   mTool->restart();
   mTool->deactivate();
+  static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->setSamples( QVector<QPointF>() );
+  mPlotMarker->setValue( 0, 0 );
+  mPlot->replot();
 }
 
 void QgsMeasureHeightProfileDialog::replot()
 {
-  QString rasterFile = QSettings().value( "/vbsfunctionality/heightmap" ).toString();
-
-  if ( rasterFile.isEmpty() )
+  QString layerid = QgsProject::instance()->property( "heightmap" ).toString();
+  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
+  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-    QgsDebugMsg( QString( "No raster specified" ) );
+    QMessageBox::warning( 0, tr( "Error" ), tr( "No heightmap is defined in the project. Right-click a raster layer in the layer tree and select it to be used as heightmap." ) );
     return;
   }
+  QString rasterFile = layer->source();
   GDALDatasetH raster = GDALOpen( rasterFile.toLocal8Bit().data(), GA_ReadOnly );
   if ( !raster )
   {
-    QgsDebugMsg( QString( "Failed to open raster file: %1" ).arg( rasterFile ) );
+    QMessageBox::warning( 0, tr( "Error" ), tr( "Failed to open raster file: %1" ).arg( rasterFile ) );
     return;
   }
 

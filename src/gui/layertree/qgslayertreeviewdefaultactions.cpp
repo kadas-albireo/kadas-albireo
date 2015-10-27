@@ -21,6 +21,7 @@
 #include "qgslayertreeview.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
+#include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
 
@@ -135,6 +136,20 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
   QWidgetAction* transpAction = new QWidgetAction( parent );
   transpAction->setDefaultWidget( transpWidget );
   return transpAction;
+}
+
+QAction* QgsLayerTreeViewDefaultActions::actionUseAsHightMap( QObject *parent )
+{
+  QgsMapLayer* layer = mView->currentLayer();
+  if ( !layer )
+    return 0;
+  QAction* heightmapAction = new QAction( tr( "Use as heightmap" ), parent );
+  heightmapAction->setCheckable( true );
+  QString currentHeightmap = QgsProject::instance()->property( "heightmap" ).toString();
+  heightmapAction->setChecked( currentHeightmap == layer->id() );
+  heightmapAction->setProperty( "layerid", layer->id() );
+  connect( heightmapAction, SIGNAL( toggled( bool ) ), this, SLOT( setHeightMapLayer( bool ) ) );
+  return heightmapAction;
 }
 
 QAction* QgsLayerTreeViewDefaultActions::actionMakeTopLevel( QObject* parent )
@@ -256,6 +271,11 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
     canvas->clearCache( layer->id() );
     canvas->refresh();
   }
+}
+
+void QgsLayerTreeViewDefaultActions::setHeightMapLayer( bool active )
+{
+  QgsProject::instance()->setProperty( "heightmap", active ? QObject::sender()->property( "layerid" ) : "" );
 }
 
 void QgsLayerTreeViewDefaultActions::zoomToLayers( QgsMapCanvas* canvas, const QList<QgsMapLayer*>& layers )
