@@ -279,7 +279,7 @@ double QgsGeos::distance( const QgsAbstractGeometryV2& geom, QString* errorMsg )
     GEOSDistance_r( geosinit.ctxt, mGeos, otherGeosGeom, &distance );
   }
   CATCH_GEOS_WITH_ERRMSG( -1.0 )
-
+  GEOSGeom_destroy_r( geosinit.ctxt, otherGeosGeom );
   return distance;
 }
 
@@ -606,6 +606,7 @@ int QgsGeos::splitLinearGeometry( GEOSGeometry* splitLine, QList<QgsAbstractGeom
   for ( int i = 0; i < lineGeoms.size(); ++i )
   {
     newGeometries << fromGeos( lineGeoms[i] );
+    GEOSGeom_destroy_r( geosinit.ctxt, lineGeoms[i] );
   }
 
   GEOSGeom_destroy_r( geosinit.ctxt, splitGeom );
@@ -672,6 +673,7 @@ int QgsGeos::splitPolygonGeometry( GEOSGeometry* splitLine, QList<QgsAbstractGeo
 
     GEOSGeom_destroy_r( geosinit.ctxt, intersectGeometry );
   }
+  GEOSGeom_destroy_r( geosinit.ctxt, polygons );
 
   bool splitDone = true;
   int nGeometriesThis = numberOfGeometries( mGeos ); //original number of geometries
@@ -707,7 +709,6 @@ int QgsGeos::splitPolygonGeometry( GEOSGeometry* splitLine, QList<QgsAbstractGeo
   for ( i = 0; i < testedGeometries.size(); ++i )
     newGeometries << fromGeos( testedGeometries[i] );
 
-  GEOSGeom_destroy_r( geosinit.ctxt, polygons );
   return 0;
 }
 
@@ -1241,13 +1242,13 @@ QgsAbstractGeometryV2* QgsGeos::buffer( double distance, int segments, QString* 
     return 0;
   }
 
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSBuffer_r( geosinit.ctxt, mGeos, distance, segments );
+    geos.reset( GEOSBuffer_r( geosinit.ctxt, mGeos, distance, segments ) );
   }
   CATCH_GEOS_WITH_ERRMSG( 0 );
-  return fromGeos( geos );
+  return fromGeos( geos.get() );
 }
 
 QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCapStyle, int joinStyle, double mitreLimit, QString* errorMsg ) const
@@ -1260,13 +1261,13 @@ QgsAbstractGeometryV2 *QgsGeos::buffer( double distance, int segments, int endCa
 #if defined(GEOS_VERSION_MAJOR) && defined(GEOS_VERSION_MINOR) && \
  ((GEOS_VERSION_MAJOR>3) || ((GEOS_VERSION_MAJOR==3) && (GEOS_VERSION_MINOR>=3)))
 
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSBufferWithStyle_r( geosinit.ctxt, mGeos, distance, segments, endCapStyle, joinStyle, mitreLimit );
+    geos.reset( GEOSBufferWithStyle_r( geosinit.ctxt, mGeos, distance, segments, endCapStyle, joinStyle, mitreLimit ) );
   }
   CATCH_GEOS_WITH_ERRMSG( 0 );
-  return fromGeos( geos );
+  return fromGeos( geos.get() );
 #else
   return 0;
 #endif //0
@@ -1278,13 +1279,13 @@ QgsAbstractGeometryV2* QgsGeos::simplify( double tolerance, QString* errorMsg ) 
   {
     return 0;
   }
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSTopologyPreserveSimplify_r( geosinit.ctxt, mGeos, tolerance );
+    geos.reset( GEOSTopologyPreserveSimplify_r( geosinit.ctxt, mGeos, tolerance ) );
   }
   CATCH_GEOS_WITH_ERRMSG( 0 );
-  return fromGeos( geos );
+  return fromGeos( geos.get() );
 }
 
 QgsAbstractGeometryV2* QgsGeos::interpolate( double distance, QString* errorMsg ) const
@@ -1293,13 +1294,14 @@ QgsAbstractGeometryV2* QgsGeos::interpolate( double distance, QString* errorMsg 
   {
     return 0;
   }
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSInterpolate_r( geosinit.ctxt, mGeos, distance );
+    geos.reset( GEOSInterpolate_r( geosinit.ctxt, mGeos, distance ) );
+
   }
   CATCH_GEOS_WITH_ERRMSG( 0 );
-  return fromGeos( geos );
+  return fromGeos( geos.get() );
 }
 
 bool QgsGeos::centroid( QgsPointV2& pt, QString* errorMsg ) const
@@ -1309,10 +1311,10 @@ bool QgsGeos::centroid( QgsPointV2& pt, QString* errorMsg ) const
     return false;
   }
 
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSGetCentroid_r( geosinit.ctxt,  mGeos );
+    geos.reset( GEOSGetCentroid_r( geosinit.ctxt,  mGeos ) );
   }
   CATCH_GEOS_WITH_ERRMSG( false );
 
@@ -1322,8 +1324,8 @@ bool QgsGeos::centroid( QgsPointV2& pt, QString* errorMsg ) const
   }
 
   double x, y;
-  GEOSGeomGetX_r( geosinit.ctxt, geos, &x );
-  GEOSGeomGetY_r( geosinit.ctxt, geos, &y );
+  GEOSGeomGetX_r( geosinit.ctxt, geos.get(), &x );
+  GEOSGeomGetY_r( geosinit.ctxt, geos.get(), &y );
   pt.setX( x ); pt.setY( y );
   return true;
 }
@@ -1334,13 +1336,13 @@ QgsAbstractGeometryV2* QgsGeos::envelope( QString* errorMsg ) const
   {
     return 0;
   }
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSEnvelope_r( geosinit.ctxt, mGeos );
+    geos.reset( GEOSEnvelope_r( geosinit.ctxt, mGeos ) );
   }
   CATCH_GEOS_WITH_ERRMSG( 0 );
-  return fromGeos( geos );
+  return fromGeos( geos.get() );
 }
 
 bool QgsGeos::pointOnSurface( QgsPointV2& pt, QString* errorMsg ) const
@@ -1350,10 +1352,10 @@ bool QgsGeos::pointOnSurface( QgsPointV2& pt, QString* errorMsg ) const
     return false;
   }
 
-  GEOSGeometry* geos = 0;
+  GEOSGeomScopedPtr geos;
   try
   {
-    geos = GEOSPointOnSurface_r( geosinit.ctxt, mGeos );
+    geos.reset( GEOSPointOnSurface_r( geosinit.ctxt, mGeos ) );
   }
   CATCH_GEOS_WITH_ERRMSG( false );
 
@@ -1363,8 +1365,8 @@ bool QgsGeos::pointOnSurface( QgsPointV2& pt, QString* errorMsg ) const
   }
 
   double x, y;
-  GEOSGeomGetX_r( geosinit.ctxt, geos, &x );
-  GEOSGeomGetY_r( geosinit.ctxt, geos, &y );
+  GEOSGeomGetX_r( geosinit.ctxt, geos.get(), &x );
+  GEOSGeomGetY_r( geosinit.ctxt, geos.get(), &y );
 
   pt.setX( x );
   pt.setY( y );
@@ -1609,6 +1611,7 @@ QgsAbstractGeometryV2* QgsGeos::reshapeGeometry( const QgsLineStringV2& reshapeW
   if ( numGeoms == -1 )
   {
     if ( errorCode ) { *errorCode = 1; }
+    GEOSGeom_destroy_r( geosinit.ctxt, reshapeLineGeos );
     return 0;
   }
 
@@ -1634,6 +1637,7 @@ QgsAbstractGeometryV2* QgsGeos::reshapeGeometry( const QgsLineStringV2& reshapeW
     if ( errorCode ) { *errorCode = 0; }
     QgsAbstractGeometryV2* reshapeResult = fromGeos( reshapedGeometry );
     GEOSGeom_destroy_r( geosinit.ctxt, reshapedGeometry );
+    GEOSGeom_destroy_r( geosinit.ctxt, reshapeLineGeos );
     return reshapeResult;
   }
   else
@@ -2095,11 +2099,11 @@ int QgsGeos::pointContainedInLine( const GEOSGeometry* point, const GEOSGeometry
 
 int QgsGeos::geomDigits( const GEOSGeometry* geom )
 {
-  GEOSGeometry* bbox = GEOSEnvelope_r( geosinit.ctxt, geom );
-  if ( !bbox )
+  GEOSGeomScopedPtr  bbox = GEOSEnvelope_r( geosinit.ctxt, geom );
+  if ( !bbox.get() )
     return -1;
 
-  const GEOSGeometry* bBoxRing = GEOSGetExteriorRing_r( geosinit.ctxt, bbox );
+  const GEOSGeometry* bBoxRing = GEOSGetExteriorRing_r( geosinit.ctxt, bbox.get() );
   if ( !bBoxRing )
     return -1;
 
