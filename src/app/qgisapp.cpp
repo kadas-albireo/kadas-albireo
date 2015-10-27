@@ -954,6 +954,8 @@ QgisApp::~QgisApp()
   delete mMapTools.mMeasureAngle;
   delete mMapTools.mMeasureArea;
   delete mMapTools.mMeasureDist;
+  delete mMapTools.mMeasureCircle;
+  delete mMapTools.mMeasureHeightProfile;
   delete mMapTools.mMoveFeature;
   delete mMapTools.mMoveLabel;
   delete mMapTools.mNodeTool;
