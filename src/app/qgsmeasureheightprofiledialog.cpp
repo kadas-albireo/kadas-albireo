@@ -49,17 +49,27 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   gridLayout->addWidget( mPlot, 0, 0, 1, 2 );
 
   QwtPlotGrid* grid = new QwtPlotGrid();
-  grid->setMajorPen( Qt::gray );
+#if QWT_VERSION < 0x060000
+  grid->setMajPen( QPen( Qt::gray ) );
+#else
+  grid->setMajorPen( QPen( Qt::gray ) );
+#endif
   grid->attach( mPlot );
 
   mPlotCurve = new QwtPlotCurve( tr( "Height profile" ) );
   mPlotCurve->setRenderHint( QwtPlotItem::RenderAntialiased );
-  mPlotCurve->setPen( Qt::blue );
+  mPlotCurve->setPen( QPen( Qt::blue ) );
   mPlotCurve->attach( mPlot );
+#if QWT_VERSION >= 0x060000
   mPlotCurve->setData( new QwtPointSeriesData() );
+#endif
 
   mPlotMarker = new QwtPlotMarker();
+#if QWT_VERSION < 0x060000
+  mPlotMarker->setSymbol( QwtSymbol( QwtSymbol::Ellipse, QBrush( Qt::blue ), QPen( Qt::blue ), QSize( 5, 5 ) ) );
+#else
   mPlotMarker->setSymbol( new QwtSymbol( QwtSymbol::Ellipse, QBrush( Qt::blue ), QPen( Qt::blue ), QSize( 5, 5 ) ) );
+#endif
   mPlotMarker->attach( mPlot );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
@@ -84,7 +94,11 @@ void QgsMeasureHeightProfileDialog::setMarkerPos( const QgsPoint &p )
   double l = qSqrt( mPoints.second.sqrDist( mPoints.first ) );
   double d = qSqrt( p.sqrDist( mPoints.first ) );
   double val = d / l * 100;
-  mPlotMarker->setValue( val, mPlotCurve->data()->sample( val ).y() );
+#if QWT_VERSION < 0x060000
+  mPlotMarker->setValue( mPlotCurve->x( val ), mPlotCurve->y( val ) );
+#else
+  mPlotMarker->setValue( mPlotCurve->data()->sample( val ) );
+#endif
   mPlot->replot();
 }
 
@@ -93,7 +107,11 @@ void QgsMeasureHeightProfileDialog::finish()
   QSettings().setValue( "/Windows/MeasureHeightProfile/geometry", saveGeometry() );
   mTool->restart();
   mTool->deactivate();
+#if QWT_VERSION < 0x060000
+  mPlotCurve->setData( QVector<double>(), QVector<double>() );
+#else
   static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->setSamples( QVector<QPointF>() );
+#endif
   mPlotMarker->setValue( 0, 0 );
   mPlot->replot();
 }
@@ -141,7 +159,11 @@ void QgsMeasureHeightProfileDialog::replot()
   }
 
   // Take 100 points between chosen
+#if QWT_VERSION < 0x060000
+  QVector<double> xSamples, ySamples;
+#else
   QVector<QPointF> samples;
+#endif
   double d = qSqrt( mPoints.second.sqrDist( mPoints.first ) );
   QgsVector dir = QgsVector( mPoints.second - mPoints.first ).normal();
   for ( int i = 0; i < 100; ++i )
@@ -160,7 +182,12 @@ void QgsMeasureHeightProfileDialog::replot()
                                   qFloor( row ), qFloor( col ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
     {
       QgsDebugMsg( "Failed to read pixel values" );
+#if QWT_VERSION < 0x060000
+	  xSamples.append( i );
+	  ySamples.append( 0 );
+#else
       samples.append( QPointF( i, 0 ) );
+#endif
     }
     else
     {
@@ -170,13 +197,22 @@ void QgsMeasureHeightProfileDialog::replot()
 
       double value = ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
                      + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
+#if QWT_VERSION < 0x060000
+	  xSamples.append( i );
+	  ySamples.append( value );
+#else
       samples.append( QPointF( i, value ) );
+#endif
     }
   }
 
   GDALClose( raster );
 
+#if QWT_VERSION < 0x060000
+  mPlotCurve->setData( xSamples, ySamples );
+#else
   static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->setSamples( samples );
+#endif
   mPlotMarker->setValue( 0, 0 );
   mPlot->replot();
 }
