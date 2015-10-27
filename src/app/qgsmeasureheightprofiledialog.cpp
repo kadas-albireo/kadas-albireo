@@ -32,6 +32,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
+#include <qmath.h>
 
 
 QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool *tool, QWidget *parent, Qt::WindowFlags f )
