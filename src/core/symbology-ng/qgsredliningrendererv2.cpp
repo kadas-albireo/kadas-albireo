@@ -32,7 +32,7 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_color", "\"fill\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_color", "\"outline\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_style", "\"outline_style\"" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 4" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "eval(regexp_substr(\"flags\",'w=([^,]+)'))" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "height", "eval(regexp_substr(\"flags\",'h=([^,]+)'))" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "rotation", "eval(regexp_substr(\"flags\",'r=([^,]+)'))" );
@@ -40,12 +40,12 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
 
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"outline\"" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
-  mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "\"size\"" );
+  mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "\"size\" / 4" );
   mLineSymbol->symbolLayers().front()->setDataDefinedProperty( "line_style", "\"outline_style\"" );
 
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color", "\"fill\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "color_border", "\"outline\"" );
-  mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "width_border", "\"size\"" );
+  mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "width_border", "\"size\" / 4" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "border_style", "\"outline_style\"" );
   mFillSymbol->symbolLayers().front()->setDataDefinedProperty( "fill_style", "\"fill_style\"" );
 }
