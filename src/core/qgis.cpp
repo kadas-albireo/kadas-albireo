@@ -96,8 +96,7 @@ const char* QGis::qgisUnitTypes[] =
   QT_TRANSLATE_NOOP( "QGis::UnitType", "degrees" ),
   QT_TRANSLATE_NOOP( "QGis::UnitType", "degrees" ),
   QT_TRANSLATE_NOOP( "QGis::UnitType", "degrees" ),
-  QT_TRANSLATE_NOOP( "QGis::UnitType", "nautical miles" ),
-  QT_TRANSLATE_NOOP( "QGis::UnitType", "kilometers" )
+  QT_TRANSLATE_NOOP( "QGis::UnitType", "nautical miles" )
 };
 
 QGis::UnitType QGis::fromLiteral( QString literal, QGis::UnitType defaultType )
@@ -156,7 +155,6 @@ double QGis::fromUnitToUnitFactor( QGis::UnitType fromUnit, QGis::UnitType toUni
         if ( toUnit == QGis::Feet ) return 1.0 / FEET_TO_METER;
         if ( toUnit == QGis::Degrees ) return 1.0 / DEGREE_TO_METER;
         if ( toUnit == QGis::NauticalMiles ) return 1.0 / NMILE_TO_METER;
-        if ( toUnit == QGis::Kilometers ) return 1 / 1000.;
         break;
       }
       case QGis::Feet:
@@ -164,7 +162,6 @@ double QGis::fromUnitToUnitFactor( QGis::UnitType fromUnit, QGis::UnitType toUni
         if ( toUnit == QGis::Meters ) return FEET_TO_METER;
         if ( toUnit == QGis::Degrees ) return FEET_TO_METER / DEGREE_TO_METER;
         if ( toUnit == QGis::NauticalMiles ) return FEET_TO_METER / NMILE_TO_METER;
-        if ( toUnit == QGis::Kilometers ) return FEET_TO_METER / 1000.;
         break;
       }
       case QGis::Degrees:
@@ -172,7 +169,6 @@ double QGis::fromUnitToUnitFactor( QGis::UnitType fromUnit, QGis::UnitType toUni
         if ( toUnit == QGis::Meters ) return DEGREE_TO_METER;
         if ( toUnit == QGis::Feet ) return DEGREE_TO_METER / FEET_TO_METER;
         if ( toUnit == QGis::NauticalMiles ) return DEGREE_TO_METER / NMILE_TO_METER;
-        if ( toUnit == QGis::Kilometers ) return DEGREE_TO_METER / 1000.;
         break;
       }
       case QGis::NauticalMiles:
@@ -180,15 +176,6 @@ double QGis::fromUnitToUnitFactor( QGis::UnitType fromUnit, QGis::UnitType toUni
         if ( toUnit == QGis::Meters ) return NMILE_TO_METER;
         if ( toUnit == QGis::Feet ) return NMILE_TO_METER / FEET_TO_METER;
         if ( toUnit == QGis::Degrees ) return NMILE_TO_METER / DEGREE_TO_METER;
-        if ( toUnit == QGis::Kilometers ) return NMILE_TO_METER / 1000;
-        break;
-      }
-      case QGis::Kilometers:
-      {
-        if ( toUnit == QGis::Meters ) return 1000.;
-        if ( toUnit == QGis::Feet ) return 1000. / FEET_TO_METER;
-        if ( toUnit == QGis::Degrees ) return 1000. / DEGREE_TO_METER;
-        if ( toUnit == QGis::NauticalMiles ) return 1000. / NMILE_TO_METER;
         break;
       }
       case QGis::UnknownUnit:

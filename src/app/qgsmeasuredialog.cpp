@@ -49,7 +49,6 @@ QgsMeasureDialog::QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f )
   mUnitsCombo->addItem( QGis::tr( QGis::Feet ) );
   mUnitsCombo->addItem( QGis::tr( QGis::Degrees ) );
   mUnitsCombo->addItem( QGis::tr( QGis::NauticalMiles ) );
-  mUnitsCombo->addItem( QGis::tr( QGis::Kilometers ) );
 
   QSettings settings;
   QString units = settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
@@ -162,7 +161,7 @@ void QgsMeasureDialog::updateUi()
     setWindowTitle( tr( "Measure (OTF on)" ) );
   }
 
-  if (( mCanvasUnits == QGis::Meters && mDisplayUnits == QGis::Feet ) || ( mCanvasUnits == QGis::Feet && ( mDisplayUnits == QGis::Meters || mDisplayUnits == QGis::Kilometers ) ) )
+  if (( mCanvasUnits == QGis::Meters && mDisplayUnits == QGis::Feet ) || ( mCanvasUnits == QGis::Feet && mDisplayUnits == QGis::Meters ) )
   {
     toolTip += "<br> * " + tr( "Finally, the value is converted from %1 to %2." ).arg( QGis::tr( mCanvasUnits ) ).arg( QGis::tr( mDisplayUnits ) );
   }
