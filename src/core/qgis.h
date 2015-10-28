@@ -240,8 +240,7 @@ class CORE_EXPORT QGis
       DecimalDegrees = 2,         // was 2
       DegreesMinutesSeconds = 2,  // was 4
       DegreesDecimalMinutes = 2,  // was 5
-      NauticalMiles = 7,
-      Kilometers = 8
+      NauticalMiles = 7
     };
 
     //! Provides the canonical name of the type value
