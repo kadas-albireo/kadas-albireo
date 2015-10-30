@@ -16,12 +16,14 @@
 #include "qgsmaptoolcapture.h"
 #include "qgsfeature.h"
 
+class QgsCurvePolygonV2;
+
 /**This tool adds new point/line/polygon features to already existing vector layers*/
 class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
 {
     Q_OBJECT
   public:
-    QgsMapToolAddFeature( QgsMapCanvas* canvas, CaptureMode captureMode = CaptureNone, QGis::WkbType forceWkbType = QGis::WKBUnknown );
+    QgsMapToolAddFeature( QgsMapCanvas* canvas );
     virtual ~QgsMapToolAddFeature();
     void canvasMapReleaseEvent( QgsMapMouseEvent * e ) override;
 
@@ -29,5 +31,7 @@ class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
     void activate() override;
 
   private:
-    QGis::WkbType mForceWkbType;
+    /**Converts curve to compoundcurve / linestring and adds z/m depending on layer type*/
+    QgsCurveV2* convertCurve( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
+    QgsCurvePolygonV2* outputPolygon( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
 };

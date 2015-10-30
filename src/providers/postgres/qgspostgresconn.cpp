@@ -469,7 +469,7 @@ bool QgsPostgresConn::getTableInfo( bool searchGeometryColumnsOnly, bool searchP
       layerProperty.tableName = tableName;
       layerProperty.geometryColName = column;
       layerProperty.geometryColType = columnType;
-      layerProperty.types = QList<QGis::WkbType>() << ( QgsPostgresConn::wkbTypeFromPostgis( type ) );
+      layerProperty.types = QList<QGis::WkbType>() << ( QgsPostgresConn::wkbTypeFromPostgis( type, dim ) );
       layerProperty.srids = QList<int>() << srid;
       layerProperty.sql = "";
       /*
@@ -1459,9 +1459,25 @@ int QgsPostgresConn::postgisWkbTypeDim( QGis::WkbType wkbType )
   return dim;
 }
 
-QGis::WkbType QgsPostgresConn::wkbTypeFromPostgis( QString type )
+QGis::WkbType QgsPostgresConn::wkbTypeFromPostgis( QString type, int dim )
 {
-  return ( QGis::WkbType )QgsWKBTypes::parseType( type );
+  QgsWKBTypes::Type t = QgsWKBTypes::parseType( type );
+  if ( type.compare( "GEOMETRY", Qt::CaseInsensitive ) != 0 )
+  {
+    if ( dim == 3 )
+    {
+      if ( !type.endsWith( "M", Qt::CaseInsensitive ) )
+      {
+        t = QgsWKBTypes::addZ( t );
+      }
+    }
+    else if ( dim == 4 )
+    {
+      t = QgsWKBTypes::addZ( t );
+      t = QgsWKBTypes::addM( t );
+    }
+  }
+  return ( QGis::WkbType )t;
 }
 
 QgsWKBTypes::Type QgsPostgresConn::wkbTypeFromOgcWkbType( unsigned int wkbType )
@@ -1509,7 +1525,6 @@ QGis::WkbType QgsPostgresConn::wkbTypeFromGeomType( QGis::GeometryType geomType 
     case QGis::NoGeometry:
       return QGis::WKBNoGeometry;
     case QGis::UnknownGeometry:
-    case QGis::AnyGeometry:
       return QGis::WKBUnknown;
   }
 

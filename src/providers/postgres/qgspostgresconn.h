@@ -294,7 +294,7 @@ class QgsPostgresConn : public QObject
 
     static QString displayStringForWkbType( QGis::WkbType wkbType );
     static QString displayStringForGeomType( QgsPostgresGeometryColumnType geomType );
-    static QGis::WkbType wkbTypeFromPostgis( QString dbType );
+    static QGis::WkbType wkbTypeFromPostgis( QString dbType, int dim = 2 );
 
     static QString postgisWkbTypeName( QGis::WkbType wkbType );
     static int postgisWkbTypeDim( QGis::WkbType wkbType );
