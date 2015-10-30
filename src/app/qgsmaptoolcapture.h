@@ -85,6 +85,11 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     void setPoints( const QList<QgsPoint>& pointList );
     void closePolygon();
 
+    /**Creates / deletes / updates the snapping marker*/
+    void updateSnappingMarker( QgsMapMouseEvent* e );
+
+    QgsVertexMarker* mSnappingMarker;
+
   private:
     /** Flag to indicate a map canvas capture operation is taking place */
     bool mCapturing;
@@ -105,8 +110,6 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     QList< QgsVertexMarker * > mGeomErrorMarkers;
 
     bool mCaptureModeFromLayer;
-
-    QgsVertexMarker* mSnappingMarker;
 };
 
 #endif
