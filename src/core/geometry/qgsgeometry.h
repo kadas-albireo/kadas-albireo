@@ -550,6 +550,17 @@ class CORE_EXPORT QgsGeometry
      */
     bool convertToMultiType();
 
+    /**
+         * Converts multi type geometry into single type geometry
+         * e.g. a multipolygon into a polygon geometry. Only the first part of the
+         * multi geometry will be retained.
+         * If it is already a single part geometry, it will return true and
+         * not change the geometry.
+         *
+         * @return true in case of success and false else
+         */
+    bool convertToSingleType();
+
     /** Modifies geometry to avoid intersections with the layers specified in project properties
      *  @return 0 in case of success,
      *          1 if geometry is not of polygon type,
