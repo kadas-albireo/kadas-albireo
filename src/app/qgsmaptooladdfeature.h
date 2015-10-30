@@ -16,6 +16,8 @@
 #include "qgsmaptoolcapture.h"
 #include "qgsfeature.h"
 
+class QgsCurvePolygonV2;
+
 /**This tool adds new point/line/polygon features to already existing vector layers*/
 class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
 {
@@ -27,4 +29,9 @@ class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
 
     bool addFeature( QgsVectorLayer *vlayer, QgsFeature *f, bool showModal = true );
     void activate() override;
+
+  private:
+    /**Converts curve to compoundcurve / linestring and adds z/m depending on layer type*/
+    QgsCurveV2* convertCurve( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
+    QgsCurvePolygonV2* outputPolygon( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
 };
