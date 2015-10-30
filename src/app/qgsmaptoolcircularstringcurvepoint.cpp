@@ -4,6 +4,7 @@
 #include "qgsgeometryrubberband.h"
 #include "qgsmapcanvas.h"
 #include "qgspointv2.h"
+#include "qgsvertexmarker.h"
 #include <QMouseEvent>
 
 QgsMapToolCircularStringCurvePoint::QgsMapToolCircularStringCurvePoint( QgsMapToolCapture* parentTool,
@@ -78,6 +79,8 @@ void QgsMapToolCircularStringCurvePoint::canvasMapReleaseEvent( QgsMapMouseEvent
 void QgsMapToolCircularStringCurvePoint::canvasMapMoveEvent( QgsMapMouseEvent* e )
 {
   QgsPointV2 mapPoint( e->mapPoint().x(), e->mapPoint().y() );
+  updateSnappingMarker( e );
+
   QgsVertexId idx; idx.part = 0; idx.ring = 0; idx.vertex = mPoints.size();
   if ( mRubberBand )
   {

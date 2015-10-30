@@ -119,6 +119,10 @@ void QgsMapToolCircularStringRadius::canvasMapMoveEvent( QgsMapMouseEvent* e )
     mLastMouseMapPos.setY( e->mapPoint().y() );
     recalculateCircularString();
   }
+  else
+  {
+    updateSnappingMarker( e );
+  }
 }
 
 void QgsMapToolCircularStringRadius::recalculateCircularString()

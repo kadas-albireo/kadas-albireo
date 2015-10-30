@@ -37,10 +37,10 @@
 
 QgsMapToolCapture::QgsMapToolCapture( QgsMapCanvas* canvas, enum CaptureMode tool )
     : QgsMapToolEdit( canvas )
+    , mSnappingMarker( 0 )
     , mRubberBand( 0 )
     , mTempRubberBand( 0 )
     , mValidator( 0 )
-    , mSnappingMarker( 0 )
 {
   mCaptureMode = tool;
   mCadAllowed = true;
@@ -114,25 +114,8 @@ void QgsMapToolCapture::currentLayerChanged( QgsMapLayer *layer )
 
 void QgsMapToolCapture::canvasMapMoveEvent( QgsMapMouseEvent * e )
 {
-  bool snapped = e->isSnapped();
   QgsPoint point = e->mapPoint();
-
-  if ( !snapped )
-  {
-    delete mSnappingMarker;
-    mSnappingMarker = 0;
-  }
-  else
-  {
-    if ( !mSnappingMarker )
-    {
-      mSnappingMarker = new QgsVertexMarker( mCanvas );
-      mSnappingMarker->setIconType( QgsVertexMarker::ICON_CROSS );
-      mSnappingMarker->setColor( Qt::magenta );
-      mSnappingMarker->setPenWidth( 3 );
-    }
-    mSnappingMarker->setCenter( point );
-  }
+  updateSnappingMarker( e );
 
   if ( !mTempRubberBand && mCaptureCurve.numPoints() > 0 )
   {
@@ -495,4 +478,24 @@ void QgsMapToolCapture::setPoints( const QList<QgsPoint>& pointList )
 
   mCaptureCurve.clear();
   mCaptureCurve.addCurve( line );
+}
+
+void QgsMapToolCapture::updateSnappingMarker( QgsMapMouseEvent* e )
+{
+  if ( e && e->isSnapped() )
+  {
+    if ( !mSnappingMarker )
+    {
+      mSnappingMarker = new QgsVertexMarker( mCanvas );
+      mSnappingMarker->setIconType( QgsVertexMarker::ICON_CROSS );
+      mSnappingMarker->setColor( Qt::magenta );
+      mSnappingMarker->setPenWidth( 3 );
+    }
+    mSnappingMarker->setCenter( e->mapPoint() );
+  }
+  else
+  {
+    delete mSnappingMarker;
+    mSnappingMarker = 0;
+  }
 }
