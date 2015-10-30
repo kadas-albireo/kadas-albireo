@@ -953,6 +953,30 @@ bool QgsGeometry::convertToMultiType()
   return true;
 }
 
+bool QgsGeometry::convertToSingleType()
+{
+  if ( !d || !d->geometry )
+  {
+    return false;
+  }
+
+  if ( !isMultipart() ) //already single part, no need to convert
+  {
+    return true;
+  }
+
+  QgsGeometryCollectionV2* multiGeom = dynamic_cast<QgsGeometryCollectionV2*>( d->geometry );
+  if ( !multiGeom || multiGeom->partCount() < 1 )
+    return false;
+
+  QgsAbstractGeometryV2* firstPart = multiGeom->geometryN( 0 )->clone();
+  detach( false );
+
+  d->geometry = firstPart;
+  removeWkbGeos();
+  return true;
+}
+
 QgsPoint QgsGeometry::asPoint() const
 {
   if ( !d || !d->geometry || d->geometry->geometryType() != "Point" )

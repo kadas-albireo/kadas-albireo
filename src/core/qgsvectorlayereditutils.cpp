@@ -178,6 +178,7 @@ int QgsVectorLayerEditUtils::addPart( QgsCurveV2* ring, QgsFeatureId featureId )
     return 6;
 
   QgsGeometry geometry;
+  bool firstPart = false;
   if ( !cache()->geometry( featureId, geometry ) ) // maybe it's in cache
   {
     // it's not in cache: let's fetch it from layer
@@ -185,12 +186,26 @@ int QgsVectorLayerEditUtils::addPart( QgsCurveV2* ring, QgsFeatureId featureId )
     if ( !L->getFeatures( QgsFeatureRequest().setFilterFid( featureId ).setSubsetOfAttributes( QgsAttributeList() ) ).nextFeature( f ) || !f.geometry() )
       return 6; //geometry not found
 
-    geometry = *f.geometry();
+    if ( !f.constGeometry() || f.constGeometry()->isEmpty() )
+    {
+      //no existing geometry, so adding first part to null geometry
+      firstPart = true;
+    }
+    else
+    {
+      geometry = *f.geometry();
+    }
   }
 
-  int errorCode = geometry.addPart( ring );
+  int errorCode = geometry.addPart( ring, L->geometryType() );
   if ( errorCode == 0 )
   {
+    if ( firstPart && QgsWKBTypes::isSingleType( QgsWKBTypes::Type( L->wkbType() ) )
+         && L->dataProvider()->doesStrictFeatureTypeCheck() )
+    {
+      //convert back to single part if required by layer
+      geometry.convertToSingleType();
+    }
     L->editBuffer()->changeGeometry( featureId, &geometry );
   }
   return errorCode;
