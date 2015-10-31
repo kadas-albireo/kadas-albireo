@@ -813,10 +813,45 @@ void QgsWMSProjectParser::addDrawingOrder( QDomElement& parentElem, QDomDocument
     for ( int i = layerList.size() - 1; i >= 0; --i )
       reversedList << layerList[ i ];
 
+    //If groups are published as single layer, place the group name at the first occurence of a layer, then remove the other sublayers from the list
+    publishGroupsAsLayerDrawingOrder( reversedList );
+
     QDomElement layerDrawingOrderElem = doc.createElement( "LayerDrawingOrder" );
     QDomText drawingOrderText = doc.createTextNode( reversedList.join( "," ) );
     layerDrawingOrderElem.appendChild( drawingOrderText );
     parentElem.appendChild( layerDrawingOrderElem );
+  }
+}
+
+void QgsWMSProjectParser::publishGroupsAsLayerDrawingOrder( QStringList& layerList ) const
+{
+  QMap< QString, QSet< QString > > groupsAsLayer;
+  QSet<QString> groups = publishGroupsAsLayer();
+  QSet<QString>::const_iterator groupIt = groups.constBegin();
+  for ( ; groupIt != groups.constEnd(); ++groupIt )
+  {
+    groupsAsLayer.insert( *groupIt, subLayersOfGroup( *groupIt ) );
+  }
+
+  for ( int i = 0; i < layerList.size(); ++i )
+  {
+    QMap< QString, QSet< QString > >::const_iterator groupsAsLayerIt = groupsAsLayer.constBegin();
+    for ( ; groupsAsLayerIt != groupsAsLayer.constEnd(); ++groupsAsLayerIt )
+    {
+      QString groupName = groupsAsLayerIt.key();
+      const QSet< QString >& g = groupsAsLayerIt.value();
+      if ( g.contains( layerList.at( i ) ) )
+      {
+        layerList[i] = groupName; //replace first layer occurence with group name
+        //and remove all other sublayer names from the list
+        QSet< QString >::const_iterator lIt = g.constBegin();
+        for ( ; lIt != g.constEnd(); ++ lIt )
+        {
+          layerList.removeOne( *lIt );
+        }
+        break;
+      }
+    }
   }
 }
 
@@ -990,7 +1025,6 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       {
         QDomNodeList children = layerElem.childNodes();
         for ( int i = children.size() - 1; i >= 0; --i )
-          //for ( int i = 0; i < children.size(); ++i )
         {
           const QDomNode& childNode = children.at( i );
           if ( childNode.nodeName() == "Layer" )
