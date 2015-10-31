@@ -457,6 +457,15 @@ int main( int argc, char * argv[] )
       filtersIterator.value()->responseComplete();
     }
 #endif
+
+    //possibility for client to suggest a download filename
+    QString outputFileName = theRequestHandler->parameter( "FILE_NAME" );
+    if ( !outputFileName.isEmpty() )
+    {
+      theRequestHandler->setDefaultHeaders();
+      theRequestHandler->setHeader( "Content-Disposition", "attachment; filename=\"" + outputFileName + "\"" );
+    }
+
     theRequestHandler->sendResponse();
 
     if ( logLevel < 1 )

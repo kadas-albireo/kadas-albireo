@@ -71,11 +71,28 @@ bool QgsHttpRequestHandler::exceptionRaised() const
   return mException != NULL;
 }
 
+void QgsHttpRequestHandler::setDefaultHeaders()
+{
+  //format
+  QString format = mInfoFormat;
+  if ( mInfoFormat.startsWith( "text/" ) )
+  {
+    format.append( "; charset=utf-8" );
+  }
+  setHeader( "Content-Type", format );
+
+  //length
+  int contentLength = mBody.size();
+  if ( contentLength > 0 ) // size is not known when streaming
+  {
+    setHeader( "Content-Length", QString::number( contentLength ) );
+  }
+}
+
 void QgsHttpRequestHandler::setHeader( const QString &name, const QString &value )
 {
   mHeaders.insert( name, value );
 }
-
 
 void QgsHttpRequestHandler::clearHeaders( )
 {
@@ -108,31 +125,18 @@ void QgsHttpRequestHandler::sendHeaders()
   // Send default headers if they've not been set in a previous stage
   if ( mHeaders.empty() )
   {
-    QgsDebugMsg( QString( "Content size: %1" ).arg( mBody.size() ) );
-    QgsDebugMsg( QString( "Content format: %1" ).arg( mInfoFormat ) );
-    printf( "Content-Type: " );
-    printf( mInfoFormat.toLocal8Bit() );
-    if ( mInfoFormat.startsWith( "text/" ) )
-      printf( "; charset=utf-8" );
-    printf( "\n" );
-    // size is not known when streaming
-    if ( mBody.size() > 0 )
-    {
-      printf( "Content-Length: %d\n", mBody.size() );
-    }
+    setDefaultHeaders();
   }
-  else
+
+  QMap<QString, QString>::const_iterator it;
+  for ( it = mHeaders.constBegin(); it != mHeaders.constEnd(); ++it )
   {
-    QMap<QString, QString>::const_iterator it;
-    for ( it = mHeaders.constBegin(); it != mHeaders.constEnd(); ++it )
-    {
-      printf( it.key().toLocal8Bit() );
-      printf( ": " );
-      printf( it.value().toLocal8Bit() );
-      printf( "\n" );
-    }
+    printf( it.key().toLocal8Bit() );
+    printf( ": " );
+    printf( it.value().toLocal8Bit() );
     printf( "\n" );
   }
+
   printf( "\n" );
   mHeaders.clear();
   mHeadersSent = TRUE;
@@ -462,6 +466,15 @@ bool QgsHttpRequestHandler::startGetFeatureResponse( QByteArray* ba, const QStri
     format = "text/xml";
 
   setInfoFormat( format );
+
+  //possibility for client to suggest a download filename
+  setDefaultHeaders();
+  QString outputFileName = parameter( "FILE_NAME" );
+  if ( !outputFileName.isEmpty() )
+  {
+    setHeader( "Content-Disposition", "attachment; filename=\"" + outputFileName + "\"" );
+  }
+
   appendBody( *ba );
   // Streaming
   sendResponse();

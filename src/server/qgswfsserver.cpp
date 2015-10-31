@@ -137,6 +137,7 @@ void QgsWFSServer::executeRequest()
   {
     //output format for GetFeature
     QString outputFormat = mParameters.value( "OUTPUTFORMAT" );
+
     try
     {
       getFeature( *mRequestHandler, outputFormat );
