@@ -128,6 +128,8 @@ class QgsServerProjectParser
 
     QStringList customLayerOrder() const { return mCustomLayerOrder; }
 
+    QSet<QString> subLayersOfGroup( const QString& groupName ) const;
+
   private:
 
     /**Content of project file*/
@@ -164,6 +166,11 @@ class QgsServerProjectParser
 
     /**Adds sublayers of an embedded group to layer set*/
     static void sublayersOfEmbeddedGroup( const QString& projectFilePath, const QString& groupName, QSet<QString>& layerSet );
+
+    /**Returns legend element for group name. Returns a null element if the group does not exist*/
+    QDomElement legendGroupByName( const QString& name ) const;
+
+    static void childAttributes( QSet<QString>& values, const QDomElement& parentElem, const QString& elementName, const QString& attributeName );
 };
 
 #endif // QGSSERVERPROJECTPARSER_H

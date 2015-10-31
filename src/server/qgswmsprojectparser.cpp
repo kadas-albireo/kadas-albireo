@@ -984,6 +984,22 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
 
       // combine bounding boxes of children (groups/layers)
       mProjectParser->combineExtentAndCrsOfGroupChildren( layerElem, doc );
+
+      //remove sublayer groups afterwards if group is published as layer
+      if ( publishGroupsAsLayer().contains( name ) )
+      {
+        QDomNodeList children = layerElem.childNodes();
+        for ( int i = children.size() - 1; i >= 0; --i )
+          //for ( int i = 0; i < children.size(); ++i )
+        {
+          const QDomNode& childNode = children.at( i );
+          if ( childNode.nodeName() == "Layer" )
+          {
+            layerElem.removeChild( childNode );
+          }
+        }
+      }
+
     }
     else if ( currentChildElem.tagName() == "legendlayer" )
     {
@@ -2018,6 +2034,39 @@ QDomElement QgsWMSProjectParser::composerByName( const QString& composerName ) c
   }
 
   return composerElem;
+}
+
+QSet<QString> QgsWMSProjectParser::publishGroupsAsLayer() const
+{
+  if ( !mProjectParser )
+  {
+    return QSet<QString>();
+  }
+
+  QStringList groupList;
+  QDomElement propertiesElem = mProjectParser->propertiesElem();
+  if ( !propertiesElem.isNull() )
+  {
+    QDomElement publishGroupsAsLayerElem = propertiesElem.firstChildElement( "WMSPublishGroupsAsLayer" );
+    if ( !publishGroupsAsLayerElem.isNull() )
+    {
+      QDomNodeList groups = publishGroupsAsLayerElem.elementsByTagName( "value" );
+      for ( int i = 0; i < groups.size(); ++i )
+      {
+        groupList.append( groups.at( i ).toElement().text() );
+      }
+    }
+  }
+  return groupList.toSet();
+}
+
+QSet<QString> QgsWMSProjectParser::subLayersOfGroup( const QString& groupName ) const
+{
+  if ( !mProjectParser )
+  {
+    return QSet<QString>();
+  }
+  return mProjectParser->subLayersOfGroup( groupName );
 }
 
 QgsLayerTreeGroup* QgsWMSProjectParser::projectLayerTreeGroup() const

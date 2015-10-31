@@ -101,6 +101,9 @@ class APP_EXPORT QgsProjectProperties : public QgsOptionsDialogBase, private Ui:
     void on_mAddLayerRestrictionButton_clicked();
     void on_mRemoveLayerRestrictionButton_clicked();
 
+    void on_mAddGroupAsLayerButton_clicked();
+    void on_mRemoveGroupAsLayerButton_clicked();
+
     /*!
      * Slots to select/unselect all the WFS layers
      */

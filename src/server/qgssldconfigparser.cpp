@@ -1708,6 +1708,24 @@ void QgsSLDConfigParser::setCrsForLayer( const QDomElement& layerElem, QgsMapLay
   }
 }
 
+QSet<QString> QgsSLDConfigParser::publishGroupsAsLayer() const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->publishGroupsAsLayer();
+  }
+  return QSet<QString>();
+}
+
+QSet<QString> QgsSLDConfigParser::subLayersOfGroup( const QString& groupName ) const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->subLayersOfGroup( groupName );
+  }
+  return QSet<QString>();
+}
+
 
 
 

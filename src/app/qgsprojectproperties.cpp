@@ -49,6 +49,9 @@
 #include "qgscolorschemeregistry.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgscolordialog.h"
+#include "qgslayertree.h"
+#include "qgslayertreegroup.h"
+#include "qgslayertreemodel.h"
 
 //qt includes
 #include <QInputDialog>
@@ -336,6 +339,13 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   if ( ok )
   {
     mLayerRestrictionsListWidget->addItems( values );
+  }
+
+  values = QgsProject::instance()->readListEntry( "WMSPublishGroupsAsLayer", "/", QStringList(), &ok );
+  mPublishGroupAsLayerGroupBox->setChecked( ok );
+  if ( ok )
+  {
+    mGroupAsLayerListWidget->addItems( values );
   }
 
   bool addWktGeometry = QgsProject::instance()->readBoolEntry( "WMSAddWktGeometry", "/" );
@@ -811,6 +821,21 @@ void QgsProjectProperties::apply()
     QgsProject::instance()->removeEntry( "WMSRestrictedLayers", "/" );
   }
 
+  //WMS publish group as layer
+  if ( mPublishGroupAsLayerGroupBox->isChecked() )
+  {
+    QStringList groups;
+    for ( int i = 0; i < mGroupAsLayerListWidget->count(); ++i )
+    {
+      groups << mGroupAsLayerListWidget->item( i )->text();
+    }
+    QgsProject::instance()->writeEntry( "WMSPublishGroupsAsLayer", "/", groups );
+  }
+  else
+  {
+    QgsProject::instance()->removeEntry( "WMSPublishGroupsAsLayer", "/" );
+  }
+
   QgsProject::instance()->writeEntry( "WMSAddWktGeometry", "/", mAddWktGeometryCheckBox->isChecked() );
   QgsProject::instance()->writeEntry( "WMSUseLayerIDs", "/", mWmsUseLayerIDs->isChecked() );
 
@@ -1205,6 +1230,52 @@ void QgsProjectProperties::on_mRemoveLayerRestrictionButton_clicked()
   if ( currentItem )
   {
     delete mLayerRestrictionsListWidget->takeItem( mLayerRestrictionsListWidget->row( currentItem ) );
+  }
+}
+
+static void _collectGroups( QgsLayerTreeGroup* parentGroup, QStringList& list )
+{
+  if ( !parentGroup )
+  {
+    return;
+  }
+
+  foreach ( QgsLayerTreeNode* child, parentGroup->children() )
+  {
+    if ( QgsLayerTree::isGroup( child ) )
+    {
+      QgsLayerTreeGroup* childGroup = QgsLayerTree::toGroup( child );
+      list << childGroup->name();
+
+      _collectGroups( childGroup, list );
+    }
+  }
+}
+
+void QgsProjectProperties::on_mAddGroupAsLayerButton_clicked()
+{
+  if ( !QgisApp::instance()->layerTreeView() || !QgisApp::instance()->layerTreeView()->layerTreeModel() )
+  {
+    return;
+  }
+
+  QStringList groups;
+  _collectGroups( QgisApp::instance()->layerTreeView()->layerTreeModel()->rootGroup(), groups );
+
+  bool ok;
+  QString groupName = QInputDialog::getItem( this, tr( "Publish group as single layer" ), tr( "Select group name" ), groups, 0, false, &ok );
+  if ( ok )
+  {
+    mGroupAsLayerListWidget->addItem( groupName );
+  }
+}
+
+void QgsProjectProperties::on_mRemoveGroupAsLayerButton_clicked()
+{
+  QListWidgetItem* currentItem = mGroupAsLayerListWidget->currentItem();
+  if ( currentItem )
+  {
+    delete mGroupAsLayerListWidget->takeItem( mGroupAsLayerListWidget->row( currentItem ) );
   }
 }
 
