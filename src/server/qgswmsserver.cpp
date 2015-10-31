@@ -47,6 +47,7 @@
 #include "qgsfeature.h"
 #include "qgseditorwidgetregistry.h"
 #include "qgsserverlogger.h"
+#include "qgssymbollayerv2utils.h"
 
 #include <QImage>
 #include <QPainter>
@@ -1307,6 +1308,9 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
     //draw configuration format specific overlay items
     mConfigParser->drawOverlays( &thePainter, theImage->dotsPerMeterX() / 1000.0 * 25.4, theImage->width(), theImage->height() );
   }
+
+  //draw possible client configurable watermark on top
+  drawWatermark( theImage, &thePainter );
 
   restoreOpacities( bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
   restoreLayerFilters( originalLayerFilters );
@@ -3118,4 +3122,112 @@ QgsRectangle QgsWMSServer::featureInfoSearchRect( QgsVectorLayer* ml, QgsMapRend
   QgsRectangle mapRectangle( infoPoint.x() - mapUnitTolerance, infoPoint.y() - mapUnitTolerance,
                              infoPoint.x() + mapUnitTolerance, infoPoint.y() + mapUnitTolerance );
   return( mr->mapToLayerCoordinates( ml, mapRectangle ) );
+}
+
+void QgsWMSServer::drawWatermark( QImage* img, QPainter* p ) const
+{
+  if ( !img || !p )
+  {
+    return;
+  }
+
+  //watermark text
+  QMap<QString, QString>::const_iterator watermarkTextIt = mParameters.find( "WATERMARK_TEXT" );
+  if ( watermarkTextIt == mParameters.constEnd() )
+  {
+    return;
+  }
+  QString watermarkText = *watermarkTextIt;
+
+  //text padding (in points)
+  double textPadding = 1; //default 1 point padding
+  QMap<QString, QString>::const_iterator textPaddingIt = mParameters.find( "WATERMARK_TEXTPADDING" );
+  if ( textPaddingIt != mParameters.constEnd() )
+  {
+    textPadding = textPaddingIt->toDouble();
+  }
+  textPadding = 0.376 * textPadding * img->dotsPerMeterX() / 1000; //convert to pixels
+
+  //position (in pixels, refers to lower line of rectangle)
+  int xPos = 0;
+  int yPos = img->height();
+  QMap<QString, QString>::const_iterator posIt = mParameters.find( "WATERMARK_POS" );
+  if ( posIt != mParameters.constEnd() )
+  {
+    QStringList coordList = posIt->split( "," );
+    if ( coordList.size() > 1 )
+    {
+      xPos = coordList.at( 0 ).toInt();
+      yPos = coordList.at( 1 ).toInt();
+    }
+  }
+
+  //font
+  QFont f;
+  double fontSize = 10;
+  QMap<QString, QString>::const_iterator sizeIt = mParameters.find( "WATERMARK_FONTSIZE" );
+  if ( sizeIt != mParameters.constEnd() )
+  {
+    fontSize = sizeIt->toDouble();
+  }
+  f.setPointSizeF( fontSize );
+
+  //font family
+  QMap<QString, QString>::const_iterator familyIt = mParameters.find( "WATERMARK_FONTFAMILY" );
+  if ( familyIt != mParameters.constEnd() )
+  {
+    f.setFamily( *familyIt );
+  }
+
+  //background color for rectangle
+  QColor bgColor( 0, 0, 0, 0 );
+  QMap<QString, QString>::const_iterator bgColorIt = mParameters.find( "WATERMARK_BACKGROUNDCOLOR" );
+  if ( bgColorIt != mParameters.end() )
+  {
+    bgColor = QgsSymbolLayerV2Utils::decodeColor( *bgColorIt );
+  }
+  QBrush brush( Qt::SolidPattern );
+  brush.setColor( bgColor );
+  p->setBrush( brush );
+
+  //frame outline color
+  QPen framePen;
+  QColor frameColor( 0, 0, 0, 0 );
+  QMap<QString, QString>::const_iterator frameColorIt = mParameters.find( "WATERMARK_FRAMECOLOR" );
+  if ( frameColorIt != mParameters.constEnd() )
+  {
+    frameColor = QgsSymbolLayerV2Utils::decodeColor( *frameColorIt );
+  }
+  framePen.setColor( frameColor );
+
+  //frame outline with (in points)
+  double frameWidth = 1;
+  QMap<QString, QString>::const_iterator frameWidthIt = mParameters.find( "WATERMARK_FRAMEWIDTH" );
+  if ( frameWidthIt != mParameters.constEnd() )
+  {
+    frameWidth = frameWidthIt->toDouble();
+  }
+  frameWidth = 0.376 * frameWidth * img->dotsPerMeterX() / 1000; //convert points to pixels
+  framePen.setWidth( frameWidth );
+  p->setPen( framePen );
+
+  //background rectangle
+  QFontMetricsF fm( f, img );
+  double rectWidth = fm.width( watermarkText ) + 2 * textPadding;
+  double rectHeight = fm.boundingRect( watermarkText ).height() + 2 * textPadding;
+  QRectF rect( xPos, yPos - rectHeight, rectWidth, rectHeight );
+  p->drawRect( rect );
+
+  //font color
+  QColor fontColor( 0, 0, 0, 255 );
+  QMap<QString, QString>::const_iterator fontColorIt = mParameters.find( "WATERMARK_FONTCOLOR" );
+  if ( fontColorIt != mParameters.constEnd() )
+  {
+    fontColor = QgsSymbolLayerV2Utils::decodeColor( *fontColorIt );
+  }
+  p->setPen( QPen( fontColor ) );
+
+  p->setFont( f );
+  p->drawText( QPoint( xPos + textPadding, yPos - textPadding - fm.descent() ), watermarkText );
+  p->restore();
 }

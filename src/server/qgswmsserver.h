@@ -254,6 +254,8 @@ class QgsWMSServer: public QgsOWSServer
 
     /**Gets layer search rectangle (depending on request parameter, layer type, map and layer crs)*/
     QgsRectangle featureInfoSearchRect( QgsVectorLayer* ml, QgsMapRenderer* mr, const QgsRenderContext& rct, const QgsPoint& infoPoint ) const;
+
+    void drawWatermark( QImage* img, QPainter* p ) const;
 };
 
 #endif

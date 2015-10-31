@@ -46,6 +46,11 @@ QString QgsSymbolLayerV2Utils::encodeColor( QColor color )
 
 QColor QgsSymbolLayerV2Utils::decodeColor( QString str )
 {
+  if ( str.startsWith( "#" ) )
+  {
+    return QColor( str );
+  }
+
   QStringList lst = str.split( "," );
   if ( lst.count() < 3 )
   {
@@ -635,10 +640,10 @@ static bool lineInfo( QPointF p1, QPointF p2, double& angle, double& t )
     return false;
 
   // tangent
-  t = ( x1 == x2 ? std::numeric_limits<double>::max() : ( y2 - y1 ) / ( x2 - x1 ) );
+  t = ( x1 == x2 ? DBL_MAX : ( y2 - y1 ) / ( x2 - x1 ) );
 
   // angle
-  if ( t == std::numeric_limits<double>::max() )
+  if ( t == DBL_MAX )
     angle = ( y2 > y1 ? M_PI / 2 : M_PI * 3 / 2 );  // angle is 90 or 270
   else if ( t == 0 )
     angle = ( x2 > x1 ? 0 : M_PI ); // angle is 0 or 180
@@ -660,15 +665,15 @@ static QPointF offsetPoint( QPointF pt, double angle, double dist )
 static QPointF linesIntersection( QPointF p1, double t1, QPointF p2, double t2 )
 {
   // parallel lines? (or the difference between angles is less than appr. 10 degree)
-  if (( t1 == std::numeric_limits<double>::max() && t2 == std::numeric_limits<double>::max() ) || qAbs( atan( t1 ) - atan( t2 ) ) < 0.175 )
+  if (( t1 == DBL_MAX && t2 == DBL_MAX ) || qAbs( atan( t1 ) - atan( t2 ) ) < 0.175 )
     return QPointF();
 
   double x, y;
-  if ( t1 == std::numeric_limits<double>::max() || t2 == std::numeric_limits<double>::max() )
+  if ( t1 == DBL_MAX || t2 == DBL_MAX )
   {
     // in case one line is with angle 90 resp. 270 degrees (tangent undefined)
     // swap them so that line 2 is with undefined tangent
-    if ( t1 == std::numeric_limits<double>::max() )
+    if ( t1 == DBL_MAX )
     {
       QPointF pSwp = p1; p1 = p2; p2 = pSwp;
       double  tSwp = t1; t1 = t2; t2 = tSwp;
