@@ -134,6 +134,9 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
     /**Reads layer drawing order from the legend section of the project file and appends it to the parent elemen (usually the <Capability> element)*/
     void addDrawingOrder( QDomElement& parentElem, QDomDocument& doc, const QHash<QString, QString> &idNameMap, const QStringList &layerIDList ) const;
 
+    /**Modifies drawing order list to replace sublayers with group name (at the first position of a group layer)*/
+    void publishGroupsAsLayerDrawingOrder( QStringList& layerList ) const;
+
     void addLayerStyles( QgsMapLayer* currentLayer, QDomDocument& doc, QDomElement& layerElem, const QString& version ) const;
 
     void addLayers( QDomDocument &doc,
