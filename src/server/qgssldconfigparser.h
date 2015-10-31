@@ -125,6 +125,10 @@ class QgsSLDConfigParser : public QgsWMSConfigParser
 
     void serviceCapabilities( QDomElement& parentElement, QDomDocument& doc ) const override;
 
+    QSet<QString> publishGroupsAsLayer() const;
+
+    QSet<QString> subLayersOfGroup( const QString& groupName ) const;
+
   private:
 
     /**SLD as dom document*/

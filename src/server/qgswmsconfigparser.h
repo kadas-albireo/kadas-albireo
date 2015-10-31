@@ -129,6 +129,10 @@ class QgsWMSConfigParser
 
     virtual bool useLayerIDs() const = 0;
 
+    virtual QSet<QString> publishGroupsAsLayer() const = 0;
+
+    virtual QSet<QString> subLayersOfGroup( const QString& groupName ) const = 0;
+
     /**Adds highlight layers to the layer registry and to the layer set. Returns the ids of the newly created layers (for later removal)*/
     static QStringList addHighlightLayers( const QMap<QString, QString>& parameterMap, QStringList& layerSet, const QString& parameterPrefix = QString() );
     static void removeHighlightLayers( const QStringList& layerIds );

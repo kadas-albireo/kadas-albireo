@@ -113,6 +113,10 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
 
     bool useLayerIDs() const override { return mProjectParser->useLayerIDs(); }
 
+    QSet<QString> publishGroupsAsLayer() const;
+
+    QSet<QString> subLayersOfGroup( const QString& groupName ) const;
+
   private:
     QgsServerProjectParser* mProjectParser;
 

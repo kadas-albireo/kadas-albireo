@@ -1872,6 +1872,31 @@ int QgsWMSServer::readLayersAndStyles( QStringList& layersList, QStringList& sty
   stylesList = mParameters.value( "STYLE" ).split( ",", QString::SkipEmptyParts );
   stylesList = stylesList + mParameters.value( "STYLES" ).split( ",", QString::SkipEmptyParts );
 
+  //Filter out sublayers of groups published as layers
+  if ( mConfigParser )
+  {
+    QSet<QString> groupsPublishedAsLayer = mConfigParser->publishGroupsAsLayer();
+    if ( !groupsPublishedAsLayer.isEmpty() )
+    {
+      QSet<QString>::const_iterator gIt = groupsPublishedAsLayer.constBegin();
+      for ( ; gIt != groupsPublishedAsLayer.constEnd(); ++gIt )
+      {
+        QSet<QString> sublayers = mConfigParser->subLayersOfGroup( *gIt );
+        for ( int i = layersList.size() - 1; i >= 0; --i )
+        {
+          if ( sublayers.contains( layersList.at( i ) ) )
+          {
+            layersList.removeAt( i );
+            if ( i < stylesList.size() )
+            {
+              stylesList.removeAt( i );
+            }
+          }
+        }
+      }
+    }
+  }
+
   return 0;
 }
 
