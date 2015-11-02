@@ -58,7 +58,12 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
 
   mPlotCurve = new QwtPlotCurve( tr( "Height profile" ) );
   mPlotCurve->setRenderHint( QwtPlotItem::RenderAntialiased );
-  mPlotCurve->setPen( QPen( Qt::blue ) );
+  QPen curvePen;
+  curvePen.setColor( Qt::red );
+  curvePen.setJoinStyle( Qt::RoundJoin );
+  mPlotCurve->setPen( curvePen );
+  mPlotCurve->setBaseline( 0 );
+  mPlotCurve->setBrush( QColor( 255, 127, 127 ) );
   mPlotCurve->attach( mPlot );
 #if QWT_VERSION >= 0x060000
   mPlotCurve->setData( new QwtPointSeriesData() );
@@ -183,8 +188,8 @@ void QgsMeasureHeightProfileDialog::replot()
     {
       QgsDebugMsg( "Failed to read pixel values" );
 #if QWT_VERSION < 0x060000
-	  xSamples.append( i );
-	  ySamples.append( 0 );
+      xSamples.append( i );
+      ySamples.append( 0 );
 #else
       samples.append( QPointF( i, 0 ) );
 #endif
@@ -198,8 +203,8 @@ void QgsMeasureHeightProfileDialog::replot()
       double value = ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
                      + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
 #if QWT_VERSION < 0x060000
-	  xSamples.append( i );
-	  ySamples.append( value );
+      xSamples.append( i );
+      ySamples.append( value );
 #else
       samples.append( QPointF( i, value ) );
 #endif
