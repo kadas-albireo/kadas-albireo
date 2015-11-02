@@ -170,13 +170,13 @@ QgsRedliningEditTool::~QgsRedliningEditTool()
 void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
 {
   mPrevPos = mPressPos = toMapCoordinates( e->pos() );
-  QgsPoint pressLayerPot = toLayerCoordinates( mLayer, mPressPos );
+  QgsPoint pressLayerPos = toLayerCoordinates( mLayer, mPressPos );
 
   const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
   QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( mPressPos ) : QList<QgsLabelPosition>();
 
   double r = QgsTolerance::vertexSearchRadius( mCanvas->currentLayer(), mCanvas->mapSettings() );
-  QgsRectangle selectRect( pressLayerPot.x() - r, pressLayerPot.y() - r, pressLayerPot.x() + r, pressLayerPot.y() + r );
+  QgsRectangle selectRect( pressLayerPos.x() - r, pressLayerPos.y() - r, pressLayerPos.x() + r, pressLayerPos.y() + r );
   QgsFeature feature;
 
   // Check whether we can keep the same selection as before
