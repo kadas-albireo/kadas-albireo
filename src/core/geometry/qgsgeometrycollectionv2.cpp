@@ -307,6 +307,18 @@ QString QgsGeometryCollectionV2::asJSON( int precision ) const
   return json;
 }
 
+QString QgsGeometryCollectionV2::asKML( int precision ) const
+{
+  QString kml;
+  kml.append( "<MultiGeometry>" );
+  for ( int i = 0; i < mGeometries.size(); ++i )
+  {
+    kml.append( mGeometries.at( i )->asKML( precision ) );
+  }
+  kml.append( "/<MultiGeometry>" );
+  return kml;
+}
+
 QgsRectangle QgsGeometryCollectionV2::calculateBoundingBox() const
 {
   if ( mGeometries.size() < 1 )

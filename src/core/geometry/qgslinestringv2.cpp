@@ -146,6 +146,55 @@ QString QgsLineStringV2::asJSON( int precision ) const
   return "{\"type\": \"LineString\", \"coordinates\": " + QgsGeometryUtils::pointsToJSON( pts, precision ) + "}";
 }
 
+QString QgsLineStringV2::asKML( int precision ) const
+{
+  QString kml;
+  if ( isRing() )
+  {
+    kml.append( "<LinearRing>" );
+  }
+  else
+  {
+    kml.append( "<LineString>" );
+  }
+  bool z = is3D();
+  kml.append( "<altituteMode>" );
+  kml.append( "relativeToGround" );
+  kml.append( "</altituteMode>" );
+  kml.append( "<coordinates>" );
+
+  int nPoints = mCoords.size();
+  for ( int i = 0; i < nPoints; ++i )
+  {
+    if ( i > 0 )
+    {
+      kml.append( " " );
+    }
+    kml.append( qgsDoubleToString( mCoords[i].x(), precision ) );
+    kml.append( "," );
+    kml.append( qgsDoubleToString( mCoords[i].y(), precision ) );
+    if ( z )
+    {
+      kml.append( "," );
+      kml.append( qgsDoubleToString( mZ[i], precision ) );
+    }
+    else
+    {
+      kml.append( ",0" );
+    }
+  }
+  kml.append( "</coordinates>" );
+  if ( isRing() )
+  {
+    kml.append( "</LinearRing>" );
+  }
+  else
+  {
+    kml.append( "</LineString>" );
+  }
+  return kml;
+}
+
 double QgsLineStringV2::length() const
 {
   double length = 0;

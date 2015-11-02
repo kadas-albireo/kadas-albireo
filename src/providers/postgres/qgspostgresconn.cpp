@@ -1525,6 +1525,7 @@ QGis::WkbType QgsPostgresConn::wkbTypeFromGeomType( QGis::GeometryType geomType 
     case QGis::NoGeometry:
       return QGis::WKBNoGeometry;
     case QGis::UnknownGeometry:
+    case QGis::AnyGeometry:
       return QGis::WKBUnknown;
   }
 

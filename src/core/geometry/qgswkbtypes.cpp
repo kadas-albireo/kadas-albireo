@@ -183,6 +183,7 @@ QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
   //register the known wkb types
   entries.insert( Unknown, wkbEntry( "Unknown", false, Unknown, Unknown, Unknown, UnknownGeometry, false, false ) );
   entries.insert( NoGeometry, wkbEntry( "NoGeometry", false, NoGeometry, NoGeometry, NoGeometry, NullGeometry, false, false ) );
+  entries.insert( MixedGeometry, wkbEntry( "MixedGeometry", false, MixedGeometry, MixedGeometry, MixedGeometry, AnyGeometry, false, false ) );
   //point
   entries.insert( Point, wkbEntry( "Point", false, MultiPoint, Point, Point, PointGeometry, false, false ) );
   entries.insert( PointZ, wkbEntry( "PointZ", false, MultiPointZ, PointZ, Point, PointGeometry, true, false ) );

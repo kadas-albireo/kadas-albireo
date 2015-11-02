@@ -1561,6 +1561,7 @@ QString QgsPostgresProvider::geomParam( int offset ) const
       case QGis::WKBPolygon25D:
       case QGis::WKBUnknown:
       case QGis::WKBNoGeometry:
+      case QGis::WKBMixedGeometry:
         forceMulti = false;
         break;
 

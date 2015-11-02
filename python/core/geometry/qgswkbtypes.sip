@@ -22,6 +22,7 @@ class QgsWKBTypes
       MultiCurve,
       MultiSurface,
       NoGeometry,
+      MixedGeometry,
       PointZ,
       LineStringZ,
       PolygonZ,
@@ -72,7 +73,8 @@ class QgsWKBTypes
       LineGeometry,
       PolygonGeometry,
       UnknownGeometry,
-      NullGeometry
+      NullGeometry,
+      AnyGeometry
     };
 
     /*struct wkbEntry

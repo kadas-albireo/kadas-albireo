@@ -320,6 +320,26 @@ QString QgsCurvePolygonV2::asJSON( int precision ) const
   return json;
 }
 
+QString QgsCurvePolygonV2::asKML( int precision ) const
+{
+  QString kml;
+  kml.append( "<Polygon>" );
+  if ( mExteriorRing )
+  {
+    kml.append( "<outerBoundaryIs>" );
+    kml.append( mExteriorRing->asKML( precision ) );
+    kml.append( "</outerBoundaryIs>" );
+  }
+  for ( int i = 0; i < mInteriorRings.size(); ++i )
+  {
+    kml.append( "<innerBoundaryIs>" );
+    kml.append( mInteriorRings.at( i )->asKML( precision ) );
+    kml.append( "</innerBoundaryIs>" );
+  }
+  kml.append( "</Polygon>" );
+  return kml;
+}
+
 double QgsCurvePolygonV2::area() const
 {
   if ( !mExteriorRing )

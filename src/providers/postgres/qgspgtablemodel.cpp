@@ -239,6 +239,10 @@ QIcon QgsPgTableModel::iconForWkbType( QGis::WkbType type )
       return QgsApplication::getThemeIcon( "/mIconLineLayer.svg" );
     case QgsWKBTypes::PolygonGeometry:
       return QgsApplication::getThemeIcon( "/mIconPolygonLayer.svg" );
+    case QgsWKBTypes::NullGeometry:
+      return QgsApplication::getThemeIcon( "/mIconTableLayer.png" );
+    case QgsWKBTypes::UnknownGeometry:
+    case QgsWKBTypes::AnyGeometry:
     default:
       break;
   }
