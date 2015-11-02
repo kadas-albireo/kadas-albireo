@@ -61,4 +61,9 @@ class QgsPointV2: public QgsAbstractGeometryV2
       virtual int ringCount(int part = 0) const;
       virtual int partCount() const;
       virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const;
+
+      /** Angle undefined. Always returns 0.0*/
+      double vertexAngle( const QgsVertexId& vertex ) const;
+      virtual bool addZValue( double zValue = 0 );
+      virtual bool addMValue( double mValue = 0 );
 };

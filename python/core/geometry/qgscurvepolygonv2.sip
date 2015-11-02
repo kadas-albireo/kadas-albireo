@@ -48,7 +48,7 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
     bool removeInteriorRing( int nr );
 
     virtual void draw( QPainter& p ) const;
-    void transform( const QgsCoordinateTransform& ct );
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
     void transform( const QTransform& t );
 
     virtual bool insertVertex( const QgsVertexId& position, const QgsPointV2& vertex );
@@ -66,4 +66,9 @@ class QgsCurvePolygonV2: public QgsSurfaceV2
     virtual int ringCount(int part = 0) const;
     virtual int partCount() const;
 
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const;
+    virtual bool addZValue( double zValue = 0 );
+    virtual bool addMValue( double mValue = 0 );
 };

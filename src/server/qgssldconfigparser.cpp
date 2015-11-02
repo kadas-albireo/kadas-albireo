@@ -708,20 +708,21 @@ int QgsSLDConfigParser::WMSPrecision() const
   return -1;
 }
 
-QgsComposition* QgsSLDConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap ) const
+QgsComposition* QgsSLDConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap, QStringList& highlightLayers ) const
 {
   if ( mFallbackParser )
   {
-    return mFallbackParser->createPrintComposition( composerTemplate, mapRenderer, parameterMap );
+    return mFallbackParser->createPrintComposition( composerTemplate, mapRenderer, parameterMap, highlightLayers );
   }
   return 0;
 }
 
-QgsComposition* QgsSLDConfigParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap*>& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList ) const
+QgsComposition* QgsSLDConfigParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap*>& mapList, QList< QgsComposerLegend* >& legendList,
+    QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList, QList< QgsComposerPicture* >& pictureList ) const
 {
   if ( mFallbackParser )
   {
-    return mFallbackParser->initComposition( composerTemplate, mapRenderer, mapList, legendList, labelList, htmlFrameList );
+    return mFallbackParser->initComposition( composerTemplate, mapRenderer, mapList, legendList, labelList, htmlFrameList, pictureList );
   }
   return 0;
 }
@@ -1705,6 +1706,24 @@ void QgsSLDConfigParser::setCrsForLayer( const QDomElement& layerElem, QgsMapLay
       ml->setCrs( srs );
     }
   }
+}
+
+QSet<QString> QgsSLDConfigParser::publishGroupsAsLayer() const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->publishGroupsAsLayer();
+  }
+  return QSet<QString>();
+}
+
+QSet<QString> QgsSLDConfigParser::subLayersOfGroup( const QString& groupName ) const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->subLayersOfGroup( groupName );
+  }
+  return QSet<QString>();
 }
 
 

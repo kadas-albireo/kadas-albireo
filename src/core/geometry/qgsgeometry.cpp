@@ -146,7 +146,9 @@ QgsAbstractGeometryV2* QgsGeometry::geometry() const
 void QgsGeometry::setGeometry( QgsAbstractGeometryV2* geometry )
 {
   detach( false );
+  delete d->geometry;
   d->geometry = geometry;
+  removeWkbGeos();
 }
 
 bool QgsGeometry::isEmpty() const
@@ -428,6 +430,25 @@ bool QgsGeometry::deleteVertex( int atVertex )
     return false;
   }
 
+  //maintain compatibility with < 2.10 API
+  if ( d->geometry->geometryType() == "MultiPoint" )
+  {
+    detach( true );
+    removeWkbGeos();
+    //delete geometry instead of point
+    return static_cast< QgsGeometryCollectionV2* >( d->geometry )->removeGeometry( atVertex );
+  }
+
+  //if it is a point, set the geometry to NULL
+  if ( QgsWKBTypes::flatType( d->geometry->wkbType() ) == QgsWKBTypes::Point )
+  {
+    detach( false );
+    delete d->geometry;
+    removeWkbGeos();
+    d->geometry = 0;
+    return true;
+  }
+
   QgsVertexId id;
   if ( !vertexIdFromVertexNr( atVertex, id ) )
   {
@@ -445,6 +466,15 @@ bool QgsGeometry::insertVertex( double x, double y, int beforeVertex )
   if ( !d || !d->geometry )
   {
     return false;
+  }
+
+  //maintain compatibility with < 2.10 API
+  if ( d->geometry->geometryType() == "MultiPoint" )
+  {
+    detach( true );
+    removeWkbGeos();
+    //insert geometry instead of point
+    return static_cast< QgsGeometryCollectionV2* >( d->geometry )->insertGeometry( new QgsPointV2( x, y ), beforeVertex );
   }
 
   detach( true );
@@ -540,6 +570,7 @@ int QgsGeometry::addRing( QgsCurveV2* ring )
 {
   if ( !d || !d->geometry )
   {
+    delete ring;
     return 1;
   }
 
@@ -551,6 +582,24 @@ int QgsGeometry::addRing( QgsCurveV2* ring )
 
 int QgsGeometry::addPart( const QList<QgsPoint> &points, QGis::GeometryType geomType )
 {
+  QgsAbstractGeometryV2* partGeom = 0;
+  if ( points.size() == 1 )
+  {
+    partGeom = new QgsPointV2( points[0].x(), points[0].y() );
+  }
+  else if ( points.size() > 1 )
+  {
+    QgsLineStringV2* ringLine = new QgsLineStringV2();
+    QList< QgsPointV2 > partPoints;
+    convertPointList( points, partPoints );
+    ringLine->setPoints( partPoints );
+    partGeom = ringLine;
+  }
+  return addPart( partGeom, geomType );
+}
+
+int QgsGeometry::addPart( QgsAbstractGeometryV2* part, QGis::GeometryType geomType )
+{
   if ( !d )
   {
     return 1;
@@ -559,8 +608,6 @@ int QgsGeometry::addPart( const QList<QgsPoint> &points, QGis::GeometryType geom
   if ( !d->geometry )
   {
     detach( false );
-    delete d->geometry;
-    removeWkbGeos();
     switch ( geomType )
     {
       case QGis::Point:
@@ -576,29 +623,13 @@ int QgsGeometry::addPart( const QList<QgsPoint> &points, QGis::GeometryType geom
         return 1;
     }
   }
+  else
+  {
+    detach( true );
+    removeWkbGeos();
+  }
 
   convertToMultiType();
-
-  QgsAbstractGeometryV2* partGeom = 0;
-  if ( points.size() == 1 )
-  {
-    partGeom = new QgsPointV2( points[0].x(), points[0].y() );
-  }
-  else if ( points.size() > 1 )
-  {
-    QgsLineStringV2* ringLine = new QgsLineStringV2();
-    QList< QgsPointV2 > partPoints;
-    convertPointList( points, partPoints );
-    ringLine->setPoints( partPoints );
-    partGeom = ringLine;
-  }
-  return addPart( partGeom );
-}
-
-int QgsGeometry::addPart( QgsAbstractGeometryV2* part )
-{
-  detach( true );
-  removeWkbGeos();
   return QgsGeometryEditUtils::addPart( d->geometry, part );
 }
 
@@ -918,6 +949,30 @@ bool QgsGeometry::convertToMultiType()
   detach( true );
   multiGeom->addGeometry( d->geometry );
   d->geometry = multiGeom;
+  removeWkbGeos();
+  return true;
+}
+
+bool QgsGeometry::convertToSingleType()
+{
+  if ( !d || !d->geometry )
+  {
+    return false;
+  }
+
+  if ( !isMultipart() ) //already single part, no need to convert
+  {
+    return true;
+  }
+
+  QgsGeometryCollectionV2* multiGeom = dynamic_cast<QgsGeometryCollectionV2*>( d->geometry );
+  if ( !multiGeom || multiGeom->partCount() < 1 )
+    return false;
+
+  QgsAbstractGeometryV2* firstPart = multiGeom->geometryN( 0 )->clone();
+  detach( false );
+
+  d->geometry = firstPart;
   removeWkbGeos();
   return true;
 }
@@ -1379,6 +1434,7 @@ QList<QgsGeometry*> QgsGeometry::asGeometryCollection() const
   if ( gc )
   {
     int numGeom = gc->numGeometries();
+    geometryList.reserve( numGeom );
     for ( int i = 0; i < numGeom; ++i )
     {
       geometryList.append( new QgsGeometry( gc->geometryN( i )->clone() ) );
@@ -1478,7 +1534,7 @@ int QgsGeometry::avoidIntersections( QMap<QgsVectorLayer*, QSet< QgsFeatureId > 
 
 void QgsGeometry::validateGeometry( QList<Error> &errors )
 {
-//todo // QgsGeometryValidator::validateGeometry( this, errors );
+  QgsGeometryValidator::validateGeometry( this, errors );
 }
 
 bool QgsGeometry::isGeosValid() const
@@ -1591,18 +1647,6 @@ void QgsGeometry::mapToPixel( const QgsMapToPixel& mtp )
   }
 }
 
-#if 0
-void QgsGeometry::clip( const QgsRectangle& rect )
-{
-  if ( d && d->geometry )
-  {
-    detach();
-    d->geometry->clip( rect );
-    removeWkbGeos();
-  }
-}
-#endif
-
 void QgsGeometry::draw( QPainter& p ) const
 {
   if ( d && d->geometry )
@@ -1648,7 +1692,7 @@ int QgsGeometry::vertexNrFromVertexId( const QgsVertexId& id ) const
 {
   if ( !d || !d->geometry )
   {
-    return false;
+    return -1;
   }
 
   QList< QList< QList< QgsPointV2 > > > coords;
@@ -2271,6 +2315,7 @@ void QgsGeometry::filterGeometryCollection( QgsWKBTypes::Type type )
 
 QgsGeometry* QgsGeometry::buffer( double distance, GEOSBufferParams* params, QString* errorMsg ) const
 {
+  Q_UNUSED( errorMsg )
   if ( !d || !d->geometry )
   {
     return 0;
@@ -2296,6 +2341,7 @@ QgsGeometry* QgsGeometry::buffer( double distance, GEOSBufferParams* params, QSt
 
 QgsGeometry* QgsGeometry::fromCollection( const QList<QgsGeometry *> & geoms, QString* errorMsg )
 {
+  Q_UNUSED( errorMsg )
   if ( geoms.size() < 1 )
   {
     return 0;
@@ -2348,6 +2394,12 @@ QDataStream& operator>>( QDataStream& in, QgsGeometry& geometry )
 {
   QByteArray byteArray;
   in >> byteArray;
+  if ( byteArray.isEmpty() )
+  {
+    geometry.setGeometry( 0 );
+    return in;
+  }
+
   char *data = new char[byteArray.size()];
   memcpy( data, byteArray.data(), byteArray.size() );
   geometry.fromWkb(( unsigned char* )data, byteArray.size() );

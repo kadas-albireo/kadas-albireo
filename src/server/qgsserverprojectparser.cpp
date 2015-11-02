@@ -221,7 +221,7 @@ QgsMapLayer* QgsServerProjectParser::createLayerFromElement( const QDomElement& 
   QgsMapLayer* layer = 0;
   if ( useCache )
   {
-    layer = QgsMSLayerCache::instance()->searchLayer( absoluteUri, id );
+    layer = QgsMSLayerCache::instance()->searchLayer( absoluteUri, id, mProjectPath );
   }
 
   if ( layer )
@@ -1430,6 +1430,47 @@ void QgsServerProjectParser::addGetFeatureLayers( const QDomElement& layerElem )
     }
     idx += rx.matchedLength();
   }
+}
+
+QSet<QString> QgsServerProjectParser::subLayersOfGroup( const QString& groupName ) const
+{
+  QSet<QString> subgroups;
+
+  QDomElement groupElement = legendGroupByName( groupName );
+  if ( groupElement.isNull() )
+  {
+    return subgroups; //group not found
+  }
+
+  childAttributes( subgroups, groupElement, "legendgroup", "name" );
+  childAttributes( subgroups, groupElement, "legendlayer", "name" );
+  return subgroups;
+}
+
+void QgsServerProjectParser::childAttributes( QSet<QString>& values, const QDomElement& parentElem, const QString& elementName, const QString& attributeName )
+{
+  QDomNodeList childNodes = parentElem.elementsByTagName( elementName );
+  for ( int i = 0; i < childNodes.size(); ++i )
+  {
+    QString entryName = childNodes.at( i ).toElement().attribute( attributeName );
+    if ( !entryName.isEmpty() )
+    {
+      values.insert( entryName );
+    }
+  }
+}
+
+QDomElement QgsServerProjectParser::legendGroupByName( const QString& name ) const
+{
+  QList<QDomElement>::const_iterator groupIt = mLegendGroupElements.constBegin();
+  for ( ; groupIt != mLegendGroupElements.constEnd(); ++groupIt )
+  {
+    if ( groupIt->attribute( "name" ) == name )
+    {
+      return *groupIt;
+    }
+  }
+  return QDomElement();
 }
 
 

@@ -382,9 +382,9 @@ void QgsLineStringV2::drawAsPolygon( QPainter& p ) const
   p.drawPolygon( mCoords );
 }
 
-void QgsLineStringV2::transform( const QgsCoordinateTransform& ct )
+void QgsLineStringV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
-  ct.transformPolygon( mCoords );
+  ct.transformPolygon( mCoords, d );
 }
 
 void QgsLineStringV2::transform( const QTransform& t )
@@ -394,7 +394,7 @@ void QgsLineStringV2::transform( const QTransform& t )
 
 bool QgsLineStringV2::insertVertex( const QgsVertexId& position, const QgsPointV2& vertex )
 {
-  if ( position.vertex < 0 || position.vertex > mCoords.size() )
+  if ( position.vertex < 0 || position.vertex >= mCoords.size() )
   {
     return false;
   }
@@ -548,4 +548,69 @@ void QgsLineStringV2::close()
     return;
   }
   addVertex( startPoint() );
+}
+
+double QgsLineStringV2::vertexAngle( const QgsVertexId& vertex ) const
+{
+  if ( vertex.vertex == 0 || vertex.vertex >= ( numPoints() - 1 ) )
+  {
+    if ( isClosed() )
+    {
+      QPointF previous = mCoords[numPoints() - 1 ];
+      QPointF current = mCoords[0];
+      QPointF after = mCoords[1];
+      return QgsGeometryUtils::averageAngle( previous.x(), previous.y(), current.x(), current.y(), after.x(), after.y() );
+    }
+    else if ( vertex.vertex == 0 )
+    {
+      return QgsGeometryUtils::linePerpendicularAngle( mCoords[0].x(), mCoords[0].y(), mCoords[1].x(), mCoords[1].y() );
+    }
+    else
+    {
+      int a = numPoints() - 2;
+      int b = numPoints() - 1;
+      return QgsGeometryUtils::linePerpendicularAngle( mCoords[a].x(), mCoords[a].y(), mCoords[b].x(), mCoords[b].y() );
+    }
+  }
+  else
+  {
+    QPointF previous = mCoords[vertex.vertex - 1 ];
+    QPointF current = mCoords[vertex.vertex];
+    QPointF after = mCoords[vertex.vertex + 1];
+    return QgsGeometryUtils::averageAngle( previous.x(), previous.y(), current.x(), current.y(), after.x(), after.y() );
+  }
+}
+
+bool QgsLineStringV2::addZValue( double zValue )
+{
+  if ( QgsWKBTypes::hasZ( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addZ( mWkbType );
+
+  mZ.clear();
+  int nPoints = numPoints();
+  mZ.reserve( nPoints );
+  for ( int i = 0; i < nPoints; ++i )
+  {
+    mZ << zValue;
+  }
+  return true;
+}
+
+bool QgsLineStringV2::addMValue( double mValue )
+{
+  if ( QgsWKBTypes::hasM( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addM( mWkbType );
+
+  mM.clear();
+  int nPoints = numPoints();
+  mM.reserve( nPoints );
+  for ( int i = 0; i < nPoints; ++i )
+  {
+    mM << mValue;
+  }
+  return true;
 }

@@ -66,6 +66,15 @@ QgsRectangle QgsCircularStringV2::calculateBoundingBox() const
       bbox.combineExtentWith( &segmentBox );
     }
   }
+
+  if ( nPoints > 0 && nPoints % 2 == 0 )
+  {
+    if ( nPoints == 2 )
+    {
+      bbox.combineExtentWith( mX[ 0 ], mY[ 0 ] );
+    }
+    bbox.combineExtentWith( mX[ nPoints - 1 ], mY[ nPoints - 1 ] );
+  }
   return bbox;
 }
 
@@ -577,7 +586,7 @@ void QgsCircularStringV2::draw( QPainter& p ) const
   p.drawPath( path );
 }
 
-void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct )
+void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
   double* zArray = mZ.data();
 
@@ -591,7 +600,7 @@ void QgsCircularStringV2::transform( const QgsCoordinateTransform& ct )
       zArray[i] = 0;
     }
   }
-  ct.transformCoords( nPoints, mX.data(), mY.data(), zArray );
+  ct.transformCoords( nPoints, mX.data(), mY.data(), zArray, d );
   if ( !hasZ )
   {
     delete[] zArray;
@@ -612,13 +621,6 @@ void QgsCircularStringV2::transform( const QTransform& t )
 #endif
   }
 }
-
-#if 0
-void QgsCircularStringV2::clip( const QgsRectangle& rect )
-{
-  //todo...
-}
-#endif
 
 void QgsCircularStringV2::addToPainterPath( QPainterPath& path ) const
 {
@@ -642,6 +644,12 @@ void QgsCircularStringV2::addToPainterPath( QPainterPath& path ) const
       path.lineTo( pt.at( j ).x(), pt.at( j ).y() );
     }
     //arcTo( path, QPointF( mX[i], mY[i] ), QPointF( mX[i + 1], mY[i + 1] ), QPointF( mX[i + 2], mY[i + 2] ) );
+  }
+
+  //if number of points is even, connect to last point with straight line (even though the circular string is not valid)
+  if ( nPoints % 2 == 0 )
+  {
+    path.lineTo( mX[ nPoints - 1 ], mY[ nPoints - 1 ] );
   }
 }
 
@@ -940,4 +948,93 @@ void QgsCircularStringV2::insertVertexBetween( int after, int before, int pointO
   {
     mM.insert( before, ( mM[after] + mM[before] ) / 2.0 );
   }
+}
+
+double QgsCircularStringV2::vertexAngle( const QgsVertexId& vId ) const
+{
+  int before = vId.vertex - 1;
+  int vertex = vId.vertex;
+  int after = vId.vertex + 1;
+
+  if ( vId.vertex % 2 != 0 ) // a curve vertex
+  {
+    if ( vId.vertex >= 1 && vId.vertex < numPoints() - 1 )
+    {
+      return QgsGeometryUtils::circleTangentDirection( QgsPointV2( mX[vertex], mY[vertex] ), QgsPointV2( mX[before], mY[before] ),
+             QgsPointV2( mX[vertex], mY[vertex] ), QgsPointV2( mX[after], mY[after] ) );
+    }
+  }
+  else //a point vertex
+  {
+    if ( vId.vertex == 0 )
+    {
+      return QgsGeometryUtils::circleTangentDirection( QgsPointV2( mX[0], mY[0] ), QgsPointV2( mX[0], mY[0] ),
+             QgsPointV2( mX[1], mY[1] ), QgsPointV2( mX[2], mY[2] ) );
+    }
+    if ( vId.vertex >= numPoints() - 1 )
+    {
+      if ( numPoints() < 3 )
+      {
+        return 0.0;
+      }
+      int a = numPoints() - 3;
+      int b = numPoints() - 2;
+      int c = numPoints() - 1;
+      return QgsGeometryUtils::circleTangentDirection( QgsPointV2( mX[c], mY[c] ), QgsPointV2( mX[a], mY[a] ),
+             QgsPointV2( mX[b], mY[b] ), QgsPointV2( mX[c], mY[c] ) );
+    }
+    else
+    {
+      if ( vId.vertex + 2 > numPoints() - 1 )
+      {
+        return 0.0;
+      }
+
+      int vertex1 = vId.vertex - 2;
+      int vertex2 = vId.vertex - 1;
+      int vertex3 = vId.vertex;
+      double angle1 = QgsGeometryUtils::circleTangentDirection( QgsPointV2( mX[vertex3], mY[vertex3] ),
+                      QgsPointV2( mX[vertex1], mY[vertex1] ), QgsPointV2( mX[vertex2], mY[vertex2] ), QgsPointV2( mX[vertex3], mY[vertex3] ) );
+      int vertex4 = vId.vertex + 1;
+      int vertex5 = vId.vertex + 2;
+      double angle2 = QgsGeometryUtils::circleTangentDirection( QgsPointV2( mX[vertex3], mY[vertex3] ),
+                      QgsPointV2( mX[vertex3], mY[vertex3] ), QgsPointV2( mX[vertex4], mY[vertex4] ), QgsPointV2( mX[vertex5], mY[vertex5] ) );
+      return QgsGeometryUtils::averageAngle( angle1, angle2 );
+    }
+  }
+  return 0.0;
+}
+
+bool QgsCircularStringV2::addZValue( double zValue )
+{
+  if ( QgsWKBTypes::hasZ( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addZ( mWkbType );
+
+  int nPoints = numPoints();
+  mZ.clear();
+  mZ.reserve( nPoints );
+  for ( int i = 0; i < nPoints; ++i )
+  {
+    mZ << zValue;
+  }
+  return true;
+}
+
+bool QgsCircularStringV2::addMValue( double mValue )
+{
+  if ( QgsWKBTypes::hasM( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addM( mWkbType );
+
+  int nPoints = numPoints();
+  mM.clear();
+  mM.reserve( nPoints );
+  for ( int i = 0; i < nPoints; ++i )
+  {
+    mM << mValue;
+  }
+  return true;
 }

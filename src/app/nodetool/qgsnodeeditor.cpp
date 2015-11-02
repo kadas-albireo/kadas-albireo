@@ -107,6 +107,13 @@ void QgsNodeEditor::rebuildTable()
 
   mTableWidget->blockSignals( true );
   mTableWidget->setRowCount( 0 );
+
+  if ( mSelectedFeature->vertexMap().size() < 1 )
+  {
+    mTableWidget->blockSignals( false );
+    return;
+  }
+
   int row = 0;
   bool hasR = false;
   foreach ( const QgsVertexEntry* entry, mSelectedFeature->vertexMap() )

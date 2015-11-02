@@ -285,7 +285,7 @@ void QgsGeometryUtils::circleCenterRadius( const QgsPointV2& pt1, const QgsPoint
   det = ( pt1.x() - pt2.x() ) * ( pt2.y() - pt3.y() ) - ( pt2.x() - pt3.x() ) * ( pt1.y() - pt2.y() );
 
   /* Check colinearity */
-  if ( qgsDoubleNear( fabs( det ), 0.0 ) )
+  if ( qgsDoubleNear( fabs( det ), 0.0, 0.00000000001 ) )
   {
     radius = -1.0;
     return;
@@ -438,6 +438,26 @@ bool QgsGeometryUtils::segmentMidPoint( const QgsPointV2& p1, const QgsPointV2& 
 
   result = possibleMidPoints.at( minDistIndex );
   return true;
+}
+
+double QgsGeometryUtils::circleTangentDirection( const QgsPointV2& tangentPoint, const QgsPointV2& cp1,
+    const QgsPointV2& cp2, const QgsPointV2& cp3 )
+{
+  //calculate circle midpoint
+  double mX, mY, radius;
+  circleCenterRadius( cp1, cp2, cp3, radius, mX, mY );
+
+  double p1Angle = QgsGeometryUtils::ccwAngle( cp1.y() - mY, cp1.x() - mX );
+  double p2Angle = QgsGeometryUtils::ccwAngle( cp2.y() - mY, cp2.x() - mX );
+  double p3Angle = QgsGeometryUtils::ccwAngle( cp3.y() - mY, cp3.x() - mX );
+  if ( circleClockwise( p1Angle, p2Angle, p3Angle ) )
+  {
+    return lineAngle( tangentPoint.x(), tangentPoint.y(), mX, mY );
+  }
+  else
+  {
+    return lineAngle( mX, mY, tangentPoint.x(), tangentPoint.y() );
+  }
 }
 
 QList<QgsPointV2> QgsGeometryUtils::pointsFromWKT( const QString &wktCoordinateList, bool is3D, bool isMeasure )
@@ -609,4 +629,72 @@ QStringList QgsGeometryUtils::wktGetChildBlocks( const QString &wkt, const QStri
     blocks.append( block );
   }
   return blocks;
+}
+
+double QgsGeometryUtils::lineAngle( double x1, double y1, double x2, double y2 )
+{
+  double at = atan2( y2 - y1, x2 - x1 );
+  double a = -at + M_PI / 2.0;
+  if ( a < 0 )
+  {
+    a = 2 * M_PI + a;
+  }
+  if ( a >= 2 * M_PI )
+  {
+    a -= 2 * M_PI;
+  }
+  return a;
+}
+
+double QgsGeometryUtils::linePerpendicularAngle( double x1, double y1, double x2, double y2 )
+{
+  double a = lineAngle( x1, y1, x2, y2 );
+  a += ( M_PI / 2.0 );
+  if ( a >= 2 * M_PI )
+  {
+    a -= ( 2 * M_PI );
+  }
+  return a;
+}
+
+double QgsGeometryUtils::averageAngle( double x1, double y1, double x2, double y2, double x3, double y3 )
+{
+  // calc average angle between the previous and next point
+  double a1 = linePerpendicularAngle( x1, y1, x2, y2 );
+  double a2 = linePerpendicularAngle( x2, y2, x3, y3 );
+  return averageAngle( a1, a2 );
+}
+
+double QgsGeometryUtils::averageAngle( double a1, double a2 )
+{
+  double clockwiseDiff = 0.0;
+  if ( a2 >= a1 )
+  {
+    clockwiseDiff = a2 - a1;
+  }
+  else
+  {
+    clockwiseDiff = a2 + ( 2 * M_PI - a1 );
+  }
+  double counterClockwiseDiff = 2 * M_PI - clockwiseDiff;
+
+  double resultAngle = 0;
+  if ( clockwiseDiff <= counterClockwiseDiff )
+  {
+    resultAngle = a1 + clockwiseDiff / 2.0;
+  }
+  else
+  {
+    resultAngle = a1 - counterClockwiseDiff / 2.0;
+  }
+
+  if ( resultAngle >= 2 * M_PI )
+  {
+    resultAngle -= 2 * M_PI;
+  }
+  else if ( resultAngle < 0 )
+  {
+    resultAngle = 2 * M_PI - resultAngle;
+  }
+  return resultAngle;
 }

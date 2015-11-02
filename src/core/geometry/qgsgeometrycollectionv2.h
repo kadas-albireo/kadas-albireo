@@ -57,17 +57,23 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     /**Adds a geometry and takes ownership. Returns true in case of success.*/
     virtual bool addGeometry( QgsAbstractGeometryV2* g );
 
+    /** Inserts a geometry before a specified index and takes ownership. Returns true in case of success.
+    * @param index position to insert geometry before
+    */
+    virtual bool insertGeometry( QgsAbstractGeometryV2* g, int index );
+
     /** Removes a geometry from the collection.
      * @param nr index of geometry to remove
      * @returns true if removal was successful.
      */
     virtual bool removeGeometry( int nr );
 
-    virtual void transform( const QgsCoordinateTransform& ct ) override;
+    /** Transforms the geometry using a coordinate transform
+     * @param ct coordinate transform
+       @param d transformation direction
+     */
+    virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
-#if 0
-    virtual void clip( const QgsRectangle& rect ) override;
-#endif
     virtual void draw( QPainter& p ) const override;
 
     bool fromWkb( const unsigned char * wkb ) override;
@@ -105,8 +111,20 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     virtual int partCount() const override { return mGeometries.size(); }
     virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const override { return mGeometries[id.part]->vertexAt( id ); }
 
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const override;
+
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
+
   protected:
     QVector< QgsAbstractGeometryV2* > mGeometries;
+
+    /** Returns whether child type names are omitted from Wkt representations of the collection
+     * @note added in QGIS 2.12
+     */
+    virtual bool wktOmitChildType() const { return false; }
 
     /** Reads a collection from a WKT string.
      */

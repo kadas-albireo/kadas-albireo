@@ -490,6 +490,8 @@
         <file>themes/default/redlining_triangle.svg</file>
         <file>themes/default/mActionMeasureCircle.png</file>
         <file>themes/default/mActionMeasureHeightProfile.png</file>
+        <file>themes/default/mActionCircularStringCurvePoint.png</file>
+        <file>themes/default/mActionCircularStringRadius.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

@@ -191,9 +191,9 @@ void QgsPointV2::clear()
   mX = mY = mZ = mM = 0.;
 }
 
-void QgsPointV2::transform( const QgsCoordinateTransform& ct )
+void QgsPointV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
-  ct.transformInPlace( mX, mY, mZ );
+  ct.transformInPlace( mX, mY, mZ, d );
 }
 
 void QgsPointV2::coordinateSequence( QList< QList< QList< QgsPointV2 > > >& coord ) const
@@ -247,6 +247,26 @@ bool QgsPointV2::nextVertex( QgsVertexId& id, QgsPointV2& vertex ) const
   {
     return false;
   }
+}
+
+bool QgsPointV2::addZValue( double zValue )
+{
+  if ( QgsWKBTypes::hasZ( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addZ( mWkbType );
+  mZ = zValue;
+  return true;
+}
+
+bool QgsPointV2::addMValue( double mValue )
+{
+  if ( QgsWKBTypes::hasM( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addM( mWkbType );
+  mM = mValue;
+  return true;
 }
 
 void QgsPointV2::transform( const QTransform& t )

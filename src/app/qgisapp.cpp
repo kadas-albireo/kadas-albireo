@@ -251,6 +251,8 @@
 #include "qgsmaptooladdring.h"
 #include "qgsmaptoolfillring.h"
 #include "qgsmaptoolannotation.h"
+#include "qgsmaptoolcircularstringcurvepoint.h"
+#include "qgsmaptoolcircularstringradius.h"
 #include "qgsmaptooldeletering.h"
 #include "qgsmaptooldeletepart.h"
 #include "qgsmaptoolfeatureaction.h"
@@ -288,7 +290,6 @@
 
 // Editor widgets
 #include "qgseditorwidgetregistry.h"
-
 //
 // Conditional Includes
 //
@@ -1137,6 +1138,8 @@ void QgisApp::createActions()
   connect( mActionCopyStyle, SIGNAL( triggered() ), this, SLOT( copyStyle() ) );
   connect( mActionPasteStyle, SIGNAL( triggered() ), this, SLOT( pasteStyle() ) );
   connect( mActionAddFeature, SIGNAL( triggered() ), this, SLOT( addFeature() ) );
+  connect( mActionCircularStringCurvePoint, SIGNAL( triggered() ), this, SLOT( circularStringCurvePoint() ) );
+  connect( mActionCircularStringRadius, SIGNAL( triggered() ), this, SLOT( circularStringRadius() ) );
   connect( mActionMoveFeature, SIGNAL( triggered() ), this, SLOT( moveFeature() ) );
   connect( mActionRotateFeature, SIGNAL( triggered() ), this, SLOT( rotateFeature() ) );
 
@@ -1413,6 +1416,8 @@ void QgisApp::createActionGroups()
   mMapToolGroup->addAction( mActionMeasureHeightProfile );
   mMapToolGroup->addAction( mActionMeasureAngle );
   mMapToolGroup->addAction( mActionAddFeature );
+  mMapToolGroup->addAction( mActionCircularStringCurvePoint );
+  mMapToolGroup->addAction( mActionCircularStringRadius );
   mMapToolGroup->addAction( mActionMoveFeature );
   mMapToolGroup->addAction( mActionRotateFeature );
 #if defined(GEOS_VERSION_MAJOR) && defined(GEOS_VERSION_MINOR) && \
@@ -1702,6 +1707,15 @@ void QgisApp::createToolBars()
   QAction* annotationAction = mAttributesToolBar->addWidget( bt );
   annotationAction->setObjectName( "ActionAnnotation" );
   connect( bt, SIGNAL( triggered( QAction * ) ), this, SLOT( toolButtonActionTriggered( QAction * ) ) );
+
+  //circular string digitize tool button
+  QToolButton* tbAddCircularString = new QToolButton( mDigitizeToolBar );
+  tbAddCircularString->setPopupMode( QToolButton::MenuButtonPopup );
+  tbAddCircularString->addAction( mActionCircularStringCurvePoint );
+  tbAddCircularString->addAction( mActionCircularStringRadius );
+  tbAddCircularString->setDefaultAction( mActionCircularStringCurvePoint );
+  connect( tbAddCircularString, SIGNAL( triggered( QAction * ) ), this, SLOT( toolButtonActionTriggered( QAction * ) ) );
+  mDigitizeToolBar->insertWidget( mActionMoveFeature, tbAddCircularString );
 
   // vector layer edits tool buttons
   QToolButton* tbAllEdits = qobject_cast<QToolButton *>( mDigitizeToolBar->widgetForAction( mActionAllEdits ) );
@@ -2255,6 +2269,10 @@ void QgisApp::createCanvasTools()
   mMapTools.mAnnotation->setAction( mActionAnnotation );
   mMapTools.mAddFeature = new QgsMapToolAddFeature( mMapCanvas );
   mMapTools.mAddFeature->setAction( mActionAddFeature );
+  mMapTools.mCircularStringCurvePoint = new QgsMapToolCircularStringCurvePoint( dynamic_cast<QgsMapToolAddFeature*>( mMapTools.mAddFeature ), mMapCanvas );
+  mMapTools.mCircularStringCurvePoint->setAction( mActionCircularStringCurvePoint );
+  mMapTools.mCircularStringRadius = new QgsMapToolCircularStringRadius( dynamic_cast<QgsMapToolAddFeature*>( mMapTools.mAddFeature ), mMapCanvas );
+  mMapTools.mCircularStringRadius->setAction( mActionCircularStringRadius );
   mMapTools.mMoveFeature = new QgsMapToolMoveFeature( mMapCanvas );
   mMapTools.mMoveFeature->setAction( mActionMoveFeature );
   mMapTools.mRotateFeature = new QgsMapToolRotateFeature( mMapCanvas );
@@ -6137,6 +6155,16 @@ void QgisApp::addFeature()
   mMapCanvas->setMapTool( mMapTools.mAddFeature );
 }
 
+void QgisApp::circularStringCurvePoint()
+{
+  mMapCanvas->setMapTool( mMapTools.mCircularStringCurvePoint );
+}
+
+void QgisApp::circularStringRadius()
+{
+  mMapCanvas->setMapTool( mMapTools.mCircularStringRadius );
+}
+
 void QgisApp::selectFeatures()
 {
   mMapCanvas->setMapTool( mMapTools.mSelectFeatures );
@@ -8879,6 +8907,9 @@ void QgisApp::updateCRSStatusBar()
 
 void QgisApp::destinationCrsChanged()
 {
+  // save this information to project
+  long srsid = mMapCanvas->mapRenderer()->destinationCrs().srsid();
+  QgsProject::instance()->writeEntry( "SpatialRefSys", "/ProjectCRSID", ( int )srsid );
   updateCRSStatusBar();
 }
 
@@ -9308,6 +9339,8 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
     mActionAddToOverview->setEnabled( false );
     mActionFeatureAction->setEnabled( false );
     mActionAddFeature->setEnabled( false );
+    mActionCircularStringCurvePoint->setEnabled( false );
+    mActionCircularStringRadius->setEnabled( false );
     mActionMoveFeature->setEnabled( false );
     mActionRotateFeature->setEnabled( false );
     mActionOffsetCurve->setEnabled( false );
@@ -9427,6 +9460,8 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
       mActionPasteFeatures->setEnabled( isEditable && canAddFeatures && !clipboard()->empty() );
 
       mActionAddFeature->setEnabled( isEditable && canAddFeatures );
+      mActionCircularStringCurvePoint->setEnabled( isEditable && ( canAddFeatures || canChangeGeometry ) && vlayer->geometryType() != QGis::Point );
+      mActionCircularStringRadius->setEnabled( isEditable && ( canAddFeatures || canChangeGeometry ) );
 
       //does provider allow deleting of features?
       mActionDeleteSelected->setEnabled( isEditable && canDeleteFeatures && layerHasSelection );
@@ -9569,6 +9604,8 @@ void QgisApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
     mActionSaveLayerDefinition->setEnabled( true );
     mActionLayerSaveAs->setEnabled( true );
     mActionAddFeature->setEnabled( false );
+    mActionCircularStringCurvePoint->setEnabled( false );
+    mActionCircularStringRadius->setEnabled( false );
     mActionDeleteSelected->setEnabled( false );
     mActionAddRing->setEnabled( false );
     mActionFillRing->setEnabled( false );

@@ -68,14 +68,18 @@ class CORE_EXPORT QgsCurvePolygonV2: public QgsSurfaceV2
     /**Sets exterior ring (takes ownership)*/
     void setExteriorRing( QgsCurveV2* ring );
     /**Sets all interior rings (takes ownership)*/
-    void setInteriorRings( QList<QgsCurveV2*> rings );
+    void setInteriorRings( const QList<QgsCurveV2*>& rings );
     /**Adds an interior ring to the geometry (takes ownership)*/
     void addInteriorRing( QgsCurveV2* ring );
     /**Removes ring. Exterior ring is 0, first interior ring 1, ...*/
     bool removeInteriorRing( int nr );
 
     virtual void draw( QPainter& p ) const override;
-    void transform( const QgsCoordinateTransform& ct ) override;
+    /** Transforms the geometry using a coordinate transform
+     * @param ct coordinate transform
+       @param d transformation direction
+     */
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
 
     virtual bool insertVertex( const QgsVertexId& position, const QgsPointV2& vertex ) override;
@@ -91,8 +95,15 @@ class CORE_EXPORT QgsCurvePolygonV2: public QgsSurfaceV2
 
     virtual int vertexCount( int /*part*/ = 0, int ring = 0 ) const override;
     virtual int ringCount( int /*part*/ = 0 ) const override { return ( mExteriorRing != 0 ) + mInteriorRings.size(); }
-    virtual int partCount() const override { return ringCount() > 0; }
+    virtual int partCount() const override { return ringCount() > 0 ? 1 : 0; }
     virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const override;
+
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const override;
+
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
 
   protected:
 

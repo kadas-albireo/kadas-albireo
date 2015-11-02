@@ -25,7 +25,7 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     virtual bool addGeometry( QgsAbstractGeometryV2* g /Transfer/ );
     virtual bool removeGeometry( int nr );
 
-    virtual void transform( const QgsCoordinateTransform& ct );
+    virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
     void transform( const QTransform& t );
     //virtual void clip( const QgsRectangle& rect );
     virtual void draw( QPainter& p ) const;
@@ -58,4 +58,17 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
     virtual int ringCount(int part = 0) const;
     virtual int partCount() const;
     virtual QgsPointV2 vertexAt( const QgsVertexId& id ) const;
+
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const;
+
+  protected:
+
+    /** Returns whether child type names are omitted from Wkt representations of the collection
+     * @note added in QGIS 2.12
+     */
+    virtual bool wktOmitChildType() const;
+    virtual bool addZValue( double zValue = 0 );
+    virtual bool addMValue( double mValue = 0 );
 };

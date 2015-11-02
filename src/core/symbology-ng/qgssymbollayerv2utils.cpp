@@ -46,6 +46,11 @@ QString QgsSymbolLayerV2Utils::encodeColor( QColor color )
 
 QColor QgsSymbolLayerV2Utils::decodeColor( QString str )
 {
+  if ( str.startsWith( "#" ) )
+  {
+    return QColor( str );
+  }
+
   QStringList lst = str.split( "," );
   if ( lst.count() < 3 )
   {

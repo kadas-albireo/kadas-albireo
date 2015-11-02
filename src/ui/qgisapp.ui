@@ -2292,20 +2292,20 @@ Acts on currently active editable layer</string>
    </property>
   </action>
   <action name="mActionMeasureCircle">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/themes/default/mActionMeasureCircle.png</normaloff>:/images/themes/default/mActionMeasureCircle.png</iconset>
-   </property>
-   <property name="text">
-    <string>Measure &amp;Circle</string>
-   </property>
-   <property name="toolTip">
-    <string>Measure Circle</string>
-   </property>
-  </action>
+  <property name="checkable">
+   <bool>true</bool>
+  </property>
+  <property name="icon">
+   <iconset resource="../../images/images.qrc">
+    <normaloff>:/images/themes/default/mActionMeasureCircle.png</normaloff>:/images/themes/default/mActionMeasureCircle.png</iconset>
+  </property>
+  <property name="text">
+   <string>Measure &amp;Circle</string>
+  </property>
+  <property name="toolTip">
+   <string>Measure Circle</string>
+  </property>
+ </action>
   <action name="mActionMeasureHeightProfile">
    <property name="checkable">
     <bool>true</bool>
@@ -2319,6 +2319,27 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>Measure Height Profile</string>
+   </property>
+  </action>
+  <action name="mActionCircularStringRadius">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Add circular string by radius</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+    <normaloff>:/images/themes/default/mActionCircularStringRadius.png</normaloff>:/images/themes/default/mActionCircularStringRadius.png</iconset>
+   </property>
+  </action>
+  <action name="mActionCircularStringCurvePoint">
+  <property name="icon">
+   <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionCircularStringCurvePoint.png</normaloff>:/images/themes/default/mActionCircularStringCurvePoint.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add circular string</string>
    </property>
   </action>
  </widget>

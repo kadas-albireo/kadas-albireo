@@ -16,8 +16,13 @@
  ***************************************************************************/
 
 #include "qgswmsconfigparser.h"
+#include "qgsgeometry.h"
 #include "qgsmaplayer.h"
+#include "qgsmaplayerregistry.h"
 #include "qgsmapserviceexception.h"
+#include "qgsrendererv2.h"
+#include "qgsvectordataprovider.h"
+#include "qgsvectorlayer.h"
 
 #include "qgscomposerlabel.h"
 #include "qgscomposerlegend.h"
@@ -25,6 +30,7 @@
 #include "qgscomposermapgrid.h"
 #include "qgscomposerhtml.h"
 #include "qgscomposerframe.h"
+#include "qgscomposerpicture.h"
 #include "qgscomposition.h"
 
 #include "qgslayertreegroup.h"
@@ -40,14 +46,15 @@ QgsWMSConfigParser::~QgsWMSConfigParser()
 
 }
 
-QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap ) const
+QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, const QMap< QString, QString >& parameterMap, QStringList& highlightLayers ) const
 {
   QList<QgsComposerMap*> composerMaps;
   QList<QgsComposerLegend*> composerLegends;
   QList<QgsComposerLabel*> composerLabels;
   QList<const QgsComposerHtml*> composerHtmls;
+  QList< QgsComposerPicture* > composerPictures;
 
-  QgsComposition* c = initComposition( composerTemplate, mapRenderer, composerMaps, composerLegends, composerLabels, composerHtmls );
+  QgsComposition* c = initComposition( composerTemplate, mapRenderer, composerMaps, composerLegends, composerLabels, composerHtmls, composerPictures );
   if ( !c )
   {
     return 0;
@@ -129,36 +136,56 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     //layers / styles
     QString layers = parameterMap.value( mapId + ":LAYERS" );
     QString styles = parameterMap.value( mapId + ":STYLES" );
-    if ( !layers.isEmpty() )
+    QStringList layerSet;
+
+    if ( layers.isEmpty() )
     {
-      QStringList layerSet;
-      QStringList wmsLayerList = layers.split( "," );
-      QStringList wmsStyleList;
+      layers = parameterMap.value( "LAYERS" );
+      styles = parameterMap.value( "STYLES" );
+    }
 
-      if ( !styles.isEmpty() )
+    QStringList wmsLayerList = layers.split( "," );
+    QStringList wmsStyleList;
+
+    if ( !styles.isEmpty() )
+    {
+      wmsStyleList = styles.split( "," );
+    }
+
+    for ( int i = 0; i < wmsLayerList.size(); ++i )
+    {
+      QString styleName;
+      if ( wmsStyleList.size() > i )
       {
-        wmsStyleList = styles.split( "," );
+        styleName = wmsStyleList.at( i );
       }
 
-      for ( int i = 0; i < wmsLayerList.size(); ++i )
+      foreach ( QgsMapLayer *layer, mapLayerFromStyle( wmsLayerList.at( i ), styleName ) )
       {
-        QString styleName;
-        if ( wmsStyleList.size() > i )
+        if ( layer )
         {
-          styleName = wmsStyleList.at( i );
-        }
-
-        foreach ( QgsMapLayer *layer, mapLayerFromStyle( wmsLayerList.at( i ), styleName ) )
-        {
-          if ( layer )
-          {
-            layerSet.push_back( layer->id() );
-          }
+          layerSet.push_back( layer->id() );
         }
       }
+    }
 
-      currentMap->setLayerSet( layerSet );
-      currentMap->setKeepLayerSet( true );
+    //save layer list prior to adding highlight layers
+    QStringList bkLayerSet = layerSet;
+
+    //add highlight layers
+    highlightLayers.append( addHighlightLayers( parameterMap, layerSet, mapId + ":" ) );
+
+    currentMap->setLayerSet( layerSet );
+    currentMap->setKeepLayerSet( true );
+
+    //remove highlight layers from the composer legends
+    QList< QgsComposerLegend* >::iterator legendIt = composerLegends.begin();
+    for ( ; legendIt != composerLegends.end(); ++legendIt )
+    {
+      if (( *legendIt )->model()->autoUpdate() )
+      {
+        ( *legendIt )->model()->setLayerSet( bkLayerSet );
+      }
     }
 
     //grid space x / y
@@ -247,6 +274,25 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     currentLabel->setText( title );
   }
 
+  //replace urls in composer pictures
+  foreach ( QgsComposerPicture* currentPicture, composerPictures )
+  {
+    QString url = parameterMap.value( currentPicture->id().toUpper() );
+    if ( url.isEmpty() )
+    {
+      if ( parameterMap.contains( currentPicture->id().toUpper() ) )
+      {
+        c->removeItem( currentPicture );
+        delete currentPicture;
+      }
+      continue;
+    }
+    else
+    {
+      currentPicture->setPicturePath( url );
+    }
+  }
+
   //replace html url
   foreach ( const QgsComposerHtml *currentHtml, composerHtmls )
   {
@@ -277,4 +323,247 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
   }
 
   return c;
+}
+
+QStringList QgsWMSConfigParser::addHighlightLayers( const QMap<QString, QString>& parameterMap, QStringList& layerSet, const QString& parameterPrefix )
+{
+  QStringList highlightLayers, geomSplit, symbolSplit, labelSplit, labelFontSplit, labelSizeSplit,
+  labelWeightSplit, labelColorSplit, labelBufferColorSplit, labelBufferSizeSplit;
+  highlightParameters( parameterMap, parameterPrefix, geomSplit, symbolSplit, labelSplit, labelFontSplit, labelSizeSplit, labelWeightSplit,
+                       labelColorSplit, labelBufferColorSplit, labelBufferSizeSplit );
+
+  if ( geomSplit.isEmpty() || symbolSplit.isEmpty() )
+  {
+    return highlightLayers;
+  }
+
+  QString crsString = parameterMap.contains( "CRS" ) ? parameterMap.value( "CRS" ) : parameterMap.value( "SRS" );
+
+  int nHighlights = qMin( geomSplit.size(), symbolSplit.size() );
+  for ( int i = 0; i < nHighlights; ++i )
+  {
+    //create geometry
+    QScopedPointer<QgsGeometry> geom( QgsGeometry::fromWkt( geomSplit.at( i ) ) );
+    if ( !geom.data() )
+    {
+      continue;
+    }
+
+    //create renderer from sld
+    QString sld = symbolSplit[i];
+    QDomDocument sldDoc;
+    if ( !sldDoc.setContent( symbolSplit[i], true ) )
+    {
+      continue;
+    }
+
+    QString errorMsg;
+    QScopedPointer<QgsFeatureRendererV2> renderer( QgsFeatureRendererV2::loadSld( sldDoc.documentElement(), geom.data()->type(), errorMsg ) );
+    if ( !renderer.data() )
+    {
+      continue;
+    }
+
+    //add label settings
+    QString labelString;
+    if ( i < labelSplit.size() )
+    {
+      labelString = labelSplit.at( i );
+    }
+
+    QScopedPointer<QgsVectorLayer> layer( createHighlightLayer( i, crsString, geom.take(), labelString, labelSizeSplit, labelColorSplit, labelWeightSplit, labelFontSplit,
+                                          labelBufferSizeSplit, labelBufferColorSplit ) );
+    if ( !layer.data() )
+    {
+      continue;
+    }
+
+    layer->setRendererV2( renderer.take() );
+    layerSet.prepend( layer.data()->id() );
+    highlightLayers.append( layer.data()->id() );
+    QgsMapLayerRegistry::instance()->addMapLayers( QList<QgsMapLayer *>() << layer.take() );
+  }
+  return highlightLayers;
+}
+
+QgsVectorLayer* QgsWMSConfigParser::createHighlightLayer( int i, const QString& crsString, QgsGeometry* geom, const QString& labelString, const QStringList& labelSizeSplit, const QStringList& labelColorSplit,
+    const QStringList& labelWeightSplit, const QStringList& labelFontSplit, const QStringList& labelBufferSizeSplit,
+    const QStringList& labelBufferColorSplit )
+{
+  if ( !geom )
+  {
+    return 0;
+  }
+
+  QGis::GeometryType geomType = geom->type();
+  QString typeName = QString( QGis::featureType( geom->wkbType() ) ).replace( "WKB", "" );
+  QString url = typeName + "?crs=" + crsString;
+  if ( !labelString.isEmpty() )
+  {
+    url += "&field=label:string";
+    if ( geomType == QGis::Polygon )
+    {
+      url += "&field=x:double&field=y:double&field=hali:string&field=vali:string";
+    }
+  }
+
+  QgsVectorLayer* layer = new QgsVectorLayer( url, "highlight_" + QString::number( i ), "memory" );
+  if ( !layer->isValid() )
+  {
+    delete layer;
+    return 0;
+  }
+
+  QgsFeature fet( layer->pendingFields() );
+  if ( !labelString.isEmpty() )
+  {
+    fet.setAttribute( 0, labelString );
+    if ( geomType == QGis::Polygon )
+    {
+      QgsGeometry* point = geom->pointOnSurface();
+      if ( point )
+      {
+        QgsPoint pt = point->asPoint();
+        fet.setAttribute( 1, pt.x() );
+        fet.setAttribute( 2, pt.y() );
+        fet.setAttribute( 3, "Center" );
+        fet.setAttribute( 4, "Half" );
+      }
+    }
+
+    layer->setCustomProperty( "labeling/fieldName", "label" );
+    layer->setCustomProperty( "labeling/enabled", "true" );
+    layer->setCustomProperty( "labeling", "pal" );
+    //give highest priority to highlight layers and make sure the labels are always drawn
+    layer->setCustomProperty( "labeling/priority", "10" );
+    layer->setCustomProperty( "labeling/displayAll", "true" );
+
+    //fontsize?
+    if ( i < labelSizeSplit.size() )
+    {
+      layer->setCustomProperty( "labeling/fontSize", labelSizeSplit.at( i ) );
+    }
+    //font color
+    if ( i < labelColorSplit.size() )
+    {
+      QColor c( labelColorSplit.at( i ) );
+      layer->setCustomProperty( "labeling/textColorR", c.red() );
+      layer->setCustomProperty( "labeling/textColorG", c.green() );
+      layer->setCustomProperty( "labeling/textColorB", c.blue() );
+    }
+    //font weight
+    if ( i < labelWeightSplit.size() )
+    {
+      layer->setCustomProperty( "labeling/fontWeight", labelWeightSplit.at( i ) );
+    }
+
+    //font family list
+    if ( i < labelFontSplit.size() )
+    {
+      layer->setCustomProperty( "labeling/fontFamily", labelFontSplit.at( i ) );
+    }
+
+    //buffer
+    if ( i < labelBufferSizeSplit.size() )
+    {
+      layer->setCustomProperty( "labeling/bufferSize", labelBufferSizeSplit.at( i ) );
+    }
+
+    //buffer color
+    if ( i <  labelBufferColorSplit.size() )
+    {
+      QColor c( labelBufferColorSplit.at( i ) );
+      layer->setCustomProperty( "labeling/bufferColorR", c.red() );
+      layer->setCustomProperty( "labeling/bufferColorG", c.green() );
+      layer->setCustomProperty( "labeling/bufferColorB", c.blue() );
+    }
+
+    //placement
+    int placement = 0;
+    switch ( geomType )
+    {
+      case QGis::Point:
+        placement = 0;
+        layer->setCustomProperty( "labeling/dist", 2 );
+        layer->setCustomProperty( "labeling/placementFlags", 0 );
+        break;
+      case QGis::Polygon:
+        layer->setCustomProperty( "labeling/dataDefinedProperty9", 1 );
+        layer->setCustomProperty( "labeling/dataDefinedProperty10", 2 );
+        layer->setCustomProperty( "labeling/dataDefinedProperty11", 3 );
+        layer->setCustomProperty( "labeling/dataDefinedProperty12", 4 );
+        break;
+      default:
+        placement = 2; //parallel placement for line
+        layer->setCustomProperty( "labeling/dist", 2 );
+        layer->setCustomProperty( "labeling/placementFlags", 10 );
+    }
+    layer->setCustomProperty( "labeling/placement", placement );
+  }
+
+  fet.setGeometry( geom );
+  layer->dataProvider()->addFeatures( QgsFeatureList() << fet );
+  return layer;
+}
+
+void QgsWMSConfigParser::highlightParameters( const QMap<QString, QString>& parameterMap, const QString& parameterPrefix, QStringList& geom, QStringList& symbol,
+    QStringList& label, QStringList& labelFont, QStringList& labelSize, QStringList& labelWeight, QStringList& labelColor,
+    QStringList& labelBufferColor, QStringList& labelBufferSize )
+{
+  QString geomParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_GEOM" );
+  QString symbolParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_SYMBOL" );
+  if ( geomParam.isEmpty() || symbolParam.isEmpty() )
+  {
+    return;
+  }
+  QString labelParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELSTRING" );
+  QString labelFontParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELFONT" );
+  QString labelSizeParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELSIZE" );
+  QString labelWeightParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELWEIGHT" );
+  QString labelColorParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELCOLOR" );
+  QString labelBufferColorParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELBUFFERCOLOR" );
+  QString labelBufferSizeParam = parameterMap.value( parameterPrefix + "HIGHLIGHT_LABELBUFFERSIZE" );
+
+  geom = geomParam.split( ";" );
+  symbol = symbolParam.split( ";" );
+
+  label.clear(); labelFont.clear(); labelSize.clear(); labelWeight.clear(); labelColor.clear(); labelBufferColor.clear(); labelBufferSize.clear();
+
+  if ( !labelParam.isEmpty() )
+  {
+    label = labelParam.split( ";" );
+  }
+  if ( !labelFontParam.isEmpty() )
+  {
+    labelFont = labelFontParam.split( ";" );
+  }
+  if ( !labelSizeParam.isEmpty() )
+  {
+    labelSize = labelSizeParam.split( ";" );
+  }
+  if ( !labelWeightParam.isEmpty() )
+  {
+    labelWeight = labelWeightParam.split( ";" );
+  }
+  if ( !labelColorParam.isEmpty() )
+  {
+    labelColor = labelColorParam.split( ";" );
+  }
+  if ( !labelBufferColorParam.isEmpty() )
+  {
+    labelBufferColor =  labelBufferColorParam.split( ";" );
+  }
+  if ( !labelBufferSizeParam.isEmpty() )
+  {
+    labelBufferSize = labelBufferSizeParam.split( ";" );
+  }
+}
+
+void QgsWMSConfigParser::removeHighlightLayers( const QStringList& layerIds )
+{
+  QStringList::const_iterator idIt = layerIds.constBegin();
+  for ( ; idIt != layerIds.constEnd(); ++idIt )
+  {
+    QgsMapLayerRegistry::instance()->removeMapLayers( QStringList() << *idIt );
+  }
 }

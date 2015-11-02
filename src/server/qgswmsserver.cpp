@@ -46,6 +46,8 @@
 #include "qgsogcutils.h"
 #include "qgsfeature.h"
 #include "qgseditorwidgetregistry.h"
+#include "qgsserverlogger.h"
+#include "qgssymbollayerv2utils.h"
 
 #include <QImage>
 #include <QPainter>
@@ -1170,12 +1172,13 @@ QByteArray* QgsWMSServer::getPrint( const QString& formatString )
 
   applyOpacities( layersList, bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
 
-
-  QgsComposition* c = mConfigParser->createPrintComposition( mParameters[ "TEMPLATE" ], mMapRenderer, QMap<QString, QString>( mParameters ) );
+  QStringList highlightLayers;
+  QgsComposition* c = mConfigParser->createPrintComposition( mParameters[ "TEMPLATE" ], mMapRenderer, QMap<QString, QString>( mParameters ), highlightLayers );
   if ( !c )
   {
     restoreLayerFilters( originalLayerFilters );
     clearFeatureSelections( selectedLayerIdList );
+    QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
     return 0;
   }
 
@@ -1240,6 +1243,7 @@ QByteArray* QgsWMSServer::getPrint( const QString& formatString )
   restoreOpacities( bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
   restoreLayerFilters( originalLayerFilters );
   clearFeatureSelections( selectedLayerIdList );
+  QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
 
   delete c;
   return ba;
@@ -1275,6 +1279,10 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   QPainter thePainter( theImage );
   thePainter.setRenderHint( QPainter::Antialiasing ); //make it look nicer
 
+  QStringList layerSet = mMapRenderer->layerSet();
+  QStringList highlightLayers = QgsWMSConfigParser::addHighlightLayers( mParameters, layerSet );
+  mMapRenderer->setLayerSet( layerSet );
+
   QMap<QString, QString> originalLayerFilters = applyRequestedLayerFilters( layersList );
   QStringList selectedLayerIdList = applyFeatureSelections( layersList );
 
@@ -1286,9 +1294,14 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   applyOpacities( layersList, bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
 
   if ( hitTest )
+  {
     runHitTest( &thePainter, *hitTest );
+  }
   else
-    mMapRenderer->render( &thePainter );
+  {
+    bool logRenderTime = QgsServerLogger::instance()->logLevel() < 1;
+    mMapRenderer->render( &thePainter, 0, logRenderTime );
+  }
 
   if ( mConfigParser )
   {
@@ -1296,9 +1309,13 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
     mConfigParser->drawOverlays( &thePainter, theImage->dotsPerMeterX() / 1000.0 * 25.4, theImage->width(), theImage->height() );
   }
 
+  //draw possible client configurable watermark on top
+  drawWatermark( theImage, &thePainter );
+
   restoreOpacities( bkVectorRenderers, bkRasterRenderers, labelTransparencies, labelBufferTransparencies );
   restoreLayerFilters( originalLayerFilters );
   clearFeatureSelections( selectedLayerIdList );
+  QgsWMSConfigParser::removeHighlightLayers( highlightLayers );
 
   // QgsDebugMsg( "clearing filters" );
   if ( !hitTest )
@@ -1402,6 +1419,7 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
 
   QgsRectangle* featuresRect = 0;
   QgsPoint* infoPoint = 0;
+
   if ( i == -1 || j == -1 )
   {
     if ( mParameters.contains( "FILTER" ) )
@@ -1416,6 +1434,10 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
   else
   {
     infoPoint = new QgsPoint();
+    if ( !infoPointToMapCoordinates( i, j, infoPoint, mMapRenderer ) )
+    {
+      return 5;
+    }
   }
 
   //get the layer registered in QgsMapLayerRegistry and apply possible filters
@@ -1505,11 +1527,6 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
         continue;
       }
 
-      if ( infoPoint && infoPointToLayerCoordinates( i, j, infoPoint, mMapRenderer, currentLayer ) != 0 )
-      {
-        continue;
-      }
-
       //switch depending on vector or raster
       QgsVectorLayer* vectorLayer = dynamic_cast<QgsVectorLayer*>( currentLayer );
 
@@ -1556,7 +1573,12 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
         QgsRasterLayer* rasterLayer = dynamic_cast<QgsRasterLayer*>( currentLayer );
         if ( rasterLayer )
         {
-          if ( featureInfoFromRasterLayer( rasterLayer, infoPoint, result, layerElement, version, infoFormat ) != 0 )
+          if ( !infoPoint )
+          {
+            continue;
+          }
+          QgsPoint layerInfoPoint = mMapRenderer->mapToLayerCoordinates( currentLayer, *infoPoint );
+          if ( featureInfoFromRasterLayer( rasterLayer, &layerInfoPoint, result, layerElement, version, infoFormat ) != 0 )
           {
             continue;
           }
@@ -1613,7 +1635,6 @@ int QgsWMSServer::getFeatureInfo( QDomDocument& result, QString version )
   restoreLayerFilters( originalLayerFilters );
   QgsMapLayerRegistry::instance()->removeAllMapLayers();
   delete featuresRect;
-  delete infoPoint;
   return 0;
 }
 
@@ -1851,6 +1872,31 @@ int QgsWMSServer::readLayersAndStyles( QStringList& layersList, QStringList& sty
   stylesList = mParameters.value( "STYLE" ).split( ",", QString::SkipEmptyParts );
   stylesList = stylesList + mParameters.value( "STYLES" ).split( ",", QString::SkipEmptyParts );
 
+  //Filter out sublayers of groups published as layers
+  if ( mConfigParser )
+  {
+    QSet<QString> groupsPublishedAsLayer = mConfigParser->publishGroupsAsLayer();
+    if ( !groupsPublishedAsLayer.isEmpty() )
+    {
+      QSet<QString>::const_iterator gIt = groupsPublishedAsLayer.constBegin();
+      for ( ; gIt != groupsPublishedAsLayer.constEnd(); ++gIt )
+      {
+        QSet<QString> sublayers = mConfigParser->subLayersOfGroup( *gIt );
+        for ( int i = layersList.size() - 1; i >= 0; --i )
+        {
+          if ( sublayers.contains( layersList.at( i ) ) )
+          {
+            layersList.removeAt( i );
+            if ( i < stylesList.size() )
+            {
+              stylesList.removeAt( i );
+            }
+          }
+        }
+      }
+    }
+  }
+
   return 0;
 }
 
@@ -1898,38 +1944,18 @@ int QgsWMSServer::initializeSLDParser( QStringList& layersList, QStringList& sty
   return 0;
 }
 
-int QgsWMSServer::infoPointToLayerCoordinates( int i, int j, QgsPoint* layerCoords, QgsMapRenderer* mapRender,
-    QgsMapLayer* layer ) const
+bool QgsWMSServer::infoPointToMapCoordinates( int i, int j, QgsPoint* infoPoint, QgsMapRenderer* mapRenderer )
 {
-  if ( !layerCoords || !mapRender || !layer || !mapRender->coordinateTransform() )
+  if ( !mapRenderer || !infoPoint )
   {
-    return 1;
+    return false;
   }
 
-  //first transform i,j to map output coordinates
-  // toMapCoordinates() is currently (Oct 18 2012) using average resolution
-  // to calc point but GetFeatureInfo request may be sent with different
-  // resolutions in each axis
-  //QgsPoint mapPoint = mapRender->coordinateTransform()->toMapCoordinates( i, j );
-  double xRes = mapRender->extent().width() / mapRender->width();
-  double yRes = mapRender->extent().height() / mapRender->height();
-  QgsPoint mapPoint( mapRender->extent().xMinimum() + i * xRes,
-                     mapRender->extent().yMaximum() - j * yRes );
-
-  QgsDebugMsg( QString( "mapPoint (corner): %1 %2" ).arg( mapPoint.x() ).arg( mapPoint.y() ) );
-  // use pixel center instead of corner
-  // Unfortunately going through pixel (integer) we cannot reconstruct precisely
-  // the coordinate clicked on client and thus result may differ from
-  // the same raster loaded and queried locally on client
-  mapPoint.setX( mapPoint.x() + xRes / 2 );
-  mapPoint.setY( mapPoint.y() - yRes / 2 );
-
-  QgsDebugMsg( QString( "mapPoint (pixel center): %1 %2" ).arg( mapPoint.x() ).arg( mapPoint.y() ) );
-
-  //and then to layer coordinates
-  *layerCoords = mapRender->mapToLayerCoordinates( layer, mapPoint );
-  QgsDebugMsg( QString( "mapPoint: %1 %2" ).arg( mapPoint.x() ).arg( mapPoint.y() ) );
-  return 0;
+  double xRes = mapRenderer->extent().width() / mapRenderer->width();
+  double yRes = mapRenderer->extent().height() / mapRenderer->height();
+  infoPoint->setX( mapRenderer->extent().xMinimum() + i * xRes + xRes / 2.0 );
+  infoPoint->setY( mapRenderer->extent().yMaximum() - j * yRes - yRes / 2.0 );
+  return true;
 }
 
 int QgsWMSServer::featureInfoFromVectorLayer( QgsVectorLayer* layer,
@@ -1952,27 +1978,13 @@ int QgsWMSServer::featureInfoFromVectorLayer( QgsVectorLayer* layer,
   QgsRectangle mapRect = mapRender->extent();
   QgsRectangle layerRect = mapRender->mapToLayerCoordinates( layer, mapRect );
 
+
   QgsRectangle searchRect;
 
   //info point could be 0 in case there is only an attribute filter
   if ( infoPoint )
   {
-    double searchRadius = 0;
-    if ( layer->geometryType() == QGis::Polygon )
-    {
-      searchRadius = layerRect.width() / 400;
-    }
-    else if ( layer->geometryType() == QGis::Line )
-    {
-      searchRadius = layerRect.width() / 200;
-    }
-    else
-    {
-      searchRadius = layerRect.width() / 100;
-    }
-
-    searchRect.set( infoPoint->x() - searchRadius, infoPoint->y() - searchRadius,
-                    infoPoint->x() + searchRadius, infoPoint->y() + searchRadius );
+    searchRect = featureInfoSearchRect( layer, mapRender, renderContext, *infoPoint );
   }
   else if ( mParameters.contains( "BBOX" ) )
   {
@@ -3085,4 +3097,162 @@ int QgsWMSServer::getWMSPrecision( int defaultValue = 8 ) const
     WMSPrecision = defaultValue;
   }
   return WMSPrecision;
+}
+
+QgsRectangle QgsWMSServer::featureInfoSearchRect( QgsVectorLayer* ml, QgsMapRenderer* mr, const QgsRenderContext& rct, const QgsPoint& infoPoint ) const
+{
+  if ( !ml || !mr )
+  {
+    return QgsRectangle();
+  }
+
+  double mapUnitTolerance = 0.0;
+  if ( ml->geometryType() == QGis::Polygon )
+  {
+    QMap<QString, QString>::const_iterator tolIt = mParameters.find( "FI_POLYGON_TOLERANCE" );
+    if ( tolIt != mParameters.constEnd() )
+    {
+      mapUnitTolerance = tolIt.value().toInt() * rct.mapToPixel().mapUnitsPerPixel();
+    }
+    else
+    {
+      mapUnitTolerance = mr->extent().width() / 400.0;
+    }
+  }
+  else if ( ml->geometryType() == QGis::Line )
+  {
+    QMap<QString, QString>::const_iterator tolIt = mParameters.find( "FI_LINE_TOLERANCE" );
+    if ( tolIt != mParameters.constEnd() )
+    {
+      mapUnitTolerance = tolIt.value().toInt() * rct.mapToPixel().mapUnitsPerPixel();
+    }
+    else
+    {
+      mapUnitTolerance = mr->extent().width() / 200.0;
+    }
+  }
+  else //points
+  {
+    QMap<QString, QString>::const_iterator tolIt = mParameters.find( "FI_POINT_TOLERANCE" );
+    if ( tolIt != mParameters.constEnd() )
+    {
+      mapUnitTolerance = tolIt.value().toInt() * rct.mapToPixel().mapUnitsPerPixel();
+    }
+    else
+    {
+      mapUnitTolerance = mr->extent().width() / 100.0;
+    }
+  }
+
+  QgsRectangle mapRectangle( infoPoint.x() - mapUnitTolerance, infoPoint.y() - mapUnitTolerance,
+                             infoPoint.x() + mapUnitTolerance, infoPoint.y() + mapUnitTolerance );
+  return( mr->mapToLayerCoordinates( ml, mapRectangle ) );
+}
+
+void QgsWMSServer::drawWatermark( QImage* img, QPainter* p ) const
+{
+  if ( !img || !p )
+  {
+    return;
+  }
+
+  //watermark text
+  QMap<QString, QString>::const_iterator watermarkTextIt = mParameters.find( "WATERMARK_TEXT" );
+  if ( watermarkTextIt == mParameters.constEnd() )
+  {
+    return;
+  }
+  QString watermarkText = *watermarkTextIt;
+
+  //text padding (in points)
+  double textPadding = 1; //default 1 point padding
+  QMap<QString, QString>::const_iterator textPaddingIt = mParameters.find( "WATERMARK_TEXTPADDING" );
+  if ( textPaddingIt != mParameters.constEnd() )
+  {
+    textPadding = textPaddingIt->toDouble();
+  }
+  textPadding = 0.376 * textPadding * img->dotsPerMeterX() / 1000; //convert to pixels
+
+  //position (in pixels, refers to lower line of rectangle)
+  int xPos = 0;
+  int yPos = img->height();
+  QMap<QString, QString>::const_iterator posIt = mParameters.find( "WATERMARK_POS" );
+  if ( posIt != mParameters.constEnd() )
+  {
+    QStringList coordList = posIt->split( "," );
+    if ( coordList.size() > 1 )
+    {
+      xPos = coordList.at( 0 ).toInt();
+      yPos = coordList.at( 1 ).toInt();
+    }
+  }
+
+  //font
+  QFont f;
+  double fontSize = 10;
+  QMap<QString, QString>::const_iterator sizeIt = mParameters.find( "WATERMARK_FONTSIZE" );
+  if ( sizeIt != mParameters.constEnd() )
+  {
+    fontSize = sizeIt->toDouble();
+  }
+  f.setPointSizeF( fontSize );
+
+  //font family
+  QMap<QString, QString>::const_iterator familyIt = mParameters.find( "WATERMARK_FONTFAMILY" );
+  if ( familyIt != mParameters.constEnd() )
+  {
+    f.setFamily( *familyIt );
+  }
+
+  //background color for rectangle
+  QColor bgColor( 0, 0, 0, 0 );
+  QMap<QString, QString>::const_iterator bgColorIt = mParameters.find( "WATERMARK_BACKGROUNDCOLOR" );
+  if ( bgColorIt != mParameters.end() )
+  {
+    bgColor = QgsSymbolLayerV2Utils::decodeColor( *bgColorIt );
+  }
+  QBrush brush( Qt::SolidPattern );
+  brush.setColor( bgColor );
+  p->setBrush( brush );
+
+  //frame outline color
+  QPen framePen;
+  QColor frameColor( 0, 0, 0, 0 );
+  QMap<QString, QString>::const_iterator frameColorIt = mParameters.find( "WATERMARK_FRAMECOLOR" );
+  if ( frameColorIt != mParameters.constEnd() )
+  {
+    frameColor = QgsSymbolLayerV2Utils::decodeColor( *frameColorIt );
+  }
+  framePen.setColor( frameColor );
+
+  //frame outline with (in points)
+  double frameWidth = 1;
+  QMap<QString, QString>::const_iterator frameWidthIt = mParameters.find( "WATERMARK_FRAMEWIDTH" );
+  if ( frameWidthIt != mParameters.constEnd() )
+  {
+    frameWidth = frameWidthIt->toDouble();
+  }
+  frameWidth = 0.376 * frameWidth * img->dotsPerMeterX() / 1000; //convert points to pixels
+  framePen.setWidth( frameWidth );
+  p->setPen( framePen );
+
+  //background rectangle
+  QFontMetricsF fm( f, img );
+  double rectWidth = fm.width( watermarkText ) + 2 * textPadding;
+  double rectHeight = fm.boundingRect( watermarkText ).height() + 2 * textPadding;
+  QRectF rect( xPos, yPos - rectHeight, rectWidth, rectHeight );
+  p->drawRect( rect );
+
+  //font color
+  QColor fontColor( 0, 0, 0, 255 );
+  QMap<QString, QString>::const_iterator fontColorIt = mParameters.find( "WATERMARK_FONTCOLOR" );
+  if ( fontColorIt != mParameters.constEnd() )
+  {
+    fontColor = QgsSymbolLayerV2Utils::decodeColor( *fontColorIt );
+  }
+  p->setPen( QPen( fontColor ) );
+
+  p->setFont( f );
+  p->drawText( QPoint( xPos + textPadding, yPos - textPadding - fm.descent() ), watermarkText );
+  p->restore();
 }

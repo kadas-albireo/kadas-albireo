@@ -80,7 +80,11 @@ class CORE_EXPORT QgsCompoundCurveV2: public QgsCurveV2
     void addVertex( const QgsPointV2& pt );
 
     void draw( QPainter& p ) const override;
-    void transform( const QgsCoordinateTransform& ct ) override;
+    /** Transforms the geometry using a coordinate transform
+     * @param ct coordinate transform
+       @param d transformation direction
+     */
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
     void addToPainterPath( QPainterPath& path ) const override;
     void drawAsPolygon( QPainter& p ) const override;
@@ -98,6 +102,13 @@ class CORE_EXPORT QgsCompoundCurveV2: public QgsCurveV2
     void close();
 
     bool hasCurvedSegments() const override;
+
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const override;
+
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
 
   private:
     QList< QgsCurveV2* > mCurves;

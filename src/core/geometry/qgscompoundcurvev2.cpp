@@ -314,6 +314,11 @@ int QgsCompoundCurveV2::numPoints() const
 {
   int nPoints = 0;
   int nCurves = mCurves.size();
+  if ( nCurves < 1 )
+  {
+    return 0;
+  }
+
   for ( int i = 0; i < nCurves; ++i )
   {
     nPoints += mCurves.at( i )->numPoints() - 1; //last vertex is equal to first of next section
@@ -412,12 +417,12 @@ void QgsCompoundCurveV2::draw( QPainter& p ) const
   }
 }
 
-void QgsCompoundCurveV2::transform( const QgsCoordinateTransform& ct )
+void QgsCompoundCurveV2::transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
 {
   QList< QgsCurveV2* >::iterator it = mCurves.begin();
   for ( ; it != mCurves.end(); ++it )
   {
-    ( *it )->transform( ct );
+    ( *it )->transform( ct, d );
   }
 }
 
@@ -579,5 +584,55 @@ bool QgsCompoundCurveV2::hasCurvedSegments() const
     }
   }
   return false;
+}
+
+double QgsCompoundCurveV2::vertexAngle( const QgsVertexId& vertex ) const
+{
+  QList< QPair<int, QgsVertexId> > curveIds = curveVertexId( vertex );
+  if ( curveIds.size() == 1 )
+  {
+    QgsCurveV2* curve = mCurves[curveIds.at( 0 ).first];
+    return curve->vertexAngle( curveIds.at( 0 ).second );
+  }
+  else if ( curveIds.size() > 1 )
+  {
+    QgsCurveV2* curve1 = mCurves[curveIds.at( 0 ).first];
+    QgsCurveV2* curve2 = mCurves[curveIds.at( 1 ).first];
+    double angle1 = curve1->vertexAngle( curveIds.at( 0 ).second );
+    double angle2 = curve2->vertexAngle( curveIds.at( 1 ).second );
+    return QgsGeometryUtils::averageAngle( angle1, angle2 );
+  }
+  else
+  {
+    return 0.0;
+  }
+}
+
+bool QgsCompoundCurveV2::addZValue( double zValue )
+{
+  if ( QgsWKBTypes::hasZ( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addZ( mWkbType );
+
+  Q_FOREACH ( QgsCurveV2* curve, mCurves )
+  {
+    curve->addZValue( zValue );
+  }
+  return true;
+}
+
+bool QgsCompoundCurveV2::addMValue( double mValue )
+{
+  if ( QgsWKBTypes::hasM( mWkbType ) )
+    return false;
+
+  mWkbType = QgsWKBTypes::addM( mWkbType );
+
+  Q_FOREACH ( QgsCurveV2* curve, mCurves )
+  {
+    curve->addMValue( mValue );
+  }
+  return true;
 }
 

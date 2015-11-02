@@ -17,22 +17,23 @@
 
 
 #include "qgsrendercontext.h"
-
+#include "qgsabstractgeometryv2.h"
 #include "qgsmapsettings.h"
 
 QgsRenderContext::QgsRenderContext()
-    : QObject( 0 ), mPainter( 0 ),
-    mCoordTransform( 0 ),
-    mDrawEditingInformation( true ),
-    mForceVectorOutput( false ),
-    mUseAdvancedEffects( true ),
-    mRenderingStopped( false ),
-    mScaleFactor( 1.0 ),
-    mRasterScaleFactor( 1.0 ),
-    mRendererScale( 1.0 ),
-    mLabelingEngine( NULL ),
-    mShowSelection( true ),
-    mUseRenderingOptimization( true )
+    : QObject( 0 ), mPainter( 0 )
+    , mCoordTransform( 0 )
+    , mDrawEditingInformation( true )
+    , mForceVectorOutput( false )
+    , mUseAdvancedEffects( true )
+    , mRenderingStopped( false )
+    , mScaleFactor( 1.0 )
+    , mRasterScaleFactor( 1.0 )
+    , mRendererScale( 1.0 )
+    , mLabelingEngine( NULL )
+    , mShowSelection( true )
+    , mUseRenderingOptimization( true )
+    , mGeometry( 0 )
 {
   mVectorSimplifyMethod.setSimplifyHints( QgsVectorSimplifyMethod::NoSimplification );
 }
@@ -60,6 +61,9 @@ QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
   mRendererScale = ct.mRendererScale;
   mLabelingEngine = ct.mLabelingEngine;
   mUseAdvancedEffects = ct.mUseAdvancedEffects;
+  mGeometry = ct.mGeometry;
+  mShowSelection = ct.mShowSelection;
+  mSelectionColor = ct.mSelectionColor;
   return *this;
 }
 
@@ -78,6 +82,7 @@ QgsRenderContext QgsRenderContext::fromMapSettings( const QgsMapSettings& mapSet
   ctx.setRasterScaleFactor( 1.0 );
   ctx.setScaleFactor( mapSettings.outputDpi() / 25.4 ); // = pixels per mm
   ctx.setRendererScale( mapSettings.scale() );
+  ctx.setSelectionColor( mapSettings.selectionColor() );
 
   //this flag is only for stopping during the current rendering progress,
   //so must be false at every new render operation

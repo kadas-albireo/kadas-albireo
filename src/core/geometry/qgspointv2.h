@@ -63,7 +63,12 @@ class CORE_EXPORT QgsPointV2: public QgsAbstractGeometryV2
     virtual QgsRectangle calculateBoundingBox() const override { return QgsRectangle( mX, mY, mX, mY );}
 
     void draw( QPainter& p ) const override;
-    void transform( const QgsCoordinateTransform& ct ) override;
+
+    /** Transforms the geometry using a coordinate transform
+     * @param ct coordinate transform
+       @param d transformation direction
+     */
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) override;
     void transform( const QTransform& t ) override;
 
     virtual void coordinateSequence( QList< QList< QList< QgsPointV2 > > >& coord ) const override;
@@ -80,6 +85,12 @@ class CORE_EXPORT QgsPointV2: public QgsAbstractGeometryV2
     virtual int ringCount( int /*part*/ = 0 ) const override { return 1; }
     virtual int partCount() const override { return 1; }
     virtual QgsPointV2 vertexAt( const QgsVertexId& /*id*/ ) const override { return *this; }
+
+    /** Angle undefined. Always returns 0.0*/
+    double vertexAngle( const QgsVertexId& vertex ) const override { Q_UNUSED( vertex ); return 0.0; }
+
+    virtual bool addZValue( double zValue = 0 ) override;
+    virtual bool addMValue( double mValue = 0 ) override;
 
   private:
     double mX;

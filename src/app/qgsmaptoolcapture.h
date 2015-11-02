@@ -18,6 +18,7 @@
 
 
 #include "qgsmaptooledit.h"
+#include "qgscompoundcurvev2.h"
 #include "qgspoint.h"
 #include "qgsgeometry.h"
 
@@ -52,6 +53,13 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     //! deactive the tool
     virtual void deactivate() override;
 
+    /** Adds a whole curve (e.g. circularstring) to the captured geometry. Curve must be in map CRS*/
+    int addCurve( QgsCurveV2* c );
+
+    const QgsCompoundCurveV2* captureCurve() const { return &mCaptureCurve; }
+
+    void deleteTempRubberBand();
+
   public slots:
     void currentLayerChanged( QgsMapLayer *layer );
     void addError( QgsGeometry::Error );
@@ -59,25 +67,28 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
 
   protected:
     int nextPoint( const QgsPoint& mapPoint, QgsPoint& layerPoint );
+    int nextPoint( const QPoint &p, QgsPoint &layerPoint, QgsPoint &mapPoint );
 
     /** Adds a point to the rubber band (in map coordinates) and to the capture list (in layer coordinates)
      @return 0 in case of success, 1 if current layer is not a vector layer, 2 if coordinate transformation failed*/
     int addVertex( const QgsPoint& point );
 
-    /**Removes the last vertex from mRubberBand and mCaptureList*/
+    /** Removes the last vertex from mRubberBand and mCaptureList*/
     void undo();
 
     void startCapturing();
     bool isCapturing() const;
     void stopCapturing();
-    void deleteTempRubberBand();
 
-    int size() { return mCaptureList.size(); }
-    QList<QgsPoint>::iterator begin() { return mCaptureList.begin(); }
-    QList<QgsPoint>::iterator end() { return mCaptureList.end(); }
-    const QList<QgsPoint> &points() { return mCaptureList; }
-    void setPoints( const QList<QgsPoint>& pointList ) { mCaptureList = pointList; }
+    int size();
+    QList<QgsPoint> points();
+    void setPoints( const QList<QgsPoint>& pointList );
     void closePolygon();
+
+    /**Creates / deletes / updates the snapping marker*/
+    void updateSnappingMarker( QgsMapMouseEvent* e );
+
+    QgsVertexMarker* mSnappingMarker;
 
   private:
     /** Flag to indicate a map canvas capture operation is taking place */
@@ -90,7 +101,7 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     QgsRubberBand* mTempRubberBand;
 
     /** List to store the points of digitised lines and polygons (in layer coordinates)*/
-    QList<QgsPoint> mCaptureList;
+    QgsCompoundCurveV2 mCaptureCurve;
 
     void validateGeometry();
     QString mTip;
@@ -99,8 +110,6 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     QList< QgsVertexMarker * > mGeomErrorMarkers;
 
     bool mCaptureModeFromLayer;
-
-    QgsVertexMarker* mSnappingMarker;
 };
 
 #endif

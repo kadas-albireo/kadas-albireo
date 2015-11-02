@@ -230,27 +230,20 @@ void QgsPgTableModel::setSql( const QModelIndex &index, const QString &sql )
 
 QIcon QgsPgTableModel::iconForWkbType( QGis::WkbType type )
 {
-  switch ( type )
+  QgsWKBTypes::GeometryType geomType = QgsWKBTypes::geometryType( QgsWKBTypes::Type( type ) );
+  switch ( geomType )
   {
-    case QGis::WKBPoint:
-    case QGis::WKBPoint25D:
-    case QGis::WKBMultiPoint:
-    case QGis::WKBMultiPoint25D:
+    case QgsWKBTypes::PointGeometry:
       return QgsApplication::getThemeIcon( "/mIconPointLayer.svg" );
-    case QGis::WKBLineString:
-    case QGis::WKBLineString25D:
-    case QGis::WKBMultiLineString:
-    case QGis::WKBMultiLineString25D:
+    case QgsWKBTypes::LineGeometry:
       return QgsApplication::getThemeIcon( "/mIconLineLayer.svg" );
-    case QGis::WKBPolygon:
-    case QGis::WKBPolygon25D:
-    case QGis::WKBMultiPolygon:
-    case QGis::WKBMultiPolygon25D:
+    case QgsWKBTypes::PolygonGeometry:
       return QgsApplication::getThemeIcon( "/mIconPolygonLayer.svg" );
-    case QGis::WKBNoGeometry:
+    case QgsWKBTypes::NullGeometry:
       return QgsApplication::getThemeIcon( "/mIconTableLayer.png" );
-    case QGis::WKBUnknown:
-    case QGis::WKBMixedGeometry:
+    case QgsWKBTypes::UnknownGeometry:
+    case QgsWKBTypes::AnyGeometry:
+    default:
       break;
   }
   return QgsApplication::getThemeIcon( "/mIconLayer.png" );

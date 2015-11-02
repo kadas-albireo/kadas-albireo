@@ -45,7 +45,7 @@ class QgsCompoundCurveV2: public QgsCurveV2
     void close();
 
     void draw( QPainter& p ) const;
-    void transform( const QgsCoordinateTransform& ct );
+    void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
     void transform( const QTransform& t );
     void addToPainterPath( QPainterPath& path ) const;
     void drawAsPolygon( QPainter& p ) const;
@@ -60,4 +60,11 @@ class QgsCompoundCurveV2: public QgsCurveV2
     void sumUpArea( double& sum ) const;
 
     bool hasCurvedSegments() const;
+
+    /** Returns approximate rotation angle for a vertex. Usually average angle between adjacent segments.
+        @return rotation in radians, clockwise from north*/
+    double vertexAngle( const QgsVertexId& vertex ) const;
+
+    virtual bool addZValue( double zValue = 0 );
+    virtual bool addMValue( double mValue = 0 );
 };

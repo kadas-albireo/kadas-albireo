@@ -60,7 +60,8 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
     int WMSPrecision() const override;
 
     //printing
-    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList ) const override;
+    QgsComposition* initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList,
+                                     QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlFrameList, QList< QgsComposerPicture* >& pictureList ) const override;
 
     void printCapabilities( QDomElement& parentElement, QDomDocument& doc ) const override;
 
@@ -112,6 +113,10 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
 
     bool useLayerIDs() const override { return mProjectParser->useLayerIDs(); }
 
+    QSet<QString> publishGroupsAsLayer() const;
+
+    QSet<QString> subLayersOfGroup( const QString& groupName ) const;
+
   private:
     QgsServerProjectParser* mProjectParser;
 
@@ -128,6 +133,9 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
 
     /**Reads layer drawing order from the legend section of the project file and appends it to the parent elemen (usually the <Capability> element)*/
     void addDrawingOrder( QDomElement& parentElem, QDomDocument& doc, const QHash<QString, QString> &idNameMap, const QStringList &layerIDList ) const;
+
+    /**Modifies drawing order list to replace sublayers with group name (at the first position of a group layer)*/
+    void publishGroupsAsLayerDrawingOrder( QStringList& layerList ) const;
 
     void addLayerStyles( QgsMapLayer* currentLayer, QDomDocument& doc, QDomElement& layerElem, const QString& version ) const;
 

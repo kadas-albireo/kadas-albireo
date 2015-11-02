@@ -395,7 +395,8 @@ int QgsWMSProjectParser::WMSPrecision() const
   return WMSPrecision;
 }
 
-QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList, QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlList ) const
+QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTemplate, QgsMapRenderer* mapRenderer, QList< QgsComposerMap* >& mapList, QList< QgsComposerLegend* >& legendList,
+    QList< QgsComposerLabel* >& labelList, QList<const QgsComposerHtml *>& htmlList, QList< QgsComposerPicture* >& pictureList ) const
 {
   //Create composition from xml
   QDomElement composerElem = composerByName( composerTemplate );
@@ -441,6 +442,11 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
       mapList.push_back( map );
       continue;
     }
+    QgsComposerPicture* picture = dynamic_cast< QgsComposerPicture*>( *itemIt );
+    if ( picture )
+    {
+      pictureList.push_back( picture );
+    }
     QgsComposerLegend* legend = dynamic_cast< QgsComposerLegend *>( *itemIt );
     if ( legend )
     {
@@ -470,7 +476,7 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
           {
             continue;
           }
-          
+
           QgsLayerTreeLayer* nodeLayer = root->findLayer( layerId );
           if ( !nodeLayer )
           {
@@ -807,10 +813,45 @@ void QgsWMSProjectParser::addDrawingOrder( QDomElement& parentElem, QDomDocument
     for ( int i = layerList.size() - 1; i >= 0; --i )
       reversedList << layerList[ i ];
 
+    //If groups are published as single layer, place the group name at the first occurence of a layer, then remove the other sublayers from the list
+    publishGroupsAsLayerDrawingOrder( reversedList );
+
     QDomElement layerDrawingOrderElem = doc.createElement( "LayerDrawingOrder" );
     QDomText drawingOrderText = doc.createTextNode( reversedList.join( "," ) );
     layerDrawingOrderElem.appendChild( drawingOrderText );
     parentElem.appendChild( layerDrawingOrderElem );
+  }
+}
+
+void QgsWMSProjectParser::publishGroupsAsLayerDrawingOrder( QStringList& layerList ) const
+{
+  QMap< QString, QSet< QString > > groupsAsLayer;
+  QSet<QString> groups = publishGroupsAsLayer();
+  QSet<QString>::const_iterator groupIt = groups.constBegin();
+  for ( ; groupIt != groups.constEnd(); ++groupIt )
+  {
+    groupsAsLayer.insert( *groupIt, subLayersOfGroup( *groupIt ) );
+  }
+
+  for ( int i = 0; i < layerList.size(); ++i )
+  {
+    QMap< QString, QSet< QString > >::const_iterator groupsAsLayerIt = groupsAsLayer.constBegin();
+    for ( ; groupsAsLayerIt != groupsAsLayer.constEnd(); ++groupsAsLayerIt )
+    {
+      QString groupName = groupsAsLayerIt.key();
+      const QSet< QString >& g = groupsAsLayerIt.value();
+      if ( g.contains( layerList.at( i ) ) )
+      {
+        layerList[i] = groupName; //replace first layer occurence with group name
+        //and remove all other sublayer names from the list
+        QSet< QString >::const_iterator lIt = g.constBegin();
+        for ( ; lIt != g.constEnd(); ++ lIt )
+        {
+          layerList.removeOne( *lIt );
+        }
+        break;
+      }
+    }
   }
 }
 
@@ -978,6 +1019,21 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
 
       // combine bounding boxes of children (groups/layers)
       mProjectParser->combineExtentAndCrsOfGroupChildren( layerElem, doc );
+
+      //remove sublayer groups afterwards if group is published as layer
+      if ( publishGroupsAsLayer().contains( name ) )
+      {
+        QDomNodeList children = layerElem.childNodes();
+        for ( int i = children.size() - 1; i >= 0; --i )
+        {
+          const QDomNode& childNode = children.at( i );
+          if ( childNode.nodeName() == "Layer" )
+          {
+            layerElem.removeChild( childNode );
+          }
+        }
+      }
+
     }
     else if ( currentChildElem.tagName() == "legendlayer" )
     {
@@ -2012,6 +2068,39 @@ QDomElement QgsWMSProjectParser::composerByName( const QString& composerName ) c
   }
 
   return composerElem;
+}
+
+QSet<QString> QgsWMSProjectParser::publishGroupsAsLayer() const
+{
+  if ( !mProjectParser )
+  {
+    return QSet<QString>();
+  }
+
+  QStringList groupList;
+  QDomElement propertiesElem = mProjectParser->propertiesElem();
+  if ( !propertiesElem.isNull() )
+  {
+    QDomElement publishGroupsAsLayerElem = propertiesElem.firstChildElement( "WMSPublishGroupsAsLayer" );
+    if ( !publishGroupsAsLayerElem.isNull() )
+    {
+      QDomNodeList groups = publishGroupsAsLayerElem.elementsByTagName( "value" );
+      for ( int i = 0; i < groups.size(); ++i )
+      {
+        groupList.append( groups.at( i ).toElement().text() );
+      }
+    }
+  }
+  return groupList.toSet();
+}
+
+QSet<QString> QgsWMSProjectParser::subLayersOfGroup( const QString& groupName ) const
+{
+  if ( !mProjectParser )
+  {
+    return QSet<QString>();
+  }
+  return mProjectParser->subLayersOfGroup( groupName );
 }
 
 QgsLayerTreeGroup* QgsWMSProjectParser::projectLayerTreeGroup() const

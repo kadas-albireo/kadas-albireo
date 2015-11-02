@@ -17,11 +17,14 @@
 #include "qgsapplication.h"
 #include "qgsattributedialog.h"
 #include "qgscsexception.h"
+#include "qgscurvepolygonv2.h"
 #include "qgsfield.h"
 #include "qgsgeometry.h"
+#include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmapmouseevent.h"
+#include "qgspolygonv2.h"
 #include "qgsproject.h"
 #include "qgsvectordataprovider.h"
 #include "qgsvectorlayer.h"
@@ -198,56 +201,40 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
         return;
       }
 
+      if ( mode() == CapturePolygon )
+      {
+        closePolygon();
+      }
+
       //create QgsFeature with wkb representation
       QgsFeature* f = new QgsFeature( vlayer->pendingFields(), 0 );
 
-      QgsGeometry *g;
+      //does compoundcurve contain circular strings?
+      //does provider support circular strings?
+      bool hasCurvedSegments = captureCurve()->hasCurvedSegments();
+      bool providerSupportsCurvedSegments = vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::CircularGeometries;
 
       if ( mode() == CaptureLine )
       {
-        if ( layerWKBType == QGis::WKBLineString || layerWKBType == QGis::WKBLineString25D )
-        {
-          g = QgsGeometry::fromPolyline( points().toVector() );
-        }
-        else if ( layerWKBType == QGis::WKBMultiLineString || layerWKBType == QGis::WKBMultiLineString25D )
-        {
-          g = QgsGeometry::fromMultiPolyline( QgsMultiPolyline() << points().toVector() );
-        }
-        else
-        {
-          emit messageEmitted( tr( "Cannot add feature. Unknown WKB type" ), QgsMessageBar::CRITICAL );
-          stopCapturing();
-          delete f;
-          return; //unknown wkbtype
-        }
-
-        f->setGeometry( g );
+        QgsCurveV2* curveToAdd = convertCurve( captureCurve(), hasCurvedSegments, providerSupportsCurvedSegments );
+        f->setGeometry( new QgsGeometry( curveToAdd ) );
       }
-      else // polygon
+      else
       {
-        if ( layerWKBType == QGis::WKBPolygon ||  layerWKBType == QGis::WKBPolygon25D )
+        QgsCurvePolygonV2* poly = outputPolygon( captureCurve(), hasCurvedSegments, providerSupportsCurvedSegments );
+        /*if ( hasCurvedSegments && providerSupportsCurvedSegments )
         {
-          g = QgsGeometry::fromPolygon( QgsPolygon() << points().toVector() );
-        }
-        else if ( layerWKBType == QGis::WKBMultiPolygon ||  layerWKBType == QGis::WKBMultiPolygon25D )
-        {
-          g = QgsGeometry::fromMultiPolygon( QgsMultiPolygon() << ( QgsPolygon() << points().toVector() ) );
+          poly = new QgsCurvePolygonV2();
         }
         else
         {
-          emit messageEmitted( tr( "Cannot add feature. Unknown WKB type" ), QgsMessageBar::CRITICAL );
-          stopCapturing();
-          delete f;
-          return; //unknown wkbtype
+          poly = new QgsPolygonV2();
         }
-
-        if ( !g )
+        poly->setExteriorRing( curveToAdd );*/
+        if ( poly )
         {
-          stopCapturing();
-          delete f;
-          return; // invalid geometry; one possibility is from duplicate points
+          f->setGeometry( poly );
         }
-        f->setGeometry( g );
 
         int avoidIntersectionsReturn = f->geometry()->avoidIntersections();
         if ( avoidIntersectionsReturn == 1 )
@@ -319,4 +306,77 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
       stopCapturing();
     }
   }
+}
+
+QgsCurveV2* QgsMapToolAddFeature::convertCurve( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const
+{
+  if ( !c )
+  {
+    return 0;
+  }
+
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
+
+  QgsCurveV2* curve = 0;
+  if ( geomHasCurves && providerSupportsCurves )
+  {
+    curve = dynamic_cast<QgsCurveV2*>( c->clone() );
+  }
+  else
+  {
+    curve = c->curveToLine();
+  }
+
+  QgsWKBTypes::Type type = ( QgsWKBTypes::Type )( vlayer->dataProvider()->geometryType() );
+  if ( QgsWKBTypes::hasZ( type ) )
+  {
+    curve->addZValue();
+  }
+  if ( QgsWKBTypes::hasM( type ) )
+  {
+    curve->addMValue();
+  }
+
+  return curve;
+}
+
+QgsCurvePolygonV2* QgsMapToolAddFeature::outputPolygon( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const
+{
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
+  QgsWKBTypes::Type type = ( QgsWKBTypes::Type )( vlayer->dataProvider()->geometryType() );
+
+  bool convertToPolygon = QgsWKBTypes::flatType( type ) == QgsWKBTypes::Polygon;
+
+  //output type is polygon or provider does not support curves
+  QgsCurveV2* exteriorRing = 0;
+  if ( !providerSupportsCurves || convertToPolygon )
+  {
+    exteriorRing = c->curveToLine();
+  }
+  else
+  {
+    exteriorRing = static_cast<QgsCurveV2*>( c->clone() );
+  }
+
+  //set z/m types if necessary
+  if ( QgsWKBTypes::hasZ( type ) )
+  {
+    exteriorRing->addZValue();
+  }
+  if ( QgsWKBTypes::hasM( type ) )
+  {
+    exteriorRing->addMValue();
+  }
+
+  QgsCurvePolygonV2* poly = 0;
+  if ( convertToPolygon )
+  {
+    poly = new QgsPolygonV2();
+  }
+  else
+  {
+    poly = new QgsCurvePolygonV2();
+  }
+  poly->setExteriorRing( exteriorRing );
+  return poly;
 }

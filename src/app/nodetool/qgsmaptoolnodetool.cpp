@@ -543,7 +543,22 @@ void QgsMapToolNodeTool::keyPressEvent( QKeyEvent* e )
       return;
 
     mSelectedFeature->deleteSelectedVertexes();
-    safeSelectVertex( firstSelectedIndex );
+
+    if ( mSelectedFeature->geometry()->isEmpty() )
+    {
+      emit messageEmitted( tr( "Geometry has been cleared. Use the add part tool to set geometry for this feature." ) );
+    }
+    else
+    {
+      int nextVertexToSelect = firstSelectedIndex;
+      if ( mSelectedFeature->geometry()->type() == QGis::Line )
+      {
+        // for lines we don't wrap around vertex selection when deleting nodes from end of line
+        nextVertexToSelect = qMin( nextVertexToSelect, mSelectedFeature->geometry()->geometry()->nCoordinates() - 1 );
+      }
+
+      safeSelectVertex( nextVertexToSelect );
+    }
     mCanvas->refresh();
 
     // Override default shortcut management in MapCanvas

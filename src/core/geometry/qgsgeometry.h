@@ -312,7 +312,7 @@ class CORE_EXPORT QgsGeometry
     /** Adds a new part to this geometry (takes ownership)
      @return 0 in case of success, 1 if not a multipolygon, 2 if ring is not a valid geometry, 3 if new polygon ring
      not disjoint with existing polygons of the feature*/
-    int addPart( QgsAbstractGeometryV2* part );
+    int addPart( QgsAbstractGeometryV2* part, QGis::GeometryType geomType = QGis::UnknownGeometry );
 
     /** Adds a new island polygon to a multipolygon feature
      @return 0 in case of success, 1 if not a multipolygon, 2 if ring is not a valid geometry, 3 if new polygon ring
@@ -550,6 +550,17 @@ class CORE_EXPORT QgsGeometry
      */
     bool convertToMultiType();
 
+    /**
+         * Converts multi type geometry into single type geometry
+         * e.g. a multipolygon into a polygon geometry. Only the first part of the
+         * multi geometry will be retained.
+         * If it is already a single part geometry, it will return true and
+         * not change the geometry.
+         *
+         * @return true in case of success and false else
+         */
+    bool convertToSingleType();
+
     /** Modifies geometry to avoid intersections with the layers specified in project properties
      *  @return 0 in case of success,
      *          1 if geometry is not of polygon type,
@@ -568,7 +579,7 @@ class CORE_EXPORT QgsGeometry
       public:
         Error() : message( "none" ), hasLocation( false ) {}
         Error( QString m ) : message( m ), hasLocation( false ) {}
-        Error( QString m, QgsPoint p ) : message( m ), location( p ), hasLocation( true ) {}
+        Error( QString m, const QgsPoint& p ) : message( m ), location( p ), hasLocation( true ) {}
 
         QString what() const { return message; }
         QgsPoint where() const { return location; }
@@ -605,13 +616,6 @@ class CORE_EXPORT QgsGeometry
      * @note added in QGIS 2.10
      */
     void mapToPixel( const QgsMapToPixel& mtp );
-
-    // not implemented for 2.10
-    /* Clips the geometry using the specified rectangle
-     * @param rect clip rectangle
-     * @note added in QGIS 2.10
-     */
-    // void clip( const QgsRectangle& rect );
 
     /** Draws the geometry onto a QPainter
      * @param p destination QPainter
