@@ -54,6 +54,18 @@
 
 #include <fcgi_stdio.h>
 
+#if defined( Q_OS_UNIX )
+#include "qgsmslayercache.h"
+#include <signal.h>
+
+void sigterm_handler( int signum )
+{
+  Q_UNUSED( signum );
+
+  //cleanup layers after fcgi process termination
+  QgsMSLayerCache::instance()->removeAllEntries();
+}
+#endif
 
 void dummyMessageHandler( QtMsgType type, const char *msg )
 {
@@ -248,6 +260,10 @@ int main( int argc, char * argv[] )
 {
 #ifndef _MSC_VER
   qInstallMsgHandler( dummyMessageHandler );
+#endif
+
+#if defined( Q_OS_UNIX )
+  signal( SIGTERM, sigterm_handler );
 #endif
 
   QString optionsPath = getenv( "QGIS_OPTIONS_PATH" );
