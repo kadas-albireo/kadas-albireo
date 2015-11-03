@@ -5,7 +5,7 @@ class QgsNineCellFilter
 %End
   public:
     /**Constructor that takes input file, output file and output format (GDAL string)*/
-    QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     virtual ~QgsNineCellFilter();
     /**Starts the calculation, reads from mInputFile and stores the result in mOutputFile
       @param p progress dialog that receives update and that is checked for abort. 0 if no progress bar is needed.

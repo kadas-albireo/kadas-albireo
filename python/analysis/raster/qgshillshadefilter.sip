@@ -6,7 +6,7 @@ class QgsHillshadeFilter: QgsDerivativeFilter
 
   public:
     QgsHillshadeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, double lightAzimuth = 300,
-                        double lightAngle = 40 );
+                        double lightAngle = 40, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsHillshadeFilter();
 
     /**Calculates output value from nine input values. The input values and the output value can be equal to the

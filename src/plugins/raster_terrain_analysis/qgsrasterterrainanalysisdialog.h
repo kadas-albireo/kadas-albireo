@@ -39,6 +39,7 @@ class QgsRasterTerrainAnalysisDialog: public QDialog, private Ui::QgsRasterTerra
     QString outputFormat() const;
 
     bool addResultToProject() const;
+    bool limitToVisibleArea() const;
     double zFactor() const;
     double lightAzimuth() const;
     double lightAngle() const;
