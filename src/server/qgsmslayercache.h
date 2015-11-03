@@ -73,6 +73,8 @@ class QgsMSLayerCache: public QObject
     //for debugging
     void logCacheContents() const;
 
+    void removeAllEntries();
+
   protected:
     /** Protected singleton constructor*/
     QgsMSLayerCache();

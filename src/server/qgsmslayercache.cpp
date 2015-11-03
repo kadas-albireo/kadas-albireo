@@ -47,11 +47,7 @@ QgsMSLayerCache::QgsMSLayerCache()
 
 QgsMSLayerCache::~QgsMSLayerCache()
 {
-  QgsDebugMsg( "removing all entries" );
-  foreach ( QgsMSLayerCacheEntry entry, mEntries )
-  {
-    delete entry.layerPointer;
-  }
+  removeAllEntries();
 }
 
 void QgsMSLayerCache::insertLayer( const QString& url, const QString& layerName, QgsMapLayer* layer, const QString& configFile, const QList<QString>& tempFiles )
@@ -222,4 +218,14 @@ void QgsMSLayerCache::logCacheContents() const
   {
     QgsMessageLog::logMessage( "Url: " + it.value().url + " Layer name: " + it.value().layerPointer->name() + " Project: " + it.value().configFile, "Server", QgsMessageLog::INFO );
   }
+}
+
+void QgsMSLayerCache::removeAllEntries()
+{
+  QMultiHash<QPair<QString, QString>, QgsMSLayerCacheEntry>::iterator entryIt = mEntries.begin();
+  for ( ; entryIt != mEntries.end(); ++entryIt )
+  {
+    freeEntryRessources( entryIt.value() );
+  }
+  mEntries.clear();
 }
