@@ -18,8 +18,8 @@
 #include "qgshillshadefilter.h"
 
 QgsHillshadeFilter::QgsHillshadeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, double lightAzimuth,
-                                        double lightAngle )
-    : QgsDerivativeFilter( inputFile, outputFile, outputFormat )
+                                        double lightAngle , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
+    : QgsDerivativeFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs )
     , mLightAzimuth( lightAzimuth )
     , mLightAngle( lightAngle )
 {

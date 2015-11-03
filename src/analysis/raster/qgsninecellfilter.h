@@ -19,7 +19,9 @@
 #define QGSNINECELLFILTER_H
 
 #include <QString>
+#include <QPolygonF>
 #include "gdal.h"
+#include "qgscoordinatereferencesystem.h"
 
 class QProgressDialog;
 
@@ -31,7 +33,7 @@ class ANALYSIS_EXPORT QgsNineCellFilter
 {
   public:
     /**Constructor that takes input file, output file and output format (GDAL string)*/
-    QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     virtual ~QgsNineCellFilter();
     /**Starts the calculation, reads from mInputFile and stores the result in mOutputFile
       @param p progress dialog that receives update and that is checked for abort. 0 if no progress bar is needed.
@@ -68,13 +70,17 @@ class ANALYSIS_EXPORT QgsNineCellFilter
     GDALDriverH openOutputDriver();
     /**Opens the output file and sets the same geotransform and CRS as the input data
       @return the output dataset or NULL in case of error*/
-    GDALDatasetH openOutputFile( GDALDatasetH inputDataset, GDALDriverH outputDriver );
+    GDALDatasetH openOutputFile( GDALDatasetH inputDataset, GDALDriverH outputDriver , int colStart, int rowStart, int xSize, int ySize );
+    /**Computes the window of the raster which contains the specified region of the raster*/
+    bool computeWindow( GDALDatasetH dataset, const QPolygonF &region, const QgsCoordinateReferenceSystem &regionCrs, int& rowStart, int& rowEnd, int& colStart, int& colEnd );
 
   protected:
 
     QString mInputFile;
     QString mOutputFile;
     QString mOutputFormat;
+    QPolygonF mFilterRegion;
+    QgsCoordinateReferenceSystem mFilterRegionCrs;
 
     double mCellSizeX;
     double mCellSizeY;

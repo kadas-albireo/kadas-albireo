@@ -13,7 +13,7 @@ class QgsRelief
       double maxElevation;
     };
 
-    QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsRelief();
 
     /**Starts the calculation, reads from mInputFile and stores the result in mOutputFile

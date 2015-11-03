@@ -176,6 +176,11 @@ bool QgsRasterTerrainAnalysisDialog::addResultToProject() const
   return mAddResultToProjectCheckBox->isChecked();
 }
 
+bool QgsRasterTerrainAnalysisDialog::limitToVisibleArea() const
+{
+  return mCheckBoxLimitToVisible->isChecked();
+}
+
 double QgsRasterTerrainAnalysisDialog::zFactor() const
 {
   return mZFactorLineEdit->text().toDouble();

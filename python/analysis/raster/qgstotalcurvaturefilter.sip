@@ -5,7 +5,7 @@ class QgsTotalCurvatureFilter: QgsNineCellFilter
 %End
 
   public:
-    QgsTotalCurvatureFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsTotalCurvatureFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsTotalCurvatureFilter();
 
   protected:

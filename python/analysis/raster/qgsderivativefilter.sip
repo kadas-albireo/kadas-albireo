@@ -6,7 +6,7 @@ class QgsDerivativeFilter : QgsNineCellFilter
 %End
 
   public:
-    QgsDerivativeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsDerivativeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     virtual ~QgsDerivativeFilter();
     //to be implemented by subclasses
     virtual float processNineCellWindow( float* x11, float* x21, float* x31,

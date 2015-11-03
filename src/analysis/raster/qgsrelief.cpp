@@ -33,7 +33,7 @@
 #define TO8F(x) QFile::encodeName( x ).constData()
 #endif
 
-QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat )
+QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
     : mInputFile( inputFile )
     , mOutputFile( outputFile )
     , mOutputFormat( outputFormat )
@@ -43,11 +43,11 @@ QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const
     , mOutputNodataValue( -1 )
     , mZFactor( 1.0 )
 {
-  mSlopeFilter = new QgsSlopeFilter( inputFile, outputFile, outputFormat );
-  mAspectFilter = new QgsAspectFilter( inputFile, outputFile, outputFormat );
-  mHillshadeFilter285 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 285, 30 );
-  mHillshadeFilter300 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 300, 30 );
-  mHillshadeFilter315 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 315, 30 );
+  mSlopeFilter = new QgsSlopeFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs );
+  mAspectFilter = new QgsAspectFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs );
+  mHillshadeFilter285 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 285, 30, filterRegion, filterRegionCrs );
+  mHillshadeFilter300 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 300, 30, filterRegion, filterRegionCrs );
+  mHillshadeFilter315 = new QgsHillshadeFilter( inputFile, outputFile, outputFormat, 315, 30, filterRegion, filterRegionCrs );
 
   /*mReliefColors = calculateOptimizedReliefClasses();
     setDefaultReliefColors();*/

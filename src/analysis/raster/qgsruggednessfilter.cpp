@@ -17,12 +17,13 @@
 
 #include "qgsruggednessfilter.h"
 
-QgsRuggednessFilter::QgsRuggednessFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat ): QgsNineCellFilter( inputFile, outputFile, outputFormat )
+QgsRuggednessFilter::QgsRuggednessFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
+    : QgsNineCellFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs )
 {
 
 }
 
-QgsRuggednessFilter::QgsRuggednessFilter(): QgsNineCellFilter( "", "", "" )
+QgsRuggednessFilter::QgsRuggednessFilter(): QgsNineCellFilter( "", "", "", QPolygonF(), QgsCoordinateReferenceSystem() )
 {
 
 }

@@ -18,6 +18,7 @@
 #include "qgsrasterterrainanalysisplugin.h"
 #include "qgis.h"
 #include "qgisinterface.h"
+#include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsaspectfilter.h"
@@ -123,7 +124,9 @@ void QgsRasterTerrainAnalysisPlugin::hillshade()
   if ( d.exec() == QDialog::Accepted )
   {
     QString outputFile = d.outputFile();
-    QgsHillshadeFilter hillshade( d.inputFile(), outputFile, d.outputFormat(), d.lightAzimuth(), d.lightAngle() );
+    QgsCoordinateReferenceSystem limitRegionCrs;
+    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsHillshadeFilter hillshade( d.inputFile(), outputFile, d.outputFormat(), d.lightAzimuth(), d.lightAngle(), limitRegion, limitRegionCrs );
     hillshade.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
     p.setWindowModality( Qt::WindowModal );
@@ -142,7 +145,9 @@ void QgsRasterTerrainAnalysisPlugin::relief()
   if ( d.exec() == QDialog::Accepted )
   {
     QString outputFile = d.outputFile();
-    QgsRelief relief( d.inputFile(), outputFile, d.outputFormat() );
+    QgsCoordinateReferenceSystem limitRegionCrs;
+    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRelief relief( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     relief.setReliefColors( d.reliefColors() );
     relief.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating relief..." ), tr( "Abort" ), 0, 0 );
@@ -162,7 +167,9 @@ void QgsRasterTerrainAnalysisPlugin::slope()
   if ( d.exec() == QDialog::Accepted )
   {
     QString outputFile = d.outputFile();
-    QgsSlopeFilter slope( d.inputFile(), outputFile, d.outputFormat() );
+    QgsCoordinateReferenceSystem limitRegionCrs;
+    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsSlopeFilter slope( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     slope.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
     p.setWindowModality( Qt::WindowModal );
@@ -181,7 +188,9 @@ void QgsRasterTerrainAnalysisPlugin::aspect()
   if ( d.exec() == QDialog::Accepted )
   {
     QString outputFile = d.outputFile();
-    QgsAspectFilter aspect( d.inputFile(), outputFile, d.outputFormat() );
+    QgsCoordinateReferenceSystem limitRegionCrs;
+    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsAspectFilter aspect( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     aspect.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating aspect..." ), tr( "Abort" ), 0, 0 );
     p.setWindowModality( Qt::WindowModal );
@@ -200,7 +209,9 @@ void QgsRasterTerrainAnalysisPlugin::ruggedness()
   if ( d.exec() == QDialog::Accepted )
   {
     QString outputFile = d.outputFile();
-    QgsRuggednessFilter ruggedness( d.inputFile(), outputFile, d.outputFormat() );
+    QgsCoordinateReferenceSystem limitRegionCrs;
+    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRuggednessFilter ruggedness( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     ruggedness.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating ruggedness..." ), tr( "Abort" ), 0, 0 );
     p.setWindowModality( Qt::WindowModal );
@@ -210,6 +221,21 @@ void QgsRasterTerrainAnalysisPlugin::ruggedness()
       mIface->addRasterLayer( outputFile, QFileInfo( outputFile ).baseName() );
     }
   }
+}
+
+QPolygonF QgsRasterTerrainAnalysisPlugin::getLimitRegion( bool limitEnabled, QgsCoordinateReferenceSystem& regionCrs ) const
+{
+  if ( !limitEnabled )
+  {
+    return QPolygonF();
+  }
+  QgsRectangle r = mIface->mapCanvas()->mapSettings().visibleExtent();
+  regionCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
+  return QPolygonF()
+         << QPointF( r.xMinimum(), r.yMinimum() )
+         << QPointF( r.xMaximum(), r.yMinimum() )
+         << QPointF( r.xMaximum(), r.yMaximum() )
+         << QPointF( r.xMinimum(), r.yMaximum() );
 }
 
 //global methods for the plugin manager

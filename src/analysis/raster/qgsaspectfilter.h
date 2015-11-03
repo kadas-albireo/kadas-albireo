@@ -24,7 +24,7 @@
 class ANALYSIS_EXPORT QgsAspectFilter: public QgsDerivativeFilter
 {
   public:
-    QgsAspectFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat );
+    QgsAspectFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsAspectFilter();
 
     /**Calculates output value from nine input values. The input values and the output value can be equal to the

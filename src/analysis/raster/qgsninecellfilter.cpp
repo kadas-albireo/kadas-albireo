@@ -16,7 +16,10 @@
  ***************************************************************************/
 
 #include "qgsninecellfilter.h"
+#include "qgscoordinatetransform.h"
 #include "cpl_string.h"
+#include <qmath.h>
+#include <QPolygonF>
 #include <QProgressDialog>
 #include <QFile>
 
@@ -26,10 +29,12 @@
 #define TO8F(x) QFile::encodeName( x ).constData()
 #endif
 
-QgsNineCellFilter::QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat )
+QgsNineCellFilter::QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &region, const QgsCoordinateReferenceSystem &regionCrs )
     : mInputFile( inputFile )
     , mOutputFile( outputFile )
     , mOutputFormat( outputFormat )
+    , mFilterRegion( region )
+    , mFilterRegionCrs( regionCrs )
     , mCellSizeX( -1.0 )
     , mCellSizeY( -1.0 )
     , mInputNodataValue( -1.0 )
@@ -64,17 +69,36 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
   {
     return 1; //opening of input file failed
   }
+  double gtrans[6] = {};
+  if ( GDALGetGeoTransform( inputDataset, &gtrans[0] ) != CE_None )
+  {
+    GDALClose( inputDataset );
+    return 1;
+  }
 
   //output driver
   GDALDriverH outputDriver = openOutputDriver();
   if ( outputDriver == 0 )
   {
+    GDALClose( inputDataset );
     return 2;
   }
 
-  GDALDatasetH outputDataset = openOutputFile( inputDataset, outputDriver );
+
+  //determine the window
+  int rowStart, rowEnd, colStart, colEnd;
+  if ( !computeWindow( inputDataset, mFilterRegion, mFilterRegionCrs, rowStart, rowEnd, colStart, colEnd ) )
+  {
+    GDALClose( inputDataset );
+    return 2;
+  }
+  xSize = colEnd - colStart;
+  ySize = rowEnd - rowStart;
+
+  GDALDatasetH outputDataset = openOutputFile( inputDataset, outputDriver, colStart, rowStart, xSize, ySize );
   if ( outputDataset == NULL )
   {
+    GDALClose( inputDataset );
     return 3; //create operation on output file failed
   }
 
@@ -138,7 +162,7 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
       {
         scanLine1[a] = mInputNodataValue;
       }
-      GDALRasterIO( rasterBand, GF_Read, 0, 0, xSize, 1, scanLine2, xSize, 1, GDT_Float32, 0, 0 );
+      GDALRasterIO( rasterBand, GF_Read, colStart, rowStart, xSize, 1, scanLine2, xSize, 1, GDT_Float32, 0, 0 );
     }
     else
     {
@@ -158,25 +182,35 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
     }
     else
     {
-      GDALRasterIO( rasterBand, GF_Read, 0, i + 1, xSize, 1, scanLine3, xSize, 1, GDT_Float32, 0, 0 );
+      GDALRasterIO( rasterBand, GF_Read, colStart, rowStart + i + 1, xSize, 1, scanLine3, xSize, 1, GDT_Float32, 0, 0 );
     }
 
+#pragma omp parallel for schedule(static)
     for ( int j = 0; j < xSize; ++j )
     {
-      if ( j == 0 )
+      QPointF pos( gtrans[0] + gtrans[1] * ( colStart + j ) + gtrans[2] * ( rowStart + i ),
+                   gtrans[3] + gtrans[4] * ( colStart + j ) + gtrans[5] * ( rowStart + i ) );
+      if ( mFilterRegion.isEmpty() || mFilterRegion.contains( pos ) )
       {
-        resultLine[j] = processNineCellWindow( &mInputNodataValue, &scanLine1[j], &scanLine1[j+1], &mInputNodataValue, &scanLine2[j],
-                                               &scanLine2[j+1], &mInputNodataValue, &scanLine3[j], &scanLine3[j+1] );
-      }
-      else if ( j == xSize - 1 )
-      {
-        resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &mInputNodataValue, &scanLine2[j-1], &scanLine2[j],
-                                               &mInputNodataValue, &scanLine3[j-1], &scanLine3[j], &mInputNodataValue );
+        if ( j == 0 )
+        {
+          resultLine[j] = processNineCellWindow( &mInputNodataValue, &scanLine1[j], &scanLine1[j+1], &mInputNodataValue, &scanLine2[j],
+                                                 &scanLine2[j+1], &mInputNodataValue, &scanLine3[j], &scanLine3[j+1] );
+        }
+        else if ( j == xSize - 1 )
+        {
+          resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &mInputNodataValue, &scanLine2[j-1], &scanLine2[j],
+                                                 &mInputNodataValue, &scanLine3[j-1], &scanLine3[j], &mInputNodataValue );
+        }
+        else
+        {
+          resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &scanLine1[j+1], &scanLine2[j-1], &scanLine2[j],
+                                                 &scanLine2[j+1], &scanLine3[j-1], &scanLine3[j], &scanLine3[j+1] );
+        }
       }
       else
       {
-        resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &scanLine1[j+1], &scanLine2[j-1], &scanLine2[j],
-                                               &scanLine2[j+1], &scanLine3[j-1], &scanLine3[j], &scanLine3[j+1] );
+        resultLine[j] = mInputNodataValue;
       }
     }
 
@@ -224,6 +258,61 @@ GDALDatasetH QgsNineCellFilter::openInputFile( int& nCellsX, int& nCellsY )
   return inputDataset;
 }
 
+bool QgsNineCellFilter::computeWindow( GDALDatasetH dataset, const QPolygonF &region, const QgsCoordinateReferenceSystem& regionCrs, int &rowStart, int &rowEnd, int &colStart, int &colEnd )
+{
+  int nCellsX = GDALGetRasterXSize( dataset );
+  int nCellsY = GDALGetRasterYSize( dataset );
+
+  if ( region.size() < 3 )
+  {
+    rowStart = 0;
+    rowEnd = nCellsY;
+    colStart = 0;
+    colEnd = nCellsX;
+    return true;
+  }
+
+  double gtrans[6] = {};
+  if ( GDALGetGeoTransform( dataset, &gtrans[0] ) != CE_None )
+  {
+    return false;
+  }
+
+  QgsCoordinateReferenceSystem rasterCrs( QString( GDALGetProjectionRef( dataset ) ) );
+  if ( !rasterCrs.isValid() )
+  {
+    return false;
+  }
+  QgsCoordinateTransform ct( regionCrs, rasterCrs );
+
+  // Transform raster geo position to pixel coordinates
+  QgsPoint pRaster = ct.transform( QgsPoint( region[0] ) );
+  double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+  double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
+  colStart = qFloor( col );
+  colEnd = qCeil( col );
+  rowStart = qFloor( row );
+  rowEnd = qCeil( row );
+
+  for ( int i = 1, n = region.size(); i < n; ++i )
+  {
+    pRaster = ct.transform( QgsPoint( region[i] ) );
+    col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+    row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
+    colStart  = qMin( colStart , qFloor( col ) );
+    colEnd  = qMax( colEnd , qCeil( col ) );
+    rowStart = qMin( rowStart, qFloor( row ) );
+    rowEnd = qMax( rowEnd, qCeil( row ) );
+  }
+
+  colStart = qMax( colStart, 0 );
+  colEnd = qMin( colEnd + 1, nCellsX );
+  rowStart = qMax( rowStart, 0 );
+  rowEnd = qMin( rowEnd + 1, nCellsY );
+
+  return true;
+}
+
 GDALDriverH QgsNineCellFilter::openOutputDriver()
 {
   char **driverMetadata;
@@ -245,23 +334,22 @@ GDALDriverH QgsNineCellFilter::openOutputDriver()
   return outputDriver;
 }
 
-GDALDatasetH QgsNineCellFilter::openOutputFile( GDALDatasetH inputDataset, GDALDriverH outputDriver )
+GDALDatasetH QgsNineCellFilter::openOutputFile( GDALDatasetH inputDataset, GDALDriverH outputDriver, int colStart, int rowStart, int xSize, int ySize )
 {
   if ( inputDataset == NULL )
   {
     return NULL;
   }
 
-  int xSize = GDALGetRasterXSize( inputDataset );
-  int ySize = GDALGetRasterYSize( inputDataset );;
-
   //open output file
   char **papszOptions = NULL;
+  papszOptions = CSLSetNameValue( papszOptions, "COMPRESS", "LZW" );
   GDALDatasetH outputDataset = GDALCreate( outputDriver, TO8F( mOutputFile ), xSize, ySize, 1, GDT_Float32, papszOptions );
   if ( outputDataset == NULL )
   {
     return outputDataset;
   }
+
 
   //get geotransform from inputDataset
   double geotransform[6];
@@ -270,6 +358,11 @@ GDALDatasetH QgsNineCellFilter::openOutputFile( GDALDatasetH inputDataset, GDALD
     GDALClose( outputDataset );
     return NULL;
   }
+
+  // Shift for origin of window
+  geotransform[0] += colStart * geotransform[1] + rowStart * geotransform[2];
+  geotransform[3] += colStart * geotransform[4] + rowStart * geotransform[5];
+
   GDALSetGeoTransform( outputDataset, geotransform );
 
   //make sure mCellSizeX and mCellSizeY are always > 0
