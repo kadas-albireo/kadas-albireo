@@ -619,6 +619,9 @@ class QgsWmsTiledImageDownloadHandler : public QObject
   protected slots:
     void tileReplyFinished();
 
+  signals:
+    void aborted();
+
   protected:
     /**
      * \brief Relaunch tile request cloning previous request parameters and managing max repeat
