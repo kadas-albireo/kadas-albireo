@@ -827,6 +827,7 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
     emit statusChanged( tr( "Getting tiles." ) );
 
     QgsWmsTiledImageDownloadHandler handler( dataSourceUri(), mSettings.authorization(), mTileReqNo, requests, mCachedImage, mCachedViewExtent, mSettings.mSmoothPixmapTransform );
+    QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
     handler.downloadBlocking();
 
 
@@ -3346,9 +3347,19 @@ QgsWmsTiledImageDownloadHandler::~QgsWmsTiledImageDownloadHandler()
 
 void QgsWmsTiledImageDownloadHandler::downloadBlocking()
 {
+  QObject::connect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
   mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+  QObject::disconnect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
 
-  Q_ASSERT( mReplies.isEmpty() );
+  if ( !mReplies.isEmpty() )
+  {
+    QList<QNetworkReply*>::const_iterator it = mReplies.constBegin();
+    for ( ; it != mReplies.constEnd(); ++it )
+    {
+      ( *it )->deleteLater();
+    }
+    mReplies.clear();
+  }
 }
 
 
