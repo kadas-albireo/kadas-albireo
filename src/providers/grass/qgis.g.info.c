@@ -24,6 +24,7 @@
  *               License (>=v2).
  *
  *****************************************************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -306,8 +307,8 @@ int main( int argc, char **argv )
       int row, col;
       void *ptr;
       double val;
-      double min = std::numeric_limits<double>::max();
-      double max = -std::numeric_limits<double>::max();
+      double min = DBL_MAX;
+      double max = -DBL_MAX;
       double sum = 0; // sum of values
       int count = 0; // count of non null values
       double mean = 0;
