@@ -179,12 +179,12 @@ void QgsMeasureHeightProfileDialog::replot()
 
 
     // Transform raster geo position to pixel coordinates
-    double col = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
-    double row = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+    double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+    double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
 
     double pixValues[4] = {};
     if ( CE_None != GDALRasterIO( band, GF_Read,
-                                  qFloor( row ), qFloor( col ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
+                                  qFloor( col ), qFloor( row ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
     {
       QgsDebugMsg( "Failed to read pixel values" );
 #if QWT_VERSION < 0x060000
