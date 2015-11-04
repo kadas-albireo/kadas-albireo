@@ -51,10 +51,6 @@ Special dependencies of QGIS KADAS:
     cmake --build . --target install --config RelWithDebInfo
 * QuaZIP: http://quazip.sourceforge.net/
 
-Copy additional local libraries from VBS-Realisierung\libs
-into C:\OSGeo4W64:
-    robocopy VBS-Realisierung\libs C:\OSGeo4W64 /s /e
-
 
 Get the source code
 ===================
