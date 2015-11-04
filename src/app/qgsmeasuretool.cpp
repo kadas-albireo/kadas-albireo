@@ -120,11 +120,13 @@ void QgsMeasureTool::updateSettings()
   int myRed = settings.value( "/qgis/default_measure_color_red", 222 ).toInt();
   int myGreen = settings.value( "/qgis/default_measure_color_green", 155 ).toInt();
   int myBlue = settings.value( "/qgis/default_measure_color_blue", 67 ).toInt();
-  mRubberBand->setColor( QColor( myRed, myGreen, myBlue, 100 ) );
+  mRubberBand->setColor( QColor( myRed, myGreen, myBlue ) );
   mRubberBand->setWidth( 3 );
   mRubberBandPoints->setIcon( QgsRubberBand::ICON_CIRCLE );
   mRubberBandPoints->setIconSize( 10 );
-  mRubberBandPoints->setColor( QColor( myRed, myGreen, myBlue, 150 ) );
+  mRubberBandPoints->setFillColor( Qt::white );
+  mRubberBandPoints->setBorderColor( QColor( myRed, myGreen, myBlue ) );
+  mRubberBandPoints->setWidth( 2 );
   mDialog->updateSettings();
 }
 
@@ -202,7 +204,10 @@ void QgsMeasureTool::addPoint( QgsPoint &point )
   {
     mDialog->addPart();
     mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
-    mTextLabels.back()->setDefaultTextColor( Qt::blue );
+    int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
+    int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
+    int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
+    mTextLabels.back()->setDefaultTextColor( QColor( red, green, blue ) );
     QFont font = mTextLabels.back()->font();
     font.setBold( true );
     mTextLabels.back()->setFont( font );
