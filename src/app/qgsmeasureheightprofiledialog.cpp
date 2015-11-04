@@ -36,7 +36,7 @@
 
 
 QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool *tool, QWidget *parent, Qt::WindowFlags f )
-    : QDialog( parent, f ), mTool( tool )
+    : QDialog( parent, f ), mTool( tool ), mNSamples( 300 )
 {
   setWindowTitle( tr( "Height profile" ) );
   QGridLayout* gridLayout = new QGridLayout( this );
@@ -86,23 +86,32 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   restoreGeometry( QSettings().value( "/Windows/MeasureHeightProfile/geometry" ).toByteArray() );
 }
 
-void QgsMeasureHeightProfileDialog::setPoints( const QgsPoint &p1, const QgsPoint &p2, const QgsCoordinateReferenceSystem &crs )
+void QgsMeasureHeightProfileDialog::setPoints( const QList<QgsPoint>& points, const QgsCoordinateReferenceSystem &crs )
 {
-  mPoints.first = p1;
-  mPoints.second = p2;
+  mPoints = points;
   mPointsCrs = crs;
+  mTotLength = 0;
+  mSegmentLengths.clear();
+  for ( int i = 0, n = mPoints.size() - 1; i < n; ++i )
+  {
+    mSegmentLengths.append( qSqrt( mPoints[i + 1].sqrDist( mPoints[i] ) ) );
+    mTotLength += mSegmentLengths.back();
+  }
   replot();
 }
 
-void QgsMeasureHeightProfileDialog::setMarkerPos( const QgsPoint &p )
+void QgsMeasureHeightProfileDialog::setMarkerPos( int segment, const QgsPoint &p )
 {
-  double l = qSqrt( mPoints.second.sqrDist( mPoints.first ) );
-  double d = qSqrt( p.sqrDist( mPoints.first ) );
-  double val = d / l * 100;
+  double x = qSqrt( p.sqrDist( mPoints[segment] ) );
+  for ( int i = 0; i < segment; ++i )
+  {
+    x += mSegmentLengths[i];
+  }
+  int idx = x / mTotLength * mNSamples;
 #if QWT_VERSION < 0x060000
-  mPlotMarker->setValue( mPlotCurve->x( val ), mPlotCurve->y( val ) );
+  mPlotMarker->setValue( mPlotCurve->x( idx ), mPlotCurve->y( idx ) );
 #else
-  mPlotMarker->setValue( mPlotCurve->data()->sample( val ) );
+  mPlotMarker->setValue( mPlotCurve->data()->sample( idx ) );
 #endif
   mPlot->replot();
 }
@@ -163,52 +172,60 @@ void QgsMeasureHeightProfileDialog::replot()
     return;
   }
 
-  // Take 100 points between chosen
 #if QWT_VERSION < 0x060000
   QVector<double> xSamples, ySamples;
 #else
   QVector<QPointF> samples;
 #endif
-  double d = qSqrt( mPoints.second.sqrDist( mPoints.first ) );
-  QgsVector dir = QgsVector( mPoints.second - mPoints.first ).normal();
-  for ( int i = 0; i < 100; ++i )
+  double x = 0;
+  for ( int i = 0, n = mPoints.size() - 1; i < n; ++i )
   {
-    QgsPoint p = mPoints.first + dir * ( d * ( i / 100. ) );
-    // Transform geo position to raster CRS
-    QgsPoint pRaster = QgsCoordinateTransform( mPointsCrs, rasterCrs ).transform( p );
-
-
-    // Transform raster geo position to pixel coordinates
-    double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
-    double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
-
-    double pixValues[4] = {};
-    if ( CE_None != GDALRasterIO( band, GF_Read,
-                                  qFloor( col ), qFloor( row ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
+    if ( x >= mSegmentLengths[i] )
     {
-      QgsDebugMsg( "Failed to read pixel values" );
-#if QWT_VERSION < 0x060000
-      xSamples.append( i );
-      ySamples.append( 0 );
-#else
-      samples.append( QPointF( i, 0 ) );
-#endif
+      continue;
     }
-    else
+    QgsVector dir = QgsVector( mPoints[i + 1] - mPoints[i] ).normal();
+    while ( x < mSegmentLengths[i] )
     {
-      // Interpolate values
-      double lambdaR = row - qFloor( row );
-      double lambdaC = col - qFloor( col );
+      QgsPoint p = mPoints[i] + dir * x;
+      // Transform geo position to raster CRS
+      QgsPoint pRaster = QgsCoordinateTransform( mPointsCrs, rasterCrs ).transform( p );
 
-      double value = ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
-                     + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
+
+      // Transform raster geo position to pixel coordinates
+      double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+      double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
+
+      double pixValues[4] = {};
+      if ( CE_None != GDALRasterIO( band, GF_Read,
+                                    qFloor( col ), qFloor( row ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
+      {
+        QgsDebugMsg( "Failed to read pixel values" );
 #if QWT_VERSION < 0x060000
-      xSamples.append( i );
-      ySamples.append( value );
+        xSamples.append( xSamples.size() );
+        ySamples.append( 0 );
 #else
-      samples.append( QPointF( i, value ) );
+        samples.append( QPointF( samples.size(), 0 ) );
 #endif
+      }
+      else
+      {
+        // Interpolate values
+        double lambdaR = row - qFloor( row );
+        double lambdaC = col - qFloor( col );
+
+        double value = ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
+                       + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
+#if QWT_VERSION < 0x060000
+        xSamples.append( xSamples.size() );
+        ySamples.append( value );
+#else
+        samples.append( QPointF( samples.size(), value ) );
+#endif
+      }
+      x += mTotLength / mNSamples;
     }
+    x -= mSegmentLengths[i];
   }
 
   GDALClose( raster );

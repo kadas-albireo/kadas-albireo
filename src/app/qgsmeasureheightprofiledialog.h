@@ -33,8 +33,8 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     Q_OBJECT
   public:
     QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool* tool, QWidget* parent = 0, Qt::WindowFlags f = 0 );
-    void setPoints( const QgsPoint& p1, const QgsPoint& p2, const QgsCoordinateReferenceSystem& crs );
-    void setMarkerPos( const QgsPoint& p );
+    void setPoints( const QList<QgsPoint> &points, const QgsCoordinateReferenceSystem& crs );
+    void setMarkerPos( int segment, const QgsPoint& p );
 
   private slots:
     void finish();
@@ -45,8 +45,11 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     QwtPlot* mPlot;
     QwtPlotCurve* mPlotCurve;
     QwtPlotMarker* mPlotMarker;
-    QPair<QgsPoint, QgsPoint> mPoints;
+    QList<QgsPoint> mPoints;
+    QVector<double> mSegmentLengths;
+    double mTotLength;
     QgsCoordinateReferenceSystem mPointsCrs;
+    int mNSamples;
 };
 
 #endif // QGSMEASUREHEIGHTPROFILEDIALOG_H
