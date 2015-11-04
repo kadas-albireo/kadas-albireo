@@ -34,37 +34,14 @@ OSGeo4W does not only provide ready packages for the current QGIS release and
 nightly builds of master, but also offers most of the dependencies needs to
 build it.
 
-For the QGIS build you need to install following packages from cygwin:
+* Select "Advanced installation"
+* Add additional package source http://build.sourcepole.ch/osgeo4w
+* Select both sources
 
-- bison
-- flex
-- git
-
-and from OSGeo4W (select Advanced Installation):
-
-- expat
-- fcgi
-- gdal
-- grass
-- gsl-devel
-- iconv
-- pyqt4
-- qt4-devel
-- qwt5-devel-qt4
-- sip
-- spatialite
-- libspatialindex-devel
-- python-qscintilla
-- python-devel
-
-For debug build:
-- qt4-libs-debug
-
-This will also select packages the above packages depend on.
+Install package 'qgis-kadas-build' to install all required build dependencies.
 
 
-Additional dependencies
-=======================
+Special dependencies of QGIS KADAS:
 
 * GEOS with C++ bindings
 * QJson: http://qjson.sourceforge.net/
@@ -72,6 +49,7 @@ Additional dependencies
   Build:
     cmake -G "Visual Studio 10 Win64" -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=../exiv2
     cmake --build . --target install --config RelWithDebInfo
+* QuaZIP: http://quazip.sourceforge.net/
 
 Copy additional local libraries from VBS-Realisierung\libs
 into C:\OSGeo4W64:
