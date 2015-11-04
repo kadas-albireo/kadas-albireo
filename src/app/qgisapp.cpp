@@ -154,6 +154,7 @@
 #include "qgslayertreeviewdefaultactions.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
+#include "qgsmapcanvasmap.h"
 #include "qgsmapcanvassnappingutils.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
@@ -1120,6 +1121,7 @@ void QgisApp::createActions()
   connect( mActionSaveProject, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
   connect( mActionSaveProjectAs, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
   connect( mActionSaveMapAsImage, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
+  connect( mActionSaveMapToClipboard, SIGNAL( triggered() ), this, SLOT( saveMapToClipboard( ) ) );
   connect( mActionNewPrintComposer, SIGNAL( triggered() ), this, SLOT( newPrintComposer() ) );
   connect( mActionShowComposerManager, SIGNAL( triggered() ), this, SLOT( showComposerManager() ) );
   connect( mActionExit, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
@@ -4586,6 +4588,11 @@ void QgisApp::saveMapAsImage( QString theImageFileNameQString, QPixmap * theQPix
     mMapCanvas->saveAsImage( theImageFileNameQString, theQPixmap );
   }
 } // saveMapAsImage
+
+void QgisApp::saveMapToClipboard()
+{
+  QApplication::clipboard()->setImage( mMapCanvas->map()->contentImage() );
+}
 
 //reimplements method from base (gui) class
 void QgisApp::addAllToOverview()
