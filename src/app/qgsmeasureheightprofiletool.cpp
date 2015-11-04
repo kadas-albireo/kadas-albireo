@@ -46,14 +46,17 @@ void QgsMeasureHeightProfileTool::restart()
   mRubberBand->reset( QGis::Line );
   mRubberBandPoints->reset( QGis::Point );
 
-  int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
-  int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
-  int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
-  mRubberBand->setColor( QColor( red, green, blue, 100 ) );
+  QSettings settings;
+  int red = settings.value( "/qgis/default_measure_color_red", 222 ).toInt();
+  int green = settings.value( "/qgis/default_measure_color_green", 155 ).toInt();
+  int blue = settings.value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  mRubberBand->setColor( QColor( red, green, blue ) );
   mRubberBand->setWidth( 3 );
   mRubberBandPoints->setIcon( QgsRubberBand::ICON_CIRCLE );
   mRubberBandPoints->setIconSize( 10 );
-  mRubberBandPoints->setColor( QColor( red, green, blue, 150 ) );
+  mRubberBandPoints->setFillColor( Qt::white );
+  mRubberBandPoints->setBorderColor( QColor( red, green, blue ) );
+  mRubberBandPoints->setWidth( 2 );
 }
 
 void QgsMeasureHeightProfileTool::activate()
@@ -72,39 +75,67 @@ void QgsMeasureHeightProfileTool::deactivate()
 void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
 {
   QgsPoint p = toMapCoordinates( e->pos() );
+  int nPoints = mRubberBand->partSize( 0 );
   if ( mMoving )
   {
-    mRubberBand->movePoint( 1, p );
-    mRubberBandPoints->movePoint( 1, p );
+    mRubberBand->movePoint( nPoints - 1 , p );
+    mRubberBandPoints->movePoint( nPoints - 1, p );
   }
-  else if ( mRubberBandPoints->partSize( 0 ) == 3 )
+  else if ( mRubberBandPoints->partSize( 0 ) > 3 )
   {
-    const QgsPoint& p1 = *mRubberBandPoints->getPoint( 0, 0 );
-    const QgsPoint& p2 = *mRubberBandPoints->getPoint( 0, 1 );
-    QgsPointV2 pProj = QgsGeometryUtils::projPointOnSegment( QgsPointV2( p ), QgsPointV2( p1 ), QgsPointV2( p2 ) );
-    mRubberBandPoints->movePoint( 2, QgsPoint( pProj.x(), pProj.y() ) );
-    mDialog->setMarkerPos( QgsPoint( pProj.x(), pProj.y() ) );
+    double minDist = std::numeric_limits<double>::max();
+    int minIdx;
+    QgsPoint minPos;
+    for ( int i = 0; i < nPoints - 1; ++i )
+    {
+      const QgsPoint& p1 = *mRubberBandPoints->getPoint( 0, i );
+      const QgsPoint& p2 = *mRubberBandPoints->getPoint( 0, i + 1 );
+      QgsPointV2 pProjV2 = QgsGeometryUtils::projPointOnSegment( QgsPointV2( p ), QgsPointV2( p1 ), QgsPointV2( p2 ) );
+      QgsPoint pProj( pProjV2.x(), pProjV2.y() );
+      double dist = pProj.sqrDist( p );
+      if ( dist < minDist )
+      {
+        minDist = dist;
+        minPos = pProj;
+        minIdx = i;
+      }
+    }
+    if ( qSqrt( minDist ) / mCanvas->mapSettings().mapUnitsPerPixel() < 30. )
+    {
+      mRubberBandPoints->movePoint( nPoints, minPos );
+      mDialog->setMarkerPos( minIdx, minPos );
+    }
   }
 }
 
 void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
 {
+  QgsPoint p = toMapCoordinates( e->pos() );
   if ( !mMoving )
   {
     restart();
-    QgsPoint p = toMapCoordinates( e->pos() );
     mRubberBand->addPoint( p );
     mRubberBandPoints->addPoint( p );
     mMoving = true;
   }
   else
   {
-    mDialog->setPoints(
-      *mRubberBandPoints->getPoint( 0, 0 ),
-      *mRubberBandPoints->getPoint( 0, 1 ),
-      mCanvas->mapSettings().destinationCrs()
-    );
-    mMoving = false;
-    mRubberBandPoints->addPoint( *mRubberBandPoints->getPoint( 0, 0 ) );
+    if ( e->button() == Qt::LeftButton )
+    {
+      mRubberBand->addPoint( p );
+      mRubberBandPoints->addPoint( p );
+    }
+    else if ( e->button() == Qt::RightButton )
+    {
+      if ( mRubberBandPoints->getPoints().front().size() > 1 )
+      {
+        mDialog->setPoints(
+          mRubberBandPoints->getPoints().front(),
+          mCanvas->mapSettings().destinationCrs()
+        );
+        mRubberBandPoints->addPoint( *mRubberBandPoints->getPoint( 0, 0 ) );
+      }
+      mMoving = false;
+    }
   }
 }
