@@ -878,6 +878,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void runScript( const QString& filePath );
     //! Save the map view as an image - user is prompted for image name using a dialog
     void saveMapAsImage();
+    //! Save the map image to clipboard
+    void saveMapToClipboard();
     //! Open a project
     void fileOpen();
     //! Create a new project
