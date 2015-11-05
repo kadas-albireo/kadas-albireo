@@ -49,6 +49,7 @@ SET(QGIS_APP_SRCS
   qgsmapmouseevent.cpp
   qgssavestyletodbdialog.cpp
   qgsguivectorlayertools.cpp
+  qgsselectgrouplayerdialog.cpp
 
   qgsmaptooladdfeature.cpp
   qgsmaptooladdpart.cpp
@@ -208,6 +209,7 @@ SET (QGIS_APP_MOC_HDRS
   qgssavestyletodbdialog.h
   qgsshortcutsmanager.h
   qgsapplayertreeviewmenuprovider.h
+  qgsselectgrouplayerdialog.h
 
   qgsmaptooladdfeature.h
   qgsmaptoolcapture.h

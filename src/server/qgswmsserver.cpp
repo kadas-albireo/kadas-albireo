@@ -525,6 +525,22 @@ QDomDocument QgsWMSServer::getCapabilities( QString version, bool fullProjectInf
       }
       capabilityElement.appendChild( wfsLayersElem );
     }
+
+    //Exclusive layer groups
+    QStringList exclusiveLayerGroups = mConfigParser->exclusiveLayerGroups();
+    if ( exclusiveLayerGroups.size() > 0 )
+    {
+      QDomElement exclusiveLayerGroupsElem = doc.createElement( "ExclusiveLayerGroups" );
+      QStringList::const_iterator groupIt = exclusiveLayerGroups.constBegin();
+      for ( ; groupIt != exclusiveLayerGroups.constEnd(); ++groupIt )
+      {
+        QDomElement groupElem = doc.createElement( "group" );
+        QDomText groupText = doc.createTextNode( *groupIt );
+        groupElem.appendChild( groupText );
+        exclusiveLayerGroupsElem.appendChild( groupElem );
+      }
+      capabilityElement.appendChild( exclusiveLayerGroupsElem );
+    }
   }
 
   //add the xml content for the individual layers/styles

@@ -284,6 +284,45 @@ QStringList QgsWMSProjectParser::wfsLayerNames() const
   return mProjectParser->wfsLayerNames();
 }
 
+QStringList QgsWMSProjectParser::exclusiveLayerGroups() const
+{
+  if ( !mProjectParser )
+  {
+    return QStringList();
+  }
+
+  QStringList groupList;
+  QDomElement propertiesElem = mProjectParser->propertiesElem();
+  if ( !propertiesElem.isNull() )
+  {
+    QDomElement exclusiveGroupsElem = propertiesElem.firstChildElement( "WMSExclusiveLayerGroups" );
+    if ( !exclusiveGroupsElem.isNull() )
+    {
+      QDomNodeList groups = exclusiveGroupsElem.elementsByTagName( "value" );
+      for ( int i = 0; i < groups.size(); ++i )
+      {
+        QStringList layerIdList = groups.at( i ).toElement().text().split( "," );
+        QStringList layerNameList;
+        for ( int j = 0; j < layerIdList.size(); ++j )
+        {
+          QString layerId = layerIdList.at( j );
+          QgsMapLayer* layer = mProjectParser->mapLayerFromLayerId( layerId );
+          if ( layer )
+          {
+            layerNameList.append( layer->name() );
+          }
+          else //a group
+          {
+            layerNameList.append( layerId );
+          }
+        }
+        groupList.append( layerNameList.join( "," ) );
+      }
+    }
+  }
+  return groupList;
+}
+
 double QgsWMSProjectParser::legendBoxSpace() const
 {
   QDomElement legendElem = mProjectParser->firstComposerLegendElement();
