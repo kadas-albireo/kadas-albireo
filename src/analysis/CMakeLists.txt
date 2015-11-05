@@ -1,4 +1,5 @@
 SUBDIRS(network)
+FIND_PACKAGE(OpenMP)
 
 #############################################################
 # sources
@@ -151,8 +152,7 @@ ENDIF (WIN32)
 # qgis_analysis library
 
 ADD_LIBRARY(qgis_analysis SHARED ${QGIS_ANALYSIS_SRCS} ${QGIS_ANALYSIS_MOC_SRCS} ${QGIS_ANALYSIS_HDRS})
-SET_TARGET_PROPERTIES(qgis_analysis PROPERTIES COMPILE_FLAGS "-fopenmp")
-
+SET_TARGET_PROPERTIES(qgis_analysis PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
 
 IF(NOT APPLE)
   INSTALL(FILES ${QGIS_ANALYSIS_HDRS} DESTINATION ${QGIS_INCLUDE_DIR})
@@ -179,7 +179,10 @@ IF (NOT ANDROID)
     )
 ENDIF (NOT ANDROID)
 
-TARGET_LINK_LIBRARIES(qgis_analysis qgis_core gomp)
+IF(CMAKE_COMPILER_IS_GNUCC AND OPENMP_FOUND)
+    SET(OpenMP_LD_FLAGS "-lgomp")
+ENDIF(CMAKE_COMPILER_IS_GNUCC AND OPENMP_FOUND)
+TARGET_LINK_LIBRARIES(qgis_analysis qgis_core ${OpenMP_LD_FLAGS})
 
 
 # install
