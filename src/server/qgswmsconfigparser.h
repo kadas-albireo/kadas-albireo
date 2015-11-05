@@ -86,6 +86,8 @@ class QgsWMSConfigParser
 
     virtual QStringList wfsLayerNames() const = 0;
 
+    virtual QStringList exclusiveLayerGroups() const = 0;
+
     virtual void owsGeneralAndResourceList( QDomElement& parentElement, QDomDocument& doc, const QString& strHref ) const = 0;
 
     //legend

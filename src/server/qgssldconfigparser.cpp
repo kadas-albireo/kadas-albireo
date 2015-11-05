@@ -583,6 +583,15 @@ QStringList QgsSLDConfigParser::wfsLayerNames() const
   return QStringList();
 }
 
+QStringList QgsSLDConfigParser::exclusiveLayerGroups() const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->exclusiveLayerGroups();
+  }
+  return QStringList();
+}
+
 void QgsSLDConfigParser::owsGeneralAndResourceList( QDomElement& parentElement, QDomDocument& doc, const QString& strHref ) const
 {
   if ( mFallbackParser )

@@ -191,7 +191,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="mProjOpts_01">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1945,6 +1945,59 @@
                     </layout>
                    </widget>
                   </item>
+                  <item row="3" column="1">
+                   <widget class="QgsCollapsibleGroupBox" name="mWMSExclusiveGroupsComboBox">
+                    <property name="title">
+                     <string>Exclusive layer groups</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_15">
+                     <item row="0" column="0" colspan="3">
+                      <widget class="QListWidget" name="mExclusiveLayerGroupsListWidget"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QToolButton" name="mAddExclusiveGroupButton">
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="icon">
+                        <iconset resource="../../images/images.qrc">
+                         <normaloff>:/images/themes/default/symbologyAdd.png</normaloff>:/images/themes/default/symbologyAdd.png</iconset>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QToolButton" name="mRemoveExclusiveGroupButton">
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="icon">
+                        <iconset resource="../../images/images.qrc">
+                         <normaloff>:/images/themes/default/symbologyRemove.png</normaloff>:/images/themes/default/symbologyRemove.png</iconset>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="2">
+                      <spacer name="horizontalSpacer_8">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>81</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -2220,6 +2273,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QgsProjectionSelector</class>
+   <extends>QWidget</extends>
+   <header>qgsprojectionselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>QgsCollapsibleGroupBox</class>
    <extends>QGroupBox</extends>
    <header>qgscollapsiblegroupbox.h</header>
@@ -2229,12 +2288,6 @@
    <class>QgsColorButtonV2</class>
    <extends>QToolButton</extends>
    <header>qgscolorbuttonv2.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QgsProjectionSelector</class>
-   <extends>QWidget</extends>
-   <header>qgsprojectionselector.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>QgsCodeEditorPython</class>
