@@ -94,6 +94,19 @@ class CORE_EXPORT QgsLayerTreeGroup : public QgsLayerTreeNode
     //! Set check state of the group node - will also update children
     void setVisible( Qt::CheckState state );
 
+    void setTitle( const QString& title ) { mTitle = title; }
+    QString title() const { return mTitle; }
+
+    void setAbstract( const QString& abstract ) { mAbstract = abstract; }
+    QString abstract() const { return mAbstract; }
+
+    void setWMSPublishLegend( bool enable ) { mWMSPublishLegend = enable; }
+    bool wmsPublishLegend() const { return mWMSPublishLegend; }
+    void setWMSPublishMetadata( bool enable ) { mWMSPublishMetadata = enable; }
+    bool wmsPublishMetadata() const { return mWMSPublishMetadata; }
+    void setWMSCheckable( bool enable ) { mWMSCheckable = enable; }
+    bool wmsCheckable() const { return mWMSCheckable; }
+
   protected slots:
     void layerDestroyed();
     void nodeVisibilityChanged( QgsLayerTreeNode* node );
@@ -106,6 +119,14 @@ class CORE_EXPORT QgsLayerTreeGroup : public QgsLayerTreeNode
     Qt::CheckState mChecked;
 
     bool mChangingChildVisibility;
+
+    /**Group title (for WMS)*/
+    QString mTitle;
+    /**Group abstract (for WMS)*/
+    QString mAbstract;
+    bool mWMSPublishLegend;
+    bool mWMSPublishMetadata;
+    bool mWMSCheckable;
 };
 
 

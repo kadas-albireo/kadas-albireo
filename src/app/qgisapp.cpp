@@ -147,6 +147,7 @@
 #include "qgslayertreeutils.h"
 #include "qgslayertreeview.h"
 #include "qgslayertreeviewdefaultactions.h"
+#include "qgslegendgroupproperties.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvassnappingutils.h"
@@ -5330,6 +5331,30 @@ void QgisApp::checkForDeprecatedLabelsInProject()
 void QgisApp::layerProperties()
 {
   showLayerProperties( activeLayer() );
+}
+
+void QgisApp::groupProperties()
+{
+  if ( !mLayerTreeView )
+  {
+    return;
+  }
+
+  QModelIndex idx = mLayerTreeView->currentIndex();
+  if ( !idx.isValid() )
+  {
+    return;
+  }
+
+  QgsLayerTreeNode* node = mLayerTreeView->layerTreeModel()->index2node( idx );
+  if ( !node || !QgsLayerTree::isGroup( node ) )
+  {
+    return;
+  }
+
+  QgsLayerTreeGroup* gnode = static_cast<QgsLayerTreeGroup*>( node );
+  QgsLegendGroupProperties p( gnode, this );
+  p.exec();
 }
 
 void QgisApp::deleteSelected( QgsMapLayer *layer, QWidget* parent, bool promptConfirmation )

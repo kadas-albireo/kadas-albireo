@@ -1015,9 +1015,23 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       layerElem.appendChild( nameElem );
 
       QDomElement titleElem = doc.createElement( "Title" );
-      QDomText titleText = doc.createTextNode( name );
+      QString groupTitle = currentChildElem.attribute( "title", "" );
+      if ( groupTitle.isEmpty() )
+      {
+        groupTitle = name;
+      }
+      QDomText titleText = doc.createTextNode( groupTitle );
       titleElem.appendChild( titleText );
       layerElem.appendChild( titleElem );
+
+      QString groupAbstract = currentChildElem.attribute( "abstract" );
+      if ( !groupAbstract.isEmpty() )
+      {
+        QDomElement abstractElem = doc.createElement( "Abstract" );
+        QDomText abstractText = doc.createTextNode( groupAbstract );
+        abstractElem.appendChild( abstractText );
+        layerElem.appendChild( abstractElem );
+      }
 
       if ( fullProjectSettings )
       {
