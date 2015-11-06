@@ -216,6 +216,11 @@
             <normaloff>:/images/themes/default/propertyicons/metadata.svg</normaloff>:/images/themes/default/propertyicons/metadata.svg</iconset>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>OWS</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
@@ -266,8 +271,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -544,8 +549,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -618,8 +623,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_28">
@@ -682,8 +687,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -724,8 +729,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_32">
@@ -867,8 +872,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -1028,8 +1033,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -1076,8 +1081,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_23">
@@ -1174,8 +1179,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>730</width>
-                <height>537</height>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -1215,9 +1220,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-71</y>
-                <width>714</width>
-                <height>608</height>
+                <y>0</y>
+                <width>743</width>
+                <height>551</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
@@ -1540,6 +1545,38 @@
                </item>
               </layout>
              </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="mOptsPage_Ows">
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="mWMSMetadataCheckBox">
+             <property name="text">
+              <string>Publish layer metadata in GetProjectSettings</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="mWMSLegendCheckBox">
+             <property name="text">
+              <string>Publish WMS legend</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="mWMSLegendTitleCheckBox">
+             <property name="text">
+              <string>Show layer title in GetLegendGraphic</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="mWMSCheckboxBox">
+             <property name="text">
+              <string>Publish layer as checkable in GetProjectSettings</string>
+             </property>
             </widget>
            </item>
           </layout>
