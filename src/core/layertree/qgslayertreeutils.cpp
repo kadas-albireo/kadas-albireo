@@ -148,6 +148,12 @@ static QDomElement _writeOldLegendGroup( QDomDocument& doc, QgsLayerTreeGroup* n
     groupElem.setAttribute( "project", nodeGroup->customProperty( "embedded_project" ).toString() );
   }
 
+  groupElem.setAttribute( "title", nodeGroup->title() );
+  groupElem.setAttribute( "abstract", nodeGroup->abstract() );
+  groupElem.setAttribute( "wms_publish_legend", nodeGroup->wmsPublishLegend() ? "1" : "0" );
+  groupElem.setAttribute( "wms_publish_metadata", nodeGroup->wmsPublishMetadata() ? "1" : "0" );
+  groupElem.setAttribute( "wms_checkable", nodeGroup->wmsCheckable() ? "1" : "0" );
+
   _writeOldLegendGroupChildren( doc, groupElem, nodeGroup, hasCustomOrder, order );
   return groupElem;
 }

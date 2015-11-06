@@ -47,7 +47,6 @@ class QgsComposerManager;
 class QgsContrastEnhancement;
 class QgsCustomLayerOrderWidget;
 class QgsGeometry;
-class QgsGPSRouteEditor;
 class QgsFeature;
 class QgsLayerTreeMapCanvasBridge;
 class QgsLayerTreeView;
@@ -60,8 +59,6 @@ class QgsPoint;
 class QgsProviderRegistry;
 class QgsPythonUtils;
 class QgsRectangle;
-class QgsRedlining;
-class QgsRedliningLayer;
 class QgsSnappingUtils;
 class QgsUndoWidget;
 class QgsVectorLayer;
@@ -70,6 +67,8 @@ class QgsDoubleSpinBox;
 
 class QDomDocument;
 class QNetworkReply;
+class QNetworkProxy;
+class QAuthenticator;
 
 class QgsBrowserDockWidget;
 class QgsAdvancedDigitizingDockWidget;
@@ -310,8 +309,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QAction *actionFeatureAction() { return mActionFeatureAction; }
     QAction *actionMeasure() { return mActionMeasure; }
     QAction *actionMeasureArea() { return mActionMeasureArea; }
-    QAction *actionMeasureCircle() { return mActionMeasureCircle; }
-    QAction *actionMeasureHeightProfile() { return mActionMeasureHeightProfile; }
     QAction *actionZoomFullExtent() { return mActionZoomFullExtent; }
     QAction *actionZoomToLayer() { return mActionZoomToLayer; }
     QAction *actionZoomToSelected() { return mActionZoomToSelected; }
@@ -492,6 +489,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
 
     //! open the properties dialog for the currently selected layer
     void layerProperties();
+    //! open the properties dialog for the currently selected group
+    void groupProperties();
 
     //! show the attribute table for the currently selected layer
     void attributeTable();
@@ -602,8 +601,11 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     //! Set app stylesheet from settings
     void setAppStyleSheet( const QString& stylesheet );
 
+    //! request credentials for network manager
+    void namAuthenticationRequired( QNetworkReply *reply, QAuthenticator *auth );
+    void namProxyAuthenticationRequired( const QNetworkProxy &proxy, QAuthenticator *auth );
 #ifndef QT_NO_OPENSSL
-    void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
+    void namSslErrors( QNetworkReply *reply, const QList<QSslError> &errors );
 #endif
     void namRequestTimedOut( QNetworkReply *reply );
 
@@ -866,8 +868,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void fileSaveAs();
     //! Export project in dxf format
     void dxfExport();
-    //! Export project in kml format
-    void kmlExport();
     //! Open the project file corresponding to the
     //! text)= of the given action.
     void openProject( QAction *action );
@@ -878,8 +878,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void runScript( const QString& filePath );
     //! Save the map view as an image - user is prompted for image name using a dialog
     void saveMapAsImage();
-    //! Save the map image to clipboard
-    void saveMapToClipboard();
     //! Open a project
     void fileOpen();
     //! Create a new project
@@ -921,8 +919,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void hideSelectedLayers();
     //reimplements method from base (gui) class
     void showSelectedLayers();
-    //! Returns the default redlining layer
-    QgsRedliningLayer* redliningLayer();
     //! Return pointer to the active layer
     QgsMapLayer *activeLayer();
     //! set the active layer
@@ -1083,10 +1079,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void measure();
     //! Measure area
     void measureArea();
-    //! Measure circle
-    void measureCircle();
-    //! Measure height profile
-    void measureHeightProfile();
     //! Measure angle
     void measureAngle();
 
@@ -1467,8 +1459,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
         QgsMapTool *mFeatureAction;
         QgsMapTool *mMeasureDist;
         QgsMapTool *mMeasureArea;
-        QgsMapTool *mMeasureCircle;
-        QgsMapTool *mMeasureHeightProfile;
         QgsMapTool *mMeasureAngle;
         QgsMapTool *mAddFeature;
         QgsMapTool *mCircularStringCurvePoint;
@@ -1666,10 +1656,6 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QToolButton* mBtnFilterLegend;
 
     QgsSnappingUtils* mSnappingUtils;
-
-    QgsRedlining* mRedlining;
-
-    QgsGPSRouteEditor* mGpsRouteEditor;
 
 #ifdef HAVE_TOUCH
     bool gestureEvent( QGestureEvent *event );
