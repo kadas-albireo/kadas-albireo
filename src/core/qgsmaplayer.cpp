@@ -53,11 +53,14 @@ QgsMapLayer::QgsMapLayer( QgsMapLayer::LayerType type,
     : mValid( false ) // assume the layer is invalid
     , mDataSource( source )
     , mLayerOrigName( lyrname ) // store the original name
-    , mLayerType( type )
     , mID( "" )
+    , mLayerType( type )
     , mBlendMode( QPainter::CompositionMode_SourceOver ) // Default to normal blending
     , mLegend( 0 )
     , mStyleManager( new QgsMapLayerStyleManager( this ) )
+    , mWMSPublishLegend( true )
+    , mWMSPublishMetadata( true )
+    , mWMSCheckable( true )
 {
   mCRS = new QgsCoordinateReferenceSystem();
 
@@ -170,6 +173,10 @@ bool QgsMapLayer::readLayerXML( const QDomElement& layerElement )
 
   QDomNode mnl;
   QDomElement mne;
+
+  mWMSPublishLegend = layerElement.attribute( "wmsPublishLegend", "1" ).toInt();
+  mWMSPublishMetadata = layerElement.attribute( "wmsPublishMetadata", "1" ).toInt();
+  mWMSCheckable = layerElement.attribute( "wmsCheckable", "1" ).toInt();
 
   // read provider
   QString provider;
@@ -508,6 +515,9 @@ bool QgsMapLayer::writeLayerXML( QDomElement& layerElement, QDomDocument& docume
   layerElement.setAttribute( "hasScaleBasedVisibilityFlag", hasScaleBasedVisibility() ? 1 : 0 );
   layerElement.setAttribute( "minimumScale", QString::number( minimumScale() ) );
   layerElement.setAttribute( "maximumScale", QString::number( maximumScale() ) );
+  layerElement.setAttribute( "wmsPublishLegend", mWMSPublishLegend ? 1 : 0 );
+  layerElement.setAttribute( "wmsPublishMetadata", mWMSPublishMetadata ? 1 : 0 );
+  layerElement.setAttribute( "wmsCheckable", mWMSCheckable ? 1 : 0 );
 
   // ID
   QDomElement layerId = document.createElement( "id" );

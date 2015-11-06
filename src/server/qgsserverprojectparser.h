@@ -128,6 +128,9 @@ class QgsServerProjectParser
 
     QStringList customLayerOrder() const { return mCustomLayerOrder; }
 
+    /**Checks if an attribute on a layer or its parent groups is set (e.g. 'legend', 'metadata')*/
+    bool checkLayerGroupAttribute( const QString& attributeName, const QString& layerId ) const;
+
     QSet<QString> subLayersOfGroup( const QString& groupName ) const;
 
   private:

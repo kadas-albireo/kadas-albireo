@@ -1019,6 +1019,13 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       titleElem.appendChild( titleText );
       layerElem.appendChild( titleElem );
 
+      if ( fullProjectSettings )
+      {
+        layerElem.setAttribute( "checkbox", ( currentChildElem.attribute( "wmsCheckable", "1" ) == "1" ) ? 1 : 0 );
+        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", name ) ? 1 : 0 );
+        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", name ) ? 1 : 0 );
+      }
+
       if ( currentChildElem.attribute( "embedded" ) == "1" )
       {
         //add layers from other project files and embed into this group
@@ -1104,6 +1111,13 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       else
       {
         layerElem.setAttribute( "queryable", "1" );
+      }
+
+      if ( fullProjectSettings )
+      {
+        layerElem.setAttribute( "checkbox", currentLayer->wmsCheckable() ? 1 : 0 );
+        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", currentLayer->id() ) ? 1 : 0 );
+        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", currentLayer->id() ) ? 1 : 0 );
       }
 
       QDomElement nameElem = doc.createElement( "Name" );

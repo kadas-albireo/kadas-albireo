@@ -688,7 +688,7 @@ void QgsServerProjectParser::combineExtentAndCrsOfGroupChildren( QDomElement& gr
 
 void QgsServerProjectParser::addLayerProjectSettings( QDomElement& layerElem, QDomDocument& doc, QgsMapLayer* currentLayer ) const
 {
-  if ( !currentLayer )
+  if ( !currentLayer || !currentLayer->wmsPublishMetadata() )
   {
     return;
   }
@@ -1430,6 +1430,66 @@ void QgsServerProjectParser::addGetFeatureLayers( const QDomElement& layerElem )
     }
     idx += rx.matchedLength();
   }
+}
+
+bool QgsServerProjectParser::checkLayerGroupAttribute( const QString& attributeName, const QString& layerId ) const
+{
+  //search layer (if it is a layer), test if attribute is true. If not, return false.
+  QString lName;
+  QHash< QString, QDomElement >::const_iterator layerIt = mProjectLayerElementsById.find( layerId );
+  if ( layerIt != mProjectLayerElementsById.constEnd() )
+  {
+    if ( !layerIt.value().attribute( attributeName, "1" ).toInt() )
+    {
+      return false;
+    }
+    lName = layerName( layerIt.value() );
+  }
+
+  QDomElement currentElement;
+  if ( lName.isEmpty() )
+  {
+    currentElement = legendGroupByName( layerId );
+  }
+  else
+  {
+    //get <legendlayer> element from legend section
+    QDomElement legendElement = legendElem();
+    QDomNodeList layerNodeList = legendElement.elementsByTagName( "legendlayer" );
+    for ( int i = 0; i < layerNodeList.size(); ++i )
+    {
+      QDomElement currentLayerElement = layerNodeList.at( i ).toElement();
+      if ( currentLayerElement.attribute( "name" ) == lName )
+      {
+        currentElement = currentLayerElement;
+        if ( !currentElement.attribute( attributeName, "1" ).toInt() )
+        {
+          return false;
+        }
+        break;
+      }
+    }
+  }
+
+  if ( currentElement.isNull() )
+  {
+    return false;
+  }
+
+  while ( !currentElement.parentNode().isNull() )
+  {
+    if ( currentElement.attribute( attributeName, "1" ).toInt() != 1 )
+    {
+      return false;
+    }
+    if ( currentElement.parentNode().nodeName() != "legendgroup" )
+    {
+      break;
+    }
+    currentElement = currentElement.parentNode().toElement();
+  }
+
+  return true;
 }
 
 QSet<QString> QgsServerProjectParser::subLayersOfGroup( const QString& groupName ) const
