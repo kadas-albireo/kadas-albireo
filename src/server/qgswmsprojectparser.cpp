@@ -2116,6 +2116,22 @@ void QgsWMSProjectParser::serviceCapabilities( QDomElement& parentElement, QDomD
   mProjectParser->serviceCapabilities( parentElement, doc, "WMS", featureInfoFormatSIA2045() );
 }
 
+void QgsWMSProjectParser::legendPermissionFilter( QStringList& layerIds ) const
+{
+  if ( !mProjectParser )
+  {
+    return;
+  }
+
+  for ( int i = layerIds.size() - 1; i >= 0; --i )
+  {
+    if ( !mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", layerIds.at( i ) ) )
+    {
+      layerIds.removeAt( i );
+    }
+  }
+}
+
 QDomElement QgsWMSProjectParser::composerByName( const QString& composerName ) const
 {
   QDomElement composerElem;

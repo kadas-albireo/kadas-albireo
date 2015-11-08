@@ -119,6 +119,8 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
 
     QSet<QString> subLayersOfGroup( const QString& groupName ) const;
 
+    void legendPermissionFilter( QStringList& layerIds ) const;
+
   private:
     QgsServerProjectParser* mProjectParser;
 

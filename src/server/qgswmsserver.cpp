@@ -695,6 +695,9 @@ QImage* QgsWMSServer::getLegendGraphics()
 
   QgsCoordinateReferenceSystem dummyCRS;
   QStringList layerIds = layerSet( layersList, stylesList, dummyCRS, scaleDenominator );
+
+  //Filter out layers if legend is excluded from publication
+  mConfigParser->legendPermissionFilter( layerIds );
   if ( layerIds.size() < 1 )
   {
     return 0;

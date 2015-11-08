@@ -129,6 +129,9 @@ class QgsWMSConfigParser
 
     virtual void serviceCapabilities( QDomElement& parentElement, QDomDocument& doc ) const = 0;
 
+    /**Removes layers where the legend cannot be published. Considers settings on layer level and on group levels*/
+    virtual void legendPermissionFilter( QStringList& layerIds ) const = 0;
+
     virtual bool useLayerIDs() const = 0;
 
     virtual QSet<QString> publishGroupsAsLayer() const = 0;

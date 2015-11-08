@@ -1735,6 +1735,14 @@ QSet<QString> QgsSLDConfigParser::subLayersOfGroup( const QString& groupName ) c
   return QSet<QString>();
 }
 
+void QgsSLDConfigParser::legendPermissionFilter( QStringList& layerIds ) const
+{
+  if ( mFallbackParser )
+  {
+    mFallbackParser->legendPermissionFilter( layerIds );
+  }
+}
+
 
 
 
