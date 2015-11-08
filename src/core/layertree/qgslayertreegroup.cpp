@@ -227,9 +227,9 @@ QgsLayerTreeGroup* QgsLayerTreeGroup::readXML( QDomElement& element )
 
   groupNode->setTitle( element.attribute( "title" ) );
   groupNode->setAbstract( element.attribute( "abstract" ) );
-  groupNode->setWMSPublishLegend( element.attribute( "wms_publish_legend", "1" ) == "1" );
-  groupNode->setWMSPublishMetadata( element.attribute( "wms_publish_metadata", "1" ) == "1" );
-  groupNode->setWMSCheckable( element.attribute( "wms_checkable", "1" ) == "1" );
+  groupNode->setWMSPublishLegend( element.attribute( "wmsPublishLegend", "1" ) == "1" );
+  groupNode->setWMSPublishMetadata( element.attribute( "wmsPublishMetadata", "1" ) == "1" );
+  groupNode->setWMSCheckable( element.attribute( "wmsCheckable", "1" ) == "1" );
 
   return groupNode;
 }
@@ -243,9 +243,9 @@ void QgsLayerTreeGroup::writeXML( QDomElement& parentElement )
   elem.setAttribute( "checked", QgsLayerTreeUtils::checkStateToXml( mChecked ) );
   elem.setAttribute( "title", mTitle );
   elem.setAttribute( "abstract", mAbstract );
-  elem.setAttribute( "wms_publish_legend", mWMSPublishLegend ? "1" : "0" );
-  elem.setAttribute( "wms_publish_metadata", mWMSPublishMetadata ? "1" : "0" );
-  elem.setAttribute( "wms_checkable", mWMSCheckable ? "1" : "0" );
+  elem.setAttribute( "wmsPublishLegend", mWMSPublishLegend ? "1" : "0" );
+  elem.setAttribute( "wmsPublishMetadata", mWMSPublishMetadata ? "1" : "0" );
+  elem.setAttribute( "wmsCheckable", mWMSCheckable ? "1" : "0" );
 
   writeCommonXML( elem );
 
