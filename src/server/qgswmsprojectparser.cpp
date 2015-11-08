@@ -1035,9 +1035,9 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
 
       if ( fullProjectSettings )
       {
-        layerElem.setAttribute( "checkbox", ( currentChildElem.attribute( "wmsCheckable", "1" ) == "1" ) ? 1 : 0 );
-        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", name ) ? 1 : 0 );
-        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", name ) ? 1 : 0 );
+        layerElem.setAttribute( "checkbox", ( currentChildElem.attribute( "wmsCheckable", "1" ) == "1" ) ? "1" : "0" );
+        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", name ) ? "1" : "0" );
+        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", name ) ? "1" : "0" );
       }
 
       if ( currentChildElem.attribute( "embedded" ) == "1" )
