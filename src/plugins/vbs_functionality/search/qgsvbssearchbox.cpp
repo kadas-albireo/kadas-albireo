@@ -476,7 +476,6 @@ void QgsVBSSearchBox::resultSelected()
     mSearchBox->blockSignals( false );
     mSearchButton->setVisible( true );
     mClearButton->setVisible( false );
-    mIface->mapCanvas()->refresh();
   }
 }
 
@@ -532,7 +531,6 @@ void QgsVBSSearchBox::cancelSearch()
   if ( mRubberBand && !mClearButton->isVisible() )
   {
     mIface->mapCanvas()->scene()->removeItem( mRubberBand );
-    mIface->mapCanvas()->refresh();
     delete mRubberBand;
     mRubberBand = 0;
   }
