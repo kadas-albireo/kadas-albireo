@@ -67,7 +67,7 @@ void QgsVBSPinAnnotationItem::setMapPosition( const QgsPoint& pos )
 
 double QgsVBSPinAnnotationItem::getHeightAtCurrentPos()
 {
-  QString layerid = QgsProject::instance()->property( "heightmap" ).toString();
+  QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {

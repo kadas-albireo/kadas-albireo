@@ -145,7 +145,7 @@ QAction* QgsLayerTreeViewDefaultActions::actionUseAsHightMap( QObject *parent )
     return 0;
   QAction* heightmapAction = new QAction( tr( "Use as heightmap" ), parent );
   heightmapAction->setCheckable( true );
-  QString currentHeightmap = QgsProject::instance()->property( "heightmap" ).toString();
+  QString currentHeightmap = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   heightmapAction->setChecked( currentHeightmap == layer->id() );
   heightmapAction->setProperty( "layerid", layer->id() );
   connect( heightmapAction, SIGNAL( toggled( bool ) ), this, SLOT( setHeightMapLayer( bool ) ) );
@@ -275,7 +275,7 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
 
 void QgsLayerTreeViewDefaultActions::setHeightMapLayer( bool active )
 {
-  QgsProject::instance()->setProperty( "heightmap", active ? QObject::sender()->property( "layerid" ) : "" );
+  QgsProject::instance()->writeEntry( "Heightmap", "layer", active ? QObject::sender()->property( "layerid" ).toString() : "" );
 }
 
 void QgsLayerTreeViewDefaultActions::zoomToLayers( QgsMapCanvas* canvas, const QList<QgsMapLayer*>& layers )
