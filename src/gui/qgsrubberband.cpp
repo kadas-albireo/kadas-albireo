@@ -560,40 +560,29 @@ void QgsRubberBand::updateRect()
     return;
   }
 
-  const QgsMapToPixel& m2p = *( mMapCanvas->getCoordinateTransform() );
+  qreal mupp = mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel();
+  qreal w = qMax(( mIconSize + 1 ) / 2., ( mPen.width() * qSqrt( 2 ) ) / 2. + mPen.width() ) * mupp;
 
-  qreal res = m2p.mapUnitsPerPixel();
-  qreal w = (( mIconSize - 1 ) / 2 + mPen.width() ) / res;
-
-  QgsRectangle r;
+  QgsRectangle newRect;
   for ( int i = 0; i < mPoints.size(); ++i )
   {
-    QList<QgsPoint>::const_iterator it = mPoints.at( i ).constBegin(),
-                                         itE = mPoints.at( i ).constEnd();
-    for ( ; it != itE; ++it )
+    foreach ( const QgsPoint& point, mPoints[i] )
     {
-      QgsPoint p( it->x() + mTranslationOffsetX, it->y() + mTranslationOffsetY );
-      p = m2p.transform( p );
-      QgsRectangle rect( p.x() - w, p.y() - w, p.x() + w, p.y() + w );
+      QgsPoint p( point.x() + mTranslationOffsetX, point.y() + mTranslationOffsetY );
+      QgsRectangle pRect( p.x() - w, p.y() - w, p.x() + w, p.y() + w );
 
-      if ( r.isEmpty() )
+      if ( newRect.isEmpty() )
       {
         // Get rectangle of the first point
-        r = rect;
+        newRect = pRect;
       }
       else
       {
-        r.combineExtentWith( &rect );
+        newRect.combineExtentWith( &pRect );
       }
     }
   }
-
-  // This is an hack to pass QgsMapCanvasItem::setRect what it
-  // expects (encoding of position and size of the item)
-  QgsPoint topLeft = m2p.toMapPoint( r.xMinimum(), r.yMinimum() );
-  QgsRectangle rect( topLeft.x(), topLeft.y(), topLeft.x() + r.width()*res, topLeft.y() - r.height()*res );
-
-  setRect( rect );
+  setRect( newRect );
 }
 
 void QgsRubberBand::updatePosition( )
