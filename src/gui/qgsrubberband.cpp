@@ -561,7 +561,14 @@ void QgsRubberBand::updateRect()
   }
 
   qreal mupp = mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel();
-  qreal w = qMax(( mIconSize + 1 ) / 2., ( mPen.width() * qSqrt( 2 ) ) / 2. + mPen.width() ) * mupp;
+
+  double iconSize = ( mIconSize + 1 ) / 2.;
+  if ( mSvgRenderer )
+  {
+    QRectF viewBox = mSvgRenderer->viewBoxF();
+    iconSize = qMax( qAbs( mSvgOffset.x() ) + .5 * viewBox.width(), qAbs( mSvgOffset.y() ) + .5 * viewBox.height() );
+  }
+  qreal w = qMax( iconSize, ( mPen.width() * qSqrt( 2 ) ) / 2. + mPen.width() ) * mupp;
 
   QgsRectangle newRect;
   for ( int i = 0; i < mPoints.size(); ++i )
