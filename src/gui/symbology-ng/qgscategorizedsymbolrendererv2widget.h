@@ -98,6 +98,9 @@ class GUI_EXPORT QgsCategorizedSymbolRendererV2Widget : public QgsRendererV2Widg
 
     void rowsMoved();
 
+  protected slots:
+    void removeLegendSymbol();
+
   protected:
 
     void updateUiFromRenderer();
@@ -117,6 +120,7 @@ class GUI_EXPORT QgsCategorizedSymbolRendererV2Widget : public QgsRendererV2Widg
     void changeSelectedSymbols();
 
     void changeCategorySymbol();
+    void changeCategoryLegendSymbol();
 
     QgsVectorColorRampV2* getColorRamp();
 

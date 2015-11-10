@@ -30,9 +30,10 @@ class CORE_EXPORT QgsRendererCategoryV2
 {
   public:
     QgsRendererCategoryV2();
+    ~QgsRendererCategoryV2();
 
     //! takes ownership of symbol
-    QgsRendererCategoryV2( QVariant value, QgsSymbolV2* symbol, QString label, bool render = true );
+    QgsRendererCategoryV2( QVariant value, QgsSymbolV2* symbol, QString label, bool render = true, QString html = QString(), QgsSymbolV2* legendSymbol = 0 );
 
     //! copy constructor
     QgsRendererCategoryV2( const QgsRendererCategoryV2& cat );
@@ -56,11 +57,22 @@ class CORE_EXPORT QgsRendererCategoryV2
 
     void toSld( QDomDocument& doc, QDomElement &element, QgsStringMap props ) const;
 
+    void setHtml( const QString& html ) { mHtml = html; }
+    QString html() const { return mHtml; }
+
+    QgsSymbolV2* legendSymbol() const;
+    void setLegendSymbol( QgsSymbolV2* s );
+
   protected:
     QVariant mValue;
     QScopedPointer<QgsSymbolV2> mSymbol;
     QString mLabel;
     bool mRender;
+
+    //! HTML legend label
+    QString mHtml;
+    //! Legend symbol (might be different from original symbol)
+    QgsSymbolV2* mLegendSymbol;
 
     void swap( QgsRendererCategoryV2 & other );
 };
@@ -109,6 +121,8 @@ class CORE_EXPORT QgsCategorizedSymbolRendererV2 : public QgsFeatureRendererV2
     bool updateCategoryValue( int catIndex, const QVariant &value );
     bool updateCategorySymbol( int catIndex, QgsSymbolV2* symbol );
     bool updateCategoryLabel( int catIndex, QString label );
+    bool updateCategoryHtml( int catIndex, QString html );
+    bool updateCategoryLegendSymbol( int catIndex, QgsSymbolV2* symbol );
 
     //! @note added in 2.5
     bool updateCategoryRenderState( int catIndex, bool render );
@@ -138,6 +152,10 @@ class CORE_EXPORT QgsCategorizedSymbolRendererV2 : public QgsFeatureRendererV2
     //! return a list of item text / symbol
     //! @note not available in python bindings
     virtual QgsLegendSymbolList legendSymbolItems( double scaleDenominator = -1, QString rule = QString() ) override;
+
+    //! Return a list of symbology items for the legend. Better choice than legendSymbolItems().
+    //! Default fallback implementation just uses legendSymbolItems() implementation
+    virtual QgsLegendSymbolListV2 legendSymbolItemsV2() const override;
 
     QgsSymbolV2* sourceSymbol();
     void setSourceSymbol( QgsSymbolV2* sym );

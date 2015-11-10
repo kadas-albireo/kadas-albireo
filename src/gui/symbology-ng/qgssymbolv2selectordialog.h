@@ -42,6 +42,8 @@ class GUI_EXPORT QgsSymbolV2SelectorDialog : public QDialog, private Ui::QgsSymb
     //! return menu for "advanced" button - create it if doesn't exist and show the advanced button
     QMenu* advancedMenu();
 
+    void addDialogBoxButton( QAbstractButton* button, QDialogButtonBox::ButtonRole role );
+
   protected:
     //! Reimplements dialog keyPress event so we can ignore it
     void keyPressEvent( QKeyEvent * event ) override;

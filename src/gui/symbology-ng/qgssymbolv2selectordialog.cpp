@@ -110,31 +110,31 @@ class SymbolLayerItem : public QStandardItem
     QVariant data( int role ) const override
     {
       if ( role == Qt::DisplayRole || role == Qt::EditRole )
+  {
+    if ( mIsLayer )
+        return QgsSymbolLayerV2Registry::instance()->symbolLayerMetadata( mLayer->layerType() )->visibleName();
+      else
       {
-        if ( mIsLayer )
-          return QgsSymbolLayerV2Registry::instance()->symbolLayerMetadata( mLayer->layerType() )->visibleName();
-        else
+        switch ( mSymbol->type() )
         {
-          switch ( mSymbol->type() )
-          {
-            case QgsSymbolV2::Marker : return "Marker";
-            case QgsSymbolV2::Fill   : return "Fill";
-            case QgsSymbolV2::Line   : return "Line";
-            default: return "Symbol";
-          }
+          case QgsSymbolV2::Marker : return "Marker";
+          case QgsSymbolV2::Fill   : return "Fill";
+          case QgsSymbolV2::Line   : return "Line";
+          default: return "Symbol";
         }
       }
-      if ( role == Qt::SizeHintRole )
-        return QVariant( QSize( 32, 32 ) );
-      if ( role == Qt::CheckStateRole )
-        return QVariant(); // could be true/false
-      return QStandardItem::data( role );
     }
+    if ( role == Qt::SizeHintRole )
+    return QVariant( QSize( 32, 32 ) );
+    if ( role == Qt::CheckStateRole )
+      return QVariant(); // could be true/false
+      return QStandardItem::data( role );
+      }
 
-  protected:
-    QgsSymbolLayerV2* mLayer;
-    QgsSymbolV2* mSymbol;
-    bool mIsLayer;
+    protected:
+      QgsSymbolLayerV2* mLayer;
+  QgsSymbolV2* mSymbol;
+  bool mIsLayer;
 };
 
 //////////
@@ -213,6 +213,11 @@ QMenu* QgsSymbolV2SelectorDialog::advancedMenu()
     layerChanged();
   }
   return mAdvancedMenu;
+}
+
+void QgsSymbolV2SelectorDialog::addDialogBoxButton( QAbstractButton* button, QDialogButtonBox::ButtonRole role )
+{
+  buttonBox->addButton( button, role );
 }
 
 void QgsSymbolV2SelectorDialog::loadSymbol( QgsSymbolV2* symbol, SymbolLayerItem* parent )

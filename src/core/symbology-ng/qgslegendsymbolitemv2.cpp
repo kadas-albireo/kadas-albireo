@@ -24,6 +24,7 @@ QgsLegendSymbolItemV2::QgsLegendSymbolItemV2()
     , mScaleMinDenom( -1 )
     , mScaleMaxDenom( -1 )
     , mLevel( 0 )
+    , mLegendSymbol( 0 )
 {
 }
 
@@ -37,12 +38,14 @@ QgsLegendSymbolItemV2::QgsLegendSymbolItemV2( QgsSymbolV2* symbol, const QString
     , mScaleMaxDenom( scaleMaxDenom )
     , mLevel( level )
     , mParentKey( parentRuleKey )
+    , mLegendSymbol( 0 )
 {
 }
 
 QgsLegendSymbolItemV2::QgsLegendSymbolItemV2( const QgsLegendSymbolItemV2& other )
     : mSymbol( 0 )
     , mOriginalSymbolPointer( 0 )
+    , mLegendSymbol( 0 )
 {
   *this = other;
 }
@@ -50,6 +53,7 @@ QgsLegendSymbolItemV2::QgsLegendSymbolItemV2( const QgsLegendSymbolItemV2& other
 QgsLegendSymbolItemV2::~QgsLegendSymbolItemV2()
 {
   delete mSymbol;
+  delete mLegendSymbol;
 }
 
 QgsLegendSymbolItemV2& QgsLegendSymbolItemV2::operator=( const QgsLegendSymbolItemV2 & other )
@@ -66,6 +70,14 @@ QgsLegendSymbolItemV2& QgsLegendSymbolItemV2::operator=( const QgsLegendSymbolIt
   mScaleMaxDenom = other.mScaleMaxDenom;
   mLevel = other.mLevel;
   mParentKey = other.mParentKey;
+  mHtml = other.mHtml;
+
+  delete mLegendSymbol;
+  mLegendSymbol = 0;
+  if ( other.mLegendSymbol )
+  {
+    mLegendSymbol = other.mLegendSymbol->clone();
+  }
 
   return *this;
 }
@@ -88,4 +100,19 @@ void QgsLegendSymbolItemV2::setSymbol( QgsSymbolV2* s )
   delete mSymbol;
   mSymbol = s ? s->clone() : 0;
   mOriginalSymbolPointer = s;
+}
+
+QgsSymbolV2* QgsLegendSymbolItemV2::legendSymbol() const
+{
+  if ( !mLegendSymbol )
+  {
+    return 0;
+  }
+  return mLegendSymbol->clone();
+}
+
+void QgsLegendSymbolItemV2::setLegendSymbol( QgsSymbolV2* s )
+{
+  delete mLegendSymbol;
+  mLegendSymbol = s;
 }

@@ -181,6 +181,30 @@ void QgsRendererV2Widget::showSymbolLevelsDialog( QgsFeatureRendererV2* r )
   }
 }
 
+QString QgsRendererV2Widget::htmlToolTip()
+{
+  return tr( "Complete html support for Html output in GetLegendGraphic. For raster output, &lt;br&gt;,&lt;b&gt;,&lt;i&gt;,&lt;u&gt; are supported. &lt;b&gt;&lt;i&gt;&lt;u&gt; can be nested in that order only" );;
+}
+
+QGis::GeometryType QgsRendererV2Widget::queryGeometryType()
+{
+  QStringList typeList;
+  typeList << tr( "Point" ) << tr( "Line" ) << tr( "Polygon" );
+  QString symbolType = QInputDialog::getItem( this, tr( "Select symbology type" ), tr( "Type" ), typeList, 0, false );
+  if ( symbolType.compare( tr( "Point" ) ) == 0 )
+  {
+    return QGis::Point;
+  }
+  else if ( symbolType.compare( tr( "Line" ) ) == 0 )
+  {
+    return QGis::Line;
+  }
+  else
+  {
+    return QGis::Polygon;
+  }
+}
+
 
 ////////////
 
