@@ -493,6 +493,7 @@
         <file>themes/default/mActionCircularStringCurvePoint.png</file>
         <file>themes/default/mActionCircularStringRadius.png</file>
         <file>themes/default/mActionSaveMapToClipboard.png</file>
+        <file>themes/default/observer.svg</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

@@ -21,8 +21,11 @@
 #include "qgscoordinatereferencesystem.h"
 #include "qgspoint.h"
 
-class QgsPoint;
+class QDoubleSpinBox;
+class QGroupBox;
 class QgsMeasureHeightProfileTool;
+class QgsPoint;
+class QgsRubberBand;
 class QwtPlot;
 class QwtPlotCurve;
 class QwtPlotMarker;
@@ -35,21 +38,30 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool* tool, QWidget* parent = 0, Qt::WindowFlags f = 0 );
     void setPoints( const QList<QgsPoint> &points, const QgsCoordinateReferenceSystem& crs );
     void setMarkerPos( int segment, const QgsPoint& p );
+    void clear();
 
   private slots:
     void finish();
     void replot();
+    void updateLineOfSight( bool replot = true );
 
   private:
     QgsMeasureHeightProfileTool* mTool;
     QwtPlot* mPlot;
     QwtPlotCurve* mPlotCurve;
+    QVector<QwtPlotCurve*> mLinesOfSight;
+    QVector<QgsRubberBand*> mLinesOfSightRB;
     QwtPlotMarker* mPlotMarker;
+    QwtPlotMarker* mLineOfSightMarker;
     QList<QgsPoint> mPoints;
     QVector<double> mSegmentLengths;
     double mTotLength;
     QgsCoordinateReferenceSystem mPointsCrs;
     int mNSamples;
+    QGroupBox* mLineOfSightGroupBoxgroupBox;
+    QDoubleSpinBox* mObserverHeightSpinBox;
+    QDoubleSpinBox* mTargetHeightSpinBox;
+
 };
 
 #endif // QGSMEASUREHEIGHTPROFILEDIALOG_H

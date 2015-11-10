@@ -42,6 +42,7 @@ QgsMeasureHeightProfileTool::~QgsMeasureHeightProfileTool()
 
 void QgsMeasureHeightProfileTool::restart()
 {
+  mDialog->clear();
   mMoving = false;
   mRubberBand->reset( QGis::Line );
   mRubberBandPoints->reset( QGis::Point );
@@ -81,7 +82,7 @@ void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
     mRubberBand->movePoint( nPoints - 1 , p );
     mRubberBandPoints->movePoint( nPoints - 1, p );
   }
-  else if ( mRubberBandPoints->partSize( 0 ) > 3 )
+  else if ( mRubberBandPoints->partSize( 0 ) > 2 )
   {
     double minDist = std::numeric_limits<double>::max();
     int minIdx;
