@@ -80,7 +80,7 @@ void QgsMeasureTool::activate()
 
 void QgsMeasureTool::deactivate()
 {
-  mDialog->hide();
+  mDialog->close();
   QgsMapTool::deactivate();
 }
 
@@ -120,7 +120,8 @@ void QgsMeasureTool::updateSettings()
   int myRed = settings.value( "/qgis/default_measure_color_red", 222 ).toInt();
   int myGreen = settings.value( "/qgis/default_measure_color_green", 155 ).toInt();
   int myBlue = settings.value( "/qgis/default_measure_color_blue", 67 ).toInt();
-  mRubberBand->setColor( QColor( myRed, myGreen, myBlue ) );
+  mRubberBand->setBorderColor( QColor( myRed, myGreen, myBlue ) );
+  mRubberBand->setFillColor( QColor( myRed, myGreen, myBlue, 127 ) );
   mRubberBand->setWidth( 3 );
   mRubberBandPoints->setIcon( QgsRubberBand::ICON_CIRCLE );
   mRubberBandPoints->setIconSize( 10 );

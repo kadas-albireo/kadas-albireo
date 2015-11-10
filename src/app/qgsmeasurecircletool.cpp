@@ -91,7 +91,10 @@ void QgsMeasureCircleTool::addPart( const QgsPoint &point )
   mCenterPos = point;
 
   mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
-  mTextLabels.back()->setDefaultTextColor( Qt::blue );
+  int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
+  int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
+  int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  mTextLabels.back()->setDefaultTextColor( QColor( red, green, blue ) );
   QFont font = mTextLabels.back()->font();
   font.setBold( true );
   mTextLabels.back()->setFont( font );
