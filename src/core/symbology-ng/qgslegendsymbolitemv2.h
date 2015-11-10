@@ -66,6 +66,12 @@ class CORE_EXPORT QgsLegendSymbolItemV2
     //! @note added in 2.8
     QString parentRuleKey() const { return mParentKey; }
 
+    void setHtml( const QString& html ) { mHtml = html; }
+    QString html() const { return mHtml; }
+
+    QgsSymbolV2* legendSymbol() const;
+    void setLegendSymbol( QgsSymbolV2* s );
+
   protected:
     //! Set symbol of the item. Takes ownership of symbol.
     void setSymbol( QgsSymbolV2* s );
@@ -91,6 +97,11 @@ class CORE_EXPORT QgsLegendSymbolItemV2
     int mLevel;
     //! Key of the parent legend node. For legends with tree hierarchy
     QString mParentKey;
+
+    //! HTML legend label
+    QString mHtml;
+    //! Legend symbol (might be different from original symbol)
+    QgsSymbolV2* mLegendSymbol;
 };
 
 

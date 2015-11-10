@@ -31,15 +31,22 @@
 #include <QSettings> // for legend
 
 QgsRendererCategoryV2::QgsRendererCategoryV2()
-    : mRender( true )
+    : mRender( true ), mLegendSymbol( 0 )
 {
 }
 
-QgsRendererCategoryV2::QgsRendererCategoryV2( QVariant value, QgsSymbolV2* symbol, QString label, bool render )
+QgsRendererCategoryV2::~QgsRendererCategoryV2()
+{
+  delete mLegendSymbol;
+}
+
+QgsRendererCategoryV2::QgsRendererCategoryV2( QVariant value, QgsSymbolV2* symbol, QString label, bool render, QString html, QgsSymbolV2* legendSymbol )
     : mValue( value )
     , mSymbol( symbol )
     , mLabel( label )
     , mRender( render )
+    , mHtml( html )
+    , mLegendSymbol( legendSymbol )
 {
 }
 
@@ -48,13 +55,25 @@ QgsRendererCategoryV2::QgsRendererCategoryV2( const QgsRendererCategoryV2& cat )
     , mSymbol( cat.mSymbol.data() ? cat.mSymbol->clone() : NULL )
     , mLabel( cat.mLabel )
     , mRender( cat.mRender )
+    , mHtml( cat.mHtml )
 {
+  mLegendSymbol = 0;
+  if ( cat.mLegendSymbol )
+  {
+    mLegendSymbol = cat.mLegendSymbol->clone();
+  }
 }
 
 // copy+swap idion, the copy is done through the 'pass by value'
 QgsRendererCategoryV2& QgsRendererCategoryV2::operator=( QgsRendererCategoryV2 cat )
 {
   swap( cat );
+  delete mLegendSymbol;
+  mLegendSymbol = 0;
+  if ( cat.mLegendSymbol )
+  {
+    mLegendSymbol = cat.legendSymbol()->clone();
+  }
   return *this;
 }
 
@@ -63,6 +82,7 @@ void QgsRendererCategoryV2::swap( QgsRendererCategoryV2 & cat )
   qSwap( mValue, cat.mValue );
   qSwap( mSymbol, cat.mSymbol );
   qSwap( mLabel, cat.mLabel );
+  qSwap( mHtml, cat.mHtml );
 }
 
 QVariant QgsRendererCategoryV2::value() const
@@ -138,6 +158,20 @@ void QgsRendererCategoryV2::toSld( QDomDocument &doc, QDomElement &element, QgsS
   QgsSymbolLayerV2Utils::createFunctionElement( doc, ruleElem, filterFunc );
 
   mSymbol->toSld( doc, ruleElem, props );
+}
+
+QgsSymbolV2* QgsRendererCategoryV2::legendSymbol() const
+{
+  if ( !mLegendSymbol )
+  {
+    return 0;
+  }
+  return mLegendSymbol->clone();
+}
+
+void QgsRendererCategoryV2::setLegendSymbol( QgsSymbolV2* s )
+{
+  delete mLegendSymbol; mLegendSymbol = s;
 }
 
 ///////////////////
@@ -316,6 +350,22 @@ bool QgsCategorizedSymbolRendererV2::updateCategoryRenderState( int catIndex, bo
   if ( catIndex < 0 || catIndex >= mCategories.size() )
     return false;
   mCategories[catIndex].setRenderState( render );
+  return true;
+}
+
+bool QgsCategorizedSymbolRendererV2::updateCategoryLegendSymbol( int catIndex, QgsSymbolV2* symbol )
+{
+  if ( catIndex < 0 || catIndex >= mCategories.size() )
+    return false;
+  mCategories[catIndex].setLegendSymbol( symbol );
+  return true;
+}
+
+bool QgsCategorizedSymbolRendererV2::updateCategoryHtml( int catIndex, QString html )
+{
+  if ( catIndex < 0 || catIndex >= mCategories.size() )
+    return false;
+  mCategories[catIndex].setHtml( html );
   return true;
 }
 
@@ -533,6 +583,14 @@ QgsFeatureRendererV2* QgsCategorizedSymbolRendererV2::create( QDomElement& eleme
   QgsSymbolV2Map symbolMap = QgsSymbolLayerV2Utils::loadSymbols( symbolsElem );
   QgsCategoryList cats;
 
+  //legend symbols
+  QgsSymbolV2Map legendSymbolsMap;
+  QDomElement legendSymbolsElem = element.firstChildElement( "legendsymbols" );
+  if ( !legendSymbolsElem.isNull() )
+  {
+    legendSymbolsMap = QgsSymbolLayerV2Utils::loadSymbols( legendSymbolsElem );
+  }
+
   QDomElement catElem = catsElem.firstChildElement();
   while ( !catElem.isNull() )
   {
@@ -541,12 +599,19 @@ QgsFeatureRendererV2* QgsCategorizedSymbolRendererV2::create( QDomElement& eleme
       QVariant value = QVariant( catElem.attribute( "value" ) );
       QString symbolName = catElem.attribute( "symbol" );
       QString label = catElem.attribute( "label" );
+      QString html = catElem.attribute( "html" );
       bool render = catElem.attribute( "render" ) != "false";
+      QgsSymbolV2* symbol = 0;
       if ( symbolMap.contains( symbolName ) )
       {
-        QgsSymbolV2* symbol = symbolMap.take( symbolName );
-        cats.append( QgsRendererCategoryV2( value, symbol, label, render ) );
+        symbol = symbolMap.take( symbolName );
       }
+      QgsSymbolV2* legendSymbol = 0;
+      if ( legendSymbolsMap.contains( symbolName ) )
+      {
+        legendSymbol = legendSymbolsMap.take( symbolName );
+      }
+      cats.append( QgsRendererCategoryV2( value, symbol, label, render, html, legendSymbol ) );
     }
     catElem = catElem.nextSiblingElement();
   }
@@ -605,6 +670,7 @@ QDomElement QgsCategorizedSymbolRendererV2::save( QDomDocument& doc )
   // categories
   int i = 0;
   QgsSymbolV2Map symbols;
+  QgsSymbolV2Map legendSymbols;
   QDomElement catsElem = doc.createElement( "categories" );
   QgsCategoryList::const_iterator it = mCategories.constBegin();
   for ( ; it != mCategories.end(); ++it )
@@ -617,6 +683,12 @@ QDomElement QgsCategorizedSymbolRendererV2::save( QDomDocument& doc )
     catElem.setAttribute( "value", cat.value().toString() );
     catElem.setAttribute( "symbol", symbolName );
     catElem.setAttribute( "label", cat.label() );
+    catElem.setAttribute( "html", cat.html() );
+    if ( cat.legendSymbol() )
+    {
+      catElem.setAttribute( "legendsymbol", symbolName );
+      legendSymbols.insert( symbolName, cat.legendSymbol() );
+    }
     catElem.setAttribute( "render", cat.renderState() ? "true" : "false" );
     catsElem.appendChild( catElem );
     i++;
@@ -627,6 +699,8 @@ QDomElement QgsCategorizedSymbolRendererV2::save( QDomDocument& doc )
   // save symbols
   QDomElement symbolsElem = QgsSymbolLayerV2Utils::saveSymbols( symbols, "symbols", doc );
   rendererElem.appendChild( symbolsElem );
+  QDomElement legendSymbolsElem = QgsSymbolLayerV2Utils::saveSymbols( legendSymbols, "legendsymbols", doc );
+  rendererElem.appendChild( legendSymbolsElem );
 
   // save source symbol
   if ( mSourceSymbol.data() )
@@ -672,6 +746,28 @@ QgsLegendSymbologyList QgsCategorizedSymbolRendererV2::legendSymbologyItems( QSi
     lst << qMakePair( cat.label(), pix );
   }
   return lst;
+}
+
+QgsLegendSymbolListV2 QgsCategorizedSymbolRendererV2::legendSymbolItemsV2() const
+{
+  QgsLegendSymbolListV2 legendItems;
+
+  int i = 0;
+  QgsCategoryList::const_iterator catIt = mCategories.constBegin();
+  for ( ; catIt != mCategories.constEnd(); ++catIt )
+  {
+    QgsLegendSymbolItemV2 symbol( catIt->symbol(), catIt->label(), QString::number( i ), legendSymbolItemsCheckable() );
+
+    //html label
+    symbol.setHtml( catIt->html() );
+
+    //legend symbol
+    QgsSymbolV2* legendSymbol = catIt->legendSymbol();
+    symbol.setLegendSymbol( legendSymbol );
+    legendItems.append( symbol );
+    ++i;
+  }
+  return legendItems;
 }
 
 QgsLegendSymbolList QgsCategorizedSymbolRendererV2::legendSymbolItems( double scaleDenominator, QString rule )
