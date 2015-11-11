@@ -165,6 +165,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /** Returns the source for the layer */
     const QString &source() const;
 
+    /** Sets the source for the layer */
+    void setSource( const QString& source ) { mDataSource = source; }
+
     /**
      * Returns the sublayers of this layer
      * (Useful for providers that manage their own layers, such as WMS)
