@@ -78,6 +78,7 @@
 %Include qgsmaptoolidentify.sip
 %Include qgsmaptoolidentifyfeature.sip
 %Include qgsmaptoolpan.sip
+%Include qgsmaptoolfilter.sip
 %Include qgsmaptooltouch.sip
 %Include qgsmaptoolzoom.sip
 %Include qgsmessagebar.sip

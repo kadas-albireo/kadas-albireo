@@ -46,7 +46,6 @@ class QgsVBSSearchBox : public QWidget
   private:
     class LineEdit;
     class TreeWidget;
-    class FilterTool;
 
     enum EntryType { EntryTypeCategory, EntryTypeResult };
     static const int sEntryTypeRole;
