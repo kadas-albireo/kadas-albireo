@@ -15,5 +15,6 @@
         <file>icons/search_filter_poly.svg</file>
         <file>icons/sync_views.svg</file>
         <file>icons/add_map_view.svg</file>
+        <file>icons/slope.svg</file>
     </qresource>
 </RCC>

@@ -34,6 +34,7 @@ class QgsMapLayer;
 class QgsMessageBarItem;
 class QgsVBSCrashHandler;
 class QgsVBSMultiMapManager;
+class QgsVBSSlopeTool;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -56,12 +57,15 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QgsVBSCrashHandler* mCrashHandler;
     QgsVBSMultiMapManager* mMultiMapManager;
     QAction* mActionOvlImport;
+    QAction* mActionSlope;
+    QgsVBSSlopeTool* mSlopeTool;
 
   private slots:
     void activateMapToolPinAnnotation();
     void onMapToolSet( QgsMapTool*tool );
     void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
     void importOVL();
+    void computeSlope( bool checked );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

@@ -25,6 +25,7 @@
 #include "qgsvbscrsselection.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
+#include "analysistools/qgsvbsslopetool.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
@@ -46,6 +47,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mCrashHandler( 0 )
     , mMultiMapManager( 0 )
     , mActionOvlImport( 0 )
+    , mSlopeTool( 0 )
 {
 }
 
@@ -78,6 +80,11 @@ void QgsVBSFunctionality::initGui()
   mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
   mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
+
+  mActionSlope = new QAction( QIcon( ":/vbsfunctionality/icons/slope.jpg" ), tr( "Compute slope" ), this );
+  mActionSlope->setCheckable( true );
+  connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( computeSlope( bool ) ) );
+  mQGisIface->pluginToolBar()->addAction( mActionSlope );
 }
 
 void QgsVBSFunctionality::unload()
@@ -144,4 +151,18 @@ void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& ne
 void QgsVBSFunctionality::importOVL()
 {
   QgsVBSOvlImporter( mQGisIface, mQGisIface->mainWindow() ).import();
+}
+
+void QgsVBSFunctionality::computeSlope( bool checked )
+{
+  if ( checked )
+  {
+    mSlopeTool = new QgsVBSSlopeTool( mQGisIface, this );
+    connect( mSlopeTool, SIGNAL( finished() ), mActionSlope, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mSlopeTool;
+    mSlopeTool = 0;
+  }
 }

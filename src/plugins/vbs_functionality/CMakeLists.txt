@@ -15,6 +15,7 @@ SET (vbsfunctionality_SRCS
   qgsvbscoordinateconverter.cpp
   qgsvbscrashhandler.cpp
   qgsvbscrsselection.cpp
+  analysistools/qgsvbsslopetool.cpp
   multimap/qgsvbsmapwidget.cpp
   multimap/qgsvbsmultimapmanager.cpp
   ovl/qgsvbsovlimporter.cpp
@@ -40,6 +41,7 @@ SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscrashhandler.h
   qgsvbscoordinatedisplayer.h
+  analysistools/qgsvbsslopetool.h
   pinannotation/qgsvbspinannotationitem.h
   multimap/qgsvbsmapwidget.h
   multimap/qgsvbsmultimapmanager.h
@@ -77,6 +79,7 @@ INCLUDE_DIRECTORIES(
      ${QJSON_INCLUDE_DIR}
      ${QUAZIP_INCLUDE_DIR}
      ${GDAL_INCLUDE_DIR}
+     ../../analysis
      ../../core
      ../../core/raster
      ../../core/geometry
@@ -88,6 +91,7 @@ INCLUDE_DIRECTORIES(
 TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core
   qgis_gui
+  qgis_analysis
   ${QJSON_LIBRARIES}
   ${QUAZIP_LIBRARIES}
   ${CRASHRPT_LIBRARY}
