@@ -56,7 +56,8 @@ class CORE_EXPORT QgsMapLayer : public QObject
     {
       VectorLayer,
       RasterLayer,
-      PluginLayer
+      PluginLayer,
+      RedliningLayer
     };
 
     /** Constructor
@@ -95,15 +96,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     void setAbstract( const QString& abstract ) { mAbstract = abstract; }
     const QString& abstract() const { return mAbstract; }
-
-    void setWMSPublishLegend( bool enable ) { mWMSPublishLegend = enable; }
-    bool wmsPublishLegend() const { return mWMSPublishLegend; }
-
-    void setWMSPublishMetadata( bool enable ) { mWMSPublishMetadata = enable; }
-    bool wmsPublishMetadata() const { return mWMSPublishMetadata; }
-
-    void setWMSCheckable( bool enable ) { mWMSCheckable = enable; }
-    bool wmsCheckable() const { return mWMSCheckable; }
 
     void setKeywordList( const QString& keywords ) { mKeywordList = keywords; }
     const QString& keywordList() const { return mKeywordList; }
@@ -172,6 +164,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Returns the source for the layer */
     const QString &source() const;
+
+    /** Sets the source for the layer */
+    void setSource( const QString& source ) { mDataSource = source; }
 
     /**
      * Returns the sublayers of this layer
@@ -615,6 +610,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /** \brief Error */
     QgsError mError;
 
+    /** Type of the layer (eg. vector, raster) */
+    QgsMapLayer::LayerType mLayerType;
+
   private:
     /** layer's spatial reference system.
         private to make sure setCrs must be used and layerCrsChanged() is emitted */
@@ -628,9 +626,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Unique ID of this layer - used to refer to this layer in map layer registry */
     QString mID;
-
-    /** Type of the layer (eg. vector, raster) */
-    QgsMapLayer::LayerType mLayerType;
 
     /** Blend mode for the layer */
     QPainter::CompositionMode mBlendMode;
@@ -656,10 +651,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     //! Manager of multiple styles available for a layer (may be null)
     QgsMapLayerStyleManager* mStyleManager;
-
-    bool mWMSPublishLegend;
-    bool mWMSPublishMetadata;
-    bool mWMSCheckable;
 };
 
 #endif
