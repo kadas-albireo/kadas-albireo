@@ -20,7 +20,7 @@
 
 #include "qgisplugin.h"
 #include <QObject>
-#include <QPolygonF>
+#include "qgsrectangle.h"
 
 class QgsCoordinateReferenceSystem;
 class QgsPoint;
@@ -52,7 +52,7 @@ class QgsRasterTerrainAnalysisPlugin: public QObject, public QgisPlugin
     QgisInterface* mIface;
     QMenu* mTerrainAnalysisMenu;
 
-    QPolygonF getLimitRegion( bool limitEnabled, QgsCoordinateReferenceSystem &regionCrs ) const;
+    QgsRectangle getLimitRegion( bool limitEnabled, QgsCoordinateReferenceSystem &regionCrs ) const;
 };
 
 #endif // QGSRASTERTERRAINANALYSISPLUGIN_H

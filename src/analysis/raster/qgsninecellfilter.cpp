@@ -19,7 +19,6 @@
 #include "qgscoordinatetransform.h"
 #include "cpl_string.h"
 #include <qmath.h>
-#include <QPolygonF>
 #include <QProgressDialog>
 #include <QFile>
 
@@ -29,7 +28,7 @@
 #define TO8F(x) QFile::encodeName( x ).constData()
 #endif
 
-QgsNineCellFilter::QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &region, const QgsCoordinateReferenceSystem &regionCrs )
+QgsNineCellFilter::QgsNineCellFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QgsRectangle &region, const QgsCoordinateReferenceSystem &regionCrs )
     : mInputFile( inputFile )
     , mOutputFile( outputFile )
     , mOutputFormat( outputFormat )
@@ -188,29 +187,20 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
 #pragma omp parallel for schedule(static)
     for ( int j = 0; j < xSize; ++j )
     {
-      QPointF pos( gtrans[0] + gtrans[1] * ( colStart + j ) + gtrans[2] * ( rowStart + i ),
-                   gtrans[3] + gtrans[4] * ( colStart + j ) + gtrans[5] * ( rowStart + i ) );
-      if ( mFilterRegion.isEmpty() || mFilterRegion.contains( pos ) )
+      if ( j == 0 )
       {
-        if ( j == 0 )
-        {
-          resultLine[j] = processNineCellWindow( &mInputNodataValue, &scanLine1[j], &scanLine1[j+1], &mInputNodataValue, &scanLine2[j],
-                                                 &scanLine2[j+1], &mInputNodataValue, &scanLine3[j], &scanLine3[j+1] );
-        }
-        else if ( j == xSize - 1 )
-        {
-          resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &mInputNodataValue, &scanLine2[j-1], &scanLine2[j],
-                                                 &mInputNodataValue, &scanLine3[j-1], &scanLine3[j], &mInputNodataValue );
-        }
-        else
-        {
-          resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &scanLine1[j+1], &scanLine2[j-1], &scanLine2[j],
-                                                 &scanLine2[j+1], &scanLine3[j-1], &scanLine3[j], &scanLine3[j+1] );
-        }
+        resultLine[j] = processNineCellWindow( &mInputNodataValue, &scanLine1[j], &scanLine1[j+1], &mInputNodataValue, &scanLine2[j],
+                                               &scanLine2[j+1], &mInputNodataValue, &scanLine3[j], &scanLine3[j+1] );
+      }
+      else if ( j == xSize - 1 )
+      {
+        resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &mInputNodataValue, &scanLine2[j-1], &scanLine2[j],
+                                               &mInputNodataValue, &scanLine3[j-1], &scanLine3[j], &mInputNodataValue );
       }
       else
       {
-        resultLine[j] = mInputNodataValue;
+        resultLine[j] = processNineCellWindow( &scanLine1[j-1], &scanLine1[j], &scanLine1[j+1], &scanLine2[j-1], &scanLine2[j],
+                                               &scanLine2[j+1], &scanLine3[j-1], &scanLine3[j], &scanLine3[j+1] );
       }
     }
 
@@ -258,12 +248,12 @@ GDALDatasetH QgsNineCellFilter::openInputFile( int& nCellsX, int& nCellsY )
   return inputDataset;
 }
 
-bool QgsNineCellFilter::computeWindow( GDALDatasetH dataset, const QPolygonF &region, const QgsCoordinateReferenceSystem& regionCrs, int &rowStart, int &rowEnd, int &colStart, int &colEnd )
+bool QgsNineCellFilter::computeWindow( GDALDatasetH dataset, const QgsRectangle &region, const QgsCoordinateReferenceSystem& regionCrs, int &rowStart, int &rowEnd, int &colStart, int &colEnd )
 {
   int nCellsX = GDALGetRasterXSize( dataset );
   int nCellsY = GDALGetRasterYSize( dataset );
 
-  if ( region.size() < 3 )
+  if ( region.isEmpty() )
   {
     rowStart = 0;
     rowEnd = nCellsY;
@@ -286,7 +276,14 @@ bool QgsNineCellFilter::computeWindow( GDALDatasetH dataset, const QPolygonF &re
   QgsCoordinateTransform ct( regionCrs, rasterCrs );
 
   // Transform raster geo position to pixel coordinates
-  QgsPoint pRaster = ct.transform( QgsPoint( region[0] ) );
+  QgsPoint regionPoints[4] =
+  {
+    QgsPoint( region.xMinimum(), region.yMinimum() ),
+    QgsPoint( region.xMaximum(), region.yMinimum() ),
+    QgsPoint( region.xMaximum(), region.yMaximum() ),
+    QgsPoint( region.xMinimum(), region.yMaximum() )
+  };
+  QgsPoint pRaster = ct.transform( regionPoints[0] );
   double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
   double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
   colStart = qFloor( col );
@@ -294,9 +291,9 @@ bool QgsNineCellFilter::computeWindow( GDALDatasetH dataset, const QPolygonF &re
   rowStart = qFloor( row );
   rowEnd = qCeil( row );
 
-  for ( int i = 1, n = region.size(); i < n; ++i )
+  for ( int i = 1; i < 4; ++i )
   {
-    pRaster = ct.transform( QgsPoint( region[i] ) );
+    pRaster = ct.transform( QgsPoint( regionPoints[i] ) );
     col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
     row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
     colStart  = qMin( colStart , qFloor( col ) );

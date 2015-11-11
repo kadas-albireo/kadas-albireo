@@ -5,7 +5,7 @@ class QgsSlopeFilter: QgsDerivativeFilter
 %End
 
   public:
-    QgsSlopeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
+    QgsSlopeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QgsRectangle &filterRegion = QgsRectangle(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsSlopeFilter();
 
     /**Calculates output value from nine input values. The input values and the output value can be equal to the
