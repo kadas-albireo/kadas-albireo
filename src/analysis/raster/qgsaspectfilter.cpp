@@ -17,7 +17,7 @@
 
 #include "qgsaspectfilter.h"
 
-QgsAspectFilter::QgsAspectFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs ) :
+QgsAspectFilter::QgsAspectFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QgsRectangle &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs ) :
     QgsDerivativeFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs )
 {
 

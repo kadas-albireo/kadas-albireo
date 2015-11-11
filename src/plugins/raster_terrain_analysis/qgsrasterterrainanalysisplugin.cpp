@@ -125,7 +125,7 @@ void QgsRasterTerrainAnalysisPlugin::hillshade()
   {
     QString outputFile = d.outputFile();
     QgsCoordinateReferenceSystem limitRegionCrs;
-    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRectangle limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
     QgsHillshadeFilter hillshade( d.inputFile(), outputFile, d.outputFormat(), d.lightAzimuth(), d.lightAngle(), limitRegion, limitRegionCrs );
     hillshade.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
@@ -146,7 +146,7 @@ void QgsRasterTerrainAnalysisPlugin::relief()
   {
     QString outputFile = d.outputFile();
     QgsCoordinateReferenceSystem limitRegionCrs;
-    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRectangle limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
     QgsRelief relief( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     relief.setReliefColors( d.reliefColors() );
     relief.setZFactor( d.zFactor() );
@@ -168,7 +168,7 @@ void QgsRasterTerrainAnalysisPlugin::slope()
   {
     QString outputFile = d.outputFile();
     QgsCoordinateReferenceSystem limitRegionCrs;
-    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRectangle limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
     QgsSlopeFilter slope( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     slope.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
@@ -189,7 +189,7 @@ void QgsRasterTerrainAnalysisPlugin::aspect()
   {
     QString outputFile = d.outputFile();
     QgsCoordinateReferenceSystem limitRegionCrs;
-    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRectangle limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
     QgsAspectFilter aspect( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     aspect.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating aspect..." ), tr( "Abort" ), 0, 0 );
@@ -210,7 +210,7 @@ void QgsRasterTerrainAnalysisPlugin::ruggedness()
   {
     QString outputFile = d.outputFile();
     QgsCoordinateReferenceSystem limitRegionCrs;
-    QPolygonF limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
+    QgsRectangle limitRegion = getLimitRegion( d.limitToVisibleArea(), limitRegionCrs );
     QgsRuggednessFilter ruggedness( d.inputFile(), outputFile, d.outputFormat(), limitRegion, limitRegionCrs );
     ruggedness.setZFactor( d.zFactor() );
     QProgressDialog p( tr( "Calculating ruggedness..." ), tr( "Abort" ), 0, 0 );
@@ -223,19 +223,14 @@ void QgsRasterTerrainAnalysisPlugin::ruggedness()
   }
 }
 
-QPolygonF QgsRasterTerrainAnalysisPlugin::getLimitRegion( bool limitEnabled, QgsCoordinateReferenceSystem& regionCrs ) const
+QgsRectangle QgsRasterTerrainAnalysisPlugin::getLimitRegion( bool limitEnabled, QgsCoordinateReferenceSystem& regionCrs ) const
 {
   if ( !limitEnabled )
   {
-    return QPolygonF();
+    return QgsRectangle();
   }
-  QgsRectangle r = mIface->mapCanvas()->mapSettings().visibleExtent();
   regionCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
-  return QPolygonF()
-         << QPointF( r.xMinimum(), r.yMinimum() )
-         << QPointF( r.xMaximum(), r.yMinimum() )
-         << QPointF( r.xMaximum(), r.yMaximum() )
-         << QPointF( r.xMinimum(), r.yMaximum() );
+  return mIface->mapCanvas()->mapSettings().visibleExtent();
 }
 
 //global methods for the plugin manager

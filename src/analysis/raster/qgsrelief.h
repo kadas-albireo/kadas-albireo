@@ -21,10 +21,10 @@
 #include <QColor>
 #include <QMap>
 #include <QPair>
-#include <QPolygonF>
 #include <QString>
 #include "gdal.h"
 #include "qgscoordinatereferencesystem.h"
+#include "qgsrectangle.h"
 
 class QgsAspectFilter;
 class QgsSlopeFilter;
@@ -43,7 +43,7 @@ class ANALYSIS_EXPORT QgsRelief
       double maxElevation;
     };
 
-    QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QPolygonF &filterRegion = QPolygonF(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
+    QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat, const QgsRectangle &filterRegion = QgsRectangle(), const QgsCoordinateReferenceSystem& filterRegionCrs = QgsCoordinateReferenceSystem() );
     ~QgsRelief();
 
     /**Starts the calculation, reads from mInputFile and stores the result in mOutputFile

@@ -17,7 +17,7 @@
 
 #include "qgsderivativefilter.h"
 
-QgsDerivativeFilter::QgsDerivativeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
+QgsDerivativeFilter::QgsDerivativeFilter( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QgsRectangle &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
     : QgsNineCellFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs )
 {
 

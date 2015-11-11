@@ -33,7 +33,7 @@
 #define TO8F(x) QFile::encodeName( x ).constData()
 #endif
 
-QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QPolygonF &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
+QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const QString& outputFormat , const QgsRectangle &filterRegion, const QgsCoordinateReferenceSystem& filterRegionCrs )
     : mInputFile( inputFile )
     , mOutputFile( outputFile )
     , mOutputFormat( outputFormat )
