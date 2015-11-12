@@ -16,5 +16,6 @@
         <file>icons/sync_views.svg</file>
         <file>icons/add_map_view.svg</file>
         <file>icons/slope.svg</file>
+        <file>icons/viewshed.svg</file>
     </qresource>
 </RCC>

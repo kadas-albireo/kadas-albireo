@@ -26,6 +26,7 @@
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
 #include "analysistools/qgsvbsslopetool.h"
+#include "analysistools/qgsvbsviewshedtool.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
@@ -48,6 +49,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mMultiMapManager( 0 )
     , mActionOvlImport( 0 )
     , mSlopeTool( 0 )
+    , mViewshedTool( 0 )
 {
 }
 
@@ -85,6 +87,11 @@ void QgsVBSFunctionality::initGui()
   mActionSlope->setCheckable( true );
   connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( computeSlope( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionSlope );
+
+  mActionViewshed = new QAction( QIcon( ":/vbsfunctionality/icons/viewshed.svg" ), tr( "Compute viewshed" ), this );
+  mActionViewshed->setCheckable( true );
+  connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
+  mQGisIface->pluginToolBar()->addAction( mActionViewshed );
 }
 
 void QgsVBSFunctionality::unload()
@@ -108,6 +115,10 @@ void QgsVBSFunctionality::unload()
   mMultiMapManager = 0;
   delete mActionOvlImport;
   mActionOvlImport = 0;
+  delete mActionSlope;
+  mActionSlope = 0;
+  delete mActionViewshed;
+  mActionViewshed = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
@@ -164,5 +175,19 @@ void QgsVBSFunctionality::computeSlope( bool checked )
   {
     delete mSlopeTool;
     mSlopeTool = 0;
+  }
+}
+
+void QgsVBSFunctionality::computeViewshed( bool checked )
+{
+  if ( checked )
+  {
+    mViewshedTool = new QgsVBSViewshedTool( mQGisIface, this );
+    connect( mViewshedTool, SIGNAL( finished() ), mActionViewshed, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mViewshedTool;
+    mViewshedTool = 0;
   }
 }
