@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsslopetools.cpp                                                   *
+ *  qgsvbsslopetool.cpp                                                    *
  *  -------------------                                                    *
  *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -25,10 +25,10 @@
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgsrubberband.h"
+#include "qgstemporaryfile.h"
 #include "raster/qgssinglebandpseudocolorrenderer.h"
 #include "raster/qgsslopefilter.h"
 
-#include <QDesktopServices>
 #include <QDir>
 #include <QMessageBox>
 #include <QProgressDialog>
@@ -67,7 +67,7 @@ void QgsVBSSlopeTool::filterFinished()
   QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
-  QString outputFile = QDir::temp().absoluteFilePath( outputFileName );
+  QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
 
   QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", rect, rectCrs );
   slope.setZFactor( 1 );

@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsslopetools.h                                                     *
+ *  qgsvbsslopetool.h                                                      *
  *  -------------------                                                    *
  *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *

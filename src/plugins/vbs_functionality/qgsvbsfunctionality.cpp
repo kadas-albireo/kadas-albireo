@@ -81,7 +81,7 @@ void QgsVBSFunctionality::initGui()
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
   mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
 
-  mActionSlope = new QAction( QIcon( ":/vbsfunctionality/icons/slope.jpg" ), tr( "Compute slope" ), this );
+  mActionSlope = new QAction( QIcon( ":/vbsfunctionality/icons/slope.svg" ), tr( "Compute slope" ), this );
   mActionSlope->setCheckable( true );
   connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( computeSlope( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionSlope );
