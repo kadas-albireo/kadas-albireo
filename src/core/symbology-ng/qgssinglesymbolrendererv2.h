@@ -42,6 +42,12 @@ class CORE_EXPORT QgsSingleSymbolRendererV2 : public QgsFeatureRendererV2
     QgsSymbolV2* symbol() const;
     void setSymbol( QgsSymbolV2* s );
 
+    QString html() const { return mHtml; }
+    void setHtml( const QString& html ) { mHtml = html; }
+
+    QgsSymbolV2* legendSymbol() const;
+    void setLegendSymbol( QgsSymbolV2* symbol );
+
     void setRotationField( QString fieldOrExpression ) override;
     QString rotationField() const override;
 
@@ -94,6 +100,8 @@ class CORE_EXPORT QgsSingleSymbolRendererV2 : public QgsFeatureRendererV2
     // temporary stuff for rendering
     QScopedPointer<QgsSymbolV2> mTempSymbol;
     double mOrigSize;
+    QString mHtml;
+    QgsSymbolV2* mLegendSymbol;
 };
 
 
