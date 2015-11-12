@@ -21,6 +21,8 @@
 #include "qgsvectorlayer.h"
 
 #include "qgssymbolv2selectordialog.h"
+#include "qgssymbollayerv2utils.h"
+#include "qgsstylev2.h"
 
 #include <QMenu>
 
@@ -51,13 +53,14 @@ QgsSingleSymbolRendererV2Widget::QgsSingleSymbolRendererV2Widget( QgsVectorLayer
   mSingleSymbol = mRenderer->symbol()->clone();
 
   // setup ui
+  setupUi( this );
+  mHtmlLineEdit->setToolTip( QgsRendererV2Widget::htmlToolTip() );
   mSelector = new QgsSymbolV2SelectorDialog( mSingleSymbol, mStyle, mLayer, NULL, true );
   connect( mSelector, SIGNAL( symbolModified() ), this, SLOT( changeSingleSymbol() ) );
+  mVerticalLayout->addWidget( mSelector );
 
-  QVBoxLayout* layout = new QVBoxLayout;
-  layout->setContentsMargins( 0, 0, 0, 0 );
-  layout->addWidget( mSelector );
-  setLayout( layout );
+  mHtmlLineEdit->setText( mRenderer->html() );
+  mWMSLegendSettingsGroupBox->setCollapsed( true );
 
   // advanced actions - data defined rendering
   QMenu* advMenu = mSelector->advancedMenu();
@@ -69,6 +72,13 @@ QgsSingleSymbolRendererV2Widget::QgsSingleSymbolRendererV2Widget( QgsVectorLayer
   connect( mDataDefinedMenus, SIGNAL( rotationFieldChanged( QString ) ), this, SLOT( rotationFieldChanged( QString ) ) );
   connect( mDataDefinedMenus, SIGNAL( sizeScaleFieldChanged( QString ) ), this, SLOT( sizeScaleFieldChanged( QString ) ) );
   connect( mDataDefinedMenus, SIGNAL( scaleMethodChanged( QgsSymbolV2::ScaleMethod ) ), this, SLOT( scaleMethodChanged( QgsSymbolV2::ScaleMethod ) ) );
+
+  //add legend symbol icon to button
+  if ( mRenderer->legendSymbol() )
+  {
+    QIcon icon = QgsSymbolLayerV2Utils::symbolPreviewIcon( mRenderer->legendSymbol(), mLegendIconButton->iconSize() );
+    mLegendIconButton->setIcon( icon );
+  }
 }
 
 QgsSingleSymbolRendererV2Widget::~QgsSingleSymbolRendererV2Widget()
@@ -119,3 +129,33 @@ void QgsSingleSymbolRendererV2Widget::showSymbolLevels()
 {
   showSymbolLevelsDialog( mRenderer );
 }
+
+void QgsSingleSymbolRendererV2Widget::on_mHtmlLineEdit_textEdited( const QString& text )
+{
+  if ( mRenderer )
+  {
+    mRenderer->setHtml( text );
+  }
+}
+
+void QgsSingleSymbolRendererV2Widget::on_mLegendIconButton_clicked()
+{
+  if ( !mRenderer->legendSymbol() )
+  {
+    mRenderer->setLegendSymbol( QgsSymbolV2::defaultSymbol( queryGeometryType() ) );
+  }
+
+  QgsSymbolV2SelectorDialog d( mRenderer->legendSymbol(), QgsStyleV2::defaultStyle(), 0 );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &d, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeLegendSymbol() ) );
+  d.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
+  if ( d.exec() == QDialog::Accepted )
+  {
+    //update symbol on button
+    QIcon icon = QgsSymbolLayerV2Utils::symbolPreviewIcon( mRenderer->legendSymbol(), mLegendIconButton->iconSize() );
+    mLegendIconButton->setIcon( icon );
+  }
+}
+
+

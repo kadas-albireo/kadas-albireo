@@ -16,13 +16,14 @@
 #define QGSSINGLESYMBOLRENDERERV2WIDGET_H
 
 #include "qgsrendererv2widget.h"
+#include "ui_qgssinglesymbolrendererv2widgetbase.h"
 
 class QgsSingleSymbolRendererV2;
 class QgsSymbolV2SelectorDialog;
 
 class QMenu;
 
-class GUI_EXPORT QgsSingleSymbolRendererV2Widget : public QgsRendererV2Widget
+class GUI_EXPORT QgsSingleSymbolRendererV2Widget : public QgsRendererV2Widget, private Ui::QgsSingleSymbolRendererV2WidgetBase
 {
     Q_OBJECT
 
@@ -40,6 +41,9 @@ class GUI_EXPORT QgsSingleSymbolRendererV2Widget : public QgsRendererV2Widget
     void rotationFieldChanged( QString fldName );
     void sizeScaleFieldChanged( QString fldName );
     void scaleMethodChanged( QgsSymbolV2::ScaleMethod scaleMethod );
+
+    void on_mHtmlLineEdit_textEdited( const QString& text );
+    void on_mLegendIconButton_clicked();
 
     void showSymbolLevels();
 

@@ -262,7 +262,7 @@ bool QgsSymbolV2LegendNode::setData( const QVariant& value, int role )
 
 QSizeF QgsSymbolV2LegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const
 {
-  QgsSymbolV2* s = mItem.symbol();
+  QgsSymbolV2* s = mItem.legendSymbol() ? mItem.legendSymbol() : mItem.symbol();
   if ( !s )
   {
     return QSizeF();
