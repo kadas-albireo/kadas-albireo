@@ -35,6 +35,7 @@ SET(QGIS_ANALYSIS_SRCS
   raster/qgsrastercalcnode.cpp
   raster/qgsrastercalculator.cpp
   raster/qgsrastermatrix.cpp
+  raster/qgsviewshed.cpp
   vector/mersenne-twister.cpp
   vector/qgsgeometryanalyzer.cpp
   vector/qgspointsample.cpp
@@ -97,6 +98,7 @@ SET(QGIS_ANALYSIS_HDRS
   raster/qgsrastermatrix.h
   raster/qgsrastercalcnode.h
   raster/qgstotalcurvaturefilter.h
+  raster/qgsviewshed.h
 
   vector/qgsgeometryanalyzer.h
   vector/qgszonalstatistics.h
