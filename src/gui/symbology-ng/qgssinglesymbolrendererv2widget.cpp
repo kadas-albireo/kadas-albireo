@@ -158,4 +158,10 @@ void QgsSingleSymbolRendererV2Widget::on_mLegendIconButton_clicked()
   }
 }
 
+void QgsSingleSymbolRendererV2Widget::removeLegendSymbol()
+{
+  mRenderer->setLegendSymbol( 0 );
+  mLegendIconButton->setIcon( QIcon() );
+}
+
 

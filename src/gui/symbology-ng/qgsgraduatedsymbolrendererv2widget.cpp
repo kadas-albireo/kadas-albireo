@@ -782,6 +782,15 @@ void QgsGraduatedSymbolRendererV2Widget::changeRangeLegendSymbol( int rangeIdx )
   mRenderer->updateRangeLegendSymbol( rangeIdx, legendSymbol );
 }
 
+void QgsGraduatedSymbolRendererV2Widget::removeLegendSymbol()
+{
+  QModelIndex idx = viewGraduated->selectionModel()->currentIndex();
+  if ( !idx.isValid() )
+    return;
+  int index = idx.row();
+  mRenderer->updateRangeLegendSymbol( index, 0 );
+}
+
 void QgsGraduatedSymbolRendererV2Widget::changeRange( int rangeIdx )
 {
   QgsLUDialog dialog( this );
