@@ -172,6 +172,38 @@ void QgsRuleBasedRendererV2Widget::editRule( const QModelIndex& index )
   if ( !index.isValid() )
     return;
   QgsRuleBasedRendererV2::Rule* rule = mModel->ruleForIndex( index );
+  if ( index.column() == 7 )
+  {
+    QgsSymbolV2 *legendSymbol = rule->legendSymbol();
+    if ( legendSymbol )
+    {
+      legendSymbol = legendSymbol->clone();
+    }
+    else
+    {
+      legendSymbol = QgsSymbolV2::defaultSymbol( queryGeometryType() );
+    }
+
+    QgsSymbolV2SelectorDialog dlg( legendSymbol, mStyle, mLayer, this );
+    QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+    connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+    connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeLegendSymbol() ) );
+    dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
+    if ( dlg.exec() == QDialog::Accepted )
+    {
+      if ( legendSymbol )
+      {
+        rule->setLegendSymbol( legendSymbol );
+      }
+      mModel->updateRule( index.parent(), index.row() );
+    }
+    else
+    {
+      delete legendSymbol;
+    }
+    return;
+  }
+
 
   QgsRendererRulePropsDialog dlg( rule, mLayer, mStyle, this );
   if ( dlg.exec() )
@@ -709,11 +741,11 @@ Qt::ItemFlags QgsRuleBasedRendererV2Model::flags( const QModelIndex &index ) con
 
   // allow drop only at first column
   Qt::ItemFlag drop = ( index.column() == 0 ? Qt::ItemIsDropEnabled : Qt::NoItemFlags );
-
+  Qt::ItemFlag editable = ( index.column() == 7 ? Qt::NoItemFlags : Qt::ItemIsEditable );
   Qt::ItemFlag checkable = ( index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags );
 
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable |
-         Qt::ItemIsEditable | checkable |
+         editable | checkable |
          Qt::ItemIsDragEnabled | drop;
 }
 
@@ -773,12 +805,18 @@ QVariant QgsRuleBasedRendererV2Model::data( const QModelIndex &index, int role )
           }
         }
         return QVariant();
+      case 6:
+        return rule->html();
       default: return QVariant();
     }
   }
   else if ( role == Qt::DecorationRole && index.column() == 0 && rule->symbol() )
   {
     return QgsSymbolLayerV2Utils::symbolPreviewIcon( rule->symbol(), QSize( 16, 16 ) );
+  }
+  else if ( role == Qt::DecorationRole && index.column() == 7 && rule->legendSymbol() )
+  {
+    return QgsSymbolLayerV2Utils::symbolPreviewIcon( rule->legendSymbol(), QSize( 16, 16 ) );
   }
   else if ( role == Qt::TextAlignmentRole )
   {
@@ -817,9 +855,10 @@ QVariant QgsRuleBasedRendererV2Model::data( const QModelIndex &index, int role )
 
 QVariant QgsRuleBasedRendererV2Model::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 7 )
+  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 8 )
   {
-    QStringList lst; lst << tr( "Label" ) << tr( "Rule" ) << tr( "Min. scale" ) << tr( "Max. scale" ) << tr( "Count" ) << tr( "Duplicate count" );
+    QStringList lst; lst << tr( "Label" ) << tr( "Rule" ) << tr( "Min. scale" ) << tr( "Max. scale" ) << tr( "Count" )
+    << tr( "Duplicate count" ) << tr( "HTML (WMS)" ) << tr( "Legend symbol (WMS)" );
     return lst[section];
   }
   else if ( orientation == Qt::Horizontal && role == Qt::ToolTipRole )
@@ -849,7 +888,7 @@ int QgsRuleBasedRendererV2Model::rowCount( const QModelIndex &parent ) const
 
 int QgsRuleBasedRendererV2Model::columnCount( const QModelIndex & ) const
 {
-  return 6;
+  return 8;
 }
 
 QModelIndex QgsRuleBasedRendererV2Model::index( int row, int column, const QModelIndex &parent ) const
@@ -911,6 +950,9 @@ bool QgsRuleBasedRendererV2Model::setData( const QModelIndex & index, const QVar
     case 3: // scale max
       rule->setScaleMinDenom( value.toInt() );
       break;
+    case 6: //html
+      rule->setHtml( value.toString() );
+      break;
     default:
       return false;
   }
@@ -949,12 +991,15 @@ QMimeData *QgsRuleBasedRendererV2Model::mimeData( const QModelIndexList &indexes
     QgsRuleBasedRendererV2::Rule* rule = ruleForIndex( index )->clone();
     QDomDocument doc;
     QgsSymbolV2Map symbols;
+    QgsSymbolV2Map legendSymbols;
 
     QDomElement rootElem = doc.createElement( "rule_mime" );
     QDomElement rulesElem = rule->save( doc, symbols );
     rootElem.appendChild( rulesElem );
     QDomElement symbolsElem = QgsSymbolLayerV2Utils::saveSymbols( symbols, "symbols", doc );
     rootElem.appendChild( symbolsElem );
+    QDomElement legendSymbolsElem = QgsSymbolLayerV2Utils::saveSymbols( legendSymbols, "legendsymbols", doc );
+    rootElem.appendChild( legendSymbolsElem );
     doc.appendChild( rootElem );
 
     delete rule;
@@ -1094,6 +1139,17 @@ void QgsRuleBasedRendererV2Model::removeRule( const QModelIndex& index )
   rule->parent()->removeChild( rule );
 
   endRemoveRows();
+}
+
+void QgsRuleBasedRendererV2Widget::removeLegendSymbol()
+{
+  QModelIndex idx = viewRules->selectionModel()->currentIndex();
+  QgsRuleBasedRendererV2::Rule* rule = mModel->ruleForIndex( idx );
+  if ( rule )
+  {
+    rule->setLegendSymbol( 0 );
+    mModel->updateRule( idx.parent(), idx.row() );
+  }
 }
 
 void QgsRuleBasedRendererV2Model::willAddRules( const QModelIndex& parent, int count )

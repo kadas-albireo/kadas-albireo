@@ -86,7 +86,8 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
       public:
         //! Constructor takes ownership of the symbol
         Rule( QgsSymbolV2* symbol, int scaleMinDenom = 0, int scaleMaxDenom = 0, QString filterExp = QString(),
-              QString label = QString(), QString description = QString(), bool elseRule = false );
+              QString label = QString(), QString description = QString(), bool elseRule = false,
+              QString html = QString(), QgsSymbolV2* legendSymbol = 0 );
         ~Rule();
         QString dump( int offset = 0 ) const;
         QSet<QString> usedAttributes();
@@ -99,6 +100,7 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
         bool isScaleOK( double scale ) const;
 
         QgsSymbolV2* symbol() { return mSymbol; }
+        QgsSymbolV2* legendSymbol() { return mLegendSymbol; }
         QString label() const { return mLabel; }
         bool dependsOnScale() const { return mScaleMinDenom != 0 || mScaleMaxDenom != 0; }
         int scaleMinDenom() const { return mScaleMinDenom; }
@@ -118,6 +120,7 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
 
         //! set a new symbol (or NULL). Deletes old symbol.
         void setSymbol( QgsSymbolV2* sym );
+        void setLegendSymbol( QgsSymbolV2* sym );
         void setLabel( QString label ) { mLabel = label; }
         void setScaleMinDenom( int scaleMinDenom ) { mScaleMinDenom = scaleMinDenom; }
         void setScaleMaxDenom( int scaleMaxDenom ) { mScaleMaxDenom = scaleMaxDenom; }
@@ -133,6 +136,7 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
         static Rule* createFromSld( QDomElement& element, QGis::GeometryType geomType );
 
         QDomElement save( QDomDocument& doc, QgsSymbolV2Map& symbolMap );
+        QDomElement save( QDomDocument& doc, QgsSymbolV2Map& symbolMap, QgsSymbolV2Map& legendSymbolMap );
 
         //! prepare the rule for rendering and its children (build active children array)
         bool startRender( QgsRenderContext& context, const QgsFields& fields );
@@ -156,6 +160,7 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
         void stopRender( QgsRenderContext& context );
 
         static Rule* create( QDomElement& ruleElem, QgsSymbolV2Map& symbolMap );
+        static Rule* create( QDomElement& ruleElem, QgsSymbolV2Map& symbolMap, QgsSymbolV2Map& legendSymbolMap );
 
         RuleList& children() { return mChildren; }
         RuleList descendants() const { RuleList l; foreach ( Rule *c, mChildren ) { l += c; l += c->descendants(); } return l; }
@@ -173,6 +178,8 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
         void takeChild( Rule* rule );
         //! take child rule out, set parent as null
         Rule* takeChildAt( int i );
+        void setHtml( const QString& html ) { mHtml = html; }
+        QString html() const { return mHtml; }
 
         //! Try to find a rule given its unique key
         //! @note added in 2.6
@@ -188,8 +195,9 @@ class CORE_EXPORT QgsRuleBasedRendererV2 : public QgsFeatureRendererV2
 
         Rule* mParent; // parent rule (NULL only for root rule)
         QgsSymbolV2* mSymbol;
+        QgsSymbolV2* mLegendSymbol;
         int mScaleMinDenom, mScaleMaxDenom;
-        QString mFilterExp, mLabel, mDescription;
+        QString mFilterExp, mLabel, mDescription, mHtml;
         bool mElseRule;
         RuleList mChildren;
         RuleList mElseRules;

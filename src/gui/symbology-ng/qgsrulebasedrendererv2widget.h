@@ -152,6 +152,7 @@ class GUI_EXPORT QgsRuleBasedRendererV2Widget : public QgsRendererV2Widget, priv
   protected slots:
     void copy() override;
     void paste() override;
+    void removeLegendSymbol();
 };
 
 ///////
