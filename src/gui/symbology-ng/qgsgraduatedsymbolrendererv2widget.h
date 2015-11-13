@@ -122,6 +122,7 @@ class GUI_EXPORT QgsGraduatedSymbolRendererV2Widget : public QgsRendererV2Widget
     QgsRangeList selectedRanges();
 
     void changeRangeSymbol( int rangeIdx );
+    void changeRangeLegendSymbol( int rangeIdx );
     void changeRange( int rangeIdx );
 
     void changeSelectedSymbols();

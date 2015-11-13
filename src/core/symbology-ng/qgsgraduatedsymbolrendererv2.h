@@ -25,7 +25,7 @@ class CORE_EXPORT QgsRendererRangeV2
 {
   public:
     QgsRendererRangeV2();
-    QgsRendererRangeV2( double lowerValue, double upperValue, QgsSymbolV2* symbol, QString label, bool render = true );
+    QgsRendererRangeV2( double lowerValue, double upperValue, QgsSymbolV2* symbol, QString label, bool render = true, QString html = QString(), QgsSymbolV2* legendSymbol = 0 );
     QgsRendererRangeV2( const QgsRendererRangeV2& range );
 
     // default dtor is ok
@@ -37,9 +37,11 @@ class CORE_EXPORT QgsRendererRangeV2
     double upperValue() const;
 
     QgsSymbolV2* symbol() const;
+    QgsSymbolV2* legendSymbol() const { return mLegendSymbol; }
     QString label() const;
 
     void setSymbol( QgsSymbolV2* s );
+    void setLegendSymbol( QgsSymbolV2* s );
     void setLabel( QString label );
     void setLowerValue( double lowerValue );
     void setUpperValue( double upperValue );
@@ -47,6 +49,9 @@ class CORE_EXPORT QgsRendererRangeV2
     // @note added in 2.5
     bool renderState() const;
     void setRenderState( bool render );
+
+    void setHtml( const QString& html ) { mHtml = html; }
+    QString html() const { return mHtml; }
 
     // debugging
     QString dump() const;
@@ -58,6 +63,8 @@ class CORE_EXPORT QgsRendererRangeV2
     QScopedPointer<QgsSymbolV2> mSymbol;
     QString mLabel;
     bool mRender;
+    QString mHtml;
+    QgsSymbolV2* mLegendSymbol;
 
     // for cpy+swap idiom
     void swap( QgsRendererRangeV2 & other );
@@ -150,6 +157,8 @@ class CORE_EXPORT QgsGraduatedSymbolRendererV2 : public QgsFeatureRendererV2
     bool updateRangeLowerValue( int rangeIndex, double value );
     //! @note added in 2.5
     bool updateRangeRenderState( int rangeIndex, bool render );
+    bool updateRangeHtml( int rangeIndex, QString label );
+    bool updateRangeLegendSymbol( int rangeIndex, QgsSymbolV2* symbol );
 
     void addClass( QgsSymbolV2* symbol );
     //! @note available in python bindings as addClassRange
@@ -225,6 +234,9 @@ class CORE_EXPORT QgsGraduatedSymbolRendererV2 : public QgsFeatureRendererV2
     //! return a list of item text / symbol
     //! @note not available in python bindings
     virtual QgsLegendSymbolList legendSymbolItems( double scaleDenominator = -1, QString rule = QString() ) override;
+    //! Return a list of symbology items for the legend. Better choice than legendSymbolItems().
+    //! Default fallback implementation just uses legendSymbolItems() implementation
+    virtual QgsLegendSymbolListV2 legendSymbolItemsV2() const override;
 
     QgsSymbolV2* sourceSymbol();
     void setSourceSymbol( QgsSymbolV2* sym );
