@@ -111,6 +111,7 @@ class GUI_EXPORT QgsGraduatedSymbolRendererV2Widget : public QgsRendererV2Widget
 
   protected slots:
     void removeLegendSymbol();
+    void removeSymbol();
 
   protected:
     void updateUiFromRenderer( bool updateCount = true );
