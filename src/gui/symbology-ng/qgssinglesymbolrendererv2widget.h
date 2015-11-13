@@ -47,6 +47,9 @@ class GUI_EXPORT QgsSingleSymbolRendererV2Widget : public QgsRendererV2Widget, p
 
     void showSymbolLevels();
 
+  private slots:
+    void removeLegendSymbol();
+
   protected:
 
     QgsSingleSymbolRendererV2* mRenderer;
