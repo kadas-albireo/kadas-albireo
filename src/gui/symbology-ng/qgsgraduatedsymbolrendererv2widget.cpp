@@ -746,8 +746,11 @@ void QgsGraduatedSymbolRendererV2Widget::changeSelectedSymbols()
 void QgsGraduatedSymbolRendererV2Widget::changeRangeSymbol( int rangeIdx )
 {
   QgsSymbolV2* newSymbol = mRenderer->ranges()[rangeIdx].symbol()->clone();
-
   QgsSymbolV2SelectorDialog dlg( newSymbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeSymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
   if ( !dlg.exec() )
   {
     delete newSymbol;
@@ -789,6 +792,15 @@ void QgsGraduatedSymbolRendererV2Widget::removeLegendSymbol()
     return;
   int index = idx.row();
   mRenderer->updateRangeLegendSymbol( index, 0 );
+}
+
+void QgsGraduatedSymbolRendererV2Widget::removeSymbol()
+{
+  QModelIndex idx = viewGraduated->selectionModel()->currentIndex();
+  if ( !idx.isValid() )
+    return;
+  int index = idx.row();
+  mRenderer->updateRangeSymbol( index, 0 );
 }
 
 void QgsGraduatedSymbolRendererV2Widget::changeRange( int rangeIdx )

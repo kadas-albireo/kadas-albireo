@@ -631,6 +631,10 @@ QgsRendererRulePropsDialog::QgsRendererRulePropsDialog( QgsRuleBasedRendererV2::
   }
 
   mSymbolSelector = new QgsSymbolV2SelectorDialog( mSymbol, style, mLayer, this, true );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeSymbol() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  buttonBox->addButton( deleteButton, QDialogButtonBox::DestructiveRole );
   QVBoxLayout* l = new QVBoxLayout;
   l->addWidget( mSymbolSelector );
   groupSymbol->setLayout( l );
@@ -702,9 +706,22 @@ void QgsRendererRulePropsDialog::accept()
   // caution: rule uses scale denom, scale widget uses true scales
   mRule->setScaleMinDenom( groupScale->isChecked() ? mScaleRangeWidget->minimumScaleDenom() : 0 );
   mRule->setScaleMaxDenom( groupScale->isChecked() ? mScaleRangeWidget->maximumScaleDenom() : 0 );
-  mRule->setSymbol( groupSymbol->isChecked() ? mSymbol->clone() : NULL );
+  if ( mSymbol )
+  {
+    mRule->setSymbol( groupSymbol->isChecked() ? mSymbol->clone() : NULL );
+  }
+  else
+  {
+    mRule->setSymbol( 0 );
+  }
 
   QDialog::accept();
+}
+
+void QgsRendererRulePropsDialog::removeSymbol()
+{
+  delete mSymbol;
+  mSymbol = 0;
 }
 
 ////////

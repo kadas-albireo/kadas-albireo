@@ -127,7 +127,12 @@ void QgsRendererCategoryV2::setRenderState( bool render )
 
 QString QgsRendererCategoryV2::dump() const
 {
-  return QString( "%1::%2::%3:%4\n" ).arg( mValue.toString() ).arg( mLabel ).arg( mSymbol->dump() ).arg( mRender );
+  QString symbolDump;
+  if ( mSymbol )
+  {
+    symbolDump = mSymbol->dump();
+  }
+  return QString( "%1::%2::%3:%4\n" ).arg( mValue.toString() ).arg( mLabel ).arg( symbolDump ).arg( mRender );
 }
 
 void QgsRendererCategoryV2::toSld( QDomDocument &doc, QDomElement &element, QgsStringMap props ) const
@@ -185,16 +190,6 @@ QgsCategorizedSymbolRendererV2::QgsCategorizedSymbolRendererV2( QString attrName
     , mAttrNum( -1 )
     , mCounting( false )
 {
-  for ( int i = 0; i < mCategories.count(); ++i )
-  {
-    QgsRendererCategoryV2& cat = mCategories[i];
-    if ( cat.symbol() == NULL )
-    {
-      QgsDebugMsg( "invalid symbol in a category! ignoring..." );
-      mCategories.removeAt( i-- );
-    }
-    //mCategories.insert(cat.value().toString(), cat);
-  }
 }
 
 QgsCategorizedSymbolRendererV2::~QgsCategorizedSymbolRendererV2()
@@ -461,6 +456,10 @@ void QgsCategorizedSymbolRendererV2::startRender( QgsRenderContext& context, con
   QgsCategoryList::iterator it = mCategories.begin();
   for ( ; it != mCategories.end(); ++it )
   {
+    if ( !it->symbol() )
+    {
+      continue;
+    }
     it->symbol()->startRender( context, &fields );
 
     if ( mRotation.data() || mSizeScale.data() )
@@ -478,7 +477,13 @@ void QgsCategorizedSymbolRendererV2::stopRender( QgsRenderContext& context )
 {
   QgsCategoryList::iterator it = mCategories.begin();
   for ( ; it != mCategories.end(); ++it )
+  {
+    if ( !it->symbol() )
+    {
+      continue;
+    }
     it->symbol()->stopRender( context );
+  }
 
   // cleanup mTempSymbols
   QHash<QgsSymbolV2*, QgsSymbolV2*>::iterator it2 = mTempSymbols.begin();

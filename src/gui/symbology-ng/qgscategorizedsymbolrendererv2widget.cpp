@@ -600,6 +600,10 @@ void QgsCategorizedSymbolRendererV2Widget::changeCategorySymbol()
   }
 
   QgsSymbolV2SelectorDialog dlg( symbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeCategorySymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
   if ( !dlg.exec() )
   {
     delete symbol;
@@ -641,6 +645,12 @@ void QgsCategorizedSymbolRendererV2Widget::removeLegendSymbol()
 {
   int catIdx = currentCategoryRow();
   mRenderer->updateCategoryLegendSymbol( catIdx, 0 );
+}
+
+void QgsCategorizedSymbolRendererV2Widget::removeCategorySymbol()
+{
+  int catIdx = currentCategoryRow();
+  mRenderer->updateCategorySymbol( catIdx, 0 );
 }
 
 static void _createCategories( QgsCategoryList& cats, QList<QVariant>& values, QgsSymbolV2* symbol )

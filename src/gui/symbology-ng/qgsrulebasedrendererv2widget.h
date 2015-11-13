@@ -176,6 +176,9 @@ class GUI_EXPORT QgsRendererRulePropsDialog : public QDialog, private Ui::QgsRen
     void buildExpression();
     void accept() override;
 
+  private slots:
+    void removeSymbol();
+
   protected:
     QgsRuleBasedRendererV2::Rule* mRule; // borrowed
     QgsVectorLayer* mLayer;

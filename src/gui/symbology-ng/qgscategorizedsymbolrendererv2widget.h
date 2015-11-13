@@ -100,6 +100,7 @@ class GUI_EXPORT QgsCategorizedSymbolRendererV2Widget : public QgsRendererV2Widg
 
   protected slots:
     void removeLegendSymbol();
+    void removeCategorySymbol();
 
   protected:
 
