@@ -763,7 +763,10 @@ QgsLegendSymbolListV2 QgsCategorizedSymbolRendererV2::legendSymbolItemsV2() cons
 
     //legend symbol
     QgsSymbolV2* legendSymbol = catIt->legendSymbol();
-    symbol.setLegendSymbol( legendSymbol );
+    if ( legendSymbol )
+    {
+      symbol.setLegendSymbol( legendSymbol->clone() );
+    }
     legendItems.append( symbol );
     ++i;
   }
