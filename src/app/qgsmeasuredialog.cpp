@@ -100,8 +100,7 @@ void QgsMeasureDialog::restart()
 void QgsMeasureDialog::finish()
 {
   QSettings().setValue( "/Windows/Measure/geometry", saveGeometry() );
-  mTool->restart();
-  mTool->deactivate();
+  mTool->canvas()->unsetMapTool( mTool );
 }
 
 void QgsMeasureDialog::addPart()
