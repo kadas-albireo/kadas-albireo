@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 #include "qgscoordinatetransform.h"
+#include "qgsimageannotationitem.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmeasureheightprofiledialog.h"
@@ -106,10 +107,12 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
   QPushButton* copyButton = bbox->addButton( tr( "Copy to clipboard" ), QDialogButtonBox::ActionRole );
+  QPushButton* addButton = bbox->addButton( tr( "Add to canvas" ), QDialogButtonBox::ActionRole );
   gridLayout->addWidget( bbox, 2, 0, 1, 2 );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
   connect( copyButton, SIGNAL( clicked( bool ) ), this, SLOT( copyToClipboard() ) );
+  connect( addButton, SIGNAL( clicked( bool ) ), this, SLOT( addToCanvas() ) );
   connect( this, SIGNAL( finished( int ) ), this, SLOT( finish() ) );
 
   restoreGeometry( QSettings().value( "/Windows/MeasureHeightProfile/geometry" ).toByteArray() );
@@ -407,4 +410,17 @@ void QgsMeasureHeightProfileDialog::copyToClipboard()
   mPlotMarker->setVisible( true );
   mPlot->replot();
   QApplication::clipboard()->setImage( image );
+}
+
+void QgsMeasureHeightProfileDialog::addToCanvas()
+{
+  QImage image( mPlot->size(), QImage::Format_ARGB32 );
+  mPlotMarker->setVisible( false );
+  mPlot->replot();
+  mPlot->render( &image );
+  mPlotMarker->setVisible( true );
+  mPlot->replot();
+  QgsImageAnnotationItem* item = new QgsImageAnnotationItem( mTool->canvas() );
+  item->setImage( image );
+  item->setMapPosition( mTool->canvas()->mapSettings().extent().center() );
 }

@@ -45,6 +45,7 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     void replot();
     void updateLineOfSight( bool replot = true );
     void copyToClipboard();
+    void addToCanvas();
 
   private:
     QgsMeasureHeightProfileTool* mTool;
