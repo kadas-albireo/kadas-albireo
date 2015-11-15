@@ -252,13 +252,14 @@ void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
     return;
   }
 
+  QRectF frameRect( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mFrameSize.width(), mFrameSize.height() );
   double handlerSize = 10;
   p->setPen( Qt::NoPen );
   p->setBrush( QColor( 200, 200, 210, 120 ) );
-  p->drawRect( QRectF( mBoundingRect.left(), mBoundingRect.top(), handlerSize, handlerSize ) );
-  p->drawRect( QRectF( mBoundingRect.right() - handlerSize, mBoundingRect.top(), handlerSize, handlerSize ) );
-  p->drawRect( QRectF( mBoundingRect.right() - handlerSize, mBoundingRect.bottom() - handlerSize, handlerSize, handlerSize ) );
-  p->drawRect( QRectF( mBoundingRect.left(), mBoundingRect.bottom() - handlerSize, handlerSize, handlerSize ) );
+  p->drawRect( QRectF( frameRect.left(), frameRect.top(), handlerSize, handlerSize ) );
+  p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.top(), handlerSize, handlerSize ) );
+  p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.bottom() - handlerSize, handlerSize, handlerSize ) );
+  p->drawRect( QRectF( frameRect.left(), frameRect.bottom() - handlerSize, handlerSize, handlerSize ) );
 }
 
 QLineF QgsAnnotationItem::segment( int index )
