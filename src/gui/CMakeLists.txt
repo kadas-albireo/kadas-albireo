@@ -226,6 +226,7 @@ qgssearchquerybuilder.cpp
 qgsslider.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
+qgsimageannotationitem.cpp
 qgssvgannotationdialog.cpp
 qgstextannotationitem.cpp
 qgstextannotationdialog.cpp
@@ -470,6 +471,7 @@ SET(QGIS_GUI_HDRS
   qgsrubberband.h
   qgsannotationwidget.cpp
   qgssvgannotationitem.h
+  qgsimageannotationitem.h
   qgstextannotationitem.h
   qgsvectorlayertools.h
   qgsvertexmarker.h
