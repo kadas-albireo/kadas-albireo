@@ -22,8 +22,11 @@
 #include "qgsrubberband.h"
 #include "qgsproject.h"
 #include <gdal.h>
+#include <QApplication>
+#include <QClipboard>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -101,9 +104,11 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   gridLayout->addWidget( mLineOfSightGroupBoxgroupBox, 1, 0, 1, 2 );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
+  QPushButton* copyButton = bbox->addButton( tr( "Copy to clipboard" ), QDialogButtonBox::ActionRole );
   gridLayout->addWidget( bbox, 2, 0, 1, 2 );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
+  connect( copyButton, SIGNAL( clicked( bool ) ), this, SLOT( copyToClipboard() ) );
   connect( this, SIGNAL( finished( int ) ), this, SLOT( finish() ) );
 
   restoreGeometry( QSettings().value( "/Windows/MeasureHeightProfile/geometry" ).toByteArray() );
@@ -391,4 +396,15 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
   {
     mPlot->replot();
   }
+}
+
+void QgsMeasureHeightProfileDialog::copyToClipboard()
+{
+  QImage image( mPlot->size(), QImage::Format_ARGB32 );
+  mPlotMarker->setVisible( false );
+  mPlot->replot();
+  mPlot->render( &image );
+  mPlotMarker->setVisible( true );
+  mPlot->replot();
+  QApplication::clipboard()->setImage( image );
 }
