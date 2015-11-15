@@ -202,6 +202,7 @@
 #include "qgssnappingdialog.h"
 #include "qgssponsors.h"
 #include "qgssvgannotationitem.h"
+#include "qgsimageannotationitem.h"
 #include "qgstextannotationitem.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
@@ -5847,6 +5848,13 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   {
     QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mMapCanvas );
     newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
+  }
+
+  QDomNodeList imageItemList = doc.elementsByTagName( "ImageAnnotationItem" );
+  for ( int i = 0; i < imageItemList.size(); ++i )
+  {
+    QgsImageAnnotationItem* newImageItem = new QgsImageAnnotationItem( mMapCanvas );
+    newImageItem->readXML( doc, imageItemList.at( i ).toElement() );
   }
 
   QDomNodeList geoImageItemList = doc.elementsByTagName( "GeoImageAnnotationItem" );
