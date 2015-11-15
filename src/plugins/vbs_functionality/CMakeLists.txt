@@ -16,6 +16,7 @@ SET (vbsfunctionality_SRCS
   qgsvbscrashhandler.cpp
   qgsvbscrsselection.cpp
   analysistools/qgsvbsslopetool.cpp
+  analysistools/qgsvbshillshadetool.cpp
   analysistools/qgsvbsviewshedtool.cpp
   multimap/qgsvbsmapwidget.cpp
   multimap/qgsvbsmultimapmanager.cpp
@@ -43,6 +44,7 @@ SET (vbsfunctionality_MOC_HDRS
   qgsvbscrashhandler.h
   qgsvbscoordinatedisplayer.h
   analysistools/qgsvbsslopetool.h
+  analysistools/qgsvbshillshadetool.h
   analysistools/qgsvbsviewshedtool.h
   pinannotation/qgsvbspinannotationitem.h
   multimap/qgsvbsmapwidget.h

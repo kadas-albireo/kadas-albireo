@@ -36,6 +36,7 @@ class QgsVBSCrashHandler;
 class QgsVBSMultiMapManager;
 class QgsVBSSlopeTool;
 class QgsVBSViewshedTool;
+class QgsVBSHillshadeTool;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -60,8 +61,10 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QAction* mActionOvlImport;
     QAction* mActionSlope;
     QAction* mActionViewshed;
+    QAction* mActionHillshade;
     QgsVBSSlopeTool* mSlopeTool;
     QgsVBSViewshedTool* mViewshedTool;
+    QgsVBSHillshadeTool* mHillshadeTool;
 
   private slots:
     void activateMapToolPinAnnotation();
@@ -70,6 +73,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     void importOVL();
     void computeSlope( bool checked );
     void computeViewshed( bool checked );
+    void computeHillshade( bool checked );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

@@ -27,6 +27,7 @@
 #include "qgisinterface.h"
 #include "analysistools/qgsvbsslopetool.h"
 #include "analysistools/qgsvbsviewshedtool.h"
+#include "analysistools/qgsvbshillshadetool.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "pinannotation/qgsvbsmaptoolpinannotation.h"
@@ -50,6 +51,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mActionOvlImport( 0 )
     , mSlopeTool( 0 )
     , mViewshedTool( 0 )
+    , mHillshadeTool( 0 )
 {
 }
 
@@ -92,6 +94,11 @@ void QgsVBSFunctionality::initGui()
   mActionViewshed->setCheckable( true );
   connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionViewshed );
+
+  mActionHillshade = new QAction( QIcon( ":/vbsfunctionality/icons/hillshade.svg" ), tr( "Compute hillshade" ), this );
+  mActionHillshade->setCheckable( true );
+  connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( computeHillshade( bool ) ) );
+  mQGisIface->pluginToolBar()->addAction( mActionHillshade );
 }
 
 void QgsVBSFunctionality::unload()
@@ -119,6 +126,8 @@ void QgsVBSFunctionality::unload()
   mActionSlope = 0;
   delete mActionViewshed;
   mActionViewshed = 0;
+  delete mActionHillshade;
+  mActionHillshade = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
@@ -189,5 +198,19 @@ void QgsVBSFunctionality::computeViewshed( bool checked )
   {
     delete mViewshedTool;
     mViewshedTool = 0;
+  }
+}
+
+void QgsVBSFunctionality::computeHillshade( bool checked )
+{
+  if ( checked )
+  {
+    mHillshadeTool = new QgsVBSHillshadeTool( mQGisIface, this );
+    connect( mHillshadeTool, SIGNAL( finished() ), mActionHillshade, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mHillshadeTool;
+    mHillshadeTool = 0;
   }
 }

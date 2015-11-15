@@ -17,5 +17,6 @@
         <file>icons/add_map_view.svg</file>
         <file>icons/slope.svg</file>
         <file>icons/viewshed.svg</file>
+        <file>icons/hillshade.svg</file>
     </qresource>
 </RCC>
