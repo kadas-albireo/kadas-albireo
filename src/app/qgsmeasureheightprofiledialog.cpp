@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 #include "qgscoordinatetransform.h"
+#include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmeasureheightprofiledialog.h"
 #include "qgsmeasureheightprofiletool.h"
@@ -165,8 +166,7 @@ void QgsMeasureHeightProfileDialog::clear()
 void QgsMeasureHeightProfileDialog::finish()
 {
   QSettings().setValue( "/Windows/MeasureHeightProfile/geometry", saveGeometry() );
-  mTool->restart();
-  mTool->deactivate();
+  mTool->canvas()->unsetMapTool( mTool );
   clear();
 }
 
