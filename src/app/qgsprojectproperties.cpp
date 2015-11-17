@@ -169,14 +169,17 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  myColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
+  myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
   myRedInt = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreenInt = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlueInt = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  myBlueInt = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
 
   pbnCanvasColor->setContext( "gui" );
   pbnCanvasColor->setColor( myColor );
+  pbnCanvasColor->setAllowAlpha( true );
   pbnCanvasColor->setDefaultColor( defaultCanvasColor );
 
   //get project scales
@@ -687,6 +690,7 @@ void QgsProjectProperties::apply()
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorRedPart", myColor.red() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorGreenPart", myColor.green() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorBluePart", myColor.blue() );
+  QgsProject::instance()->writeEntry( "Gui", "/CanvasColorAlphaPart", myColor.alpha() );
   mMapCanvas->setCanvasColor( myColor );
 
   //save project scales

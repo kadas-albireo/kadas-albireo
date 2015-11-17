@@ -585,7 +585,8 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   int myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   int myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   int myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue ) );
+  int myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0).toInt();
+  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
 
   centralLayout->addWidget( mMapCanvas, 0, 0, 2, 1 );
 
@@ -3693,10 +3694,12 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
+  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
   prj->writeEntry( "Gui", "/CanvasColorRedPart", myRed );
   prj->writeEntry( "Gui", "/CanvasColorGreenPart", myGreen );
   prj->writeEntry( "Gui", "/CanvasColorBluePart", myBlue );
-  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue ) );
+  prj->writeEntry( "Gui", "/CanvasColorAlphaPart", myAlpha );
+  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
 
   prj->dirty( false );
 
@@ -4072,7 +4075,8 @@ bool QgisApp::addProject( QString projectFile )
   int  myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   int  myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   int  myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  int  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
+  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
   mMapCanvas->setCanvasColor( myColor ); //this is fill color before rendering starts
   QgsDebugMsg( "Canvas background color restored..." );
 
@@ -9230,7 +9234,8 @@ void QgisApp::projectProperties()
   int  myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   int  myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   int  myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  int  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
+  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
   mMapCanvas->setCanvasColor( myColor ); // this is fill color before rendering onto canvas
 
   qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureDist )->updateSettings();
