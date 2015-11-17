@@ -163,17 +163,23 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
     void addPoint( const QgsPoint & p, bool doUpdate = true, int geometryIndex = 0 );
 
     /**
-    * Remove a vertex from the rubberband and (optionally) update canvas.
-    * @param index The index of the vertex/point to remove, negative indexes start at end
-    * @param doUpdate Should the map canvas be updated immediately?
-    * @param geometryIndex The index of the feature part (in case of multipart geometries)
-    */
+     * Remove a vertex from the rubberband and (optionally) update canvas.
+     * @param index The index of the vertex/point to remove, negative indexes start at end
+     * @param doUpdate Should the map canvas be updated immediately?
+     * @param geometryIndex The index of the feature part (in case of multipart geometries)
+     */
     void removePoint( int index = 0, bool doUpdate = true, int geometryIndex = 0 );
 
     /**
      * Removes the last point. Most useful in connection with undo operations
      */
     void removeLastPoint( int geometryIndex = 0, bool doUpdate = true );
+
+    /**
+    * Remove the last geometry part
+    * @param doUpdate Should the map canvas be updated immediately?
+    */
+    void removeLastPart( bool doUpdate = true );
 
     /**
      * Moves the rubber band point specified by index. Note that if the rubber band is

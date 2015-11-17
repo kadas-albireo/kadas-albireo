@@ -67,6 +67,8 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
     //! updates the projections we're using
     void updateSettings();
 
+    void pickGeometry();
+
 
   protected:
     QgsMeasureDialog* mDialog;
@@ -90,8 +92,14 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
     //! text labels with measurements
     QList< QGraphicsTextItem* > mTextLabels;
 
+    //! Whether next mouse release event picks a feature
+    bool mPickFeature;
+
     //! Add new point
-    void addPoint( QgsPoint &point );
+    void addPoint( const QgsPoint &point );
+
+    //! Adds a new part
+    void addPart( const QPoint &labelPos );
 
     //! Returns the snapped (map) coordinate
     //@param p (pixel) coordinate

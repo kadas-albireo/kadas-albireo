@@ -13,6 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsfeaturepicker.h"
 #include "qgsmeasureheightprofiletool.h"
 #include "qgsmeasureheightprofiledialog.h"
 #include "qgsmapcanvas.h"
@@ -44,6 +45,7 @@ void QgsMeasureHeightProfileTool::restart()
 {
   mDialog->clear();
   mMoving = false;
+  mPicking = false;
   mRubberBand->reset( QGis::Line );
   mRubberBandPoints->reset( QGis::Point );
 
@@ -68,9 +70,16 @@ void QgsMeasureHeightProfileTool::activate()
 
 void QgsMeasureHeightProfileTool::deactivate()
 {
-  mDialog->hide();
   restart();
+  mDialog->close();
   QgsMapTool::deactivate();
+}
+
+void QgsMeasureHeightProfileTool::pickLine()
+{
+  restart();
+  mPicking = true;
+  setCursor( QCursor( Qt::ArrowCursor ) );
 }
 
 void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
@@ -112,7 +121,23 @@ void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
 void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
 {
   QgsPoint p = toMapCoordinates( e->pos() );
-  if ( !mMoving )
+  if ( mPicking )
+  {
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( p, QGis::Line );
+    if ( pickResult.first.isValid() && pickResult.first.geometry()->geometry()->vertexCount() > 1 )
+    {
+      mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );
+      mRubberBandPoints->addGeometry( pickResult.first.geometry(), pickResult.second );
+      mDialog->setPoints(
+        mRubberBandPoints->getPoints().front(),
+        mCanvas->mapSettings().destinationCrs()
+      );
+      mRubberBandPoints->addPoint( *mRubberBandPoints->getPoint( 0, 0 ) );
+    }
+    mPicking = false;
+    setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+  }
+  else if ( !mMoving )
   {
     restart();
     mRubberBand->addPoint( p );

@@ -30,7 +30,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QSettings>
@@ -46,14 +46,18 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
     : QDialog( parent, f ), mTool( tool ), mLineOfSightMarker( 0 ), mNSamples( 300 )
 {
   setWindowTitle( tr( "Height profile" ) );
-  QGridLayout* gridLayout = new QGridLayout( this );
+  QVBoxLayout* vboxLayout = new QVBoxLayout( this );
+
+  QPushButton* pickButton = new QPushButton( QIcon( ":/images/themes/default/mActionSelect.svg" ), tr( "Measure along existing line" ), this );
+  connect( pickButton, SIGNAL( clicked( bool ) ), mTool, SLOT( pickLine() ) );
+  vboxLayout->addWidget( pickButton );
 
   mPlot = new QwtPlot( this );
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
   mPlot->enableAxis( QwtPlot::xBottom, false );
   mPlot->setAxisTitle( QwtPlot::yLeft, tr( "Height [m]" ) );
-  gridLayout->addWidget( mPlot, 0, 0, 1, 2 );
+  vboxLayout->addWidget( mPlot );
 
   QwtPlotGrid* grid = new QwtPlotGrid();
 #if QWT_VERSION < 0x060000
@@ -103,12 +107,12 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mTargetHeightSpinBox->setDecimals( 1 );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mTargetHeightSpinBox, 1 );
-  gridLayout->addWidget( mLineOfSightGroupBoxgroupBox, 1, 0, 1, 2 );
+  vboxLayout->addWidget( mLineOfSightGroupBoxgroupBox );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
   QPushButton* copyButton = bbox->addButton( tr( "Copy to clipboard" ), QDialogButtonBox::ActionRole );
   QPushButton* addButton = bbox->addButton( tr( "Add to canvas" ), QDialogButtonBox::ActionRole );
-  gridLayout->addWidget( bbox, 2, 0, 1, 2 );
+  vboxLayout->addWidget( bbox );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
   connect( copyButton, SIGNAL( clicked( bool ) ), this, SLOT( copyToClipboard() ) );

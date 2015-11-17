@@ -42,7 +42,7 @@
    <property name="spacing">
     <number>6</number>
    </property>
-   <item row="4" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="textLabel2">
      <property name="text">
       <string>Total</string>
@@ -52,7 +52,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="3" column="2">
     <widget class="QLineEdit" name="editTotal">
      <property name="font">
       <font>
@@ -68,7 +68,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="3" column="1">
     <spacer>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -84,10 +84,10 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="3">
+   <item row="3" column="3">
     <widget class="QComboBox" name="mUnitsCombo"/>
    </item>
-   <item row="2" column="0" colspan="4">
+   <item row="1" column="0" colspan="4">
     <widget class="QTreeWidget" name="mTable">
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
@@ -108,14 +108,14 @@
      </column>
     </widget>
    </item>
-   <item row="6" column="0" colspan="4">
+   <item row="5" column="0" colspan="4">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
       <set>QDialogButtonBox::Close|QDialogButtonBox::Help</set>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="4">
+   <item row="4" column="0" colspan="4">
     <widget class="QgsCollapsibleGroupBox" name="groupBox">
      <property name="title">
       <string>Info</string>
@@ -171,6 +171,20 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="0" colspan="4">
+    <widget class="QPushButton" name="mPickerButton">
+     <property name="text">
+      <string>Measure existing geometry</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../images/images.qrc">
+       <normaloff>:/images/themes/default/mActionSelect.svg</normaloff>:/images/themes/default/mActionSelect.svg</iconset>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -186,6 +200,8 @@
   <tabstop>mTable</tabstop>
   <tabstop>editTotal</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>
