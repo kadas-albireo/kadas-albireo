@@ -13,14 +13,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscursors.h"
+#include "qgsfeaturepicker.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
-#include "qgsrubberband.h"
-#include "qgssnappingutils.h"
-
 #include "qgsmeasuredialog.h"
 #include "qgsmeasurecircletool.h"
-#include "qgscursors.h"
+#include "qgsrubberband.h"
+#include "qgssnappingutils.h"
+#include "qgsvectorlayer.h"
 
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -32,7 +33,9 @@ void QgsMeasureCircleTool::updateLabel( int idx )
   QList<QgsPoint> radius;
   radius.append( *mRubberBandPoints->getPoint( idx, 0 ) );
   radius.append( *mRubberBandPoints->getPoint( idx, 1 ) );
-  mTextLabels[idx]->setHtml( QString( "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">%1<br />(r=%2)</div>" )
+  mTextLabels[idx]->setHtml( QString(
+                               "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">%1</div>"
+                               "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">(r=%2)</div>" )
                              .arg( mDialog->getPartMeasurement( idx ) )
                              .arg( mDialog->formatValue( mDialog->measureGeometry( radius, false ), false ) ) );
 }
@@ -46,8 +49,7 @@ void QgsMeasureCircleTool::updateRubberbandGeometry( const QgsPoint& point )
     mRubberBand->movePoint( i,
                             QgsPoint( mCenterPos.x() + r * qCos( i * d2r ), mCenterPos.y() + r * qSin( i * d2r ) ),
                             mCurrentPart,
-                            i == 359
-                          );
+                            i == 359 );
   }
 }
 
@@ -70,10 +72,27 @@ void QgsMeasureCircleTool::canvasMoveEvent( QMouseEvent * e )
 void QgsMeasureCircleTool::canvasReleaseEvent( QMouseEvent * e )
 {
   QgsPoint point = snapPoint( e->pos() );
-  if ( e->button() == Qt::LeftButton && mCurrentPart == -1 )
+  if ( mPickFeature )
+  {
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( toMapCoordinates( e->pos() ), QGis::Polygon );
+    if ( pickResult.first.isValid() )
+    {
+      QgsRectangle bbox = pickResult.first.geometry()->boundingBox();
+      QgsPoint p1 = toMapCoordinates( pickResult.second, QgsPoint( bbox.xMinimum(), bbox.yMinimum() ) );
+      QgsPoint p2 = toMapCoordinates( pickResult.second, QgsPoint( bbox.xMaximum(), bbox.yMaximum() ) );
+      QgsPoint center( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) );
+      double radius = qSqrt( p1.sqrDist( center ) );
+      initCircle( toMapCoordinates( pickResult.second, center ), radius );
+      updateLabel( mCurrentPart );
+      ++mCurrentPart;
+    }
+    mPickFeature = false;
+    setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+  }
+  else if ( e->button() == Qt::LeftButton && mCurrentPart == -1 )
   {
     ++mCurrentPart;
-    addPart( point );
+    initCircle( point );
   }
   else if ( mRubberBand->getPoints().size() - 1 == mCurrentPart )
   {
@@ -82,33 +101,24 @@ void QgsMeasureCircleTool::canvasReleaseEvent( QMouseEvent * e )
   }
   else if ( mRubberBand->getPoints().size() == mCurrentPart && e->button() == Qt::LeftButton )
   {
-    addPart( point );
+    initCircle( point );
   }
 }
 
-void QgsMeasureCircleTool::addPart( const QgsPoint &point )
+void QgsMeasureCircleTool::initCircle( const QgsPoint &center, double radius )
 {
-  mCenterPos = point;
-
-  mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
-  int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
-  int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
-  int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
-  mTextLabels.back()->setDefaultTextColor( QColor( red, green, blue ) );
-  QFont font = mTextLabels.back()->font();
-  font.setBold( true );
-  mTextLabels.back()->setFont( font );
-  mTextLabels.back()->setPos( toCanvasCoordinates( point ) );
+  addPart( toCanvasCoordinates( center ) );
+  mCenterPos = center;
 
   double d2r = M_PI / 180.;
   for ( int i = 0; i < 360; ++i )
   {
     mRubberBand->addPoint(
-      QgsPoint( mCenterPos.x() + 0.0001 * qCos( i * d2r ), mCenterPos.y() + 0.0001 * qSin( i * d2r ) ),
+      QgsPoint( mCenterPos.x() + radius * qCos( i * d2r ), mCenterPos.y() + radius * qSin( i * d2r ) ),
       i == 359, mCurrentPart );
   }
-  mRubberBandPoints->addPoint( point, true, mCurrentPart );
+  mRubberBandPoints->addPoint( center, false, mCurrentPart );
+  mRubberBandPoints->addPoint( *mRubberBand->getPoint( mCurrentPart, 0 ), true, mCurrentPart );
 
-  mDialog->addPart();
   mDialog->updateMeasurements();
 }

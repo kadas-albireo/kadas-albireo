@@ -135,6 +135,12 @@ class QgsRubberBand: QgsMapCanvasItem
     void removeLastPoint( int geometryIndex = 0, bool doUpdate = true );
 
     /**
+    * Remove the last geometry part
+    * @param doUpdate Should the map canvas be updated immediately?
+    */
+    void removeLastPart(bool doUpdate = true);
+
+    /**
      * Moves the rubber band point specified by index. Note that if the rubber band is
      * not used to track the last mouse position, the first point of the rubber band has two vertices
      */

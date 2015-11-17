@@ -394,6 +394,11 @@ void QgisApp::emitCustomSrsValidation( QgsCoordinateReferenceSystem &srs )
   emit customSrsValidation( srs );
 }
 
+QgsLegendInterface* QgisApp::legendInterface() const
+{
+  return mQgisInterface->legendInterface();
+}
+
 void QgisApp::layerTreeViewDoubleClicked( const QModelIndex& index )
 {
   Q_UNUSED( index )

@@ -44,6 +44,7 @@ QgsMeasureDialog::QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f )
   connect( buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
   connect( this, SIGNAL( finished( int ) ), this, SLOT( finish() ) );
+  connect( mPickerButton, SIGNAL( clicked( bool ) ), mTool, SLOT( pickGeometry() ) );
 
   mUnitsCombo->addItem( QGis::tr( QGis::Meters ) );
   mUnitsCombo->addItem( QGis::tr( QGis::Feet ) );
@@ -206,13 +207,14 @@ void QgsMeasureDialog::convertMeasurement( double &measure, QGis::UnitType &u, b
 
 void QgsMeasureDialog::updateMeasurements()
 {
-  if ( mTool->getPoints().isEmpty() )
+  int idx = mTable->topLevelItemCount() - 1;
+  if ( mTool->getPoints().size() <= idx )
   {
     return;
   }
 
-  QTreeWidgetItem *item = mTable->topLevelItem( mTable->topLevelItemCount() - 1 );
-  double value = measureGeometry( mTool->getPoints().last(), mMeasureArea );
+  QTreeWidgetItem *item = mTable->topLevelItem( idx );
+  double value = measureGeometry( mTool->getPoints()[idx], mMeasureArea );
   item->setText( 0, formatValue( value, mMeasureArea ) );
   item->setData( 0, Qt::UserRole, value );
   double total = 0;

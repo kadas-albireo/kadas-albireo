@@ -36,11 +36,15 @@ class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
     void activate() override;
     void deactivate() override;
 
+  public slots:
+    void pickLine();
+
   private:
     QgsMeasureHeightProfileDialog* mDialog;
     QgsRubberBand *mRubberBand;
     QgsRubberBand *mRubberBandPoints;
     bool mMoving;
+    bool mPicking;
 };
 
 #endif // QGSMEASUREHEIGHTPROFILETOOL_H

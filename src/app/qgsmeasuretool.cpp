@@ -13,14 +13,14 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscursors.h"
+#include "qgsfeaturepicker.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
-#include "qgsrubberband.h"
-#include "qgssnappingutils.h"
-
 #include "qgsmeasuredialog.h"
 #include "qgsmeasuretool.h"
-#include "qgscursors.h"
+#include "qgsrubberband.h"
+#include "qgssnappingutils.h"
 
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -31,9 +31,8 @@ QgsMeasureTool::QgsMeasureTool( QgsMapCanvas* canvas, bool measureArea )
     : QgsMapTool( canvas )
     , mCurrentPart( -1 )
     , mWrongProjectProjection( false )
+    , mPickFeature( false )
 {
-  setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
-
   mMeasureArea = measureArea;
 
   mRubberBand = new QgsRubberBand( canvas, mMeasureArea ? QGis::Polygon : QGis::Line );
@@ -80,6 +79,7 @@ void QgsMeasureTool::activate()
 
 void QgsMeasureTool::deactivate()
 {
+  restart();
   mDialog->close();
   QgsMapTool::deactivate();
 }
@@ -98,6 +98,8 @@ void QgsMeasureTool::restart()
   updateSettings();
 
   mWrongProjectProjection = false;
+  mPickFeature = false;
+  setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
 }
 
 void QgsMeasureTool::updateLabels()
@@ -131,6 +133,20 @@ void QgsMeasureTool::updateSettings()
   mDialog->updateSettings();
 }
 
+void QgsMeasureTool::pickGeometry()
+{
+  if ( mCurrentPart >= 0 && mRubberBand->getPoints().size() > mCurrentPart )
+  {
+    mRubberBand->removeLastPart( true );
+  }
+  else if ( mCurrentPart == -1 )
+  {
+    mCurrentPart = 0;
+  }
+  mPickFeature = true;
+  setCursor( QCursor( Qt::ArrowCursor ) );
+}
+
 //////////////////////////
 
 void QgsMeasureTool::canvasMoveEvent( QMouseEvent * e )
@@ -149,20 +165,45 @@ void QgsMeasureTool::canvasMoveEvent( QMouseEvent * e )
 
 void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
 {
-  QgsPoint point = snapPoint( e->pos() );
-
-  if ( mCurrentPart < 0 )
+  if ( mPickFeature )
   {
-    mCurrentPart = 0;
-    addPoint( point );
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
+    if ( pickResult.first.isValid() )
+    {
+      mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );
+      mRubberBandPoints->addGeometry( pickResult.first.geometry(), pickResult.second );
+      int idx = mCurrentPart;
+      while ( mCurrentPart < mRubberBand->getPoints().size() )
+      {
+        addPart( toCanvasCoordinates( mRubberBand->partMidpoint( mCurrentPart ) ) );
+        mDialog->updateMeasurements();
+        ++mCurrentPart;
+      }
+      while ( idx < mCurrentPart )
+      {
+        updateLabel( idx++ );
+      }
+    }
+    mPickFeature = false;
+    setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
   }
   else
   {
-    addPoint( point );
+    QgsPoint point = snapPoint( e->pos() );
 
-    if ( e->button() == Qt::RightButton )
+    if ( mCurrentPart < 0 )
     {
-      ++mCurrentPart;
+      mCurrentPart = 0;
+      addPoint( point );
+    }
+    else
+    {
+      addPoint( point );
+
+      if ( e->button() == Qt::RightButton )
+      {
+        ++mCurrentPart;
+      }
     }
   }
 }
@@ -199,26 +240,31 @@ void QgsMeasureTool::keyPressEvent( QKeyEvent* e )
 }
 
 
-void QgsMeasureTool::addPoint( QgsPoint &point )
+void QgsMeasureTool::addPoint( const QgsPoint &point )
 {
   if ( mRubberBand->getPoints().size() <= mCurrentPart )
   {
-    mDialog->addPart();
-    mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
-    int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
-    int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
-    int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
-    mTextLabels.back()->setDefaultTextColor( QColor( red, green, blue ) );
-    QFont font = mTextLabels.back()->font();
-    font.setBold( true );
-    mTextLabels.back()->setFont( font );
-    mTextLabels.back()->setPos( toCanvasCoordinates( point ) );
+    addPart( toCanvasCoordinates( point ) );
   }
 
   // Append point that we will be moving.
   mRubberBand->addPoint( point, true, mCurrentPart );
   mRubberBandPoints->addPoint( point, true, mCurrentPart );
   mDialog->updateMeasurements();
+}
+
+void QgsMeasureTool::addPart( const QPoint &labelPos )
+{
+  mDialog->addPart();
+  mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
+  int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
+  int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
+  int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  mTextLabels.back()->setDefaultTextColor( QColor( red, green, blue ) );
+  QFont font = mTextLabels.back()->font();
+  font.setBold( true );
+  mTextLabels.back()->setFont( font );
+  mTextLabels.back()->setPos( labelPos );
 }
 
 const QList< QList<QgsPoint> >& QgsMeasureTool::getPoints() const

@@ -51,6 +51,7 @@ class QgsGPSRouteEditor;
 class QgsFeature;
 class QgsLayerTreeMapCanvasBridge;
 class QgsLayerTreeView;
+class QgsLegendInterface;
 class QgsMapCanvas;
 class QgsMapLayer;
 class QgsMapTip;
@@ -471,6 +472,9 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
 
     static LONG WINAPI qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo );
 #endif
+
+    /** Returns the legend interface */
+    QgsLegendInterface* legendInterface() const;
 
   public slots:
     void layerTreeViewDoubleClicked( const QModelIndex& index );

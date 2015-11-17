@@ -49,7 +49,7 @@ class APP_EXPORT QgsMeasureCircleTool : public QgsMeasureTool
 
     void updateRubberbandGeometry( const QgsPoint& point );
 
-    void addPart( const QgsPoint& pos );
+    void initCircle( const QgsPoint& center , double radius = 0.0001 );
 };
 
 #endif // QGSMEASURECIRCLETOOL_H
