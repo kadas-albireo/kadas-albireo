@@ -84,7 +84,7 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   setTitleBarWidget( titleWidget );
 
   mMapCanvas = new QgsMapCanvas( this );
-  mMapCanvas->setCanvasColor( Qt::white );
+  mMapCanvas->setCanvasColor( Qt::transparent );
   mMapCanvas->enableAntiAliasing( mIface->mapCanvas()->antiAliasingEnabled() );
   QgsMapCanvas::WheelAction wheelAction = static_cast<QgsMapCanvas::WheelAction>( settings.value( "/qgis/wheel_action", "0" ).toInt() );
   double zoomFactor = settings.value( "/qgis/zoom_factor", "2.0" ).toDouble();

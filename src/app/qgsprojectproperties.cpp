@@ -38,7 +38,6 @@
 #include "qgsvectordataprovider.h"
 #include "qgsscaleutils.h"
 #include "qgsgenericprojectionselector.h"
-#include "qgsselectgrouplayerdialog.h"
 #include "qgsstylev2.h"
 #include "qgssymbolv2.h"
 #include "qgsstylev2managerdialog.h"
@@ -170,14 +169,17 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  myColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
+  myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
   myRedInt = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreenInt = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlueInt = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt );
+  myBlueInt = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
 
   pbnCanvasColor->setContext( "gui" );
   pbnCanvasColor->setColor( myColor );
+  pbnCanvasColor->setAllowAlpha( true );
   pbnCanvasColor->setDefaultColor( defaultCanvasColor );
 
   //get project scales
@@ -347,17 +349,6 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   if ( ok )
   {
     mGroupAsLayerListWidget->addItems( values );
-  }
-
-  values = QgsProject::instance()->readListEntry( "WMSExclusiveLayerGroups", "/", QStringList(), &ok );
-  mWMSExclusiveGroupsComboBox->setChecked( ok );
-  if ( ok )
-  {
-    QStringList::const_iterator groupIt = values.constBegin();
-    for ( ; groupIt != values.constEnd(); ++groupIt )
-    {
-      setLayerIdsToLayerGroupsListWidget( *groupIt );
-    }
   }
 
   bool addWktGeometry = QgsProject::instance()->readBoolEntry( "WMSAddWktGeometry", "/" );
@@ -699,6 +690,7 @@ void QgsProjectProperties::apply()
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorRedPart", myColor.red() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorGreenPart", myColor.green() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorBluePart", myColor.blue() );
+  QgsProject::instance()->writeEntry( "Gui", "/CanvasColorAlphaPart", myColor.alpha() );
   mMapCanvas->setCanvasColor( myColor );
 
   //save project scales
@@ -846,21 +838,6 @@ void QgsProjectProperties::apply()
   else
   {
     QgsProject::instance()->removeEntry( "WMSPublishGroupsAsLayer", "/" );
-  }
-
-  //WMS exclusive layer groups
-  if ( mWMSExclusiveGroupsComboBox->isChecked() )
-  {
-    QStringList groups;
-    for ( int i = 0; i < mExclusiveLayerGroupsListWidget->count(); ++i )
-    {
-      groups << mExclusiveLayerGroupsListWidget->item( i )->data( Qt::UserRole ).toString();
-    }
-    QgsProject::instance()->writeEntry( "WMSExclusiveLayerGroups", "/", groups );
-  }
-  else
-  {
-    QgsProject::instance()->removeEntry( "WMSExclusiveLayerGroups", "/" );
   }
 
   QgsProject::instance()->writeEntry( "WMSAddWktGeometry", "/", mAddWktGeometryCheckBox->isChecked() );
@@ -1303,43 +1280,6 @@ void QgsProjectProperties::on_mRemoveGroupAsLayerButton_clicked()
   if ( currentItem )
   {
     delete mGroupAsLayerListWidget->takeItem( mGroupAsLayerListWidget->row( currentItem ) );
-  }
-}
-
-void QgsProjectProperties::on_mAddExclusiveGroupButton_clicked()
-{
-  if ( !mMapCanvas )
-  {
-    return;
-  }
-
-  QgsLayerTreeView* treeView = QgisApp::instance()->layerTreeView();
-  if ( !treeView )
-  {
-    return;
-  }
-
-  QgsLayerTreeModel* treeModel = treeView->layerTreeModel();
-  if ( !treeModel )
-  {
-    return;
-  }
-
-  QgsSelectGroupLayerDialog d( treeModel, this );
-  if ( d.exec() == QDialog::Accepted )
-  {
-    QStringList layerIds = d.selectedLayerIds();
-    layerIds.append( d.selectedGroups() );
-    setLayerIdsToLayerGroupsListWidget( layerIds.join( "," ) );
-  }
-}
-
-void QgsProjectProperties::on_mRemoveExclusiveGroupButton_clicked()
-{
-  QListWidgetItem* currentItem = mExclusiveLayerGroupsListWidget->currentItem();
-  if ( currentItem )
-  {
-    delete mExclusiveLayerGroupsListWidget->takeItem( mExclusiveLayerGroupsListWidget->row( currentItem ) );
   }
 }
 
@@ -1851,26 +1791,4 @@ void QgsProjectProperties::on_mButtonExportColors_clicked()
     QMessageBox::critical( 0, tr( "Error exporting" ), tr( "Error writing palette file" ) );
     return;
   }
-}
-
-void QgsProjectProperties::setLayerIdsToLayerGroupsListWidget( const QString& layerIds )
-{
-  QStringList layerIdList = layerIds.split( "," );
-  QStringList layerNameList;
-  QStringList::const_iterator idIt = layerIdList.constBegin();
-  for ( ; idIt != layerIdList.constEnd(); ++idIt )
-  {
-    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *idIt );
-    if ( layer )
-    {
-      layerNameList.append( layer->name() );
-    }
-    else
-    {
-      layerNameList.append( *idIt );
-    }
-  }
-  QListWidgetItem* item = new QListWidgetItem( layerNameList.join( "," ) );
-  item->setData( Qt::UserRole, layerIds );
-  mExclusiveLayerGroupsListWidget->addItem( item );
 }
