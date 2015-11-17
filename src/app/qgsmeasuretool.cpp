@@ -112,7 +112,7 @@ void QgsMeasureTool::updateLabels()
 
 void QgsMeasureTool::updateLabel( int idx )
 {
-  mTextLabels[idx]->setHtml( QString( "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">%1</div>" ).arg( mDialog->getPartMeasurement( idx ) ) );
+  mTextLabels[idx]->setHtml( QString( "<div style=\"background: rgba(255, 255, 255, 159); padding: 5px; border-radius: 5px;\">%1</div>" ).arg( mDialog->getPartMeasurement( idx ) ) );
 }
 
 void QgsMeasureTool::updateSettings()
