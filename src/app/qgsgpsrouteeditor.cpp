@@ -35,6 +35,9 @@
 #include <QMessageBox>
 #include <QSettings>
 
+
+int QgsGPSRouteEditor::sFeatureSize = 3;
+
 QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
 {
@@ -185,7 +188,7 @@ void QgsGPSRouteEditor::updateFeatureStyle( const QgsFeatureId &fid )
     return;
   }
   const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), 2 );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), sFeatureSize );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::green ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( Qt::SolidLine ) ) );
@@ -253,7 +256,7 @@ void QgsGPSRouteEditor::importGpx()
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
     QString flags = "symbol=circle,w=5*\"size\",h=5*\"size\",r=0";
-    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::green, 1, Qt::SolidLine, Qt::SolidPattern, flags, name );
+    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, name );
     ++nWpts;
   }
   QDomNodeList rtes = doc.elementsByTagName( "rte" );
@@ -272,7 +275,26 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::green, 1, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    ++nRtes;
+  }
+  QDomNodeList trks = doc.elementsByTagName( "trk" );
+  for ( int i = 0, n = trks.size(); i < n; ++i )
+  {
+    QDomElement trkEl = rtes.at( i ).toElement();
+    QString name = trkEl.firstChildElement( "name" ).text();
+    QList<QgsPointV2> pts;
+    QDomNodeList trksegs = trkEl.elementsByTagName( "trkseg" );
+    for ( int j = 0, m = trksegs.size(); j < m; ++j )
+    {
+      QDomElement trkptEl = trksegs.at( j ).toElement();
+      double lat = trkptEl.attribute( "lat" ).toDouble();
+      double lon = trkptEl.attribute( "lon" ).toDouble();
+      pts.append( QgsPointV2( lon, lat ) );
+    }
+    QgsLineStringV2* line = new QgsLineStringV2();
+    line->setPoints( pts );
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
     ++nRtes;
   }
   mApp->mapCanvas()->clearCache( mLayer->id() );
