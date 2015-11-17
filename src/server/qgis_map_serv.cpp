@@ -57,6 +57,7 @@
 #if defined( Q_OS_UNIX )
 #include "qgsmslayercache.h"
 #include <signal.h>
+#include <execinfo.h>
 
 void sigterm_handler( int signum )
 {
@@ -64,6 +65,27 @@ void sigterm_handler( int signum )
 
   //cleanup layers after fcgi process termination
   QgsMSLayerCache::instance()->removeAllEntries();
+}
+
+void segfault_handler( int signum )
+{
+  Q_UNUSED( signum );
+  QgsMessageLog::logMessage( "Segfault", "Server", QgsMessageLog::CRITICAL );
+
+  //write backtrace information into log
+
+  void* bt[20];
+  int btSize = backtrace( bt, 20 );
+
+  char** messages = 0;
+  messages = backtrace_symbols( bt, btSize );
+
+  for ( int i = 0; i < btSize; ++i )
+  {
+    QgsMessageLog::logMessage( messages[i], "Server", QgsMessageLog::CRITICAL );
+  }
+
+  exit( 1 );
 }
 #endif
 
@@ -263,6 +285,7 @@ int main( int argc, char * argv[] )
 #endif
 
 #if defined( Q_OS_UNIX )
+  signal( SIGSEGV, segfault_handler );
   signal( SIGTERM, sigterm_handler );
 #endif
 
