@@ -203,6 +203,7 @@
 #include "qgssponsors.h"
 #include "qgssvgannotationitem.h"
 #include "qgsimageannotationitem.h"
+#include "qgstemporaryfile.h"
 #include "qgstextannotationitem.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
@@ -8335,6 +8336,7 @@ void QgisApp::closeProject()
   mMapCanvas->setLayerSet( emptyList );
   mMapCanvas->clearCache();
   removeAllLayers();
+  QgsTemporaryFile::clear();
 }
 
 

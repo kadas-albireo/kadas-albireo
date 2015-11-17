@@ -21,10 +21,17 @@
 
 QgsTemporaryFile::~QgsTemporaryFile()
 {
-  foreach ( QTemporaryFile* file, mFiles )
+  clear();
+}
+
+void QgsTemporaryFile::clear()
+{
+  foreach ( QTemporaryFile* file, instance()->mFiles )
   {
     QFile( file->fileName() + ".aux.xml" ).remove();
+    delete file;
   }
+  instance()->mFiles.clear();
 }
 
 QString QgsTemporaryFile::createNewFile( const QString& templateName )
