@@ -20,7 +20,7 @@
 
 class QgsRubberBand;
 
-class QgsMapToolFilter : public QgsMapTool
+class GUI_EXPORT QgsMapToolFilter : public QgsMapTool
 {
   public:
     enum Mode { Circle, Rect, Poly };

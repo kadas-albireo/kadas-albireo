@@ -24,16 +24,16 @@ class QProgressDialog;
 
 #include "qgis.h"
 
-namespace QgsViewshed
+class ANALYSIS_EXPORT QgsViewshed
 {
-
-  bool computeViewshed( const QString& inputFile,
+public:
+  static bool computeViewshed( const QString& inputFile,
                         const QString& outputFile, const QString& outputFormat,
                         QgsPoint observerPos, const QgsCoordinateReferenceSystem& observerPosCrs,
                         double observerHeight, double targetHeight, double radius,
                         const QGis::UnitType distanceElevUnit,
                         QProgressDialog* progress = 0 );
 
-} // QgsViewshed
+};
 
 #endif // QGSVIEWSHED_H
