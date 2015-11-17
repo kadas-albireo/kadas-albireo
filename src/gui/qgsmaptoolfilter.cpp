@@ -61,7 +61,7 @@ void QgsMapToolFilter::canvasMoveEvent( QMouseEvent * e )
     if ( mMode == Circle )
     {
       QPoint diff = mPressPos - e->pos();
-      double r = qSqrt( diff.x() * diff.x() + diff.y() + diff.y() );
+      double r = qSqrt( diff.x() * diff.x() + diff.y() * diff.y() );
       QgsCircularStringV2* exterior = new QgsCircularStringV2();
       exterior->setPoints(
         QList<QgsPointV2>() << toMapCoordinates( QPoint( mPressPos.x() + r, mPressPos.y() ) )
