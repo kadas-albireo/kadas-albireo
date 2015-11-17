@@ -34,8 +34,8 @@ void QgsMeasureCircleTool::updateLabel( int idx )
   radius.append( *mRubberBandPoints->getPoint( idx, 0 ) );
   radius.append( *mRubberBandPoints->getPoint( idx, 1 ) );
   mTextLabels[idx]->setHtml( QString(
-                               "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">%1</div>"
-                               "<div style=\"background: rgba(255, 255, 255, 64); padding: 5px; border-radius: 5px;\">(r=%2)</div>" )
+                               "<div style=\"background: rgba(255, 255, 255, 159); padding: 5px; border-radius: 5px;\">%1</div>"
+                               "<div style=\"background: rgba(255, 255, 255, 159); padding: 5px; border-radius: 5px;\">(r=%2)</div>" )
                              .arg( mDialog->getPartMeasurement( idx ) )
                              .arg( mDialog->formatValue( mDialog->measureGeometry( radius, false ), false ) ) );
 }
