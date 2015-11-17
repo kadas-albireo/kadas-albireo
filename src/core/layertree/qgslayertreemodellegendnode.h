@@ -132,6 +132,9 @@ class CORE_EXPORT QgsLayerTreeModelLegendNode : public QObject
     QgsLayerTreeLayer* mLayerNode;
     bool mEmbeddedInParent;
     QString mUserLabel;
+
+    /**Splits text into multiple lines and sections with different font (e.g. italic, bold)*/
+    static QList< QList< QPair< QFont, QString> > > formatTextAsHtml( const QFont& baseFont, const QString& text );
 };
 
 #include "qgslegendsymbolitemv2.h"

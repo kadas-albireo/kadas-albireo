@@ -726,6 +726,7 @@ QString QgsWMSServer::getLegendGraphicHtml()
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
   // TODO: not available: layer font color
   legendSettings.setFontColor( itemFontColor );
+  legendSettings.setWMSLegend( true );
 
 
 
@@ -1033,6 +1034,7 @@ QImage* QgsWMSServer::getLegendGraphics()
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
   // TODO: not available: layer font color
   legendSettings.setFontColor( itemFontColor );
+  legendSettings.setWMSLegend( true );
 
   if ( contentBasedLegend )
   {

@@ -772,6 +772,13 @@ QVariant QgsRuleBasedRendererV2Model::data( const QModelIndex &index, int role )
     return QVariant();
 
   QgsRuleBasedRendererV2::Rule* rule = ruleForIndex( index );
+  if ( role == Qt::ToolTipRole )
+  {
+    if ( index.column() == 6 )
+    {
+      return QgsRendererV2Widget::htmlToolTip();
+    }
+  }
 
   if ( role == Qt::DisplayRole || role == Qt::ToolTipRole )
   {
