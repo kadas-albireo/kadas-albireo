@@ -585,7 +585,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   int myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   int myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   int myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  int myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0).toInt();
+  int myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
   mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
 
   centralLayout->addWidget( mMapCanvas, 0, 0, 2, 1 );
@@ -4602,7 +4602,11 @@ void QgisApp::saveMapAsImage( QString theImageFileNameQString, QPixmap * theQPix
 
 void QgisApp::saveMapToClipboard()
 {
-  QApplication::clipboard()->setImage( mMapCanvas->map()->contentImage() );
+  QImage image( mMapCanvas->size(), QImage::Format_ARGB32 );
+  image.fill( Qt::transparent );
+  QPainter painter( &image );
+  mMapCanvas->render( &painter );
+  QApplication::clipboard()->setImage( image );
 }
 
 //reimplements method from base (gui) class
