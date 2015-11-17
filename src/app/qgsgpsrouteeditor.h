@@ -40,6 +40,8 @@ class QgsGPSRouteEditor : public QObject
     void featureStyleChanged();
 
   private:
+    static int sFeatureSize;
+
     QgisApp* mApp;
     QToolButton* mBtnNewObject;
     QAction* mActionEditObject;
