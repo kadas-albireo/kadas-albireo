@@ -76,6 +76,8 @@ class QgsWMSServer: public QgsOWSServer
     /**Returns the map legend as an image (or a null pointer in case of error). The caller takes ownership
     of the image object*/
     QImage* getLegendGraphics();
+    /**Returns the map legend as html*/
+    QString getLegendGraphicHtml();
 
     typedef QSet<QgsSymbolV2*> SymbolV2Set;
     typedef QMap<QgsVectorLayer*, SymbolV2Set> HitTest;
@@ -256,6 +258,14 @@ class QgsWMSServer: public QgsOWSServer
     QgsRectangle featureInfoSearchRect( QgsVectorLayer* ml, QgsMapRenderer* mr, const QgsRenderContext& rct, const QgsPoint& infoPoint ) const;
 
     void drawWatermark( QImage* img, QPainter* p ) const;
+
+    static QString emptyHtml() { return QString( "<!DOCTYPE html><HEAD/><BODY/>" ); }
+
+    /**Show rule labels in GetLegendGraphic if true*/
+    bool showRuleLabel() const;
+
+    /**Show layer title in GetLegendGraphic if true*/
+    bool showLayerTitle() const;
 };
 
 #endif
