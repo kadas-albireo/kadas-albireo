@@ -311,8 +311,8 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
   QVector<QPointF> samples;
   for ( int i = 0; i < nSamples; ++i )
   {
-    samples.append( QPointF( mPlotCurve->x( i ), mPlotCurve->y( i ) );
-                  }
+    samples.append( QPointF( mPlotCurve->x( i ), mPlotCurve->y( i ) ) );
+  }
 #else
   QVector<QPointF> samples = static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->samples();
 #endif
@@ -363,7 +363,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
       losXSamples.append( sample.x() );
       losYSamples.append( sample.y() );
     }
-    mLineOfSight->setData( losXSamples, losYSamples );
+    curve->setData( losXSamples, losYSamples );
 #else
     curve->setData( new QwtPointSeriesData() );
     static_cast<QwtPointSeriesData*>( curve->data() )->setSamples( losSamples );
@@ -385,9 +385,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 
   mLineOfSightMarker = new QwtPlotMarker();
 #if QWT_VERSION < 0x060000
-  QwtSymbol observerMarkerSymbol;
-  observerMarkerSymbol.setPixmap( QPixmap( ":/images/themes/default/observer.svg" ) );
-  observerMarkerSymbol.setPinPoint( QPointF( 0, 4 ) );
+  QwtSymbol observerMarkerSymbol(QwtSymbol::LTriangle, QBrush(Qt::white), QPen(Qt::black), QSize(8, 8));
   mLineOfSightMarker->setSymbol( observerMarkerSymbol );
   mLineOfSightMarker->setValue( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
 #else

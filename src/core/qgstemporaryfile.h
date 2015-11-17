@@ -23,7 +23,7 @@
 
 class QTemporaryFile;
 
-class QgsTemporaryFile : public QObject
+class CORE_EXPORT QgsTemporaryFile : public QObject
 {
   public:
     static QString createNewFile( const QString &templateName );
