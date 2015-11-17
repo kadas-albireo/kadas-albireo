@@ -27,6 +27,7 @@ class QgsTemporaryFile : public QObject
 {
   public:
     static QString createNewFile( const QString &templateName );
+    static void clear();
 
   private:
     QList<QTemporaryFile*> mFiles;
