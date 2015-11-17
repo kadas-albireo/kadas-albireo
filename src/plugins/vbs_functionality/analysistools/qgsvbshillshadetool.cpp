@@ -110,7 +110,8 @@ void QgsVBSHillshadeTool::filterFinished()
   hillshade.processRaster( &p );
   if ( !p.wasCanceled() )
   {
-    mIface->addRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
+    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
+    layer->renderer()->setOpacity( 0.6 );
   }
   emit finished();
 }
