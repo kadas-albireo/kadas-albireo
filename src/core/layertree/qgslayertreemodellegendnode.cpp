@@ -157,6 +157,10 @@ Qt::ItemFlags QgsSymbolV2LegendNode::flags() const
 
 QVariant QgsSymbolV2LegendNode::data( int role ) const
 {
+  if ( role == Qt::UserRole ) //user role is html text if available or label text else
+  {
+    return mItem.html().isEmpty() ? mItem.label() : mItem.html();
+  }
   if ( role == Qt::DisplayRole )
   {
     return mLabel;
