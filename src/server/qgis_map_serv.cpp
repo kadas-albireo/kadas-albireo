@@ -359,6 +359,10 @@ int main( int argc, char * argv[] )
   int logLevel = QgsServerLogger::instance()->logLevel();
   QTime time; //used for measuring request time if loglevel < 1
 
+  //init layer cache here (the environment variable MAX_CACHE_LAYERS is not accessible anymore in the fcgi-loop)
+  QgsMSLayerCache* cache = QgsMSLayerCache::instance();
+  Q_UNUSED( cache );
+
 #ifdef HAVE_SERVER_PYTHON_PLUGINS
   // Create the interface
   QgsServerInterfaceImpl serverIface( &capabilitiesCache );
