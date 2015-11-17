@@ -139,6 +139,9 @@ class CORE_EXPORT QgsLegendSettings
     /** Returns the font descent in Millimeters (considers upscaling and downscaling with FONT_WORKAROUND_SCALE */
     double fontDescentMillimeters( const QFont& font ) const;
 
+    bool wmsLegend() const { return mWMSLegend; }
+    void setWMSLegend( bool wms ) { mWMSLegend = wms; }
+
   private:
 
     QString mTitle;
@@ -187,6 +190,8 @@ class CORE_EXPORT QgsLegendSettings
 
     /** DPI to be used when rendering legend */
     int mDpi;
+
+    bool mWMSLegend;
 };
 
 

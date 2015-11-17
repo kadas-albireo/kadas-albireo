@@ -112,6 +112,14 @@ QVariant QgsCategorizedSymbolRendererV2Model::data( const QModelIndex &index, in
 
   const QgsRendererCategoryV2 category = mRenderer->categories().value( index.row() );
 
+  if ( role  == Qt::ToolTipRole )
+  {
+    if ( index.column() == 3 )
+    {
+      return QgsRendererV2Widget::htmlToolTip();
+    }
+  }
+
   if ( role == Qt::CheckStateRole && index.column() == 0 )
   {
     return category.renderState() ? Qt::Checked : Qt::Unchecked;

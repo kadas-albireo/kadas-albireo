@@ -34,6 +34,7 @@ QgsLegendSettings::QgsLegendSettings()
     , mUseAdvancedEffects( true )
     , mMapScale( 1 )
     , mDpi( 96 ) // based on QImage's default DPI
+    , mWMSLegend( false )
 {
   rstyle( QgsComposerLegendStyle::Title ).setMargin( QgsComposerLegendStyle::Bottom, 2 );
   rstyle( QgsComposerLegendStyle::Group ).setMargin( QgsComposerLegendStyle::Top, 2 );
