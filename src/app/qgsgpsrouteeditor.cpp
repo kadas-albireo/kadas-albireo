@@ -185,7 +185,7 @@ void QgsGPSRouteEditor::updateFeatureStyle( const QgsFeatureId &fid )
     return;
   }
   const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), 1 );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), 2 );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::green ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( Qt::SolidLine ) ) );
