@@ -39,6 +39,7 @@ class QgsVBSViewshedTool : public QObject
 
   private slots:
     void filterFinished();
+    void adjustRadius( double newRadius );
 };
 
 #endif // QGSVBSVIEWSHEDTOOL_H
