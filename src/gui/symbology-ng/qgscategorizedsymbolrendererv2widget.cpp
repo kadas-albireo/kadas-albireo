@@ -93,7 +93,7 @@ Qt::ItemFlags QgsCategorizedSymbolRendererV2Model::flags( const QModelIndex & in
   }
 
   Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable;
-  if ( index.column() == 1 || index.column() == 2 )
+  if ( index.column() == 1 || index.column() == 2 || index.column() == 3 )
   {
     flags |= Qt::ItemIsEditable;
   }
@@ -112,6 +112,14 @@ QVariant QgsCategorizedSymbolRendererV2Model::data( const QModelIndex &index, in
 
   const QgsRendererCategoryV2 category = mRenderer->categories().value( index.row() );
 
+  if ( role  == Qt::ToolTipRole )
+  {
+    if ( index.column() == 3 )
+    {
+      return QgsRendererV2Widget::htmlToolTip();
+    }
+  }
+
   if ( role == Qt::CheckStateRole && index.column() == 0 )
   {
     return category.renderState() ? Qt::Checked : Qt::Unchecked;
@@ -122,12 +130,17 @@ QVariant QgsCategorizedSymbolRendererV2Model::data( const QModelIndex &index, in
     {
       case 1: return category.value().toString();
       case 2: return category.label();
+      case 3: return category.html();
       default: return QVariant();
     }
   }
   else if ( role == Qt::DecorationRole && index.column() == 0 && category.symbol() )
   {
     return QgsSymbolLayerV2Utils::symbolPreviewIcon( category.symbol(), QSize( 16, 16 ) );
+  }
+  else if ( role == Qt::DecorationRole && index.column() == 4 && category.legendSymbol() )
+  {
+    return QgsSymbolLayerV2Utils::symbolPreviewIcon( category.legendSymbol(), QSize( 16, 16 ) );
   }
   else if ( role == Qt::TextAlignmentRole )
   {
@@ -139,6 +152,7 @@ QVariant QgsCategorizedSymbolRendererV2Model::data( const QModelIndex &index, in
     {
       case 1: return category.value();
       case 2: return category.label();
+      case 3: return category.html();
       default: return QVariant();
     }
   }
@@ -185,6 +199,9 @@ bool QgsCategorizedSymbolRendererV2Model::setData( const QModelIndex & index, co
     case 2: // label
       mRenderer->updateCategoryLabel( index.row(), value.toString() );
       break;
+    case 3: //html
+      mRenderer->updateCategoryHtml( index.row(), value.toString() );
+      break;
     default:
       return false;
   }
@@ -195,9 +212,9 @@ bool QgsCategorizedSymbolRendererV2Model::setData( const QModelIndex & index, co
 
 QVariant QgsCategorizedSymbolRendererV2Model::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 3 )
+  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 5 )
   {
-    QStringList lst; lst << tr( "Symbol" ) << tr( "Value" ) << tr( "Legend" );
+    QStringList lst; lst << tr( "Symbol" ) << tr( "Value" ) << tr( "Label" ) << tr( "HTML (WMS)" ) << tr( "Legend symbol (WMS)" );
     return lst.value( section );
   }
   return QVariant();
@@ -215,7 +232,7 @@ int QgsCategorizedSymbolRendererV2Model::rowCount( const QModelIndex &parent ) c
 int QgsCategorizedSymbolRendererV2Model::columnCount( const QModelIndex & index ) const
 {
   Q_UNUSED( index );
-  return 3;
+  return 5;
 }
 
 QModelIndex QgsCategorizedSymbolRendererV2Model::index( int row, int column, const QModelIndex &parent ) const
@@ -566,7 +583,13 @@ void QgsCategorizedSymbolRendererV2Widget::categoryColumnChanged( QString field 
 void QgsCategorizedSymbolRendererV2Widget::categoriesDoubleClicked( const QModelIndex & idx )
 {
   if ( idx.isValid() && idx.column() == 0 )
+  {
     changeCategorySymbol();
+  }
+  if ( idx.isValid() && idx.column() == 4 )
+  {
+    changeCategoryLegendSymbol();
+  }
 }
 
 void QgsCategorizedSymbolRendererV2Widget::changeCategorySymbol()
@@ -585,6 +608,10 @@ void QgsCategorizedSymbolRendererV2Widget::changeCategorySymbol()
   }
 
   QgsSymbolV2SelectorDialog dlg( symbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeCategorySymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
   if ( !dlg.exec() )
   {
     delete symbol;
@@ -592,6 +619,46 @@ void QgsCategorizedSymbolRendererV2Widget::changeCategorySymbol()
   }
 
   mRenderer->updateCategorySymbol( catIdx, symbol );
+}
+
+void QgsCategorizedSymbolRendererV2Widget::changeCategoryLegendSymbol()
+{
+  int catIdx = currentCategoryRow();
+  QgsRendererCategoryV2 category = mRenderer->categories().value( currentCategoryRow() );
+  QgsSymbolV2 *symbol = category.legendSymbol();
+  if ( symbol )
+  {
+    symbol = symbol->clone();
+  }
+  else
+  {
+    symbol = QgsSymbolV2::defaultSymbol( queryGeometryType() );
+  }
+
+  QgsSymbolV2SelectorDialog dlg( symbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeLegendSymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
+  if ( !dlg.exec() )
+  {
+    delete symbol;
+    return;
+  }
+
+  mRenderer->updateCategoryLegendSymbol( catIdx, symbol );
+}
+
+void QgsCategorizedSymbolRendererV2Widget::removeLegendSymbol()
+{
+  int catIdx = currentCategoryRow();
+  mRenderer->updateCategoryLegendSymbol( catIdx, 0 );
+}
+
+void QgsCategorizedSymbolRendererV2Widget::removeCategorySymbol()
+{
+  int catIdx = currentCategoryRow();
+  mRenderer->updateCategorySymbol( catIdx, 0 );
 }
 
 static void _createCategories( QgsCategoryList& cats, QList<QVariant>& values, QgsSymbolV2* symbol )

@@ -583,6 +583,15 @@ QStringList QgsSLDConfigParser::wfsLayerNames() const
   return QStringList();
 }
 
+QStringList QgsSLDConfigParser::exclusiveLayerGroups() const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->exclusiveLayerGroups();
+  }
+  return QStringList();
+}
+
 void QgsSLDConfigParser::owsGeneralAndResourceList( QDomElement& parentElement, QDomDocument& doc, const QString& strHref ) const
 {
   if ( mFallbackParser )
@@ -1724,6 +1733,14 @@ QSet<QString> QgsSLDConfigParser::subLayersOfGroup( const QString& groupName ) c
     return mFallbackParser->subLayersOfGroup( groupName );
   }
   return QSet<QString>();
+}
+
+void QgsSLDConfigParser::legendPermissionFilter( QStringList& layerIds ) const
+{
+  if ( mFallbackParser )
+  {
+    mFallbackParser->legendPermissionFilter( layerIds );
+  }
 }
 
 

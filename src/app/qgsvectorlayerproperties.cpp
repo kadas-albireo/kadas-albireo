@@ -248,6 +248,9 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
   //layer title and abstract
   mLayerTitleLineEdit->setText( layer->title() );
   mLayerAbstractTextEdit->setPlainText( layer->abstract() );
+  mWMSMetadataCheckBox->setChecked( layer->wmsPublishMetadata() );
+  mWMSLegendCheckBox->setChecked( layer->wmsPublishLegend() );
+  mWMSCheckboxBox->setChecked( layer->wmsCheckable() );
   mLayerKeywordListLineEdit->setText( layer->keywordList() );
   mLayerDataUrlLineEdit->setText( layer->dataUrl() );
   mLayerDataUrlFormatComboBox->setCurrentIndex(
@@ -570,6 +573,9 @@ void QgsVectorLayerProperties::apply()
   //layer title and abstract
   layer->setTitle( mLayerTitleLineEdit->text() );
   layer->setAbstract( mLayerAbstractTextEdit->toPlainText() );
+  layer->setWMSPublishLegend( mWMSLegendCheckBox->isChecked() );
+  layer->setWMSPublishMetadata( mWMSMetadataCheckBox->isChecked() );
+  layer->setWMSCheckable( mWMSCheckboxBox->isChecked() );
   layer->setKeywordList( mLayerKeywordListLineEdit->text() );
   layer->setDataUrl( mLayerDataUrlLineEdit->text() );
   layer->setDataUrlFormat( mLayerDataUrlFormatComboBox->currentText() );

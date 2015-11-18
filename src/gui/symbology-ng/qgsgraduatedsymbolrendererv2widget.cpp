@@ -100,7 +100,7 @@ Qt::ItemFlags QgsGraduatedSymbolRendererV2Model::flags( const QModelIndex & inde
 
   Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable;
 
-  if ( index.column() == 2 )
+  if ( index.column() == 2 || index.column() == 3 )
   {
     flags |= Qt::ItemIsEditable;
   }
@@ -123,6 +123,13 @@ QVariant QgsGraduatedSymbolRendererV2Model::data( const QModelIndex &index, int 
   {
     return range.renderState() ? Qt::Checked : Qt::Unchecked;
   }
+  else if ( role  == Qt::ToolTipRole )
+  {
+    if ( index.column() == 3 )
+    {
+      return QgsRendererV2Widget::htmlToolTip();
+    }
+  }
   else if ( role == Qt::DisplayRole || role == Qt::ToolTipRole )
   {
     switch ( index.column() )
@@ -134,12 +141,17 @@ QVariant QgsGraduatedSymbolRendererV2Model::data( const QModelIndex &index, int 
         return QString::number( range.lowerValue(), 'f', decimalPlaces ) + " - " + QString::number( range.upperValue(), 'f', decimalPlaces );
       }
       case 2: return range.label();
+      case 3: return range.html();
       default: return QVariant();
     }
   }
   else if ( role == Qt::DecorationRole && index.column() == 0 && range.symbol() )
   {
     return QgsSymbolLayerV2Utils::symbolPreviewIcon( range.symbol(), QSize( 16, 16 ) );
+  }
+  else if ( role == Qt::DecorationRole && index.column() == 4 && range.legendSymbol() )
+  {
+    return QgsSymbolLayerV2Utils::symbolPreviewIcon( range.legendSymbol(), QSize( 16, 16 ) );
   }
   else if ( role == Qt::TextAlignmentRole )
   {
@@ -151,6 +163,7 @@ QVariant QgsGraduatedSymbolRendererV2Model::data( const QModelIndex &index, int 
     {
         // case 1: return rangeStr;
       case 2: return range.label();
+      case 3: return range.html();
       default: return QVariant();
     }
   }
@@ -181,6 +194,9 @@ bool QgsGraduatedSymbolRendererV2Model::setData( const QModelIndex & index, cons
     case 2: // label
       mRenderer->updateRangeLabel( index.row(), value.toString() );
       break;
+    case 3: //html
+      mRenderer->updateRangeHtml( index.row(), value.toString() );
+      break;
     default:
       return false;
   }
@@ -191,9 +207,9 @@ bool QgsGraduatedSymbolRendererV2Model::setData( const QModelIndex & index, cons
 
 QVariant QgsGraduatedSymbolRendererV2Model::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 3 )
+  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < 5 )
   {
-    QStringList lst; lst << tr( "Symbol" ) << tr( "Values" ) << tr( "Legend" );
+    QStringList lst; lst << tr( "Symbol" ) << tr( "Values" ) << tr( "Legend" ) << tr( "HTML (WMS)" ) << tr( "Legend symbol (WMS)" );
     return lst.value( section );
   }
   return QVariant();
@@ -211,7 +227,7 @@ int QgsGraduatedSymbolRendererV2Model::rowCount( const QModelIndex &parent ) con
 int QgsGraduatedSymbolRendererV2Model::columnCount( const QModelIndex & index ) const
 {
   Q_UNUSED( index );
-  return 3;
+  return 5;
 }
 
 QModelIndex QgsGraduatedSymbolRendererV2Model::index( int row, int column, const QModelIndex &parent ) const
@@ -678,9 +694,17 @@ QgsRangeList QgsGraduatedSymbolRendererV2Widget::selectedRanges()
 void QgsGraduatedSymbolRendererV2Widget::rangesDoubleClicked( const QModelIndex & idx )
 {
   if ( idx.isValid() && idx.column() == 0 )
+  {
     changeRangeSymbol( idx.row() );
+  }
   if ( idx.isValid() && idx.column() == 1 )
+  {
     changeRange( idx.row() );
+  }
+  if ( idx.isValid() && idx.column() == 4 )
+  {
+    changeRangeLegendSymbol( idx.row() );
+  }
 }
 
 void QgsGraduatedSymbolRendererV2Widget::rangesClicked( const QModelIndex & idx )
@@ -722,8 +746,11 @@ void QgsGraduatedSymbolRendererV2Widget::changeSelectedSymbols()
 void QgsGraduatedSymbolRendererV2Widget::changeRangeSymbol( int rangeIdx )
 {
   QgsSymbolV2* newSymbol = mRenderer->ranges()[rangeIdx].symbol()->clone();
-
   QgsSymbolV2SelectorDialog dlg( newSymbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeSymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
   if ( !dlg.exec() )
   {
     delete newSymbol;
@@ -731,6 +758,49 @@ void QgsGraduatedSymbolRendererV2Widget::changeRangeSymbol( int rangeIdx )
   }
 
   mRenderer->updateRangeSymbol( rangeIdx, newSymbol );
+}
+
+void QgsGraduatedSymbolRendererV2Widget::changeRangeLegendSymbol( int rangeIdx )
+{
+  QgsSymbolV2* legendSymbol = mRenderer->ranges()[rangeIdx].legendSymbol();
+
+  if ( legendSymbol )
+  {
+    legendSymbol = legendSymbol->clone();
+  }
+  else
+  {
+    legendSymbol = QgsSymbolV2::defaultSymbol( queryGeometryType() );
+  }
+  QgsSymbolV2SelectorDialog dlg( legendSymbol, mStyle, mLayer, this );
+  QPushButton* deleteButton = new QPushButton( QApplication::style()->standardIcon( QStyle::SP_TrashIcon ), tr( "Delete" ) );
+  connect( deleteButton, SIGNAL( clicked() ), &dlg, SLOT( reject() ) );
+  connect( deleteButton, SIGNAL( clicked() ), this, SLOT( removeLegendSymbol() ) );
+  dlg.addDialogBoxButton( deleteButton, QDialogButtonBox::DestructiveRole );
+  if ( !dlg.exec() )
+  {
+    delete legendSymbol;
+    return;
+  }
+  mRenderer->updateRangeLegendSymbol( rangeIdx, legendSymbol );
+}
+
+void QgsGraduatedSymbolRendererV2Widget::removeLegendSymbol()
+{
+  QModelIndex idx = viewGraduated->selectionModel()->currentIndex();
+  if ( !idx.isValid() )
+    return;
+  int index = idx.row();
+  mRenderer->updateRangeLegendSymbol( index, 0 );
+}
+
+void QgsGraduatedSymbolRendererV2Widget::removeSymbol()
+{
+  QModelIndex idx = viewGraduated->selectionModel()->currentIndex();
+  if ( !idx.isValid() )
+    return;
+  int index = idx.row();
+  mRenderer->updateRangeSymbol( index, 0 );
 }
 
 void QgsGraduatedSymbolRendererV2Widget::changeRange( int rangeIdx )

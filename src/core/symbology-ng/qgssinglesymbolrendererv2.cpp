@@ -34,12 +34,14 @@ QgsSingleSymbolRendererV2::QgsSingleSymbolRendererV2( QgsSymbolV2* symbol )
     , mSymbol( symbol )
     , mScaleMethod( DEFAULT_SCALE_METHOD )
     , mOrigSize( 0.0 )
+    , mLegendSymbol( 0 )
 {
   Q_ASSERT( symbol );
 }
 
 QgsSingleSymbolRendererV2::~QgsSingleSymbolRendererV2()
 {
+  delete mLegendSymbol;
 }
 
 QgsSymbolV2* QgsSingleSymbolRendererV2::symbolForFeature( QgsFeature& feature )
@@ -179,6 +181,11 @@ QString QgsSingleSymbolRendererV2::dump() const
 QgsFeatureRendererV2* QgsSingleSymbolRendererV2::clone() const
 {
   QgsSingleSymbolRendererV2* r = new QgsSingleSymbolRendererV2( mSymbol->clone() );
+  if ( mLegendSymbol )
+  {
+    r->setLegendSymbol( mLegendSymbol->clone() );
+  }
+  r->setHtml( mHtml );
   r->setUsingSymbolLevels( usingSymbolLevels() );
   r->setRotationField( rotationField() );
   r->setSizeScaleField( sizeScaleField() );
@@ -224,6 +231,18 @@ QgsFeatureRendererV2* QgsSingleSymbolRendererV2::create( QDomElement& element )
     return NULL;
 
   QgsSingleSymbolRendererV2* r = new QgsSingleSymbolRendererV2( symbolMap.take( "0" ) );
+
+  QDomElement legendSymbolElem = element.firstChildElement( "legendsymbol" );
+  if ( !legendSymbolElem.isNull() )
+  {
+    QgsSymbolV2Map legendSymbolMap = QgsSymbolLayerV2Utils::loadSymbols( legendSymbolElem );
+    if ( legendSymbolMap.contains( "0" ) )
+    {
+      r->setLegendSymbol( legendSymbolMap.take( "0" ) );
+    }
+  }
+
+  r->setHtml( element.attribute( "html" ) );
 
   // delete symbols if there are any more
   QgsSymbolLayerV2Utils::clearSymbolMap( symbolMap );
@@ -336,11 +355,20 @@ QDomElement QgsSingleSymbolRendererV2::save( QDomDocument& doc )
   QDomElement rendererElem = doc.createElement( RENDERER_TAG_NAME );
   rendererElem.setAttribute( "type", "singleSymbol" );
   rendererElem.setAttribute( "symbollevels", ( mUsingSymbolLevels ? "1" : "0" ) );
+  rendererElem.setAttribute( "html", mHtml );
 
   QgsSymbolV2Map symbols;
   symbols["0"] = mSymbol.data();
   QDomElement symbolsElem = QgsSymbolLayerV2Utils::saveSymbols( symbols, "symbols", doc );
   rendererElem.appendChild( symbolsElem );
+
+  if ( mLegendSymbol )
+  {
+    QgsSymbolV2Map legendSymbol;
+    legendSymbol["0"] = mLegendSymbol;
+    QDomElement legendSymbolElem = QgsSymbolLayerV2Utils::saveSymbols( legendSymbol, "legendsymbol", doc );
+    rendererElem.appendChild( legendSymbolElem );
+  }
 
   QDomElement rotationElem = doc.createElement( "rotation" );
   if ( mRotation.data() )
@@ -352,6 +380,8 @@ QDomElement QgsSingleSymbolRendererV2::save( QDomDocument& doc )
     sizeScaleElem.setAttribute( "field", QgsSymbolLayerV2Utils::fieldOrExpressionFromExpression( mSizeScale.data() ) );
   sizeScaleElem.setAttribute( "scalemethod", QgsSymbolLayerV2Utils::encodeScaleMethod( mScaleMethod ) );
   rendererElem.appendChild( sizeScaleElem );
+
+
 
   return rendererElem;
 }
@@ -379,7 +409,13 @@ QgsLegendSymbolList QgsSingleSymbolRendererV2::legendSymbolItems( double scaleDe
 QgsLegendSymbolListV2 QgsSingleSymbolRendererV2::legendSymbolItemsV2() const
 {
   QgsLegendSymbolListV2 lst;
-  lst << QgsLegendSymbolItemV2( mSymbol.data(), QString(), 0 );
+  QgsLegendSymbolItemV2 item( mSymbol.data(), QString(), 0 );
+  item.setHtml( mHtml );
+  if ( mLegendSymbol )
+  {
+    item.setLegendSymbol( mLegendSymbol->clone() );
+  }
+  lst << item;
   return lst;
 }
 
@@ -408,4 +444,20 @@ QgsSingleSymbolRendererV2* QgsSingleSymbolRendererV2::convertFromRenderer( const
     return new QgsSingleSymbolRendererV2( symbols.at( 0 )->clone() );
   }
   return 0;
+}
+
+QgsSymbolV2* QgsSingleSymbolRendererV2::legendSymbol() const
+{
+  return mLegendSymbol;
+}
+
+void QgsSingleSymbolRendererV2::setLegendSymbol( QgsSymbolV2* symbol )
+{
+  if ( symbol == mLegendSymbol )
+  {
+    return;
+  }
+
+  delete mLegendSymbol;
+  mLegendSymbol = symbol;
 }

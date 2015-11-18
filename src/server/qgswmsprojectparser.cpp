@@ -284,6 +284,45 @@ QStringList QgsWMSProjectParser::wfsLayerNames() const
   return mProjectParser->wfsLayerNames();
 }
 
+QStringList QgsWMSProjectParser::exclusiveLayerGroups() const
+{
+  if ( !mProjectParser )
+  {
+    return QStringList();
+  }
+
+  QStringList groupList;
+  QDomElement propertiesElem = mProjectParser->propertiesElem();
+  if ( !propertiesElem.isNull() )
+  {
+    QDomElement exclusiveGroupsElem = propertiesElem.firstChildElement( "WMSExclusiveLayerGroups" );
+    if ( !exclusiveGroupsElem.isNull() )
+    {
+      QDomNodeList groups = exclusiveGroupsElem.elementsByTagName( "value" );
+      for ( int i = 0; i < groups.size(); ++i )
+      {
+        QStringList layerIdList = groups.at( i ).toElement().text().split( "," );
+        QStringList layerNameList;
+        for ( int j = 0; j < layerIdList.size(); ++j )
+        {
+          QString layerId = layerIdList.at( j );
+          QgsMapLayer* layer = mProjectParser->mapLayerFromLayerId( layerId );
+          if ( layer )
+          {
+            layerNameList.append( layer->name() );
+          }
+          else //a group
+          {
+            layerNameList.append( layerId );
+          }
+        }
+        groupList.append( layerNameList.join( "," ) );
+      }
+    }
+  }
+  return groupList;
+}
+
 double QgsWMSProjectParser::legendBoxSpace() const
 {
   QDomElement legendElem = mProjectParser->firstComposerLegendElement();
@@ -976,9 +1015,30 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       layerElem.appendChild( nameElem );
 
       QDomElement titleElem = doc.createElement( "Title" );
-      QDomText titleText = doc.createTextNode( name );
+      QString groupTitle = currentChildElem.attribute( "title", "" );
+      if ( groupTitle.isEmpty() )
+      {
+        groupTitle = name;
+      }
+      QDomText titleText = doc.createTextNode( groupTitle );
       titleElem.appendChild( titleText );
       layerElem.appendChild( titleElem );
+
+      QString groupAbstract = currentChildElem.attribute( "abstract" );
+      if ( !groupAbstract.isEmpty() )
+      {
+        QDomElement abstractElem = doc.createElement( "Abstract" );
+        QDomText abstractText = doc.createTextNode( groupAbstract );
+        abstractElem.appendChild( abstractText );
+        layerElem.appendChild( abstractElem );
+      }
+
+      if ( fullProjectSettings )
+      {
+        layerElem.setAttribute( "checkbox", ( currentChildElem.attribute( "wmsCheckable", "1" ) == "1" ) ? "1" : "0" );
+        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", name ) ? "1" : "0" );
+        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", name ) ? "1" : "0" );
+      }
 
       if ( currentChildElem.attribute( "embedded" ) == "1" )
       {
@@ -1065,6 +1125,13 @@ void QgsWMSProjectParser::addLayers( QDomDocument &doc,
       else
       {
         layerElem.setAttribute( "queryable", "1" );
+      }
+
+      if ( fullProjectSettings )
+      {
+        layerElem.setAttribute( "checkbox", currentLayer->wmsCheckable() ? 1 : 0 );
+        layerElem.setAttribute( "legend", mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", currentLayer->id() ) ? 1 : 0 );
+        layerElem.setAttribute( "metadata", mProjectParser->checkLayerGroupAttribute( "wmsPublishMetadata", currentLayer->id() ) ? 1 : 0 );
       }
 
       QDomElement nameElem = doc.createElement( "Name" );
@@ -2047,6 +2114,22 @@ int QgsWMSProjectParser::nLayers() const
 void QgsWMSProjectParser::serviceCapabilities( QDomElement& parentElement, QDomDocument& doc ) const
 {
   mProjectParser->serviceCapabilities( parentElement, doc, "WMS", featureInfoFormatSIA2045() );
+}
+
+void QgsWMSProjectParser::legendPermissionFilter( QStringList& layerIds ) const
+{
+  if ( !mProjectParser )
+  {
+    return;
+  }
+
+  for ( int i = layerIds.size() - 1; i >= 0; --i )
+  {
+    if ( !mProjectParser->checkLayerGroupAttribute( "wmsPublishLegend", layerIds.at( i ) ) )
+    {
+      layerIds.removeAt( i );
+    }
+  }
 }
 
 QDomElement QgsWMSProjectParser::composerByName( const QString& composerName ) const

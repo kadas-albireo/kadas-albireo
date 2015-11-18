@@ -215,6 +215,11 @@ QMenu* QgsSymbolV2SelectorDialog::advancedMenu()
   return mAdvancedMenu;
 }
 
+void QgsSymbolV2SelectorDialog::addDialogBoxButton( QAbstractButton* button, QDialogButtonBox::ButtonRole role )
+{
+  buttonBox->addButton( button, role );
+}
+
 void QgsSymbolV2SelectorDialog::loadSymbol( QgsSymbolV2* symbol, SymbolLayerItem* parent )
 {
   SymbolLayerItem* symbolItem = new SymbolLayerItem( symbol );

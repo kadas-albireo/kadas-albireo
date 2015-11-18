@@ -104,6 +104,9 @@ class APP_EXPORT QgsProjectProperties : public QgsOptionsDialogBase, private Ui:
     void on_mAddGroupAsLayerButton_clicked();
     void on_mRemoveGroupAsLayerButton_clicked();
 
+    void on_mAddExclusiveGroupButton_clicked();
+    void on_mRemoveExclusiveGroupButton_clicked();
+
     /*!
      * Slots to select/unselect all the WFS layers
      */
@@ -192,6 +195,8 @@ class APP_EXPORT QgsProjectProperties : public QgsOptionsDialogBase, private Ui:
      * Reset the python macros
      */
     void resetPythonMacros();
+
+    void setLayerIdsToLayerGroupsListWidget( const QString& layerIds );
 
     long mProjectSrsId;
     long mLayerSrsId;

@@ -49,6 +49,8 @@ class GUI_EXPORT QgsRendererV2Widget : public QWidget
     //! show a dialog with renderer's symbol level settings
     void showSymbolLevelsDialog( QgsFeatureRendererV2* r );
 
+    static QString htmlToolTip();
+
   protected:
     QgsVectorLayer* mLayer;
     QgsStyleV2* mStyle;
@@ -60,6 +62,8 @@ class GUI_EXPORT QgsRendererV2Widget : public QWidget
       and by connecting the slot contextMenuViewCategories(const QPoint&)*/
     virtual QList<QgsSymbolV2*> selectedSymbols() { return QList<QgsSymbolV2*>(); }
     virtual void refreshSymbolView() {}
+
+    QGis::GeometryType queryGeometryType();
 
   protected slots:
     void  contextMenuViewCategories( const QPoint& p );

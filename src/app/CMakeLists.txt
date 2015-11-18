@@ -44,11 +44,13 @@ SET(QGIS_APP_SRCS
   qgslabelengineconfigdialog.cpp
   qgslabelinggui.cpp
   qgslabelpreview.cpp
+  qgslegendgroupproperties.cpp
   qgsloadstylefromdbdialog.cpp
   qgsmaplayerstyleguiutils.cpp
   qgsmapmouseevent.cpp
   qgssavestyletodbdialog.cpp
   qgsguivectorlayertools.cpp
+  qgsselectgrouplayerdialog.cpp
 
   qgsmaptooladdfeature.cpp
   qgsmaptooladdpart.cpp
@@ -206,11 +208,13 @@ SET (QGIS_APP_MOC_HDRS
   qgslabelengineconfigdialog.h
   qgslabelinggui.h
   qgslabelpropertydialog.h
+  qgslegendgroupproperties.h
   qgsloadstylefromdbdialog.h
   qgsmaplayerstyleguiutils.h
   qgssavestyletodbdialog.h
   qgsshortcutsmanager.h
   qgsapplayertreeviewmenuprovider.h
+  qgsselectgrouplayerdialog.h
 
   qgsmaptooladdfeature.h
   qgsmaptoolcapture.h

@@ -152,6 +152,7 @@ class GUI_EXPORT QgsRuleBasedRendererV2Widget : public QgsRendererV2Widget, priv
   protected slots:
     void copy() override;
     void paste() override;
+    void removeLegendSymbol();
 };
 
 ///////
@@ -174,6 +175,9 @@ class GUI_EXPORT QgsRendererRulePropsDialog : public QDialog, private Ui::QgsRen
     void testFilter();
     void buildExpression();
     void accept() override;
+
+  private slots:
+    void removeSymbol();
 
   protected:
     QgsRuleBasedRendererV2::Rule* mRule; // borrowed

@@ -109,6 +109,10 @@ class GUI_EXPORT QgsGraduatedSymbolRendererV2Widget : public QgsRendererV2Widget
     void rowsMoved();
     void modelDataChanged();
 
+  protected slots:
+    void removeLegendSymbol();
+    void removeSymbol();
+
   protected:
     void updateUiFromRenderer( bool updateCount = true );
     void connectUpdateHandlers();
@@ -122,6 +126,7 @@ class GUI_EXPORT QgsGraduatedSymbolRendererV2Widget : public QgsRendererV2Widget
     QgsRangeList selectedRanges();
 
     void changeRangeSymbol( int rangeIdx );
+    void changeRangeLegendSymbol( int rangeIdx );
     void changeRange( int rangeIdx );
 
     void changeSelectedSymbols();

@@ -86,6 +86,8 @@ class QgsWMSConfigParser
 
     virtual QStringList wfsLayerNames() const = 0;
 
+    virtual QStringList exclusiveLayerGroups() const = 0;
+
     virtual void owsGeneralAndResourceList( QDomElement& parentElement, QDomDocument& doc, const QString& strHref ) const = 0;
 
     //legend
@@ -126,6 +128,9 @@ class QgsWMSConfigParser
     virtual int nLayers() const = 0;
 
     virtual void serviceCapabilities( QDomElement& parentElement, QDomDocument& doc ) const = 0;
+
+    /**Removes layers where the legend cannot be published. Considers settings on layer level and on group levels*/
+    virtual void legendPermissionFilter( QStringList& layerIds ) const = 0;
 
     virtual bool useLayerIDs() const = 0;
 

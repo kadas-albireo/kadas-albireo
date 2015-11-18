@@ -282,30 +282,47 @@ void QgsWMSServer::executeRequest()
             request.compare( "GetLegendGraphics", Qt::CaseInsensitive ) == 0 )
     // GetLegendGraphics for compatibility with earlier QGIS versions
   {
-    QImage* result = 0;
-    try
+    QString legendGraphicFormat = mParameters.value( "FORMAT" );
+    if ( legendGraphicFormat.compare( "text/html", Qt::CaseInsensitive ) == 0 )
     {
-      result = getLegendGraphics();
-    }
-    catch ( QgsMapServiceException& ex )
-    {
-      QgsDebugMsg( "Caught exception during GetLegendGraphic request" );
-      mRequestHandler->setServiceException( ex );
-    }
-
-    if ( result )
-    {
-      QgsDebugMsg( "Setting GetLegendGraphic response" );
-      //setting is the same for GetMap and GetLegendGraphic
-      mRequestHandler->setGetMapResponse( "WMS", result, getImageQuality() );
-      QgsDebugMsg( "Response sent" );
+      QString html = getLegendGraphicHtml();
+      if ( html.isNull() )
+      {
+        //do error handling
+      }
+      else
+      {
+        QByteArray ba = html.toUtf8();
+        mRequestHandler->setGetPrintResponse( &ba );
+      }
     }
     else
     {
-      //do some error handling
-      QgsDebugMsg( "result image is 0" );
+      QImage* result = 0;
+      try
+      {
+        result = getLegendGraphics();
+      }
+      catch ( QgsMapServiceException& ex )
+      {
+        QgsDebugMsg( "Caught exception during GetLegendGraphic request" );
+        mRequestHandler->setServiceException( ex );
+      }
+
+      if ( result )
+      {
+        QgsDebugMsg( "Setting GetLegendGraphic response" );
+        //setting is the same for GetMap and GetLegendGraphic
+        mRequestHandler->setGetMapResponse( "WMS", result, getImageQuality() );
+        QgsDebugMsg( "Response sent" );
+      }
+      else
+      {
+        //do some error handling
+        QgsDebugMsg( "result image is 0" );
+      }
+      delete result;
     }
-    delete result;
   }
   //GetPrint
   else if ( request.compare( "GetPrint", Qt::CaseInsensitive ) == 0 )
@@ -525,6 +542,22 @@ QDomDocument QgsWMSServer::getCapabilities( QString version, bool fullProjectInf
       }
       capabilityElement.appendChild( wfsLayersElem );
     }
+
+    //Exclusive layer groups
+    QStringList exclusiveLayerGroups = mConfigParser->exclusiveLayerGroups();
+    if ( exclusiveLayerGroups.size() > 0 )
+    {
+      QDomElement exclusiveLayerGroupsElem = doc.createElement( "ExclusiveLayerGroups" );
+      QStringList::const_iterator groupIt = exclusiveLayerGroups.constBegin();
+      for ( ; groupIt != exclusiveLayerGroups.constEnd(); ++groupIt )
+      {
+        QDomElement groupElem = doc.createElement( "group" );
+        QDomText groupText = doc.createTextNode( *groupIt );
+        groupElem.appendChild( groupText );
+        exclusiveLayerGroupsElem.appendChild( groupElem );
+      }
+      capabilityElement.appendChild( exclusiveLayerGroupsElem );
+    }
   }
 
   //add the xml content for the individual layers/styles
@@ -619,6 +652,204 @@ static QgsRectangle _parseBBOX( const QString &bboxStr, bool &ok )
   return QgsRectangle( d[0], d[1], d[2], d[3] );
 }
 
+QString QgsWMSServer::getLegendGraphicHtml()
+{
+  if ( !mConfigParser || !mMapRenderer )
+  {
+    return QString();
+  }
+  if ( !mParameters.contains( "LAYER" ) && !mParameters.contains( "LAYERS" ) )
+  {
+    throw QgsMapServiceException( "LayerNotSpecified", "LAYER is mandatory for GetLegendGraphic operation" );
+  }
+  if ( !mParameters.contains( "FORMAT" ) )
+  {
+    throw QgsMapServiceException( "FormatNotSpecified", "FORMAT is mandatory for GetLegendGraphic operation" );
+  }
+
+  //consider options to hide titles, labels or to show only specific legend classes
+  bool layerTitle = showLayerTitle();
+  bool ruleLabel = showRuleLabel();
+
+  QStringList layersList, stylesList;
+  if ( readLayersAndStyles( layersList, stylesList ) != 0 )
+  {
+    QgsDebugMsg( "error reading layers and styles" );
+    return QString();
+  }
+
+  if ( layersList.size() < 1 )
+  {
+    return emptyHtml();
+  }
+
+  //scale
+  double scaleDenominator = -1;
+  QMap<QString, QString>::const_iterator scaleIt = mParameters.find( "SCALE" );
+  if ( scaleIt != mParameters.constEnd() )
+  {
+    bool conversionSuccess;
+    double scaleValue = scaleIt.value().toDouble( &conversionSuccess );
+    if ( conversionSuccess )
+    {
+      scaleDenominator = scaleValue;
+    }
+  }
+
+  QgsCoordinateReferenceSystem dummyCRS;
+  QStringList layerIds = layerSet( layersList, stylesList, dummyCRS, scaleDenominator );
+
+  //Filter out layers if legend is excluded from publication
+  mConfigParser->legendPermissionFilter( layerIds );
+  if ( layerIds.size() < 1 )
+  {
+    return emptyHtml();
+  }
+
+  //get icon size, spaces between legend items and font from config parser
+  double boxSpace, layerSpace, layerTitleSpace, symbolSpace, iconLabelSpace, symbolWidth, symbolHeight;
+  QFont layerFont, itemFont;
+  QColor layerFontColor, itemFontColor;
+  legendParameters( boxSpace, layerSpace, layerTitleSpace, symbolSpace,
+                    iconLabelSpace, symbolWidth, symbolHeight, layerFont, itemFont, layerFontColor, itemFontColor );
+
+  // setup legend configuration
+  QgsLegendSettings legendSettings;
+  legendSettings.setTitle( QString() );
+  legendSettings.setBoxSpace( boxSpace );
+  legendSettings.rstyle( QgsComposerLegendStyle::Subgroup ).setMargin( QgsComposerLegendStyle::Top, layerSpace );
+  // TODO: not available: layer title space
+  legendSettings.rstyle( QgsComposerLegendStyle::Symbol ).setMargin( QgsComposerLegendStyle::Top, symbolSpace );
+  legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setMargin( QgsComposerLegendStyle::Left, iconLabelSpace );
+  legendSettings.setSymbolSize( QSizeF( symbolWidth, symbolHeight ) );
+  legendSettings.rstyle( QgsComposerLegendStyle::Subgroup ).setFont( layerFont );
+  legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
+  // TODO: not available: layer font color
+  legendSettings.setFontColor( itemFontColor );
+  legendSettings.setWMSLegend( true );
+
+
+
+  //create first image (to find out dpi)
+  QImage* theImage = createImage( 10, 10 );
+  if ( !theImage )
+  {
+    return emptyHtml();
+  }
+
+  // Create the layer tree root
+  QgsLayerTreeGroup rootGroup;
+  // Create tree layer node for each layer
+  foreach ( QString layerId, layerIds )
+  {
+    // get layer
+    QgsMapLayer *ml = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+    rootGroup.addLayer( ml );
+  }
+
+  //QgsLayerTreeModel legendModel( &rootGroup );
+  QString htmlString;
+  if ( layerTitle )
+  {
+    htmlString.append( "<!DOCTYPE html>\n" );
+    htmlString.append( "<HEAD>\n" );
+    htmlString.append( "<TITLE> GetLegendGraphic </TITLE>\n" );
+    htmlString.append( "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">\n" );
+    htmlString.append( "</HEAD>\n" );
+    htmlString.append( "<BODY>\n" );
+  }
+
+  QList<QgsLayerTreeNode*> rootChildren = rootGroup.children();
+  QList<QgsLayerTreeNode*>::const_iterator layerIt = rootChildren.constBegin();
+  for ( ; layerIt != rootChildren.constEnd(); ++layerIt )
+  {
+    QgsLayerTreeLayer* treeLayer = dynamic_cast<QgsLayerTreeLayer*>( *layerIt );
+    if ( !treeLayer )
+    {
+      continue;
+    }
+
+    QgsMapLayer* layer = treeLayer->layer();
+    if ( !layer )
+    {
+      continue;
+    }
+
+    bool showLayerTitle = ( layerTitle && layer /*&& layer->wmsShowLegendTitle()*/ );
+    if ( layerTitle || ruleLabel )
+    {
+      htmlString.append( "<TABLE border=\"1\" width=\"100%\">\n" );
+    }
+
+    if ( showLayerTitle )
+    {
+      htmlString.append( "<TR><TD colspan=\"2\">" + layer->title().isEmpty() ? layer->name() : layer->title() + "</TD></TR>\n" );
+    }
+
+    //loop over legend items
+    QList<QgsLayerTreeModelLegendNode*> legendItems = layer->legend()->createLayerTreeModelLegendNodes( treeLayer );
+    QList<QgsLayerTreeModelLegendNode*>::const_iterator lIt = legendItems.constBegin();
+    for ( ; lIt != legendItems.constEnd(); ++lIt )
+    {
+      double currentSymbolHeight = symbolHeight;
+      double currentSymbolWidth = symbolWidth;
+
+      //embed png image directly
+      QImage img( currentSymbolWidth + 0.5, currentSymbolHeight + 0.5, QImage::Format_ARGB32_Premultiplied );
+      img.setDotsPerMeterX( theImage->dotsPerMeterX() );
+      img.setDotsPerMeterY( theImage->dotsPerMeterY() );
+      img.fill( 0 );
+      QPainter p;
+      p.begin( &img );
+
+      QgsLayerTreeModelLegendNode::ItemContext itemCtx;
+      itemCtx.painter = &p;
+      itemCtx.point = QPointF( 0.0, 0.0 );
+      itemCtx.labelXOffset = 0;
+
+      if ( layerTitle || ruleLabel )
+      {
+        htmlString.append( "<TR>\n" );
+      }
+
+      if ( !( *lIt ) )
+      {
+        continue;
+      }
+
+      QSizeF size = ( *lIt )->drawSymbol( legendSettings, &itemCtx, symbolHeight );
+
+      QByteArray ba;
+      QBuffer buffer( &ba );
+      buffer.open( QIODevice::WriteOnly );
+      img.save( &buffer, "PNG", -1 );
+      ba = ba.toBase64();
+
+      if ( layerTitle || ruleLabel )
+      {
+        htmlString.append( "<TD>" );
+      }
+      htmlString.append( "<img src=\"data:image/png;base64," );
+      htmlString.append( QString( ba ) );
+      htmlString.append( "\" />" );
+      if ( layerTitle || ruleLabel )
+      {
+        htmlString.append( "</TD>\n" );
+      }
+      if ( ruleLabel )
+      {
+        htmlString.append( "<TD>" + ( *lIt )->data( Qt::UserRole ).toString() + "</TD>\n" );
+      }
+
+      htmlString.append( "</TR>\n" );
+    }
+    qDeleteAll( legendItems );
+    htmlString.append( "</TABLE>\n<BR/>\n" );
+  }
+
+  return htmlString;
+}
+
 
 QImage* QgsWMSServer::getLegendGraphics()
 {
@@ -679,6 +910,9 @@ QImage* QgsWMSServer::getLegendGraphics()
 
   QgsCoordinateReferenceSystem dummyCRS;
   QStringList layerIds = layerSet( layersList, stylesList, dummyCRS, scaleDenominator );
+
+  //Filter out layers if legend is excluded from publication
+  mConfigParser->legendPermissionFilter( layerIds );
   if ( layerIds.size() < 1 )
   {
     return 0;
@@ -800,6 +1034,7 @@ QImage* QgsWMSServer::getLegendGraphics()
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
   // TODO: not available: layer font color
   legendSettings.setFontColor( itemFontColor );
+  legendSettings.setWMSLegend( true );
 
   if ( contentBasedLegend )
   {
@@ -3256,3 +3491,35 @@ void QgsWMSServer::drawWatermark( QImage* img, QPainter* p ) const
   p->drawText( QPoint( xPos + textPadding, yPos - textPadding - fm.descent() ), watermarkText );
   p->restore();
 }
+
+bool QgsWMSServer::showRuleLabel() const
+{
+  QMap<QString, QString>::const_iterator showRuleIt = mParameters.find( "RULELABEL" );
+  if ( showRuleIt == mParameters.constEnd() )
+  {
+    return true;
+  }
+
+  if ( showRuleIt.value().compare( "FALSE", Qt::CaseInsensitive ) == 0 )
+  {
+    return false;
+  }
+  return true;
+}
+
+bool QgsWMSServer::showLayerTitle() const
+{
+  QMap<QString, QString>::const_iterator showTitleIt = mParameters.find( "LAYERTITLE" );
+  if ( showTitleIt == mParameters.constEnd() )
+  {
+    return true;
+  }
+
+  if ( showTitleIt.value().compare( "FALSE", Qt::CaseInsensitive ) == 0 )
+  {
+    return false;
+  }
+  return true;
+}
+
+

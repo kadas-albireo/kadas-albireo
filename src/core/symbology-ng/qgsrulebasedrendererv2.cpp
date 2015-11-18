@@ -32,10 +32,13 @@
 #include <QUuid>
 
 
-QgsRuleBasedRendererV2::Rule::Rule( QgsSymbolV2* symbol, int scaleMinDenom, int scaleMaxDenom, QString filterExp, QString label, QString description, bool elseRule )
-    : mParent( NULL ), mSymbol( symbol )
+QgsRuleBasedRendererV2::Rule::Rule( QgsSymbolV2* symbol, int scaleMinDenom, int scaleMaxDenom, QString filterExp, QString label, QString description, bool elseRule,
+                                    QString html, QgsSymbolV2* legendSymbol )
+    : mParent( NULL )
+    , mSymbol( symbol )
+    , mLegendSymbol( legendSymbol )
     , mScaleMinDenom( scaleMinDenom ), mScaleMaxDenom( scaleMaxDenom )
-    , mFilterExp( filterExp ), mLabel( label ), mDescription( description )
+    , mFilterExp( filterExp ), mLabel( label ), mDescription( description ), mHtml( html )
     , mElseRule( elseRule )
     , mCheckState( true )
     , mFilter( NULL )
@@ -47,6 +50,7 @@ QgsRuleBasedRendererV2::Rule::Rule( QgsSymbolV2* symbol, int scaleMinDenom, int 
 QgsRuleBasedRendererV2::Rule::~Rule()
 {
   delete mSymbol;
+  delete mLegendSymbol;
   delete mFilter;
   qDeleteAll( mChildren );
   // do NOT delete parent
@@ -197,6 +201,12 @@ void QgsRuleBasedRendererV2::Rule::setSymbol( QgsSymbolV2* sym )
   mSymbol = sym;
 }
 
+void QgsRuleBasedRendererV2::Rule::setLegendSymbol( QgsSymbolV2* sym )
+{
+  delete mLegendSymbol;
+  mLegendSymbol = sym;
+}
+
 QgsLegendSymbolList QgsRuleBasedRendererV2::Rule::legendSymbolItems( double scaleDenominator, QString ruleFilter )
 {
   QgsLegendSymbolList lst;
@@ -219,7 +229,13 @@ QgsLegendSymbolListV2 QgsRuleBasedRendererV2::Rule::legendSymbolItemsV2( int cur
   QgsLegendSymbolListV2 lst;
   if ( currentLevel != -1 ) // root rule should not be shown
   {
-    lst << QgsLegendSymbolItemV2( mSymbol, mLabel, mRuleKey, true, mScaleMinDenom, mScaleMaxDenom, currentLevel, mParent ? mParent->mRuleKey : QString() );
+    QgsLegendSymbolItemV2 item( mSymbol, mLabel, mRuleKey, true, mScaleMinDenom, mScaleMaxDenom, currentLevel, mParent ? mParent->mRuleKey : QString() );
+    item.setHtml( mHtml );
+    if ( mLegendSymbol )
+    {
+      item.setLegendSymbol( mLegendSymbol->clone() );
+    }
+    lst << item;
   }
 
   for ( RuleList::const_iterator it = mChildren.constBegin(); it != mChildren.constEnd(); ++it )
@@ -257,14 +273,27 @@ QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::clone() const
 {
   QgsSymbolV2* sym = mSymbol ? mSymbol->clone() : NULL;
   Rule* newrule = new Rule( sym, mScaleMinDenom, mScaleMaxDenom, mFilterExp, mLabel, mDescription );
+  newrule->setHtml( mHtml );
+  if ( mLegendSymbol )
+  {
+    newrule->setLegendSymbol( mLegendSymbol->clone() );
+  }
   newrule->setCheckState( mCheckState );
   // clone children
-  foreach ( Rule* rule, mChildren )
+  Q_FOREACH ( Rule* rule, mChildren )
+  {
     newrule->appendChild( rule->clone() );
+  }
   return newrule;
 }
 
 QDomElement QgsRuleBasedRendererV2::Rule::save( QDomDocument& doc, QgsSymbolV2Map& symbolMap )
+{
+  QgsSymbolV2Map legendMap;
+  return save( doc, symbolMap, legendMap );
+}
+
+QDomElement QgsRuleBasedRendererV2::Rule::save( QDomDocument& doc, QgsSymbolV2Map& symbolMap, QgsSymbolV2Map& legendSymbolMap )
 {
   QDomElement ruleElem = doc.createElement( "rule" );
 
@@ -274,6 +303,13 @@ QDomElement QgsRuleBasedRendererV2::Rule::save( QDomDocument& doc, QgsSymbolV2Ma
     symbolMap[QString::number( symbolIndex )] = mSymbol;
     ruleElem.setAttribute( "symbol", symbolIndex );
   }
+  if ( mLegendSymbol )
+  {
+    int legendSymbolIndex = legendSymbolMap.size();
+    legendSymbolMap[QString::number( legendSymbolIndex )] = mLegendSymbol;
+    ruleElem.setAttribute( "legendsymbol", legendSymbolIndex );
+  }
+
   if ( !mFilterExp.isEmpty() )
     ruleElem.setAttribute( "filter", mFilterExp );
   if ( mScaleMinDenom != 0 )
@@ -282,6 +318,10 @@ QDomElement QgsRuleBasedRendererV2::Rule::save( QDomDocument& doc, QgsSymbolV2Ma
     ruleElem.setAttribute( "scalemaxdenom", mScaleMaxDenom );
   if ( !mLabel.isEmpty() )
     ruleElem.setAttribute( "label", mLabel );
+  if ( !mHtml.isEmpty() )
+  {
+    ruleElem.setAttribute( "html", mHtml );
+  }
   if ( !mDescription.isEmpty() )
     ruleElem.setAttribute( "description", mDescription );
   if ( !mCheckState )
@@ -291,7 +331,7 @@ QDomElement QgsRuleBasedRendererV2::Rule::save( QDomDocument& doc, QgsSymbolV2Ma
   for ( RuleList::iterator it = mChildren.begin(); it != mChildren.end(); ++it )
   {
     Rule* rule = *it;
-    ruleElem.appendChild( rule->save( doc, symbolMap ) );
+    ruleElem.appendChild( rule->save( doc, symbolMap, legendSymbolMap ) );
   }
   return ruleElem;
 }
@@ -574,6 +614,12 @@ void QgsRuleBasedRendererV2::Rule::stopRender( QgsRenderContext& context )
 
 QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::create( QDomElement& ruleElem, QgsSymbolV2Map& symbolMap )
 {
+  QgsSymbolV2Map legendSymbolMap;
+  return QgsRuleBasedRendererV2::Rule::create( ruleElem, symbolMap, legendSymbolMap );
+}
+
+QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::create( QDomElement& ruleElem, QgsSymbolV2Map& symbolMap , QgsSymbolV2Map& legendSymbolMap )
+{
   QString symbolIdx = ruleElem.attribute( "symbol" );
   QgsSymbolV2* symbol = NULL;
   if ( !symbolIdx.isEmpty() )
@@ -588,13 +634,21 @@ QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::create( QDomElement&
     }
   }
 
+  QgsSymbolV2* legendSymbol = 0;
+  QString legendSymbolIdx = ruleElem.attribute( "legendsymbol" );
+  if ( !legendSymbolIdx.isEmpty() && legendSymbolMap.contains( legendSymbolIdx ) )
+  {
+    legendSymbol = legendSymbolMap.take( legendSymbolIdx );
+  }
+
   QString filterExp = ruleElem.attribute( "filter" );
   QString label = ruleElem.attribute( "label" );
+  QString html = ruleElem.attribute( "html" );
   QString description = ruleElem.attribute( "description" );
   int scaleMinDenom = ruleElem.attribute( "scalemindenom", "0" ).toInt();
   int scaleMaxDenom = ruleElem.attribute( "scalemaxdenom", "0" ).toInt();
   QString ruleKey = ruleElem.attribute( "key" );
-  Rule* rule = new Rule( symbol, scaleMinDenom, scaleMaxDenom, filterExp, label, description );
+  Rule* rule = new Rule( symbol, scaleMinDenom, scaleMaxDenom, filterExp, label, description, false, html, legendSymbol );
 
   if ( !ruleKey.isEmpty() )
     rule->mRuleKey = ruleKey;
@@ -604,7 +658,7 @@ QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::create( QDomElement&
   QDomElement childRuleElem = ruleElem.firstChildElement( "rule" );
   while ( !childRuleElem.isNull() )
   {
-    Rule* childRule = create( childRuleElem, symbolMap );
+    Rule* childRule = create( childRuleElem, symbolMap, legendSymbolMap );
     if ( childRule )
     {
       rule->appendChild( childRule );
@@ -884,13 +938,17 @@ QDomElement QgsRuleBasedRendererV2::save( QDomDocument& doc )
   rendererElem.setAttribute( "symbollevels", ( mUsingSymbolLevels ? "1" : "0" ) );
 
   QgsSymbolV2Map symbols;
+  QgsSymbolV2Map legendSymbols;
 
-  QDomElement rulesElem = mRootRule->save( doc, symbols );
+  QDomElement rulesElem = mRootRule->save( doc, symbols, legendSymbols );
   rulesElem.setTagName( "rules" ); // instead of just "rule"
   rendererElem.appendChild( rulesElem );
 
   QDomElement symbolsElem = QgsSymbolLayerV2Utils::saveSymbols( symbols, "symbols", doc );
   rendererElem.appendChild( symbolsElem );
+
+  QDomElement legendSymbolsElem = QgsSymbolLayerV2Utils::saveSymbols( legendSymbols, "legendsymbols", doc );
+  rendererElem.appendChild( legendSymbolsElem );
 
   return rendererElem;
 }
@@ -946,9 +1004,16 @@ QgsFeatureRendererV2* QgsRuleBasedRendererV2::create( QDomElement& element )
 
   QgsSymbolV2Map symbolMap = QgsSymbolLayerV2Utils::loadSymbols( symbolsElem );
 
+  QDomElement legendSymbolsElem = element.firstChildElement( "legendsymbols" );
+  QgsSymbolV2Map legendSymbolMap;
+  if ( !legendSymbolsElem.isNull() )
+  {
+    legendSymbolMap = QgsSymbolLayerV2Utils::loadSymbols( legendSymbolsElem );
+  }
+
   QDomElement rulesElem = element.firstChildElement( "rules" );
 
-  Rule* root = Rule::create( rulesElem, symbolMap );
+  Rule* root = Rule::create( rulesElem, symbolMap, legendSymbolMap );
   if ( root == NULL )
     return NULL;
 

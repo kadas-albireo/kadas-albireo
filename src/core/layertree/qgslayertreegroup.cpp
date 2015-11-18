@@ -29,6 +29,9 @@ QgsLayerTreeGroup::QgsLayerTreeGroup( const QString& name, Qt::CheckState checke
     , mName( name )
     , mChecked( checked )
     , mChangingChildVisibility( false )
+    , mWMSPublishLegend( true )
+    , mWMSPublishMetadata( true )
+    , mWMSCheckable( true )
 {
   connect( this, SIGNAL( visibilityChanged( QgsLayerTreeNode*, Qt::CheckState ) ), this, SLOT( nodeVisibilityChanged( QgsLayerTreeNode* ) ) );
 }
@@ -38,6 +41,11 @@ QgsLayerTreeGroup::QgsLayerTreeGroup( const QgsLayerTreeGroup& other )
     , mName( other.mName )
     , mChecked( other.mChecked )
     , mChangingChildVisibility( false )
+    , mTitle( other.mTitle )
+    , mAbstract( other.mAbstract )
+    , mWMSPublishLegend( other.mWMSPublishLegend )
+    , mWMSPublishMetadata( other.mWMSPublishMetadata )
+    , mWMSCheckable( other.mWMSCheckable )
 {
   connect( this, SIGNAL( visibilityChanged( QgsLayerTreeNode*, Qt::CheckState ) ), this, SLOT( nodeVisibilityChanged( QgsLayerTreeNode* ) ) );
 }
@@ -217,6 +225,12 @@ QgsLayerTreeGroup* QgsLayerTreeGroup::readXML( QDomElement& element )
 
   groupNode->readChildrenFromXML( element );
 
+  groupNode->setTitle( element.attribute( "title" ) );
+  groupNode->setAbstract( element.attribute( "abstract" ) );
+  groupNode->setWMSPublishLegend( element.attribute( "wmsPublishLegend", "1" ) == "1" );
+  groupNode->setWMSPublishMetadata( element.attribute( "wmsPublishMetadata", "1" ) == "1" );
+  groupNode->setWMSCheckable( element.attribute( "wmsCheckable", "1" ) == "1" );
+
   return groupNode;
 }
 
@@ -227,6 +241,11 @@ void QgsLayerTreeGroup::writeXML( QDomElement& parentElement )
   elem.setAttribute( "name", mName );
   elem.setAttribute( "expanded", mExpanded ? "1" : "0" );
   elem.setAttribute( "checked", QgsLayerTreeUtils::checkStateToXml( mChecked ) );
+  elem.setAttribute( "title", mTitle );
+  elem.setAttribute( "abstract", mAbstract );
+  elem.setAttribute( "wmsPublishLegend", mWMSPublishLegend ? "1" : "0" );
+  elem.setAttribute( "wmsPublishMetadata", mWMSPublishMetadata ? "1" : "0" );
+  elem.setAttribute( "wmsCheckable", mWMSCheckable ? "1" : "0" );
 
   writeCommonXML( elem );
 

@@ -39,15 +39,18 @@ QgsRendererRangeV2::QgsRendererRangeV2()
     , mSymbol( 0 )
     , mLabel()
     , mRender( true )
+    , mLegendSymbol( 0 )
 {
 }
 
-QgsRendererRangeV2::QgsRendererRangeV2( double lowerValue, double upperValue, QgsSymbolV2* symbol, QString label, bool render )
+QgsRendererRangeV2::QgsRendererRangeV2( double lowerValue, double upperValue, QgsSymbolV2* symbol, QString label, bool render, QString html, QgsSymbolV2* legendSymbol )
     : mLowerValue( lowerValue )
     , mUpperValue( upperValue )
     , mSymbol( symbol )
     , mLabel( label )
     , mRender( render )
+    , mHtml( html )
+    , mLegendSymbol( legendSymbol )
 {
 }
 
@@ -57,13 +60,25 @@ QgsRendererRangeV2::QgsRendererRangeV2( const QgsRendererRangeV2& range )
     , mSymbol( range.mSymbol.data() ? range.mSymbol->clone() : NULL )
     , mLabel( range.mLabel )
     , mRender( range.mRender )
+    , mHtml( range.mHtml )
 {
+  mLegendSymbol = 0;
+  if ( range.mLegendSymbol )
+  {
+    mLegendSymbol = range.mLegendSymbol->clone();
+  }
 }
 
 // cpy and swap idiom, note that the cpy is done with 'pass by value'
 QgsRendererRangeV2& QgsRendererRangeV2::operator=( QgsRendererRangeV2 range )
 {
   swap( range );
+  mLegendSymbol = 0;
+  if ( range.mLegendSymbol )
+  {
+    mLegendSymbol = range.mLegendSymbol->clone();
+  }
+
   return *this;
 }
 
@@ -81,6 +96,7 @@ void QgsRendererRangeV2::swap( QgsRendererRangeV2 & other )
   qSwap( mUpperValue, other.mUpperValue );
   qSwap( mSymbol, other.mSymbol );
   std::swap( mLabel, other.mLabel );
+  qSwap( mHtml, other.mHtml );
 }
 
 double QgsRendererRangeV2::lowerValue() const
@@ -106,6 +122,16 @@ QString QgsRendererRangeV2::label() const
 void QgsRendererRangeV2::setSymbol( QgsSymbolV2* s )
 {
   if ( mSymbol.data() != s ) mSymbol.reset( s );
+}
+
+void QgsRendererRangeV2::setLegendSymbol( QgsSymbolV2* s )
+{
+  if ( mLegendSymbol == s )
+  {
+    return;
+  }
+  delete mLegendSymbol;
+  mLegendSymbol = s;
 }
 
 void QgsRendererRangeV2::setLabel( QString label )
@@ -461,6 +487,22 @@ bool QgsGraduatedSymbolRendererV2::updateRangeLabel( int rangeIndex, QString lab
   if ( rangeIndex < 0 || rangeIndex >= mRanges.size() )
     return false;
   mRanges[rangeIndex].setLabel( label );
+  return true;
+}
+
+bool QgsGraduatedSymbolRendererV2::updateRangeHtml( int rangeIndex, QString label )
+{
+  if ( rangeIndex < 0 || rangeIndex >= mRanges.size() )
+    return false;
+  mRanges[rangeIndex].setHtml( label );
+  return true;
+}
+
+bool QgsGraduatedSymbolRendererV2::updateRangeLegendSymbol( int rangeIndex, QgsSymbolV2* symbol )
+{
+  if ( rangeIndex < 0 || rangeIndex >= mRanges.size() )
+    return false;
+  mRanges[rangeIndex].setLegendSymbol( symbol );
   return true;
 }
 
@@ -1119,6 +1161,14 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
     return NULL;
 
   QgsSymbolV2Map symbolMap = QgsSymbolLayerV2Utils::loadSymbols( symbolsElem );
+
+  QDomElement legendSymbolsElem = element.firstChildElement( "legendsymbols" );
+  QgsSymbolV2Map legendSymbolMap;
+  if ( !legendSymbolsElem.isNull() )
+  {
+    legendSymbolMap = QgsSymbolLayerV2Utils::loadSymbols( legendSymbolsElem );
+  }
+
   QgsRangeList ranges;
 
   QDomElement rangeElem = rangesElem.firstChildElement();
@@ -1130,12 +1180,20 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
       double upperValue = rangeElem.attribute( "upper" ).toDouble();
       QString symbolName = rangeElem.attribute( "symbol" );
       QString label = rangeElem.attribute( "label" );
+      QString html = rangeElem.attribute( "html" );
       bool render = rangeElem.attribute( "render", "true" ) != "false";
+      QgsSymbolV2* symbol = 0;
       if ( symbolMap.contains( symbolName ) )
       {
-        QgsSymbolV2* symbol = symbolMap.take( symbolName );
-        ranges.append( QgsRendererRangeV2( lowerValue, upperValue, symbol, label, render ) );
+        symbol = symbolMap.take( symbolName );
       }
+      QString legendSymbolName = rangeElem.attribute( "legendsymbol" );
+      QgsSymbolV2* legendSymbol = 0;
+      if ( legendSymbolMap.contains( legendSymbolName ) )
+      {
+        legendSymbol = legendSymbolMap.take( legendSymbolName );
+      }
+      ranges.append( QgsRendererRangeV2( lowerValue, upperValue, symbol, label, render, html, legendSymbol ) );
     }
     rangeElem = rangeElem.nextSiblingElement();
   }
@@ -1144,10 +1202,10 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
 
   QgsGraduatedSymbolRendererV2* r = new QgsGraduatedSymbolRendererV2( attrName, ranges );
 
-  // delete symbols if there are any more
+// delete symbols if there are any more
   QgsSymbolLayerV2Utils::clearSymbolMap( symbolMap );
 
-  // try to load source symbol (optional)
+// try to load source symbol (optional)
   QDomElement sourceSymbolElem = element.firstChildElement( "source-symbol" );
   if ( !sourceSymbolElem.isNull() )
   {
@@ -1159,7 +1217,7 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
     QgsSymbolLayerV2Utils::clearSymbolMap( sourceSymbolMap );
   }
 
-  // try to load color ramp (optional)
+// try to load color ramp (optional)
   QDomElement sourceColorRampElem = element.firstChildElement( "colorramp" );
   if ( !sourceColorRampElem.isNull() && sourceColorRampElem.attribute( "name" ) == "[source]" )
   {
@@ -1169,7 +1227,7 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
       r->setInvertedColorRamp( invertedColorRampElem.attribute( "value" ) == "1" );
   }
 
-  // try to load mode
+// try to load mode
   QDomElement modeElem = element.firstChildElement( "mode" );
   if ( !modeElem.isNull() )
   {
@@ -1202,7 +1260,7 @@ QgsFeatureRendererV2* QgsGraduatedSymbolRendererV2::create( QDomElement& element
     labelFormat.setFromDomElement( labelFormatElem );
     r->setLabelFormat( labelFormat );
   }
-  // TODO: symbol levels
+// TODO: symbol levels
   return r;
 }
 
@@ -1216,6 +1274,7 @@ QDomElement QgsGraduatedSymbolRendererV2::save( QDomDocument& doc )
   // ranges
   int i = 0;
   QgsSymbolV2Map symbols;
+  QgsSymbolV2Map legendSymbols;
   QDomElement rangesElem = doc.createElement( "ranges" );
   QgsRangeList::const_iterator it = mRanges.constBegin();
   for ( ; it != mRanges.constEnd(); ++it )
@@ -1225,11 +1284,17 @@ QDomElement QgsGraduatedSymbolRendererV2::save( QDomDocument& doc )
     symbols.insert( symbolName, range.symbol() );
 
     QDomElement rangeElem = doc.createElement( "range" );
+    if ( range.legendSymbol() )
+    {
+      rangeElem.setAttribute( "legendsymbol", symbolName );
+      legendSymbols.insert( symbolName, range.legendSymbol() );
+    }
     rangeElem.setAttribute( "lower", QString::number( range.lowerValue(), 'f' ) );
     rangeElem.setAttribute( "upper", QString::number( range.upperValue(), 'f' ) );
     rangeElem.setAttribute( "symbol", symbolName );
     rangeElem.setAttribute( "label", range.label() );
     rangeElem.setAttribute( "render", range.renderState() ? "true" : "false" );
+    rangeElem.setAttribute( "html", range.html() );
     rangesElem.appendChild( rangeElem );
     i++;
   }
@@ -1239,6 +1304,10 @@ QDomElement QgsGraduatedSymbolRendererV2::save( QDomDocument& doc )
   // save symbols
   QDomElement symbolsElem = QgsSymbolLayerV2Utils::saveSymbols( symbols, "symbols", doc );
   rendererElem.appendChild( symbolsElem );
+
+  // save legend symbols
+  QDomElement legendSymbolsElem = QgsSymbolLayerV2Utils::saveSymbols( legendSymbols, "legendsymbols", doc );
+  rendererElem.appendChild( legendSymbolsElem );
 
   // save source symbol
   if ( mSourceSymbol.data() )
@@ -1322,6 +1391,30 @@ QgsLegendSymbolList QgsGraduatedSymbolRendererV2::legendSymbolItems( double scal
     }
   }
   return lst;
+}
+
+QgsLegendSymbolListV2 QgsGraduatedSymbolRendererV2::legendSymbolItemsV2() const
+{
+  QgsLegendSymbolListV2 legendItems;
+
+  int i = 0;
+  QgsRangeList::const_iterator rangeIt = mRanges.constBegin();
+  for ( ; rangeIt != mRanges.constEnd(); ++rangeIt )
+  {
+    QgsLegendSymbolItemV2 symbol( rangeIt->symbol(), rangeIt->label(), QString::number( i ), legendSymbolItemsCheckable() );
+    symbol.setHtml( rangeIt->html() );
+
+    //legend symbol
+    QgsSymbolV2* legendSymbol = rangeIt->legendSymbol();
+    if ( legendSymbol )
+    {
+      symbol.setLegendSymbol( legendSymbol->clone() );
+    }
+
+    legendItems.append( symbol );
+    ++i;
+  }
+  return legendItems;
 }
 
 QgsSymbolV2* QgsGraduatedSymbolRendererV2::sourceSymbol()

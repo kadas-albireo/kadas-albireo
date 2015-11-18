@@ -86,6 +86,8 @@ class QgsSLDConfigParser : public QgsWMSConfigParser
 
     QStringList wfsLayerNames() const override;
 
+    QStringList exclusiveLayerGroups() const override;
+
     void owsGeneralAndResourceList( QDomElement& parentElement, QDomDocument& doc, const QString& strHref ) const override;
 
     //legend
@@ -128,6 +130,8 @@ class QgsSLDConfigParser : public QgsWMSConfigParser
     QSet<QString> publishGroupsAsLayer() const;
 
     QSet<QString> subLayersOfGroup( const QString& groupName ) const;
+
+    void legendPermissionFilter( QStringList& layerIds ) const;
 
   private:
 

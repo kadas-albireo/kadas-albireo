@@ -93,12 +93,22 @@ QSizeF QgsLayerTreeModelLegendNode::drawSymbolText( const QgsLegendSettings& set
 
   QFont symbolLabelFont = settings.style( QgsComposerLegendStyle::SymbolLabel ).font();
   double textHeight = settings.fontHeightCharacterMM( symbolLabelFont, QChar( '0' ) );
+  QStringList lines;
 
-  QStringList lines = settings.splitStringForWrapping( data( Qt::DisplayRole ).toString() );
+  //show html formatted string only in wms GetLegendGraphic, not in the composer
+  if ( settings.wmsLegend() )
+  {
+    lines = settings.splitStringForWrapping( data( Qt::UserRole ).toString() );
+  }
+  else
+  {
+    lines = settings.splitStringForWrapping( data( Qt::DisplayRole ).toString() );
+  }
 
   labelSize.rheight() = lines.count() * textHeight + ( lines.count() - 1 ) * settings.lineSpacing();
 
-  double labelX, labelY;
+  double labelX = 0.0;
+  double labelY = 0.0;
   if ( ctx )
   {
     ctx->painter->setPen( settings.fontColor() );
@@ -113,19 +123,128 @@ QSizeF QgsLayerTreeModelLegendNode::drawSymbolText( const QgsLegendSettings& set
       labelY += textHeight; // label starts at top and runs under symbol
   }
 
-  for ( QStringList::Iterator itemPart = lines.begin(); itemPart != lines.end(); ++itemPart )
+  //html mode
+  if ( settings.wmsLegend() )
   {
-    labelSize.rwidth() = qMax( settings.textWidthMillimeters( symbolLabelFont, *itemPart ), double( labelSize.width() ) );
-
-    if ( ctx )
+    double itemHeight = 0;
+    double itemWidth = 0;
+    for ( QStringList::Iterator itemPart = lines.begin(); itemPart != lines.end(); ++itemPart )
     {
-      settings.drawText( ctx->painter, labelX, labelY, *itemPart, symbolLabelFont );
-      if ( itemPart != lines.end() )
-        labelY += settings.lineSpacing() + textHeight;
+      QList< QList< QPair< QFont, QString> > > htmlFragments = formatTextAsHtml( symbolLabelFont, *itemPart );
+      for ( int i = 0; i < htmlFragments.size(); ++i )
+      {
+        double maxTextHeight = 0;
+        double currentLineWidth = 0;
+        double currentLabelX = labelX;
+
+        const QList< QPair< QFont, QString> >& currentLine = htmlFragments.at( i );
+        QList< QPair< QFont, QString> >::const_iterator currentLineIt = currentLine.constBegin();
+        for ( ; currentLineIt != currentLine.constEnd(); ++currentLineIt ) //for each line section
+        {
+          maxTextHeight = 0;
+          if ( ctx )
+          {
+            settings.drawText( ctx->painter, currentLabelX, labelY, currentLineIt->second, currentLineIt->first );
+          }
+          currentLabelX += settings.textWidthMillimeters( currentLineIt->first, currentLineIt->second );
+          currentLineWidth += settings.textWidthMillimeters( currentLineIt->first, currentLineIt->second );
+
+          maxTextHeight = qMax( settings.fontHeightCharacterMM( symbolLabelFont, QChar( '0' ) ), maxTextHeight );
+        }
+        labelY += maxTextHeight;
+        itemHeight += maxTextHeight;
+        itemWidth = qMax( itemWidth, currentLineWidth );
+      }
+    }
+    //set label width / height
+    labelSize.rheight() = itemHeight;
+    labelSize.rwidth() = itemWidth;
+  }
+  else
+  {
+    for ( QStringList::Iterator itemPart = lines.begin(); itemPart != lines.end(); ++itemPart )
+    {
+      labelSize.rwidth() = qMax( settings.textWidthMillimeters( symbolLabelFont, *itemPart ), double( labelSize.width() ) );
+
+      if ( ctx )
+      {
+        settings.drawText( ctx->painter, labelX, labelY, *itemPart, symbolLabelFont );
+        if ( itemPart != lines.end() )
+        {
+          labelY += settings.lineSpacing() + textHeight;
+        }
+      }
     }
   }
 
   return labelSize;
+}
+
+QList< QList< QPair< QFont, QString> > > QgsLayerTreeModelLegendNode::formatTextAsHtml( const QFont& baseFont, const QString& text )
+{
+  QList< QList< QPair< QFont, QString> > > result;
+  QList< QPair< QFont, QString> > textLine;
+  QStringList boldSplit = text.split( QRegExp( "</{0,1}b{0,1}B{0,1}>" ), QString::KeepEmptyParts );
+  bool bold = false;
+  for ( int i = 0; i < boldSplit.size(); ++i )
+  {
+    QString boldSplitText = boldSplit.at( i );
+    if ( !boldSplitText.isEmpty() )
+    {
+      bool italic = false;
+      QStringList italicSplit = boldSplitText.split( QRegExp( "</{0,1}i{0,1}I{0,1}>" ), QString::KeepEmptyParts );
+      for ( int j = 0; j < italicSplit.size(); ++j )
+      {
+        QString italicSplitText = italicSplit.at( j );
+        if ( !italicSplitText.isEmpty() )
+        {
+          bool underline = false;
+          QStringList underlineSplit = italicSplitText.split( QRegExp( "</{0,1}u{0,1}U{0,1}>" ), QString::KeepEmptyParts );
+          for ( int k = 0; k < underlineSplit.size(); ++k )
+          {
+            QString underlineSplitText = underlineSplit.at( k );
+            if ( !underlineSplitText.isEmpty() )
+            {
+
+              QFont font = baseFont;
+              if ( bold )
+              {
+                font.setBold( true );
+              }
+              if ( italic )
+              {
+                font.setItalic( true );
+              }
+              if ( underline )
+              {
+                font.setUnderline( true );
+              }
+
+              QStringList lineSplit = underlineSplitText.split( "<br>", QString::KeepEmptyParts, Qt::CaseInsensitive );
+              for ( int j = 0; j < lineSplit.size(); ++j )
+              {
+                if ( j > 0 )
+                {
+                  result.push_back( textLine );
+                  textLine.clear();
+                }
+                if ( !lineSplit.at( j ).isEmpty() )
+                {
+                  textLine.push_back( qMakePair( font, lineSplit.at( j ) ) );
+                }
+              }
+            }
+            underline = !underline;
+          }
+        }
+        italic = !italic;
+      }
+    }
+    bold = !bold;
+  }
+  result.push_back( textLine );
+
+  return result;
 }
 
 // -------------------------------------------------------------------------
@@ -157,6 +276,10 @@ Qt::ItemFlags QgsSymbolV2LegendNode::flags() const
 
 QVariant QgsSymbolV2LegendNode::data( int role ) const
 {
+  if ( role == Qt::UserRole ) //user role is html text if available or label text else
+  {
+    return mItem.html().isEmpty() ? mItem.label() : mItem.html();
+  }
   if ( role == Qt::DisplayRole )
   {
     return mLabel;
@@ -262,7 +385,7 @@ bool QgsSymbolV2LegendNode::setData( const QVariant& value, int role )
 
 QSizeF QgsSymbolV2LegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const
 {
-  QgsSymbolV2* s = mItem.symbol();
+  QgsSymbolV2* s = mItem.legendSymbol() ? mItem.legendSymbol() : mItem.symbol();
   if ( !s )
   {
     return QSizeF();
