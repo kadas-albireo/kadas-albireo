@@ -80,21 +80,25 @@ void QgsGeometryCheckerSetupTab::updateLayers()
   ui.comboBoxInputLayer->clear();
 
   // Collect layers
-  QgsMapLayer* currentLayer = mIface->mapCanvas()->currentLayer();
+  // Don't switch current layer if dialog is visible to avoid confusing the user
+  QgsMapLayer* currentLayer = isVisible() ? 0 : mIface->mapCanvas()->currentLayer();
   int currIdx = -1;
+  int idx = 0;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
+    QgsDebugMsg( QString( "Adding layer, have %1 in list" ).arg( ui.comboBoxInputLayer->count() ) );
     if ( qobject_cast<QgsVectorLayer*>( layer ) )
     {
       ui.comboBoxInputLayer->addItem( layer->name(), layer->id() );
       if ( layer->name() == prevLayer )
       {
-        currIdx = ui.comboBoxInputLayer->count() - 1;
+        currIdx = idx;
       }
       else if ( currIdx == -1 && layer == currentLayer )
       {
-        currIdx = ui.comboBoxInputLayer->count() - 1;
+        currIdx = idx;
       }
+      ++idx;
     }
   }
   ui.comboBoxInputLayer->setCurrentIndex( qMax( 0, currIdx ) );
@@ -171,6 +175,13 @@ void QgsGeometryCheckerSetupTab::runChecks()
   QgsVectorLayer* layer = getSelectedLayer();
   if ( layer == 0 )
   {
+    return;
+  }
+
+  if ( ui.radioButtonOutputNew->isChecked() &&
+       layer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) )
+  {
+    QMessageBox::critical( this, tr( "Invalid Output Layer" ), tr( "The chosen output layer is the same as the input layer." ) );
     return;
   }
 
@@ -303,6 +314,7 @@ void QgsGeometryCheckerSetupTab::runChecks()
   connect( checker, SIGNAL( progressValue( int ) ), ui.progressBar, SLOT( setValue( int ) ) );
   connect( &futureWatcher, SIGNAL( finished() ), &evLoop, SLOT( quit() ) );
   connect( mAbortButton, SIGNAL( clicked() ), &futureWatcher, SLOT( cancel() ) );
+  connect( mAbortButton, SIGNAL( clicked() ), this, SLOT( showCancelFeedback() ) );
 
   int maxSteps = 0;
   futureWatcher.setFuture( checker->execute( &maxSteps ) );
@@ -311,12 +323,22 @@ void QgsGeometryCheckerSetupTab::runChecks()
 
   /** Restore window **/
   unsetCursor();
+  mAbortButton->setEnabled( true );
   ui.buttonBox->removeButton( mAbortButton );
   mRunButton->setEnabled( true );
   mRunButton->show();
   ui.progressBar->hide();
+  ui.labelStatus->hide();
   ui.widgetInputs->setEnabled( true );
 
   /** Show result **/
   emit checkerFinished( !futureWatcher.isCanceled() );
+}
+
+void QgsGeometryCheckerSetupTab::showCancelFeedback()
+{
+  mAbortButton->setEnabled( false );
+  ui.labelStatus->setText( tr( "<b>Waiting for running checks to finish...</b>" ) );
+  ui.labelStatus->show();
+  ui.progressBar->hide();
 }

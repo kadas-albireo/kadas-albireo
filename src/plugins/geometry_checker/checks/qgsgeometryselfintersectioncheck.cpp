@@ -6,11 +6,11 @@
  ***************************************************************************/
 
 #include "qgsgeometryselfintersectioncheck.h"
-#include "qgscurvepolygonv2.h"
+#include "qgspolygonv2.h"
 #include "qgslinestringv2.h"
 #include "qgsgeometryengine.h"
 #include "qgsmultipolygonv2.h"
-#include "qgsmulticurvev2.h"
+#include "qgsmultilinestringv2.h"
 #include "qgsgeometryutils.h"
 #include "../utils/qgsfeaturepool.h"
 
@@ -193,12 +193,13 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
         // If ring is exterior, build two polygons, and reassign interiors as necessary
         poly->setExteriorRing( ringGeom1 );
 
-        QgsCurvePolygonV2* poly2 = new QgsCurvePolygonV2();
+        // If original feature was a linear polygon, also create the new part as a linear polygon
+        QgsCurvePolygonV2* poly2 = dynamic_cast<QgsPolygonV2*>( part ) ? new QgsPolygonV2() : new QgsCurvePolygonV2();
         poly2->setExteriorRing( ringGeom2 );
 
         // Reassing interiors as necessary
-        QgsGeometryEngine* geomEnginePoly1 = QgsGeomUtils::createGeomEngine( poly, QgsGeometryCheckPrecision::precision() );
-        QgsGeometryEngine* geomEnginePoly2 = QgsGeomUtils::createGeomEngine( poly2, QgsGeometryCheckPrecision::precision() );
+        QgsGeometryEngine* geomEnginePoly1 = QgsGeomUtils::createGeomEngine( poly, QgsGeometryCheckPrecision::tolerance() );
+        QgsGeometryEngine* geomEnginePoly2 = QgsGeomUtils::createGeomEngine( poly2, QgsGeometryCheckPrecision::tolerance() );
         for ( int n = poly->numInteriorRings(), i = n - 1; i >= 0; --i )
         {
           if ( !geomEnginePoly1->contains( *poly->interiorRing( i ) ) )
@@ -265,7 +266,7 @@ void QgsGeometrySelfIntersectionCheck::fixError( QgsGeometryCheckError* error, i
         }
         else
         {
-          QgsMultiCurveV2* geomCollection = new QgsMultiCurveV2();
+          QgsMultiCurveV2* geomCollection = new QgsMultiLineStringV2();
           geomCollection->addGeometry( ringGeom1 );
           geomCollection->addGeometry( ringGeom2 );
           feature.setGeometry( new QgsGeometry( geomCollection ) );

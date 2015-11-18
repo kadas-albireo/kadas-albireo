@@ -69,9 +69,11 @@ void QgsGeometrySnapperDialog::updateLayers()
   ui.comboBoxReferenceLayer->clear();
 
   // Collect layers
-  QgsMapLayer* currentLayer = mIface->mapCanvas()->currentLayer();
+  // Don't switch current layer if dialog is visible to avoid confusing the user
+  QgsMapLayer* currentLayer = isVisible() ? 0 : mIface->mapCanvas()->currentLayer();
   int curInputIdx = -1;
   int curReferenceIdx = -1;
+  int idx = 0;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
     if ( qobject_cast<QgsVectorLayer*>( layer ) )
@@ -83,17 +85,18 @@ void QgsGeometrySnapperDialog::updateLayers()
         ui.comboBoxReferenceLayer->addItem( layer->name(), layer->id() );
         if ( layer->name() == curInput )
         {
-          curInputIdx = ui.comboBoxInputLayer->count() - 1;
+          curInputIdx = idx;
         }
         else if ( curInputIdx == -1 && layer == currentLayer )
         {
-          curInputIdx = ui.comboBoxInputLayer->count() - 1;
+          curInputIdx = idx;
         }
 
         if ( layer->name() == curReference )
         {
-          curReferenceIdx = ui.comboBoxReferenceLayer->count() - 1;
+          curReferenceIdx = idx;
         }
+        ++idx;
       }
     }
   }
@@ -186,6 +189,14 @@ void QgsGeometrySnapperDialog::run()
   QgsVectorLayer* referenceLayer = getReferenceLayer();
   if ( layer == 0 || referenceLayer == 0 )
   {
+    return;
+  }
+
+  if ( ui.radioButtonOutputNew->isChecked() &&
+       ( layer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) ||
+         referenceLayer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) ) )
+  {
+    QMessageBox::critical( this, tr( "Invalid Output Layer" ), tr( "The chosen output layer is the same as an input layer." ) );
     return;
   }
 

@@ -3,8 +3,6 @@
 
 SET(QGIS_CORE_SRCS
 
-  geosextra/geos_c_extra.cpp
-
   gps/qgsgpsconnection.cpp
   gps/qgsgpsconnectionregistry.cpp
   gps/qgsnmeaconnection.cpp
@@ -800,7 +798,6 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${EXPAT_LIBRARY}
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
-  ${GEOS_CPP_LIBRARY}
 )
 
 # install
