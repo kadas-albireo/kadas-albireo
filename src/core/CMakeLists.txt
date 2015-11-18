@@ -3,8 +3,6 @@
 
 SET(QGIS_CORE_SRCS
 
-  geosextra/geos_c_extra.cpp
-
   gps/qgsgpsconnection.cpp
   gps/qgsgpsconnectionregistry.cpp
   gps/qgsnmeaconnection.cpp
@@ -301,8 +299,6 @@ SET(QGIS_CORE_SRCS
   geometry/qgsmultisurfacev2.cpp
   geometry/qgswkbptr.cpp
   geometry/qgswkbtypes.cpp
-
-  geosextra/geos_c_extra.cpp
 )
 
 IF(ENABLE_MODELTEST)
@@ -451,8 +447,6 @@ SET(QGIS_CORE_MOC_HDRS
   layertree/qgslayertreemodellegendnode.h
   layertree/qgslayertreenode.h
   layertree/qgslayertreeregistrybridge.h
-
-  geosextra/geos_c_extra.h
 )
 
 IF (NOT QT5_BUILD)
@@ -792,7 +786,6 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${EXPAT_LIBRARY}
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
-  ${GEOS_CPP_LIBRARY}
 )
 
 # install

@@ -18,7 +18,6 @@ email                : marco.hugentobler at sourcepole dot com
 
 #include "qgsgeometryengine.h"
 #include "qgspointv2.h"
-#include "geosextra/geos_c_extra.h"
 #include <geos_c.h>
 
 class QgsLineStringV2;
@@ -86,9 +85,6 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
   private:
     mutable GEOSGeometry* mGeos;
     const GEOSPreparedGeometry* mGeosPrepared;
-    //precision reducer
-    GEOSPrecisionModel* mPrecisionModel;
-    GEOSGeometryPrecisionReducer* mPrecisionReducer;
 
     enum Overlay
     {
@@ -136,9 +132,6 @@ class CORE_EXPORT QgsGeos: public QgsGeometryEngine
     static int lineContainedInLine( const GEOSGeometry* line1, const GEOSGeometry* line2 );
     static int pointContainedInLine( const GEOSGeometry* point, const GEOSGeometry* line );
     static int geomDigits( const GEOSGeometry* geom );
-
-  private:
-    inline GEOSGeometry *getReducedGeometry( GEOSGeometry* geom ) const;
 };
 
 #endif // QGSGEOS_H
