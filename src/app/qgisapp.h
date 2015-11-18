@@ -496,6 +496,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
 
     //! open the properties dialog for the currently selected layer
     void layerProperties();
+    //! open the properties dialog for the currently selected group
+    void groupProperties();
 
     //! show the attribute table for the currently selected layer
     void attributeTable();

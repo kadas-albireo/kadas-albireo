@@ -280,7 +280,7 @@ QgsRuleBasedRendererV2::Rule* QgsRuleBasedRendererV2::Rule::clone() const
   }
   newrule->setCheckState( mCheckState );
   // clone children
-  Q_FOREACH( Rule* rule, mChildren )
+  Q_FOREACH ( Rule* rule, mChildren )
   {
     newrule->appendChild( rule->clone() );
   }

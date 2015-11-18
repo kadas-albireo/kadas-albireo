@@ -68,12 +68,20 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
 
+
+      if ( rlayer || vlayer )
+      {
+        menu->addAction( actions->actionTransparency( mCanvas, menu ) );
+        menu->addSeparator();
+      }
+
       menu->addAction( actions->actionZoomToLayer( mCanvas, menu ) );
       menu->addAction( actions->actionShowInOverview( menu ) );
 
       if ( rlayer )
       {
         menu->addAction( tr( "&Zoom to Best Scale (100%)" ), QgisApp::instance(), SLOT( legendLayerZoomNative() ) );
+        menu->addAction( actions->actionUseAsHightMap( menu ) );
 
         if ( rlayer->rasterType() != QgsRasterLayer::Palette )
           menu->addAction( tr( "&Stretch Using Current Extent" ), QgisApp::instance(), SLOT( legendLayerStretchUsingCurrentExtent() ) );
@@ -81,107 +89,113 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
 
       menu->addAction( QgsApplication::getThemeIcon( "/mActionRemoveLayer.svg" ), tr( "&Remove" ), QgisApp::instance(), SLOT( removeLayer() ) );
 
-      // duplicate layer
-      QAction* duplicateLayersAction = menu->addAction( QgsApplication::getThemeIcon( "/mActionDuplicateLayer.svg" ), tr( "&Duplicate" ), QgisApp::instance(), SLOT( duplicateLayers() ) );
-
-      if ( !vlayer || vlayer->geometryType() != QGis::NoGeometry )
+      if ( layer->type() != QgsMapLayer::RedliningLayer )
       {
-        // set layer scale visibility
-        menu->addAction( tr( "&Set Layer Scale Visibility" ), QgisApp::instance(), SLOT( setLayerScaleVisibility() ) );
+        // duplicate layer
+        QAction* duplicateLayersAction = menu->addAction( QgsApplication::getThemeIcon( "/mActionDuplicateLayer.svg" ), tr( "&Duplicate" ), QgisApp::instance(), SLOT( duplicateLayers() ) );
 
-        // set layer crs
-        menu->addAction( QgsApplication::getThemeIcon( "/mActionSetCRS.png" ), tr( "&Set Layer CRS" ), QgisApp::instance(), SLOT( setLayerCRS() ) );
-
-        // assign layer crs to project
-        menu->addAction( QgsApplication::getThemeIcon( "/mActionSetProjectCRS.png" ), tr( "Set &Project CRS from Layer" ), QgisApp::instance(), SLOT( setProjectCRSFromLayer() ) );
-      }
-
-      // style-related actions
-      if ( layer && mView->selectedLayerNodes().count() == 1 )
-      {
-        QMenu *menuStyleManager = new QMenu( tr( "Styles" ) );
-
-        QgisApp *app = QgisApp::instance();
-        menuStyleManager->addAction( tr( "Copy Style" ), app, SLOT( copyStyle() ) );
-        if ( app->clipboard()->hasFormat( QGSCLIPBOARD_STYLE_MIME ) )
+        if ( !vlayer || vlayer->geometryType() != QGis::NoGeometry )
         {
-          menuStyleManager->addAction( tr( "Paste Style" ), app, SLOT( pasteStyle() ) );
+          // set layer scale visibility
+          menu->addAction( tr( "&Set Layer Scale Visibility" ), QgisApp::instance(), SLOT( setLayerScaleVisibility() ) );
+
+          // set layer crs
+          menu->addAction( QgsApplication::getThemeIcon( "/mActionSetCRS.png" ), tr( "&Set Layer CRS" ), QgisApp::instance(), SLOT( setLayerCRS() ) );
+
+          // assign layer crs to project
+          menu->addAction( QgsApplication::getThemeIcon( "/mActionSetProjectCRS.png" ), tr( "Set &Project CRS from Layer" ), QgisApp::instance(), SLOT( setProjectCRSFromLayer() ) );
         }
 
-        menuStyleManager->addSeparator();
-        QgsMapLayerStyleGuiUtils::instance()->addStyleManagerActions( menuStyleManager, layer );
-
-        menu->addMenu( menuStyleManager );
-      }
-
-      menu->addSeparator();
-
-      if ( vlayer )
-      {
-        QAction *toggleEditingAction = QgisApp::instance()->actionToggleEditing();
-        QAction *saveLayerEditsAction = QgisApp::instance()->actionSaveActiveLayerEdits();
-        QAction *allEditsAction = QgisApp::instance()->actionAllEdits();
-
-        // attribute table
-        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
-                         QgisApp::instance(), SLOT( attributeTable() ) );
-
-        // allow editing
-        int cap = vlayer->dataProvider()->capabilities();
-        if ( cap & QgsVectorDataProvider::EditingCapabilities )
+        // style-related actions
+        if ( layer && mView->selectedLayerNodes().count() == 1 )
         {
-          if ( toggleEditingAction )
+          QMenu *menuStyleManager = new QMenu( tr( "Styles" ) );
+
+          QgisApp *app = QgisApp::instance();
+          menuStyleManager->addAction( tr( "Copy Style" ), app, SLOT( copyStyle() ) );
+          if ( app->clipboard()->hasFormat( QGSCLIPBOARD_STYLE_MIME ) )
           {
-            menu->addAction( toggleEditingAction );
-            toggleEditingAction->setChecked( vlayer->isEditable() );
+            menuStyleManager->addAction( tr( "Paste Style" ), app, SLOT( pasteStyle() ) );
           }
-          if ( saveLayerEditsAction && vlayer->isModified() )
-          {
-            menu->addAction( saveLayerEditsAction );
-          }
+
+          menuStyleManager->addSeparator();
+          QgsMapLayerStyleGuiUtils::instance()->addStyleManagerActions( menuStyleManager, layer );
+
+          menu->addMenu( menuStyleManager );
         }
-
-        if ( allEditsAction->isEnabled() )
-          menu->addAction( allEditsAction );
-
-        // disable duplication of memory layers
-        if ( vlayer->storageType() == "Memory storage" && mView->selectedLayerNodes().count() == 1 )
-          duplicateLayersAction->setEnabled( false );
-
-        // save as vector file
-        menu->addAction( tr( "Save As..." ), QgisApp::instance(), SLOT( saveAsFile() ) );
-        menu->addAction( tr( "Save As Layer Definition File..." ), QgisApp::instance(), SLOT( saveAsLayerDefinition() ) );
-
-        if ( !vlayer->isEditable() && vlayer->dataProvider()->supportsSubsetString() && vlayer->vectorJoins().isEmpty() )
-          menu->addAction( tr( "&Filter..." ), QgisApp::instance(), SLOT( layerSubsetString() ) );
-
-        menu->addAction( actions->actionShowFeatureCount( menu ) );
 
         menu->addSeparator();
-      }
-      else if ( rlayer )
-      {
-        menu->addAction( tr( "Save As..." ), QgisApp::instance(), SLOT( saveAsRasterFile() ) );
-        menu->addAction( tr( "Save As Layer Definition File..." ), QgisApp::instance(), SLOT( saveAsLayerDefinition() ) );
-      }
-      else if ( layer && layer->type() == QgsMapLayer::PluginLayer && mView->selectedLayerNodes().count() == 1 )
-      {
-        // disable duplication of plugin layers
-        duplicateLayersAction->setEnabled( false );
+
+        if ( vlayer )
+        {
+          QAction *toggleEditingAction = QgisApp::instance()->actionToggleEditing();
+          QAction *saveLayerEditsAction = QgisApp::instance()->actionSaveActiveLayerEdits();
+          QAction *allEditsAction = QgisApp::instance()->actionAllEdits();
+
+          // attribute table
+          menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
+                           QgisApp::instance(), SLOT( attributeTable() ) );
+
+          // allow editing
+          int cap = vlayer->dataProvider()->capabilities();
+          if ( cap & QgsVectorDataProvider::EditingCapabilities )
+          {
+            if ( toggleEditingAction )
+            {
+              menu->addAction( toggleEditingAction );
+              toggleEditingAction->setChecked( vlayer->isEditable() );
+            }
+            if ( saveLayerEditsAction && vlayer->isModified() )
+            {
+              menu->addAction( saveLayerEditsAction );
+            }
+          }
+
+          if ( allEditsAction->isEnabled() )
+            menu->addAction( allEditsAction );
+
+          // disable duplication of memory layers
+          if ( vlayer->storageType() == "Memory storage" && mView->selectedLayerNodes().count() == 1 )
+            duplicateLayersAction->setEnabled( false );
+
+          // save as vector file
+          menu->addAction( tr( "Save As..." ), QgisApp::instance(), SLOT( saveAsFile() ) );
+          menu->addAction( tr( "Save As Layer Definition File..." ), QgisApp::instance(), SLOT( saveAsLayerDefinition() ) );
+
+          if ( !vlayer->isEditable() && vlayer->dataProvider()->supportsSubsetString() && vlayer->vectorJoins().isEmpty() )
+            menu->addAction( tr( "&Filter..." ), QgisApp::instance(), SLOT( layerSubsetString() ) );
+
+          menu->addAction( actions->actionShowFeatureCount( menu ) );
+
+          menu->addSeparator();
+        }
+        else if ( rlayer )
+        {
+          menu->addAction( tr( "Save As..." ), QgisApp::instance(), SLOT( saveAsRasterFile() ) );
+          menu->addAction( tr( "Save As Layer Definition File..." ), QgisApp::instance(), SLOT( saveAsLayerDefinition() ) );
+        }
+        else if ( layer && layer->type() == QgsMapLayer::PluginLayer && mView->selectedLayerNodes().count() == 1 )
+        {
+          // disable duplication of plugin layers
+          duplicateLayersAction->setEnabled( false );
+        }
       }
 
       addCustomLayerActions( menu, layer );
 
-      if ( layer && QgsProject::instance()->layerIsEmbedded( layer->id() ).isEmpty() )
-        menu->addAction( tr( "&Properties" ), QgisApp::instance(), SLOT( layerProperties() ) );
+      if ( layer->type() != QgsMapLayer::RedliningLayer )
+      {
+        if ( layer && QgsProject::instance()->layerIsEmbedded( layer->id() ).isEmpty() )
+          menu->addAction( tr( "&Properties" ), QgisApp::instance(), SLOT( layerProperties() ) );
 
-      if ( node->parent() != mView->layerTreeModel()->rootGroup() )
-        menu->addAction( actions->actionMakeTopLevel( menu ) );
+        if ( node->parent() != mView->layerTreeModel()->rootGroup() )
+          menu->addAction( actions->actionMakeTopLevel( menu ) );
 
-      menu->addAction( actions->actionRenameGroupOrLayer( menu ) );
+        menu->addAction( actions->actionRenameGroupOrLayer( menu ) );
 
-      if ( mView->selectedNodes( true ).count() >= 2 )
-        menu->addAction( actions->actionGroupSelected( menu ) );
+        if ( mView->selectedNodes( true ).count() >= 2 )
+          menu->addAction( actions->actionGroupSelected( menu ) );
+      }
     }
 
   }
