@@ -490,9 +490,6 @@ ENDIF(MSVC)
 SET(QGIS_CORE_HDRS
   ${CMAKE_BINARY_DIR}/qgsconfig.h
   ../plugins/qgisplugin.h
-
-  geosextra/geos_c_extra.h
-
   qgis.h
   qgsattributeaction.h
   qgscachedfeatureiterator.h
