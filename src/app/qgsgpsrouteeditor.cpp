@@ -36,7 +36,7 @@
 #include <QSettings>
 
 
-int QgsGPSRouteEditor::sFeatureSize = 3;
+int QgsGPSRouteEditor::sFeatureSize = 2;
 
 QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
@@ -305,10 +305,14 @@ void QgsGPSRouteEditor::importGpx()
 void QgsGPSRouteEditor::exportGpx()
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QString filename = QFileDialog::getSaveFileName( mApp, tr( "Export to GPX" ), lastProjectDir, tr( "GPX Files (*.gpx" ) );
+  QString filename = QFileDialog::getSaveFileName( mApp, tr( "Export to GPX" ), lastProjectDir, tr( "GPX Files (*.gpx)" ) );
   if ( filename.isEmpty() )
   {
     return;
+  }
+  if ( !filename.endsWith( ".gpx", Qt::CaseInsensitive ) )
+  {
+    filename += ".gpx";
   }
 
   QFile file( filename );
