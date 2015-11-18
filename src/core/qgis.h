@@ -24,7 +24,7 @@
 #include <QMetaType>
 #include <QVariant>
 #include <stdlib.h>
-#include <limits>
+#include <cfloat>
 #include <cmath>
 #include <qnumeric.h>
 
@@ -66,7 +66,6 @@ class CORE_EXPORT QGis
       WKBMultiCurve = 11,
       WKBMultiSurface = 12,
       WKBNoGeometry = 100, //attributes only
-      WKBMixedGeometry = 101,
       WKBPointZ = 1001,
       WKBLineStringZ = 1002,
       WKBPolygonZ = 1003,
@@ -185,7 +184,6 @@ class CORE_EXPORT QGis
       {
         case WKBUnknown:            return 0;
         case WKBNoGeometry:         return 0;
-        case WKBMixedGeometry:      return 0;
         case WKBPoint25D:           return 3;
         case WKBLineString25D:      return 3;
         case WKBPolygon25D:         return 3;
@@ -202,8 +200,7 @@ class CORE_EXPORT QGis
       Line,
       Polygon,
       UnknownGeometry,
-      NoGeometry,
-      AnyGeometry
+      NoGeometry
     };
 
     //! description strings for geometry types
@@ -372,7 +369,7 @@ inline QString qgsDoubleToString( const double &a, const int &precision = 17 )
 //
 // compare two doubles (but allow some difference)
 //
-inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * std::numeric_limits<double>::epsilon() )
+inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * DBL_EPSILON )
 {
   const double diff = a - b;
   return diff > -epsilon && diff <= epsilon;
@@ -396,13 +393,19 @@ inline bool qgsDoubleNearSig( double a, double b, int significantDigits = 10 )
          qRound( ar * pow( 10.0, significantDigits ) ) == qRound( br * pow( 10.0, significantDigits ) );
 }
 
+//
+// a round function which returns a double to guard against overflows
+//
+inline double qgsRound( double x )
+{
+  return x < 0.0 ? std::ceil( x - 0.5 ) : std::floor( x + 0.5 );
+}
+
 bool qgsVariantLessThan( const QVariant& lhs, const QVariant& rhs );
 
 bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs );
 
-QString CORE_EXPORT qgsInsertLinkAnchors( const QString& text );
-
-QString CORE_EXPORT qgsVsiPrefix( QString path );
+QString qgsVsiPrefix( QString path );
 
 /** Allocates size bytes and returns a pointer to the allocated  memory.
     Works like C malloc() but prints debug message by QgsLogger if allocation fails.
