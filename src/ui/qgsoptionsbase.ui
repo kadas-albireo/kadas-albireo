@@ -2487,7 +2487,7 @@
                    </widget>
                   </item>
                   <item row="0" column="0" rowspan="8">
-                   <widget class="QgsColorSchemeList" name="mTreeCustomColors" native="true"/>
+                   <widget class="QgsColorSchemeList" name="mTreeCustomColors"/>
                   </item>
                  </layout>
                 </widget>
@@ -2641,28 +2641,15 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_21">
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_8">
-                    <item>
+                   <layout class="QGridLayout" name="gridLayout_19">
+                    <item row="0" column="0">
                      <widget class="QLabel" name="label_15">
                       <property name="text">
                        <string>Double click action in legend</string>
                       </property>
                      </widget>
                     </item>
-                    <item>
-                     <spacer name="horizontalSpacer_6">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
+                    <item row="0" column="2">
                      <widget class="QComboBox" name="cmbLegendDoubleClickAction">
                       <item>
                        <property name="text">
@@ -2675,6 +2662,53 @@
                        </property>
                       </item>
                      </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <spacer name="horizontalSpacer_6">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_42">
+                      <property name="text">
+                       <string>Add new layers</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QComboBox" name="mComboBoxAddLayerMode">
+                      <item>
+                       <property name="text">
+                        <string>Above all layers</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Above active layer</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <spacer name="horizontalSpacer_47">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </item>
@@ -3372,8 +3406,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>480</width>
-                <height>303</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_39">
@@ -3577,7 +3611,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>464</width>
+                <width>614</width>
                 <height>613</height>
                </rect>
               </property>
@@ -4077,8 +4111,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>412</width>
-                <height>368</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -4216,7 +4250,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>512</width>
+                <width>614</width>
                 <height>639</height>
                </rect>
               </property>
@@ -4259,7 +4293,7 @@
                   <item row="1" column="0">
                    <widget class="QRadioButton" name="radPromptForProjection">
                     <property name="text">
-                     <string>Prompt for &amp;CRS</string>
+                     <string>Pro&amp;mpt for CRS</string>
                     </property>
                    </widget>
                   </item>
@@ -4322,7 +4356,7 @@
                      <string>Automatically enable 'on the fly' reprojection if CRS of a new added layer differ from CRS of layer(s) already present. CRS of present layer(s) will be used.</string>
                     </property>
                     <property name="text">
-                     <string>Automatically enable 'on the fly' reprojection if layers have different CRS</string>
+                     <string>Automatically enable 'on the fly' reprojection if layers ha&amp;ve different CRS</string>
                     </property>
                    </widget>
                   </item>
@@ -4462,15 +4496,15 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>278</width>
-                <height>222</height>
+                <width>628</width>
+                <height>554</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_32">
                <item>
                 <widget class="QGroupBox" name="grpLocale">
                  <property name="title">
-                  <string>Override system locale</string>
+                  <string>O&amp;verride system locale</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
@@ -4980,8 +5014,8 @@
   </customwidget>
   <customwidget>
    <class>QgsColorSchemeList</class>
-   <extends>QWidget</extends>
-   <header location="global">qgscolorschemelist.h</header>
+   <extends>QTreeView</extends>
+   <header>qgscolorschemelist.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

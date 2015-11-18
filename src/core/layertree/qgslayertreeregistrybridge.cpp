@@ -22,6 +22,8 @@
 #include "qgsproject.h"
 #include "qgslogger.h"
 
+#include <QSettings>
+
 QgsLayerTreeRegistryBridge::QgsLayerTreeRegistryBridge( QgsLayerTreeGroup *root, QObject *parent )
     : QObject( parent )
     , mRoot( root )
@@ -66,8 +68,10 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     }
   }
 
+  int addMode = QSettings().value( "/qgis/layerLegendAddMode", 0 ).toInt();
+  int ins = addMode == 0 ? 0 : mInsertionPointIndex;
+
   // Modify insertion point to the first possible slot below any redlining layer
-  int ins = mInsertionPointIndex;
   QList<QgsLayerTreeNode*> childNodes = mInsertionPointGroup->children();
   for ( int i = childNodes.size() - 1; i >= ins; --i )
   {
