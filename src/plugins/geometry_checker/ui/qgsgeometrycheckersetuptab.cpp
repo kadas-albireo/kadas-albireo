@@ -174,6 +174,13 @@ void QgsGeometryCheckerSetupTab::runChecks()
     return;
   }
 
+  if ( ui.radioButtonOutputNew->isChecked() &&
+       layer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) )
+  {
+    QMessageBox::critical( this, tr( "Invalid Output Layer" ), tr( "The chosen output layer is the same as the input layer." ) );
+    return;
+  }
+
   if ( layer->isEditable() )
   {
     QMessageBox::critical( this, tr( "Editable Input Layer" ), tr( "The input layer is not allowed to be in editing mode." ) );

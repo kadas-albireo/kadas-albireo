@@ -189,6 +189,14 @@ void QgsGeometrySnapperDialog::run()
     return;
   }
 
+  if ( ui.radioButtonOutputNew->isChecked() &&
+       ( layer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) ||
+         referenceLayer->dataProvider()->dataSourceUri().startsWith( ui.lineEditOutput->text() ) ) )
+  {
+    QMessageBox::critical( this, tr( "Invalid Output Layer" ), tr( "The chosen output layer is the same as an input layer." ) );
+    return;
+  }
+
   bool selectedOnly = ui.checkBoxInputSelectedOnly->isChecked();
 
   /** Duplicate if necessary **/
