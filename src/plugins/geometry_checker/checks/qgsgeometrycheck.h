@@ -14,7 +14,6 @@
 #include "qgsvectorlayer.h"
 #include "geometry/qgsgeometry.h"
 #include "../utils/qgsgeomutils.h"
-#include <geosextra/geos_c_extra.h>
 #include <QApplication>
 
 class QgsGeometryCheckError;

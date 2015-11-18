@@ -156,30 +156,11 @@ class GEOSGeomScopedPtr
 
 QgsGeos::QgsGeos( const QgsAbstractGeometryV2* geometry, int precision ): QgsGeometryEngine( geometry ), mGeos( 0 ), mGeosPrepared( 0 )
 {
-  double prec = qPow( 10, -precision );
-  mPrecisionModel = GEOSPrecisionModel_createFixed( 1.f / prec );
-  mPrecisionReducer = GEOSGeometryPrecisionReducer_create( mPrecisionModel );
   cacheGeos();
 }
 
 QgsGeos::~QgsGeos()
 {
-  GEOSGeom_destroy_r( geosinit.ctxt, mGeos );
-  GEOSPreparedGeom_destroy_r( geosinit.ctxt, mGeosPrepared );
-  GEOSGeometryPrecisionReducer_destroy( mPrecisionReducer );
-  GEOSPrecisionModel_destroy( mPrecisionModel );
-}
-
-inline GEOSGeometry* QgsGeos::getReducedGeometry( GEOSGeometry* geom ) const
-{
-#ifdef HAVE_GEOS_CPP
-  //reduce precision
-  GEOSGeometry* reduced = GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, geom );
-  GEOSGeom_destroy_r( geosinit.ctxt, geom );
-  return reduced;
-#else
-  return geom;
-#endif
 }
 
 void QgsGeos::geometryChanged()
@@ -208,12 +189,7 @@ void QgsGeos::cacheGeos() const
     return;
   }
 
-  GEOSGeometry* g = asGeos( mGeometry );
-  if ( g )
-  {
-    mGeos = GEOSGeometryPrecisionReducer_reduce( mPrecisionReducer, g );
-    GEOSGeom_destroy_r( geosinit.ctxt, g );
-  }
+  mGeos = asGeos( mGeometry );
 }
 
 QgsAbstractGeometryV2* QgsGeos::intersection( const QgsAbstractGeometryV2& geom, QString* errorMsg ) const
@@ -238,7 +214,7 @@ QgsAbstractGeometryV2* QgsGeos::combine( const QList< const QgsAbstractGeometryV
   geosGeometries.resize( geomList.size() );
   for ( int i = 0; i < geomList.size(); ++i )
   {
-    geosGeometries[i] = getReducedGeometry( asGeos( geomList.at( i ) ) );
+    geosGeometries[i] = asGeos( geomList.at( i ) );
   }
 
   GEOSGeometry* geomUnion = 0;
@@ -1096,7 +1072,7 @@ QgsAbstractGeometryV2* QgsGeos::overlay( const QgsAbstractGeometryV2& geom, Over
     return 0;
   }
 
-  GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
+  GEOSGeomScopedPtr geosGeom( asGeos( &geom ) );
   if ( !geosGeom )
   {
     return 0;
@@ -1156,7 +1132,7 @@ bool QgsGeos::relation( const QgsAbstractGeometryV2& geom, Relation r, QString* 
     return false;
   }
 
-  GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
+  GEOSGeomScopedPtr geosGeom( asGeos( &geom ) );
   if ( !geosGeom )
   {
     return false;
@@ -1414,7 +1390,7 @@ bool QgsGeos::isEqual( const QgsAbstractGeometryV2& geom, QString* errorMsg ) co
 
   try
   {
-    GEOSGeomScopedPtr geosGeom = getReducedGeometry( asGeos( &geom ) );
+    GEOSGeomScopedPtr geosGeom( asGeos( &geom ) );
     if ( !geosGeom )
     {
       return false;
