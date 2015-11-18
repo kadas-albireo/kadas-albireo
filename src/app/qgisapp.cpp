@@ -938,6 +938,8 @@ QgisApp::~QgisApp()
 {
   mMapCanvas->stopRendering();
   mMapCanvas->setMapTool( 0 );
+  disconnect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool *, QgsMapTool * ) ),
+              this, SLOT( mapToolChanged( QgsMapTool *, QgsMapTool * ) ) );
 
   delete mInternalClipboard;
   delete mQgisInterface;
@@ -8994,6 +8996,12 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     disconnect( oldTool, SIGNAL( messageEmitted( QString ) ), this, SLOT( displayMapToolMessage( QString ) ) );
     disconnect( oldTool, SIGNAL( messageEmitted( QString, QgsMessageBar::MessageLevel ) ), this, SLOT( displayMapToolMessage( QString, QgsMessageBar::MessageLevel ) ) );
     disconnect( oldTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
+  }
+  // Automatically return to pan tool if no tool is active
+  if ( !newTool && oldTool != mMapTools.mPan )
+  {
+    mMapCanvas->setMapTool( mMapTools.mPan );
+    return;
   }
 
   if ( newTool )
