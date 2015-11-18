@@ -92,21 +92,28 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mLineOfSightGroupBoxgroupBox->setTitle( tr( "Line of sight" ) );
   mLineOfSightGroupBoxgroupBox->setCheckable( true );
   connect( mLineOfSightGroupBoxgroupBox, SIGNAL( clicked( bool ) ), this, SLOT( updateLineOfSight() ) );
-  QHBoxLayout* layoutLOS = new QHBoxLayout();
+  QGridLayout* layoutLOS = new QGridLayout();
   layoutLOS->setContentsMargins( 2, 2, 2, 2 );
   mLineOfSightGroupBoxgroupBox->setLayout( layoutLOS );
-  layoutLOS->addWidget( new QLabel( "Observer height:" ), 0 );
+  layoutLOS->addWidget( new QLabel( "Observer height:" ), 0, 0 );
   mObserverHeightSpinBox = new QDoubleSpinBox();
   mObserverHeightSpinBox->setRange( 0, 8000 );
   mObserverHeightSpinBox->setDecimals( 1 );
+  mObserverHeightSpinBox->setSuffix( " m" );
+  mObserverHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mObserverHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
-  layoutLOS->addWidget( mObserverHeightSpinBox, 1 );
-  layoutLOS->addWidget( new QLabel( "Target height:" ), 0 );
+  layoutLOS->addWidget( mObserverHeightSpinBox, 0, 1 );
+  layoutLOS->addWidget( new QLabel( "Target height:" ), 0, 2 );
   mTargetHeightSpinBox = new QDoubleSpinBox();
   mTargetHeightSpinBox->setRange( 0, 8000 );
   mTargetHeightSpinBox->setDecimals( 1 );
+  mTargetHeightSpinBox->setSuffix( " m" );
+  mTargetHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
-  layoutLOS->addWidget( mTargetHeightSpinBox, 1 );
+  layoutLOS->addWidget( mTargetHeightSpinBox, 0, 3 );
+  QLabel* curvatureWarningLabel = new QLabel( tr( "<b>Note:</b> Earth curvature is not taken into account." ) );
+  curvatureWarningLabel->setStyleSheet( "QLabel { background: #9999FF; color: #FFFFFF; border-radius: 5px; padding: 2px; }" );
+  layoutLOS->addWidget( curvatureWarningLabel, 1, 0, 1, 4 );
   vboxLayout->addWidget( mLineOfSightGroupBoxgroupBox );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
@@ -317,7 +324,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
   QVector<QPointF> samples = static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->samples();
 #endif
 
-                  QVector< QVector<QPointF> > losSampleSet;
+  QVector< QVector<QPointF> > losSampleSet;
   losSampleSet.append( QVector<QPointF>() );
 
   QPointF p1( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
@@ -385,7 +392,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 
   mLineOfSightMarker = new QwtPlotMarker();
 #if QWT_VERSION < 0x060000
-  QwtSymbol observerMarkerSymbol(QwtSymbol::LTriangle, QBrush(Qt::white), QPen(Qt::black), QSize(8, 8));
+  QwtSymbol observerMarkerSymbol( QwtSymbol::LTriangle, QBrush( Qt::white ), QPen( Qt::black ), QSize( 8, 8 ) );
   mLineOfSightMarker->setSymbol( observerMarkerSymbol );
   mLineOfSightMarker->setValue( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
 #else
