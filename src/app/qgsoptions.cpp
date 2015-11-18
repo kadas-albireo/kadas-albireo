@@ -596,6 +596,8 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
 
   cmbLegendDoubleClickAction->setCurrentIndex( settings.value( "/qgis/legendDoubleClickAction", 0 ).toInt() );
 
+  mComboBoxAddLayerMode->setCurrentIndex( settings.value( "/qgis/layerLegendAddMode", 0 ).toInt() );
+
   // WMS getLegendGraphic setting
   mLegendGraphicResolutionSpinBox->setValue( settings.value( "/qgis/defaultLegendGraphicResolution", 0 ).toInt() );
 
@@ -1119,6 +1121,8 @@ void QgsOptions::saveOptions()
 
   settings.setValue( "/qgis/map_update_interval", spinMapUpdateInterval->value() );
   settings.setValue( "/qgis/legendDoubleClickAction", cmbLegendDoubleClickAction->currentIndex() );
+  settings.setValue( "/qgis/layerLegendAddMode", mComboBoxAddLayerMode->currentIndex() );
+
   bool legendLayersCapitalise = settings.value( "/qgis/capitaliseLayerName", false ).toBool();
   settings.setValue( "/qgis/capitaliseLayerName", capitaliseCheckBox->isChecked() );
   QgsMapCanvas::enableRotation( cbxCanvasRotation->isChecked() );
