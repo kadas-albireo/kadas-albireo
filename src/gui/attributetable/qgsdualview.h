@@ -135,6 +135,9 @@ class GUI_EXPORT QgsDualView : public QStackedWidget, private Ui::QgsDualViewBas
      * @return The master model
      */
     QgsAttributeTableModel* masterModel() const { return mMasterModel; }
+    QgsAttributeTableFilterModel* filterModel() const { return mFilterModel; }
+
+    const QgsAttributeTableView* tableView() const { return mTableView; }
 
     void setRequest( const QgsFeatureRequest& request );
 

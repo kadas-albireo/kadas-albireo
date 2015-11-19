@@ -24,6 +24,7 @@
 #include <memory>
 #include <deque>
 
+#include "qgsfeature.h"
 #include "qgsrectangle.h"
 #include "qgspoint.h"
 #include "qgis.h"
@@ -57,7 +58,6 @@ class QgsMapLayer;
 class QgsHighlight;
 class QgsVectorLayer;
 
-class QgsAnnotationItem;
 class QgsLabelingResults;
 class QgsMapRenderer;
 class QgsMapRendererCache;
@@ -155,9 +155,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! @note added in 2.4
     void clearCache();
 
-    //! Removes the cache for the specified layer
-    void clearCache( const QString& layerId );
-
     //! Set whether the layers are rendered in parallel or sequentially
     //! @note added in 2.4
     void setParallelRenderingEnabled( bool enabled );
@@ -237,6 +234,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     /** Zoom to the extent of the selected features of current (vector) layer.
       @param layer optionally specify different than current layer */
     void zoomToSelected( QgsVectorLayer* layer = NULL );
+
+    /** Set canvas extent to the bounding box of a feature*/
+    void zoomToFeatureId( QgsVectorLayer* layer, QgsFeatureId id );
 
     /** Pan to the selected features of current (vector) layer keeping same extent. */
     void panToSelected( QgsVectorLayer* layer = NULL );
@@ -400,18 +400,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
      */
     void setSnappingUtils( QgsSnappingUtils* utils );
 
-
-    /** Returns the annotation item at the specified position.
-     * @param pos The position.
-     * @return The annotation item at the specified position, or 0 if none.
-     */
-    QgsAnnotationItem* annotationItemAtPos( const QPoint &pos ) const;
-
-    /** Returns the selected annotation item.
-     * @return The selected annotation item, or 0 if none.
-     */
-    QgsAnnotationItem* selectedAnnotationItem() const;
-
   public slots:
 
     /**Repaints the canvas map*/
@@ -564,9 +552,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     bool event( QEvent * e ) override;
 #endif
 
-    //! Overridden context menu event
-    void contextMenuEvent( QContextMenuEvent *event ) override;
-
     //! Overridden key press event
     void keyPressEvent( QKeyEvent * e ) override;
 
@@ -599,6 +584,10 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     //! called when panning is in action, reset indicates end of panning
     void moveCanvasContents( bool reset = false );
+
+    //! Zooms to feature extent. Adds a small margin around the extent
+    //! and does a pan if rect is empty (point extent)
+    void zoomToFeatureExtent( QgsRectangle& rect );
 
     //! called on resize or changed extent to notify canvas items to change their rectangle
     void updateCanvasItemPositions();
