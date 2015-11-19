@@ -190,6 +190,9 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
     void updateFieldFromExpression();
     void updateFieldFromExpressionSelected();
 
+    void viewWillShowContextMenu( QMenu* menu, QModelIndex atIndex );
+    void zoomToFeature();
+
   private:
     QMenu* mMenuActions;
     QAction* mActionToggleEditing;
