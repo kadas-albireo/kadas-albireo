@@ -38,6 +38,7 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsserverlogger.h"
 #include "qgseditorwidgetregistry.h"
+#include "qgsmslayercache.h"
 
 #ifdef HAVE_SERVER_PYTHON_PLUGINS
 #include "qgsserverplugins.h"
@@ -55,7 +56,6 @@
 #include <fcgi_stdio.h>
 
 #if defined( Q_OS_UNIX )
-#include "qgsmslayercache.h"
 #include <signal.h>
 #include <execinfo.h>
 
