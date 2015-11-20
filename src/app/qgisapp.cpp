@@ -5330,7 +5330,15 @@ void QgisApp::checkForDeprecatedLabelsInProject()
 
 void QgisApp::layerProperties()
 {
-  showLayerProperties( activeLayer() );
+  QgsMapLayer* layer = activeLayer();
+  if ( layer )
+  {
+    showLayerProperties( layer );
+  }
+  else
+  {
+    groupProperties();
+  }
 }
 
 void QgisApp::groupProperties()
