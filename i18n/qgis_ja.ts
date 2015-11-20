@@ -81,6 +81,17 @@
     </message>
 </context>
 <context>
+    <name>AbstractTool</name>
+    <message>
+        <source>The requested feature does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The feature geometry could not be fetched</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddModelFromFileAction</name>
     <message>
         <source>Add model from file</source>
@@ -5565,7 +5576,7 @@ and python executables.
 
 MacOS users usually need to set it to something like
 /Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
-        <translation>コロン(LinuxとMac)またはセミコロン(Windows)で区切られた
+        <translation type="obsolete">コロン(LinuxとMac)またはセミコロン(Windows)で区切られた
 バイナリとPython実行可能ファイルへのパスのリスト.
 
 MacOSユーザは通常これを以下のように設定する必要があります
@@ -5574,13 +5585,13 @@ MacOSユーザは通常これを以下のように設定する必要がありま
     <message>
         <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
-        <translation>コロン(LinuxとMac)またはセミコロン(Windows)で区切られた
+        <translation type="obsolete">コロン(LinuxとMac)またはセミコロン(Windows)で区切られた
 Pythonモジュールへのパスのリスト.</translation>
     </message>
     <message>
         <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
-        <translation>ツールダイアログのヘルプボタンをクリックすると
+        <translation type="obsolete">ツールダイアログのヘルプボタンをクリックすると
 便利なことにオンラインヘルプの代わりにローカルのGDAL文書を開きます.</translation>
     </message>
     <message>
@@ -5594,6 +5605,28 @@ when pressing on the tool dialog&apos;s Help button.</source>
     <message>
         <source>Select directory with the GDAL documentation</source>
         <translation>GDALドキュメントがあるディレクトリを選択してください</translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to both binaries
+and python executables.
+
+MacOS users usually need to set it to something like
+/Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to python modules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Useful to open local GDAL documentation instead of online help
+when pressing on the tool dialog&apos;s Help button.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6296,6 +6329,13 @@ JPEG,JPEG2000,MrSID,ECW,のようなカラー索引をサポートしないデ�
     </message>
 </context>
 <context>
+    <name>GenericGeoprocessingToolDialog</name>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoAlgorithm</name>
     <message>
         <source>Uncaught error while executing algorithm</source>
@@ -6519,6 +6559,298 @@ Please choose another field...</source>
     </message>
 </context>
 <context>
+    <name>Geoprocessing::AbstractBinaryToolDialog</name>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">選択された地物のみ</translation>
+    </message>
+    <message>
+        <source>Operator layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished">入力レイヤ</translation>
+    </message>
+    <message>
+        <source>Combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer fields:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer CRS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::BufferToolDialog</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">バッファ</translation>
+    </message>
+    <message>
+        <source>Buffer distance value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buffer distance field:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Round</source>
+        <translation type="unfinished">丸み</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished">平坦</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">角型</translation>
+    </message>
+    <message>
+        <source>Mitre</source>
+        <translation type="unfinished">留め継ぎ</translation>
+    </message>
+    <message>
+        <source>Bevel</source>
+        <translation type="unfinished">角形</translation>
+    </message>
+    <message>
+        <source>Single sided</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve buffer results</source>
+        <translation type="unfinished">バッファの結果を融合</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Segments:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cap style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre limit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">融合</translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be non-zero for polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be positive for point and line layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::ConvexHullToolDialog</name>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::DissolveToolDialog</name>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">融合</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingErrorDialog</name>
+    <message>
+        <source>Select faulty features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing/incomplete features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry errors</source>
+        <translation type="unfinished">ジオメトリエラー</translation>
+    </message>
+    <message>
+        <source>%1 features could not be written</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingToolDialog</name>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">実行</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Canceled&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Completed&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%p% (Step %1/%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::SliverPolygonToolDialog</name>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">微細ポリゴンを除去する</translation>
+    </message>
+    <message>
+        <source>Largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longest shared boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer must be a polygon layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::GroupUI</name>
+    <message>
+        <source>%1 all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by attribute:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by expression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid expression:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">全ての</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::SummarizeUI</name>
+    <message>
+        <source>First</source>
+        <translation type="unfinished">最初</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sum</source>
+        <translation type="unfinished">合計</translation>
+    </message>
+    <message>
+        <source>Mean</source>
+        <translation type="unfinished">平均値</translation>
+    </message>
+    <message>
+        <source>Min</source>
+        <translation type="unfinished">最小</translation>
+    </message>
+    <message>
+        <source>Max</source>
+        <translation type="unfinished">最大</translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">範囲</translation>
+    </message>
+    <message>
+        <source>StdDev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Null</source>
+        <translation type="unfinished">ヌル</translation>
+    </message>
+    <message>
+        <source>Summarize numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Summarize non-numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoprocessingDialog</name>
     <message>
         <source>Dissolve all</source>
@@ -6679,6 +7011,64 @@ Feature geometry error: One or more output features ignored due to invalid geome
 GEOS geoprocessing error: One or more input features have invalid geometry.</source>
         <translation>
 GEOS空間演算エラー:1個またはそれ以上の数の地物のジオメトリが不正です.</translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingErrorDialog</name>
+    <message>
+        <source>Errors</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Errors occurred while executing the process:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt; You can check for geometry errors via &lt;span style=&quot; font-style:italic;&quot;&gt;Vector-&amp;gt;Geometry Tools-&amp;gt;Check geometry validity&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingToolDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished">ダイアログ</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">選択された地物のみ</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">出力</translation>
+    </message>
+    <message>
+        <source>Add result to canvas</source>
+        <translation type="unfinished">結果をキャンバスに追加する</translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">ブラウズ</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">オプション</translation>
+    </message>
+    <message>
+        <source>1E-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Precision:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7895,6 +8285,17 @@ are stored on the installation folder</source>
     <message>
         <source>Intersection</source>
         <translation>交差</translation>
+    </message>
+</context>
+<context>
+    <name>IntersectionTool</name>
+    <message>
+        <source>Dimensionality of the input layer must be less or equal the dimensionality of the operator layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9284,6 +9685,14 @@ Shift+クリックで非表示
     <message>
         <source>New temporary scratch layer</source>
         <translation>新しい一時スクラッチレイヤ</translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12321,7 +12730,7 @@ Error(%2): %3</source>
     </message>
     <message>
         <source>GEOS prior to 3.2 doesn&apos;t support GEOSInterpolate</source>
-        <translation>GEOS 3.2以前のバージョンではGEOSInterpolateに対応していません</translation>
+        <translation type="obsolete">GEOS 3.2以前のバージョンではGEOSInterpolateに対応していません</translation>
     </message>
     <message>
         <source>segment %1 of ring %2 of polygon %3 intersects segment %4 of ring %5 of polygon %6 at %7</source>
@@ -14472,6 +14881,14 @@ Response was:
         <source>Are you sure you want to delete %1?</source>
         <translation>%1を削除します. よろしいですか?</translation>
     </message>
+    <message>
+        <source>VectorAnalysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tools for vector data analysis and management</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -14707,7 +15124,7 @@ Response was:
     </message>
     <message>
         <source>QGIS </source>
-        <translation>QGIS</translation>
+        <translation type="obsolete">QGIS</translation>
     </message>
     <message>
         <source>Multiple instances of QGIS application object detected.
@@ -15824,6 +16241,10 @@ Always ignore these errors?</source>
         <source>A problem occured during deletion of %1 feature(s)</source>
         <translation>%1個の地物の削除中に問題が発生しました</translation>
     </message>
+    <message>
+        <source>QGIS Enterprise </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgisAppInterface</name>
@@ -15851,14 +16272,14 @@ Always ignore these errors?</source>
     </message>
     <message>
         <source>License</source>
-        <translation>ライセンス</translation>
+        <translation type="obsolete">ライセンス</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -15877,7 +16298,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Join our user mailing list</source>
-        <translation>私たちのユーザーメーリングリストに参加してください</translation>
+        <translation type="obsolete">私たちのユーザーメーリングリストに参加してください</translation>
     </message>
     <message>
         <source>about:blank</source>
@@ -15885,7 +16306,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>What&apos;s New</source>
-        <translation>What&apos;s New</translation>
+        <translation type="obsolete">What&apos;s New</translation>
     </message>
     <message>
         <source>Providers</source>
@@ -15893,27 +16314,27 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers</source>
-        <translation>開発者</translation>
+        <translation type="obsolete">開発者</translation>
     </message>
     <message>
         <source>Essen (Germany), Developer meeting 2012</source>
-        <translation>Essen (Germany), デベロッパーミーティング 2012</translation>
+        <translation type="obsolete">Essen (Germany), デベロッパーミーティング 2012</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>貢献者</translation>
+        <translation type="obsolete">貢献者</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation>翻訳者</translation>
+        <translation type="obsolete">翻訳者</translation>
     </message>
     <message>
         <source>Donors</source>
-        <translation>寄贈者</translation>
+        <translation type="obsolete">寄贈者</translation>
     </message>
     <message>
         <source>&lt;p&gt;For a list of individuals and institutions who have contributed money to fund QGIS development and other project costs see &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;QGISの開発とその他のプロジェクトにかかる費用を寄付した個人と機関のリストは次のWEBページで閲覧できます. &lt;a href=&quot;http://qgis.org/ja/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/ja/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation type="obsolete">&lt;p&gt;QGISの開発とその他のプロジェクトにかかる費用を寄付した個人と機関のリストは次のWEBページで閲覧できます. &lt;a href=&quot;http://qgis.org/ja/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/ja/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Available QGIS Data Provider Plugins</source>
@@ -15933,7 +16354,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers Map</source>
-        <translation>開発者マップ</translation>
+        <translation type="obsolete">開発者マップ</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS Enterprise&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17019,6 +17447,10 @@ Parser error:
         <source>, spatially limited</source>
         <translation>, 空間的な制限あり</translation>
     </message>
+    <message>
+        <source>Zoom to feature</source>
+        <translation type="unfinished">地物にズームする</translation>
+    </message>
 </context>
 <context>
     <name>QgsAttributeTableModel</name>
@@ -17577,7 +18009,19 @@ Database: %2</source>
     </message>
     <message>
         <source>Legend</source>
-        <translation>凡例</translation>
+        <translation type="obsolete">凡例</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">ラベル</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -27418,6 +27862,912 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGeometryAngleCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete node with small angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAreaCheck</name>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with identical attribute value, if any, or leave as is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">地物の削除</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal area</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryChecker</name>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerDialog</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished">結果</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixDialog</name>
+    <message>
+        <source>Fix errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation type="unfinished">次</translation>
+    </message>
+    <message>
+        <source>Fix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select how to fix error &quot;%1&quot;:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Fixed:&lt;/b&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;span color=&quot;red&quot;&gt;&lt;b&gt;Fixed failed:&lt;/b&gt; %1&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Error is obsolete&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixSummaryDialog</name>
+    <message>
+        <source>Summary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">値</translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 new errors were found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were not fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors are obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerPlugin</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">ジオメトリツール(&amp;E)</translation>
+    </message>
+    <message>
+        <source>Geometry Checker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check geometries for errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">ベクタ</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">バージョン0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerResultTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">フォーム</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Geometry check result:&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">値</translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished">解像度</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished">エクスポート</translation>
+    </message>
+    <message>
+        <source>Total errors: 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When a row is selected, move to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">地物</translation>
+    </message>
+    <message>
+        <source>Don&apos;t &amp;move</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight contour of selected features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors using default resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors, prompt for resolution method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error resolution settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show selected features in attribute table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute to use when merging features by attribute value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total errors: %1, fixed errors: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fixed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ESRI Shapefile (*.shp);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to export errors to shapefile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to fix %1 errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Error Resolutions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The layer has been removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerSetupTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">フォーム</translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">選択された地物のみ</translation>
+    </message>
+    <message>
+        <source>Geometry validity:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than 3 nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed geometry types:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">点</translation>
+    </message>
+    <message>
+        <source>Multipoint</source>
+        <translation type="unfinished">マルチポイント</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">ライン</translation>
+    </message>
+    <message>
+        <source>Multiline</source>
+        <translation type="unfinished">マルチライン</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">ポリゴン</translation>
+    </message>
+    <message>
+        <source>Multipolygon</source>
+        <translation type="unfinished">マルチポリゴン</translation>
+    </message>
+    <message>
+        <source>Geometry properties:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygons and multipolygons may not contain any holes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart objects must consist of more that one part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry conditions:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum angle between segments (deg):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal polygon area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No sliver polygons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum thinness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Thinness is the ratio between the area of the minimum square containing the polygon and the area of the polygon itself. A square has thinness 1. Default: 20.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Topology checks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for overlaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for gaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for features within other features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;new layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">ブラウズ</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">実行</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as the input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editable Input Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The input layer is not allowed to be in editing mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Preparing output...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. The geometry check can be performed, but it will not be possible to fix any errors. Do you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Building spatial index...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Waiting for running checks to finish...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheck</name>
+    <message>
+        <source>Feature %1 within feature %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">地物の削除</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Within</source>
+        <translation type="unfinished">範囲内</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheckError</name>
+    <message>
+        <source>Within %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDegeneratePolygonCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">地物の削除</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than three nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateCheck</name>
+    <message>
+        <source>Duplicate check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateNodesCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryGapCheck</name>
+    <message>
+        <source>Gap check: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add gap area to neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryHoleCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryMultipartCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to single part feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">地物の削除</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart object with only one feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryOverlapCheck</name>
+    <message>
+        <source>Overlap check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to compute intersection between overlapping features: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find shared edges between intersection and overlapping features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove overlapping area from neighboring polygon with shortest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySegmentLengthCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySelfIntersectionCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into a multi-object feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into multiple single-object features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySliverPolygonCheck</name>
+    <message>
+        <source>Sliver polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapper</name>
+    <message>
+        <source>Failed to read feature %1 of input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperDialog</name>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">選択された地物のみ</translation>
+    </message>
+    <message>
+        <source>Reference layer</source>
+        <translation type="unfinished">参照レイヤ</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">オプション</translation>
+    </message>
+    <message>
+        <source>Maximum snapping distance (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new &amp;layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">ブラウズ</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">実行</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as an input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. Please select another output file format.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The following errors occured:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperPlugin</name>
+    <message>
+        <source>Snap geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">ジオメトリツール(&amp;E)</translation>
+    </message>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snap geometries to a reference layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">ベクタ</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">バージョン0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheck</name>
+    <message>
+        <source>Unknown geometry type</source>
+        <translation type="unfinished">不明なジオメトリタイプ</translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to corresponding multi or single type if possible, otherwise delete feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">地物の削除</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry type</source>
+        <translation type="unfinished">ジオメトリタイプ</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheckError</name>
+    <message>
+        <source>Overlap with %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGeorefConfigDialog</name>
     <message>
         <source>A5 (148x210 mm)</source>
@@ -28292,6 +29642,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Legend</source>
         <translation>凡例</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32411,6 +33769,37 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
 </context>
 <context>
+    <name>QgsLegendGroupPropertiesBase</name>
+    <message>
+        <source>Legend group properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished">タイトル</translation>
+    </message>
+    <message>
+        <source>Abstract</source>
+        <translation type="unfinished">要約</translation>
+    </message>
+    <message>
+        <source>OWS Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLegendModel</name>
     <message>
         <source>Group</source>
@@ -32787,7 +34176,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Cannot add feature. Unknown WKB type</source>
-        <translation>地物を追加できません。不明なWKBタイプです</translation>
+        <translation type="obsolete">地物を追加できません。不明なWKBタイプです</translation>
     </message>
     <message>
         <source>The feature could not be added because removing the polygon intersections would change the geometry type</source>
@@ -32912,6 +34301,13 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Changed properties for label</source>
         <translation>ラベルプロパティを変更しました</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapToolCircularStringRadius</name>
+    <message>
+        <source>Radius: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33133,7 +34529,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     <name>QgsMapToolNodeTool</name>
     <message>
         <source>Node tool</source>
-        <translation>ノードツール</translation>
+        <translation type="obsolete">ノードツール</translation>
     </message>
     <message>
         <source>could not snap to a segment on the current layer.</source>
@@ -33142,6 +34538,10 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Inserted vertex</source>
         <translation>頂点を挿入しました</translation>
+    </message>
+    <message>
+        <source>Geometry has been cleared. Use the add part tool to set geometry for this feature.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34697,6 +36097,13 @@ Extended error information:
     <message>
         <source>File encoding</source>
         <translation>ファイルエンコーディング</translation>
+    </message>
+</context>
+<context>
+    <name>QgsNodeEditor</name>
+    <message>
+        <source>Vertex editor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39527,35 +40934,35 @@ SQL:%2
     </message>
     <message>
         <source>Point</source>
-        <translation>点</translation>
+        <translation type="obsolete">点</translation>
     </message>
     <message>
         <source>Multipoint</source>
-        <translation>マルチポイント</translation>
+        <translation type="obsolete">マルチポイント</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>ライン</translation>
+        <translation type="obsolete">ライン</translation>
     </message>
     <message>
         <source>Multiline</source>
-        <translation>マルチライン</translation>
+        <translation type="obsolete">マルチライン</translation>
     </message>
     <message>
         <source>Polygon</source>
-        <translation>ポリゴン</translation>
+        <translation type="obsolete">ポリゴン</translation>
     </message>
     <message>
         <source>Multipolygon</source>
-        <translation>マルチポリゴン</translation>
+        <translation type="obsolete">マルチポリゴン</translation>
     </message>
     <message>
         <source>No Geometry</source>
-        <translation>ジオメトリ無し</translation>
+        <translation type="obsolete">ジオメトリ無し</translation>
     </message>
     <message>
         <source>Unknown Geometry</source>
-        <translation>不明なジオメトリ</translation>
+        <translation type="obsolete">不明なジオメトリ</translation>
     </message>
     <message>
         <source>None</source>
@@ -40046,6 +41453,14 @@ Proceed?</source>
         <source>Error writing palette file</source>
         <translation>パレットファイル書き込みエラー</translation>
     </message>
+    <message>
+        <source>Publish group as single layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select group name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsProjectPropertiesBase</name>
@@ -40474,6 +41889,14 @@ Proceed?</source>
     <message>
         <source>Python macros</source>
         <translation>Pythonマクロ</translation>
+    </message>
+    <message>
+        <source>Publish group as layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exclusive layer groups</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42924,6 +44347,10 @@ standard deviation ×</source>
             <numerusform>フィルターは%n個の地物を返しました</numerusform>
         </translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
+    </message>
 </context>
 <context>
     <name>QgsRendererV2DataDefinedMenus</name>
@@ -43049,6 +44476,30 @@ standard deviation ×</source>
         <source>Change symbol size</source>
         <translation>シンボルサイズ変更</translation>
     </message>
+    <message>
+        <source>Complete html support for Html output in GetLegendGraphic. For raster output, &amp;lt;br&amp;gt;,&amp;lt;b&amp;gt;,&amp;lt;i&amp;gt;,&amp;lt;u&amp;gt; are supported. &amp;lt;b&amp;gt;&amp;lt;i&amp;gt;&amp;lt;u&amp;gt; can be nested in that order only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">点</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">ライン</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">ポリゴン</translation>
+    </message>
+    <message>
+        <source>Select symbology type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRuleBasedRendererV2Model</name>
@@ -43091,6 +44542,14 @@ standard deviation ×</source>
     <message>
         <source>Number of features in this rule which are also present in other rule(s).</source>
         <translation>このルールの地物で他のルールも適用されているものの数.</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -43174,6 +44633,10 @@ standard deviation ×</source>
     <message>
         <source>Abort</source>
         <translation>取り消し</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
     </message>
 </context>
 <context>
@@ -43544,6 +45007,13 @@ standard deviation ×</source>
     </message>
 </context>
 <context>
+    <name>QgsSelectGroupLayerDialogBase</name>
+    <message>
+        <source>Select layers and groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsSelectedFeature</name>
     <message>
         <source>Validation started.</source>
@@ -43562,23 +45032,23 @@ standard deviation ×</source>
     </message>
     <message>
         <source>polygon %1, ring %2, vertex %3</source>
-        <translation>ポリゴン %1 リング %2 頂点 %3</translation>
+        <translation type="obsolete">ポリゴン %1 リング %2 頂点 %3</translation>
     </message>
     <message>
         <source>polyline %1, vertex %2</source>
-        <translation>ポリライン %1 頂点 %2</translation>
+        <translation type="obsolete">ポリライン %1 頂点 %2</translation>
     </message>
     <message>
         <source>vertex %1</source>
-        <translation>頂点 %1</translation>
+        <translation type="obsolete">頂点 %1</translation>
     </message>
     <message>
         <source>point %1</source>
-        <translation>点 %1</translation>
+        <translation type="obsolete">点 %1</translation>
     </message>
     <message>
         <source>single point</source>
-        <translation>単一点</translation>
+        <translation type="obsolete">単一点</translation>
     </message>
 </context>
 <context>
@@ -43952,6 +45422,29 @@ enhancement</source>
     <message>
         <source>Symbol levels...</source>
         <translation>シンボルレベル...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSingleSymbolRendererV2WidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">フォーム</translation>
+    </message>
+    <message>
+        <source>WMS legend settings (GetLegendGraphic)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -47325,6 +48818,26 @@ Error was:%2</source>
         <source>Diagrams</source>
         <translation>ダイアグラム</translation>
     </message>
+    <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsVectorLayerSaveAsDialog</name>
@@ -50637,6 +52150,13 @@ Problem with line %d</source>
     </message>
 </context>
 <context>
+    <name>SymDifferenceTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SymbolsListWidget</name>
     <message>
         <source>Form</source>
@@ -50894,6 +52414,17 @@ Problem with line %d</source>
     </message>
 </context>
 <context>
+    <name>UnionTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UniqueValues</name>
     <message>
         <source>Input layer</source>
@@ -51002,6 +52533,53 @@ Problem with line %d</source>
     <message>
         <source>Buffer</source>
         <translation>バッファ</translation>
+    </message>
+</context>
+<context>
+    <name>VectorAnalysis</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">バッファ</translation>
+    </message>
+    <message>
+        <source>Clip</source>
+        <translation type="unfinished">クリップ</translation>
+    </message>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Difference</source>
+        <translation type="unfinished">差分</translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">融合</translation>
+    </message>
+    <message>
+        <source>Intersect</source>
+        <translation type="unfinished">交差</translation>
+    </message>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">微細ポリゴンを除去する</translation>
+    </message>
+    <message>
+        <source>Symmetric difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Union</source>
+        <translation type="unfinished">統合</translation>
+    </message>
+    <message>
+        <source>&amp;Geoprocessing Tools</source>
+        <translation type="unfinished">空間演算ツール(&amp;G)</translation>
+    </message>
+    <message>
+        <source>Intersection</source>
+        <translation type="unfinished">交差</translation>
     </message>
 </context>
 <context>
@@ -51509,6 +53087,10 @@ Problem with line %d</source>
     <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+    <message>
+        <source>on every curve point</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -55240,6 +56822,13 @@ To edit values, select the field to modify with the filter button on the left an
     <message>
         <source>Output file for contour lines (vector)</source>
         <translation>等高線(ベクタ)を出力するファイル名</translation>
+    </message>
+</context>
+<context>
+    <name>differencetool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -64080,6 +65669,17 @@ Format a date type or string into a custom string format. Uses Qt data time form
     <message>
         <source>Sieved</source>
         <translation>ふるいをかけた</translation>
+    </message>
+</context>
+<context>
+    <name>sliverpolygontool</name>
+    <message>
+        <source>Merge combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create multipolygon from merge results: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

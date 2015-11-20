@@ -81,6 +81,17 @@
     </message>
 </context>
 <context>
+    <name>AbstractTool</name>
+    <message>
+        <source>The requested feature does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The feature geometry could not be fetched</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddModelFromFileAction</name>
     <message>
         <source>Add model from file</source>
@@ -635,11 +646,15 @@ Open the results dialog to check it.</source>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
         <translation>Saknade datavärde, lämna tomt för att hämta värde från indata.</translation>
+    </message>
+    <message>
+        <source>Clipped</source>
+        <translation type="unfinished">Klippt</translation>
     </message>
 </context>
 <context>
@@ -743,7 +758,11 @@ Open the results dialog to check it.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Color relief</source>
+        <translation type="unfinished">Färgrelief</translation>
     </message>
 </context>
 <context>
@@ -3195,6 +3214,45 @@ Vill du verkligen fortsätta?</translation>
     </message>
 </context>
 <context>
+    <name>DinfDistDownMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished">D-Oändlighetsflödesriktningsrutnät</translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Hålfyllt höjdrutnät</translation>
+    </message>
+    <message>
+        <source>Stream Raster Grid</source>
+        <translation type="unfinished">Strömrasterrutnät</translation>
+    </message>
+    <message>
+        <source>Weight Path Grid</source>
+        <translation type="unfinished">Viktriktningsrutnät</translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished">Statistisk metod</translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished">Avståndsmetod</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Kontrollera kantförorening</translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished">D-oänlighetssänkning till strömningsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DinfDistUp</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
@@ -3231,6 +3289,45 @@ Vill du verkligen fortsätta?</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>DinfDistUpMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished">D-Oändlighetsflödesriktningsrutnät</translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Hålfyllt höjdrutnät</translation>
+    </message>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished">Lutningsrutnät</translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished">Statistisk metod</translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished">Avståndsmetod</translation>
+    </message>
+    <message>
+        <source>Proportion Threshold</source>
+        <translation type="unfinished">Proportionströskel</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Kontrollera kantförorening</translation>
+    </message>
+    <message>
+        <source>D-Infinity Distance Up</source>
+        <translation type="unfinished">D-oändlighetsavstånd upp</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3309,6 +3406,84 @@ Vill du verkligen fortsätta?</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccum2Multi</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished">D-Oändlighetsflödesriktningsrutnät</translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished">Understödsrutnät</translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished">Transportkapacitetsrutnät</translation>
+    </message>
+    <message>
+        <source>Input Concentration Grid</source>
+        <translation type="unfinished">Indata koncentrationsrutnät</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Shape-fil för uttag</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Kontrollera kantförorening</translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished">Transportbegränsat akumuleringsrutnät</translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
+        <translation type="unfinished">Depositionsrutnät</translation>
+    </message>
+    <message>
+        <source>Output Concentration Grid</source>
+        <translation type="unfinished">Utdata koncentrationsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccumMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished">D-Oändlighetsflödesriktningsrutnät</translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished">Understödsrutnät</translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished">Transportkapacitetsrutnät</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Shape-fil för uttag</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Kontrollera kantförorening</translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished">Transportbegränsat akumuleringsrutnät</translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
+        <translation type="unfinished">Depositionsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3944,6 +4119,53 @@ geometrikolumn - kolumn med unika heltalsvärden</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>DropAnalysisMulti</name>
+    <message>
+        <source>D8 Contributing Area Grid</source>
+        <translation type="unfinished">D8 Bidragande områdesrutnät</translation>
+    </message>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished">D8 flödesrikningsrutnät</translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Hålfyllt höjdrutnät</translation>
+    </message>
+    <message>
+        <source>Accumulated Stream Source Grid</source>
+        <translation type="unfinished">Ackumulerat strömkällsrutnät</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Shape-fil för uttag</translation>
+    </message>
+    <message>
+        <source>Minimum Threshold</source>
+        <translation type="unfinished">Lägsta tröskelvärde</translation>
+    </message>
+    <message>
+        <source>Maximum Threshold</source>
+        <translation type="unfinished">Högsta tröskelvärde</translation>
+    </message>
+    <message>
+        <source>Number of Threshold Values</source>
+        <translation type="unfinished">Antal tröskelvärden</translation>
+    </message>
+    <message>
+        <source>Spacing for Threshold Values</source>
+        <translation type="unfinished">Mellanrum för tröskelvärden</translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished">D-oänlighetssänkning till strömningsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5364,7 +5586,7 @@ and python executables.
 
 MacOS users usually need to set it to something like
 /Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
-        <translation>En lista med kolonseparerade (Linux och MacOS) eller
+        <translation type="obsolete">En lista med kolonseparerade (Linux och MacOS) eller
 semikolonseparerade (Windows) sökvägar till både binär-
 och python exekverbara filer.
 
@@ -5374,13 +5596,13 @@ MacOS-användare behöver normal sätta de till något som
     <message>
         <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
-        <translation>En lista med kolonseparerade (Linux och MacOS) eller
+        <translation type="obsolete">En lista med kolonseparerade (Linux och MacOS) eller
 semikolonseparerade (Windows) sökvägar till python-moduler.</translation>
     </message>
     <message>
         <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
-        <translation>Användbara för att öppna lokala GDAL-dokumentationen istället för onlinehjälp
+        <translation type="obsolete">Användbara för att öppna lokala GDAL-dokumentationen istället för onlinehjälp
 när knappen för hjälp i verktygsdialogerna.</translation>
     </message>
     <message>
@@ -5394,6 +5616,28 @@ när knappen för hjälp i verktygsdialogerna.</translation>
     <message>
         <source>Select directory with the GDAL documentation</source>
         <translation>Välj katalog med GDAL-dokumentation</translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to both binaries
+and python executables.
+
+MacOS users usually need to set it to something like
+/Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to python modules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Useful to open local GDAL documentation instead of online help
+when pressing on the tool dialog&apos;s Help button.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6096,6 +6340,13 @@ Det &apos;gråa&apos; värdet (från GDAL 1.7.0) möjliggör att expandera ett d
     </message>
 </context>
 <context>
+    <name>GenericGeoprocessingToolDialog</name>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoAlgorithm</name>
     <message>
         <source>Uncaught error while executing algorithm</source>
@@ -6320,6 +6571,298 @@ Var vänlig välj ett annat fält...</translation>
     </message>
 </context>
 <context>
+    <name>Geoprocessing::AbstractBinaryToolDialog</name>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Endast valda objekt</translation>
+    </message>
+    <message>
+        <source>Operator layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished">Indatalager</translation>
+    </message>
+    <message>
+        <source>Combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer fields:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer CRS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::BufferToolDialog</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">Buffer</translation>
+    </message>
+    <message>
+        <source>Buffer distance value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buffer distance field:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Round</source>
+        <translation type="unfinished">Rund</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished">Platt</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre</source>
+        <translation type="unfinished">Gering</translation>
+    </message>
+    <message>
+        <source>Bevel</source>
+        <translation type="unfinished">Sned</translation>
+    </message>
+    <message>
+        <source>Single sided</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve buffer results</source>
+        <translation type="unfinished">Lös ut buffertresultat</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Segments:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cap style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre limit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Lös ut</translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be non-zero for polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be positive for point and line layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::ConvexHullToolDialog</name>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::DissolveToolDialog</name>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Lös ut</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingErrorDialog</name>
+    <message>
+        <source>Select faulty features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing/incomplete features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry errors</source>
+        <translation type="unfinished">Geometrifel</translation>
+    </message>
+    <message>
+        <source>%1 features could not be written</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingToolDialog</name>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Kör</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Canceled&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Completed&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%p% (Step %1/%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::SliverPolygonToolDialog</name>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">Eliminera polygonstrimlor</translation>
+    </message>
+    <message>
+        <source>Largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longest shared boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer must be a polygon layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::GroupUI</name>
+    <message>
+        <source>%1 all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by attribute:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by expression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid expression:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Alla</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::SummarizeUI</name>
+    <message>
+        <source>First</source>
+        <translation type="unfinished">Först</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Count</source>
+        <translation type="unfinished">Antal</translation>
+    </message>
+    <message>
+        <source>Sum</source>
+        <translation type="unfinished">Summa</translation>
+    </message>
+    <message>
+        <source>Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min</source>
+        <translation type="unfinished">Min</translation>
+    </message>
+    <message>
+        <source>Max</source>
+        <translation type="unfinished">Max</translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">Intervall</translation>
+    </message>
+    <message>
+        <source>StdDev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Null</source>
+        <translation type="unfinished">Null</translation>
+    </message>
+    <message>
+        <source>Summarize numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Summarize non-numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoprocessingDialog</name>
     <message>
         <source>Dissolve all</source>
@@ -6476,6 +7019,64 @@ Feature geometry error: One or more output features ignored due to invalid geome
         <source>
 GEOS geoprocessing error: One or more input features have invalid geometry.</source>
         <translation>GEOS geobearbetningssfel: En eller flera indataobjekt har ogiltig geometri.</translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingErrorDialog</name>
+    <message>
+        <source>Errors</source>
+        <translation type="unfinished">Fel</translation>
+    </message>
+    <message>
+        <source>Errors occurred while executing the process:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt; You can check for geometry errors via &lt;span style=&quot; font-style:italic;&quot;&gt;Vector-&amp;gt;Geometry Tools-&amp;gt;Check geometry validity&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingToolDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished">Dialog</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Vektorlager med indata</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Endast valda objekt</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">Utdata</translation>
+    </message>
+    <message>
+        <source>Add result to canvas</source>
+        <translation type="unfinished">Lägg till resultat i kartfönster</translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Bläddra</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Inställningar</translation>
+    </message>
+    <message>
+        <source>1E-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Precision:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6802,7 +7403,7 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Utdata</translation>
+        <translation type="obsolete">Utdata</translation>
     </message>
     <message>
         <source>Invalid grid spacing: %s/%s</source>
@@ -6815,6 +7416,10 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     <message>
         <source>Vertical spacing is too small for the covered area</source>
         <translation>Vertikalt avstånd är för litet för den täckta ytan</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Rutnät</translation>
     </message>
 </context>
 <context>
@@ -6853,7 +7458,11 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6896,7 +7505,11 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Interpolated metrics</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6943,11 +7556,15 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
     </message>
     <message>
         <source>Smoothing</source>
         <translation>Utjämning</translation>
+    </message>
+    <message>
+        <source>Interpolated IDW</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7025,7 +7642,11 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Interpolated nearest neighbor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7061,6 +7682,41 @@ Vänligen installera det före körning av GRASS algoritmer.</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>GridNetMulti</name>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished">D8 flödesrikningsrutnät</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Shape-fil för uttag</translation>
+    </message>
+    <message>
+        <source>Mask Grid</source>
+        <translation type="unfinished">Maskeringsrutnät</translation>
+    </message>
+    <message>
+        <source>Mask Threshold</source>
+        <translation type="unfinished">Maskeringströskel</translation>
+    </message>
+    <message>
+        <source>Longest Upslope Length Grid</source>
+        <translation type="unfinished">Längsta rutnät i uppförsbacke</translation>
+    </message>
+    <message>
+        <source>Total Upslope Length Grid</source>
+        <translation type="unfinished">Total rutnätslängd i uppförsbacke</translation>
+    </message>
+    <message>
+        <source>Strahler Network Order Grid</source>
+        <translation type="unfinished">Strahler nätverksordningsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7560,6 +8216,10 @@ exempelmodell eller ett exempelskript, då dessa
         <source>Elevation</source>
         <translation>Höjd</translation>
     </message>
+    <message>
+        <source>Feature %d is smaller than raster cell size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImportIntoPostGIS</name>
@@ -7655,6 +8315,17 @@ exempelmodell eller ett exempelskript, då dessa
     <message>
         <source>Intersection</source>
         <translation>Skärning</translation>
+    </message>
+</context>
+<context>
+    <name>IntersectionTool</name>
+    <message>
+        <source>Dimensionality of the input layer must be less or equal the dimensionality of the operator layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7894,6 +8565,33 @@ Please configure it before running LAStools algorithms.</source>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>LengthAreaMulti</name>
+    <message>
+        <source>Length Grid</source>
+        <translation type="unfinished">Längdrutnät</translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished">Bidragande områdesrutnät</translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation type="unfinished">Tröskelvärde</translation>
+    </message>
+    <message>
+        <source>Exponent</source>
+        <translation type="unfinished">Exponent</translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished">Strömkällsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9017,6 +9715,14 @@ Fungear på aktuellt redigerbart lager</translation>
         <source>New temporary scratch layer</source>
         <translation>Nytt temporärt skisslager</translation>
     </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ManageConnectionsDialog</name>
@@ -9447,6 +10153,10 @@ Fungear på aktuellt redigerbart lager</translation>
     <message>
         <source>seconds</source>
         <translation>sekunder</translation>
+    </message>
+    <message>
+        <source>Record parsing error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9912,6 +10622,10 @@ Se loggen för mer information.</translation>
     <message>
         <source>Overwrite %s?</source>
         <translation>Skriv över %s?</translation>
+    </message>
+    <message>
+        <source>Name cannot contain &apos;/&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10581,6 +11295,33 @@ Var vänlig och kontrollera konfigurationen i dialogen Bearbetningsinställninga
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>Fel antal MPI processer användes. Var vänlig ange korrekt antal innan du kör TauDEM algoritmer.</translation>
+    </message>
+</context>
+<context>
+    <name>PeukerDouglasMulti</name>
+    <message>
+        <source>Elevation Grid</source>
+        <translation type="unfinished">Höjdrutnät</translation>
+    </message>
+    <message>
+        <source>Center Smoothing Weight</source>
+        <translation type="unfinished">Centrerad utjämningsvikt</translation>
+    </message>
+    <message>
+        <source>Side Smoothing Weight</source>
+        <translation type="unfinished">Sidoutjämningsvikt</translation>
+    </message>
+    <message>
+        <source>Diagonal Smoothing Weight</source>
+        <translation type="unfinished">Diagonal utjämningsvikt</translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished">Strömkällsrutnät</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12016,7 +12757,7 @@ Fel(%2): %3</translation>
     </message>
     <message>
         <source>GEOS prior to 3.2 doesn&apos;t support GEOSInterpolate</source>
-        <translation>GEOS tidigare än 3.2 stödde inte GEOSInterpolate</translation>
+        <translation type="obsolete">GEOS tidigare än 3.2 stödde inte GEOSInterpolate</translation>
     </message>
     <message>
         <source>segment %1 of ring %2 of polygon %3 intersects segment %4 of ring %5 of polygon %6 at %7</source>
@@ -14122,7 +14863,7 @@ Svaret var:
     </message>
     <message>
         <source>Fatal error occurred in GRASS library. QGIS gets over the error but any next fatal error will cause QGIS exit without warning. This is a problem of GRASS 7.0.0beta1 but it is fixed in GRASS 7.1 and higher. Error message: %1</source>
-        <translation>Ett allvarligt fel uppstod i GRASS-biblioteket. QGIS kan komma förbi felet men nästa allvarliga fel kommer att få QGIS att krascha utan varning. Detta är ett problem med GRASS 7.0.0beta1 men är löst i GRASS 7.1 och högre. Felmeddelande: %1</translation>
+        <translation type="obsolete">Ett allvarligt fel uppstod i GRASS-biblioteket. QGIS kan komma förbi felet men nästa allvarliga fel kommer att få QGIS att krascha utan varning. Detta är ett problem med GRASS 7.0.0beta1 men är löst i GRASS 7.1 och högre. Felmeddelande: %1</translation>
     </message>
     <message>
         <source>Raster image fill</source>
@@ -14139,6 +14880,50 @@ Svaret var:
     <message>
         <source>NOTICE: %1</source>
         <translation>OBSERVERA: %1</translation>
+    </message>
+    <message>
+        <source>Recent colors</source>
+        <translation type="unfinished">Senast använda färger</translation>
+    </message>
+    <message>
+        <source>Standard colors</source>
+        <translation type="unfinished">Standardfärger</translation>
+    </message>
+    <message>
+        <source>Project colors</source>
+        <translation type="unfinished">Projektfärger</translation>
+    </message>
+    <message>
+        <source>Number of places must be positive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VectorAnalysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tools for vector data analysis and management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete the connection to %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1.%2?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -14375,7 +15160,7 @@ Svaret var:
     </message>
     <message>
         <source>QGIS </source>
-        <translation>QGIS </translation>
+        <translation type="obsolete">QGIS </translation>
     </message>
     <message>
         <source>Multiple instances of QGIS application object detected.
@@ -15498,6 +16283,10 @@ Ignorera alltid dessa fel?</translation>
         <source>A problem occured during deletion of %1 feature(s)</source>
         <translation>Ett problem uppstod under radering av %1 objekt</translation>
     </message>
+    <message>
+        <source>QGIS Enterprise </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgisAppInterface</name>
@@ -15525,14 +16314,14 @@ Ignorera alltid dessa fel?</translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Licens</translation>
+        <translation type="obsolete">Licens</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -15551,7 +16340,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Join our user mailing list</source>
-        <translation>Anmäl dig till vår epostlista för användare</translation>
+        <translation type="obsolete">Anmäl dig till vår epostlista för användare</translation>
     </message>
     <message>
         <source>about:blank</source>
@@ -15559,7 +16348,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>What&apos;s New</source>
-        <translation>Nyheter</translation>
+        <translation type="obsolete">Nyheter</translation>
     </message>
     <message>
         <source>Providers</source>
@@ -15567,27 +16356,27 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers</source>
-        <translation>Utvecklare</translation>
+        <translation type="obsolete">Utvecklare</translation>
     </message>
     <message>
         <source>Essen (Germany), Developer meeting 2012</source>
-        <translation>Essen (Tyskland), utvecklarmöte 2012</translation>
+        <translation type="obsolete">Essen (Tyskland), utvecklarmöte 2012</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>Medarbetare</translation>
+        <translation type="obsolete">Medarbetare</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation>Översättare</translation>
+        <translation type="obsolete">Översättare</translation>
     </message>
     <message>
         <source>Donors</source>
-        <translation>Donatorer</translation>
+        <translation type="obsolete">Donatorer</translation>
     </message>
     <message>
         <source>&lt;p&gt;For a list of individuals and institutions who have contributed money to fund QGIS development and other project costs see &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;För en fullständig lista på personer och instutioner som har bidragit med pengar till QGIS utveckling och andra projekt se &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation type="obsolete">&lt;p&gt;För en fullständig lista på personer och instutioner som har bidragit med pengar till QGIS utveckling och andra projekt se &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Available QGIS Data Provider Plugins</source>
@@ -15607,7 +16396,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers Map</source>
-        <translation>Utvecklarkarta</translation>
+        <translation type="obsolete">Utvecklarkarta</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS Enterprise&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -16635,7 +17431,7 @@ Tolkningsfel:
     </message>
     <message>
         <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4</source>
-        <translation>Attributtabell - %1 :: Totalt antal objekt: %2, filtrerade: %3, valda: %4</translation>
+        <translation type="obsolete">Attributtabell - %1 :: Totalt antal objekt: %2, filtrerade: %3, valda: %4</translation>
     </message>
     <message>
         <source>Update Filtered</source>
@@ -16682,6 +17478,26 @@ Tolkningsfel:
     <message>
         <source>Update Selected</source>
         <translation>Uppdatera Markerade</translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation type="unfinished">Ctrl+R</translation>
+    </message>
+    <message>
+        <source>Show All Features In Initial Canvas Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4%5</source>
+        <translation type="unfinished">Attributtabell - %1 :: Totalt antal objekt: %2, filtrerade: %3, valda: %4%5 {1 ?} {2,?} {3,?}</translation>
+    </message>
+    <message>
+        <source>, spatially limited</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom to feature</source>
+        <translation type="unfinished">Zooma till objekt</translation>
     </message>
 </context>
 <context>
@@ -17243,7 +18059,19 @@ Databas: %2</translation>
     </message>
     <message>
         <source>Legend</source>
-        <translation>Teckenförklaring</translation>
+        <translation type="obsolete">Teckenförklaring</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17286,7 +18114,7 @@ Databas: %2</translation>
     </message>
     <message>
         <source>Join</source>
-        <translation>Slå ihop</translation>
+        <translation type="obsolete">Slå ihop</translation>
     </message>
     <message>
         <source>Advanced</source>
@@ -22874,7 +23702,7 @@ och nuvarande fil är [%3]</translation>
     <name>QgsCustomColorScheme</name>
     <message>
         <source>Standard colors</source>
-        <translation>Standardfärger</translation>
+        <translation type="obsolete">Standardfärger</translation>
     </message>
 </context>
 <context>
@@ -24040,6 +24868,18 @@ visas inte</translation>
     <message>
         <source>The file has been updated by another application - reloading</source>
         <translation>Filen har uppdaterats av en annan applikation - återladdas</translation>
+    </message>
+    <message>
+        <source>Whole number (integer)</source>
+        <translation type="unfinished">Heltal (integer)</translation>
+    </message>
+    <message>
+        <source>Decimal number (double)</source>
+        <translation type="unfinished">Decimaltal (double)</translation>
+    </message>
+    <message>
+        <source>Text, unlimited length (text)</source>
+        <translation type="unfinished">Text, obegränsad längd (text)</translation>
     </message>
 </context>
 <context>
@@ -25369,6 +26209,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Load all unique values</source>
         <translation>Läs in alla unika värden</translation>
+    </message>
+    <message>
+        <source>%1...</source>
+        <translation type="unfinished">%1...</translation>
     </message>
 </context>
 <context>
@@ -27085,6 +27929,912 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGeometryAngleCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete node with small angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAreaCheck</name>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with identical attribute value, if any, or leave as is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ta bort objekt</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal area</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryChecker</name>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerDialog</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished">Resultat</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixDialog</name>
+    <message>
+        <source>Fix errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation type="unfinished">Nästa</translation>
+    </message>
+    <message>
+        <source>Fix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select how to fix error &quot;%1&quot;:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Fixed:&lt;/b&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;span color=&quot;red&quot;&gt;&lt;b&gt;Fixed failed:&lt;/b&gt; %1&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Error is obsolete&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixSummaryDialog</name>
+    <message>
+        <source>Summary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Fel</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Värde</translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 new errors were found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were not fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors are obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerPlugin</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">G&amp;eometriverktyg</translation>
+    </message>
+    <message>
+        <source>Geometry Checker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check geometries for errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">Vektor</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">Version 0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerResultTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Formulär</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Geometry check result:&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Fel</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Värde</translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished">Upplösning</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished">Exportera</translation>
+    </message>
+    <message>
+        <source>Total errors: 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When a row is selected, move to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">Objekt</translation>
+    </message>
+    <message>
+        <source>Don&apos;t &amp;move</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight contour of selected features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors using default resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors, prompt for resolution method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error resolution settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show selected features in attribute table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute to use when merging features by attribute value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total errors: %1, fixed errors: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fixed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ESRI Shapefile (*.shp);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to export errors to shapefile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to fix %1 errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Error Resolutions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The layer has been removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerSetupTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Formulär</translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Vektorlager med indata</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Endast valda objekt</translation>
+    </message>
+    <message>
+        <source>Geometry validity:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than 3 nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed geometry types:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Punkt</translation>
+    </message>
+    <message>
+        <source>Multipoint</source>
+        <translation type="unfinished">Multipunkt</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Linje</translation>
+    </message>
+    <message>
+        <source>Multiline</source>
+        <translation type="unfinished">Multilinje</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Polygon</translation>
+    </message>
+    <message>
+        <source>Multipolygon</source>
+        <translation type="unfinished">Multipolygon</translation>
+    </message>
+    <message>
+        <source>Geometry properties:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygons and multipolygons may not contain any holes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart objects must consist of more that one part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry conditions:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum angle between segments (deg):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal polygon area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No sliver polygons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum thinness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Thinness is the ratio between the area of the minimum square containing the polygon and the area of the polygon itself. A square has thinness 1. Default: 20.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Topology checks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for overlaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for gaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for features within other features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;new layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Bläddra</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Kör</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as the input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editable Input Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The input layer is not allowed to be in editing mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Preparing output...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. The geometry check can be performed, but it will not be possible to fix any errors. Do you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Building spatial index...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Waiting for running checks to finish...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheck</name>
+    <message>
+        <source>Feature %1 within feature %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ta bort objekt</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Within</source>
+        <translation type="unfinished">Innanför</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheckError</name>
+    <message>
+        <source>Within %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDegeneratePolygonCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ta bort objekt</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than three nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateCheck</name>
+    <message>
+        <source>Duplicate check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateNodesCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryGapCheck</name>
+    <message>
+        <source>Gap check: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add gap area to neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryHoleCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryMultipartCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to single part feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ta bort objekt</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart object with only one feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryOverlapCheck</name>
+    <message>
+        <source>Overlap check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to compute intersection between overlapping features: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find shared edges between intersection and overlapping features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove overlapping area from neighboring polygon with shortest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySegmentLengthCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySelfIntersectionCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into a multi-object feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into multiple single-object features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySliverPolygonCheck</name>
+    <message>
+        <source>Sliver polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapper</name>
+    <message>
+        <source>Failed to read feature %1 of input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperDialog</name>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Vektorlager med indata</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Endast valda objekt</translation>
+    </message>
+    <message>
+        <source>Reference layer</source>
+        <translation type="unfinished">Referenslager</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Inställningar</translation>
+    </message>
+    <message>
+        <source>Maximum snapping distance (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new &amp;layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Bläddra</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Kör</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as an input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. Please select another output file format.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The following errors occured:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperPlugin</name>
+    <message>
+        <source>Snap geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">G&amp;eometriverktyg</translation>
+    </message>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snap geometries to a reference layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">Vektor</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">Version 0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheck</name>
+    <message>
+        <source>Unknown geometry type</source>
+        <translation type="unfinished">Okänd geometrityp</translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to corresponding multi or single type if possible, otherwise delete feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ta bort objekt</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry type</source>
+        <translation type="unfinished">Geometrityp</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheckError</name>
+    <message>
+        <source>Overlap with %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGeorefConfigDialog</name>
     <message>
         <source>A5 (148x210 mm)</source>
@@ -27960,6 +29710,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Legend</source>
         <translation>Teckenförklaring</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -29506,7 +31264,7 @@ vid rad %2 kolumn %3</translation>
     </message>
     <message>
         <source>Cannot activate grass</source>
-        <translation>Kan inte aktivera grass</translation>
+        <translation type="obsolete">Kan inte aktivera grass</translation>
     </message>
 </context>
 <context>
@@ -32071,6 +33829,37 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
 </context>
 <context>
+    <name>QgsLegendGroupPropertiesBase</name>
+    <message>
+        <source>Legend group properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished">Titel</translation>
+    </message>
+    <message>
+        <source>Abstract</source>
+        <translation type="unfinished">Sammanfattning</translation>
+    </message>
+    <message>
+        <source>OWS Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLegendModel</name>
     <message>
         <source>Group</source>
@@ -32446,7 +34235,7 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
     <message>
         <source>Cannot add feature. Unknown WKB type</source>
-        <translation>Kan inte lägga till objekt. Okänd WKB-typ</translation>
+        <translation type="obsolete">Kan inte lägga till objekt. Okänd WKB-typ</translation>
     </message>
     <message>
         <source>The feature could not be added because removing the polygon intersections would change the geometry type</source>
@@ -32571,6 +34360,13 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     <message>
         <source>Changed properties for label</source>
         <translation>Ändrade egenskaper för etikett</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapToolCircularStringRadius</name>
+    <message>
+        <source>Radius: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32792,7 +34588,7 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     <name>QgsMapToolNodeTool</name>
     <message>
         <source>Node tool</source>
-        <translation>Nodverktyg</translation>
+        <translation type="obsolete">Nodverktyg</translation>
     </message>
     <message>
         <source>could not snap to a segment on the current layer.</source>
@@ -32801,6 +34597,10 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     <message>
         <source>Inserted vertex</source>
         <translation>Satte in nod</translation>
+    </message>
+    <message>
+        <source>Geometry has been cleared. Use the add part tool to set geometry for this feature.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33134,19 +34934,19 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
     <message>
         <source>Meters</source>
-        <translation>Meter</translation>
+        <translation type="obsolete">Meter</translation>
     </message>
     <message>
         <source>Feet</source>
-        <translation>Fot</translation>
+        <translation type="obsolete">Fot</translation>
     </message>
     <message>
         <source>Degrees</source>
-        <translation>Grader</translation>
+        <translation type="obsolete">Grader</translation>
     </message>
     <message>
         <source>Nautical Miles</source>
-        <translation>Nautiska mil</translation>
+        <translation type="obsolete">Nautiska mil</translation>
     </message>
 </context>
 <context>
@@ -34372,6 +36172,13 @@ Detaljerad felinformation:
     <message>
         <source>File encoding</source>
         <translation>Teckenkodning</translation>
+    </message>
+</context>
+<context>
+    <name>QgsNodeEditor</name>
+    <message>
+        <source>Vertex editor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36911,9 +38718,15 @@ error:%2
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>Anslutning misslyckades - Kontrollera inställningar och försök igen.
+        <translation type="obsolete">Anslutning misslyckades - Kontrollera inställningar och försök igen.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37423,6 +39236,14 @@ Error: %2</source>
         <translation>Oracle-fel: %1
 Fel: %2</translation>
     </message>
+    <message>
+        <source>Could not prepare get feature id statement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not retrieve feature id %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsOracleRootItem</name>
@@ -37682,11 +39503,15 @@ Fel: %2</translation>
     <name>QgsPGLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>Ta bort lager</translation>
+        <translation type="obsolete">Ta bort lager</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>Borttagning av lager lyckades.</translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37865,9 +39690,15 @@ Fel: %2</translation>
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>Anslutning misslyckades - Kontrollera inställningar och försök igen.
+        <translation type="obsolete">Anslutning misslyckades - Kontrollera inställningar och försök igen.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39197,35 +41028,35 @@ Resultat: %3 (%4)</translation>
     </message>
     <message>
         <source>Point</source>
-        <translation>Punkt</translation>
+        <translation type="obsolete">Punkt</translation>
     </message>
     <message>
         <source>Multipoint</source>
-        <translation>Multipunkt</translation>
+        <translation type="obsolete">Multipunkt</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linje</translation>
+        <translation type="obsolete">Linje</translation>
     </message>
     <message>
         <source>Multiline</source>
-        <translation>Multilinje</translation>
+        <translation type="obsolete">Multilinje</translation>
     </message>
     <message>
         <source>Polygon</source>
-        <translation>Polygon</translation>
+        <translation type="obsolete">Polygon</translation>
     </message>
     <message>
         <source>Multipolygon</source>
-        <translation>Multipolygon</translation>
+        <translation type="obsolete">Multipolygon</translation>
     </message>
     <message>
         <source>No Geometry</source>
-        <translation>Ingen geometri</translation>
+        <translation type="obsolete">Ingen geometri</translation>
     </message>
     <message>
         <source>Unknown Geometry</source>
-        <translation>Okänd geometri</translation>
+        <translation type="obsolete">Okänd geometri</translation>
     </message>
     <message>
         <source>None</source>
@@ -39535,7 +41366,7 @@ Välj &apos;Ignorera&apos; för att fortsätta utan de saknade lagren. Välj &ap
     <name>QgsProjectColorScheme</name>
     <message>
         <source>Project colors</source>
-        <translation>Projektfärger</translation>
+        <translation type="obsolete">Projektfärger</translation>
     </message>
 </context>
 <context>
@@ -39723,6 +41554,14 @@ Fortsätt?</translation>
     <message>
         <source>Error writing palette file</source>
         <translation>Fel vid skrivning till palettfil</translation>
+    </message>
+    <message>
+        <source>Publish group as single layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select group name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -40151,6 +41990,14 @@ Fortsätt?</translation>
     <message>
         <source>Python macros</source>
         <translation>Python-makron</translation>
+    </message>
+    <message>
+        <source>Publish group as layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exclusive layer groups</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42332,7 +44179,7 @@ standardavvikelse ×</translation>
     <name>QgsRecentColorScheme</name>
     <message>
         <source>Recent colors</source>
-        <translation>Senast använda färger</translation>
+        <translation type="obsolete">Senast använda färger</translation>
     </message>
 </context>
 <context>
@@ -42606,6 +44453,10 @@ standardavvikelse ×</translation>
             <numerusform>Filtret returnerade %n objekt</numerusform>
         </translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRendererV2DataDefinedMenus</name>
@@ -42731,6 +44582,30 @@ standardavvikelse ×</translation>
         <source>Change symbol size</source>
         <translation>Ändra symbolstorlek</translation>
     </message>
+    <message>
+        <source>Complete html support for Html output in GetLegendGraphic. For raster output, &amp;lt;br&amp;gt;,&amp;lt;b&amp;gt;,&amp;lt;i&amp;gt;,&amp;lt;u&amp;gt; are supported. &amp;lt;b&amp;gt;&amp;lt;i&amp;gt;&amp;lt;u&amp;gt; can be nested in that order only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Punkt</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Linje</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Polygon</translation>
+    </message>
+    <message>
+        <source>Select symbology type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished">Typ</translation>
+    </message>
 </context>
 <context>
     <name>QgsRuleBasedRendererV2Model</name>
@@ -42773,6 +44648,14 @@ standardavvikelse ×</translation>
     <message>
         <source>Number of features in this rule which are also present in other rule(s).</source>
         <translation>Antal objekt i denna regel som även finns i andra regler.</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42857,6 +44740,10 @@ standardavvikelse ×</translation>
         <source>Abort</source>
         <translation>Avbryt</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRunProcess</name>
@@ -42940,11 +44827,15 @@ standardavvikelse ×</translation>
     <name>QgsSLLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>Radera lager</translation>
+        <translation type="obsolete">Radera lager</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>Lagret raderades.</translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -43229,6 +45120,13 @@ standardavvikelse ×</translation>
     </message>
 </context>
 <context>
+    <name>QgsSelectGroupLayerDialogBase</name>
+    <message>
+        <source>Select layers and groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsSelectedFeature</name>
     <message>
         <source>Validation started.</source>
@@ -43248,23 +45146,23 @@ standardavvikelse ×</translation>
     </message>
     <message>
         <source>polygon %1, ring %2, vertex %3</source>
-        <translation>polygon %1, hål %2, nod %3</translation>
+        <translation type="obsolete">polygon %1, hål %2, nod %3</translation>
     </message>
     <message>
         <source>polyline %1, vertex %2</source>
-        <translation>linje %1, nod %2</translation>
+        <translation type="obsolete">linje %1, nod %2</translation>
     </message>
     <message>
         <source>vertex %1</source>
-        <translation>nod %1</translation>
+        <translation type="obsolete">nod %1</translation>
     </message>
     <message>
         <source>point %1</source>
-        <translation>punkt %1</translation>
+        <translation type="obsolete">punkt %1</translation>
     </message>
     <message>
         <source>single point</source>
-        <translation>enkel punkt</translation>
+        <translation type="obsolete">enkel punkt</translation>
     </message>
 </context>
 <context>
@@ -43638,6 +45536,29 @@ förhöjning</translation>
     <message>
         <source>Symbol levels...</source>
         <translation>Symbolnivåer...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSingleSymbolRendererV2WidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Formulär</translation>
+    </message>
+    <message>
+        <source>WMS legend settings (GetLegendGraphic)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -46281,6 +48202,14 @@ felet var: %2</translation>
         <source>Height attribute</source>
         <translation>Höjdattribut</translation>
     </message>
+    <message>
+        <source>Millimeter</source>
+        <translation type="unfinished">Millimeter</translation>
+    </message>
+    <message>
+        <source>Map unit</source>
+        <translation type="unfinished">Kartenhet</translation>
+    </message>
 </context>
 <context>
     <name>QgsVectorGradientColorRampV2Dialog</name>
@@ -47010,6 +48939,26 @@ felet var: %2</translation>
     <message>
         <source>Diagrams</source>
         <translation>Diagram</translation>
+    </message>
+    <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -50203,6 +52152,33 @@ Problem vid rad: %d</translation>
     </message>
 </context>
 <context>
+    <name>SlopeAreaMulti</name>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished">Lutningsrutnät</translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished">Bidragande områdesrutnät</translation>
+    </message>
+    <message>
+        <source>Slope Exponent</source>
+        <translation type="unfinished">Lutningsexponent</translation>
+    </message>
+    <message>
+        <source>Area Exponent</source>
+        <translation type="unfinished">Area Exponent</translation>
+    </message>
+    <message>
+        <source>Slope Area Grid</source>
+        <translation type="unfinished">Rutnät för lutningsarea</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SpatialJoin</name>
     <message>
         <source>Target vector layer</source>
@@ -50314,6 +52290,13 @@ Problem vid rad: %d</translation>
     </message>
 </context>
 <context>
+    <name>SymDifferenceTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SymbolsListWidget</name>
     <message>
         <source>Form</source>
@@ -50368,23 +52351,46 @@ Problem vid rad: %d</translation>
     <name>SymetricalDifference</name>
     <message>
         <source>Input layer</source>
-        <translation>Indatalager</translation>
+        <translation type="obsolete">Indatalager</translation>
     </message>
     <message>
         <source>Difference layer</source>
-        <translation>Differenslager</translation>
+        <translation type="obsolete">Differenslager</translation>
     </message>
     <message>
         <source>Symetrical difference</source>
-        <translation>Symetrisk differans</translation>
+        <translation type="obsolete">Symetrisk differans</translation>
     </message>
     <message>
         <source>Geometry exception while computing symetrical difference</source>
-        <translation>Geometriundantag medan symmetriska skillnader beräknades</translation>
+        <translation type="obsolete">Geometriundantag medan symmetriska skillnader beräknades</translation>
     </message>
     <message>
         <source>Feature exception while computing symetrical difference</source>
-        <translation>Objektundantag medan symmetriska skillnader beräknades</translation>
+        <translation type="obsolete">Objektundantag medan symmetriska skillnader beräknades</translation>
+    </message>
+</context>
+<context>
+    <name>SymmetricalDifference</name>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished">Indatalager</translation>
+    </message>
+    <message>
+        <source>Difference layer</source>
+        <translation type="unfinished">Differenslager</translation>
+    </message>
+    <message>
+        <source>Symetrical difference</source>
+        <translation type="unfinished">Symetrisk differans</translation>
+    </message>
+    <message>
+        <source>Geometry exception while computing symetrical difference</source>
+        <translation type="unfinished">Geometriundantag medan symmetriska skillnader beräknades</translation>
+    </message>
+    <message>
+        <source>Feature exception while computing symetrical difference</source>
+        <translation type="unfinished">Objektundantag medan symmetriska skillnader beräknades</translation>
     </message>
 </context>
 <context>
@@ -50421,6 +52427,36 @@ Problem vid rad: %d</translation>
     <message>
         <source>TauDEM (hydrologic analysis)</source>
         <translation>TauDEM (hydrologisk analys)</translation>
+    </message>
+    <message>
+        <source>TauDEM multifile command line tools folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable singlefile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable multifile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open TauDEM algorithm %s:
+%s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TauDEMMultifileAlgorithm</name>
+    <message>
+        <source>Could not load TauDEM algorithm: %s
+%s</source>
+        <translation type="unfinished">Kunde inte öppna TauDEM algoritm: %s
+%s</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -50541,6 +52577,17 @@ Problem vid rad: %d</translation>
     </message>
 </context>
 <context>
+    <name>UnionTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UniqueValues</name>
     <message>
         <source>Input layer</source>
@@ -50649,6 +52696,53 @@ Problem vid rad: %d</translation>
     <message>
         <source>Buffer</source>
         <translation>Buffer</translation>
+    </message>
+</context>
+<context>
+    <name>VectorAnalysis</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">Buffer</translation>
+    </message>
+    <message>
+        <source>Clip</source>
+        <translation type="unfinished">Klipp</translation>
+    </message>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Lös ut</translation>
+    </message>
+    <message>
+        <source>Intersect</source>
+        <translation type="unfinished">Skärning</translation>
+    </message>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">Eliminera polygonstrimlor</translation>
+    </message>
+    <message>
+        <source>Symmetric difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Union</source>
+        <translation type="unfinished">Union</translation>
+    </message>
+    <message>
+        <source>&amp;Geoprocessing Tools</source>
+        <translation type="unfinished">&amp;Geobehandlingsverktyg</translation>
+    </message>
+    <message>
+        <source>Intersection</source>
+        <translation type="unfinished">Skärning</translation>
     </message>
 </context>
 <context>
@@ -51156,6 +53250,10 @@ Problem vid rad: %d</translation>
     <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+    <message>
+        <source>on every curve point</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -51844,7 +53942,11 @@ Problem vid rad: %d</translation>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Virtual</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -54804,6 +56906,13 @@ Vektorlagret behöver vara i redigeringsläge, innan det går att klicka på &lt
     </message>
 </context>
 <context>
+    <name>differencetool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dxf2shpConverter</name>
     <message>
         <source>Converts DXF files in Shapefile format</source>
@@ -55701,7 +57810,11 @@ Insticksprogrammet stängs av.</translation>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60485,7 +62598,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>xyz</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60512,7 +62629,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Pyramidized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -62337,7 +64458,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Terrängskuggning</translation>
     </message>
 </context>
 <context>
@@ -63325,7 +65450,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Merged</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63344,7 +65473,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Nearblack</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63443,7 +65576,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>PCT to RGB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63458,7 +65595,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Vectorized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63493,7 +65634,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Avstånd</translation>
     </message>
 </context>
 <context>
@@ -63508,7 +65653,7 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Write values inside an existing raster layer(*)</source>
-        <translation>Skriv värden inuti ett existerande rasterlager(*)</translation>
+        <translation type="obsolete">Skriv värden inuti ett existerande rasterlager(*)</translation>
     </message>
     <message>
         <source>Set output raster size (ignored if above option is checked)</source>
@@ -63528,7 +65673,7 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer: mandatory to choose an existing raster layer if the (*) option is selected</source>
-        <translation>Utdatalager: obligatoriskt att välja ett befintligt rasterlager om (*) alternativet väljs</translation>
+        <translation type="obsolete">Utdatalager: obligatoriskt att välja ett befintligt rasterlager om (*) alternativet väljs</translation>
     </message>
     <message>
         <source>Nodata value</source>
@@ -63560,7 +65705,15 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
-        <translation>Tvinga skapandet av en associerad ESRI worldfil (.tfw))</translation>
+        <translation type="obsolete">Tvinga skapandet av en associerad ESRI worldfil (.tfw))</translation>
+    </message>
+    <message>
+        <source>Force the generation of an associated ESRI world file (.tfw)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rasterized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63575,7 +65728,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>RGB to PCT</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63594,7 +65751,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Roughness</source>
+        <translation type="unfinished">Ojämnhet</translation>
     </message>
 </context>
 <context>
@@ -63683,7 +65844,22 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
+    </message>
+    <message>
+        <source>Sieved</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>sliverpolygontool</name>
+    <message>
+        <source>Merge combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create multipolygon from merge results: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63714,7 +65890,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Lutning</translation>
     </message>
 </context>
 <context>
@@ -63872,7 +66052,11 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output file</source>
-        <translation>Utdatafil</translation>
+        <translation type="obsolete">Utdatafil</translation>
+    </message>
+    <message>
+        <source>Topographic Position Index</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -63915,7 +66099,7 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -63948,6 +66132,10 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
         <translation>Tvinga skapandet av en associerad ESRI worldfil (.tfw))</translation>
+    </message>
+    <message>
+        <source>Translated</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -64146,7 +66334,7 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Mål för utdatafil</translation>
+        <translation type="obsolete">Mål för utdatafil</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -64179,6 +66367,10 @@ Formaterar en datumtyp till text med ett anpassat format. Använder Qt &apos;tim
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
         <translation>Tvinga skapandet av en associerad ESRI worldfil (.tfw))</translation>
+    </message>
+    <message>
+        <source>Warped</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
