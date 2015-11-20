@@ -71,8 +71,6 @@
 #include <qgsnetworkaccessmanager.h>
 #include <qgsapplication.h>
 #include <qgscomposition.h>
-#include <qgsgeoimageannotationitem.h>
-#include <qgsredlining.h>
 
 #include <QNetworkReply>
 #include <QNetworkProxy>
@@ -136,13 +134,10 @@
 #include "qgsfeature.h"
 #include "qgsformannotationitem.h"
 #include "qgsfieldcalculator.h"
-#include "qgsgpsrouteeditor.h"
 #include "qgshtmlannotationitem.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
 #include "qgsguivectorlayertools.h"
-#include "qgskmlexport.h"
-#include "qgskmlexportdialog.h"
 #include "qgslabelinggui.h"
 #include "qgslayerdefinition.h"
 #include "qgslayertree.h"
@@ -155,7 +150,6 @@
 #include "qgslegendgroupproperties.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
-#include "qgsmapcanvasmap.h"
 #include "qgsmapcanvassnappingutils.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
@@ -203,8 +197,6 @@
 #include "qgssnappingdialog.h"
 #include "qgssponsors.h"
 #include "qgssvgannotationitem.h"
-#include "qgsimageannotationitem.h"
-#include "qgstemporaryfile.h"
 #include "qgstextannotationitem.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
@@ -282,8 +274,6 @@
 #include "qgsmaptoolzoom.h"
 #include "qgsmaptoolsimplify.h"
 #include "qgsmeasuretool.h"
-#include "qgsmeasurecircletool.h"
-#include "qgsmeasureheightprofiletool.h"
 #include "qgsmaptoolpinlabels.h"
 #include "qgsmaptoolshowhidelabels.h"
 #include "qgsmaptoolmovelabel.h"
@@ -318,7 +308,7 @@ extern "C"
 
 #include "qgspythonutils.h"
 
-#ifndef _MSC_VER
+#ifndef Q_OS_WIN
 #include <dlfcn.h>
 #else
 #include <windows.h>
@@ -394,11 +384,6 @@ static void customSrsValidation_( QgsCoordinateReferenceSystem &srs )
 void QgisApp::emitCustomSrsValidation( QgsCoordinateReferenceSystem &srs )
 {
   emit customSrsValidation( srs );
-}
-
-QgsLegendInterface* QgisApp::legendInterface() const
-{
-  return mQgisInterface->legendInterface();
 }
 
 void QgisApp::layerTreeViewDoubleClicked( const QModelIndex& index )
@@ -586,8 +571,7 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   int myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   int myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   int myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  int myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
-  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
+  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue ) );
 
   centralLayout->addWidget( mMapCanvas, 0, 0, 2, 1 );
 
@@ -631,12 +615,6 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
   updateProjectFromTemplates();
   legendLayerSelectionChanged();
   mSaveRollbackInProgress = false;
-
-  //Redlining
-  mRedlining = new QgsRedlining( this );
-
-  //GPS route editor
-  mGpsRouteEditor = new QgsGPSRouteEditor( this );
 
   // initialize the plugin manager
   mPluginManager = new QgsPluginManager( this, restorePlugins );
@@ -861,7 +839,6 @@ QgisApp::QgisApp( QSplashScreen *splash, bool restorePlugins, QWidget * parent, 
 #ifdef ANDROID
   toggleFullScreen();
 #endif
-
 } // QgisApp ctor
 
 QgisApp::QgisApp()
@@ -938,9 +915,6 @@ QgisApp::QgisApp()
 QgisApp::~QgisApp()
 {
   mMapCanvas->stopRendering();
-  mMapCanvas->setMapTool( 0 );
-  disconnect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool *, QgsMapTool * ) ),
-              this, SLOT( mapToolChanged( QgsMapTool *, QgsMapTool * ) ) );
 
   delete mInternalClipboard;
   delete mQgisInterface;
@@ -967,8 +941,6 @@ QgisApp::~QgisApp()
   delete mMapTools.mMeasureAngle;
   delete mMapTools.mMeasureArea;
   delete mMapTools.mMeasureDist;
-  delete mMapTools.mMeasureCircle;
-  delete mMapTools.mMeasureHeightProfile;
   delete mMapTools.mMoveFeature;
   delete mMapTools.mMoveLabel;
   delete mMapTools.mNodeTool;
@@ -998,9 +970,6 @@ QgisApp::~QgisApp()
   delete mComposerManager;
 
   delete mVectorLayerTools;
-
-  delete mRedlining;
-  delete mGpsRouteEditor;
 
   deletePrintComposers();
   removeAnnotationItems();
@@ -1132,12 +1101,10 @@ void QgisApp::createActions()
   connect( mActionSaveProject, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
   connect( mActionSaveProjectAs, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
   connect( mActionSaveMapAsImage, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
-  connect( mActionSaveMapToClipboard, SIGNAL( triggered() ), this, SLOT( saveMapToClipboard( ) ) );
   connect( mActionNewPrintComposer, SIGNAL( triggered() ), this, SLOT( newPrintComposer() ) );
   connect( mActionShowComposerManager, SIGNAL( triggered() ), this, SLOT( showComposerManager() ) );
   connect( mActionExit, SIGNAL( triggered() ), this, SLOT( fileExit() ) );
   connect( mActionDxfExport, SIGNAL( triggered() ), this, SLOT( dxfExport() ) );
-  connect( mActionKMLExport, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
 
   // Edit Menu Items
 
@@ -1192,8 +1159,6 @@ void QgisApp::createActions()
   connect( mActionFeatureAction, SIGNAL( triggered() ), this, SLOT( doFeatureAction() ) );
   connect( mActionMeasure, SIGNAL( triggered() ), this, SLOT( measure() ) );
   connect( mActionMeasureArea, SIGNAL( triggered() ), this, SLOT( measureArea() ) );
-  connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle() ) );
-  connect( mActionMeasureHeightProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile() ) );
   connect( mActionMeasureAngle, SIGNAL( triggered() ), this, SLOT( measureAngle() ) );
   connect( mActionZoomFullExtent, SIGNAL( triggered() ), this, SLOT( zoomFull() ) );
   connect( mActionZoomToLayer, SIGNAL( triggered() ), this, SLOT( zoomToLayerExtent() ) );
@@ -1425,8 +1390,6 @@ void QgisApp::createActionGroups()
   mMapToolGroup->addAction( mActionDeselectAll );
   mMapToolGroup->addAction( mActionMeasure );
   mMapToolGroup->addAction( mActionMeasureArea );
-  mMapToolGroup->addAction( mActionMeasureCircle );
-  mMapToolGroup->addAction( mActionMeasureHeightProfile );
   mMapToolGroup->addAction( mActionMeasureAngle );
   mMapToolGroup->addAction( mActionAddFeature );
   mMapToolGroup->addAction( mActionCircularStringCurvePoint );
@@ -1678,8 +1641,6 @@ void QgisApp::createToolBars()
   bt->setPopupMode( QToolButton::MenuButtonPopup );
   bt->addAction( mActionMeasure );
   bt->addAction( mActionMeasureArea );
-  bt->addAction( mActionMeasureCircle );
-  bt->addAction( mActionMeasureHeightProfile );
   bt->addAction( mActionMeasureAngle );
 
   QAction* defMeasureAction = mActionMeasure;
@@ -1688,8 +1649,6 @@ void QgisApp::createToolBars()
     case 0: defMeasureAction = mActionMeasure; break;
     case 1: defMeasureAction = mActionMeasureArea; break;
     case 2: defMeasureAction = mActionMeasureAngle; break;
-    case 3: defMeasureAction = mActionMeasureCircle; break;
-    case 4: defMeasureAction = mActionMeasureHeightProfile; break;
   }
   bt->setDefaultAction( defMeasureAction );
   QAction* measureAction = mAttributesToolBar->insertWidget( mActionMapTips, bt );
@@ -2097,8 +2056,6 @@ void QgisApp::setTheme( QString theThemeName )
   mActionMeasure->setIcon( QgsApplication::getThemeIcon( "/mActionMeasure.png" ) );
   mActionMeasureArea->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureArea.png" ) );
   mActionMeasureAngle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureAngle.png" ) );
-  mActionMeasureCircle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureCircle.png" ) );
-  mActionMeasureHeightProfile->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureHeightProfile.png" ) );
   mActionMapTips->setIcon( QgsApplication::getThemeIcon( "/mActionMapTips.png" ) );
   mActionShowBookmarks->setIcon( QgsApplication::getThemeIcon( "/mActionShowBookmarks.png" ) );
   mActionNewBookmark->setIcon( QgsApplication::getThemeIcon( "/mActionNewBookmark.png" ) );
@@ -2260,14 +2217,10 @@ void QgisApp::createCanvasTools()
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
   mMapTools.mFeatureAction = new QgsMapToolFeatureAction( mMapCanvas );
   mMapTools.mFeatureAction->setAction( mActionFeatureAction );
-  mMapTools.mMeasureDist = new QgsMeasureTool( mMapCanvas, false );
+  mMapTools.mMeasureDist = new QgsMeasureTool( mMapCanvas, false /* area */ );
   mMapTools.mMeasureDist->setAction( mActionMeasure );
-  mMapTools.mMeasureArea = new QgsMeasureTool( mMapCanvas, true );
+  mMapTools.mMeasureArea = new QgsMeasureTool( mMapCanvas, true /* area */ );
   mMapTools.mMeasureArea->setAction( mActionMeasureArea );
-  mMapTools.mMeasureCircle = new QgsMeasureCircleTool( mMapCanvas );
-  mMapTools.mMeasureCircle->setAction( mActionMeasureCircle );
-  mMapTools.mMeasureHeightProfile = new QgsMeasureHeightProfileTool( mMapCanvas );
-  mMapTools.mMeasureHeightProfile->setAction( mActionMeasureHeightProfile );
   mMapTools.mMeasureAngle = new QgsMapToolMeasureAngle( mMapCanvas );
   mMapTools.mMeasureAngle->setAction( mActionMeasureAngle );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mMapCanvas );
@@ -2526,13 +2479,9 @@ void QgisApp::initLayerTreeView()
   toolbarLayout->addWidget( btnRemoveItem );
   toolbarLayout->addStretch();
 
-  QWidget* layerTreeToolbar = new QWidget();
-  layerTreeToolbar->setLayout( toolbarLayout );
-  layerTreeToolbar->setObjectName( "layerTreeToolbar" );
-
   QVBoxLayout* vboxLayout = new QVBoxLayout;
   vboxLayout->setMargin( 0 );
-  vboxLayout->addWidget( layerTreeToolbar );
+  vboxLayout->addLayout( toolbarLayout );
   vboxLayout->addWidget( mLayerTreeView );
 
   QWidget* w = new QWidget;
@@ -3697,12 +3646,10 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
   prj->writeEntry( "Gui", "/CanvasColorRedPart", myRed );
   prj->writeEntry( "Gui", "/CanvasColorGreenPart", myGreen );
   prj->writeEntry( "Gui", "/CanvasColorBluePart", myBlue );
-  prj->writeEntry( "Gui", "/CanvasColorAlphaPart", myAlpha );
-  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
+  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue ) );
 
   prj->dirty( false );
 
@@ -4078,8 +4025,7 @@ bool QgisApp::addProject( QString projectFile )
   int  myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   int  myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   int  myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  int  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
-  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
+  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt );
   mMapCanvas->setCanvasColor( myColor ); //this is fill color before rendering starts
   QgsDebugMsg( "Canvas background color restored..." );
 
@@ -4310,30 +4256,6 @@ void QgisApp::dxfExport()
   }
 }
 
-void QgisApp::kmlExport()
-{
-  QgsKMLExportDialog d( mMapCanvas->mapSettings().layers() );
-  if ( d.exec() == QDialog::Accepted )
-  {
-    QgsKMLExport kmlExport;
-    kmlExport.setLayers( d.selectedLayers() );
-
-    QString fileName = d.saveFile();
-    QFile kmlFile( fileName );
-
-    QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( &kmlFile, mMapCanvas->mapSettings() ) == 0 )
-    {
-      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
-    }
-    else
-    {
-      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
-    }
-    QApplication::restoreOverrideCursor();
-  }
-}
-
 void QgisApp::openLayerDefinition( const QString & path )
 {
   QString errorMessage;
@@ -4414,12 +4336,6 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
       CPLPopErrorHandler();
       return true;
     }
-  }
-
-  // Handle georeferenced images (with EXIF tags)
-  if ( QgsGeoImageAnnotationItem::create( mMapCanvas, fileName ) )
-  {
-    return true;
   }
 
   // try to load it as raster
@@ -4602,15 +4518,6 @@ void QgisApp::saveMapAsImage( QString theImageFileNameQString, QPixmap * theQPix
     mMapCanvas->saveAsImage( theImageFileNameQString, theQPixmap );
   }
 } // saveMapAsImage
-
-void QgisApp::saveMapToClipboard()
-{
-  QImage image( mMapCanvas->size(), QImage::Format_ARGB32 );
-  image.fill( Qt::transparent );
-  QPainter painter( &image );
-  mMapCanvas->render( &painter );
-  QApplication::clipboard()->setImage( image );
-}
 
 //reimplements method from base (gui) class
 void QgisApp::addAllToOverview()
@@ -4932,16 +4839,6 @@ void QgisApp::measure()
 void QgisApp::measureArea()
 {
   mMapCanvas->setMapTool( mMapTools.mMeasureArea );
-}
-
-void QgisApp::measureCircle()
-{
-  mMapCanvas->setMapTool( mMapTools.mMeasureCircle );
-}
-
-void QgisApp::measureHeightProfile()
-{
-  mMapCanvas->setMapTool( mMapTools.mMeasureHeightProfile );
 }
 
 void QgisApp::measureAngle()
@@ -5399,7 +5296,7 @@ void QgisApp::saveAsVectorFileGeneral( QgsVectorLayer* vlayer, bool symbologyOpt
 
 void QgisApp::checkForDeprecatedLabelsInProject()
 {
-  bool ok = false;
+  bool ok;
   QgsProject::instance()->readBoolEntry( "DeprecatedLabels", "/Enabled", false, &ok );
   if ( ok ) // project already flagged (regardless of project property value)
   {
@@ -5433,7 +5330,15 @@ void QgisApp::checkForDeprecatedLabelsInProject()
 
 void QgisApp::layerProperties()
 {
-  showLayerProperties( activeLayer() );
+  QgsMapLayer* layer = activeLayer();
+  if ( layer )
+  {
+    showLayerProperties( layer );
+  }
+  else
+  {
+    groupProperties();
+  }
 }
 
 void QgisApp::groupProperties()
@@ -5889,20 +5794,6 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   {
     QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mMapCanvas );
     newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList imageItemList = doc.elementsByTagName( "ImageAnnotationItem" );
-  for ( int i = 0; i < imageItemList.size(); ++i )
-  {
-    QgsImageAnnotationItem* newImageItem = new QgsImageAnnotationItem( mMapCanvas );
-    newImageItem->readXML( doc, imageItemList.at( i ).toElement() );
-  }
-
-  QDomNodeList geoImageItemList = doc.elementsByTagName( "GeoImageAnnotationItem" );
-  for ( int i = 0; i < geoImageItemList.size(); ++i )
-  {
-    QgsGeoImageAnnotationItem* newGeoImageItem = new QgsGeoImageAnnotationItem( mMapCanvas );
-    newGeoImageItem->readXML( doc, geoImageItemList.at( i ).toElement() );
   }
   return true;
 }
@@ -6680,7 +6571,7 @@ void QgisApp::pasteStyle( QgsMapLayer * destinationLayer )
       }
 
       mLayerTreeView->refreshLayerSymbology( selectionLayer->id() );
-      mMapCanvas->clearCache( selectionLayer->id() );
+      mMapCanvas->clearCache();
       mMapCanvas->refresh();
     }
   }
@@ -6772,10 +6663,6 @@ bool QgisApp::toggleEditing( QgsMapLayer *layer, bool allowCancel )
     {
       vlayer->triggerRepaint();
     }
-  }
-  else if ( vlayer->isModified() && vlayer->type() == QgsMapLayer::RedliningLayer )
-  {
-    vlayer->commitChanges();
   }
   else if ( vlayer->isModified() )
   {
@@ -8096,11 +7983,6 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
 #endif
 }
 
-QgsRedliningLayer* QgisApp::redliningLayer()
-{
-  return mRedlining->getOrCreateLayer();
-}
-
 /** Get a pointer to the currently selected map layer */
 QgsMapLayer *QgisApp::activeLayer()
 {
@@ -8371,7 +8253,6 @@ void QgisApp::closeProject()
   mMapCanvas->setLayerSet( emptyList );
   mMapCanvas->clearCache();
   removeAllLayers();
-  QgsTemporaryFile::clear();
 }
 
 
@@ -9022,12 +8903,6 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     disconnect( oldTool, SIGNAL( messageEmitted( QString, QgsMessageBar::MessageLevel ) ), this, SLOT( displayMapToolMessage( QString, QgsMessageBar::MessageLevel ) ) );
     disconnect( oldTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
   }
-  // Automatically return to pan tool if no tool is active
-  if ( !newTool && oldTool != mMapTools.mPan )
-  {
-    mMapCanvas->setMapTool( mMapTools.mPan );
-    return;
-  }
 
   if ( newTool )
   {
@@ -9271,8 +9146,7 @@ void QgisApp::projectProperties()
   int  myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   int  myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   int  myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  int  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
-  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
+  QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt );
   mMapCanvas->setCanvasColor( myColor ); // this is fill color before rendering onto canvas
 
   qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureDist )->updateSettings();
@@ -9750,6 +9624,8 @@ void QgisApp::refreshActionFeatureAction()
 // this is a slot for action from GUI to add raster layer
 void QgisApp::addRasterLayer()
 {
+  QString fileFilters;
+
   QStringList selectedFiles;
   QString e;//only for parameter correctness
   QString title = tr( "Open a GDAL Supported Raster Data Source" );
@@ -9762,17 +9638,7 @@ void QgisApp::addRasterLayer()
     return;
   }
 
-  // Handle georeferenced images (with EXIF tags)
-  QStringList rasterFiles;
-  foreach ( const QString& file, selectedFiles )
-  {
-    if ( !QgsGeoImageAnnotationItem::create( mMapCanvas, file ) )
-    {
-      rasterFiles.append( file );
-    }
-  }
-
-  addRasterLayers( rasterFiles );
+  addRasterLayers( selectedFiles );
 
 }// QgisApp::addRasterLayer()
 
@@ -10074,7 +9940,7 @@ void QgisApp::keyPressEvent( QKeyEvent * e )
   {
     stopRendering();
   }
-#if defined(__MSC_VER) && defined(QGISDEBUG)
+#if defined(Q_OS_WIN) && defined(QGISDEBUG)
   else if ( e->key() == Qt::Key_Backslash && e->modifiers() & Qt::ControlModifier )
   {
     qgisCrashDump( 0 );
@@ -10374,27 +10240,153 @@ void QgisApp::namSetup()
 
   namUpdate();
 
-#ifndef QT_NO_OPENSSL
-  connect( nam, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
-           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ) );
-#endif
+  connect( nam, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
+           this, SLOT( namAuthenticationRequired( QNetworkReply *, QAuthenticator * ) ) );
+
+  connect( nam, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
+           this, SLOT( namProxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ) );
+
   connect( nam, SIGNAL( requestTimedOut( QNetworkReply* ) ),
            this, SLOT( namRequestTimedOut( QNetworkReply* ) ) );
+
+#ifndef QT_NO_OPENSSL
+  connect( nam, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
+           this, SLOT( namSslErrors( QNetworkReply *, const QList<QSslError> & ) ) );
+#endif
+}
+
+void QgisApp::namAuthenticationRequired( QNetworkReply *reply, QAuthenticator *auth )
+{
+  QString username = auth->user();
+  QString password = auth->password();
+
+  if ( username.isEmpty() && password.isEmpty() && reply->request().hasRawHeader( "Authorization" ) )
+  {
+    QByteArray header( reply->request().rawHeader( "Authorization" ) );
+    if ( header.startsWith( "Basic " ) )
+    {
+      QByteArray auth( QByteArray::fromBase64( header.mid( 6 ) ) );
+      int pos = auth.indexOf( ":" );
+      if ( pos >= 0 )
+      {
+        username = auth.left( pos );
+        password = auth.mid( pos + 1 );
+      }
+    }
+  }
+
+  {
+    QMutexLocker lock( QgsCredentials::instance()->mutex() );
+
+    for ( ;; )
+    {
+      bool ok = QgsCredentials::instance()->get(
+                  QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+                  username, password,
+                  tr( "Authentication required" ) );
+      if ( !ok )
+        return;
+
+      if ( reply->isFinished() )
+        return;
+
+      if ( auth->user() != username || ( password != auth->password() && !password.isNull() ) )
+        break;
+
+      // credentials didn't change - stored ones probably wrong? clear password and retry
+      QgsCredentials::instance()->put(
+        QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+        username, QString::null );
+    }
+
+    // save credentials
+    QgsCredentials::instance()->put(
+      QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() ),
+      username, password
+    );
+  }
+
+  auth->setUser( username );
+  auth->setPassword( password );
+}
+
+void QgisApp::namProxyAuthenticationRequired( const QNetworkProxy &proxy, QAuthenticator *auth )
+{
+  QSettings settings;
+  if ( !settings.value( "proxy/proxyEnabled", false ).toBool() ||
+       settings.value( "proxy/proxyType", "" ).toString() == "DefaultProxy" )
+  {
+    auth->setUser( "" );
+    return;
+  }
+
+  QString username = auth->user();
+  QString password = auth->password();
+
+  {
+    QMutexLocker lock( QgsCredentials::instance()->mutex() );
+
+    for ( ;; )
+    {
+      bool ok = QgsCredentials::instance()->get(
+                  QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+                  username, password,
+                  tr( "Proxy authentication required" ) );
+      if ( !ok )
+        return;
+
+      if ( auth->user() != username || ( password != auth->password() && !password.isNull() ) )
+        break;
+
+      // credentials didn't change - stored ones probably wrong? clear password and retry
+      QgsCredentials::instance()->put(
+        QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+        username, QString::null );
+    }
+
+    QgsCredentials::instance()->put(
+      QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() ),
+      username, password
+    );
+  }
+
+  auth->setUser( username );
+  auth->setPassword( password );
 }
 
 #ifndef QT_NO_OPENSSL
-void QgisApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &errors, bool *ok )
+void QgisApp::namSslErrors( QNetworkReply *reply, const QList<QSslError> &errors )
 {
-  QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( url.toString() );
+  QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( reply->request().url().toString() );
+  bool otherError = false;
+  static QSet<QSslError::SslError> ignoreErrors;
+
   foreach ( QSslError error, errors )
   {
+    if ( error.error() == QSslError::NoError )
+      continue;
+
+    QgsDebugMsg( QString( "SSL error %1: %2" ).arg( error.error() ).arg( error.errorString() ) );
+
+    otherError = otherError || !ignoreErrors.contains( error.error() );
+
     msg += "\n" + error.errorString();
   }
+
   msg += tr( "\n\nAlways ignore these errors?" );
-  *ok = QMessageBox::warning( this,
-                              tr( "%1 SSL errors occured", "number of errors", errors.size() ),
-                              msg,
-                              QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes;
+
+  if ( !otherError ||
+       QMessageBox::warning( this,
+                             tr( "%n SSL errors occured", "number of errors", errors.size() ),
+                             msg,
+                             QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Ok )
+  {
+    foreach ( QSslError error, errors )
+    {
+      ignoreErrors << error.error();
+    }
+    reply->ignoreSslErrors();
+  }
 }
 #endif
 
@@ -10439,10 +10431,6 @@ void QgisApp::toolButtonActionTriggered( QAction *action )
     settings.setValue( "/UI/measureTool", 1 );
   else if ( action == mActionMeasureAngle )
     settings.setValue( "/UI/measureTool", 2 );
-  else if ( action == mActionMeasureCircle )
-    settings.setValue( "/UI/measureCircle", 3 );
-  else if ( action == mActionMeasureHeightProfile )
-    settings.setValue( "/UI/measureHeightProfile", 4 );
   else if ( action == mActionTextAnnotation )
     settings.setValue( "/UI/annotationTool", 0 );
   else if ( action == mActionFormAnnotation )
@@ -10549,7 +10537,7 @@ void QgisApp::tapAndHoldTriggered( QTapAndHoldGesture *gesture )
 }
 #endif
 
-#ifdef __MSC_VER
+#ifdef Q_OS_WIN
 LONG WINAPI QgisApp::qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo )
 {
   QString dumpName = QDir::toNativeSeparators(
