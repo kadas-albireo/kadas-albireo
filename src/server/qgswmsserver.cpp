@@ -775,7 +775,7 @@ QString QgsWMSServer::getLegendGraphicHtml()
       continue;
     }
 
-    bool showLayerTitle = ( layerTitle && layer /*&& layer->wmsShowLegendTitle()*/ );
+    bool showLayerTitle = ( layerTitle && layer && layer->wmsShowLegendTitle() );
     if ( layerTitle || ruleLabel )
     {
       htmlString.append( "<TABLE border=\"1\" width=\"100%\">\n" );

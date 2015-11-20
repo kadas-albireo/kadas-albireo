@@ -61,6 +61,7 @@ QgsMapLayer::QgsMapLayer( QgsMapLayer::LayerType type,
     , mWMSPublishLegend( true )
     , mWMSPublishMetadata( true )
     , mWMSCheckable( true )
+    , mWMSShowLegendTitle( true )
 {
   mCRS = new QgsCoordinateReferenceSystem();
 
@@ -177,6 +178,7 @@ bool QgsMapLayer::readLayerXML( const QDomElement& layerElement )
   mWMSPublishLegend = layerElement.attribute( "wmsPublishLegend", "1" ).toInt();
   mWMSPublishMetadata = layerElement.attribute( "wmsPublishMetadata", "1" ).toInt();
   mWMSCheckable = layerElement.attribute( "wmsCheckable", "1" ).toInt();
+  mWMSShowLegendTitle = layerElement.attribute( "wmsShowLegendTitle", "1" ).toInt();
 
   // read provider
   QString provider;
@@ -518,6 +520,7 @@ bool QgsMapLayer::writeLayerXML( QDomElement& layerElement, QDomDocument& docume
   layerElement.setAttribute( "wmsPublishLegend", mWMSPublishLegend ? 1 : 0 );
   layerElement.setAttribute( "wmsPublishMetadata", mWMSPublishMetadata ? 1 : 0 );
   layerElement.setAttribute( "wmsCheckable", mWMSCheckable ? 1 : 0 );
+  layerElement.setAttribute( "wmsShowLegendTitle", mWMSShowLegendTitle ? 1 : 0 );
 
   // ID
   QDomElement layerId = document.createElement( "id" );

@@ -517,6 +517,22 @@ QgsLegendRenderer::Nucleon QgsLegendRenderer::drawSymbolItem( QgsLayerTreeModelL
 QSizeF QgsLegendRenderer::drawLayerTitle( QgsLayerTreeLayer* nodeLayer, QPainter* painter, QPointF point )
 {
   QSizeF size( 0, 0 );
+  if ( !nodeLayer )
+  {
+    return size;
+  }
+
+  QgsMapLayer* layer = nodeLayer->layer();
+  if ( !layer || !layer->wmsShowLegendTitle() )
+  {
+    return size;
+  }
+
+  if ( !nodeLayer->layer() || !nodeLayer->layer() )
+  {
+    return size;
+  }
+
   QModelIndex idx = mLegendModel->node2index( nodeLayer );
 
   //Let the user omit the layer title item by having an empty layer title string
