@@ -121,6 +121,8 @@ class QgsWMSProjectParser : public QgsWMSConfigParser
 
     void legendPermissionFilter( QStringList& layerIds ) const;
 
+    bool allowRequestDefinedDatasources() const;
+
   private:
     QgsServerProjectParser* mProjectParser;
 

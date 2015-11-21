@@ -363,6 +363,9 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   bool addWktGeometry = QgsProject::instance()->readBoolEntry( "WMSAddWktGeometry", "/" );
   mAddWktGeometryCheckBox->setChecked( addWktGeometry );
 
+  bool requestDefinedSources = QgsProject::instance()->readBoolEntry( "WMSRequestDefinedDataSources", "/", false );
+  mAllowRequestDefinedDataSourcesBox->setChecked( requestDefinedSources );
+
   bool useLayerIDs = QgsProject::instance()->readBoolEntry( "WMSUseLayerIDs", "/" );
   mWmsUseLayerIDs->setChecked( useLayerIDs );
 
@@ -864,6 +867,7 @@ void QgsProjectProperties::apply()
   }
 
   QgsProject::instance()->writeEntry( "WMSAddWktGeometry", "/", mAddWktGeometryCheckBox->isChecked() );
+  QgsProject::instance()->writeEntry( "WMSRequestDefinedDataSources", "/", mAllowRequestDefinedDataSourcesBox->isChecked() );
   QgsProject::instance()->writeEntry( "WMSUseLayerIDs", "/", mWmsUseLayerIDs->isChecked() );
 
   QString maxWidthText = mMaxWidthLineEdit->text();

@@ -211,8 +211,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>696</width>
-                <height>793</height>
+                <width>484</width>
+                <height>600</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -798,8 +798,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>696</width>
-                <height>793</height>
+                <width>246</width>
+                <height>46</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -848,8 +848,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>696</width>
-                <height>793</height>
+                <width>98</width>
+                <height>100</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -920,8 +920,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>696</width>
-                <height>793</height>
+                <width>311</width>
+                <height>509</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1332,9 +1332,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>0</y>
+                <y>-312</y>
                 <width>671</width>
-                <height>1601</height>
+                <height>1626</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -1766,7 +1766,7 @@
                     </layout>
                    </widget>
                   </item>
-                  <item row="9" column="0" colspan="2">
+                  <item row="10" column="0" colspan="2">
                    <layout class="QHBoxLayout" name="horizontalLayout_10">
                     <item>
                      <widget class="QLabel" name="mWMSImageQualityLabel">
@@ -1800,7 +1800,7 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="8" column="0" colspan="2">
+                  <item row="9" column="0" colspan="2">
                    <layout class="QGridLayout" name="gridLayout_3">
                     <item row="1" column="1">
                      <widget class="QLabel" name="mMaxWidthLabel">
@@ -1847,7 +1847,7 @@
                     </item>
                    </layout>
                   </item>
-                  <item row="6" column="0" colspan="2">
+                  <item row="7" column="0" colspan="2">
                    <layout class="QHBoxLayout" name="grpWMSPrecision">
                     <item>
                      <widget class="QLabel" name="label_5">
@@ -1871,7 +1871,7 @@
                     </item>
                    </layout>
                   </item>
-                  <item row="7" column="0" colspan="2">
+                  <item row="8" column="0" colspan="2">
                    <layout class="QHBoxLayout" name="horizontalLayout_2">
                     <item>
                      <widget class="QLabel" name="mWMSUrlLabel">
@@ -1996,6 +1996,13 @@
                       </spacer>
                      </item>
                     </layout>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QCheckBox" name="mAllowRequestDefinedDataSourcesBox">
+                    <property name="text">
+                     <string>Allow defining datasources in server requests</string>
+                    </property>
                    </widget>
                   </item>
                  </layout>
@@ -2190,8 +2197,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>696</width>
-                <height>793</height>
+                <width>129</width>
+                <height>46</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_17">
