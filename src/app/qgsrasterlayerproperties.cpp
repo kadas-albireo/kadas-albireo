@@ -773,6 +773,11 @@ void QgsRasterLayerProperties::sync()
 
   mLayerLegendUrlLineEdit->setText( mRasterLayer->legendUrl() );
   mLayerLegendUrlFormatComboBox->setCurrentIndex( mLayerLegendUrlFormatComboBox->findText( mRasterLayer->legendUrlFormat() ) );
+
+  mWMSMetadataCheckBox->setChecked( mRasterLayer->wmsPublishMetadata() );
+  mWMSLegendCheckBox->setChecked( mRasterLayer->wmsPublishLegend() );
+  mWMSCheckboxBox->setChecked( mRasterLayer->wmsCheckable() );
+  mWMSLegendTitleCheckBox->setChecked( mRasterLayer->wmsShowLegendTitle() );
 } // QgsRasterLayerProperties::sync()
 
 /*
@@ -942,6 +947,11 @@ void QgsRasterLayerProperties::apply()
   mRasterLayer->setMetadataUrlFormat( mLayerMetadataUrlFormatComboBox->currentText() );
   mRasterLayer->setLegendUrl( mLayerLegendUrlLineEdit->text() );
   mRasterLayer->setLegendUrlFormat( mLayerLegendUrlFormatComboBox->currentText() );
+
+  mRasterLayer->setWMSPublishLegend( mWMSLegendCheckBox->isChecked() );
+  mRasterLayer->setWMSPublishMetadata( mWMSMetadataCheckBox->isChecked() );
+  mRasterLayer->setWMSCheckable( mWMSCheckboxBox->isChecked() );
+  mRasterLayer->setWMSShowLegendTitle( mWMSLegendTitleCheckBox->isChecked() );
 
   // update symbology
   emit refreshLegend( mRasterLayer->id(), false );
