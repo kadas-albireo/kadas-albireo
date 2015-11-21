@@ -63,7 +63,7 @@ void QgsMapToolAddFeature::activate()
     return;
   }
 
-  QgsMapTool::activate();
+  QgsMapToolCapture::activate();
 }
 
 void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )

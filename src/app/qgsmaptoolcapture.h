@@ -52,6 +52,7 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
 
     //! deactive the tool
     virtual void deactivate() override;
+    virtual void activate() override;
 
     /** Adds a whole curve (e.g. circularstring) to the captured geometry. Curve must be in map CRS*/
     int addCurve( QgsCurveV2* c );
@@ -78,7 +79,7 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
 
     void startCapturing();
     bool isCapturing() const;
-    void stopCapturing();
+    void stopCapturing( bool canvasRefresh = true );
 
     int size();
     QList<QgsPoint> points();
@@ -88,6 +89,8 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
     /**Creates / deletes / updates the snapping marker*/
     void updateSnappingMarker( QgsMapMouseEvent* e );
 
+    void removeRubberBand();
+
     QgsVertexMarker* mSnappingMarker;
 
   private:
@@ -96,6 +99,7 @@ class APP_EXPORT QgsMapToolCapture : public QgsMapToolEdit
 
     /** rubber band for polylines and polygons */
     QgsRubberBand* mRubberBand;
+    QString mRubberBandLayerId;
 
     /** temporary rubber band for polylines and polygons. this connects the last added point to the mouse cursor position */
     QgsRubberBand* mTempRubberBand;
