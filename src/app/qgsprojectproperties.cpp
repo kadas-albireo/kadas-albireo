@@ -170,17 +170,14 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   myRedInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorRedPart", 255 );
   myGreenInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorGreenPart", 255 );
   myBlueInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorBluePart", 255 );
-  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
-  myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
+  myColor = QColor( myRedInt, myGreenInt, myBlueInt );
   myRedInt = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreenInt = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlueInt = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  myBlueInt = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
-  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
+  QColor defaultCanvasColor = QColor( myRedInt, myGreenInt, myBlueInt );
 
   pbnCanvasColor->setContext( "gui" );
   pbnCanvasColor->setColor( myColor );
-  pbnCanvasColor->setAllowAlpha( true );
   pbnCanvasColor->setDefaultColor( defaultCanvasColor );
 
   //get project scales
@@ -365,6 +362,9 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
 
   bool addWktGeometry = QgsProject::instance()->readBoolEntry( "WMSAddWktGeometry", "/" );
   mAddWktGeometryCheckBox->setChecked( addWktGeometry );
+
+  bool requestDefinedSources = QgsProject::instance()->readBoolEntry( "WMSRequestDefinedDataSources", "/", false );
+  mAllowRequestDefinedDataSourcesBox->setChecked( requestDefinedSources );
 
   bool useLayerIDs = QgsProject::instance()->readBoolEntry( "WMSUseLayerIDs", "/" );
   mWmsUseLayerIDs->setChecked( useLayerIDs );
@@ -702,7 +702,6 @@ void QgsProjectProperties::apply()
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorRedPart", myColor.red() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorGreenPart", myColor.green() );
   QgsProject::instance()->writeEntry( "Gui", "/CanvasColorBluePart", myColor.blue() );
-  QgsProject::instance()->writeEntry( "Gui", "/CanvasColorAlphaPart", myColor.alpha() );
   mMapCanvas->setCanvasColor( myColor );
 
   //save project scales
@@ -868,6 +867,7 @@ void QgsProjectProperties::apply()
   }
 
   QgsProject::instance()->writeEntry( "WMSAddWktGeometry", "/", mAddWktGeometryCheckBox->isChecked() );
+  QgsProject::instance()->writeEntry( "WMSRequestDefinedDataSources", "/", mAllowRequestDefinedDataSourcesBox->isChecked() );
   QgsProject::instance()->writeEntry( "WMSUseLayerIDs", "/", mWmsUseLayerIDs->isChecked() );
 
   QString maxWidthText = mMaxWidthLineEdit->text();

@@ -1511,6 +1511,12 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   QStringList layersList, stylesList, layerIdList;
   QImage* theImage = initializeRendering( layersList, stylesList, layerIdList );
 
+  if ( !theImage )
+  {
+    QgsMessageLog::logMessage( "Initialisation paint device failed", "Server", QgsMessageLog::CRITICAL );
+    return 0;
+  }
+
   QPainter thePainter( theImage );
   thePainter.setRenderHint( QPainter::Antialiasing ); //make it look nicer
 
@@ -1901,6 +1907,12 @@ QImage* QgsWMSServer::initializeRendering( QStringList& layersList, QStringList&
   QString gml = mParameters.value( "GML" );
   if ( !gml.isEmpty() )
   {
+    if ( !mConfigParser->allowRequestDefinedDatasources() )
+    {
+      QgsMessageLog::logMessage( "The project configuration does not allow datasources defined in the request", "Server", QgsMessageLog::CRITICAL );
+      return 0;
+    }
+
     QDomDocument* gmlDoc = new QDomDocument();
     if ( gmlDoc->setContent( gml, true ) )
     {
@@ -2147,9 +2159,8 @@ int QgsWMSServer::initializeSLDParser( QStringList& layersList, QStringList& sty
 
     if ( !theDocument->setContent( xml, true, &errorMsg, &errorLine, &errorColumn ) )
     {
-      //std::cout << xml.toAscii().data() << std::endl;
-      QgsDebugMsg( "Error, could not create DomDocument from SLD" );
-      QgsDebugMsg( QString( "The error message is: %1" ).arg( errorMsg ) );
+      QgsMessageLog::logMessage( QString( "Could not create xml document from SLD. Error: %1, line %2, column %3" ).arg( errorMsg ).arg( errorLine ).arg( errorColumn ),
+                                 "Server", QgsMessageLog::CRITICAL );
       delete theDocument;
       return 1;
     }
