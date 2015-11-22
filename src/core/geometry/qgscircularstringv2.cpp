@@ -346,6 +346,13 @@ QgsLineStringV2* QgsCircularStringV2::curveToLine() const
 
   for ( int i = 0; i < ( nPoints - 2 ) ; i += 2 )
   {
+    if ( i > 0 ) //avoid doubled vertices in segmentized linestring
+    {
+      if ( !points.isEmpty() )
+      {
+        points.removeLast();
+      }
+    }
     segmentize( pointN( i ), pointN( i + 1 ), pointN( i + 2 ), points );
   }
 
