@@ -334,6 +334,14 @@ QgsLineStringV2* QgsCompoundCurveV2::curveToLine() const
   QgsLineStringV2* currentLine = 0;
   for ( ; curveIt != mCurves.constEnd(); ++curveIt )
   {
+    if ( curveIt != mCurves.constBegin() )
+    {
+      int lastVertex = line->numPoints() - 1;
+      if ( lastVertex >= 0 )
+      {
+        line->deleteVertex( QgsVertexId( 0, 0, lastVertex ) );
+      }
+    }
     currentLine = ( *curveIt )->curveToLine();
     line->append( currentLine );
     delete currentLine;
@@ -615,7 +623,7 @@ bool QgsCompoundCurveV2::addZValue( double zValue )
 
   mWkbType = QgsWKBTypes::addZ( mWkbType );
 
-  Q_FOREACH ( QgsCurveV2* curve, mCurves )
+  Q_FOREACH( QgsCurveV2* curve, mCurves )
   {
     curve->addZValue( zValue );
   }
@@ -629,7 +637,7 @@ bool QgsCompoundCurveV2::addMValue( double mValue )
 
   mWkbType = QgsWKBTypes::addM( mWkbType );
 
-  Q_FOREACH ( QgsCurveV2* curve, mCurves )
+  Q_FOREACH( QgsCurveV2* curve, mCurves )
   {
     curve->addMValue( mValue );
   }
