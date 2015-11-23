@@ -494,6 +494,26 @@
         <file>themes/default/mActionCircularStringRadius.png</file>
         <file>themes/default/mActionSaveMapToClipboard.png</file>
         <file>themes/default/observer.svg</file>
+	<file>kadas/analyse_flaechen.png</file>
+	<file>kadas/anwenderhandbuch.png</file>
+	<file>kadas/azimuth.png</file>
+	<file>kadas/distanz.png</file>
+	<file>kadas/drucken.png</file>
+	<file>kadas/einsehbarkeitsanalyse.png</file>
+	<file>kadas/flaeche.png</file>
+	<file>kadas/gelaendeneigung.png</file>
+	<file>kadas/hoehenprofil.png</file>
+	<file>kadas/inklination.png</file>
+	<file>kadas/koordinatengitter.png</file>
+	<file>kadas/kopieren.png</file>
+	<file>kadas/kreismessung.png</file>
+	<file>kadas/lineofsight.png</file>
+	<file>kadas/linie.png</file>
+	<file>kadas/neues_kartenfenster.png</file>
+	<file>kadas/oeffnen.png</file>
+	<file>kadas/speichern.png</file>
+	<file>kadas/stecknadel.png</file>
+	<file>kadas/text.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>
