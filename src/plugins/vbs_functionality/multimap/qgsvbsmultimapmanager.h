@@ -36,7 +36,7 @@ class QgsVBSMultiMapManager : public QObject
 
   private:
     QgisInterface* mIface;
-    QList<QPointer<QgsVBSMapWidget>> mMapWidgets;
+    QList<QPointer<QgsVBSMapWidget> > mMapWidgets;
     QAction* mActionAddMapWidget;
 
   private slots:
