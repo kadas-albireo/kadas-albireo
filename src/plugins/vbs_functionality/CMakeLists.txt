@@ -97,6 +97,7 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_gui
   qgis_analysis
   ${qjson_LIBRARIES}
+  ${QJSON_LIBRARIES}
   ${QUAZIP_LIBRARIES}
   ${CRASHRPT_LIBRARY}
 )
