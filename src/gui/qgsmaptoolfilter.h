@@ -23,9 +23,46 @@ class QgsRubberBand;
 class GUI_EXPORT QgsMapToolFilter : public QgsMapTool
 {
   public:
-    enum Mode { Circle, Rect, Poly };
+    enum Mode { Rect, Poly, Circle, CircularSector };
 
-    QgsMapToolFilter( QgsMapCanvas* canvas, Mode mode, QgsRubberBand* rubberBand );
+    struct FilterData
+    {
+      virtual ~FilterData() {}
+      virtual void updateRubberband( QgsRubberBand* rubberband ) = 0;
+    };
+
+    struct PolyData : FilterData
+    {
+      QList<QgsPoint> points;
+      void updateRubberband( QgsRubberBand* rubberband ) override;
+    };
+
+    struct RectData : FilterData
+    {
+      QgsPoint p1, p2;
+      void updateRubberband( QgsRubberBand* rubberband ) override;
+    };
+
+    struct CircleData : FilterData
+    {
+      CircleData() : radius( 0 ) {}
+      double radius;
+      QgsPoint center;
+      void updateRubberband( QgsRubberBand* rubberband ) override;
+    };
+
+    struct CircularSectorData : CircleData
+    {
+      CircularSectorData() : stage( Empty ), startAngle( 0 ), stopAngle( 0 ) {}
+      enum Stage { Empty, HaveCenter, HaveArc } stage;
+      bool incomplete = true;
+      double startAngle;
+      double stopAngle;
+      void updateRubberband( QgsRubberBand* rubberband ) override;
+    };
+
+    QgsMapToolFilter( QgsMapCanvas* canvas, Mode mode, QgsRubberBand* rubberBand, FilterData* filterData = 0 );
+    ~QgsMapToolFilter();
 
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
@@ -36,7 +73,8 @@ class GUI_EXPORT QgsMapToolFilter : public QgsMapTool
     Mode mMode;
     QgsRubberBand* mRubberBand;
     bool mCapturing;
-    QPoint mPressPos;
+    bool mOwnFilterData;
+    FilterData* mFilterData;
 };
 
 #endif // QGSMAPTOOLFILTER_H
