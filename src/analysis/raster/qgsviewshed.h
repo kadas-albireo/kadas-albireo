@@ -24,15 +24,18 @@ class QProgressDialog;
 
 #include "qgis.h"
 
+#include <QVector>
+
 class ANALYSIS_EXPORT QgsViewshed
 {
-public:
-  static bool computeViewshed( const QString& inputFile,
-                        const QString& outputFile, const QString& outputFormat,
-                        QgsPoint observerPos, const QgsCoordinateReferenceSystem& observerPosCrs,
-                        double observerHeight, double targetHeight, double radius,
-                        const QGis::UnitType distanceElevUnit,
-                        QProgressDialog* progress = 0 );
+  public:
+    static bool computeViewshed( const QString& inputFile,
+                                 const QString& outputFile, const QString& outputFormat,
+                                 QgsPoint observerPos, const QgsCoordinateReferenceSystem& observerPosCrs,
+                                 double observerHeight, double targetHeight, double radius,
+                                 const QGis::UnitType distanceElevUnit,
+                                 const QVector<QgsPoint> &filterRegion = QVector<QgsPoint>(),
+                                 QProgressDialog* progress = 0 );
 
 };
 

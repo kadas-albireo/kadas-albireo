@@ -21,7 +21,6 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsmaptoolfilter.h"
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgsrubberband.h"
@@ -41,7 +40,9 @@ QgsVBSSlopeTool::QgsVBSSlopeTool( QgisInterface *iface, QObject *parent )
   mRubberBand->setFillColor( QColor( 254, 178, 76, 63 ) );
   mRubberBand->setBorderColor( QColor( 254, 58, 29, 100 ) );
 
-  QgsMapToolFilter* filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::Rect, mRubberBand );
+  mRectData = new QgsMapToolFilter::RectData();
+
+  QgsMapToolFilter* filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::Rect, mRubberBand, mRectData );
   connect( filterTool, SIGNAL( deactivated() ), this, SLOT( filterFinished() ) );
   connect( filterTool, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   mIface->mapCanvas()->setMapTool( filterTool );
@@ -50,6 +51,7 @@ QgsVBSSlopeTool::QgsVBSSlopeTool( QgisInterface *iface, QObject *parent )
 QgsVBSSlopeTool::~QgsVBSSlopeTool()
 {
   delete mRubberBand;
+  delete mRectData;
 }
 
 void QgsVBSSlopeTool::filterFinished()
@@ -63,7 +65,8 @@ void QgsVBSSlopeTool::filterFinished()
     return;
   }
 
-  QgsRectangle rect( *mRubberBand->getPoint( 0, 0 ), *mRubberBand->getPoint( 0, 2 ) );
+  QgsRectangle rect( mRectData->p1, mRectData->p2 );
+  rect.normalize();
   QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );

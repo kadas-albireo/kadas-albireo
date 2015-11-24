@@ -19,6 +19,7 @@
 #define QGSVBSHILLSHADETOOL_H
 
 #include <QObject>
+#include "qgsmaptoolfilter.h"
 
 class QgisInterface;
 class QgsRubberBand;
@@ -36,6 +37,7 @@ class QgsVBSHillshadeTool : public QObject
   private:
     QgisInterface* mIface;
     QgsRubberBand* mRubberBand;
+    QgsMapToolFilter::RectData* mRectData;
 
   private slots:
     void filterFinished();

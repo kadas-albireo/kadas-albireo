@@ -18,5 +18,6 @@
         <file>icons/slope.svg</file>
         <file>icons/viewshed.svg</file>
         <file>icons/hillshade.svg</file>
+        <file>icons/viewshed_sector.svg</file>
     </qresource>
 </RCC>

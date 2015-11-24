@@ -20,6 +20,8 @@
 
 #include <QObject>
 
+#include "qgsmaptoolfilter.h"
+
 class QgisInterface;
 class QgsRubberBand;
 
@@ -27,7 +29,7 @@ class QgsVBSViewshedTool : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSViewshedTool( QgisInterface* iface, QObject* parent = 0 );
+    QgsVBSViewshedTool( QgisInterface* iface, bool sectorOnly, QObject* parent = 0 );
     ~QgsVBSViewshedTool();
 
   signals:
@@ -36,6 +38,7 @@ class QgsVBSViewshedTool : public QObject
   private:
     QgisInterface* mIface;
     QgsRubberBand* mRubberBand;
+    QgsMapToolFilter::CircleData* mFilterData;
 
   private slots:
     void filterFinished();

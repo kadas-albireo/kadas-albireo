@@ -24,7 +24,6 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsmaptoolfilter.h"
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgsrubberband.h"
@@ -41,14 +40,24 @@
 #include <QProgressDialog>
 
 
-QgsVBSViewshedTool::QgsVBSViewshedTool( QgisInterface *iface, QObject *parent )
-    : QObject( parent ), mIface( iface )
+QgsVBSViewshedTool::QgsVBSViewshedTool( QgisInterface *iface, bool sectorOnly , QObject *parent )
+    : QObject( parent ), mIface( iface ), mFilterData( 0 )
 {
   mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Polygon );
   mRubberBand->setFillColor( QColor( 254, 178, 76, 63 ) );
   mRubberBand->setBorderColor( QColor( 254, 58, 29, 100 ) );
 
-  QgsMapToolFilter* filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::Circle, mRubberBand );
+  QgsMapToolFilter* filterTool;
+  if ( sectorOnly )
+  {
+    mFilterData = new QgsMapToolFilter::CircularSectorData;
+    filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::CircularSector, mRubberBand, mFilterData );
+  }
+  else
+  {
+    mFilterData = new QgsMapToolFilter::CircleData;
+    filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::Circle, mRubberBand, mFilterData );
+  }
   connect( filterTool, SIGNAL( deactivated() ), this, SLOT( filterFinished() ) );
   connect( filterTool, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   mIface->mapCanvas()->setMapTool( filterTool );
@@ -57,6 +66,7 @@ QgsVBSViewshedTool::QgsVBSViewshedTool( QgisInterface *iface, QObject *parent )
 QgsVBSViewshedTool::~QgsVBSViewshedTool()
 {
   delete mRubberBand;
+  delete mFilterData;
 }
 
 void QgsVBSViewshedTool::filterFinished()
@@ -70,10 +80,9 @@ void QgsVBSViewshedTool::filterFinished()
     return;
   }
 
-  QgsGeometry* rubberBandGeom = mRubberBand->asGeometry();
-  double curRadius = 0.5 * rubberBandGeom->boundingBox().width();
-  delete rubberBandGeom;
-  QGis::UnitType measureUnit = mIface->mapCanvas()->mapSettings().destinationCrs().mapUnits();
+  QgsCoordinateReferenceSystem canvasCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
+  double curRadius = mFilterData->radius;
+  QGis::UnitType measureUnit = canvasCrs.mapUnits();
   QgsDistanceArea().convertMeasurement( curRadius, measureUnit, QGis::Meters, false );
 
   QDialog heightDialog;
@@ -114,20 +123,27 @@ void QgsVBSViewshedTool::filterFinished()
     return;
   }
 
-  rubberBandGeom = mRubberBand->asGeometry();
-  QgsRectangle rect = rubberBandGeom->boundingBox();
-  delete rubberBandGeom;
-  QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
-
-  QString outputFileName = QString( "viewshed_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
+  QString outputFileName = QString( "viewshed_%1,%2.tif" ).arg( mFilterData->center.x() ).arg( mFilterData->center.y() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
+
+  QVector<QgsPoint> filterRegion;
+  if ( dynamic_cast<QgsMapToolFilter::CircularSectorData*>( mFilterData ) )
+  {
+    QgsGeometry* rbGeom = mRubberBand->asGeometry();
+    QgsPolygon poly = rbGeom->asPolygon();
+    if ( !poly.isEmpty() )
+    {
+      filterRegion = poly.front();
+    }
+    delete rbGeom;
+  }
 
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", rect.center(), rectCrs, spinObserverHeight->value(), spinRadius->value(), .5 * rect.width(), QGis::Meters, &p );
+  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", mFilterData->center, canvasCrs, spinObserverHeight->value(), spinTargetHeight->value(), mFilterData->radius, QGis::Meters, filterRegion, &p );
   if ( success )
   {
-    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( rect.center().toString() ) );
+    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( mFilterData->center.toString() ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
         << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
@@ -145,16 +161,6 @@ void QgsVBSViewshedTool::adjustRadius( double newRadius )
   QGis::UnitType measureUnit = QGis::Meters;
   QGis::UnitType targetUnit = mIface->mapCanvas()->mapSettings().destinationCrs().mapUnits();
   QgsDistanceArea().convertMeasurement( newRadius, measureUnit, targetUnit, false );
-
-  QgsPoint pressPos = mRubberBand->asGeometry()->boundingBox().center();
-
-  QgsCircularStringV2* exterior = new QgsCircularStringV2();
-  exterior->setPoints(
-    QList<QgsPointV2>() << QgsPoint( pressPos.x() + newRadius, pressPos.y() )
-    << pressPos
-    << QgsPoint( pressPos.x() + newRadius, pressPos.y() ) );
-  QgsCurvePolygonV2 geom;
-  geom.setExteriorRing( exterior );
-  QgsGeometry g( geom.segmentize() );
-  mRubberBand->setToGeometry( &g, 0 );
+  mFilterData->radius = newRadius;
+  mFilterData->updateRubberband( mRubberBand );
 }

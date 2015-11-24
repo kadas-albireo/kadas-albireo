@@ -29,18 +29,27 @@
 #include <QVector>
 
 
-static inline double geotransformx( double gtrans[6], double x, double y )
+static inline double geoToPixelX( double gtrans[6], double x, double y )
 {
   return ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * y + gtrans[5] * x ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
-
 }
 
-static inline double geotransformy( double gtrans[6], double x, double y )
+static inline double geoToPixelY( double gtrans[6], double x, double y )
 {
   return ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * y + gtrans[4] * x ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
 }
 
-bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, double radius, const QGis::UnitType distanceElevUnit, QProgressDialog *progress )
+static inline double pixelToGeoX( double gtrans[6], double px, double py )
+{
+  return gtrans[0] + px * gtrans[1] + py * gtrans[2];
+}
+
+static inline double pixelToGeoY( double gtrans[6], double px, double py )
+{
+  return gtrans[3] + px * gtrans[4] + py * gtrans[5];
+}
+
+bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, QProgressDialog *progress )
 {
   // Open input file
   GDALDatasetH inputDataset = GDALOpen( inputFile.toLocal8Bit().data(), GA_ReadOnly );
@@ -91,12 +100,13 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
 
   int obs[2] =
   {
-    qRound( geotransformx( gtrans, observerPos.x(), observerPos.y() ) ),
-    qRound( geotransformy( gtrans, observerPos.x(), observerPos.y() ) )
+    qRound( geoToPixelX( gtrans, observerPos.x(), observerPos.y() ) ),
+    qRound( geoToPixelY( gtrans, observerPos.x(), observerPos.y() ) )
   };
   double earthRadius = 6370000;
-  if(datasetCrs.mapUnits() != QGis::Meters) {
-    earthRadius *= QGis::fromUnitToUnitFactor(QGis::Meters, datasetCrs.mapUnits());
+  if ( datasetCrs.mapUnits() != QGis::Meters )
+  {
+    earthRadius *= QGis::fromUnitToUnitFactor( QGis::Meters, datasetCrs.mapUnits() );
   }
 
   QList<QgsPoint> cornerPoints = QList<QgsPoint>()
@@ -110,8 +120,8 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   int rowEnd = -std::numeric_limits<int>::max();
   foreach ( const QgsPoint& p, cornerPoints )
   {
-    double x = geotransformx( gtrans, p.x(), p.y() );
-    double y = geotransformy( gtrans, p.x(), p.y() );
+    double x = geoToPixelX( gtrans, p.x(), p.y() );
+    double y = geoToPixelY( gtrans, p.x(), p.y() );
     colStart = qMin( colStart, qFloor( x ) );
     colEnd = qMax( colEnd, qCeil( x ) );
     rowStart = qMin( rowStart, qFloor( y ) );
@@ -124,6 +134,12 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   int hmapWidth = colEnd - colStart + 1;
   int hmapHeight = rowEnd - rowStart + 1;
   int roi = .5 * qMin( hmapWidth, hmapHeight );
+  QPolygon filterPoly;
+  for ( int i = 0, n = filterRegion.size(); i < n; ++i )
+  {
+    QgsPoint p = ct.transform( filterRegion[i] );
+    filterPoly.append( QPoint( geoToPixelX( gtrans, p.x(), p.y() ), geoToPixelY( gtrans, p.x(), p.y() ) ) );
+  }
 
 
   // Prepare output
@@ -267,6 +283,10 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       {
         break;
       }
+      if ( !filterPoly.isEmpty() && !filterPoly.containsPoint( QPoint( p[0], p[1] ), Qt::OddEvenFill ) )
+      {
+        break;
+      }
 
       float pElev = heightmap[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )];
       if ( pElev == noDataValue )
@@ -275,11 +295,11 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       }
 
       // Earth curvature correction
-      double pGeoX = pixelToGeoX(gtrans, p[0], p[1]);
-      double pGeoY = pixelToGeoY(gtrans, p[0], p[1]);
-      double geoDistSqr = (observerPos.x() - pGeoX) * (observerPos.x() - pGeoX) + (observerPos.y() - pGeoY) * (observerPos.y() - pGeoY);
+      double pGeoX = pixelToGeoX( gtrans, p[0], p[1] );
+      double pGeoY = pixelToGeoY( gtrans, p[0], p[1] );
+      double geoDistSqr = ( observerPos.x() - pGeoX ) * ( observerPos.x() - pGeoX ) + ( observerPos.y() - pGeoY ) * ( observerPos.y() - pGeoY );
       // http://www.swisstopo.admin.ch/internet/swisstopo/de/home/topics/survey/faq/curvature.html
-      pElev -= 0.87 * geoDistSqr / (2 * earthRadius);
+      pElev -= 0.87 * geoDistSqr / ( 2 * earthRadius );
 
       // Update the slope if the current slope is greater than the old one
       double s = double( pElev - observerHeight ) / double( qAbs( p[inciny] - obs[inciny] ) );

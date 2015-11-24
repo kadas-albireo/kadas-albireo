@@ -19,6 +19,7 @@
 #define QGSVBSSLOPETOOL_H
 
 #include <QObject>
+#include "qgsmaptoolfilter.h"
 
 class QgisInterface;
 class QgsRubberBand;
@@ -36,6 +37,7 @@ class QgsVBSSlopeTool : public QObject
   private:
     QgisInterface* mIface;
     QgsRubberBand* mRubberBand;
+    QgsMapToolFilter::RectData* mRectData;
 
   private slots:
     void filterFinished();
