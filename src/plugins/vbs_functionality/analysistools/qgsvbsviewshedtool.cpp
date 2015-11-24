@@ -102,13 +102,10 @@ void QgsVBSViewshedTool::filterFinished()
   spinRadius->setKeyboardTracking( false );
   connect( spinRadius, SIGNAL( valueChanged( double ) ), this, SLOT( adjustRadius( double ) ) );
   heightDialogLayout->addWidget( spinRadius, 2, 1, 1, 1 );
-  QLabel* curvatureWarningLabel = new QLabel( tr( "<b>Note:</b> Earth curvature is not taken into account." ) );
-  curvatureWarningLabel->setStyleSheet( "QLabel { background: #9999FF; color: #FFFFFF; border-radius: 5px; padding: 2px; }" );
-  heightDialogLayout->addWidget( curvatureWarningLabel, 3, 0, 1, 2 );
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
   connect( bbox, SIGNAL( accepted() ), &heightDialog, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), &heightDialog, SLOT( reject() ) );
-  heightDialogLayout->addWidget( bbox, 4, 0, 1, 2 );
+  heightDialogLayout->addWidget( bbox, 3, 0, 1, 2 );
   heightDialog.setLayout( heightDialogLayout );
   heightDialog.setFixedSize( heightDialog.sizeHint() );
   if ( heightDialog.exec() == QDialog::Rejected )

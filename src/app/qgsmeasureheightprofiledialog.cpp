@@ -111,9 +111,6 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mTargetHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mTargetHeightSpinBox, 0, 3 );
-  QLabel* curvatureWarningLabel = new QLabel( tr( "<b>Note:</b> Earth curvature is not taken into account." ) );
-  curvatureWarningLabel->setStyleSheet( "QLabel { background: #9999FF; color: #FFFFFF; border-radius: 5px; padding: 2px; }" );
-  layoutLOS->addWidget( curvatureWarningLabel, 1, 0, 1, 4 );
   vboxLayout->addWidget( mLineOfSightGroupBoxgroupBox );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
@@ -217,6 +214,7 @@ void QgsMeasureHeightProfileDialog::replot()
     GDALClose( raster );
     return;
   }
+  double heightToMeters = QGis::fromUnitToUnitFactor( rasterCrs.mapUnits(), QGis::Meters );
 
   GDALRasterBandH band = GDALGetRasterBand( raster, 1 );
   if ( !raster )
@@ -272,9 +270,9 @@ void QgsMeasureHeightProfileDialog::replot()
                        + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
 #if QWT_VERSION < 0x060000
         xSamples.append( xSamples.size() );
-        ySamples.append( value );
+        ySamples.append( value * heightToMeters );
 #else
-        samples.append( QPointF( samples.size(), value ) );
+        samples.append( QPointF( samples.size(), value * heightToMeters ) );
 #endif
       }
       x += mTotLength / mNSamples;
@@ -331,7 +329,12 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 
   for ( int i = 0; i < nSamples - 1; ++i )
   {
-    QPointF p2( samples[i].x(), samples[i].y() + mTargetHeightSpinBox->value() );
+    // Curvature correction
+    double distFromObserver = samples[i].x() / mNSamples * mTotLength;
+    double earthRadius = 6370000;
+    double hCorr = 0.87 * distFromObserver * distFromObserver / ( 2 * earthRadius );
+
+    QPointF p2( samples[i].x(), samples[i].y() + mTargetHeightSpinBox->value() - hCorr );
     // X = p1.x() + d * (p2.x() - p1.x())
     // Y = p1.y() + d * (p2.y() - p1.y())
     // => d = (X - p1.x()) / (p2.x() - p1.x())
