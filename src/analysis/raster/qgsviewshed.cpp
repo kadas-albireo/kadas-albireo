@@ -94,6 +94,10 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
     qRound( geotransformx( gtrans, observerPos.x(), observerPos.y() ) ),
     qRound( geotransformy( gtrans, observerPos.x(), observerPos.y() ) )
   };
+  double earthRadius = 6370000;
+  if(datasetCrs.mapUnits() != QGis::Meters) {
+    earthRadius *= QGis::fromUnitToUnitFactor(QGis::Meters, datasetCrs.mapUnits());
+  }
 
   QList<QgsPoint> cornerPoints = QList<QgsPoint>()
                                  << QgsPoint( observerPos.x() - radius, observerPos.y() - radius )
@@ -269,6 +273,13 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       {
         continue;
       }
+
+      // Earth curvature correction
+      double pGeoX = pixelToGeoX(gtrans, p[0], p[1]);
+      double pGeoY = pixelToGeoY(gtrans, p[0], p[1]);
+      double geoDistSqr = (observerPos.x() - pGeoX) * (observerPos.x() - pGeoX) + (observerPos.y() - pGeoY) * (observerPos.y() - pGeoY);
+      // http://www.swisstopo.admin.ch/internet/swisstopo/de/home/topics/survey/faq/curvature.html
+      pElev -= 0.87 * geoDistSqr / (2 * earthRadius);
 
       // Update the slope if the current slope is greater than the old one
       double s = double( pElev - observerHeight ) / double( qAbs( p[inciny] - obs[inciny] ) );
