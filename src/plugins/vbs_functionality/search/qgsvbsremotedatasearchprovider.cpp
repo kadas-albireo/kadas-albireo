@@ -18,8 +18,10 @@
 #include "qgsvbsremotedatasearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
+#include "qgslinestringv2.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayer.h"
+#include "qgspolygonv2.h"
 #include "qgsrasterlayer.h"
 #include "qgslogger.h"
 #include "qgsdatasourceuri.h"
@@ -37,6 +39,7 @@ QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *i
     : QgsVBSSearchProvider( iface )
 {
   mNetReply = 0;
+  mReplyFilter = 0;
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
@@ -44,7 +47,7 @@ QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *i
   connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
 }
 
-void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , const SearchRegion &searchRegion )
+void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
   QStringList remoteLayers;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
@@ -55,33 +58,33 @@ void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext , co
     }
     QgsRasterLayer* rasterLayer = static_cast<QgsRasterLayer*>( layer );
     QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
-    if ( url.queryItemValue( "url" ).startsWith( "http://wmts.geo.admin.ch" ) )
+    if ( url.queryItemValue( "url" ).contains( "wmts.geo.admin.ch" ) ||
+         url.queryItemValue( "url" ).contains( "wms.geo.admin.ch" ) )
     {
       remoteLayers.append( url.queryItemValue( "layers" ).split( "," ) );
     }
   }
 
-  QUrl url( QSettings().value("vbsfunctionality/search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer").toString() );
+  QUrl url( QSettings().value( "vbsfunctionality/search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
   url.addQueryItem( "type", "featuresearch" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "features", remoteLayers.join( "," ) );
   if ( !searchRegion.polygon.isEmpty() )
   {
-    // TODO: FeatureSearch currently does not allow spatial filtering, below might need to be adapted
-    // if spatial filtering is not implmeneted there via geometry/geometryType...
-    QString geometryStr = "{\"rings\":[[";
+    QgsRectangle rect;
+    rect.setMinimal();
+    QgsLineStringV2* exterior = new QgsLineStringV2();
     QgsCoordinateTransform ct( searchRegion.crs, QgsCoordinateReferenceSystem( "EPSG:21781" ) );
-    for ( int i = 0, n = searchRegion.polygon.size(); i < n; ++i )
+    foreach ( const QgsPoint& p, searchRegion.polygon )
     {
-      if ( i > 0 )
-        geometryStr += ", ";
-      QgsPoint p = ct.transform( searchRegion.polygon.at( i ) );
-      geometryStr += QString( "[%1, %2]" ).arg( p.x() ).arg( p.y() );
+      QgsPoint pt = ct.transform( p );
+      rect.include( pt );
+      exterior->addVertex( QgsPointV2( pt ) );
     }
-    geometryStr += "]]}";
-    url.addQueryItem( "geometry", geometryStr );
-    url.addQueryItem( "geometryType", "esriGeometryPolygon" );
-
+    url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( rect.xMinimum() ).arg( rect.yMinimum() ).arg( rect.xMaximum() ).arg( rect.yMaximum() ) );
+    QgsPolygonV2* poly = new QgsPolygonV2();
+    poly->setExteriorRing( exterior );
+    mReplyFilter = new QgsGeometry( poly );
   }
 
   QNetworkRequest req( url );
@@ -100,6 +103,8 @@ void QgsVBSRemoteDataSearchProvider::cancelSearch()
     mNetReply->close();
     mNetReply->deleteLater();
     mNetReply = 0;
+    delete mReplyFilter;
+    mReplyFilter = 0;
   }
 }
 
@@ -112,6 +117,8 @@ void QgsVBSRemoteDataSearchProvider::replyFinished()
   {
     mNetReply->deleteLater();
     mNetReply = 0;
+    delete mReplyFilter;
+    mReplyFilter = 0;
     emit searchFinished();
     return;
   }
@@ -154,6 +161,11 @@ void QgsVBSRemoteDataSearchProvider::replyFinished()
     {
       continue;
     }
+    if ( mReplyFilter && !mReplyFilter->contains( &searchResult.pos ) )
+    {
+      continue;
+    }
+
     searchResult.zoomScale = 1000;
 
     searchResult.category = tr( "Feature" );
@@ -164,5 +176,7 @@ void QgsVBSRemoteDataSearchProvider::replyFinished()
   }
   mNetReply->deleteLater();
   mNetReply = 0;
+  delete mReplyFilter;
+  mReplyFilter = 0;
   emit searchFinished();
 }
