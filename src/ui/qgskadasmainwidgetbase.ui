@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>QgsKadasMainWidgetBase</class>
+ <widget class="QWidget" name="QgsKadasMainWidgetBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -102,9 +102,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QgsVBSSearchBox" name="mSearchWidget" native="true">
-         <zorder>mRibbonWidget</zorder>
-        </widget>
+        <widget class="QWidget" name="mSearchWidget" native="true"/>
        </item>
       </layout>
      </item>
@@ -140,10 +138,6 @@
            </property>
            <property name="text">
             <string>Open</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/oeffnen.png</normaloff>:/images/kadas/oeffnen.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -241,7 +235,6 @@
           </widget>
          </item>
         </layout>
-        <zorder></zorder>
         <zorder>mSaveButton</zorder>
         <zorder>mOpenButton</zorder>
         <zorder>mCopyButton</zorder>
@@ -297,14 +290,20 @@
     </layout>
    </item>
   </layout>
+  <action name="mActionOpen">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/oeffnen.png</normaloff>:/images/kadas/oeffnen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open project</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QgsVBSSearchBox</class>
-   <extends>QWidget</extends>
-   <header>qgsvbssearchbox.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>QgsMapCanvas</class>
    <extends>QWidget</extends>
