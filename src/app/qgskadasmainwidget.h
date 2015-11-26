@@ -38,6 +38,11 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     //! clear out any stuff from project
     void closeProject();
     void removeAllLayers();
+    void createCanvasTools();
+    /** Activates or deactivates actions depending on the current maplayer type.
+    Is called from the legend when the current legend item has changed*/
+    void activateDeactivateLayerRelatedActions( QgsMapLayer *layer );
+    void initMapCanvas();
 
     //! list of recently opened/saved project files
     QStringList mRecentProjectPaths;
@@ -45,6 +50,109 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     QgsLayerTreeView* mLayerTreeView;
     //! Helper class that connects layer tree with map canvas
     QgsLayerTreeMapCanvasBridge* mLayerTreeCanvasBridge;
+
+    QgsMapTool* mNonEditMapTool;
+
+    class Tools
+    {
+      public:
+
+        Tools()
+            : mZoomIn( 0 )
+            , mZoomOut( 0 )
+            , mPan( 0 )
+#ifdef HAVE_TOUCH
+            , mTouch( 0 )
+#endif
+            , mIdentify( 0 )
+            , mFeatureAction( 0 )
+            , mMeasureDist( 0 )
+            , mMeasureArea( 0 )
+            , mMeasureAngle( 0 )
+            , mAddFeature( 0 )
+            , mMoveFeature( 0 )
+            , mOffsetCurve( 0 )
+            , mReshapeFeatures( 0 )
+            , mSplitFeatures( 0 )
+            , mSplitParts( 0 )
+            , mSelect( 0 )
+            , mSelectFeatures( 0 )
+            , mSelectPolygon( 0 )
+            , mSelectFreehand( 0 )
+            , mSelectRadius( 0 )
+            , mVertexAdd( 0 )
+            , mVertexMove( 0 )
+            , mVertexDelete( 0 )
+            , mAddRing( 0 )
+            , mFillRing( 0 )
+            , mAddPart( 0 )
+            , mSimplifyFeature( 0 )
+            , mDeleteRing( 0 )
+            , mDeletePart( 0 )
+            , mNodeTool( 0 )
+            , mRotatePointSymbolsTool( 0 )
+            , mAnnotation( 0 )
+            , mFormAnnotation( 0 )
+            , mHtmlAnnotation( 0 )
+            , mSvgAnnotation( 0 )
+            , mTextAnnotation( 0 )
+            , mPinLabels( 0 )
+            , mShowHideLabels( 0 )
+            , mMoveLabel( 0 )
+            , mRotateFeature( 0 )
+            , mRotateLabel( 0 )
+            , mChangeLabelProperties( 0 )
+        {}
+
+        QgsMapTool *mZoomIn;
+        QgsMapTool *mZoomOut;
+        QgsMapTool *mPan;
+#ifdef HAVE_TOUCH
+        QgsMapTool *mTouch;
+#endif
+        QgsMapTool *mIdentify;
+        QgsMapTool *mFeatureAction;
+        QgsMapTool *mMeasureDist;
+        QgsMapTool *mMeasureArea;
+        QgsMapTool *mMeasureCircle;
+        QgsMapTool *mMeasureHeightProfile;
+        QgsMapTool *mMeasureAngle;
+        QgsMapTool *mAddFeature;
+        QgsMapTool *mCircularStringCurvePoint;
+        QgsMapTool *mCircularStringRadius;
+        QgsMapTool *mMoveFeature;
+        QgsMapTool *mOffsetCurve;
+        QgsMapTool *mReshapeFeatures;
+        QgsMapTool *mSplitFeatures;
+        QgsMapTool *mSplitParts;
+        QgsMapTool *mSelect;
+        QgsMapTool *mSelectFeatures;
+        QgsMapTool *mSelectPolygon;
+        QgsMapTool *mSelectFreehand;
+        QgsMapTool *mSelectRadius;
+        QgsMapTool *mVertexAdd;
+        QgsMapTool *mVertexMove;
+        QgsMapTool *mVertexDelete;
+        QgsMapTool *mAddRing;
+        QgsMapTool *mFillRing;
+        QgsMapTool *mAddPart;
+        QgsMapTool *mSimplifyFeature;
+        QgsMapTool *mDeleteRing;
+        QgsMapTool *mDeletePart;
+        QgsMapTool *mNodeTool;
+        QgsMapTool *mRotatePointSymbolsTool;
+        QgsMapTool *mAnnotation;
+        QgsMapTool *mFormAnnotation;
+        QgsMapTool *mHtmlAnnotation;
+        QgsMapTool *mSvgAnnotation;
+        QgsMapTool *mTextAnnotation;
+        QgsMapTool *mPinLabels;
+        QgsMapTool *mShowHideLabels;
+        QgsMapTool *mMoveLabel;
+        QgsMapTool *mRotateFeature;
+        QgsMapTool *mRotateLabel;
+        QgsMapTool *mChangeLabelProperties;
+    } mMapTools;
 };
 
 #endif // QGSKADASMAINWIDGET_H
