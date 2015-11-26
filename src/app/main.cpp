@@ -38,6 +38,7 @@
 
 #include "qgscustomization.h"
 #include "qgsfontutils.h"
+#include "qgskadasmainwidget.h"
 #include "qgspluginregistry.h"
 #include "qgsmessagelog.h"
 #include "qgspythonrunner.h"
@@ -693,7 +694,7 @@ int main( int argc, char *argv[] )
     gdalShares << QCoreApplication::applicationDirPath().append( "/share/gdal" )
     << appResources.append( "/share/gdal" )
     << appResources.append( "/gdal" );
-    Q_FOREACH ( const QString& gdalShare, gdalShares )
+    Q_FOREACH( const QString& gdalShare, gdalShares )
     {
       if ( QFile::exists( gdalShare ) )
       {
@@ -882,11 +883,11 @@ int main( int argc, char *argv[] )
 #endif
 
   //set up splash screen
-  QPixmap myPixmap( splash_image );
-  QSplashScreen *mypSplash = new QSplashScreen( myPixmap );
+  //QPixmap myPixmap( splash_image );
+  //QSplashScreen *mypSplash = new QSplashScreen( myPixmap );
   //for win and linux we can just automask and png transparency areas will be used
-  mypSplash->setMask( myPixmap.mask() );
-  mypSplash->show();
+  //mypSplash->setMask( myPixmap.mask() );
+  //mypSplash->show();
 
   // optionally restore default window state
   // use restoreDefaultWindowState setting only if NOT using command line (then it is set already)
@@ -901,7 +902,8 @@ int main( int argc, char *argv[] )
   // this should be done in QgsApplication::init() but it doesn't know the settings dir.
   QgsApplication::setMaxThreads( QSettings().value( "/qgis/max_threads", -1 ).toInt() );
 
-  QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
+  //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
+  QgsKadasMainWidget* qgis = new QgsKadasMainWidget();
   qgis->setObjectName( "QgisApp" );
 
   myApp.connect(
@@ -910,6 +912,7 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
   );
 
+#if 0 //disable command line options for now
   /////////////////////////////////////////////////////////////////////
   // Load a project file if one was specified
   /////////////////////////////////////////////////////////////////////
@@ -1020,6 +1023,7 @@ int main( int argc, char *argv[] )
 
     return 1;
   }
+#endif //0
 
   /////////////////////////////////////////////////////////////////////
   // Continue on to interactive gui...
@@ -1027,10 +1031,10 @@ int main( int argc, char *argv[] )
   qgis->show();
   myApp.connect( &myApp, SIGNAL( lastWindowClosed() ), &myApp, SLOT( quit() ) );
 
-  mypSplash->finish( qgis );
-  delete mypSplash;
+  //mypSplash->finish( qgis );
+  //delete mypSplash;
 
-  qgis->completeInitialization();
+  //qgis->completeInitialization();
 
 #if defined(ANDROID)
   // fix for Qt Ministro hiding app's menubar in favor of native Android menus
