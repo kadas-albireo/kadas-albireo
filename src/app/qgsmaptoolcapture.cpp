@@ -22,7 +22,6 @@
 #include "qgslinestringv2.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
-#include "qgsmaplayerregistry.h"
 #include "qgsmapmouseevent.h"
 #include "qgsmaprenderer.h"
 #include "qgspolygonv2.h"
@@ -58,8 +57,11 @@ QgsMapToolCapture::QgsMapToolCapture( QgsMapCanvas* canvas, enum CaptureMode too
   QPixmap mySelectQPixmap = QPixmap(( const char ** ) capture_point_cursor );
   mCursor = QCursor( mySelectQPixmap, 8, 8 );
 
-  connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer * ) ),
-           this, SLOT( currentLayerChanged( QgsMapLayer * ) ) );
+  if ( QgisApp::instance() && QgisApp::instance()->layerTreeView() )
+  {
+    connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer * ) ),
+             this, SLOT( currentLayerChanged( QgsMapLayer * ) ) );
+  }
 }
 
 QgsMapToolCapture::~QgsMapToolCapture()
@@ -83,26 +85,8 @@ void QgsMapToolCapture::deactivate()
   QgsMapToolEdit::deactivate();
 }
 
-void QgsMapToolCapture::activate()
-{
-  QgsVectorLayer* vl = currentVectorLayer();
-  if ( vl )
-  {
-    if ( vl->id() != mRubberBandLayerId )
-    {
-      stopCapturing( false );
-    }
-  }
-  QgsMapToolEdit::activate();
-}
-
 void QgsMapToolCapture::currentLayerChanged( QgsMapLayer *layer )
 {
-  if (( !layer || ( layer->isEditable() && layer->id() != mRubberBandLayerId ) ) && mCapturing )
-  {
-    stopCapturing( false );
-  }
-
   if ( !mCaptureModeFromLayer )
     return;
 
@@ -205,18 +189,6 @@ int QgsMapToolCapture::addVertex( const QgsPoint& point )
   if ( !mRubberBand )
   {
     mRubberBand = createRubberBand( mCaptureMode == CapturePolygon ? QGis::Polygon : QGis::Line );
-    if ( currentVectorLayer() )
-    {
-      //disconnect from old layer if still there
-      QgsVectorLayer* oldLayer = dynamic_cast<QgsVectorLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mRubberBandLayerId ) );
-      if ( oldLayer )
-      {
-        QObject::disconnect( oldLayer, SIGNAL( editingStopped() ), this, SLOT( stopLayerEditing() ) );
-      }
-      mRubberBandLayerId = currentVectorLayer()->id();
-      QObject::connect( currentVectorLayer(), SIGNAL( editingStopped() ), this, SLOT( stopLayerEditing() ) );
-      //todo: connect signal slot
-    }
   }
   mRubberBand->addPoint( point );
   mCaptureCurve.addVertex( QgsPointV2( layerPoint.x(), layerPoint.y() ) );
@@ -349,9 +321,19 @@ bool QgsMapToolCapture::isCapturing() const
   return mCapturing;
 }
 
-void QgsMapToolCapture::stopCapturing( bool canvasRefresh )
+void QgsMapToolCapture::stopCapturing()
 {
-  removeRubberBand();
+  if ( mRubberBand )
+  {
+    delete mRubberBand;
+    mRubberBand = 0;
+  }
+
+  if ( mTempRubberBand )
+  {
+    delete mTempRubberBand;
+    mTempRubberBand = 0;
+  }
 
   while ( !mGeomErrorMarkers.isEmpty() )
   {
@@ -367,10 +349,7 @@ void QgsMapToolCapture::stopCapturing( bool canvasRefresh )
 
   mCapturing = false;
   mCaptureCurve.clear();
-  if ( canvasRefresh )
-  {
-    mCanvas->refresh();
-  }
+  mCanvas->refresh();
 }
 
 void QgsMapToolCapture::deleteTempRubberBand()
@@ -522,20 +501,4 @@ void QgsMapToolCapture::updateSnappingMarker( QgsMapMouseEvent* e )
     delete mSnappingMarker;
     mSnappingMarker = 0;
   }
-}
-
-void QgsMapToolCapture::removeRubberBand()
-{
-  //disconnect from old layer if still there
-  QgsVectorLayer* oldLayer = dynamic_cast<QgsVectorLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mRubberBandLayerId ) );
-  if ( oldLayer )
-  {
-    QObject::disconnect( oldLayer, SIGNAL( editingStopped() ), this, SLOT( stopLayerEditing() ) );
-  }
-
-  delete mRubberBand;
-  mRubberBand = 0;
-  delete mTempRubberBand;
-  mTempRubberBand = 0;
-  mRubberBandLayerId.clear();
 }
