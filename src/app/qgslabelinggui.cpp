@@ -23,11 +23,11 @@
 #include <qgsmaplayerregistry.h>
 
 #include "qgsdatadefinedbutton.h"
+#include "qgskadasmainwidget.h"
 #include "qgslabelengineconfigdialog.h"
 #include "qgsexpressionbuilderdialog.h"
 #include "qgsexpression.h"
 #include "qgsfontutils.h"
-#include "qgisapp.h"
 #include "qgsmaprenderer.h"
 #include "qgsproject.h"
 #include "qgssvgcache.h"
@@ -39,7 +39,7 @@
 #include <QSettings>
 
 
-QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent )
+QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsKadasMainWidget* mainWidget )
     : QWidget( parent )
     , mLayer( layer )
     , mMapCanvas( mapCanvas )
@@ -53,6 +53,7 @@ QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, 
     , mPreviewSize( 24 )
     , mMinPixelLimit( 0 )
     , mLoadSvgParams( false )
+    , mMainWidget( mainWidget )
 {
   if ( !layer )
     return;
@@ -151,7 +152,10 @@ QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, 
   mFieldExpressionWidget->setLayer( mLayer );
   QgsDistanceArea myDa;
   myDa.setSourceCrs( mLayer->crs().srsid() );
-  myDa.setEllipsoidalMode( QgisApp::instance()->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
+  if ( mMainWidget )
+  {
+    myDa.setEllipsoidalMode( mMainWidget->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
+  }
   myDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
   mFieldExpressionWidget->setGeomCalculator( myDa );
 
@@ -551,7 +555,10 @@ void QgsLabelingGui::apply()
 {
   writeSettingsToLayer();
   mFontMissingLabel->setVisible( false );
-  QgisApp::instance()->markDirty();
+  if ( mMainWidget )
+  {
+    mMainWidget->markDirty();
+  }
   // trigger refresh
   if ( mMapCanvas )
   {
