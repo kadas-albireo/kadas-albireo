@@ -1,12 +1,23 @@
 #include "qgskadasmainwidget.h"
 #include "qgsapplication.h"
+#include "qgsattributetabledialog.h"
 #include "qgslayertreemapcanvasbridge.h"
+#include "qgslayertreemodel.h"
+#include "qgsapplayertreeviewmenuprovider.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
+#include "qgsmessageviewer.h"
+#include "qgsmessagebar.h"
+#include "qgsmessagebaritem.h"
+#include "qgspluginlayer.h"
+#include "qgspluginlayerregistry.h"
 #include "qgsproject.h"
 #include "qgsproviderregistry.h"
+#include "qgsrasterlayerproperties.h"
 #include "qgstemporaryfile.h"
+#include "qgsvectordataprovider.h"
 #include "qgsvectorlayer.h"
+#include "qgsvectorlayerproperties.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -57,10 +68,11 @@
 #include "nodetool/qgsmaptoolnodetool.h"
 
 
-QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeView( 0 ),
-    mLayerTreeCanvasBridge( 0 ), mNonEditMapTool( 0 )
+QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
+    mNonEditMapTool( 0 )
 {
   setupUi( this );
+  mLayerTreeView->setVisible( false );
 
   QgsApplication::initQgis();
 
@@ -69,7 +81,13 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   setActionToButton( mActionOpen, mOpenButton );
 
   mMapCanvas->freeze();
+  initLayerTreeView();
   initMapCanvas();
+
+  // a bar to warn the user with non-blocking messages
+  mInfoBar = new QgsMessageBar( mMapCanvas );
+  mInfoBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+  //centralLayout->addWidget( mInfoBar, 0, 0, 1, 1 );
 
   /*mLayerTreeView = new QgsLayerTreeView( this );
   mLayerTreeView->setObjectName( "theLayerTreeView" ); // "theLayerTreeView" used to find this canonical instance later*/
@@ -96,6 +114,59 @@ QgsKadasMainWidget::~QgsKadasMainWidget()
 {
 }
 
+int QgsKadasMainWidget::messageTimeout()
+{
+  QSettings settings;
+  return settings.value( "/qgis/messageTimeout", 5 ).toInt();
+}
+
+void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
+{
+  QRect mapCanvasGeometry = mMapCanvas->geometry();
+
+  //make sure +/- buttons have constant distance to upper right corner of map canvas
+  QWidget* zoomLayoutWidget = dynamic_cast<QWidget*>( mZoomInOutLayout->parent() );
+  if ( zoomLayoutWidget )
+  {
+    QRect zoomLayoutGeometry = zoomLayoutWidget->geometry();
+    zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - 15 - zoomLayoutGeometry.width(), 15, 35, zoomLayoutGeometry.height() ) );
+  }
+  QWidget::resizeEvent( event );
+}
+
+void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
+{
+  QgsMessageViewer *mv = new QgsMessageViewer();
+  mv->setWindowTitle( tr( "Commit errors" ) );
+  mv->setMessageAsPlainText( tr( "Could not commit changes to layer %1" ).arg( vlayer->name() )
+                             + "\n\n"
+                             + tr( "Errors: %1\n" ).arg( vlayer->commitErrors().join( "\n  " ) )
+                           );
+
+  QToolButton *showMore = new QToolButton();
+  // store pointer to vlayer in data of QAction
+  QAction *act = new QAction( showMore );
+  act->setData( QVariant( QMetaType::QObjectStar, &vlayer ) );
+  act->setText( tr( "Show more" ) );
+  showMore->setStyleSheet( "background-color: rgba(255, 255, 255, 0); color: black; text-decoration: underline;" );
+  showMore->setCursor( Qt::PointingHandCursor );
+  showMore->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+  showMore->addAction( act );
+  showMore->setDefaultAction( act );
+  connect( showMore, SIGNAL( triggered( QAction* ) ), mv, SLOT( exec() ) );
+  connect( showMore, SIGNAL( triggered( QAction* ) ), showMore, SLOT( deleteLater() ) );
+
+  // no timeout set, since notice needs attention and is only shown first time layer is labeled
+  QgsMessageBarItem *errorMsg = new QgsMessageBarItem(
+    tr( "Commit errors" ),
+    tr( "Could not commit changes to layer %1" ).arg( vlayer->name() ),
+    showMore,
+    QgsMessageBar::WARNING,
+    0,
+    messageBar() );
+  messageBar()->pushItem( errorMsg );
+}
+
 void QgsKadasMainWidget::initMapCanvas()
 {
   if ( !mMapCanvas )
@@ -111,6 +182,27 @@ void QgsKadasMainWidget::initMapCanvas()
   mMapCanvas->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
   mMapCanvas->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", false ).toBool() );
   mMapCanvas->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
+}
+
+void QgsKadasMainWidget::initLayerTreeView()
+{
+  QgsLayerTreeModel* model = new QgsLayerTreeModel( QgsProject::instance()->layerTreeRoot(), this );
+#ifdef ENABLE_MODELTEST
+  new ModelTest( model, this );
+#endif
+  model->setFlag( QgsLayerTreeModel::AllowNodeReorder );
+  model->setFlag( QgsLayerTreeModel::AllowNodeRename );
+  model->setFlag( QgsLayerTreeModel::AllowNodeChangeVisibility );
+  model->setFlag( QgsLayerTreeModel::ShowLegendAsTree );
+  model->setAutoCollapseLegendNodes( 10 );
+
+  mLayerTreeView->setModel( model );
+  mLayerTreeView->setMenuProvider( new QgsAppLayerTreeViewMenuProvider( mLayerTreeView, mMapCanvas ) );
+
+  //setup connections
+  connect( mLayerTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( layerTreeViewDoubleClicked( QModelIndex ) ) );
+
+  //setupLayerTreeViewFromSettings();
 }
 
 void QgsKadasMainWidget::setActionToButton( QAction* action, QPushButton* button )
@@ -502,6 +594,38 @@ void QgsKadasMainWidget::readProject( const QDomDocument & )
 
   if ( autoSetupOnFirstLayer )
     mLayerTreeCanvasBridge->setAutoSetupOnFirstLayer( true );
+}
+
+void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
+{
+  if ( !mLayerTreeView )
+  {
+    return;
+  }
+
+  bool visible = mLayerTreeView->isVisible();
+  if ( visible )
+  {
+    mLayerTreeView->resize( 0, mLayerTreeView->height() );
+  }
+  mLayerTreeView->setVisible( !visible );
+
+}
+
+void QgsKadasMainWidget::on_mZoomInButton_clicked()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->zoomIn();
+  }
+}
+
+void QgsKadasMainWidget::on_mZoomOutButton_clicked()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->zoomOut();
+  }
 }
 
 void QgsKadasMainWidget::activateDeactivateLayerRelatedActions( QgsMapLayer *layer )
@@ -999,6 +1123,219 @@ void QgsKadasMainWidget::createCanvasTools()
   //mMapTools.mChangeLabelProperties->setAction( mActionChangeLabelProperties );
   //ensure that non edit tool is initialised or we will get crashes in some situations
   mNonEditMapTool = mMapTools.mPan;
+}
+
+void QgsKadasMainWidget::layerTreeViewDoubleClicked( const QModelIndex& index )
+{
+  Q_UNUSED( index )
+  QSettings settings;
+  switch ( settings.value( "/qgis/legendDoubleClickAction", 0 ).toInt() )
+  {
+    case 0:
+      layerProperties();
+      break;
+    case 1:
+      attributeTable();
+      break;
+    default:
+      break;
+  }
+}
+
+void QgsKadasMainWidget::layerProperties()
+{
+  showLayerProperties( activeLayer() );
+}
+
+void QgsKadasMainWidget::attributeTable()
+{
+  QgsVectorLayer *myLayer = qobject_cast<QgsVectorLayer *>( activeLayer() );
+  if ( !myLayer )
+  {
+    return;
+  }
+
+  QgsAttributeTableDialog *mDialog = new QgsAttributeTableDialog( myLayer );
+  mDialog->show();
+  // the dialog will be deleted by itself on close
+}
+
+void QgsKadasMainWidget::toggleEditing()
+{
+  QgsVectorLayer *currentLayer = qobject_cast<QgsVectorLayer*>( activeLayer() );
+  if ( currentLayer )
+  {
+    toggleEditing( currentLayer, true );
+  }
+  else
+  {
+    // active although there's no layer active!?
+    //mActionToggleEditing->setChecked( false );
+  }
+}
+
+bool QgsKadasMainWidget::toggleEditing( QgsMapLayer *layer, bool allowCancel )
+{
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
+  if ( !vlayer )
+  {
+    return false;
+  }
+
+  bool res = true;
+
+  if ( !vlayer->isEditable() && !vlayer->isReadOnly() )
+  {
+    if ( !( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::EditingCapabilities ) )
+    {
+      //mActionToggleEditing->setChecked( false );
+      //mActionToggleEditing->setEnabled( false );
+      messageBar()->pushMessage( tr( "Start editing failed" ),
+                                 tr( "Provider cannot be opened for editing" ),
+                                 QgsMessageBar::INFO, messageTimeout() );
+      return false;
+    }
+
+    vlayer->startEditing();
+
+    QSettings settings;
+    QString markerType = settings.value( "/qgis/digitizing/marker_style", "Cross" ).toString();
+    bool markSelectedOnly = settings.value( "/qgis/digitizing/marker_only_for_selected", false ).toBool();
+
+    // redraw only if markers will be drawn
+    if (( !markSelectedOnly || vlayer->selectedFeatureCount() > 0 ) &&
+        ( markerType == "Cross" || markerType == "SemiTransparentCircle" ) )
+    {
+      vlayer->triggerRepaint();
+    }
+  }
+  else if ( vlayer->isModified() && vlayer->type() == QgsMapLayer::RedliningLayer )
+  {
+    vlayer->commitChanges();
+  }
+  else if ( vlayer->isModified() )
+  {
+    QMessageBox::StandardButtons buttons = QMessageBox::Save | QMessageBox::Discard;
+    if ( allowCancel )
+      buttons |= QMessageBox::Cancel;
+
+    switch ( QMessageBox::information( 0,
+                                       tr( "Stop editing" ),
+                                       tr( "Do you want to save the changes to layer %1?" ).arg( vlayer->name() ),
+                                       buttons ) )
+    {
+      case QMessageBox::Cancel:
+        res = false;
+        break;
+
+      case QMessageBox::Save:
+        QApplication::setOverrideCursor( Qt::WaitCursor );
+
+        if ( !vlayer->commitChanges() )
+        {
+          commitError( vlayer );
+          // Leave the in-memory editing state alone,
+          // to give the user a chance to enter different values
+          // and try the commit again later
+          res = false;
+        }
+
+        vlayer->triggerRepaint();
+
+        QApplication::restoreOverrideCursor();
+        break;
+
+      case QMessageBox::Discard:
+        QApplication::setOverrideCursor( Qt::WaitCursor );
+
+        mMapCanvas->freeze( true );
+        if ( !vlayer->rollBack() )
+        {
+          messageBar()->pushMessage( tr( "Error" ),
+                                     tr( "Problems during roll back" ),
+                                     QgsMessageBar::CRITICAL );
+          res = false;
+        }
+        mMapCanvas->freeze( false );
+
+        vlayer->triggerRepaint();
+
+        QApplication::restoreOverrideCursor();
+        break;
+
+      default:
+        break;
+    }
+  }
+  else //layer not modified
+  {
+    mMapCanvas->freeze( true );
+    vlayer->rollBack();
+    mMapCanvas->freeze( false );
+    res = true;
+    vlayer->triggerRepaint();
+  }
+
+  if ( !res && layer == activeLayer() )
+  {
+    // while also called when layer sends editingStarted/editingStopped signals,
+    // this ensures correct restoring of gui state if toggling was canceled
+    // or layer commit/rollback functions failed
+    activateDeactivateLayerRelatedActions( layer );
+  }
+
+  return res;
+}
+
+void QgsKadasMainWidget::showLayerProperties( QgsMapLayer *ml )
+{
+  if ( !ml )
+    return;
+
+  if ( !QgsProject::instance()->layerIsEmbedded( ml->id() ).isEmpty() )
+  {
+    return; //don't show properties of embedded layers
+  }
+
+  if ( ml->type() == QgsMapLayer::RasterLayer )
+  {
+    QgsRasterLayerProperties *rlp = new QgsRasterLayerProperties( ml, mMapCanvas, this );
+    rlp->exec();
+    delete rlp; // delete since dialog cannot be reused without updating code
+  }
+  else if ( ml->type() == QgsMapLayer::VectorLayer ) // VECTOR
+  {
+    QgsVectorLayer* vlayer = qobject_cast<QgsVectorLayer *>( ml );
+    QgsVectorLayerProperties *vlp = new QgsVectorLayerProperties( vlayer, this, this );
+
+    if ( vlp->exec() )
+    {
+      activateDeactivateLayerRelatedActions( ml );
+    }
+    delete vlp; // delete since dialog cannot be reused without updating code
+  }
+  else if ( ml->type() == QgsMapLayer::PluginLayer )
+  {
+    QgsPluginLayer* pl = qobject_cast<QgsPluginLayer *>( ml );
+    if ( !pl )
+      return;
+
+    QgsPluginLayerType* plt = QgsPluginLayerRegistry::instance()->pluginLayerType( pl->pluginLayerType() );
+    if ( !plt )
+      return;
+
+    if ( !plt->showLayerProperties( pl ) )
+    {
+      /*messageBar()->pushMessage( tr( "Warning" ),
+                                 tr( "This layer doesn't have a properties dialog." ),
+                                 QgsMessageBar::INFO, messageTimeout() );*/
+    }
+  }
+}
+
+QgsMapLayer* QgsKadasMainWidget::activeLayer()
+{
+  return mLayerTreeView ? mLayerTreeView->currentLayer() : 0;
 }
 
 

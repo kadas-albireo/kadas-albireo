@@ -34,6 +34,7 @@
 #include "qgslabelinggui.h"
 #include "qgslabel.h"
 #include "qgsgenericprojectionselector.h"
+#include "qgskadasmainwidget.h"
 #include "qgslogger.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayerstyleguiutils.h"
@@ -68,6 +69,7 @@
 
 QgsVectorLayerProperties::QgsVectorLayerProperties(
   QgsVectorLayer *lyr,
+  QgsKadasMainWidget* mainWidget,
   QWidget * parent,
   Qt::WindowFlags fl
 )
@@ -82,6 +84,7 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
     , actionDialog( 0 )
     , diagramPropertiesDialog( 0 )
     , mFieldsPropertiesDialog( 0 )
+    , mMainWidget( mainWidget )
 {
   setupUi( this );
   // QgsOptionsDialogBase handles saving/restoring of geometry, splitter and current tab states,
@@ -128,9 +131,12 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
     // Create the Labeling dialog tab
     layout = new QVBoxLayout( labelingFrame );
     layout->setMargin( 0 );
-    labelingDialog = new QgsLabelingGui( layer, QgisApp::instance()->mapCanvas(), labelingFrame );
-    labelingDialog->layout()->setContentsMargins( -1, 0, -1, 0 );
-    layout->addWidget( labelingDialog );
+    if ( mMainWidget )
+    {
+      labelingDialog = new QgsLabelingGui( layer, mMainWidget->mapCanvas(), labelingFrame, mMainWidget );
+      labelingDialog->layout()->setContentsMargins( -1, 0, -1, 0 );
+      layout->addWidget( labelingDialog );
+    }
     labelingFrame->setLayout( layout );
 
     // Create the Labeling (deprecated) dialog tab
@@ -190,7 +196,10 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
   mFieldsFrame->layout()->addWidget( mFieldsPropertiesDialog );
 
   connect( mFieldsPropertiesDialog, SIGNAL( toggleEditing() ), this, SLOT( toggleEditing() ) );
-  connect( this, SIGNAL( toggleEditing( QgsMapLayer* ) ), QgisApp::instance(), SLOT( toggleEditing( QgsMapLayer* ) ) );
+  if ( mMainWidget )
+  {
+    connect( this, SIGNAL( toggleEditing( QgsMapLayer* ) ), mMainWidget, SLOT( toggleEditing( QgsMapLayer* ) ) );
+  }
 
   syncToLayer();
 
@@ -414,7 +423,10 @@ void QgsVectorLayerProperties::syncToLayer( void )
   // set up the scale based layer visibility stuff....
   mScaleRangeWidget->setScaleRange( 1.0 / layer->maximumScale(), 1.0 / layer->minimumScale() ); // caution: layer uses scale denoms, widget uses true scales
   mScaleVisibilityGroupBox->setChecked( layer->hasScaleBasedVisibility() );
-  mScaleRangeWidget->setMapCanvas( QgisApp::instance()->mapCanvas() );
+  if ( mMainWidget )
+  {
+    mScaleRangeWidget->setMapCanvas( mMainWidget->mapCanvas() );
+  }
 
   // get simplify drawing configuration
   const QgsVectorSimplifyMethod& simplifyMethod = layer->simplifyMethod();
