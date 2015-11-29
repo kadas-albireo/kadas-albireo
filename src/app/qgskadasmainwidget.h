@@ -37,7 +37,10 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     virtual void resizeEvent( QResizeEvent* event );
 
   private slots:
+    void addToFavorites();
     void open();
+    bool save();
+
     //! project was read
     void readProject( const QDomDocument & );
     void on_mLayerTreeViewButton_clicked();

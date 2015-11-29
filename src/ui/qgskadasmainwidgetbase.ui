@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="mTopLayout">
      <item>
       <layout class="QVBoxLayout" name="mFavouritesSearchLayout">
        <property name="sizeConstraint">
@@ -81,7 +81,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="mAddToFavoriteButton">
+          <widget class="QPushButton" name="mAddToFavoritesButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -96,6 +96,10 @@
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
            </property>
           </widget>
          </item>
@@ -117,7 +121,7 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="tab">
+       <widget class="QWidget" name="mMyMapsTab">
         <attribute name="title">
          <string>My maps</string>
         </attribute>
@@ -240,27 +244,27 @@
         <zorder>mCopyButton</zorder>
         <zorder>mPrintButton</zorder>
        </widget>
-       <widget class="QWidget" name="tab_2">
+       <widget class="QWidget" name="mViewTab">
         <attribute name="title">
          <string>View</string>
         </attribute>
        </widget>
-       <widget class="QWidget" name="tab_3">
+       <widget class="QWidget" name="mDrawTab">
         <attribute name="title">
          <string>Draw</string>
         </attribute>
        </widget>
-       <widget class="QWidget" name="tab_4">
+       <widget class="QWidget" name="mSituationRepartTab">
         <attribute name="title">
          <string>Situation report</string>
         </attribute>
        </widget>
-       <widget class="QWidget" name="tab_5">
+       <widget class="QWidget" name="mSettingsTab">
         <attribute name="title">
          <string>Settings</string>
         </attribute>
        </widget>
-       <widget class="QWidget" name="tab_6">
+       <widget class="QWidget" name="mHelpTab">
         <attribute name="title">
          <string>Help</string>
         </attribute>
@@ -277,69 +281,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <widget class="QWidget" name="">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>60</y>
-        <width>141</width>
-        <height>194</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QgsLayerTreeView" name="mLayerTreeView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="mLayerTreeViewButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>20</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../../images/images.qrc">
-           <normaloff>:/images/kadas/layerbaum.png</normaloff>:/images/kadas/layerbaum.png</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>780</x>
         <y>10</y>
-        <width>31</width>
+        <width>32</width>
         <height>66</height>
        </rect>
       </property>
@@ -384,6 +331,63 @@
        </item>
       </layout>
      </widget>
+     <widget class="QgsLayerTreeView" name="mLayerTreeView">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>115</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="mLayerTreeViewButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>20</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>20</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>20</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../../images/images.qrc">
+        <normaloff>:/images/kadas/layerbaum.png</normaloff>:/images/kadas/layerbaum.png</iconset>
+      </property>
+     </widget>
     </widget>
    </item>
    <item row="2" column="0">
@@ -407,6 +411,24 @@
    </property>
    <property name="toolTip">
     <string>Open project</string>
+   </property>
+  </action>
+  <action name="mActionAddToFavorites">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add to favorites</string>
+   </property>
+  </action>
+  <action name="mActionSave">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/speichern.png</normaloff>:/images/kadas/speichern.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
    </property>
   </action>
  </widget>
