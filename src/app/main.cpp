@@ -640,6 +640,22 @@ int main( int argc, char *argv[] )
 
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
+  //set stylesheet if there
+  QString styleSheetPath = QgsApplication::styleSheetPath();
+  QFile styleSheetFile( styleSheetPath );
+  if ( styleSheetFile.exists() )
+  {
+    if ( styleSheetFile.open( QIODevice::ReadOnly ) )
+    {
+      QTextStream styleStream( &styleSheetFile );
+      QString styleSheetText = styleStream.readAll();
+      if ( !styleSheetText.isEmpty() )
+      {
+        myApp.setStyleSheet( styleSheetText );
+      }
+    }
+  }
+
 // (if Windows/Mac, use icon from resource)
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
   myApp.setWindowIcon( QIcon( QgsApplication::iconsPath() + "qgis-icon.png" ) );

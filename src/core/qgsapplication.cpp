@@ -607,6 +607,11 @@ const QString QgsApplication::libexecPath()
   return ABISYM( mLibexecPath );
 }
 
+const QString QgsApplication::styleSheetPath()
+{
+  return ABISYM( mPkgDataPath ) + QString( "/resources/qgskadasstyle.css" );
+}
+
 QgsApplication::endian_t QgsApplication::endian()
 {
   return ( htonl( 1 ) == 1 ) ? XDR : NDR;

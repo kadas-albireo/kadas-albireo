@@ -76,9 +76,17 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   QgsApplication::initQgis();
 
+  //mActionAddToFavorites
+  connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );
+  setActionToButton( mActionAddToFavorites, mAddToFavoritesButton );
+
   //mActionOpen
   connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( open() ) );
   setActionToButton( mActionOpen, mOpenButton );
+
+  //mActionSave
+  connect( mActionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
+  setActionToButton( mActionSave, mSaveButton );
 
   mMapCanvas->freeze();
   initLayerTreeView();
@@ -217,6 +225,10 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QPushButton* button
   connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
 }
 
+void QgsKadasMainWidget::addToFavorites()
+{
+}
+
 void QgsKadasMainWidget::open()
 {
   // possibly save any pending work before opening a new project
@@ -245,6 +257,87 @@ void QgsKadasMainWidget::open()
     // open the selected project
     addProject( fullPath );
   }
+}
+
+bool QgsKadasMainWidget::save()
+{
+  // if we don't have a file name, then obviously we need to get one; note
+  // that the project file name is reset to null in fileNew()
+  QFileInfo fullPath;
+
+  // we need to remember if this is a new project so that we know to later
+  // update the "last project dir" settings; we know it's a new project if
+  // the current project file name is empty
+  bool isNewProject = false;
+
+  if ( QgsProject::instance()->fileName().isNull() )
+  {
+    isNewProject = true;
+
+    // Retrieve last used project dir from persistent settings
+    QSettings settings;
+    QString lastUsedDir = settings.value( "/UI/lastProjectDir", "." ).toString();
+
+    QString path = QFileDialog::getSaveFileName(
+                     this,
+                     tr( "Choose a QGIS project file" ),
+                     lastUsedDir + "/" + QgsProject::instance()->title(),
+                     tr( "QGIS files" ) + " (*.qgs *.QGS)" );
+    if ( path.isEmpty() )
+      return false;
+
+    fullPath.setFile( path );
+
+    // make sure we have the .qgs extension in the file name
+    if ( "qgs" != fullPath.suffix().toLower() )
+    {
+      fullPath.setFile( fullPath.filePath() + ".qgs" );
+    }
+
+
+    QgsProject::instance()->setFileName( fullPath.filePath() );
+  }
+  else
+  {
+    QFileInfo fi( QgsProject::instance()->fileName() );
+    if ( fi.exists() && ! fi.isWritable() )
+    {
+      messageBar()->pushMessage( tr( "Insufficient permissions" ),
+                                 tr( "The project file is not writable." ),
+                                 QgsMessageBar::WARNING );
+      return false;
+    }
+  }
+
+  if ( QgsProject::instance()->write() )
+  {
+    /*setTitleBarText_( *this ); // update title bar
+    statusBar()->showMessage( tr( "Saved project to: %1" ).arg( QgsProject::instance()->fileName() ), 5000 );*/
+
+    if ( isNewProject )
+    {
+      // add this to the list of recently used project files
+      QSettings settings;
+      saveRecentProjectPath( fullPath.filePath(), settings );
+    }
+  }
+  else
+  {
+    QMessageBox::critical( this,
+                           tr( "Unable to save project %1" ).arg( QgsProject::instance()->fileName() ),
+                           QgsProject::instance()->error() );
+    return false;
+  }
+
+#if 0
+  // run the saved project macro
+  if ( mTrustedMacros )
+  {
+    QgsPythonRunner::run( "qgis.utils.saveProjectMacro();" );
+  }
+#endif //0
+
+  return true;
 }
 
 bool QgsKadasMainWidget::addProject( const QString& projectFile )
@@ -604,12 +697,16 @@ void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
   }
 
   bool visible = mLayerTreeView->isVisible();
-  if ( visible )
-  {
-    mLayerTreeView->resize( 0, mLayerTreeView->height() );
-  }
   mLayerTreeView->setVisible( !visible );
 
+  if ( !visible )
+  {
+    mLayerTreeViewButton->move( mLayerTreeView->size().width() /*mLayerTreeView->frameSize().width()*/, mLayerTreeViewButton->y() );
+  }
+  else
+  {
+    mLayerTreeViewButton->move( 0, mLayerTreeViewButton->y() );
+  }
 }
 
 void QgsKadasMainWidget::on_mZoomInButton_clicked()

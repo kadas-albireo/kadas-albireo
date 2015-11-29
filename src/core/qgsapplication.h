@@ -175,6 +175,8 @@ class CORE_EXPORT QgsApplication : public QApplication
     //! Returns the path with utility executables (help viewer, crssync, ...)
     static const QString libexecPath();
 
+    static const QString styleSheetPath();
+
     //! Alters prefix path - used by 3rd party apps
     static void setPrefixPath( const QString &thePrefixPath, bool useDefaultPaths = false );
 

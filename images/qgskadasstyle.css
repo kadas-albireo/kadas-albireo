@@ -1,0 +1,74 @@
+QWidget {
+  font-family: "Frutiger LT Pro";
+  font-style: 55 Roman;
+  font-size: 14px; 
+}
+
+QgsKadasMainWidget {
+  background-color: #263B4E;
+}
+
+/**UI left of mRibbonWidget*/
+QPushButton#mAddToFavoritesButton {
+  background-color: #5D7081;
+  color: #263B4E;
+  font-size: 12px;
+}
+
+QPushButton#mFavoriteButton1 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+QPushButton#mFavoriteButton2 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+QPushButton#mFavoriteButton3 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+/**mRibbonWidget*/
+#mRibbonWidget QWidget {
+  background-color: #263B4E;
+}
+
+#mRibbonWidget QPushButton { 
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+/*QTabWidget#mRibbonWidget { 
+  font-family: "Frutiger LT Pro" 
+}*/
+
+QTabWidget::pane {
+}
+
+#mRibbonWidget QTabBar::tab:selected {
+    background-color: #263B4E;
+    color: #FFFFFF
+}
+
+#mRibbonWidget QTabBar::tab:!selected {
+    background-color: #BEDCF6; /* make non-selected tabs look smaller */
+}
+
+/**Tree view button*/
+QPushButton#mLayerTreeViewButton {
+  background-color: #263B4E;
+}
+
+/**+- button*/
+QPushButton#mZoomInButton {
+  background-color: #263B4E;
+  color: #FFFFFF
+}
+QPushButton#mZoomOutButton {
+  background-color: #263B4E;
+  color: #FFFFFF
+}
+
+
