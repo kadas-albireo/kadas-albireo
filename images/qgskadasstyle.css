@@ -1,8 +1,28 @@
+/**General styling*/
 QWidget {
   font-family: "Frutiger LT Pro";
   font-style: 55 Roman;
   font-size: 14px; 
 }
+
+QTreeView::indicator {
+    width: 13px;
+    height: 13px;
+    background: #FFFFFF;
+    frame: 1px #9a9a9a
+}
+
+QTreeView::indicator::checked {
+  image: url(:/images/kadas/checked.png);
+}
+
+QTreeView::indicator::unchecked {
+  image: url(:/images/kadas/unchecked.png);
+}
+
+/*QCheckBox::indicator:unchecked {
+    image: url(:/images/checkbox_unchecked.png);
+}*/
 
 QgsKadasMainWidget {
   background-color: #263B4E;
