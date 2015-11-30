@@ -174,6 +174,7 @@ qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
 qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
+qgskadasribbonbutton.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
@@ -224,7 +225,6 @@ qgsscalevisibilitydialog.cpp
 qgsscalewidget.cpp
 qgssearchquerybuilder.cpp
 qgsslider.cpp
-qgssourceselectdialog.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
 qgsimageannotationitem.cpp
@@ -336,7 +336,6 @@ SET(QGIS_GUI_MOC_HDRS
   qgsscalewidget.h
   qgssearchquerybuilder.h
   qgsslider.h
-  qgssourceselectdialog.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
 

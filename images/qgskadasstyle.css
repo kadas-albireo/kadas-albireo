@@ -60,6 +60,11 @@ QPushButton#mFavoriteButton3 {
   color: #FFFFFF;
 }
 
+#mRibbonWidget QAbstractButton { 
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
 /*QTabWidget#mRibbonWidget { 
   font-family: "Frutiger LT Pro" 
 }*/
