@@ -213,7 +213,7 @@ void QgsKadasMainWidget::initLayerTreeView()
   //setupLayerTreeViewFromSettings();
 }
 
-void QgsKadasMainWidget::setActionToButton( QAction* action, QPushButton* button )
+void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* button )
 {
   button->setText( action->text() );
   button->setStatusTip( action->statusTip() );

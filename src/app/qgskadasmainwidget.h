@@ -49,7 +49,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void layerTreeViewDoubleClicked( const QModelIndex& index );
 
   private:
-    void setActionToButton( QAction* action, QPushButton* button );
+    void setActionToButton( QAction* action, QAbstractButton* button );
 
     bool addProject( const QString& projectFile );
     //! check to see if file is dirty and if so, prompt the user th save it
