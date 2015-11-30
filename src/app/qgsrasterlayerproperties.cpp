@@ -1509,8 +1509,9 @@ void QgsRasterLayerProperties::pixelSelected( const QgsPoint& canvasPoint )
     double mapUnitsPerPixel = mMapCanvas->mapUnitsPerPixel();
     int myWidth = mMapCanvas->extent().width() / mapUnitsPerPixel;
     int myHeight = mMapCanvas->extent().height() / mapUnitsPerPixel;
+    int myDpi = mMapCanvas->mapSettings().outputDpi();
 
-    QMap<int, QVariant> myPixelMap = mRasterLayer->dataProvider()->identify( myPoint, QgsRaster::IdentifyFormatValue, myExtent, myWidth, myHeight ).results();
+    QMap<int, QVariant> myPixelMap = mRasterLayer->dataProvider()->identify( myPoint, QgsRaster::IdentifyFormatValue, myExtent, myWidth, myHeight, myDpi ).results();
 
     QList<int> bands = renderer->usesBands();
 

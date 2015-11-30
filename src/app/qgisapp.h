@@ -334,6 +334,8 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QAction *actionAddWmsLayer() { return mActionAddWmsLayer; }
     QAction *actionAddWcsLayer() { return mActionAddWcsLayer; }
     QAction *actionAddWfsLayer() { return mActionAddWfsLayer; }
+    QAction *actionAddAfsLayer() { return mActionAddAfsLayer; }
+    QAction *actionAddAmsLayer() { return mActionAddAmsLayer; }
     QAction *actionCopyLayerStyle() { return mActionCopyStyle; }
     QAction *actionPasteLayerStyle() { return mActionPasteStyle; }
     QAction *actionOpenTable() { return mActionOpenTable; }
@@ -626,6 +628,10 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     QgsRasterLayer *addRasterLayer( QString const & uri, QString const & baseName, QString const & providerKey );
 
     void addWfsLayer( QString uri, QString typeName );
+
+    void addAfsLayer( QString uri, QString typeName );
+
+    void addAmsLayer( QString uri, QString typeName );
 
     void versionReplyFinished();
 
@@ -1073,6 +1079,10 @@ class APP_EXPORT QgisApp : public QMainWindow, private Ui::MainWindow
     void addWcsLayer();
     //! Add a WFS layer to the map
     void addWfsLayer();
+    //! Add a ArcGIS FeatureServer layer to the map
+    void addAfsLayer();
+    //! Add a ArcGIS MapServer layer to the map
+    void addAmsLayer();
     //! Set map tool to Zoom out
     void zoomOut();
     //! Set map tool to Zoom in

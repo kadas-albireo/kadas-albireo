@@ -1,9 +1,9 @@
 /***************************************************************************
-                              qgswfssourceselect.h
-                              --------------------
-  begin                : Jun 02, 2015
-  copyright            : (C) 2015 by Sandro Mani
-  email                : smani@sourcepole.ch
+      qgsamssourceselect.h
+      --------------------
+    begin                : Nov 26, 2015
+    copyright            : (C) 2015 by Sandro Mani
+    email                : smani@sourcepole.ch
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,22 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSWFSSOURCESELECT_H
-#define QGSWFSSOURCESELECT_H
+#ifndef QGSAMSSOURCESELECT_H
+#define QGSAMSSOURCESELECT_H
 
 #include "qgssourceselectdialog.h"
 
+class QCheckBox;
 
-class QgsWFSSourceSelect: public QgsSourceSelectDialog
+class QgsAmsSourceSelect: public QgsSourceSelectDialog
 {
     Q_OBJECT
 
   public:
-    QgsWFSSourceSelect( QWidget* parent, Qt::WindowFlags fl, bool embeddedMode = false );
+    QgsAmsSourceSelect( QWidget* parent, Qt::WindowFlags fl, bool embeddedMode = false );
 
   protected:
     bool connectToService( const QgsOWSConnection& connection ) override;
-    void buildQuery( const QgsOWSConnection &connection, const QModelIndex& ) override;
     QString getLayerURI( const QgsOWSConnection &connection,
                          const QString& layerTitle, const QString& layerName,
                          const QString& crs = QString(),
@@ -38,4 +38,4 @@ class QgsWFSSourceSelect: public QgsSourceSelectDialog
                          const QgsRectangle& bBox = QgsRectangle() ) const override;
 };
 
-#endif // QGSWFSSOURCESELECT_H
+#endif // QGSAMSSOURCESELECT_H

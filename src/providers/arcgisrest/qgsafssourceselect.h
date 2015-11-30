@@ -1,9 +1,9 @@
 /***************************************************************************
-                              qgswfssourceselect.h
-                              --------------------
-  begin                : Jun 02, 2015
-  copyright            : (C) 2015 by Sandro Mani
-  email                : smani@sourcepole.ch
+      qgsafssourceselect.h
+      --------------------
+    begin                : Jun 02, 2015
+    copyright            : (C) 2015 by Sandro Mani
+    email                : smani@sourcepole.ch
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,18 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSWFSSOURCESELECT_H
-#define QGSWFSSOURCESELECT_H
+#ifndef QGSAFSSOURCESELECT_H
+#define QGSAFSSOURCESELECT_H
 
 #include "qgssourceselectdialog.h"
 
+class QCheckBox;
 
-class QgsWFSSourceSelect: public QgsSourceSelectDialog
+class QgsAfsSourceSelect: public QgsSourceSelectDialog
 {
     Q_OBJECT
 
   public:
-    QgsWFSSourceSelect( QWidget* parent, Qt::WindowFlags fl, bool embeddedMode = false );
+    QgsAfsSourceSelect( QWidget* parent, Qt::WindowFlags fl, bool embeddedMode = false );
 
   protected:
     bool connectToService( const QgsOWSConnection& connection ) override;
@@ -38,4 +39,4 @@ class QgsWFSSourceSelect: public QgsSourceSelectDialog
                          const QgsRectangle& bBox = QgsRectangle() ) const override;
 };
 
-#endif // QGSWFSSOURCESELECT_H
+#endif // QGSAFSSOURCESELECT_H

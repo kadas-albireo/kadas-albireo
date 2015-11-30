@@ -121,6 +121,9 @@ class QgsRasterDataProvider : QgsDataProvider, QgsRasterInterface
      *  their own layers, such as WMS */
     virtual QStringList subLayers() const;
 
+    /** \brief Returns whether the provider supplies a legend graphic */
+    virtual bool supportsLegendGraphic() const;
+
     /** \brief Returns the legend rendered as pixmap
      *
      *  useful for that layer that need to get legend layer remotely as WMS

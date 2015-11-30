@@ -23,7 +23,7 @@ class QgsOWSConnection : QObject
     static void setSelectedConnection( const QString & theService, const QString & name );
 
     QString mConnName;
-    QgsDataSourceURI uri();
+    const QgsDataSourceURI& uri() const;
     QString mConnectionInfo;
 
     QString connectionInfo() /Deprecated/;

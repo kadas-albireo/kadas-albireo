@@ -105,6 +105,8 @@
         <file>themes/default/mActionAddAllToOverview.svg</file>
         <file>themes/default/mActionAddArrow.png</file>
         <file>themes/default/mActionAddBasicShape.png</file>
+        <file>themes/default/mActionAddAfsLayer.svg</file>
+        <file>themes/default/mActionAddAmsLayer.svg</file>
         <file>themes/default/mActionAddGPSLayer.png</file>
         <file>themes/default/mActionAddGroup.png</file>
         <file>themes/default/mActionAddHtml.png</file>
@@ -292,6 +294,8 @@
         <file>themes/default/mActionZoomOut.svg</file>
         <file>themes/default/mActionZoomToLayer.svg</file>
         <file>themes/default/mActionZoomToSelected.svg</file>
+        <file>themes/default/mIconAfs.svg</file>
+        <file>themes/default/mIconAms.svg</file>
         <file>themes/default/mIconAtlas.svg</file>
         <file>themes/default/mIconAutoPlacementSettings.svg</file>
         <file>themes/default/mIconClear.svg</file>

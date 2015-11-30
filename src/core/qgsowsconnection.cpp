@@ -95,7 +95,7 @@ QString QgsOWSConnection::connectionInfo()
   return mConnectionInfo;
 }
 
-QgsDataSourceURI QgsOWSConnection::uri()
+const QgsDataSourceURI& QgsOWSConnection::uri() const
 {
   return mUri;
 }

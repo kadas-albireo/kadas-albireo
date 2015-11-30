@@ -2039,7 +2039,7 @@ QString QgsWmsProvider::metadata()
   return metadata;
 }
 
-QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight )
+QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight, int theDpi )
 {
   QgsDebugMsg( QString( "theFormat = %1" ).arg( theFormat ) );
 
