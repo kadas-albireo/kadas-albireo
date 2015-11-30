@@ -413,7 +413,7 @@ bool QgsMapToolIdentify::identifyRasterLayer( QList<IdentifyResult> *results, Qg
     r = toLayerCoordinates( layer, r ); // will be a bit larger
     // Mapserver (6.0.3, for example) does not work with 1x1 pixel box
     // but that is fixed (the rect is enlarged) in the WMS provider
-    identifyResult = dprovider->identify( point, format, r, 1, 1 );
+    identifyResult = dprovider->identify( point, format, r, 1, 1, mCanvas->mapSettings().outputDpi() );
   }
   else
   {
@@ -436,7 +436,7 @@ bool QgsMapToolIdentify::identifyRasterLayer( QList<IdentifyResult> *results, Qg
     QgsDebugMsg( QString( "width = %1 height = %2" ).arg( width ).arg( height ) );
     QgsDebugMsg( QString( "xRes = %1 yRes = %2 mapUnitsPerPixel = %3" ).arg( viewExtent.width() / width ).arg( viewExtent.height() / height ).arg( mapUnitsPerPixel ) );
 
-    identifyResult = dprovider->identify( point, format, viewExtent, width, height );
+    identifyResult = dprovider->identify( point, format, viewExtent, width, height, mCanvas->mapSettings().outputDpi() );
   }
 
   derivedAttributes.insert( tr( "(clicked coordinate)" ), point.toString() );

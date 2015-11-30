@@ -151,6 +151,8 @@
      <addaction name="mActionAddLayerSeparator"/>
      <addaction name="mActionAddWcsLayer"/>
      <addaction name="mActionAddWfsLayer"/>
+     <addaction name="mActionAddAfsLayer"/>
+     <addaction name="mActionAddAmsLayer"/>
      <addaction name="mActionAddDelimitedText"/>
     </widget>
     <addaction name="mNewLayerMenu"/>
@@ -1714,6 +1716,18 @@ Ctl (Cmd) increments by 15 deg.</string>
     <string>Add WFS Layer</string>
    </property>
   </action>
+  <action name="mActionAddAfsLayer">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddAfsLayer.svg</normaloff>:/images/themes/default/mActionAddAfsLayer.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add Ar&amp;cGIS FeatureServer Layer...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add ArcGIS FeatureServer Layer</string>
+   </property>
+  </action>
   <action name="mActionFeatureAction">
    <property name="checkable">
     <bool>true</bool>
@@ -2349,10 +2363,22 @@ Acts on currently active editable layer</string>
      <normaloff>:/images/themes/default/mActionSaveMapToClipboard.png</normaloff>:/images/themes/default/mActionSaveMapToClipboard.png</iconset>
    </property>
    <property name="text">
-    <string>Save to &amp;Clipboard...</string>
+    <string>Sa&amp;ve to Clipboard...</string>
    </property>
    <property name="toolTip">
     <string>Save Map Image to Clipboard</string>
+   </property>
+  </action>
+  <action name="mActionAddAmsLayer">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddAmsLayer.svg</normaloff>:/images/themes/default/mActionAddAmsLayer.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add Ar&amp;cGIS MapServer Layer...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add ArcGIS MapServer Layer</string>
    </property>
   </action>
  </widget>

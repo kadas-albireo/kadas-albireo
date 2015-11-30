@@ -773,11 +773,6 @@ void QgsRasterLayerProperties::sync()
 
   mLayerLegendUrlLineEdit->setText( mRasterLayer->legendUrl() );
   mLayerLegendUrlFormatComboBox->setCurrentIndex( mLayerLegendUrlFormatComboBox->findText( mRasterLayer->legendUrlFormat() ) );
-
-  mWMSMetadataCheckBox->setChecked( mRasterLayer->wmsPublishMetadata() );
-  mWMSLegendCheckBox->setChecked( mRasterLayer->wmsPublishLegend() );
-  mWMSCheckboxBox->setChecked( mRasterLayer->wmsCheckable() );
-  mWMSLegendTitleCheckBox->setChecked( mRasterLayer->wmsShowLegendTitle() );
 } // QgsRasterLayerProperties::sync()
 
 /*
@@ -947,11 +942,6 @@ void QgsRasterLayerProperties::apply()
   mRasterLayer->setMetadataUrlFormat( mLayerMetadataUrlFormatComboBox->currentText() );
   mRasterLayer->setLegendUrl( mLayerLegendUrlLineEdit->text() );
   mRasterLayer->setLegendUrlFormat( mLayerLegendUrlFormatComboBox->currentText() );
-
-  mRasterLayer->setWMSPublishLegend( mWMSLegendCheckBox->isChecked() );
-  mRasterLayer->setWMSPublishMetadata( mWMSMetadataCheckBox->isChecked() );
-  mRasterLayer->setWMSCheckable( mWMSCheckboxBox->isChecked() );
-  mRasterLayer->setWMSShowLegendTitle( mWMSLegendTitleCheckBox->isChecked() );
 
   // update symbology
   emit refreshLegend( mRasterLayer->id(), false );
@@ -1519,8 +1509,9 @@ void QgsRasterLayerProperties::pixelSelected( const QgsPoint& canvasPoint )
     double mapUnitsPerPixel = mMapCanvas->mapUnitsPerPixel();
     int myWidth = mMapCanvas->extent().width() / mapUnitsPerPixel;
     int myHeight = mMapCanvas->extent().height() / mapUnitsPerPixel;
+    int myDpi = mMapCanvas->mapSettings().outputDpi();
 
-    QMap<int, QVariant> myPixelMap = mRasterLayer->dataProvider()->identify( myPoint, QgsRaster::IdentifyFormatValue, myExtent, myWidth, myHeight ).results();
+    QMap<int, QVariant> myPixelMap = mRasterLayer->dataProvider()->identify( myPoint, QgsRaster::IdentifyFormatValue, myExtent, myWidth, myHeight, myDpi ).results();
 
     QList<int> bands = renderer->usesBands();
 

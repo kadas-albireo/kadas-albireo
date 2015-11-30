@@ -52,7 +52,7 @@ class CORE_EXPORT QgsOWSConnection : public QObject
     static void setSelectedConnection( const QString & theService, const QString & name );
 
     QString mConnName;
-    QgsDataSourceURI uri();
+    const QgsDataSourceURI& uri() const;
     QString mConnectionInfo;
 
     Q_DECL_DEPRECATED QString connectionInfo();

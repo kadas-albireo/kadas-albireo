@@ -91,6 +91,7 @@ class QgsWKBTypes
     static Type singleType( Type type );
     static Type multiType( Type type );
     static Type flatType( Type type );
+    static Type zmType( Type type, bool hasZ, bool hasM );
     static Type parseType( const QString& wktStr );
     static bool isSingleType( Type type );
     static bool isMultiType( Type type );
