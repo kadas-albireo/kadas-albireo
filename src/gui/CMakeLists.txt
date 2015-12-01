@@ -195,6 +195,7 @@ qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
 qgsmaptoolfilter.cpp
+qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
 qgsmessagebar.cpp
 qgsmessagebaritem.cpp
@@ -306,6 +307,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptooldrawshape.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
