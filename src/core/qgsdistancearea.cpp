@@ -601,7 +601,7 @@ double QgsDistanceArea::measurePolygon( const QgsCurveV2* curve ) const
   QList<QgsPointV2>::const_iterator ptIt = linePointsV2.constBegin();
   for ( ; ptIt != linePointsV2.constEnd(); ++ptIt )
   {
-    linePoints.append( mCoordTransform->transform( QPoint( ptIt->x(), ptIt->y() ) ) );
+    linePoints.append( mCoordTransform->transform( QgsPoint( ptIt->x(), ptIt->y() ) ) );
   }
 
   return computePolygonArea( linePoints );
