@@ -50,6 +50,7 @@ QgsRubberBand::QgsRubberBand( QgsMapCanvas* mapCanvas, bool isPolygon )
     : QgsMapCanvasItem( mapCanvas )
     , mIconSize( 5 )
     , mIconType( ICON_CIRCLE )
+    , mSvgRenderer( 0 )
     , mTranslationOffsetX( 0.0 )
     , mTranslationOffsetY( 0.0 )
 {
