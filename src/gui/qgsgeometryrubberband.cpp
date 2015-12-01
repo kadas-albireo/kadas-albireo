@@ -19,17 +19,31 @@
 #include "qgsabstractgeometryv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspointv2.h"
+#include "qgscurvev2.h"
+#include "qgspolygonv2.h"
+#include "qgslinestringv2.h"
+#include "qgscircularstringv2.h"
+#include "qgsgeometrycollectionv2.h"
+#include "qgsproject.h"
 #include <QPainter>
 
 QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType ): QgsMapCanvasItem( mapCanvas ),
-    mGeometry( 0 ), mIconSize( 5 ), mIconType( ICON_BOX ), mGeometryType( geomType )
+    mGeometry( 0 ), mIconSize( 5 ), mIconType( ICON_BOX ), mGeometryType( geomType ), mMeasurementMode( MEASURE_NONE )
 {
+  mTranslationOffset[0] = 0.;
+  mTranslationOffset[1] = 0.;
+
   mPen = QPen( QColor( 255, 0, 0 ) );
   mBrush = QBrush( QColor( 255, 0, 0 ) );
+
+  mDa.setSourceCrs( mMapCanvas->mapSettings().destinationCrs() );
+  mDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
+  mDa.setEllipsoidalMode( mMapCanvas->mapSettings().hasCrsTransformEnabled() );
 }
 
 QgsGeometryRubberBand::~QgsGeometryRubberBand()
 {
+  qDeleteAll( mMeasurementLabels );
   delete mGeometry;
 }
 
@@ -56,7 +70,10 @@ void QgsGeometryRubberBand::paint( QPainter* painter )
 
   QgsAbstractGeometryV2* paintGeom = mGeometry->clone();
 
-  paintGeom->transform( mMapCanvas->getCoordinateTransform()->transform() );
+  QTransform mapToCanvas = mMapCanvas->getCoordinateTransform()->transform();
+  QTransform translationOffset = QTransform::fromTranslate( mTranslationOffset[0], mTranslationOffset[1] );
+
+  paintGeom->transform( translationOffset * mapToCanvas );
   paintGeom->draw( *painter );
 
   //draw vertices
@@ -111,7 +128,37 @@ void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom )
 {
   delete mGeometry;
   mGeometry = geom;
+  qDeleteAll( mMeasurementLabels );
+  mMeasurementLabels.clear();
 
+  if ( !mGeometry )
+  {
+    return;
+  }
+
+  setRect( rubberBandRectangle() );
+
+  if ( mMeasurementMode != MEASURE_NONE )
+  {
+    if ( dynamic_cast<QgsGeometryCollectionV2*>( mGeometry ) )
+    {
+      QgsGeometryCollectionV2* collection = static_cast<QgsGeometryCollectionV2*>( mGeometry );
+      for ( int i = 0, n = collection->numGeometries(); i < n; ++i )
+      {
+        measureGeometry( collection->geometryN( i ) );
+      }
+    }
+    else
+    {
+      measureGeometry( mGeometry );
+    }
+  }
+}
+
+void QgsGeometryRubberBand::setTranslationOffset( double dx, double dy )
+{
+  mTranslationOffset[0] = dx;
+  mTranslationOffset[1] = dy;
   if ( mGeometry )
   {
     setRect( rubberBandRectangle() );
@@ -152,10 +199,120 @@ void QgsGeometryRubberBand::setBrushStyle( Qt::BrushStyle brushStyle )
   mBrush.setStyle( brushStyle );
 }
 
+void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits )
+{
+  mMeasurementMode = measurementMode;
+  mDisplayUnits = displayUnits;
+}
+
 QgsRectangle QgsGeometryRubberBand::rubberBandRectangle() const
 {
   qreal scale = mMapCanvas->mapUnitsPerPixel();
   qreal s = ( mIconSize - 1 ) / 2.0 * scale;
   qreal p = mPen.width() * scale;
-  return mGeometry->boundingBox().buffer( s + p );
+  QgsRectangle rect = mGeometry->boundingBox().buffer( s + p );
+  rect.setXMinimum( rect.xMinimum() + mTranslationOffset[0] );
+  rect.setYMinimum( rect.yMinimum() + mTranslationOffset[1] );
+  rect.setXMaximum( rect.xMaximum() + mTranslationOffset[0] );
+  rect.setYMaximum( rect.yMaximum() + mTranslationOffset[1] );
+  return rect;
+}
+
+void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
+{
+  QStringList measurements;
+  switch ( mMeasurementMode )
+  {
+    case MEASURE_LINE:
+      if ( dynamic_cast<QgsCurveV2*>( geometry ) )
+      {
+        measurements.append( formatMeasurement( mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) ), false ) );
+      }
+      break;
+    case MEASURE_LINE_AND_SEGMENTS:
+      if ( dynamic_cast<QgsCurveV2*>( geometry ) )
+      {
+        QList<QgsPointV2> points;
+        static_cast<QgsCurveV2*>( geometry )->points( points );
+        for ( int i = 0, n = points.size() - 1; i < n; ++i )
+        {
+          QgsPoint p1( points[i].x(), points[i].y() );
+          QgsPoint p2( points[i+1].x(), points[i+1].y() );
+          QString segmentLength = formatMeasurement( mDa.measureLine( p1, p2 ), false );
+          addMeasurements( QStringList() << segmentLength, QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
+        }
+        if ( !points.isEmpty() )
+        {
+          QString totLength = QApplication::translate( "QgsGeometryRubberBand", "Tot.: %1" ).arg( formatMeasurement( mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) ), false ) );
+          addMeasurements( QStringList() << totLength, points.last() );
+        }
+      }
+      break;
+    case MEASURE_POLYGON:
+      if ( dynamic_cast<QgsCurvePolygonV2*>( geometry ) )
+      {
+        measurements.append( formatMeasurement( mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() ), true ) );
+      }
+      break;
+    case MEASURE_RECTANGLE:
+      if ( dynamic_cast<QgsPolygonV2*>( geometry ) )
+      {
+        measurements.append( formatMeasurement( mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() ), true ) );
+        QgsCurveV2* ring = static_cast<QgsPolygonV2*>( geometry )->exteriorRing();
+        if ( ring->vertexCount() >= 4 )
+        {
+          QList<QgsPointV2> points;
+          ring->points( points );
+          QgsPoint p1( points[0].x(), points[0].y() );
+          QgsPoint p2( points[2].x(), points[2].y() );
+          QString width = formatMeasurement( mDa.measureLine( p1, QgsPoint( p2.x(), p1.y() ) ), false );
+          QString height = formatMeasurement( mDa.measureLine( p1, QgsPoint( p1.x(), p2.y() ) ), false );
+          measurements.append( QString( "(%1 x %2)" ).arg( width ).arg( height ) );
+        }
+      }
+      break;
+    case MEASURE_CIRCLE:
+      if ( dynamic_cast<QgsCurvePolygonV2*>( geometry ) )
+      {
+        QgsCurveV2* ring = static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing();
+        QgsLineStringV2* polyline = ring->curveToLine();
+        measurements.append( formatMeasurement( mDa.measurePolygon( polyline ), true ) );
+        delete polyline;
+        QgsPointV2 p1 = ring->vertexAt( QgsVertexId( 0, 0, 0 ) );
+        QgsPointV2 p2 = ring->vertexAt( QgsVertexId( 0, 0, 1 ) );
+        measurements.append( QApplication::translate( "QgsGeometryRubberBand", "Radius: %1" ).arg( formatMeasurement( mDa.measureLine( QgsPoint( p1.x(), p1.y() ), QgsPoint( p2.x(), p2.y() ) ), false ) ) );
+      }
+      break;
+    case MEASURE_NONE:
+      break;
+  }
+  addMeasurements( measurements, geometry->centroid() );
+}
+
+QString QgsGeometryRubberBand::formatMeasurement( double value, bool isArea ) const
+{
+  QGis::UnitType measureUnits = mMapCanvas->mapSettings().mapUnits();
+  mDa.convertMeasurement( value, measureUnits, mDisplayUnits, isArea );
+  return mDa.textUnit( value, 3, mDisplayUnits, isArea );
+}
+
+void QgsGeometryRubberBand::addMeasurements( const QStringList& measurements, const QgsPointV2& mapPos )
+{
+  if ( measurements.isEmpty() )
+  {
+    return;
+  }
+  QGraphicsTextItem* label = new QGraphicsTextItem( "", 0, mMapCanvas->scene() );
+  int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
+  int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
+  int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  label->setDefaultTextColor( QColor( red, green, blue ) );
+  QFont font = label->font();
+  font.setBold( true );
+  label->setFont( font );
+  label->setPos( toCanvasCoordinates( QgsPoint( mapPos.x(), mapPos.y() ) ) );
+  QString html = QString( "<div style=\"background: rgba(255, 255, 255, 159); padding: 5px; border-radius: 5px;\">" ) + measurements.join( "</div><div style=\"background: rgba(255, 255, 255, 159); padding: 5px; border-radius: 5px;\">" ) + QString( "</div>" );
+  label->setHtml( html );
+  label->setZValue( zValue() + 1 );
+  mMeasurementLabels.append( label );
 }
