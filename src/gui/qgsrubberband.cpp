@@ -736,6 +736,17 @@ const QgsPoint *QgsRubberBand::getPoint( int i, int j ) const
     return 0;
 }
 
+void QgsRubberBand::setPoints( const QList<QList<QgsPoint> > &points, bool doUpdate )
+{
+  mPoints = points;
+  if ( doUpdate )
+  {
+    setVisible( true );
+    updateRect();
+    update();
+  }
+}
+
 QgsGeometry *QgsRubberBand::asGeometry()
 {
   QgsGeometry *geom = NULL;

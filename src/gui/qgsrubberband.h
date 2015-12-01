@@ -279,6 +279,11 @@ class GUI_EXPORT QgsRubberBand: public QgsMapCanvasItem
     const QList< QList <QgsPoint> >& getPoints() const { return mPoints; }
 
     /**
+     * Set the point list
+     */
+    void setPoints( const QList< QList <QgsPoint> >& points, bool doUpdate = true );
+
+    /**
      * Returns the rubberband as a Geometry.
      *  @return A geometry object which reflects the current state of the rubberband.
      */
