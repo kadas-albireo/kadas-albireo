@@ -103,6 +103,15 @@ class CORE_EXPORT QgsDistanceArea
     //! measures polygon area
     double measurePolygon( const QList<QgsPoint>& points ) const;
 
+    //! measures a geometry
+    double measure( const QgsAbstractGeometryV2* geomV2 ) const;
+
+    //! measure line geometry
+    double measureLine( const QgsCurveV2* curve ) const;
+
+    //! measure polygon geometry
+    double measurePolygon( const QgsCurveV2* curve ) const;
+
     //! compute bearing - in radians
     double bearing( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
@@ -170,10 +179,6 @@ class CORE_EXPORT QgsDistanceArea
 
     double getQ( double x ) const;
     double getQbar( double x ) const;
-
-    double measure( const QgsAbstractGeometryV2* geomV2 ) const;
-    double measureLine( const QgsCurveV2* curve ) const;
-    double measurePolygon( const QgsCurveV2* curve ) const;
 
     // temporary area measurement stuff
 
