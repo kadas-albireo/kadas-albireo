@@ -19,55 +19,52 @@
 #include <QObject>
 #include <QPointer>
 #include "qgsfeature.h"
-#include "qgsmaptool.h"
+#include "qgsmaptooldrawshape.h"
 #include "qgsmaprenderer.h"
 
 class QgsRubberBand;
 class QgsSelectedFeature;
 class QgsVectorLayer;
 
-class QgsRedliningNewShapeMapTool : public QgsMapTool
+class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
 {
   public:
-    QgsRedliningNewShapeMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
-    ~QgsRedliningNewShapeMapTool();
-    void canvasPressEvent( QMouseEvent * e ) override;
-    void canvasReleaseEvent( QMouseEvent * e ) override;
-    bool isEditTool() { return true; }
-
-  protected:
-    QgsVectorLayer* mLayer;
-    QPoint mPressPos;
-    QgsAbstractGeometryV2* mGeometry;
-    QgsRubberBand* mRubberBand;
-};
-
-class QgsRedliningPointMapTool : public QgsRedliningNewShapeMapTool
-{
-  public:
-    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape )
-        : QgsRedliningNewShapeMapTool( canvas, layer ), mShape( shape ) {}
-    void canvasPressEvent( QMouseEvent * /*e*/ ) override {}
-    void canvasReleaseEvent( QMouseEvent * e ) override;
+    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape );
   private:
+    QgsVectorLayer* mLayer;
     QString mShape;
+
+    void onFinished();
 };
 
-class QgsRedliningRectangleMapTool : public QgsRedliningNewShapeMapTool
+class QgsRedliningRectangleMapTool : public QgsMapToolDrawRectangle
 {
   public:
-    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
-        : QgsRedliningNewShapeMapTool( canvas, layer ) {}
-    void canvasMoveEvent( QMouseEvent * e ) override;
-    void canvasReleaseEvent( QMouseEvent * e ) override;
+    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+  private:
+    QgsVectorLayer* mLayer;
+
+    void onFinished();
 };
 
-class QgsRedliningCircleMapTool : public QgsRedliningNewShapeMapTool
+class QgsRedliningPolylineMapTool : public QgsMapToolDrawPolyLine
 {
   public:
-    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
-        : QgsRedliningNewShapeMapTool( canvas, layer ) {}
-    void canvasMoveEvent( QMouseEvent * e ) override;
+    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed );
+  private:
+    QgsVectorLayer* mLayer;
+
+    void onFinished();
+};
+
+class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
+{
+  public:
+    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+  private:
+    QgsVectorLayer* mLayer;
+
+    void onFinished();
 };
 
 class QgsRedliningTextTool : public QgsMapTool
@@ -106,7 +103,7 @@ class QgsRedliningEditTool : public QgsMapTool
     QgsVectorLayer* mLayer;
     enum Mode { NoSelection, TextSelected, FeatureSelected } mMode;
     QgsLabelPosition mCurrentLabel;
-    QgsRubberBand* mRubberBand;
+    QgsGeometryRubberBand* mRubberBand;
     QPointer<QgsSelectedFeature> mCurrentFeature;
     int mCurrentVertex;
     bool mIsRectangle;

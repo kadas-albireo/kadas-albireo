@@ -139,7 +139,7 @@ void QgsGPSRouteEditor::newPoint()
 
 void QgsGPSRouteEditor::newLine()
 {
-  activateTool( new QgsMapToolAddFeature( mApp->mapCanvas(), QgsMapToolCapture::CaptureLine, QGis::WKBLineString ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsGPSRouteEditor::activateTool( QgsMapTool *tool, QAction* action )

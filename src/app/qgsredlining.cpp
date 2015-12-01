@@ -198,7 +198,7 @@ void QgsRedlining::newTriangle()
 
 void QgsRedlining::newLine()
 {
-  activateTool( new QgsMapToolAddFeature( mApp->mapCanvas(), QgsMapToolCapture::CaptureLine, QGis::WKBLineString ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newRectangle()
@@ -208,7 +208,7 @@ void QgsRedlining::newRectangle()
 
 void QgsRedlining::newPolygon()
 {
-  activateTool( new QgsMapToolAddFeature( mApp->mapCanvas(), QgsMapToolCapture::CapturePolygon, QGis::WKBPolygon ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), true ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newCircle()
