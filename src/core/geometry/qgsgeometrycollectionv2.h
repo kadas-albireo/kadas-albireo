@@ -68,6 +68,12 @@ class CORE_EXPORT QgsGeometryCollectionV2: public QgsAbstractGeometryV2
      */
     virtual bool removeGeometry( int nr );
 
+    /** Removes and returns a geometry from the collection.
+     * @param nr index of geometry to remove
+     * @returns The geometry, if removal was successful, otherwise 0.
+     */
+    virtual QgsAbstractGeometryV2* takeGeometry( int nr );
+
     /** Transforms the geometry using a coordinate transform
      * @param ct coordinate transform
        @param d transformation direction
