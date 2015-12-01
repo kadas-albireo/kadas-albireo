@@ -199,7 +199,7 @@ bool QgsMapTool::isEditTool()
   return false;
 }
 
-QgsMapCanvas* QgsMapTool::canvas()
+QgsMapCanvas* QgsMapTool::canvas() const
 {
   return mCanvas;
 }

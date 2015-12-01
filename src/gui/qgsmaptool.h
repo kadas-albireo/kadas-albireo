@@ -123,7 +123,7 @@ class GUI_EXPORT QgsMapTool : public QObject
     virtual void deactivate();
 
     //! returns pointer to the tool's map canvas
-    QgsMapCanvas* canvas();
+    QgsMapCanvas* canvas() const;
 
     //! Emit map tool changed with the old tool
     //! @note added in 2.3
