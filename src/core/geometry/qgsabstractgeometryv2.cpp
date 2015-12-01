@@ -176,48 +176,62 @@ QgsPointV2 QgsAbstractGeometryV2::centroid() const
   // http://en.wikipedia.org/wiki/Centroid#Centroid_of_polygon
   // Pick the first ring of first part for the moment
 
-  int n = vertexCount( 0, 0 );
+  QgsAbstractGeometryV2* geom = segmentize();
+  QgsPointV2 c;
+
+  int n = geom->vertexCount( 0, 0 );
   if ( n == 1 )
   {
-    return vertexAt( QgsVertexId( 0, 0, 0 ) );
-  }
-
-  double A = 0.;
-  double Cx = 0.;
-  double Cy = 0.;
-  int i = 0, j = 1;
-  if ( vertexAt( QgsVertexId( 0, 0, 0 ) ) != vertexAt( QgsVertexId( 0, 0, n - 1 ) ) )
-  {
-    i = n - 1;
-    j = 0;
-  }
-  for ( ; j < n; i = j++ )
-  {
-    QgsPointV2 vi = vertexAt( QgsVertexId( 0, 0, i ) );
-    QgsPointV2 vj = vertexAt( QgsVertexId( 0, 0, j ) );
-    double d = vi.x() * vj.y() - vj.x() * vi.y();
-    A += d;
-    Cx += ( vi.x() + vj.x() ) * d;
-    Cy += ( vi.y() + vj.y() ) * d;
-  }
-
-  if ( A < 1E-12 )
-  {
-    Cx = Cy = 0.;
-    for ( int i = 0; i < n - 1; ++i )
-    {
-      QgsPointV2 vi = vertexAt( QgsVertexId( 0, 0, i ) );
-      Cx += vi.x();
-      Cy += vi.y();
-    }
-    return QgsPointV2( Cx / ( n - 1 ), Cy / ( n - 1 ) );
+    c = geom->vertexAt( QgsVertexId( 0, 0, 0 ) );
   }
   else
   {
-    return QgsPointV2( Cx / ( 3. * A ), Cy / ( 3. * A ) );
-  }
 
-  return QgsPointV2();
+    double A = 0.;
+    double Cx = 0.;
+    double Cy = 0.;
+    int i = 0, j = 1;
+    if ( geom->vertexAt( QgsVertexId( 0, 0, 0 ) ) != geom->vertexAt( QgsVertexId( 0, 0, n - 1 ) ) )
+    {
+      i = n - 1;
+      j = 0;
+    }
+    for ( ; j < n; i = j++ )
+    {
+      QgsPointV2 vi = geom->vertexAt( QgsVertexId( 0, 0, i ) );
+      QgsPointV2 vj = geom->vertexAt( QgsVertexId( 0, 0, j ) );
+      double d = vi.x() * vj.y() - vj.x() * vi.y();
+      A += d;
+      Cx += ( vi.x() + vj.x() ) * d;
+      Cy += ( vi.y() + vj.y() ) * d;
+    }
+
+    if ( A < 1E-12 )
+    {
+      Cx = Cy = 0.;
+      for ( int i = 0; i < n - 1; ++i )
+      {
+        QgsPointV2 vi = geom->vertexAt( QgsVertexId( 0, 0, i ) );
+        Cx += vi.x();
+        Cy += vi.y();
+      }
+      c = QgsPointV2( Cx / ( n - 1 ), Cy / ( n - 1 ) );
+    }
+    else
+    {
+      c = QgsPointV2( Cx / ( 3. * A ), Cy / ( 3. * A ) );
+    }
+  }
+  delete geom;
+  return c;
+}
+
+
+QgsAbstractGeometryV2* QgsAbstractGeometryV2::transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
+{
+  QgsAbstractGeometryV2* geom = clone();
+  geom->transform( ct, d );
+  return geom;
 }
 
 bool QgsAbstractGeometryV2::isEmpty() const

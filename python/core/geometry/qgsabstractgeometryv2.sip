@@ -99,6 +99,7 @@ class QgsAbstractGeometryV2
     //render pipeline
     virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) = 0;
     virtual void transform( const QTransform& t ) = 0;
+    QgsAbstractGeometryV2* transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
     //virtual void clip( const QgsRectangle& rect );
     virtual void draw( QPainter& p ) const = 0;
 
