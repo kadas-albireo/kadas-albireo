@@ -222,6 +222,17 @@ class QgsRubberBand: QgsMapCanvasItem
     const QgsPoint *getPoint( int i, int j = 0 ) const;
 
     /**
+     * Return current point list
+     * @return The current point list
+     */
+    const QList< QList <QgsPoint> >& getPoints() const;
+
+    /**
+     * Set the point list
+     */
+    void setPoints(const QList< QList <QgsPoint> >& points, bool doUpdate = true);
+
+    /**
      * Returns the rubberband as a Geometry.
      *  @return A geometry object which reflects the current state of the rubberband.
      */
