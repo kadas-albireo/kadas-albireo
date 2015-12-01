@@ -23,7 +23,18 @@ class QgsGeometryCollectionV2: public QgsAbstractGeometryV2
 
     /**Adds a geometry and takes ownership. Returns true in case of success*/
     virtual bool addGeometry( QgsAbstractGeometryV2* g /Transfer/ );
+
+    /** Removes a geometry from the collection.
+     * @param nr index of geometry to remove
+     * @returns true if removal was successful.
+     */
     virtual bool removeGeometry( int nr );
+
+    /** Removes and returns a geometry from the collection.
+     * @param nr index of geometry to remove
+     * @returns The geometry, if removal was successful, otherwise 0.
+     */
+    virtual QgsAbstractGeometryV2* takeGeometry( int nr ) /TransferBack/;
 
     virtual void transform( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
     void transform( const QTransform& t );

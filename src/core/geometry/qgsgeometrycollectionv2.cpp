@@ -131,6 +131,18 @@ bool QgsGeometryCollectionV2::removeGeometry( int nr )
   return true;
 }
 
+QgsAbstractGeometryV2* QgsGeometryCollectionV2::takeGeometry( int nr )
+{
+  if ( nr >= mGeometries.size() || nr < 0 )
+  {
+    return 0;
+  }
+  QgsAbstractGeometryV2* geom = mGeometries[nr];
+  mGeometries.remove( nr );
+  return geom;
+}
+
+
 int QgsGeometryCollectionV2::dimension() const
 {
   int maxDim = 0;
