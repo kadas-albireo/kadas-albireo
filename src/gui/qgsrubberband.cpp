@@ -683,14 +683,22 @@ QgsPoint QgsRubberBand::partMidpoint( int geometryIndex ) const
       return mPoints[geometryIndex].front();
     }
 
+    // Reduce numerical instability by doing all the computations relative to first point
+    QgsPoint center = mPoints[geometryIndex][0];
+    QList<QgsPoint> points;
+    for ( int i = 0; i < n; ++i )
+    {
+      points.append( QgsPoint( mPoints[geometryIndex][i].x() - center.x(), mPoints[geometryIndex][i].y() - center.y() ) );
+    }
+
     double A = 0.;
     double Cx = 0.;
     double Cy = 0.;
     int i = n - 1, j = 0;
     for ( ; j < n; i = j++ )
     {
-      const QgsPoint& vi = mPoints[geometryIndex][i];
-      const QgsPoint& vj = mPoints[geometryIndex][j];
+      const QgsPoint& vi = points[i];
+      const QgsPoint& vj = points[j];
       double d = vi.x() * vj.y() - vj.x() * vi.y();
       A += d;
       Cx += ( vi.x() + vj.x() ) * d;
@@ -700,7 +708,7 @@ QgsPoint QgsRubberBand::partMidpoint( int geometryIndex ) const
     if ( qAbs( A ) < 1E-12 )
       return mPoints[geometryIndex].front();
     else
-      return QgsPoint( Cx / ( 3. * A ), Cy / ( 3. * A ) );
+      return QgsPoint( center.x() + Cx / ( 3. * A ), center.y() + Cy / ( 3. * A ) );
   }
   return QgsPoint( 0, 0 );
 }
