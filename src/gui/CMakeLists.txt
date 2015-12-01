@@ -106,10 +106,6 @@ editorwidgets/qgswebviewconfigdlg.cpp
 editorwidgets/qgswebviewwidgetwrapper.cpp
 editorwidgets/qgswebviewwidgetfactory.cpp
 
-kadas/qgsvbscoordinateconverter.cpp
-kadas/qgsvbscoordinatedisplayer.cpp
-kadas/qgsvbsmaptoolpinannotation.cpp
-kadas/qgsvbspinannotationitem.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -178,7 +174,6 @@ qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
 qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
-qgskadasribbonbutton.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
@@ -200,6 +195,7 @@ qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
 qgsmaptoolfilter.cpp
+qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
 qgsmessagebar.cpp
 qgsmessagebaritem.cpp
@@ -229,6 +225,7 @@ qgsscalevisibilitydialog.cpp
 qgsscalewidget.cpp
 qgssearchquerybuilder.cpp
 qgsslider.cpp
+qgssourceselectdialog.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
 qgsimageannotationitem.cpp
@@ -310,6 +307,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptooldrawshape.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
@@ -340,6 +338,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsscalewidget.h
   qgssearchquerybuilder.h
   qgsslider.h
+  qgssourceselectdialog.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
 
@@ -347,10 +346,6 @@ SET(QGIS_GUI_MOC_HDRS
   qgshtmlannotationdialog.h
   qgssvgannotationdialog.h
   qgstextannotationdialog.h
-  
-  kadas/qgsvbscoordinateconverter.h
-  kadas/qgsvbscoordinatedisplayer.h
-  kadas/qgsvbspinannotationitem.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
