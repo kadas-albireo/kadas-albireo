@@ -17,7 +17,7 @@
 
 #include "qgsvbspinannotationitem.h"
 #include "qgscoordinatetransform.h"
-#include "../qgsvbscoordinatedisplayer.h"
+#include "qgsvbscoordinatedisplayer.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"

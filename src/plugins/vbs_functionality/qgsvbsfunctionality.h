@@ -25,9 +25,7 @@
 
 class QAction;
 class QToolBar;
-class QgsVBSCoordinateDisplayer;
 class QgsVBSCrsSelection;
-class QgsVBSMapToolPinAnnotation;
 class QgsVBSSearchBox;
 class QgsMapTool;
 class QgsMapLayer;
@@ -49,10 +47,8 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
 
   private:
     QgisInterface* mQGisIface;
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
     QgsVBSCrsSelection* mCrsSelection;
     QAction* mActionPinAnnotation;
-    QgsVBSMapToolPinAnnotation* mMapToolPinAnnotation;
     QToolBar* mSearchToolbar;
     QgsVBSSearchBox* mSearchBox;
     QPointer<QgsMessageBarItem> mReprojMsgItem;
@@ -61,15 +57,12 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QAction* mActionOvlImport;
     QAction* mActionSlope;
     QAction* mActionViewshed;
-    QAction* mActionViewshedSector;
     QAction* mActionHillshade;
     QgsVBSSlopeTool* mSlopeTool;
     QgsVBSViewshedTool* mViewshedTool;
     QgsVBSHillshadeTool* mHillshadeTool;
 
   private slots:
-    void activateMapToolPinAnnotation();
-    void onMapToolSet( QgsMapTool*tool );
     void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
     void importOVL();
     void computeSlope( bool checked );

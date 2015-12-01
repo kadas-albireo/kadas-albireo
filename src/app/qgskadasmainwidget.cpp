@@ -15,6 +15,9 @@
 #include "qgsproviderregistry.h"
 #include "qgsrasterlayerproperties.h"
 #include "qgstemporaryfile.h"
+#include "kadas/qgsvbscoordinatedisplayer.h"
+#include "kadas/qgsvbsmaptoolpinannotation.h"
+#include "kadas/qgsvbspinannotationitem.h"
 #include "qgsvectordataprovider.h"
 #include "qgsvectorlayer.h"
 #include "qgsvectorlayerproperties.h"
@@ -76,6 +79,8 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   QgsApplication::initQgis();
 
+  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mMapCanvas, this );
+
   //mActionAddToFavorites
   connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );
   setActionToButton( mActionAddToFavorites, mAddToFavoritesButton );
@@ -87,6 +92,11 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   //mActionSave
   connect( mActionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
   setActionToButton( mActionSave, mSaveButton );
+
+  //mActionPin
+  connect( mActionPin, SIGNAL( triggered() ), this, SLOT( pin() ) );
+  setActionToButton( mActionPin, mPinButton );
+  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pinActionToggled( bool ) ) );
 
   mMapCanvas->freeze();
   initLayerTreeView();
@@ -223,6 +233,7 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* bu
   button->setCheckable( action->isCheckable() );
   button->setChecked( action->isChecked() );
   connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
+  connect( button, SIGNAL( toggled( bool ) ), action, SLOT( setChecked( bool ) ) );
 }
 
 void QgsKadasMainWidget::addToFavorites()
@@ -338,6 +349,22 @@ bool QgsKadasMainWidget::save()
 #endif //0
 
   return true;
+}
+
+void QgsKadasMainWidget::pin()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->setMapTool( mMapTools.mMapToolPinAnnotation );
+  }
+}
+
+void QgsKadasMainWidget::pinActionToggled( bool enabled )
+{
+  if ( !enabled )
+  {
+    mMapCanvas->setMapTool( mNonEditMapTool );
+  }
 }
 
 bool QgsKadasMainWidget::addProject( const QString& projectFile )
@@ -1217,6 +1244,7 @@ void QgsKadasMainWidget::createCanvasTools()
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mMapCanvas );
   //mMapTools.mRotateLabel->setAction( mActionRotateLabel );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mMapCanvas );
+  mMapTools.mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mMapCanvas, mCoordinateDisplayer );
   //mMapTools.mChangeLabelProperties->setAction( mActionChangeLabelProperties );
   //ensure that non edit tool is initialised or we will get crashes in some situations
   mNonEditMapTool = mMapTools.mPan;

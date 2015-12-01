@@ -21,22 +21,22 @@
 #include <QWidget>
 #include <qgspoint.h>
 
-class QgisInterface;
 class QComboBox;
 class QLabel;
 class QLineEdit;
 class QgsCoordinateReferenceSystem;
+class QgsMapCanvas;
 
 class QgsVBSCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsVBSCoordinateDisplayer( QgisInterface* iface, QWidget* parent = 0 );
+    QgsVBSCoordinateDisplayer( QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
     ~QgsVBSCoordinateDisplayer();
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
 
   private:
-    QgisInterface* mQGisIface;
+    QgsMapCanvas* mMapCanvas;
     QComboBox* mCRSSelectionCombo;
     QLabel* mIconLabel;
     QLineEdit* mCoordinateLineEdit;

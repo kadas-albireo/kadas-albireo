@@ -11,8 +11,6 @@ ENDIF(MSVC)
 
 SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
-  qgsvbscoordinatedisplayer.cpp
-  qgsvbscoordinateconverter.cpp
   qgsvbscrashhandler.cpp
   qgsvbscrsselection.cpp
   analysistools/qgsvbsslopetool.cpp
@@ -21,8 +19,6 @@ SET (vbsfunctionality_SRCS
   multimap/qgsvbsmapwidget.cpp
   multimap/qgsvbsmultimapmanager.cpp
   ovl/qgsvbsovlimporter.cpp
-  pinannotation/qgsvbsmaptoolpinannotation.cpp
-  pinannotation/qgsvbspinannotationitem.cpp
   search/qgsvbssearchbox.cpp
   search/qgsvbscoordinatesearchprovider.cpp
   search/qgsvbslocationsearchprovider.cpp
@@ -33,20 +29,15 @@ SET (vbsfunctionality_SRCS
 
 SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
-  qgsvbscoordinatedisplayer.h
-  qgsvbscoordinateconverter.h
   ovl/qgsvbsovlimporter.h
-  pinannotation/qgsvbsmaptoolpinannotation.h
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscrashhandler.h
-  qgsvbscoordinatedisplayer.h
   analysistools/qgsvbsslopetool.h
   analysistools/qgsvbshillshadetool.h
   analysistools/qgsvbsviewshedtool.h
-  pinannotation/qgsvbspinannotationitem.h
   multimap/qgsvbsmapwidget.h
   multimap/qgsvbsmultimapmanager.h
   search/qgsvbssearchbox.h

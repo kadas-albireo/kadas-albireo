@@ -106,6 +106,10 @@ editorwidgets/qgswebviewconfigdlg.cpp
 editorwidgets/qgswebviewwidgetwrapper.cpp
 editorwidgets/qgswebviewwidgetfactory.cpp
 
+kadas/qgsvbscoordinateconverter.cpp
+kadas/qgsvbscoordinatedisplayer.cpp
+kadas/qgsvbsmaptoolpinannotation.cpp
+kadas/qgsvbspinannotationitem.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -343,6 +347,10 @@ SET(QGIS_GUI_MOC_HDRS
   qgshtmlannotationdialog.h
   qgssvgannotationdialog.h
   qgstextannotationdialog.h
+  
+  kadas/qgsvbscoordinateconverter.h
+  kadas/qgsvbscoordinatedisplayer.h
+  kadas/qgsvbspinannotationitem.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h

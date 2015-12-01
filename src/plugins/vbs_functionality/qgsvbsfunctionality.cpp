@@ -21,7 +21,6 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgsvbsfunctionality.h"
-#include "qgsvbscoordinatedisplayer.h"
 #include "qgsvbscrsselection.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
@@ -30,7 +29,6 @@
 #include "analysistools/qgsvbshillshadetool.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
-#include "pinannotation/qgsvbsmaptoolpinannotation.h"
 #include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
 #include <QAction>
@@ -39,10 +37,8 @@
 QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
     , mQGisIface( theQgisInterface )
-    , mCoordinateDisplayer( 0 )
     , mCrsSelection( 0 )
     , mActionPinAnnotation( 0 )
-    , mMapToolPinAnnotation( 0 )
     , mSearchToolbar( 0 )
     , mSearchBox( 0 )
     , mReprojMsgItem( 0 )
@@ -57,15 +53,7 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
 
 void QgsVBSFunctionality::initGui()
 {
-  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mQGisIface, mQGisIface->mainWindow() );
   mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
-  mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mQGisIface->mapCanvas(), mCoordinateDisplayer );
-  connect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
-  mActionPinAnnotation = new QAction( QIcon( ":/vbsfunctionality/icons/pin_red.svg" ), tr( "Add pin" ), this );
-  mActionPinAnnotation->setCheckable( true );
-  mMapToolPinAnnotation->setAction( mActionPinAnnotation );
-  connect( mActionPinAnnotation, SIGNAL( triggered() ), this, SLOT( activateMapToolPinAnnotation() ) );
-  mQGisIface->pluginToolBar()->addAction( mActionPinAnnotation );
 
   mSearchToolbar = mQGisIface->addToolBar( "vbsSearchToolbar" );
   mSearchBox = new QgsVBSSearchBox( mQGisIface, mSearchToolbar );
@@ -95,11 +83,6 @@ void QgsVBSFunctionality::initGui()
   connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionViewshed );
 
-  mActionViewshedSector = new QAction( QIcon( ":/vbsfunctionality/icons/viewshed_sector.svg" ), tr( "Compute viewshed" ), this );
-  mActionViewshedSector->setCheckable( true );
-  connect( mActionViewshedSector, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
-  mQGisIface->pluginToolBar()->addAction( mActionViewshedSector );
-
   mActionHillshade = new QAction( QIcon( ":/vbsfunctionality/icons/hillshade.svg" ), tr( "Compute hillshade" ), this );
   mActionHillshade->setCheckable( true );
   connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( computeHillshade( bool ) ) );
@@ -109,15 +92,8 @@ void QgsVBSFunctionality::initGui()
 void QgsVBSFunctionality::unload()
 {
   disconnect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
-
-  delete mCoordinateDisplayer;
-  mCoordinateDisplayer = 0;
   delete mCrsSelection;
   mCrsSelection = 0;
-  delete mActionPinAnnotation;
-  mActionPinAnnotation = 0;
-  delete mMapToolPinAnnotation;
-  mMapToolPinAnnotation = 0;
   delete mSearchToolbar;
   mSearchToolbar = 0;
   mSearchBox = 0;
@@ -131,23 +107,11 @@ void QgsVBSFunctionality::unload()
   mActionSlope = 0;
   delete mActionViewshed;
   mActionViewshed = 0;
-  delete mActionViewshedSector;
-  mActionViewshedSector = 0;
   delete mActionHillshade;
   mActionHillshade = 0;
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( true );
-}
-
-void QgsVBSFunctionality::activateMapToolPinAnnotation()
-{
-  mQGisIface->mapCanvas()->setMapTool( mMapToolPinAnnotation );
-}
-
-void QgsVBSFunctionality::onMapToolSet( QgsMapTool * tool )
-{
-  mActionPinAnnotation->setChecked( tool == mMapToolPinAnnotation );
 }
 
 void QgsVBSFunctionality::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )
@@ -196,11 +160,10 @@ void QgsVBSFunctionality::computeSlope( bool checked )
 
 void QgsVBSFunctionality::computeViewshed( bool checked )
 {
-  QAction* viewshedAction = qobject_cast<QAction*>( QObject::sender() );
   if ( checked )
   {
-    mViewshedTool = new QgsVBSViewshedTool( mQGisIface, viewshedAction == mActionViewshedSector, this );
-    connect( mViewshedTool, SIGNAL( finished() ), viewshedAction, SLOT( toggle() ) );
+    mViewshedTool = new QgsVBSViewshedTool( mQGisIface, this );
+    connect( mViewshedTool, SIGNAL( finished() ), mActionViewshed, SLOT( toggle() ) );
   }
   else
   {

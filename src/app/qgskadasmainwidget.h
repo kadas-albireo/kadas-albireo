@@ -6,6 +6,7 @@
 class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
 class QgsMessageBar;
+class QgsVBSCoordinateDisplayer;
 
 class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 {
@@ -40,6 +41,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void addToFavorites();
     void open();
     bool save();
+    void pin();
 
     //! project was read
     void readProject( const QDomDocument & );
@@ -47,6 +49,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void on_mZoomInButton_clicked();
     void on_mZoomOutButton_clicked();
     void layerTreeViewDoubleClicked( const QModelIndex& index );
+
+    void pinActionToggled( bool enabled );
 
   private:
     void setActionToButton( QAction* action, QAbstractButton* button );
@@ -88,6 +92,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     //! a bar to display warnings in a non-blocker manner
     QgsMessageBar* mInfoBar;
+
+    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
 
     class Tools
     {
@@ -188,6 +194,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
         QgsMapTool *mRotateFeature;
         QgsMapTool *mRotateLabel;
         QgsMapTool *mChangeLabelProperties;
+        QgsMapTool *mMapToolPinAnnotation;
     } mMapTools;
 };
 
