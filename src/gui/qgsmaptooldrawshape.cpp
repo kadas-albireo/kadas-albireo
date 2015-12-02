@@ -46,6 +46,11 @@ void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::Measurement
   mRubberBand->setMeasurementMode( measurementMode, displayUnits );
 }
 
+void QgsMapToolDrawShape::update()
+{
+  mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+}
+
 void QgsMapToolDrawShape::reset()
 {
   clear();
@@ -58,11 +63,10 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
   if ( mState != StateFinished )
   {
     mState = buttonEvent( toMapCoordinates( e->pos() ), true, e->button() );
-    mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+    update();
     if ( mState == StateFinished )
     {
       emit finished();
-      onFinished();
     }
   }
 }
@@ -72,7 +76,7 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
   if ( mState == StateDrawing )
   {
     moveEvent( toMapCoordinates( e->pos() ) );
-    mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+    update();
   }
 }
 
@@ -81,11 +85,10 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
   if ( mState != StateFinished )
   {
     mState = buttonEvent( toMapCoordinates( e->pos() ), false, e->button() );
-    mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+    update();
     if ( mState == StateFinished )
     {
       emit finished();
-      onFinished();
     }
   }
 }
@@ -376,7 +379,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
   if ( mSectorStage == HaveCenter )
   {
     mRadii.back() = qSqrt( pos.sqrDist( mCenters.back() ) );
-    mStartAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
+    mStartAngles.back() = mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
   }
   else if ( mSectorStage == HaveArc )
   {
@@ -395,7 +398,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
 QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
-  QgsGeometryCollectionV2* multiGeom = new QgsMultiCurveV2;
+  QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
   for ( int i = 0, n = mCenters.size(); i < n; ++i )
   {
     double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] );
@@ -405,10 +408,13 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
                    mCenters[i].y() + mRadii[i] * qSin( alphaMid ) );
     QgsPoint pEnd( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
                    mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
-    QgsCircularStringV2* arc = new QgsCircularStringV2();
-    arc->setPoints( QList<QgsPointV2>() << t.transform( pStart ) << t.transform( pMid ) << t.transform( pEnd ) );
     QgsCompoundCurveV2* exterior = new QgsCompoundCurveV2();
-    exterior->addCurve( arc );
+    if ( mStartAngles[i] != mStopAngles[i] )
+    {
+      QgsCircularStringV2* arc = new QgsCircularStringV2();
+      arc->setPoints( QList<QgsPointV2>() << t.transform( pStart ) << t.transform( pMid ) << t.transform( pEnd ) );
+      exterior->addCurve( arc );
+    }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( QList<QgsPointV2>() << t.transform( pEnd ) << t.transform( mCenters[i] ) << t.transform( pStart ) );
     exterior->addCurve( line );

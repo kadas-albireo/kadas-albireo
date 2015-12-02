@@ -200,7 +200,6 @@ qgsmaptoolemitpoint.cpp
 qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
-qgsmaptoolfilter.cpp
 qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
 qgsmessagebar.cpp
@@ -480,7 +479,6 @@ SET(QGIS_GUI_HDRS
   qgsmaptip.h
   qgsmaptoolannotation.h
   qgsmaptoolpan.h
-  qgsmaptoolfilter.h
   qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
   qgsrubberband.h

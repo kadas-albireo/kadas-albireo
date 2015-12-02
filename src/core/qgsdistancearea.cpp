@@ -101,11 +101,19 @@ void QgsDistanceArea::setSourceCrs( long srsid )
   QgsCoordinateReferenceSystem srcCRS;
   srcCRS.createFromSrsId( srsid );
   mCoordTransform->setSourceCrs( srcCRS );
+  if ( mEllipsoid == GEO_NONE )
+  {
+    mCoordTransform->setDestCRS( srcCRS );
+  }
 }
 
 void QgsDistanceArea::setSourceCrs( const QgsCoordinateReferenceSystem& srcCRS )
 {
   mCoordTransform->setSourceCrs( srcCRS );
+  if ( mEllipsoid == GEO_NONE )
+  {
+    mCoordTransform->setDestCRS( srcCRS );
+  }
 }
 
 void QgsDistanceArea::setSourceAuthId( QString authId )
@@ -113,6 +121,10 @@ void QgsDistanceArea::setSourceAuthId( QString authId )
   QgsCoordinateReferenceSystem srcCRS;
   srcCRS.createFromOgcWmsCrs( authId );
   mCoordTransform->setSourceCrs( srcCRS );
+  if ( mEllipsoid == GEO_NONE )
+  {
+    mCoordTransform->setDestCRS( srcCRS );
+  }
 }
 
 bool QgsDistanceArea::setEllipsoid( const QString& ellipsoid )
