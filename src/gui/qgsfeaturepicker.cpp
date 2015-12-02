@@ -13,20 +13,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgisapp.h"
 #include "qgsfeaturepicker.h"
 #include "qgsgeometry.h"
 #include "qgslegendinterface.h"
 #include "qgsmapcanvas.h"
-#include "qgsmaplayerregistry.h"
 #include "qgsrendererv2.h"
 #include "qgsvectorlayer.h"
 
-QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
+QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* canvas, const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
 {
-  QgsMapCanvas* canvas = QgisApp::instance()->mapCanvas();
-  QgsLegendInterface* legendIface = QgisApp::instance()->legendInterface();
-
   QgsRenderContext renderContext = QgsRenderContext::fromMapSettings( canvas->mapSettings() );
   double radiusmm = QSettings().value( "/Map/searchRadiusMM", QGis::DEFAULT_SEARCH_RADIUS_MM ).toDouble();
   radiusmm = radiusmm > 0 ? radiusmm : QGis::DEFAULT_SEARCH_RADIUS_MM;
@@ -39,14 +34,14 @@ QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsPoint &mapPo
 
 
   QgsFeatureList features;
-  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
+  foreach ( QgsMapLayer* layer, canvas->layers() )
   {
-    if (( layer->type() != QgsMapLayer::VectorLayer && layer->type() != QgsMapLayer::RedliningLayer ) || !legendIface->isLayerVisible( layer ) )
+    if (( layer->type() != QgsMapLayer::VectorLayer && layer->type() != QgsMapLayer::RedliningLayer ) )
     {
       continue;
     }
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( layer );
-    if ( vlayer->geometryType() != QGis::AnyGeometry && vlayer->geometryType() != geomType )
+    if ( geomType != QGis::AnyGeometry && vlayer->geometryType() != QGis::AnyGeometry && vlayer->geometryType() != geomType )
     {
       continue;
     }

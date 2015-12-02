@@ -21,12 +21,13 @@
 class QgsFeature;
 class QgsPoint;
 class QgsVectorLayer;
+class QgsMapCanvas;
 
 class QgsFeaturePicker
 {
   public:
     typedef bool( *filter_t )( const QgsFeature& );
-    static QPair<QgsFeature, QgsVectorLayer*> pick( const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
+    static QPair<QgsFeature, QgsVectorLayer*> pick(const QgsMapCanvas *canvas, const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
 };
 
 #endif // QGSFEATUREPICKER_H
