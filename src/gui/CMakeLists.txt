@@ -162,6 +162,7 @@ qgsexpressionbuilderwidget.cpp
 qgsexpressionhighlighter.cpp
 qgsexpressionselectiondialog.cpp
 qgsextentgroupbox.cpp
+qgsfeaturepicker.cpp
 qgsfeatureselectiondlg.cpp
 qgsfieldcombobox.cpp
 qgsfieldexpressionwidget.cpp
@@ -470,6 +471,7 @@ SET(QGIS_GUI_HDRS
   qgscursors.h
   qgsdetaileditemdata.h
   qgsexpressionbuilderdialog.h
+  qgsfeaturepicker.h
   qgsfiledropedit.h
   qgshighlight.h
   qgsmapcanvasitem.h

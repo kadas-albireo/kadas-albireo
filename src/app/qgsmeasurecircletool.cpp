@@ -74,7 +74,7 @@ void QgsMeasureCircleTool::canvasReleaseEvent( QMouseEvent * e )
   QgsPoint point = snapPoint( e->pos() );
   if ( mPickFeature )
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( toMapCoordinates( e->pos() ), QGis::Polygon );
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::Polygon );
     if ( pickResult.first.isValid() )
     {
       QgsRectangle bbox = pickResult.first.geometry()->boundingBox();

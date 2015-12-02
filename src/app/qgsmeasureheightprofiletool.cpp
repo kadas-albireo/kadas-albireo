@@ -123,7 +123,7 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
   QgsPoint p = toMapCoordinates( e->pos() );
   if ( mPicking )
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( p, QGis::Line );
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, p, QGis::Line );
     if ( pickResult.first.isValid() && pickResult.first.geometry()->geometry()->vertexCount() > 1 )
     {
       mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );

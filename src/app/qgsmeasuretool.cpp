@@ -167,7 +167,7 @@ void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( mPickFeature )
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
+    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
     if ( pickResult.first.isValid() )
     {
       mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );

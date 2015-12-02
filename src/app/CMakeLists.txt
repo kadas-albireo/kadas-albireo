@@ -32,7 +32,6 @@ SET(QGIS_APP_SRCS
   qgsdelattrdialog.cpp
   qgsdiagramproperties.cpp
   qgsdisplayangle.cpp
-  qgsfeaturepicker.cpp
   qgsfieldcalculator.cpp
   qgsfieldsproperties.cpp
   qgsidentifyresultsdialog.cpp
