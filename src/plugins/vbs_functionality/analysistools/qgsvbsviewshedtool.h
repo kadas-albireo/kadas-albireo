@@ -20,10 +20,8 @@
 
 #include <QObject>
 
-#include "qgsmaptoolfilter.h"
-
 class QgisInterface;
-class QgsRubberBand;
+class QgsMapToolDrawShape;
 
 class QgsVBSViewshedTool : public QObject
 {
@@ -37,11 +35,10 @@ class QgsVBSViewshedTool : public QObject
 
   private:
     QgisInterface* mIface;
-    QgsRubberBand* mRubberBand;
-    QgsMapToolFilter::CircleData* mFilterData;
+    QgsMapToolDrawShape* mDrawTool;
 
   private slots:
-    void filterFinished();
+    void drawFinished();
     void adjustRadius( double newRadius );
 };
 

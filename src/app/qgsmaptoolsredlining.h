@@ -28,42 +28,46 @@ class QgsVectorLayer;
 
 class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
 {
+    Q_OBJECT
   public:
     QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape );
   private:
     QgsVectorLayer* mLayer;
     QString mShape;
-
+  private slots:
     void onFinished();
 };
 
 class QgsRedliningRectangleMapTool : public QgsMapToolDrawRectangle
 {
+    Q_OBJECT
   public:
     QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
   private:
     QgsVectorLayer* mLayer;
-
+  private slots:
     void onFinished();
 };
 
 class QgsRedliningPolylineMapTool : public QgsMapToolDrawPolyLine
 {
+    Q_OBJECT
   public:
     QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed );
   private:
     QgsVectorLayer* mLayer;
-
+  private slots:
     void onFinished();
 };
 
 class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
 {
+    Q_OBJECT
   public:
     QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
   private:
     QgsVectorLayer* mLayer;
-
+  private slots:
     void onFinished();
 };
 

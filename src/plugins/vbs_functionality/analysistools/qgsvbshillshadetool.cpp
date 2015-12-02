@@ -21,9 +21,9 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
+#include "qgsmaptooldrawshape.h"
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
-#include "qgsrubberband.h"
 #include "qgstemporaryfile.h"
 #include "raster/qgssinglebandpseudocolorrenderer.h"
 #include "raster/qgshillshadefilter.h"
@@ -40,25 +40,17 @@
 QgsVBSHillshadeTool::QgsVBSHillshadeTool( QgisInterface *iface, QObject *parent )
     : QObject( parent ), mIface( iface )
 {
-  mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Polygon );
-  mRubberBand->setFillColor( QColor( 254, 178, 76, 63 ) );
-  mRubberBand->setBorderColor( QColor( 254, 58, 29, 100 ) );
-
-  mRectData = new QgsMapToolFilter::RectData;
-
-  QgsMapToolFilter* filterTool = new QgsMapToolFilter( mIface->mapCanvas(), QgsMapToolFilter::Rect, mRubberBand, mRectData );
-  connect( filterTool, SIGNAL( deactivated() ), this, SLOT( filterFinished() ) );
-  connect( filterTool, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
-  mIface->mapCanvas()->setMapTool( filterTool );
+  mRectangleTool = new QgsMapToolDrawRectangle( iface->mapCanvas() );
+  connect( mRectangleTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
+  mIface->mapCanvas()->setMapTool( mRectangleTool );
 }
 
 QgsVBSHillshadeTool::~QgsVBSHillshadeTool()
 {
-  delete mRubberBand;
-  delete mRectData;
+  delete mRectangleTool;
 }
 
-void QgsVBSHillshadeTool::filterFinished()
+void QgsVBSHillshadeTool::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
@@ -99,7 +91,9 @@ void QgsVBSHillshadeTool::filterFinished()
     return;
   }
 
-  QgsRectangle rect( mRectData->p1, mRectData->p2 );
+  QgsPoint p1, p2;
+  mRectangleTool->getPart( 0, p1, p2 );
+  QgsRectangle rect( p1, p2 );
   rect.normalize();
   QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
 

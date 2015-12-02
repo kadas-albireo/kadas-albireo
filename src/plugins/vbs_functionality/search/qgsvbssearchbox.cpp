@@ -17,8 +17,9 @@
 
 #include "qgsapplication.h"
 #include "qgsvbssearchbox.h"
+#include "qgsgeometryrubberband.h"
 #include "qgsmapcanvas.h"
-#include "qgsmaptoolfilter.h"
+#include "qgsmaptooldrawshape.h"
 #include "qgscoordinatetransform.h"
 #include "qgsvbssearchprovider.h"
 #include "qgsvbscoordinatesearchprovider.h"
@@ -68,7 +69,7 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
 {
   mNumRunningProviders = 0;
   mRubberBand = 0;
-  mFilterRubberBand = 0;
+  mFilterTool = 0;
 
   mSearchBox = new LineEdit( this );
 
@@ -111,17 +112,17 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   connect( noFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( clearFilter() ) );
 
   QAction* circleFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_circle.svg" ), tr( "Filter by radius" ), filterMenu );
-  circleFilterAction->setData( QVariant::fromValue( static_cast<int>( QgsMapToolFilter::Circle ) ) );
+  circleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterCircle ) ) );
   filterActionGroup->addAction( circleFilterAction );
   connect( circleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
 
   QAction* rectangleFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_rect.svg" ), tr( "Filter by rectangle" ), filterMenu );
-  rectangleFilterAction->setData( QVariant::fromValue( static_cast<int>( QgsMapToolFilter::Rect ) ) );
+  rectangleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterRect ) ) );
   filterActionGroup->addAction( rectangleFilterAction );
   connect( rectangleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
 
   QAction* polygonFilterAction = new QAction( QIcon( ":/vbsfunctionality/icons/search_filter_poly.svg" ), tr( "Filter by polygon" ), filterMenu );
-  polygonFilterAction->setData( QVariant::fromValue( static_cast<int>( QgsMapToolFilter::Poly ) ) );
+  polygonFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterPoly ) ) );
   filterActionGroup->addAction( polygonFilterAction );
   connect( polygonFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
 
@@ -196,8 +197,8 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
     mTreeWidget->show();
     if ( !mClearButton->isVisible() )
       resultSelected();
-    if ( mFilterRubberBand )
-      mFilterRubberBand->setVisible( true );
+    if ( mFilterTool )
+      mFilterTool->getRubberBand()->setVisible( true );
     return true;
   }
   else if ( obj == mSearchBox && ev->type() == QEvent::MouseButtonPress )
@@ -226,8 +227,8 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
   {
     cancelSearch();
     mSearchBox->clearFocus();
-    if ( mFilterRubberBand )
-      mFilterRubberBand->setVisible( false );
+    if ( mFilterTool )
+      mFilterTool->getRubberBand()->setVisible( false );
     return true;
   }
   else if ( obj == mTreeWidget && ev->type() == QEvent::MouseButtonPress )
@@ -287,14 +288,14 @@ void QgsVBSSearchBox::startSearch()
   mNumRunningProviders = mSearchProviders.count();
 
   QgsVBSSearchProvider::SearchRegion searchRegion;
-  if ( mFilterRubberBand )
+  if ( mFilterTool )
   {
-    for ( int i = 0, n = mFilterRubberBand->partSize( 0 ); i < n; ++i )
+    QgsPolygon poly = QgsGeometry( mFilterTool->getRubberBand()->geometry()->clone() ).asPolygon();
+    if ( !poly.isEmpty() )
     {
-      searchRegion.polygon.append( *mFilterRubberBand->getPoint( 0, i ) );
+      searchRegion.polygon = poly.front();
+      searchRegion.crs = mIface->mapCanvas()->mapSettings().destinationCrs();
     }
-    searchRegion.polygon.append( *mFilterRubberBand->getPoint( 0, 0 ) );
-    searchRegion.crs = mIface->mapCanvas()->mapSettings().destinationCrs();
   }
 
   foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
@@ -448,10 +449,10 @@ void QgsVBSSearchBox::cancelSearch()
 
 void QgsVBSSearchBox::clearFilter()
 {
-  if ( mFilterRubberBand != 0 )
+  if ( mFilterTool != 0 )
   {
-    delete mFilterRubberBand;
-    mFilterRubberBand = 0;
+    delete mFilterTool;
+    mFilterTool = 0;
     // Trigger a new search since the filter changed
     startSearch();
   }
@@ -460,24 +461,28 @@ void QgsVBSSearchBox::clearFilter()
 void QgsVBSSearchBox::setFilterTool()
 {
   QAction* action = qobject_cast<QAction*>( QObject::sender() );
-  QgsMapToolFilter::Mode mode = static_cast<QgsMapToolFilter::Mode>( action->data().toInt() );
-  delete mFilterRubberBand;
-  mFilterRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Polygon );
-  mFilterRubberBand->setFillColor( QColor( 254, 178, 76, 63 ) );
-  mFilterRubberBand->setBorderColor( QColor( 254, 58, 29, 100 ) );
-  QgsMapToolFilter* tool = new QgsMapToolFilter( mIface->mapCanvas(), mode, mFilterRubberBand );
-  mIface->mapCanvas()->setMapTool( tool );
+  FilterType filterType = static_cast<FilterType>( action->data().toInt() );
+  delete mFilterTool;
+  switch ( filterType )
+  {
+    case FilterRect:
+      mFilterTool = new QgsMapToolDrawRectangle( mIface->mapCanvas() ); break;
+    case FilterPoly:
+      mFilterTool = new QgsMapToolDrawPolyLine( mIface->mapCanvas(), true ); break;
+    case FilterCircle:
+      mFilterTool = new QgsMapToolDrawCircle( mIface->mapCanvas() ); break;
+  }
+  mIface->mapCanvas()->setMapTool( mFilterTool );
   action->setCheckable( true );
   action->setChecked( true );
-  connect( tool, SIGNAL( deactivated() ), this, SLOT( filterToolFinished() ) );
-  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
+  connect( mFilterTool, SIGNAL( finished() ), this, SLOT( filterToolFinished() ) );
 }
 
 void QgsVBSSearchBox::filterToolFinished()
 {
   mFilterButton->defaultAction()->setChecked( false );
   mFilterButton->defaultAction()->setCheckable( false );
-  if ( mFilterRubberBand && mFilterRubberBand->partSize( 0 ) > 0 )
+  if ( mFilterTool )
   {
     mSearchBox->setFocus();
     mSearchBox->selectAll();

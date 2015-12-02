@@ -56,6 +56,7 @@
 %Include qgsfilterlineedit.sip
 %Include qgsformannotationitem.sip
 %Include qgsgenericprojectionselector.sip
+%Include qgsgeometryrubberband.sip
 %Include qgshtmlannotationitem.sip
 %Include qgsidentifymenu.sip
 %Include qgslegendinterface.sip
@@ -74,11 +75,11 @@
 %Include qgsmapoverviewcanvas.sip
 %Include qgsmaptip.sip
 %Include qgsmaptool.sip
+%Include qgsmaptooldrawshape.sip
 %Include qgsmaptoolemitpoint.sip
 %Include qgsmaptoolidentify.sip
 %Include qgsmaptoolidentifyfeature.sip
 %Include qgsmaptoolpan.sip
-%Include qgsmaptoolfilter.sip
 %Include qgsmaptooltouch.sip
 %Include qgsmaptoolzoom.sip
 %Include qgsmessagebar.sip

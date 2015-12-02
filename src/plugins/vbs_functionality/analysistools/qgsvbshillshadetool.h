@@ -19,10 +19,9 @@
 #define QGSVBSHILLSHADETOOL_H
 
 #include <QObject>
-#include "qgsmaptoolfilter.h"
 
 class QgisInterface;
-class QgsRubberBand;
+class QgsMapToolDrawRectangle;
 
 class QgsVBSHillshadeTool : public QObject
 {
@@ -36,11 +35,10 @@ class QgsVBSHillshadeTool : public QObject
 
   private:
     QgisInterface* mIface;
-    QgsRubberBand* mRubberBand;
-    QgsMapToolFilter::RectData* mRectData;
+    QgsMapToolDrawRectangle* mRectangleTool;
 
   private slots:
-    void filterFinished();
+    void drawFinished();
 };
 
 #endif // QGSVBSHILLSHADETOOL_H

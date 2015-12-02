@@ -19,10 +19,9 @@
 #define QGSVBSSLOPETOOL_H
 
 #include <QObject>
-#include "qgsmaptoolfilter.h"
 
 class QgisInterface;
-class QgsRubberBand;
+class QgsMapToolDrawRectangle;
 
 class QgsVBSSlopeTool : public QObject
 {
@@ -36,11 +35,10 @@ class QgsVBSSlopeTool : public QObject
 
   private:
     QgisInterface* mIface;
-    QgsRubberBand* mRubberBand;
-    QgsMapToolFilter::RectData* mRectData;
+    QgsMapToolDrawRectangle* mRectangleTool;
 
   private slots:
-    void filterFinished();
+    void drawFinished();
 };
 
 #endif // QGSVBSSLOPETOOL_H

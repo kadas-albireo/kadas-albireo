@@ -28,6 +28,7 @@
 class QCheckBox;
 class QToolButton;
 class QgsCoordinateReferenceSystem;
+class QgsMapToolDrawShape;
 class QgsPoint;
 class QgsRectangle;
 class QgsRubberBand;
@@ -47,6 +48,8 @@ class QgsVBSSearchBox : public QWidget
     class LineEdit;
     class TreeWidget;
 
+    enum FilterType { FilterRect, FilterPoly, FilterCircle };
+
     enum EntryType { EntryTypeCategory, EntryTypeResult };
     static const int sEntryTypeRole;
     static const int sCatNameRole;
@@ -55,7 +58,7 @@ class QgsVBSSearchBox : public QWidget
 
     QgisInterface* mIface;
     QgsRubberBand* mRubberBand;
-    QgsRubberBand* mFilterRubberBand;
+    QgsMapToolDrawShape* mFilterTool;
     QList<QgsVBSSearchProvider*> mSearchProviders;
     QTimer mTimer;
     LineEdit* mSearchBox;
