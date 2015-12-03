@@ -51,6 +51,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void layerTreeViewDoubleClicked( const QModelIndex& index );
 
     void pinActionToggled( bool enabled );
+    void userScale();
 
   private:
     void setActionToButton( QAction* action, QAbstractButton* button );
