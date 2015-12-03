@@ -201,6 +201,7 @@ qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
 qgsmaptoolfilter.cpp
+qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
 qgsmessagebar.cpp
 qgsmessagebaritem.cpp
@@ -230,6 +231,7 @@ qgsscalevisibilitydialog.cpp
 qgsscalewidget.cpp
 qgssearchquerybuilder.cpp
 qgsslider.cpp
+qgssourceselectdialog.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
 qgsimageannotationitem.cpp
@@ -311,6 +313,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptooldrawshape.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
@@ -341,6 +344,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsscalewidget.h
   qgssearchquerybuilder.h
   qgsslider.h
+  qgssourceselectdialog.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
 

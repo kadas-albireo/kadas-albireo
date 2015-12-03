@@ -55,6 +55,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QAction* mActionOvlImport;
     QAction* mActionSlope;
     QAction* mActionViewshed;
+    QAction* mActionViewshedSector;
     QAction* mActionHillshade;
     QgsVBSSlopeTool* mSlopeTool;
     QgsVBSViewshedTool* mViewshedTool;

@@ -79,6 +79,11 @@ void QgsVBSFunctionality::initGui()
   connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionViewshed );
 
+  mActionViewshedSector = new QAction( QIcon( ":/vbsfunctionality/icons/viewshed_sector.svg" ), tr( "Compute viewshed" ), this );
+  mActionViewshedSector->setCheckable( true );
+  connect( mActionViewshedSector, SIGNAL( toggled( bool ) ), this, SLOT( computeViewshed( bool ) ) );
+  mQGisIface->pluginToolBar()->addAction( mActionViewshedSector );
+
   mActionHillshade = new QAction( QIcon( ":/vbsfunctionality/icons/hillshade.svg" ), tr( "Compute hillshade" ), this );
   mActionHillshade->setCheckable( true );
   connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( computeHillshade( bool ) ) );
@@ -101,6 +106,8 @@ void QgsVBSFunctionality::unload()
   mActionSlope = 0;
   delete mActionViewshed;
   mActionViewshed = 0;
+  delete mActionViewshedSector;
+  mActionViewshedSector = 0;
   delete mActionHillshade;
   mActionHillshade = 0;
 
@@ -154,10 +161,11 @@ void QgsVBSFunctionality::computeSlope( bool checked )
 
 void QgsVBSFunctionality::computeViewshed( bool checked )
 {
+  QAction* viewshedAction = qobject_cast<QAction*>( QObject::sender() );
   if ( checked )
   {
-    mViewshedTool = new QgsVBSViewshedTool( mQGisIface, this );
-    connect( mViewshedTool, SIGNAL( finished() ), mActionViewshed, SLOT( toggle() ) );
+    mViewshedTool = new QgsVBSViewshedTool( mQGisIface, viewshedAction == mActionViewshedSector, this );
+    connect( mViewshedTool, SIGNAL( finished() ), viewshedAction, SLOT( toggle() ) );
   }
   else
   {
