@@ -22,7 +22,7 @@
 class QgsDistanceArea;
 class QGraphicsTextItem;
 
-class QgsMapToolDrawShape : public QgsMapTool
+class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 {
     Q_OBJECT
   public:
@@ -56,7 +56,7 @@ class QgsMapToolDrawShape : public QgsMapTool
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsMapToolDrawPoint : public QgsMapToolDrawShape
+class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
 {
   public:
     QgsMapToolDrawPoint( QgsMapCanvas* canvas );
@@ -75,7 +75,7 @@ class QgsMapToolDrawPoint : public QgsMapToolDrawShape
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
+class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 {
   public:
     QgsMapToolDrawPolyLine( QgsMapCanvas* canvas, bool closed );
@@ -94,7 +94,7 @@ class QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsMapToolDrawRectangle : public QgsMapToolDrawShape
+class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
 {
   public:
     QgsMapToolDrawRectangle( QgsMapCanvas* canvas );
@@ -113,7 +113,7 @@ class QgsMapToolDrawRectangle : public QgsMapToolDrawShape
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsMapToolDrawCircle : public QgsMapToolDrawShape
+class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
 {
   public:
     QgsMapToolDrawCircle( QgsMapCanvas* canvas );
@@ -133,7 +133,7 @@ class QgsMapToolDrawCircle : public QgsMapToolDrawShape
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
+class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
 {
   public:
     QgsMapToolDrawCircularSector( QgsMapCanvas* canvas );
