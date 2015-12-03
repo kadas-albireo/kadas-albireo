@@ -2,8 +2,6 @@
 # Files
 
 SET (IMAGE_RCCS images.qrc)
-INSTALL ( FILES qgskadasstyle.css
-         DESTINATION ${QGIS_DATA_DIR}/resources)
 
 ########################################################
 # Build
