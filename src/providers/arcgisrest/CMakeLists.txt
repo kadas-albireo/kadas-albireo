@@ -34,6 +34,7 @@ TARGET_LINK_LIBRARIES(arcgisfeatureserverprovider
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES}
 )
 
 INSTALL (TARGETS arcgisfeatureserverprovider
@@ -64,6 +65,7 @@ TARGET_LINK_LIBRARIES(arcgismapserverprovider
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES}
 )
 
 INSTALL (TARGETS arcgismapserverprovider
