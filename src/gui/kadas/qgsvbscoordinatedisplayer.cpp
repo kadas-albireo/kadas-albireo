@@ -41,19 +41,15 @@ static inline T* variant2ptr( const QVariant& v )
 }
 
 
-QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgsMapCanvas* mapCanvas, QWidget *parent )
-    : QWidget( parent ), mMapCanvas( mapCanvas )
+QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
+    QWidget *parent ) : QWidget( parent ), mMapCanvas( mapCanvas ),
+    mCRSSelectionCombo( crsComboBox ), mCoordinateLineEdit( coordLineEdit )
 {
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   mIconLabel = new QLabel( this );
   mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mousecoordinates.svg" ) );
 
-  mCRSSelectionCombo = 0;
-  mCoordinateLineEdit = 0;
-
-  /*
-  mCRSSelectionCombo = new QComboBox( this );
   mCRSSelectionCombo->addItem( "LV03", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:21781", mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->addItem( "LV95", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:2056", mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->addItem( "DMS", ptr2variant( new QgsWGS84CoordinateConverter( QgsWGS84CoordinateConverter::DegMinSec, mCRSSelectionCombo ) ) );
@@ -64,7 +60,6 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgsMapCanvas* mapCanvas, Q
   mCRSSelectionCombo->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
   mCRSSelectionCombo->setCurrentIndex( 0 );
 
-  mCoordinateLineEdit = new QLineEdit( this );
   QFont font = mCoordinateLineEdit->font();
   font.setPointSize( 9 );
   mCoordinateLineEdit->setFont( font );
@@ -73,30 +68,10 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QgsMapCanvas* mapCanvas, Q
   mCoordinateLineEdit->setFixedWidth( 200 );
   mCoordinateLineEdit->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
-  QHBoxLayout* layout = new QHBoxLayout( this );
-  layout->setContentsMargins( 0, 0, 0, 0 );
-  layout->setSpacing( 1 );
-  layout->addWidget( mIconLabel );
-  layout->addWidget( mCRSSelectionCombo );
-  layout->addWidget( mCoordinateLineEdit );
-
-  QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mQGisIface->mainWindow() );
-  Q_ASSERT( mainWindow );
-  QStatusBar* statusBar = mainWindow->statusBar();
-  QLabel* coordsLabel = statusBar->findChild<QLabel*>( "mCoordsLabel" );
-
-  statusBar->insertPermanentWidget( statusBar->children().indexOf( coordsLabel ), this, 0 );
-
-  if ( coordsLabel )
-    coordsLabel->setVisible( false );
-  QLineEdit* coordsEdit = statusBar->findChild<QLineEdit*>( "mCoordsEdit" );
-  if ( coordsEdit )
-    coordsEdit->setVisible( false );*/
-
-  /*connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
+  connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
   connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), mCoordinateLineEdit, SLOT( clear() ) );
-  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( displayFormatChanged() ) );*/
+  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( displayFormatChanged() ) );
 
   syncProjectCrs();
 }
@@ -105,30 +80,17 @@ QgsVBSCoordinateDisplayer::~QgsVBSCoordinateDisplayer()
 {
   disconnect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   disconnect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
-
-  /*QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mQGisIface->mainWindow() );
-  Q_ASSERT( mainWindow );
-  QStatusBar* statusBar = mainWindow->statusBar();
-
-  statusBar->removeWidget( this );
-
-  QLabel* coordsLabel = statusBar->findChild<QLabel*>( "mCoordsLabel" );
-  if ( coordsLabel )
-    coordsLabel->setVisible( true );
-  QLineEdit* coordsEdit = statusBar->findChild<QLineEdit*>( "mCoordsEdit" );
-  if ( coordsEdit )
-    coordsEdit->setVisible( true );*/
 }
 
 QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
 {
-  if( mCRSSelectionCombo )
+  if ( mCRSSelectionCombo )
   {
     QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
     QgsVBSCoordinateConverter* conv = variant2ptr<QgsVBSCoordinateConverter>( v );
     if ( conv )
     {
-        return conv->convert( p, crs );
+      return conv->convert( p, crs );
     }
   }
   return QString();
@@ -136,10 +98,10 @@ QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const Qg
 
 void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 {
-    if( mCoordinateLineEdit )
-    {
-        mCoordinateLineEdit->setText( getDisplayString( p, mMapCanvas->mapSettings().destinationCrs() ) );
-    }
+  if ( mCoordinateLineEdit )
+  {
+    mCoordinateLineEdit->setText( getDisplayString( p, mMapCanvas->mapSettings().destinationCrs() ) );
+  }
 }
 
 void QgsVBSCoordinateDisplayer::syncProjectCrs()

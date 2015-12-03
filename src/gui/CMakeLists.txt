@@ -108,6 +108,7 @@ editorwidgets/qgswebviewwidgetfactory.cpp
 
 kadas/qgsvbscoordinateconverter.cpp
 kadas/qgsvbscoordinatedisplayer.cpp
+kadas/qgsvbscrsselection.cpp
 kadas/qgsvbsmaptoolpinannotation.cpp
 kadas/qgsvbspinannotationitem.cpp
 
@@ -350,6 +351,7 @@ SET(QGIS_GUI_MOC_HDRS
   
   kadas/qgsvbscoordinateconverter.h
   kadas/qgsvbscoordinatedisplayer.h
+  kadas/qgsvbscrsselection.h
   kadas/qgsvbspinannotationitem.h
 
   raster/qgsrasterminmaxwidget.h
