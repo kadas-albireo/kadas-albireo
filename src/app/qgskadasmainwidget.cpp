@@ -83,6 +83,8 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
+  connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
+
   //mActionAddToFavorites
   connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );
   setActionToButton( mActionAddToFavorites, mAddToFavoritesButton );
@@ -366,6 +368,14 @@ void QgsKadasMainWidget::pinActionToggled( bool enabled )
   if ( !enabled )
   {
     mMapCanvas->setMapTool( mNonEditMapTool );
+  }
+}
+
+void QgsKadasMainWidget::userScale()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->zoomScale( 1.0 / mScaleComboBox->scale() );
   }
 }
 
