@@ -27,7 +27,10 @@ QgsMapToolAdvancedDigitizing::QgsMapToolAdvancedDigitizing( QgsMapCanvas* canvas
     , mSnapOnMove( false )
     , mSnapOnDoubleClick( false )
 {
-  mCadDockWidget = QgisApp::instance()->cadDockWidget();
+  if ( QgisApp::instance() )
+  {
+    mCadDockWidget = QgisApp::instance()->cadDockWidget();
+  }
 }
 
 QgsMapToolAdvancedDigitizing::~QgsMapToolAdvancedDigitizing()

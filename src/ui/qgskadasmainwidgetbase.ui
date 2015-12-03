@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QgsKadasMainWidgetBase</class>
+ <widget class="QWidget" name="QgsKadasMainWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>840</width>
+    <height>613</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="mTopLayout">
+     <item>
+      <layout class="QVBoxLayout" name="mFavouritesSearchLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetFixedSize</enum>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="mFavoriteButton1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mFavoriteButton2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mFavoriteButton3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mAddToFavoritesButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="mSearchWidget" native="true"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTabWidget" name="mRibbonWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="mMyMapsTab">
+        <attribute name="title">
+         <string>My maps</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="4">
+          <widget class="QgsKadasRibbonButton" name="mPrintButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Print</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/drucken.png</normaloff>:/images/kadas/drucken.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QgsKadasRibbonButton" name="mSaveButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/speichern.png</normaloff>:/images/kadas/speichern.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsKadasRibbonButton" name="mOpenButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Open</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QgsKadasRibbonButton" name="mCopyButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Copy</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/kopieren.png</normaloff>:/images/kadas/kopieren.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+        <zorder>mSaveButton</zorder>
+        <zorder>mOpenButton</zorder>
+        <zorder>mCopyButton</zorder>
+        <zorder>mPrintButton</zorder>
+        <zorder>horizontalSpacer</zorder>
+       </widget>
+       <widget class="QWidget" name="mViewTab">
+        <attribute name="title">
+         <string>View</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="mDrawTab">
+        <attribute name="title">
+         <string>Draw</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="1">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="0">
+          <widget class="QgsKadasRibbonButton" name="mPinButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Pin</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="mSituationRepartTab">
+        <attribute name="title">
+         <string>Situation report</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="mSettingsTab">
+        <attribute name="title">
+         <string>Settings</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="mHelpTab">
+        <attribute name="title">
+         <string>Help</string>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QgsMapCanvas" name="mMapCanvas" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>10</y>
+        <width>32</width>
+        <height>66</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="mZoomInOutLayout">
+       <item>
+        <widget class="QPushButton" name="mZoomInButton">
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="mZoomOutButton">
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QgsLayerTreeView" name="mLayerTreeView">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>115</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="mLayerTreeViewButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>20</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>20</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>20</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../../images/images.qrc">
+        <normaloff>:/images/kadas/layerbaum.png</normaloff>:/images/kadas/layerbaum.png</iconset>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="mStatusLayout">
+     <item>
+      <widget class="QLabel" name="mMousePositionLabel">
+       <property name="text">
+        <string>Mouse position:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="mCoordinateLineEdit"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="mCRSComboBox"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="mScaleLabel">
+       <property name="text">
+        <string>Scale:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QgsScaleComboBox" name="mScaleComboBox"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="mCRSLabel">
+       <property name="text">
+        <string>Coordinate system:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QgsVBSCrsSelection" name="mCRSSelectionButton">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <action name="mActionOpen">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/oeffnen.png</normaloff>:/images/kadas/oeffnen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open project</string>
+   </property>
+  </action>
+  <action name="mActionAddToFavorites">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add to favorites</string>
+   </property>
+  </action>
+  <action name="mActionSave">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/speichern.png</normaloff>:/images/kadas/speichern.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="mActionPin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/stecknadel.png</normaloff>:/images/kadas/stecknadel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pin</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsMapCanvas</class>
+   <extends>QWidget</extends>
+   <header>qgsmapcanvas.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QgsLayerTreeView</class>
+   <extends>QTreeView</extends>
+   <header>qgslayertreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsKadasRibbonButton</class>
+   <extends>QPushButton</extends>
+   <header>qgskadasribbonbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsScaleComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsscalecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsVBSCrsSelection</class>
+   <extends>QToolButton</extends>
+   <header>kadas/qgsvbscrsselection.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

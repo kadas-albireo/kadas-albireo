@@ -38,6 +38,7 @@
 
 #include "qgscustomization.h"
 #include "qgsfontutils.h"
+#include "qgskadasmainwidget.h"
 #include "qgspluginregistry.h"
 #include "qgsmessagelog.h"
 #include "qgspythonrunner.h"
@@ -491,6 +492,8 @@ int main( int argc, char *argv[] )
 
   QString customizationfile;
 
+  bool kadasGui = true;
+
 #if defined(ANDROID)
   QgsDebugMsg( QString( "Android: All params stripped" ) );// Param %1" ).arg( argv[0] ) );
   //put all QGIS settings in the same place
@@ -572,6 +575,10 @@ int main( int argc, char *argv[] )
       {
         myRestoreDefaultWindowState = true;
       }
+      else if ( arg == "--kadasgui" )
+      {
+          kadasGui = ( args.at( i ).compare( "true", Qt::CaseInsensitive ) == 0 );
+      }
       else
       {
         myFileList.append( QDir::toNativeSeparators( QFileInfo( args[i] ).absoluteFilePath() ) );
@@ -639,6 +646,22 @@ int main( int argc, char *argv[] )
 
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
+  //set stylesheet if there
+  QString styleSheetPath = QgsApplication::styleSheetPath();
+  QFile styleSheetFile( styleSheetPath );
+  if ( styleSheetFile.exists() )
+  {
+    if ( styleSheetFile.open( QIODevice::ReadOnly ) )
+    {
+      QTextStream styleStream( &styleSheetFile );
+      QString styleSheetText = styleStream.readAll();
+      if ( !styleSheetText.isEmpty() )
+      {
+        myApp.setStyleSheet( styleSheetText );
+      }
+    }
+  }
+
 // (if Windows/Mac, use icon from resource)
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
   myApp.setWindowIcon( QIcon( QgsApplication::iconsPath() + "qgis-icon.png" ) );
@@ -693,7 +716,7 @@ int main( int argc, char *argv[] )
     gdalShares << QCoreApplication::applicationDirPath().append( "/share/gdal" )
     << appResources.append( "/share/gdal" )
     << appResources.append( "/gdal" );
-    Q_FOREACH ( const QString& gdalShare, gdalShares )
+    Q_FOREACH( const QString& gdalShare, gdalShares )
     {
       if ( QFile::exists( gdalShare ) )
       {
@@ -901,7 +924,16 @@ int main( int argc, char *argv[] )
   // this should be done in QgsApplication::init() but it doesn't know the settings dir.
   QgsApplication::setMaxThreads( QSettings().value( "/qgis/max_threads", -1 ).toInt() );
 
-  QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
+  //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
+  QWidget* qgis = 0;
+  if( kadasGui )
+  {
+    qgis = new QgsKadasMainWidget();
+  }
+  else
+  {
+     qgis = new QgisApp( mypSplash, myRestorePlugins );
+  }
   qgis->setObjectName( "QgisApp" );
 
   myApp.connect(
@@ -910,6 +942,7 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
   );
 
+#if 0 //disable command line options for now
   /////////////////////////////////////////////////////////////////////
   // Load a project file if one was specified
   /////////////////////////////////////////////////////////////////////
@@ -1020,6 +1053,7 @@ int main( int argc, char *argv[] )
 
     return 1;
   }
+#endif //0
 
   /////////////////////////////////////////////////////////////////////
   // Continue on to interactive gui...
@@ -1030,7 +1064,7 @@ int main( int argc, char *argv[] )
   mypSplash->finish( qgis );
   delete mypSplash;
 
-  qgis->completeInitialization();
+  //qgis->completeInitialization();
 
 #if defined(ANDROID)
   // fix for Qt Ministro hiding app's menubar in favor of native Android menus

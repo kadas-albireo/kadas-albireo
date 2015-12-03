@@ -57,8 +57,11 @@ QgsMapToolCapture::QgsMapToolCapture( QgsMapCanvas* canvas, enum CaptureMode too
   QPixmap mySelectQPixmap = QPixmap(( const char ** ) capture_point_cursor );
   mCursor = QCursor( mySelectQPixmap, 8, 8 );
 
-  connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer * ) ),
-           this, SLOT( currentLayerChanged( QgsMapLayer * ) ) );
+  if ( QgisApp::instance() && QgisApp::instance()->layerTreeView() )
+  {
+    connect( QgisApp::instance()->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer * ) ),
+             this, SLOT( currentLayerChanged( QgsMapLayer * ) ) );
+  }
 }
 
 QgsMapToolCapture::~QgsMapToolCapture()

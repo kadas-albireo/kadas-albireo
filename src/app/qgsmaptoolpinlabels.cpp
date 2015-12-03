@@ -36,7 +36,10 @@ QgsMapToolPinLabels::QgsMapToolPinLabels( QgsMapCanvas* canvas )
 {
   mToolName = tr( "Pin labels" );
 
-  connect( QgisApp::instance()->actionToggleEditing(), SIGNAL( triggered() ), this, SLOT( updatePinnedLabels() ) );
+  if ( QgisApp::instance() && QgisApp::instance()->actionToggleEditing() )
+  {
+    connect( QgisApp::instance()->actionToggleEditing(), SIGNAL( triggered() ), this, SLOT( updatePinnedLabels() ) );
+  }
   connect( canvas, SIGNAL( renderComplete( QPainter * ) ), this, SLOT( highlightPinnedLabels() ) );
 }
 

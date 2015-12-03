@@ -1,0 +1,99 @@
+/**General styling*/
+QWidget {
+  font-family: "Frutiger LT Pro";
+  font-style: 55 Roman;
+  font-size: 14px; 
+}
+
+QTreeView::indicator {
+    width: 13px;
+    height: 13px;
+    background: #FFFFFF;
+    frame: 1px #9a9a9a
+}
+
+QTreeView::indicator::checked {
+  image: url(:/images/kadas/checked.png);
+}
+
+QTreeView::indicator::unchecked {
+  image: url(:/images/kadas/unchecked.png);
+}
+
+/*QCheckBox::indicator:unchecked {
+    image: url(:/images/checkbox_unchecked.png);
+}*/
+
+QgsKadasMainWidget {
+  background-color: #263B4E;
+}
+
+/**UI left of mRibbonWidget*/
+QPushButton#mAddToFavoritesButton {
+  background-color: #5D7081;
+  color: #263B4E;
+  font-size: 12px;
+}
+
+QPushButton#mFavoriteButton1 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+QPushButton#mFavoriteButton2 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+QPushButton#mFavoriteButton3 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+/**mRibbonWidget*/
+#mRibbonWidget QWidget {
+  background-color: #263B4E;
+}
+
+#mRibbonWidget QPushButton { 
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+#mRibbonWidget QAbstractButton { 
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+/*QTabWidget#mRibbonWidget { 
+  font-family: "Frutiger LT Pro" 
+}*/
+
+QTabWidget::pane {
+}
+
+#mRibbonWidget QTabBar::tab:selected {
+    background-color: #263B4E;
+    color: #FFFFFF
+}
+
+#mRibbonWidget QTabBar::tab:!selected {
+    background-color: #BEDCF6; /* make non-selected tabs look smaller */
+}
+
+/**Tree view button*/
+QPushButton#mLayerTreeViewButton {
+  background-color: #263B4E;
+}
+
+/**+- button*/
+QPushButton#mZoomInButton {
+  background-color: #263B4E;
+  color: #FFFFFF
+}
+QPushButton#mZoomOutButton {
+  background-color: #263B4E;
+  color: #FFFFFF
+}
+
+
