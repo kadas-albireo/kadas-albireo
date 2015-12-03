@@ -65,6 +65,17 @@ QPushButton#mFavoriteButton3 {
   color: #FFFFFF;
 }
 
+/**Status bar*/
+
+QWidget#mStatusWidget {
+  background-color: #1E2126
+}
+
+#mStatusWidget  QWidget {
+  background-color: #16171B;
+  color: #FFFFFF;
+}
+
 /*QTabWidget#mRibbonWidget { 
   font-family: "Frutiger LT Pro" 
 }*/
