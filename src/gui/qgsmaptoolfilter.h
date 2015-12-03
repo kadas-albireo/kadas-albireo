@@ -53,9 +53,9 @@ class GUI_EXPORT QgsMapToolFilter : public QgsMapTool
 
     struct CircularSectorData : CircleData
     {
-      CircularSectorData() : stage( Empty ), startAngle( 0 ), stopAngle( 0 ) {}
+      CircularSectorData() : stage( Empty ), incomplete( true ), startAngle( 0 ), stopAngle( 0 ) {}
       enum Stage { Empty, HaveCenter, HaveArc } stage;
-      bool incomplete = true;
+      bool incomplete;
       double startAngle;
       double stopAngle;
       void updateRubberband( QgsRubberBand* rubberband ) override;
