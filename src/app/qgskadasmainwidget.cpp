@@ -16,6 +16,7 @@
 #include "qgsrasterlayerproperties.h"
 #include "qgstemporaryfile.h"
 #include "kadas/qgsvbscoordinatedisplayer.h"
+#include "kadas/qgsvbscrsselection.h"
 #include "kadas/qgsvbsmaptoolpinannotation.h"
 #include "kadas/qgsvbspinannotationitem.h"
 #include "qgsvectordataprovider.h"
@@ -79,7 +80,8 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   QgsApplication::initQgis();
 
-  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mMapCanvas, this );
+  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
+  mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   //mActionAddToFavorites
   connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );

@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="mTopLayout">
      <item>
@@ -449,12 +452,69 @@
    </item>
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="mStatusLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
+     <item>
+      <widget class="QLabel" name="mMousePositionLabel">
+       <property name="text">
+        <string>Mouse position:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="mCoordinateLineEdit"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="mCRSComboBox"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="mScaleLabel">
+       <property name="text">
+        <string>Scale:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QgsScaleComboBox" name="mScaleComboBox"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="mCRSLabel">
+       <property name="text">
+        <string>Coordinate system:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QgsVBSCrsSelection" name="mCRSSelectionButton">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -517,6 +577,16 @@
    <class>QgsKadasRibbonButton</class>
    <extends>QPushButton</extends>
    <header>qgskadasribbonbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsScaleComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsscalecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsVBSCrsSelection</class>
+   <extends>QToolButton</extends>
+   <header>kadas/qgsvbscrsselection.h</header>
   </customwidget>
  </customwidgets>
  <resources>

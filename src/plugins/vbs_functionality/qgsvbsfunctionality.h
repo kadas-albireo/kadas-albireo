@@ -25,7 +25,6 @@
 
 class QAction;
 class QToolBar;
-class QgsVBSCrsSelection;
 class QgsVBSSearchBox;
 class QgsMapTool;
 class QgsMapLayer;
@@ -47,7 +46,6 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
 
   private:
     QgisInterface* mQGisIface;
-    QgsVBSCrsSelection* mCrsSelection;
     QAction* mActionPinAnnotation;
     QToolBar* mSearchToolbar;
     QgsVBSSearchBox* mSearchBox;

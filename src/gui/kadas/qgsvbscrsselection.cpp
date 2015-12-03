@@ -30,8 +30,8 @@
 #include <QStatusBar>
 #include <QToolButton>
 
-QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
-    : QToolButton( parent ), mIface( iface )
+QgsVBSCrsSelection::QgsVBSCrsSelection( QWidget *parent )
+    : QToolButton( parent ), mMapCanvas( 0 )
 {
   QMenu* crsSelectionMenu = new QMenu( this );
   crsSelectionMenu->addAction( QgsCoordinateReferenceSystem( "EPSG:21781" ).description(), this, SLOT( setMapCrs() ) )->setData( "EPSG:21781" );
@@ -46,6 +46,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
   setMenu( crsSelectionMenu );
   setPopupMode( QToolButton::InstantPopup );
 
+#if 0
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
   Q_ASSERT( mainWindow );
   QStatusBar* statusBar = mainWindow->statusBar();
@@ -73,11 +74,12 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QgisInterface *iface, QWidget *parent )
 
   connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
   connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
-
+#endif //0
 }
 
 QgsVBSCrsSelection::~QgsVBSCrsSelection()
 {
+#if 0
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
   Q_ASSERT( mainWindow );
   QStatusBar* statusBar = mainWindow->statusBar();
@@ -87,35 +89,64 @@ QgsVBSCrsSelection::~QgsVBSCrsSelection()
   QToolButton* otfProjButton = statusBar->findChild<QToolButton*>( "mOnTheFlyProjectionStatusButton" );
   if ( otfProjButton )
     otfProjButton->setVisible( true );
+#endif //0
+}
+
+void QgsVBSCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
+{
+    mMapCanvas = canvas;
+    if( mMapCanvas )
+    {
+        QgsCoordinateReferenceSystem crs( "EPSG:21781" );
+        mMapCanvas->setDestinationCrs( crs );
+        mMapCanvas->setMapUnits( crs.mapUnits() );
+        setText( crs.description() );
+
+        connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
+
+        //todo: needs to be connected from main widget (e.g. KadasMainWidget)
+        //connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
+    }
 }
 
 void QgsVBSCrsSelection::syncCrsButton()
 {
-  QString authid = mIface->mapCanvas()->mapSettings().destinationCrs().authid();
-  setText( authid );
+    if( mMapCanvas )
+    {
+        QString authid = mMapCanvas->mapSettings().destinationCrs().authid();
+        setText( authid );
+    }
 }
 
 void QgsVBSCrsSelection::selectMapCrs()
 {
+    if( !mMapCanvas )
+    {
+        return;
+    }
   QgsProjectionSelectionWidget projSelector;
-  projSelector.dialog()->setSelectedAuthId( mIface->mapCanvas()->mapSettings().destinationCrs().authid() );
+  projSelector.dialog()->setSelectedAuthId( mMapCanvas->mapSettings().destinationCrs().authid() );
   if ( projSelector.dialog()->exec() != QDialog::Accepted )
   {
     return;
   }
   QgsCoordinateReferenceSystem crs( projSelector.dialog()->selectedAuthId() );
-  mIface->mapCanvas()->setCrsTransformEnabled( true );
-  mIface->mapCanvas()->setDestinationCrs( crs );
-  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
+  mMapCanvas->setCrsTransformEnabled( true );
+  mMapCanvas->setDestinationCrs( crs );
+  mMapCanvas->setMapUnits( crs.mapUnits() );
   setText( crs.description() );
 }
 
 void QgsVBSCrsSelection::setMapCrs()
 {
+    if( !mMapCanvas )
+    {
+        return;
+    }
   QAction* action = qobject_cast<QAction*>( QObject::sender() );
   QgsCoordinateReferenceSystem crs( action->data().toString() );
-  mIface->mapCanvas()->setCrsTransformEnabled( true );
-  mIface->mapCanvas()->setDestinationCrs( crs );
-  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
+  mMapCanvas->setCrsTransformEnabled( true );
+  mMapCanvas->setDestinationCrs( crs );
+  mMapCanvas->setMapUnits( crs.mapUnits() );
   setText( crs.description() );
 }

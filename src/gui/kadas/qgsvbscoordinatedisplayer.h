@@ -31,7 +31,7 @@ class QgsVBSCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsVBSCoordinateDisplayer( QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
+    QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
     ~QgsVBSCoordinateDisplayer();
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
 

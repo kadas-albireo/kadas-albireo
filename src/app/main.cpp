@@ -492,6 +492,8 @@ int main( int argc, char *argv[] )
 
   QString customizationfile;
 
+  bool kadasGui = true;
+
 #if defined(ANDROID)
   QgsDebugMsg( QString( "Android: All params stripped" ) );// Param %1" ).arg( argv[0] ) );
   //put all QGIS settings in the same place
@@ -572,6 +574,10 @@ int main( int argc, char *argv[] )
       else if ( arg == "--defaultui" || arg == "-d" )
       {
         myRestoreDefaultWindowState = true;
+      }
+      else if ( arg == "--kadasgui" )
+      {
+          kadasGui = ( args.at( i ).compare( "true", Qt::CaseInsensitive ) == 0 );
       }
       else
       {
@@ -899,11 +905,11 @@ int main( int argc, char *argv[] )
 #endif
 
   //set up splash screen
-  //QPixmap myPixmap( splash_image );
-  //QSplashScreen *mypSplash = new QSplashScreen( myPixmap );
+  QPixmap myPixmap( splash_image );
+  QSplashScreen *mypSplash = new QSplashScreen( myPixmap );
   //for win and linux we can just automask and png transparency areas will be used
-  //mypSplash->setMask( myPixmap.mask() );
-  //mypSplash->show();
+  mypSplash->setMask( myPixmap.mask() );
+  mypSplash->show();
 
   // optionally restore default window state
   // use restoreDefaultWindowState setting only if NOT using command line (then it is set already)
@@ -919,7 +925,15 @@ int main( int argc, char *argv[] )
   QgsApplication::setMaxThreads( QSettings().value( "/qgis/max_threads", -1 ).toInt() );
 
   //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
-  QgsKadasMainWidget* qgis = new QgsKadasMainWidget();
+  QWidget* qgis = 0;
+  if( kadasGui )
+  {
+    qgis = new QgsKadasMainWidget();
+  }
+  else
+  {
+     qgis = new QgisApp( mypSplash, myRestorePlugins );
+  }
   qgis->setObjectName( "QgisApp" );
 
   myApp.connect(
@@ -1047,8 +1061,8 @@ int main( int argc, char *argv[] )
   qgis->show();
   myApp.connect( &myApp, SIGNAL( lastWindowClosed() ), &myApp, SLOT( quit() ) );
 
-  //mypSplash->finish( qgis );
-  //delete mypSplash;
+  mypSplash->finish( qgis );
+  delete mypSplash;
 
   //qgis->completeInitialization();
 

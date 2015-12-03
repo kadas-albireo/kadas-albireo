@@ -20,17 +20,19 @@
 
 #include <QToolButton>
 
-class QgisInterface;
+class QgsMapCanvas;
 
 class QgsVBSCrsSelection : public QToolButton
 {
     Q_OBJECT
   public:
-    QgsVBSCrsSelection( QgisInterface* iface, QWidget* parent = 0 );
+    QgsVBSCrsSelection( QWidget* parent = 0 );
     ~QgsVBSCrsSelection();
 
+    void setMapCanvas( QgsMapCanvas* canvas );
+
   private:
-    QgisInterface* mIface;
+    QgsMapCanvas* mMapCanvas;
 
   private slots:
     void syncCrsButton();

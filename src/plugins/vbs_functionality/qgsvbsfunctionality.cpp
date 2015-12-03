@@ -21,7 +21,6 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgsvbsfunctionality.h"
-#include "qgsvbscrsselection.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
 #include "analysistools/qgsvbsslopetool.h"
@@ -37,7 +36,6 @@
 QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
     , mQGisIface( theQgisInterface )
-    , mCrsSelection( 0 )
     , mActionPinAnnotation( 0 )
     , mSearchToolbar( 0 )
     , mSearchBox( 0 )
@@ -53,8 +51,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
 
 void QgsVBSFunctionality::initGui()
 {
-  mCrsSelection = new QgsVBSCrsSelection( mQGisIface, mQGisIface->mainWindow() );
-
   mSearchToolbar = mQGisIface->addToolBar( "vbsSearchToolbar" );
   mSearchBox = new QgsVBSSearchBox( mQGisIface, mSearchToolbar );
   mSearchToolbar->addWidget( mSearchBox );
@@ -92,8 +88,6 @@ void QgsVBSFunctionality::initGui()
 void QgsVBSFunctionality::unload()
 {
   disconnect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
-  delete mCrsSelection;
-  mCrsSelection = 0;
   delete mSearchToolbar;
   mSearchToolbar = 0;
   mSearchBox = 0;

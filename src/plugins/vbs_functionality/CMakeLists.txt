@@ -12,7 +12,6 @@ ENDIF(MSVC)
 SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
   qgsvbscrashhandler.cpp
-  qgsvbscrsselection.cpp
   analysistools/qgsvbsslopetool.cpp
   analysistools/qgsvbshillshadetool.cpp
   analysistools/qgsvbsviewshedtool.cpp
@@ -47,7 +46,6 @@ SET (vbsfunctionality_MOC_HDRS
   search/qgsvbslocaldatasearchprovider.h
   search/qgsvbsremotedatasearchprovider.h
   search/qgsvbsworldlocationsearchprovider.h
-  qgsvbscrsselection.h
 )
 
 SET (vbsfunctionality_UIS
