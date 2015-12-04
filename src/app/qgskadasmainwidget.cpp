@@ -85,9 +85,15 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
 
+  //My maps tab
+
   //mActionAddToFavorites
   connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );
   setActionToButton( mActionAddToFavorites, mAddToFavoritesButton );
+
+  //mActionNew
+  connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
+  setActionToButton( mActionNew, mNewButton );
 
   //mActionOpen
   connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( open() ) );
@@ -101,6 +107,17 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   connect( mActionPin, SIGNAL( triggered() ), this, SLOT( pin() ) );
   setActionToButton( mActionPin, mPinButton );
   connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pinActionToggled( bool ) ) );
+
+  //Analysis tab
+  setActionToButton( mActionDistance, mDistanceButton );
+  setActionToButton( mActionArea, mAreaButton );
+  setActionToButton( mActionProfile, mProfileButton );
+  setActionToButton( mActionAzimuth, mAzimuthButton );
+  setActionToButton( mActionLineOfSight, mLineOfSightButton );
+  setActionToButton( mActionSlope, mSlopeButton );
+  setActionToButton( mActionHillshade, mHillshadeButton );
+  setActionToButton( mActionViewshed, mViewshedButton );
+  setActionToButton( mActionWPS, mWPSButton );
 
   mMapCanvas->freeze();
   initLayerTreeView();
@@ -242,6 +259,11 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* bu
 
 void QgsKadasMainWidget::addToFavorites()
 {
+}
+
+void QgsKadasMainWidget::fileNew()
+{
+  //todo...
 }
 
 void QgsKadasMainWidget::open()
