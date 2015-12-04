@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
+    <width>858</width>
     <height>613</height>
    </rect>
   </property>
@@ -29,15 +29,21 @@
          <item>
           <widget class="QPushButton" name="mFavoriteButton1">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -51,15 +57,21 @@
          <item>
           <widget class="QPushButton" name="mFavoriteButton2">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -70,15 +82,21 @@
          <item>
           <widget class="QPushButton" name="mFavoriteButton3">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -89,15 +107,21 @@
          <item>
           <widget class="QPushButton" name="mAddToFavoritesButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -125,33 +149,35 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="mMyMapsTab">
         <attribute name="title">
          <string>My maps</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="4">
-          <widget class="QgsKadasRibbonButton" name="mPrintButton">
+         <item row="0" column="1">
+          <widget class="QgsKadasRibbonButton" name="mOpenButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
             </size>
            </property>
-           <property name="text">
-            <string>Print</string>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
            </property>
-           <property name="icon">
-            <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/drucken.png</normaloff>:/images/kadas/drucken.png</iconset>
+           <property name="text">
+            <string>Open</string>
            </property>
            <property name="iconSize">
             <size>
@@ -164,15 +190,21 @@
          <item row="0" column="2">
           <widget class="QgsKadasRibbonButton" name="mSaveButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -190,43 +222,37 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QgsKadasRibbonButton" name="mOpenButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+         <item row="0" column="10">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-           <property name="minimumSize">
+           <property name="sizeHint" stdset="0">
             <size>
-             <width>80</width>
-             <height>80</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
-           <property name="text">
-            <string>Open</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-          </widget>
+          </spacer>
          </item>
          <item row="0" column="3">
           <widget class="QgsKadasRibbonButton" name="mCopyButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>52</width>
              <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -245,17 +271,168 @@
           </widget>
          </item>
          <item row="0" column="5">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+          <widget class="QgsKadasRibbonButton" name="mPrintButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="sizeHint" stdset="0">
+           <property name="minimumSize">
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>52</width>
+             <height>80</height>
             </size>
            </property>
-          </spacer>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Print</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../images/images.qrc">
+             <normaloff>:/images/kadas/drucken.png</normaloff>:/images/kadas/drucken.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QgsKadasRibbonButton" name="mSaveMapExtentButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Save map
+ extent</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QgsKadasRibbonButton" name="mNewButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>New</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QgsKadasRibbonButton" name="mCopyToClipboardButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Copy to 
+ clipboard</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="7">
+          <widget class="QgsKadasRibbonButton" name="mExportKMLButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Export
+ KML/KMZ</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="9">
+          <widget class="QgsKadasRibbonButton" name="mImportOVLButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Import
+ OVL</string>
+           </property>
+          </widget>
          </item>
         </layout>
         <zorder>mSaveButton</zorder>
@@ -263,11 +440,340 @@
         <zorder>mCopyButton</zorder>
         <zorder>mPrintButton</zorder>
         <zorder>horizontalSpacer</zorder>
+        <zorder>mNewButton</zorder>
+        <zorder>mCopyToClipboardButton</zorder>
+        <zorder>mSaveMapExtentButton</zorder>
+        <zorder>mExportKMLButton</zorder>
+        <zorder>mImportOVLButton</zorder>
        </widget>
        <widget class="QWidget" name="mViewTab">
         <attribute name="title">
          <string>View</string>
         </attribute>
+       </widget>
+       <widget class="QWidget" name="mAnalysisTab">
+        <attribute name="title">
+         <string>Analysis</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="10">
+          <widget class="QgsKadasRibbonButton" name="mWPSButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>WPS</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QgsKadasRibbonButton" name="mLineOfSightButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Line of Sight</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QgsKadasRibbonButton" name="mAzimuthButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Azimuth</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="8">
+          <widget class="QgsKadasRibbonButton" name="mHillshadeButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Hillshade</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsKadasRibbonButton" name="mAreaButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Area</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="7">
+          <widget class="QgsKadasRibbonButton" name="mSlopeButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Slope</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QgsKadasRibbonButton" name="mDistanceButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Distance</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QgsKadasRibbonButton" name="mMeasureCircleButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Circle</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="9">
+          <widget class="QgsKadasRibbonButton" name="mViewshedButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Viewshed</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="11">
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>49</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="4">
+          <widget class="QgsKadasRibbonButton" name="mProfileButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Profile</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="mDrawTab">
         <attribute name="title">
@@ -344,7 +850,7 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>780</x>
+        <x>820</x>
         <y>10</y>
         <width>32</width>
         <height>66</height>
@@ -492,7 +998,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>177</width>
+          <width>186</width>
           <height>20</height>
          </size>
         </property>
@@ -515,7 +1021,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>177</width>
+          <width>186</width>
           <height>20</height>
          </size>
         </property>
@@ -579,6 +1085,84 @@
    </property>
    <property name="text">
     <string>Pin</string>
+   </property>
+  </action>
+  <action name="mActionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="mActionDistance">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/distanz.png</normaloff>:/images/kadas/distanz.png</iconset>
+   </property>
+   <property name="text">
+    <string>Distance</string>
+   </property>
+  </action>
+  <action name="mActionArea">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/flaeche.png</normaloff>:/images/kadas/flaeche.png</iconset>
+   </property>
+   <property name="text">
+    <string>Area</string>
+   </property>
+  </action>
+  <action name="mActionProfile">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/hoehenprofil.png</normaloff>:/images/kadas/hoehenprofil.png</iconset>
+   </property>
+   <property name="text">
+    <string>Profile</string>
+   </property>
+  </action>
+  <action name="mActionAzimuth">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/azimuth.png</normaloff>:/images/kadas/azimuth.png</iconset>
+   </property>
+   <property name="text">
+    <string>Azimuth</string>
+   </property>
+  </action>
+  <action name="mActionLineOfSight">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/lineofsight.png</normaloff>:/images/kadas/lineofsight.png</iconset>
+   </property>
+   <property name="text">
+    <string>Line of Sight</string>
+   </property>
+  </action>
+  <action name="mActionSlope">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/gelaendeneigung.png</normaloff>:/images/kadas/gelaendeneigung.png</iconset>
+   </property>
+   <property name="text">
+    <string>Slope</string>
+   </property>
+  </action>
+  <action name="mActionHillshade">
+   <property name="text">
+    <string>Hillshade</string>
+   </property>
+  </action>
+  <action name="mActionViewshed">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/einsehbarkeitsanalyse.png</normaloff>:/images/kadas/einsehbarkeitsanalyse.png</iconset>
+   </property>
+   <property name="text">
+    <string>Viewshed</string>
+   </property>
+  </action>
+  <action name="mActionWPS">
+   <property name="text">
+    <string>WPS</string>
    </property>
   </action>
  </widget>

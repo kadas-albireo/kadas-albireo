@@ -39,6 +39,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
   private slots:
     void addToFavorites();
+    void fileNew();
     void open();
     bool save();
     void pin();
