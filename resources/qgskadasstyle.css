@@ -29,23 +29,22 @@ QgsKadasMainWidget {
 }
 
 /**UI left of mRibbonWidget*/
-QPushButton#mAddToFavoritesButton {
-  background-color: #5D7081;
-  color: #263B4E;
-  font-size: 12px;
-}
-
-QPushButton#mFavoriteButton1 {
+QAbstractButton#mFavoriteButton1 {
   background-color: #5D7081;
   color: #FFFFFF;
 }
 
-QPushButton#mFavoriteButton2 {
+QAbstractButton#mFavoriteButton2 {
   background-color: #5D7081;
   color: #FFFFFF;
 }
 
-QPushButton#mFavoriteButton3 {
+QAbstractButton#mFavoriteButton3 {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+QAbstractButton#mFavoriteButton4 {
   background-color: #5D7081;
   color: #FFFFFF;
 }
@@ -53,6 +52,7 @@ QPushButton#mFavoriteButton3 {
 /**mRibbonWidget*/
 #mRibbonWidget QWidget {
   background-color: #263B4E;
+  border-left: 1px solid #BEDCF6;
 }
 
 #mRibbonWidget QPushButton { 
