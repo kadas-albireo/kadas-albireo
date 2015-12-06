@@ -1141,6 +1141,9 @@
    </property>
   </action>
   <action name="mActionDistance">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/distanz.png</normaloff>:/images/kadas/distanz.png</iconset>
@@ -1150,6 +1153,9 @@
    </property>
   </action>
   <action name="mActionArea">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/flaeche.png</normaloff>:/images/kadas/flaeche.png</iconset>
@@ -1159,6 +1165,9 @@
    </property>
   </action>
   <action name="mActionProfile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/hoehenprofil.png</normaloff>:/images/kadas/hoehenprofil.png</iconset>
@@ -1168,6 +1177,9 @@
    </property>
   </action>
   <action name="mActionAzimuth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/azimuth.png</normaloff>:/images/kadas/azimuth.png</iconset>
@@ -1211,6 +1223,14 @@
   <action name="mActionWPS">
    <property name="text">
     <string>WPS</string>
+   </property>
+  </action>
+  <action name="mActionCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Circle</string>
    </property>
   </action>
  </widget>
