@@ -104,6 +104,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     void restoreFavoriteButton( QAbstractButton* button );
 
+    void configureButtons();
+
     //! list of recently opened/saved project files
     QStringList mRecentProjectPaths;
     //! Helper class that connects layer tree with map canvas
