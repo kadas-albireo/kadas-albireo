@@ -41,7 +41,7 @@ QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* c
       continue;
     }
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( layer );
-    if ( geomType != QGis::AnyGeometry && vlayer->geometryType() != QGis::AnyGeometry && vlayer->geometryType() != geomType )
+    if ( geomType != QGis::AnyGeometry && geomType != QGis::AnyGeometry && vlayer->geometryType() != QGis::AnyGeometry && vlayer->geometryType() != geomType )
     {
       continue;
     }
@@ -74,7 +74,7 @@ QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* c
       {
         continue;
       }
-      if ( feature.geometry()->type() != geomType )
+      if ( geomType != QGis::AnyGeometry && feature.geometry()->type() != geomType )
       {
         continue;
       }
