@@ -19,6 +19,10 @@
 #include "qgsvbscoordinateconverter.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
+#include "qgsproject.h"
+#include "qgslogger.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsmessagebar.h"
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -26,6 +30,8 @@
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QStatusBar>
+#include <QMessageBox>
+#include <gdal.h>
 
 
 template<class T>
@@ -95,6 +101,83 @@ QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const Qg
   }
   return QString();
 }
+
+double QgsVBSCoordinateDisplayer::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit )
+{
+  QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
+  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
+  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
+  {
+#warning TODO
+    // mQGisIface->messageBar()->pushMessage(tr( "No heightmap is defined in the project."), tr("Right-click a raster layer in the layer tree and select it to be used as heightmap."), QgsMessageBar::INFO, 10);
+    return 0;
+  }
+  QString rasterFile = layer->source();
+  GDALDatasetH raster = GDALOpen( rasterFile.toLocal8Bit().data(), GA_ReadOnly );
+  if ( !raster )
+  {
+    QMessageBox::warning( 0, tr( "Error" ), tr( "Failed to open raster file: %1" ).arg( rasterFile ) );
+    return 0;
+  }
+
+  double gtrans[6] = {};
+  if ( GDALGetGeoTransform( raster, &gtrans[0] ) != CE_None )
+  {
+    QgsDebugMsg( "Failed to get raster geotransform" );
+    GDALClose( raster );
+    return 0;
+  }
+
+  QString proj( GDALGetProjectionRef( raster ) );
+  QgsCoordinateReferenceSystem rasterCrs( proj );
+  if ( !rasterCrs.isValid() )
+  {
+    QgsDebugMsg( "Failed to get raster CRS" );
+    GDALClose( raster );
+    return 0;
+  }
+
+  GDALRasterBandH band = GDALGetRasterBand( raster, 1 );
+  if ( !raster )
+  {
+    QgsDebugMsg( "Failed to open raster band 0" );
+    GDALClose( raster );
+    return 0;
+  }
+
+  // Transform geo position to raster CRS
+  QgsPoint pRaster = QgsCoordinateTransform( crs, rasterCrs ).transform( p );
+  QgsDebugMsg( QString( "Transform %1 from %2 to %3 gives %4" ).arg( p.toString() )
+               .arg( crs.authid() ).arg( rasterCrs.authid() ).arg( pRaster.toString() ) );
+
+  // Transform raster geo position to pixel coordinates
+  double row = ( -gtrans[0] * gtrans[4] + gtrans[1] * gtrans[3] - gtrans[1] * pRaster.y() + gtrans[4] * pRaster.x() ) / ( gtrans[2] * gtrans[4] - gtrans[1] * gtrans[5] );
+  double col = ( -gtrans[0] * gtrans[5] + gtrans[2] * gtrans[3] - gtrans[2] * pRaster.y() + gtrans[5] * pRaster.x() ) / ( gtrans[1] * gtrans[5] - gtrans[2] * gtrans[4] );
+
+  double pixValues[4] = {};
+  if ( CE_None != GDALRasterIO( band, GF_Read,
+                                qFloor( col ), qFloor( row ), 2, 2, &pixValues[0], 2, 2, GDT_Float64, 0, 0 ) )
+  {
+    QgsDebugMsg( "Failed to read pixel values" );
+    GDALClose( raster );
+    return 0;
+  }
+
+  GDALClose( raster );
+
+  // Interpolate values
+  double lambdaR = row - qFloor( row );
+  double lambdaC = col - qFloor( col );
+
+  double value = ( pixValues[0] * ( 1. - lambdaC ) + pixValues[1] * lambdaC ) * ( 1. - lambdaR )
+                 + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
+  if ( rasterCrs.mapUnits() != unit )
+  {
+    value *= QGis::fromUnitToUnitFactor( rasterCrs.mapUnits(), unit );
+  }
+  return value;
+}
+
 
 void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 {
