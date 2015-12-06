@@ -33,7 +33,6 @@
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QMessageBox>
 #include <QProgressDialog>
 
 
@@ -56,7 +55,7 @@ void QgsVBSHillshadeTool::drawFinished()
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-    QMessageBox::warning( 0, tr( "Error" ), tr( "No heightmap is defined in the project. Right-click a raster layer in the layer tree and select it to be used as heightmap." ) );
+    mIface->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
     emit finished();
     return;
   }

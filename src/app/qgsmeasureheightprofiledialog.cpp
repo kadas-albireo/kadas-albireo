@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgisapp.h"
 #include "qgscoordinatetransform.h"
 #include "qgsimageannotationitem.h"
 #include "qgsmapcanvas.h"
@@ -187,7 +188,7 @@ void QgsMeasureHeightProfileDialog::replot()
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-    QMessageBox::warning( 0, tr( "Error" ), tr( "No heightmap is defined in the project. Right-click a raster layer in the layer tree and select it to be used as heightmap." ) );
+    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
     return;
   }
   QString rasterFile = layer->source();
