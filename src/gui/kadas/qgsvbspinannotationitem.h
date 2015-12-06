@@ -30,7 +30,6 @@ class QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
     QgsVBSPinAnnotationItem( QgsMapCanvas* canvas, QgsVBSCoordinateDisplayer* coordinateDisplayer );
 
     void setMapPosition( const QgsPoint& pos ) override;
-    double getHeightAtCurrentPos();
     void showContextMenu( const QPoint& screenPos );
 
   private:

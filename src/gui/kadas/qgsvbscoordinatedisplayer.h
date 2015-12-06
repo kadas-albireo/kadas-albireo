@@ -34,6 +34,7 @@ class QgsVBSCoordinateDisplayer : public QWidget
     QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
     ~QgsVBSCoordinateDisplayer();
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
+    double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
 
   private:
     QgsMapCanvas* mMapCanvas;
