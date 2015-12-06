@@ -522,6 +522,8 @@
 	<file>kadas/text.png</file>
 	<file>kadas/checked.png</file>
 	<file>kadas/unchecked.png</file>
+	<file>kadas/zoom_in.png</file>
+	<file>kadas/zoom_out.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

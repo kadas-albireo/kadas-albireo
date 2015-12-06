@@ -929,7 +929,11 @@
           </size>
          </property>
          <property name="text">
-          <string>+</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../images/images.qrc">
+           <normaloff>:/images/kadas/zoom_in.png</normaloff>:/images/kadas/zoom_in.png</iconset>
          </property>
         </widget>
        </item>
@@ -948,7 +952,11 @@
           </size>
          </property>
          <property name="text">
-          <string>-</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../images/images.qrc">
+           <normaloff>:/images/kadas/zoom_out.png</normaloff>:/images/kadas/zoom_out.png</iconset>
          </property>
         </widget>
        </item>
