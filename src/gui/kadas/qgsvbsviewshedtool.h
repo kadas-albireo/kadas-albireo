@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbshillshadetool.h                                                  *
+ *  qgsvbsviewshedtool.h                                                   *
  *  -------------------                                                    *
- *  begin                : Nov 15, 2015                                    *
+ *  begin                : Nov 12, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,30 +15,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSHILLSHADETOOL_H
-#define QGSVBSHILLSHADETOOL_H
+#ifndef QGSVBSVIEWSHEDTOOL_H
+#define QGSVBSVIEWSHEDTOOL_H
 
 #include <QObject>
 
-class QgisInterface;
-class QgsMapToolDrawRectangle;
+class QgsMapCanvas;
+class QgsMapToolDrawShape;
 
-class QgsVBSHillshadeTool : public QObject
+class GUI_EXPORT QgsVBSViewshedTool : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSHillshadeTool( QgisInterface* iface, QObject* parent = 0 );
-    ~QgsVBSHillshadeTool();
+    QgsVBSViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly, QObject* parent = 0 );
+    ~QgsVBSViewshedTool();
 
   signals:
     void finished();
 
   private:
-    QgisInterface* mIface;
-    QgsMapToolDrawRectangle* mRectangleTool;
+    QgsMapCanvas* mMapCanvas;
+    QgsMapToolDrawShape* mDrawTool;
 
   private slots:
     void drawFinished();
+    void adjustRadius( double newRadius );
 };
 
-#endif // QGSVBSHILLSHADETOOL_H
+#endif // QGSVBSVIEWSHEDTOOL_H

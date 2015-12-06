@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsviewshedtool.h                                                   *
+ *  qgsvbsslopetool.h                                                      *
  *  -------------------                                                    *
- *  begin                : Nov 12, 2015                                    *
+ *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,31 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSVIEWSHEDTOOL_H
-#define QGSVBSVIEWSHEDTOOL_H
+#ifndef QGSVBSSLOPETOOL_H
+#define QGSVBSSLOPETOOL_H
 
 #include <QObject>
 
-class QgisInterface;
-class QgsMapToolDrawShape;
+class QgsMapCanvas;
+class QgsMapToolDrawRectangle;
 
-class QgsVBSViewshedTool : public QObject
+class GUI_EXPORT QgsVBSSlopeTool : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSViewshedTool( QgisInterface* iface, bool sectorOnly, QObject* parent = 0 );
-    ~QgsVBSViewshedTool();
+    QgsVBSSlopeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
+    ~QgsVBSSlopeTool();
 
   signals:
     void finished();
 
   private:
-    QgisInterface* mIface;
-    QgsMapToolDrawShape* mDrawTool;
+    QgsMapCanvas* mMapCanvas;
+    QgsMapToolDrawRectangle* mRectangleTool;
 
   private slots:
     void drawFinished();
-    void adjustRadius( double newRadius );
 };
 
-#endif // QGSVBSVIEWSHEDTOOL_H
+#endif // QGSVBSSLOPETOOL_H

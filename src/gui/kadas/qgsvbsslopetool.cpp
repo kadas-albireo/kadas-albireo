@@ -17,7 +17,6 @@
 
 #include "qgsvbsslopetool.h"
 #include "qgscolorrampshader.h"
-#include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
@@ -33,12 +32,12 @@
 #include <QProgressDialog>
 
 
-QgsVBSSlopeTool::QgsVBSSlopeTool( QgisInterface *iface, QObject *parent )
-    : QObject( parent ), mIface( iface )
+QgsVBSSlopeTool::QgsVBSSlopeTool( QgsMapCanvas* mapCanvas, QObject *parent )
+    : QObject( parent ), mMapCanvas( mapCanvas )
 {
-  mRectangleTool = new QgsMapToolDrawRectangle( iface->mapCanvas() );
+  mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
   connect( mRectangleTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-  mIface->mapCanvas()->setMapTool( mRectangleTool );
+  mMapCanvas->setMapTool( mRectangleTool );
 }
 
 QgsVBSSlopeTool::~QgsVBSSlopeTool()
@@ -61,7 +60,7 @@ void QgsVBSSlopeTool::drawFinished()
   mRectangleTool->getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
   rect.normalize();
-  QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
+  QgsCoordinateReferenceSystem rectCrs = mMapCanvas->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
@@ -73,6 +72,25 @@ void QgsVBSSlopeTool::drawFinished()
   slope.processRaster( &p );
   if ( !p.wasCanceled() )
   {
+      QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
+      QgsColorRampShader* rampShader = new QgsColorRampShader();
+      QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
+          << QgsColorRampShader::ColorRampItem( 0, QColor( 0, 0, 255 ), "0%" )
+          << QgsColorRampShader::ColorRampItem( 7.13, QColor( 0, 127, 255 ), "12.5%" )
+          << QgsColorRampShader::ColorRampItem( 14.04, QColor( 0, 255, 255 ), "25%" )
+          << QgsColorRampShader::ColorRampItem( 20.56, QColor( 0, 255, 200 ), "37.5%" )
+          << QgsColorRampShader::ColorRampItem( 26.57, QColor( 0, 255, 0 ), "50%" )
+          << QgsColorRampShader::ColorRampItem( 32.01, QColor( 200, 255, 0 ), "62.5%" )
+          << QgsColorRampShader::ColorRampItem( 36.87, QColor( 255, 255, 0 ), "75%" )
+          << QgsColorRampShader::ColorRampItem( 41.19, QColor( 255, 127, 0 ), "87.5%" )
+          << QgsColorRampShader::ColorRampItem( 45, QColor( 255, 0, 0 ), "100%" );
+      rampShader->setColorRampItemList( colorRampItems );
+      QgsRasterShader* shader = new QgsRasterShader();
+      shader->setRasterShaderFunction( rampShader );
+      QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
+      layer->setRenderer( renderer );
+      QgsMapLayerRegistry::instance()->addMapLayer( layer );
+      /*
     QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
@@ -90,6 +108,7 @@ void QgsVBSSlopeTool::drawFinished()
     shader->setRasterShaderFunction( rampShader );
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
     layer->setRenderer( renderer );
+    */
   }
   emit finished();
 }

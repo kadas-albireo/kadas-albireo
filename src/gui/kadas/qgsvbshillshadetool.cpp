@@ -37,12 +37,12 @@
 #include <QProgressDialog>
 
 
-QgsVBSHillshadeTool::QgsVBSHillshadeTool( QgisInterface *iface, QObject *parent )
-    : QObject( parent ), mIface( iface )
+QgsVBSHillshadeTool::QgsVBSHillshadeTool( QgsMapCanvas* mapCanvas, QObject *parent )
+    : QObject( parent ), mMapCanvas( mapCanvas )
 {
-  mRectangleTool = new QgsMapToolDrawRectangle( iface->mapCanvas() );
+  mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
   connect( mRectangleTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-  mIface->mapCanvas()->setMapTool( mRectangleTool );
+  mMapCanvas->setMapTool( mRectangleTool );
 }
 
 QgsVBSHillshadeTool::~QgsVBSHillshadeTool()
@@ -95,7 +95,7 @@ void QgsVBSHillshadeTool::drawFinished()
   mRectangleTool->getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
   rect.normalize();
-  QgsCoordinateReferenceSystem rectCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
+  QgsCoordinateReferenceSystem rectCrs = mMapCanvas->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "hillshade_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
@@ -107,8 +107,9 @@ void QgsVBSHillshadeTool::drawFinished()
   hillshade.processRaster( &p );
   if ( !p.wasCanceled() )
   {
-    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
+    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
     layer->renderer()->setOpacity( 0.6 );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
   emit finished();
 }

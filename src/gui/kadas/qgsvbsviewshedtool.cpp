@@ -41,19 +41,19 @@
 #include <QProgressDialog>
 
 
-QgsVBSViewshedTool::QgsVBSViewshedTool( QgisInterface *iface, bool sectorOnly , QObject *parent )
-    : QObject( parent ), mIface( iface )
+QgsVBSViewshedTool::QgsVBSViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly , QObject *parent )
+    : QObject( parent ), mMapCanvas( mapCanvas )
 {
   if ( sectorOnly )
   {
-    mDrawTool = new QgsMapToolDrawCircularSector( mIface->mapCanvas() );
+    mDrawTool = new QgsMapToolDrawCircularSector( mMapCanvas );
   }
   else
   {
-    mDrawTool = new QgsMapToolDrawCircle( mIface->mapCanvas() );
+    mDrawTool = new QgsMapToolDrawCircle( mMapCanvas );
   }
   connect( mDrawTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-  mIface->mapCanvas()->setMapTool( mDrawTool );
+  mMapCanvas->setMapTool( mDrawTool );
 }
 
 QgsVBSViewshedTool::~QgsVBSViewshedTool()
@@ -72,7 +72,7 @@ void QgsVBSViewshedTool::drawFinished()
     return;
   }
 
-  QgsCoordinateReferenceSystem canvasCrs = mIface->mapCanvas()->mapSettings().destinationCrs();
+  QgsCoordinateReferenceSystem canvasCrs = mMapCanvas->mapSettings().destinationCrs();
   double curRadius;
   QgsPoint center;
   double trash;
@@ -148,7 +148,7 @@ void QgsVBSViewshedTool::drawFinished()
   bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, spinObserverHeight->value(), spinTargetHeight->value(), curRadius, QGis::Meters, filterRegion, &p );
   if ( success )
   {
-    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
+    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
         << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
@@ -157,6 +157,7 @@ void QgsVBSViewshedTool::drawFinished()
     shader->setRasterShaderFunction( rampShader );
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
     layer->setRenderer( renderer );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
   emit finished();
 }
@@ -164,7 +165,7 @@ void QgsVBSViewshedTool::drawFinished()
 void QgsVBSViewshedTool::adjustRadius( double newRadius )
 {
   QGis::UnitType measureUnit = QGis::Meters;
-  QGis::UnitType targetUnit = mIface->mapCanvas()->mapSettings().destinationCrs().mapUnits();
+  QGis::UnitType targetUnit = mMapCanvas->mapSettings().destinationCrs().mapUnits();
   QgsDistanceArea().convertMeasurement( newRadius, measureUnit, targetUnit, false );
   if ( dynamic_cast<QgsMapToolDrawCircularSector*>( mDrawTool ) )
   {

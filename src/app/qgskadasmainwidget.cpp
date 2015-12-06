@@ -71,9 +71,13 @@
 #include "qgsmaptoolchangelabelproperties.h"
 #include "nodetool/qgsmaptoolnodetool.h"
 
+#include "qgsvbshillshadetool.h"
+#include "qgsvbsslopetool.h"
+#include "qgsvbsviewshedtool.h"
+
 
 QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
-    mNonEditMapTool( 0 )
+    mNonEditMapTool( 0 ), mSlopeTool( 0 )
 {
   setupUi( this );
   mLayerTreeView->setVisible( false );
@@ -120,10 +124,18 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   //mActionAzimuth
   connect( mActionAzimuth, SIGNAL( toggled( bool ) ), this, SLOT( azimuth( bool ) ) );
   setActionToButton( mActionAzimuth, mAzimuthButton );
+  //mActionLineOfSight
   setActionToButton( mActionLineOfSight, mLineOfSightButton );
+  //mActionSlope
+  connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( slope( bool ) ) );
   setActionToButton( mActionSlope, mSlopeButton );
+  //mActionHillshade
+  connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( hillshade( bool ) ) );
   setActionToButton( mActionHillshade, mHillshadeButton );
+  //mAcionViewshed
+  connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( viewshed( bool ) ) );
   setActionToButton( mActionViewshed, mViewshedButton );
+
   setActionToButton( mActionWPS, mWPSButton );
 
   mMapCanvas->freeze();
@@ -559,6 +571,50 @@ void QgsKadasMainWidget::circle( bool enabled )
     return;
   }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureCircle : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::slope( bool enabled )
+{
+  if ( enabled )
+  {
+    mSlopeTool = new QgsVBSSlopeTool( mMapCanvas, this );
+    connect( mSlopeTool, SIGNAL( finished() ), mActionSlope, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mSlopeTool;
+    mSlopeTool = 0;
+    mMapCanvas->setMapTool( mNonEditMapTool );
+  }
+}
+
+void QgsKadasMainWidget::hillshade( bool enabled )
+{
+  if ( enabled )
+  {
+    mHillshadeTool = new QgsVBSHillshadeTool( mMapCanvas, this );
+    connect( mHillshadeTool, SIGNAL( finished() ), mActionHillshade, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mHillshadeTool;
+    mHillshadeTool = 0;
+    mMapCanvas->setMapTool( mNonEditMapTool );
+  }
+}
+
+void QgsKadasMainWidget::viewshed( bool enabled )
+{
+  if ( enabled )
+  {
+    mViewshedTool = new QgsVBSViewshedTool( mMapCanvas, false, this );
+    connect( mViewshedTool, SIGNAL( finished() ), mActionViewshed, SLOT( toggle() ) );
+  }
+  else
+  {
+    delete mViewshedTool;
+    mViewshedTool = 0;
+  }
 }
 
 void QgsKadasMainWidget::pinActionToggled( bool enabled )

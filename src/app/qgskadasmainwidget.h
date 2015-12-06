@@ -7,6 +7,9 @@ class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
 class QgsMessageBar;
 class QgsVBSCoordinateDisplayer;
+class QgsVBSHillshadeTool;
+class QgsVBSSlopeTool;
+class QgsVBSViewshedTool;
 
 class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 {
@@ -52,6 +55,9 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void area( bool enabled );
     void azimuth( bool enabled );
     void circle( bool enabled );
+    void slope( bool enabled );
+    void hillshade( bool enabled );
+    void viewshed( bool enabled );
 
     //! project was read
     void readProject( const QDomDocument & );
@@ -112,6 +118,10 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     QPoint mDragStartPos;
     QString mDragStartActionName;
+
+    QgsVBSSlopeTool* mSlopeTool;
+    QgsVBSHillshadeTool* mHillshadeTool;
+    QgsVBSViewshedTool* mViewshedTool;
 
     class Tools
     {

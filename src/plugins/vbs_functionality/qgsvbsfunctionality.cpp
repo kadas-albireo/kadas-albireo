@@ -23,9 +23,6 @@
 #include "qgsvbsfunctionality.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
-#include "analysistools/qgsvbsslopetool.h"
-#include "analysistools/qgsvbsviewshedtool.h"
-#include "analysistools/qgsvbshillshadetool.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "search/qgsvbssearchbox.h"
@@ -43,9 +40,9 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mCrashHandler( 0 )
     , mMultiMapManager( 0 )
     , mActionOvlImport( 0 )
-    , mSlopeTool( 0 )
+    /*, mSlopeTool( 0 )
     , mViewshedTool( 0 )
-    , mHillshadeTool( 0 )
+    , mHillshadeTool( 0 )*/
 {
 }
 
@@ -69,6 +66,7 @@ void QgsVBSFunctionality::initGui()
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
   mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
 
+#if 0
   mActionSlope = new QAction( QIcon( ":/vbsfunctionality/icons/slope.svg" ), tr( "Compute slope" ), this );
   mActionSlope->setCheckable( true );
   connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( computeSlope( bool ) ) );
@@ -88,6 +86,7 @@ void QgsVBSFunctionality::initGui()
   mActionHillshade->setCheckable( true );
   connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( computeHillshade( bool ) ) );
   mQGisIface->pluginToolBar()->addAction( mActionHillshade );
+#endif //0
 }
 
 void QgsVBSFunctionality::unload()
@@ -145,6 +144,7 @@ void QgsVBSFunctionality::importOVL()
   QgsVBSOvlImporter( mQGisIface, mQGisIface->mainWindow() ).import();
 }
 
+#if 0
 void QgsVBSFunctionality::computeSlope( bool checked )
 {
   if ( checked )
@@ -187,3 +187,4 @@ void QgsVBSFunctionality::computeHillshade( bool checked )
     mHillshadeTool = 0;
   }
 }
+#endif //0
