@@ -111,6 +111,9 @@ kadas/qgsvbscoordinatedisplayer.cpp
 kadas/qgsvbscrsselection.cpp
 kadas/qgsvbsmaptoolpinannotation.cpp
 kadas/qgsvbspinannotationitem.cpp
+kadas/qgsvbshillshadetool.cpp
+kadas/qgsvbsslopetool.cpp
+kadas/qgsvbsviewshedtool.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -357,6 +360,9 @@ SET(QGIS_GUI_MOC_HDRS
   kadas/qgsvbscoordinatedisplayer.h
   kadas/qgsvbscrsselection.h
   kadas/qgsvbspinannotationitem.h
+  kadas/qgsvbshillshadetool.h
+  kadas/qgsvbsslopetool.h
+  kadas/qgsvbsviewshedtool.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
@@ -557,6 +563,7 @@ INCLUDE_DIRECTORIES(
   ../core/layertree
   ../core/raster
   ../core/symbology-ng
+  ../analysis
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../ui
   ${QWT_INCLUDE_DIR}
@@ -627,6 +634,7 @@ ADD_DEPENDENCIES(qgis_gui ui)
 
 TARGET_LINK_LIBRARIES(qgis_gui
   qgis_core
+  qgis_analysis
   ${QT_QTUITOOLS_LIBRARY}
   ${QWT_LIBRARY}
   ${QSCINTILLA_LIBRARY}

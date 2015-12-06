@@ -485,6 +485,7 @@ INCLUDE_DIRECTORIES(
   ../gui/editorwidgets
   ../gui/editorwidgets/core
   ../gui/layertree
+  ../gui/kadas
   ../plugins
   ../python
   gps

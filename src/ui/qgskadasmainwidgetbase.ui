@@ -200,7 +200,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="mMyMapsTab">
         <attribute name="title">
@@ -1198,6 +1198,9 @@
    </property>
   </action>
   <action name="mActionSlope">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/gelaendeneigung.png</normaloff>:/images/kadas/gelaendeneigung.png</iconset>
@@ -1207,11 +1210,17 @@
    </property>
   </action>
   <action name="mActionHillshade">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Hillshade</string>
    </property>
   </action>
   <action name="mActionViewshed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/kadas/einsehbarkeitsanalyse.png</normaloff>:/images/kadas/einsehbarkeitsanalyse.png</iconset>
