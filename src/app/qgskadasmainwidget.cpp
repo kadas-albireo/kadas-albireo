@@ -89,54 +89,7 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
 
-  //My maps tab
-
-  //mActionNew
-  connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
-  setActionToButton( mActionNew, mNewButton );
-
-  //mActionOpen
-  connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( open() ) );
-  setActionToButton( mActionOpen, mOpenButton );
-
-  //mActionSave
-  connect( mActionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
-  setActionToButton( mActionSave, mSaveButton );
-
-  //mActionPin
-  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pin( bool ) ) );
-  setActionToButton( mActionPin, mPinButton );
-
-  //Analysis tab
-
-  //mActionDistance
-  connect( mActionDistance, SIGNAL( toggled( bool ) ), this, SLOT( distance( bool ) ) );
-  setActionToButton( mActionDistance, mDistanceButton );
-  //mActionArea
-  connect( mActionArea, SIGNAL( toggled( bool ) ), this, SLOT( area( bool ) ) );
-  setActionToButton( mActionArea, mAreaButton );
-  //mActionCircle
-  connect( mActionCircle, SIGNAL( toggled( bool ) ), this, SLOT( circle( bool ) ) );
-  setActionToButton( mActionCircle, mMeasureCircleButton );
-  //mActionProfile
-  connect( mActionProfile, SIGNAL( toggled( bool ) ), this, SLOT( profile( bool ) ) );
-  setActionToButton( mActionProfile, mProfileButton );
-  //mActionAzimuth
-  connect( mActionAzimuth, SIGNAL( toggled( bool ) ), this, SLOT( azimuth( bool ) ) );
-  setActionToButton( mActionAzimuth, mAzimuthButton );
-  //mActionLineOfSight
-  setActionToButton( mActionLineOfSight, mLineOfSightButton );
-  //mActionSlope
-  connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( slope( bool ) ) );
-  setActionToButton( mActionSlope, mSlopeButton );
-  //mActionHillshade
-  connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( hillshade( bool ) ) );
-  setActionToButton( mActionHillshade, mHillshadeButton );
-  //mAcionViewshed
-  connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( viewshed( bool ) ) );
-  setActionToButton( mActionViewshed, mViewshedButton );
-
-  setActionToButton( mActionWPS, mWPSButton );
+  configureButtons();
 
   mMapCanvas->freeze();
   initLayerTreeView();
@@ -301,6 +254,70 @@ void QgsKadasMainWidget::restoreFavoriteButton( QAbstractButton* button )
   }
 
   setActionToButton( action, button );
+}
+
+void QgsKadasMainWidget::configureButtons()
+{
+  //My maps tab
+
+  //mActionNew
+  connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
+  setActionToButton( mActionNew, mNewButton );
+  //mActionOpen
+  connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( open() ) );
+  setActionToButton( mActionOpen, mOpenButton );
+  //mActionSave
+  connect( mActionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
+  setActionToButton( mActionSave, mSaveButton );
+  //mActionCopy
+  setActionToButton( mActionCopy, mCopyButton );
+  //mActionCopyToClipboard
+  setActionToButton( mActionCopyToClipboard, mCopyToClipboardButton );
+  //mActionPrint
+  setActionToButton( mActionPrint, mPrintButton );
+  //mActionSaveMapExtent
+  setActionToButton( mActionSaveMapExtent, mSaveMapExtentButton );
+  //mActionExportKML
+  setActionToButton( mActionExportKML, mExportKMLButton );
+  //mActionImportOVL
+  setActionToButton( mActionImportOVL, mImportOVLButton );
+
+  //draw tab
+
+  //mActionPin
+  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pin( bool ) ) );
+  setActionToButton( mActionPin, mPinButton );
+
+  //Analysis tab
+
+  //mActionDistance
+  connect( mActionDistance, SIGNAL( toggled( bool ) ), this, SLOT( distance( bool ) ) );
+  setActionToButton( mActionDistance, mDistanceButton );
+  //mActionArea
+  connect( mActionArea, SIGNAL( toggled( bool ) ), this, SLOT( area( bool ) ) );
+  setActionToButton( mActionArea, mAreaButton );
+  //mActionCircle
+  connect( mActionCircle, SIGNAL( toggled( bool ) ), this, SLOT( circle( bool ) ) );
+  setActionToButton( mActionCircle, mMeasureCircleButton );
+  //mActionProfile
+  connect( mActionProfile, SIGNAL( toggled( bool ) ), this, SLOT( profile( bool ) ) );
+  setActionToButton( mActionProfile, mProfileButton );
+  //mActionAzimuth
+  connect( mActionAzimuth, SIGNAL( toggled( bool ) ), this, SLOT( azimuth( bool ) ) );
+  setActionToButton( mActionAzimuth, mAzimuthButton );
+  //mActionLineOfSight
+  setActionToButton( mActionLineOfSight, mLineOfSightButton );
+  //mActionSlope
+  connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( slope( bool ) ) );
+  setActionToButton( mActionSlope, mSlopeButton );
+  //mActionHillshade
+  connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( hillshade( bool ) ) );
+  setActionToButton( mActionHillshade, mHillshadeButton );
+  //mAcionViewshed
+  connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( viewshed( bool ) ) );
+  setActionToButton( mActionViewshed, mViewshedButton );
+  //mActionWPS
+  setActionToButton( mActionWPS, mWPSButton );
 }
 
 void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
