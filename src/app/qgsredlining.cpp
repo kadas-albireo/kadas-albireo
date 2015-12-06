@@ -36,51 +36,51 @@ QgsRedlining::QgsRedlining( QgisApp* app )
 
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
-  QAction* actionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
-  actionNewPoint->setCheckable( true );
-  connect( actionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint() ) );
+  mActionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
+  mActionNewPoint->setCheckable( true );
+  connect( mActionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint() ) );
 
-  QAction* actionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
-  actionNewSquare->setCheckable( true );
-  connect( actionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare() ) );
+  mActionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
+  mActionNewSquare->setCheckable( true );
+  connect( mActionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare() ) );
 
-  QAction* actionNewTriangle = new QAction( QIcon( ":/images/themes/default/redlining_triangle.svg" ), tr( "Triangle" ), this );
-  actionNewTriangle->setCheckable( true );
-  connect( actionNewTriangle, SIGNAL( triggered( bool ) ), this, SLOT( newTriangle() ) );
+  mActionNewTriangle = new QAction( QIcon( ":/images/themes/default/redlining_triangle.svg" ), tr( "Triangle" ), this );
+  mActionNewTriangle->setCheckable( true );
+  connect( mActionNewTriangle, SIGNAL( triggered( bool ) ), this, SLOT( newTriangle() ) );
 
-  QAction* actionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Line" ), this );
-  actionNewLine->setCheckable( true );
-  connect( actionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine() ) );
-  QAction* actionNewRectangle = new QAction( QIcon( ":/images/themes/default/redlining_rectangle.svg" ), tr( "Rectangle" ), this );
-  actionNewRectangle->setCheckable( true );
-  connect( actionNewRectangle, SIGNAL( triggered( bool ) ), this, SLOT( newRectangle() ) );
-  QAction* actionNewPolygon = new QAction( QIcon( ":/images/themes/default/redlining_polygon.svg" ), tr( "Polygon" ), this );
-  actionNewPolygon->setCheckable( true );
-  connect( actionNewPolygon, SIGNAL( triggered( bool ) ), this, SLOT( newPolygon() ) );
-  QAction* actionNewCircle = new QAction( QIcon( ":/images/themes/default/redlining_circle.svg" ), tr( "Circle" ), this );
-  actionNewCircle->setCheckable( true );
-  connect( actionNewCircle, SIGNAL( triggered( bool ) ), this, SLOT( newCircle() ) );
-  QAction* actionNewText = new QAction( QIcon( ":/images/themes/default/redlining_text.svg" ), tr( "Text" ), this );
-  actionNewText->setCheckable( true );
-  connect( actionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
+  mActionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Line" ), this );
+  mActionNewLine->setCheckable( true );
+  connect( mActionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine() ) );
+  mActionNewRectangle = new QAction( QIcon( ":/images/themes/default/redlining_rectangle.svg" ), tr( "Rectangle" ), this );
+  mActionNewRectangle->setCheckable( true );
+  connect( mActionNewRectangle, SIGNAL( triggered( bool ) ), this, SLOT( newRectangle() ) );
+  mActionNewPolygon = new QAction( QIcon( ":/images/themes/default/redlining_polygon.svg" ), tr( "Polygon" ), this );
+  mActionNewPolygon->setCheckable( true );
+  connect( mActionNewPolygon, SIGNAL( triggered( bool ) ), this, SLOT( newPolygon() ) );
+  mActionNewCircle = new QAction( QIcon( ":/images/themes/default/redlining_circle.svg" ), tr( "Circle" ), this );
+  mActionNewCircle->setCheckable( true );
+  connect( mActionNewCircle, SIGNAL( triggered( bool ) ), this, SLOT( newCircle() ) );
+  mActionNewText = new QAction( QIcon( ":/images/themes/default/redlining_text.svg" ), tr( "Text" ), this );
+  mActionNewText->setCheckable( true );
+  connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
 
   mBtnNewObject = new QToolButton();
   mBtnNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();
-  menuNewMarker->addAction( actionNewPoint );
-  menuNewMarker->addAction( actionNewSquare );
-  menuNewMarker->addAction( actionNewTriangle );
+  menuNewMarker->addAction( mActionNewPoint );
+  menuNewMarker->addAction( mActionNewSquare );
+  menuNewMarker->addAction( mActionNewTriangle );
   actionNewMarker->setMenu( menuNewMarker );
   QMenu* menuNewObject = new QMenu();
   menuNewObject->addAction( actionNewMarker );
-  menuNewObject->addAction( actionNewLine );
-  menuNewObject->addAction( actionNewRectangle );
-  menuNewObject->addAction( actionNewPolygon );
-  menuNewObject->addAction( actionNewCircle );
-  menuNewObject->addAction( actionNewText );
+  menuNewObject->addAction( mActionNewLine );
+  menuNewObject->addAction( mActionNewRectangle );
+  menuNewObject->addAction( mActionNewPolygon );
+  menuNewObject->addAction( mActionNewCircle );
+  menuNewObject->addAction( mActionNewText );
   mBtnNewObject->setMenu( menuNewObject );
   mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
-  mBtnNewObject->setDefaultAction( actionNewPoint );
+  mBtnNewObject->setDefaultAction( mActionNewPoint );
   connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
   redliningToolbar->addWidget( mBtnNewObject );
 

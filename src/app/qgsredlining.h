@@ -34,6 +34,14 @@ class QgsRedlining : public QObject
   public:
     QgsRedlining( QgisApp* app );
     QgsRedliningLayer *getOrCreateLayer();
+    QAction* actionNewPoint() const { return mActionNewPoint; }
+    QAction* actionNewSquare() const { return mActionNewSquare; }
+    QAction* actionNewTriangle() const { return mActionNewTriangle; }
+    QAction* actionNewLine() const { return mActionNewLine; }
+    QAction* actionNewRectangle() const { return mActionNewRectangle; }
+    QAction* actionNewPolygon() const { return mActionNewPolygon; }
+    QAction* actionNewCircle() const { return mActionNewCircle; }
+    QAction* actionNewText() const { return mActionNewText; }
 
   signals:
     void featureStyleChanged();
@@ -47,6 +55,14 @@ class QgsRedlining : public QObject
     QSpinBox* mSpinBorderSize;
     QComboBox* mOutlineStyleCombo;
     QComboBox* mFillStyleCombo;
+    QAction* mActionNewPoint;
+    QAction* mActionNewSquare;
+    QAction* mActionNewTriangle;
+    QAction* mActionNewLine;
+    QAction* mActionNewRectangle;
+    QAction* mActionNewPolygon;
+    QAction* mActionNewCircle;
+    QAction* mActionNewText;
 
     QPointer<QgsRedliningLayer> mLayer;
     QPointer<QgsMapTool> mRedliningTool;
