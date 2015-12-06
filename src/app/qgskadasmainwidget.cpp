@@ -100,14 +100,25 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   setActionToButton( mActionSave, mSaveButton );
 
   //mActionPin
-  connect( mActionPin, SIGNAL( triggered() ), this, SLOT( pin() ) );
+  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pin( bool ) ) );
   setActionToButton( mActionPin, mPinButton );
-  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pinActionToggled( bool ) ) );
 
   //Analysis tab
+
+  //mActionDistance
+  connect( mActionDistance, SIGNAL( toggled( bool ) ), this, SLOT( distance( bool ) ) );
   setActionToButton( mActionDistance, mDistanceButton );
+  //mActionArea
+  connect( mActionArea, SIGNAL( toggled( bool ) ), this, SLOT( area( bool ) ) );
   setActionToButton( mActionArea, mAreaButton );
+  //mActionCircle
+  connect( mActionCircle, SIGNAL( toggled( bool ) ), this, SLOT( circle( bool ) ) );
+  setActionToButton( mActionCircle, mMeasureCircleButton );
+  //mActionProfile
+  connect( mActionProfile, SIGNAL( toggled( bool ) ), this, SLOT( profile( bool ) ) );
   setActionToButton( mActionProfile, mProfileButton );
+  //mActionAzimuth
+  connect( mActionAzimuth, SIGNAL( toggled( bool ) ), this, SLOT( azimuth( bool ) ) );
   setActionToButton( mActionAzimuth, mAzimuthButton );
   setActionToButton( mActionLineOfSight, mLineOfSightButton );
   setActionToButton( mActionSlope, mSlopeButton );
@@ -366,8 +377,14 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* bu
   button->setCheckable( action->isCheckable() );
   button->setChecked( action->isChecked() );
   button->setProperty( "actionName", action->objectName() );
-  connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
-  connect( button, SIGNAL( toggled( bool ) ), action, SLOT( setChecked( bool ) ) );
+  if ( action->isCheckable() )
+  {
+    connect( button, SIGNAL( toggled( bool ) ), action, SLOT( setChecked( bool ) ) );
+  }
+  else
+  {
+    connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
+  }
 }
 
 void QgsKadasMainWidget::addToFavorites()
@@ -490,12 +507,58 @@ bool QgsKadasMainWidget::save()
   return true;
 }
 
-void QgsKadasMainWidget::pin()
+void QgsKadasMainWidget::pin( bool enabled )
 {
-  if ( mMapCanvas )
+  if ( !mMapCanvas )
   {
-    mMapCanvas->setMapTool( mMapTools.mMapToolPinAnnotation );
+    return;
   }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMapToolPinAnnotation : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::profile( bool enabled )
+{
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureHeightProfile : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::distance( bool enabled )
+{
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureDist : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::area( bool enabled )
+{
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureArea : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::azimuth( bool enabled )
+{
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureAngle : mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::circle( bool enabled )
+{
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureCircle : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::pinActionToggled( bool enabled )

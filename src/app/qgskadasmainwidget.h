@@ -46,7 +46,12 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void fileNew();
     void open();
     bool save();
-    void pin();
+    void pin( bool enabled );
+    void profile( bool enabled );
+    void distance( bool enabled );
+    void area( bool enabled );
+    void azimuth( bool enabled );
+    void circle( bool enabled );
 
     //! project was read
     void readProject( const QDomDocument & );
