@@ -36,6 +36,10 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
   protected:
     virtual void resizeEvent( QResizeEvent* event );
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual void dropEvent( QDropEvent* event );
+    virtual void dragEnterEvent( QDragEnterEvent* event );
 
   private slots:
     void addToFavorites();
@@ -85,6 +89,10 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     /** Alerts user when commit errors occured */
     void commitError( QgsVectorLayer *vlayer );
 
+    void performDrag( const QIcon* icon = 0 );
+
+    void restoreFavoriteButton( QAbstractButton* button );
+
     //! list of recently opened/saved project files
     QStringList mRecentProjectPaths;
     //! Helper class that connects layer tree with map canvas
@@ -96,6 +104,9 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     QgsMessageBar* mInfoBar;
 
     QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
+
+    QPoint mDragStartPos;
+    QString mDragStartActionName;
 
     class Tools
     {

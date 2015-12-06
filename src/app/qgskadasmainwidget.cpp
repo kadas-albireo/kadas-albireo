@@ -87,10 +87,6 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   //My maps tab
 
-  //mActionAddToFavorites
-  connect( mActionAddToFavorites, SIGNAL( triggered() ), this, SLOT( addToFavorites() ) );
-  setActionToButton( mActionAddToFavorites, mAddToFavoritesButton );
-
   //mActionNew
   connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
   setActionToButton( mActionNew, mNewButton );
@@ -147,6 +143,11 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   createCanvasTools();
   activateDeactivateLayerRelatedActions( 0 ); // after members were created
+
+  restoreFavoriteButton( mFavoriteButton1 );
+  restoreFavoriteButton( mFavoriteButton2 );
+  restoreFavoriteButton( mFavoriteButton3 );
+  restoreFavoriteButton( mFavoriteButton4 );
 }
 
 QgsKadasMainWidget::~QgsKadasMainWidget()
@@ -171,6 +172,112 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
     zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - 15 - zoomLayoutGeometry.width(), 15, 35, zoomLayoutGeometry.height() ) );
   }
   QWidget::resizeEvent( event );
+}
+
+void QgsKadasMainWidget::mousePressEvent( QMouseEvent* event )
+{
+  if ( event->button() == Qt::LeftButton )
+  {
+    mDragStartPos = event->pos();
+    QWidget* dragStart = childAt( event->pos() );
+    if ( dragStart )
+    {
+      mDragStartActionName = dragStart->property( "actionName" ).toString();
+    }
+  }
+  QWidget::mousePressEvent( event );
+}
+
+void QgsKadasMainWidget::mouseMoveEvent( QMouseEvent* event )
+{
+  if ( event->buttons() & Qt::LeftButton )
+  {
+    QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+    if ( button )
+    {
+      int distance = ( event->pos() - mDragStartPos ).manhattanLength();
+      if ( distance >= QApplication::startDragDistance() )
+      {
+        QIcon dragIcon = button->icon();
+        performDrag( &dragIcon );
+      }
+    }
+  }
+  QWidget::mouseMoveEvent( event );
+}
+
+void QgsKadasMainWidget::dropEvent( QDropEvent* event )
+{
+  if ( !event )
+  {
+    return;
+  }
+
+  //get button under mouse
+  QAbstractButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+  if ( !button )
+  {
+    return;
+  }
+
+
+  QAction* action = findChild<QAction*>( mDragStartActionName );
+  if ( !action )
+  {
+    return;
+  }
+
+  setActionToButton( action, button );
+
+  //save in settings for next restart
+  QSettings s;
+  s.setValue( "/UI/FavoriteAction/" + button->objectName(), mDragStartActionName );
+  mDragStartActionName.clear();
+}
+
+void QgsKadasMainWidget::dragEnterEvent( QDragEnterEvent* event )
+{
+  QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+  if ( button && button->acceptDrops() )
+  {
+    event->acceptProposedAction();
+  }
+}
+
+void QgsKadasMainWidget::performDrag( const QIcon* icon )
+{
+  QMimeData *mimeData = new QMimeData();
+
+  QDrag *drag = new QDrag( this );
+  drag->setMimeData( mimeData );
+  if ( icon )
+  {
+    drag->setPixmap( icon->pixmap( 32, 32 ) );
+  }
+  drag->exec( Qt::CopyAction );
+}
+
+void QgsKadasMainWidget::restoreFavoriteButton( QAbstractButton* button )
+{
+  if ( !button )
+  {
+    return;
+  }
+
+  QSettings s;
+  QString actionName = s.value( "/UI/FavoriteAction/" + button->objectName() ).toString();
+  if ( actionName.isEmpty() )
+  {
+    return;
+  }
+
+  QAction* action = findChild<QAction*>( actionName );
+  if ( !action )
+  {
+    return;
+  }
+
+  setActionToButton( action, button );
 }
 
 void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
@@ -246,6 +353,11 @@ void QgsKadasMainWidget::initLayerTreeView()
 
 void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* button )
 {
+  if ( !button )
+  {
+    return;
+  }
+  button->disconnect(); //disconnect all existing signals/slots
   button->setText( action->text() );
   button->setStatusTip( action->statusTip() );
   button->setToolTip( action->toolTip() );
@@ -253,6 +365,7 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* bu
   button->setEnabled( action->isEnabled() );
   button->setCheckable( action->isCheckable() );
   button->setChecked( action->isChecked() );
+  button->setProperty( "actionName", action->objectName() );
   connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
   connect( button, SIGNAL( toggled( bool ) ), action, SLOT( setChecked( bool ) ) );
 }

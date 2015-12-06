@@ -1,4 +1,5 @@
 #include "qgskadasribbonbutton.h"
+#include <QDragEnterEvent>
 #include <QPainter>
 
 QgsKadasRibbonButton::QgsKadasRibbonButton( QWidget* parent ): QAbstractButton( parent )
@@ -88,4 +89,16 @@ void QgsKadasRibbonButton::focusOutEvent( QFocusEvent* event )
 {
   update();
   QAbstractButton::focusOutEvent( event );
+}
+
+
+void QgsKadasRibbonButton::mousePressEvent( QMouseEvent* event )
+{
+  QAbstractButton::mousePressEvent( event );
+  event->ignore();
+}
+
+void QgsKadasRibbonButton::mouseMoveEvent( QMouseEvent* event )
+{
+  event->ignore();
 }
