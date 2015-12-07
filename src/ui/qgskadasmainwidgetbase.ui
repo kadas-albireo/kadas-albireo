@@ -1052,7 +1052,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="mSituationRepartTab">
+       <widget class="QWidget" name="mSituationReportTab">
         <attribute name="title">
          <string>Situation report</string>
         </attribute>
