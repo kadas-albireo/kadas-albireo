@@ -2,6 +2,7 @@
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
 #include "qgslayertreemapcanvasbridge.h"
+#include "qgslayertreeregistrybridge.h"
 #include "qgslayertreemodel.h"
 #include "qgsapplayertreeviewmenuprovider.h"
 #include "qgsmapcanvas.h"
@@ -284,7 +285,9 @@ void QgsKadasMainWidget::configureButtons()
   setActionToButton( mActionImportOVL, mImportOVLButton );
 
   //view tab
+  connect( mActionZoomLast, SIGNAL( triggered() ), this, SLOT( zoomToPrevious() ) );
   setActionToButton( mActionZoomLast, mZoomLastButton );
+  connect( mActionZoomNext, SIGNAL( triggered() ), this, SLOT( zoomToNext() ) );
   setActionToButton( mActionZoomNext, mZoomNextButton );
   setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
   setActionToButton( mAction3D, m3DButton );
@@ -326,6 +329,156 @@ void QgsKadasMainWidget::configureButtons()
   setActionToButton( mActionViewshed, mViewshedButton );
   //mActionWPS
   setActionToButton( mActionWPS, mWPSButton );
+}
+
+void QgsKadasMainWidget::fileNew( bool thePromptToSaveFlag, bool forceBlank )
+{
+  if ( thePromptToSaveFlag )
+  {
+    if ( !saveDirty() )
+    {
+      return; //cancel pressed
+    }
+  }
+
+  QSettings settings;
+
+  closeProject();
+
+  QgsProject* prj = QgsProject::instance();
+  prj->clear();
+
+  prj->layerTreeRegistryBridge()->setNewLayersVisible( settings.value( "/qgis/new_layers_visible", true ).toBool() );
+
+  mLayerTreeCanvasBridge->clear();
+
+  //set the color for selections
+  //the default can be set in qgisoptions
+  //use project properties to override the color on a per project basis
+  int myRed = settings.value( "/qgis/default_selection_color_red", 255 ).toInt();
+  int myGreen = settings.value( "/qgis/default_selection_color_green", 255 ).toInt();
+  int myBlue = settings.value( "/qgis/default_selection_color_blue", 0 ).toInt();
+  int myAlpha = settings.value( "/qgis/default_selection_color_alpha", 255 ).toInt();
+  prj->writeEntry( "Gui", "/SelectionColorRedPart", myRed );
+  prj->writeEntry( "Gui", "/SelectionColorGreenPart", myGreen );
+  prj->writeEntry( "Gui", "/SelectionColorBluePart", myBlue );
+  prj->writeEntry( "Gui", "/SelectionColorAlphaPart", myAlpha );
+  mMapCanvas->setSelectionColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
+
+  //set the canvas to the default background color
+  //the default can be set in qgisoptions
+  //use project properties to override the color on a per project basis
+  myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
+  myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
+  myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
+  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  prj->writeEntry( "Gui", "/CanvasColorRedPart", myRed );
+  prj->writeEntry( "Gui", "/CanvasColorGreenPart", myGreen );
+  prj->writeEntry( "Gui", "/CanvasColorBluePart", myBlue );
+  prj->writeEntry( "Gui", "/CanvasColorAlphaPart", myAlpha );
+  mMapCanvas->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
+
+  prj->dirty( false );
+
+  //setTitleBarText_( *this );
+
+  //QgsDebugMsg("emiting new project signal");
+
+  // emit signal so listeners know we have a new project
+  emit newProject();
+
+  mMapCanvas->freeze( false );
+  mMapCanvas->refresh();
+  mMapCanvas->clearExtentHistory();
+  mMapCanvas->setRotation( 0.0 );
+  mScaleComboBox->updateScales();
+
+  // set project CRS
+  QString defCrs = settings.value( "/Projections/projectDefaultCrs", GEO_EPSG_CRS_AUTHID ).toString();
+  QgsCoordinateReferenceSystem srs;
+  srs.createFromOgcWmsCrs( defCrs );
+  mMapCanvas->setDestinationCrs( srs );
+  // write the projections _proj string_ to project settings
+  prj->writeEntry( "SpatialRefSys", "/ProjectCRSProj4String", srs.toProj4() );
+  prj->writeEntry( "SpatialRefSys", "/ProjectCrs", srs.authid() );
+  prj->writeEntry( "SpatialRefSys", "/ProjectCRSID", ( int ) srs.srsid() );
+  prj->dirty( false );
+  if ( srs.mapUnits() != QGis::UnknownUnit )
+  {
+    mMapCanvas->setMapUnits( srs.mapUnits() );
+  }
+
+  // enable OTF CRS transformation if necessary
+  mMapCanvas->setCrsTransformEnabled( settings.value( "/Projections/otfTransformEnabled", 0 ).toBool() );
+
+  //updateCRSStatusBar();
+
+  /** New Empty Project Created
+      (before attempting to load custom project templates/filepaths) */
+
+  // load default template
+  /* NOTE: don't open default template on launch until after initialization,
+           in case a project was defined via command line */
+
+  // don't open template if last auto-opening of a project failed
+  if ( ! forceBlank )
+  {
+    forceBlank = ! settings.value( "/qgis/projOpenedOKAtLaunch", QVariant( true ) ).toBool();
+  }
+
+  if ( ! forceBlank && settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() )
+  {
+    fileNewFromDefaultTemplate();
+  }
+
+  //QgsVisibilityPresets::instance()->clear();
+
+  // set the initial map tool
+#ifndef HAVE_TOUCH
+  mMapCanvas->setMapTool( mMapTools.mPan );
+  mNonEditMapTool = mMapTools.mPan;  // signals are not yet setup to catch this
+#else
+  mMapCanvas->setMapTool( mMapTools.mTouch );
+  mNonEditMapTool = mMapTools.mTouch;  // signals are not yet setup to catch this
+#endif
+}
+
+void QgsKadasMainWidget::fileNewFromDefaultTemplate()
+{
+  QString projectTemplate = QgsApplication::qgisSettingsDirPath() + QString( "project_default.qgs" );
+  QString msgTxt;
+  if ( !projectTemplate.isEmpty() && QFile::exists( projectTemplate ) )
+  {
+    if ( fileNewFromTemplate( projectTemplate ) )
+    {
+      return;
+    }
+    msgTxt = tr( "Default failed to open: %1" );
+  }
+  else
+  {
+    msgTxt = tr( "Default not found: %1" );
+  }
+  /*messageBar()->pushMessage( tr( "Open Template Project" ),
+                             msgTxt.arg( projectTemplate ),
+                             QgsMessageBar::WARNING );*/
+}
+
+bool QgsKadasMainWidget::fileNewFromTemplate( QString fileName )
+{
+  if ( !saveDirty() )
+  {
+    return false; //cancel pressed
+  }
+
+  QgsDebugMsg( QString( "loading project template: %1" ).arg( fileName ) );
+  if ( addProject( fileName ) )
+  {
+    // set null filename so we don't override the template
+    QgsProject::instance()->setFileName( QString() );
+    return true;
+  }
+  return false;
 }
 
 void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
@@ -415,7 +568,7 @@ void QgsKadasMainWidget::addToFavorites()
 
 void QgsKadasMainWidget::fileNew()
 {
-  //todo...
+  fileNew( true ); // prompts whether to save project
 }
 
 void QgsKadasMainWidget::open()
@@ -527,6 +680,22 @@ bool QgsKadasMainWidget::save()
 #endif //0
 
   return true;
+}
+
+void QgsKadasMainWidget::zoomToPrevious()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->zoomToPreviousExtent();
+  }
+}
+
+void QgsKadasMainWidget::zoomToNext()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->zoomToNextExtent();
+  }
 }
 
 void QgsKadasMainWidget::pin( bool enabled )
