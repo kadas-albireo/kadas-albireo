@@ -24,13 +24,10 @@
 #include <QString>
 #include <QObject>
 
-#ifdef HAVE_TOUCH
-#include <QGestureEvent>
-#endif
-
 class QgsMapLayer;
 class QgsMapCanvas;
 class QgsRenderContext;
+class QGestureEvent;
 class QKeyEvent;
 class QMouseEvent;
 class QWheelEvent;
@@ -77,10 +74,8 @@ class GUI_EXPORT QgsMapTool : public QObject
     //! Key event for overriding. Default implementation does nothing.
     virtual void keyReleaseEvent( QKeyEvent* e );
 
-#ifdef HAVE_TOUCH
     //! gesture event for overriding. Default implementation does nothing.
     virtual bool gestureEvent( QGestureEvent* e );
-#endif
 
     //! Called when rendering has finished. Default implementation does nothing.
     //! @deprecated since 2.4 - not called anymore - map tools must not directly depend on rendering progress

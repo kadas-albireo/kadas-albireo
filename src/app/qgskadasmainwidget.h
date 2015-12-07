@@ -135,9 +135,6 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
             : mZoomIn( 0 )
             , mZoomOut( 0 )
             , mPan( 0 )
-#ifdef HAVE_TOUCH
-            , mTouch( 0 )
-#endif
             , mIdentify( 0 )
             , mFeatureAction( 0 )
             , mMeasureDist( 0 )
@@ -181,9 +178,6 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
         QgsMapTool *mZoomIn;
         QgsMapTool *mZoomOut;
         QgsMapTool *mPan;
-#ifdef HAVE_TOUCH
-        QgsMapTool *mTouch;
-#endif
         QgsMapTool *mIdentify;
         QgsMapTool *mFeatureAction;
         QgsMapTool *mMeasureDist;

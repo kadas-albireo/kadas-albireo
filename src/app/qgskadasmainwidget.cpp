@@ -1430,10 +1430,6 @@ void QgsKadasMainWidget::createCanvasTools()
   //mMapTools.mZoomOut->setAction( mActionZoomOut );
   mMapTools.mPan = new QgsMapToolPan( mMapCanvas );
   //mMapTools.mPan->setAction( mActionPan );
-#ifdef HAVE_TOUCH
-  mMapTools.mTouch = new QgsMapToolTouch( mMapCanvas );
-  mMapTools.mTouch->setAction( mActionTouch );
-#endif
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mMapCanvas );
   //mMapTools.mIdentify->setAction( mActionIdentify );
   connect( mMapTools.mIdentify, SIGNAL( copyToClipboard( QgsFeatureStore & ) ),

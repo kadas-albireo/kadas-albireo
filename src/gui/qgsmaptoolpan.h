@@ -21,6 +21,7 @@
 
 class QgsMapCanvas;
 class QgsRubberBand;
+class QPinchGesture;
 
 
 /** \ingroup gui
@@ -29,9 +30,15 @@ class QgsRubberBand;
  */
 class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 {
+    Q_OBJECT
   public:
     //! constructor
     QgsMapToolPan( QgsMapCanvas* canvas );
+
+    ~QgsMapToolPan();
+
+    void activate() override;
+    void deactivate() override;
 
     //! Overridden mouse double click event
     virtual void canvasDoubleClickEvent( QMouseEvent *e ) override;
@@ -50,10 +57,18 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
     virtual bool isTransient() override { return true; }
 
+    bool gestureEvent( QGestureEvent *event ) override;
+
+  signals:
+    void contextMenuRequested( QPoint screenPos, QgsPoint mapPos );
+
   private:
 
     //! Flag to indicate a map canvas drag operation is taking place
     bool mDragging;
+
+    //! Flag to indicate a pinch gesture is taking place
+    bool mPinching;
 
     //! Zoom are rubberband for shift+select mode
     QgsRubberBand* mZoomRubberBand;
@@ -72,6 +87,8 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
     //! The pan cursor
     QCursor mPanCursor;
+
+    void pinchTriggered( QPinchGesture *gesture );
 
 };
 
