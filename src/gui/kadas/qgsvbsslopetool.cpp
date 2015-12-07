@@ -72,26 +72,7 @@ void QgsVBSSlopeTool::drawFinished()
   slope.processRaster( &p );
   if ( !p.wasCanceled() )
   {
-      QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
-      QgsColorRampShader* rampShader = new QgsColorRampShader();
-      QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
-          << QgsColorRampShader::ColorRampItem( 0, QColor( 0, 0, 255 ), "0%" )
-          << QgsColorRampShader::ColorRampItem( 7.13, QColor( 0, 127, 255 ), "12.5%" )
-          << QgsColorRampShader::ColorRampItem( 14.04, QColor( 0, 255, 255 ), "25%" )
-          << QgsColorRampShader::ColorRampItem( 20.56, QColor( 0, 255, 200 ), "37.5%" )
-          << QgsColorRampShader::ColorRampItem( 26.57, QColor( 0, 255, 0 ), "50%" )
-          << QgsColorRampShader::ColorRampItem( 32.01, QColor( 200, 255, 0 ), "62.5%" )
-          << QgsColorRampShader::ColorRampItem( 36.87, QColor( 255, 255, 0 ), "75%" )
-          << QgsColorRampShader::ColorRampItem( 41.19, QColor( 255, 127, 0 ), "87.5%" )
-          << QgsColorRampShader::ColorRampItem( 45, QColor( 255, 0, 0 ), "100%" );
-      rampShader->setColorRampItemList( colorRampItems );
-      QgsRasterShader* shader = new QgsRasterShader();
-      shader->setRasterShaderFunction( rampShader );
-      QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
-      layer->setRenderer( renderer );
-      QgsMapLayerRegistry::instance()->addMapLayer( layer );
-      /*
-    QgsRasterLayer* layer = mIface->addRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
+    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
         << QgsColorRampShader::ColorRampItem( 0, QColor( 0, 0, 255 ), "0%" )
@@ -108,7 +89,7 @@ void QgsVBSSlopeTool::drawFinished()
     shader->setRasterShaderFunction( rampShader );
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
     layer->setRenderer( renderer );
-    */
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
   emit finished();
 }

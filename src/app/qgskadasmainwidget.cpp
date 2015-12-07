@@ -80,6 +80,7 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
     mNonEditMapTool( 0 ), mSlopeTool( 0 )
 {
   setupUi( this );
+  mToggleButtonGroup = new QButtonGroup( this );
   mLayerTreeView->setVisible( false );
 
   QgsApplication::initQgis();
@@ -184,13 +185,13 @@ void QgsKadasMainWidget::mouseMoveEvent( QMouseEvent* event )
 
 void QgsKadasMainWidget::dropEvent( QDropEvent* event )
 {
-  if ( !event )
+  if ( !event || mDragStartActionName.isEmpty() )
   {
     return;
   }
 
   //get button under mouse
-  QAbstractButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+  QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
   if ( !button )
   {
     return;
@@ -233,7 +234,7 @@ void QgsKadasMainWidget::performDrag( const QIcon* icon )
   drag->exec( Qt::CopyAction );
 }
 
-void QgsKadasMainWidget::restoreFavoriteButton( QAbstractButton* button )
+void QgsKadasMainWidget::restoreFavoriteButton( QToolButton* button )
 {
   if ( !button )
   {
@@ -391,28 +392,13 @@ void QgsKadasMainWidget::initLayerTreeView()
   //setupLayerTreeViewFromSettings();
 }
 
-void QgsKadasMainWidget::setActionToButton( QAction* action, QAbstractButton* button )
+void QgsKadasMainWidget::setActionToButton( QAction* action, QToolButton* button )
 {
-  if ( !button )
-  {
-    return;
-  }
-  button->disconnect(); //disconnect all existing signals/slots
-  button->setText( action->text() );
-  button->setStatusTip( action->statusTip() );
-  button->setToolTip( action->toolTip() );
-  button->setIcon( action->icon() );
-  button->setEnabled( action->isEnabled() );
-  button->setCheckable( action->isCheckable() );
-  button->setChecked( action->isChecked() );
+  button->setDefaultAction( action );
   button->setProperty( "actionName", action->objectName() );
   if ( action->isCheckable() )
   {
-    connect( button, SIGNAL( toggled( bool ) ), action, SLOT( setChecked( bool ) ) );
-  }
-  else
-  {
-    connect( button, SIGNAL( clicked() ), action, SLOT( trigger() ) );
+    mToggleButtonGroup->addButton( button );
   }
 }
 
