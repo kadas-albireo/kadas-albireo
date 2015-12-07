@@ -1973,7 +1973,6 @@ void QgsMapCanvas::mapToolDestroyed()
   mMapTool = 0;
 }
 
-#ifdef HAVE_TOUCH
 bool QgsMapCanvas::event( QEvent * e )
 {
   bool done = false;
@@ -1992,7 +1991,6 @@ bool QgsMapCanvas::event( QEvent * e )
   }
   return done;
 }
-#endif
 
 bool QgsMapCanvas::rotationEnabled()
 {

@@ -245,13 +245,6 @@ qgsvertexmarker.cpp
 qgsunitselectionwidget.cpp
 )
 
-IF (WITH_TOUCH)
-  SET(QGIS_GUI_SRCS
-      ${QGIS_GUI_SRCS}
-      qgsmaptooltouch.cpp
-  )
-ENDIF (WITH_TOUCH)
-
 SET(QGIS_GUI_MOC_HDRS
   qgisinterface.h
   qgsactionmenu.h
@@ -320,6 +313,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
+  qgsmaptoolpan.h
   qgsmessagebar.h
   qgsmessagebaritem.h
   qgsmessagelogviewer.h
@@ -486,7 +480,6 @@ SET(QGIS_GUI_HDRS
   qgsmapcanvassnappingutils.h
   qgsmaptip.h
   qgsmaptoolannotation.h
-  qgsmaptoolpan.h
   qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
   qgsrubberband.h
@@ -520,13 +513,6 @@ SET(QGIS_GUI_HDRS
 
   raster/qgsrasterrendererwidget.h
 )
-
-IF (WITH_TOUCH)
-  SET(QGIS_GUI_HDRS
-      ${QGIS_GUI_HDRS}
-      qgsmaptooltouch.h
-  )
-ENDIF (WITH_TOUCH)
 
 SET(QGIS_GUI_UI_HDRS
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsdetaileditemwidgetbase.h

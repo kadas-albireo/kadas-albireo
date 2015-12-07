@@ -35,10 +35,6 @@
 #include "qgsmapsettings.h" // TEMPORARY
 #include "qgsprevieweffect.h" //for QgsPreviewEffect::PreviewMode
 
-#ifdef HAVE_TOUCH
-#include <QGestureEvent>
-#endif
-
 class QWheelEvent;
 class QPixmap;
 class QPaintEvent;
@@ -559,10 +555,8 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     void currentLayerChanged( QgsMapLayer* layer );
 
   protected:
-#ifdef HAVE_TOUCH
     //! Overridden standard event to be gestures aware
     bool event( QEvent * e ) override;
-#endif
 
     //! Overridden context menu event
     void contextMenuEvent( QContextMenuEvent *event ) override;
