@@ -25,7 +25,6 @@
 #include "qgisinterface.h"
 #include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
-#include "search/qgsvbssearchbox.h"
 #include "vbsfunctionality_plugin.h"
 #include <QAction>
 #include <QToolBar>
@@ -35,7 +34,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mQGisIface( theQgisInterface )
     , mActionPinAnnotation( 0 )
     , mSearchToolbar( 0 )
-    , mSearchBox( 0 )
     , mReprojMsgItem( 0 )
     , mCrashHandler( 0 )
     , mMultiMapManager( 0 )
@@ -49,8 +47,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
 void QgsVBSFunctionality::initGui()
 {
   mSearchToolbar = mQGisIface->addToolBar( "vbsSearchToolbar" );
-  mSearchBox = new QgsVBSSearchBox( mQGisIface, mSearchToolbar );
-  mSearchToolbar->addWidget( mSearchBox );
 
   QWidget* layerTreeToolbar = mQGisIface->mainWindow()->findChild<QWidget*>( "layerTreeToolbar" );
   if ( layerTreeToolbar ) layerTreeToolbar->setVisible( false );
@@ -94,7 +90,6 @@ void QgsVBSFunctionality::unload()
   disconnect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
   delete mSearchToolbar;
   mSearchToolbar = 0;
-  mSearchBox = 0;
   delete mCrashHandler;
   mCrashHandler = 0;
   delete mMultiMapManager;

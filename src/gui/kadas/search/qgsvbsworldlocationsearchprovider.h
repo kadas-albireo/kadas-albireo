@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbscoordinatesearchprovider.h                                       *
+ *  qgsvbsworldlocationsearchprovider.h                                    *
  *  -------------------                                                    *
- *  begin                : Jul 09, 2015                                    *
+ *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,28 +15,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCOORDINATESEARCHPROVIDER_HPP
-#define QGSVBSCOORDINATESEARCHPROVIDER_HPP
+
+#ifndef QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#define QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
 
 #include "qgsvbssearchprovider.h"
+#include <QMap>
 #include <QRegExp>
+#include <QTimer>
 
-class QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
+class QNetworkAccessManager;
+class QNetworkReply;
+
+class QgsVBSWorldLocationSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSCoordinateSearchProvider( QgisInterface* iface );
+    QgsVBSWorldLocationSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
+    void cancelSearch() override;
 
   private:
-    QRegExp mPatLVDD;
-    QRegExp mPatDM;
-    QRegExp mPatDMS;
-    QRegExp mPatUTM;
-    QRegExp mPatUTM2;
-    QRegExp mPatMGRS;
+    static const int sSearchTimeout;
+    static const int sResultCountLimit;
+    static const QByteArray sGeoAdminUrl;
 
-    static const QString sCategoryName;
+    QNetworkReply* mNetReply;
+    QMap<QString, QString> mCategoryMap;
+    QRegExp mPatBox;
+    QTimer mTimeoutTimer;
+
+  private slots:
+    void replyFinished();
 };
 
-#endif // QGSVBSCOORDINATESEARCHPROVIDER_HPP
+#endif // QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP

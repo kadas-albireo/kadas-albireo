@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbslocationsearchprovider.cpp                                       *
+ *  qgsvbsworldlocationsearchprovider.cpp                                  *
  *  -------------------                                                    *
- *  begin                : Jul 09, 2015                                    *
+ *  begin                : Sep 21, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbslocationsearchprovider.h"
+#include "qgsvbsworldlocationsearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
 #include "qgslogger.h"
@@ -25,21 +25,16 @@
 #include <qjson/parser.h>
 
 
-const int QgsVBSLocationSearchProvider::sSearchTimeout = 2000;
-const int QgsVBSLocationSearchProvider::sResultCountLimit = 50;
+const int QgsVBSWorldLocationSearchProvider::sSearchTimeout = 2000;
+const int QgsVBSWorldLocationSearchProvider::sResultCountLimit = 50;
 
 
-QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgisInterface *iface )
-    : QgsVBSSearchProvider( iface )
+QgsVBSWorldLocationSearchProvider::QgsVBSWorldLocationSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsVBSSearchProvider( mapCanvas )
 {
   mNetReply = 0;
 
-  mCategoryMap.insert( "sn25", tr( "Places" ) );
-  mCategoryMap.insert( "gg25", tr( "Municipalities" ) );
-  mCategoryMap.insert( "kantone", tr( "Cantons" ) );
-  mCategoryMap.insert( "district", tr( "Districts" ) );
-  mCategoryMap.insert( "address", tr( "Address" ) );
-  mCategoryMap.insert( "zipcode", tr( "Zip Codes" ) );
+  mCategoryMap.insert( "geonames", tr( "World Places" ) );
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
@@ -47,9 +42,9 @@ QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgisInterface *iface
   connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
 }
 
-void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
+void QgsVBSWorldLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( QSettings().value("vbsfunctionality/search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer").toString() );
+  QUrl url( QSettings().value( "vbsfunctionality/search/worldlocationsearchurl", "http://cm004695.lt.admin.ch/MGDIServices/Service/SearchServer.svc/Search" ).toString() );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
@@ -61,7 +56,7 @@ void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , cons
   mTimeoutTimer.start( sSearchTimeout );
 }
 
-void QgsVBSLocationSearchProvider::cancelSearch()
+void QgsVBSWorldLocationSearchProvider::cancelSearch()
 {
   if ( mNetReply )
   {
@@ -73,7 +68,7 @@ void QgsVBSLocationSearchProvider::cancelSearch()
   }
 }
 
-void QgsVBSLocationSearchProvider::replyFinished()
+void QgsVBSWorldLocationSearchProvider::replyFinished()
 {
   if ( !mNetReply )
     return;
@@ -100,20 +95,15 @@ void QgsVBSLocationSearchProvider::replyFinished()
 
     QString origin = itemAttrsMap["origin"].toString();
 
+
     SearchResult searchResult;
-    if ( mPatBox.exactMatch( itemAttrsMap["geom_st_box2d"].toString() ) )
-    {
-      searchResult.bbox = QgsRectangle( mPatBox.cap( 1 ).toDouble(), mPatBox.cap( 2 ).toDouble(),
-                                        mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
-    }
-    // When bbox is empty, fallback to pos + zoomScale is used
     searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
     searchResult.zoomScale = 1000;
 
     searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin] : origin;
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
-    searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );
+    searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:4326" );
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

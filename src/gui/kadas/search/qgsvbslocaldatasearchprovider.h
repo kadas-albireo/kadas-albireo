@@ -32,7 +32,7 @@ class QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSLocalDataSearchProvider( QgisInterface* iface );
+    QgsVBSLocalDataSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
     void cancelSearch() override;
 

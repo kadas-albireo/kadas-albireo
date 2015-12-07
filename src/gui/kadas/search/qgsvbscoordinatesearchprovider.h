@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsremotedatasearchprovider.h                                       *
+ *  qgsvbscoordinatesearchprovider.h                                       *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,38 +15,28 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#ifndef QGSVBSREMOTEDATASEARCHPROVIDER_HPP
-#define QGSVBSREMOTEDATASEARCHPROVIDER_HPP
+#ifndef QGSVBSCOORDINATESEARCHPROVIDER_HPP
+#define QGSVBSCOORDINATESEARCHPROVIDER_HPP
 
 #include "qgsvbssearchprovider.h"
-#include <QMap>
 #include <QRegExp>
-#include <QTimer>
 
-class QNetworkAccessManager;
-class QNetworkReply;
-
-class QgsVBSRemoteDataSearchProvider : public QgsVBSSearchProvider
+class QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSRemoteDataSearchProvider( QgisInterface* iface );
+    QgsVBSCoordinateSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
-    void cancelSearch() override;
 
   private:
-    static const int sSearchTimeout;
-    static const int sResultCountLimit;
-    static const QByteArray sGeoAdminUrl;
+    QRegExp mPatLVDD;
+    QRegExp mPatDM;
+    QRegExp mPatDMS;
+    QRegExp mPatUTM;
+    QRegExp mPatUTM2;
+    QRegExp mPatMGRS;
 
-    QNetworkReply* mNetReply;
-    QgsGeometry* mReplyFilter;
-    QRegExp mPatBox;
-    QTimer mTimeoutTimer;
-
-  private slots:
-    void replyFinished();
+    static const QString sCategoryName;
 };
 
-#endif // QGSVBSREMOTEDATASEARCHPROVIDER_HPP
+#endif // QGSVBSCOORDINATESEARCHPROVIDER_HPP

@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsworldlocationsearchprovider.h                                    *
+ *  qgsvbsremotedatasearchprovider.h                                       *
  *  -------------------                                                    *
- *  begin                : Sep 16, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 
-#ifndef QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
-#define QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#ifndef QGSVBSREMOTEDATASEARCHPROVIDER_HPP
+#define QGSVBSREMOTEDATASEARCHPROVIDER_HPP
 
 #include "qgsvbssearchprovider.h"
 #include <QMap>
@@ -27,11 +27,11 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class QgsVBSWorldLocationSearchProvider : public QgsVBSSearchProvider
+class QgsVBSRemoteDataSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSWorldLocationSearchProvider( QgisInterface* iface );
+    QgsVBSRemoteDataSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
     void cancelSearch() override;
 
@@ -41,7 +41,7 @@ class QgsVBSWorldLocationSearchProvider : public QgsVBSSearchProvider
     static const QByteArray sGeoAdminUrl;
 
     QNetworkReply* mNetReply;
-    QMap<QString, QString> mCategoryMap;
+    QgsGeometry* mReplyFilter;
     QRegExp mPatBox;
     QTimer mTimeoutTimer;
 
@@ -49,4 +49,4 @@ class QgsVBSWorldLocationSearchProvider : public QgsVBSSearchProvider
     void replyFinished();
 };
 
-#endif // QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#endif // QGSVBSREMOTEDATASEARCHPROVIDER_HPP

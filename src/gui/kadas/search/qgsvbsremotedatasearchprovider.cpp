@@ -35,8 +35,8 @@ const int QgsVBSRemoteDataSearchProvider::sSearchTimeout = 2000;
 const int QgsVBSRemoteDataSearchProvider::sResultCountLimit = 100;
 
 
-QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgisInterface *iface )
-    : QgsVBSSearchProvider( iface )
+QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsVBSSearchProvider( mapCanvas )
 {
   mNetReply = 0;
   mReplyFilter = 0;

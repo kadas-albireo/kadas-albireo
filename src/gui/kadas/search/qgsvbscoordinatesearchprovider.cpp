@@ -21,8 +21,8 @@
 
 const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
 
-QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgisInterface *iface )
-    : QgsVBSSearchProvider( iface )
+QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsVBSSearchProvider( mapCanvas )
 {
   QString degChar = QString( "%1" ).arg( QChar( 0x00B0 ) );
   QString minChars = QString( "'%1%2%3" ).arg( QChar( 0x2032 ) ).arg( QChar( 0x02BC ) ).arg( QChar( 0x2019 ) );

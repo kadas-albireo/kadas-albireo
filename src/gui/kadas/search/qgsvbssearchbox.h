@@ -18,7 +18,6 @@
 #ifndef QGSVBSSEARCHBOX_H
 #define QGSVBSSEARCHBOX_H
 
-#include "qgisinterface.h"
 #include "qgsvbssearchprovider.h"
 #include <QList>
 #include <QTimer>
@@ -28,6 +27,7 @@
 class QCheckBox;
 class QToolButton;
 class QgsCoordinateReferenceSystem;
+class QgsMapCanvas;
 class QgsMapToolDrawShape;
 class QgsPoint;
 class QgsRectangle;
@@ -38,11 +38,16 @@ class QgsVBSSearchBox : public QWidget
     Q_OBJECT
 
   public:
-    QgsVBSSearchBox( QgisInterface* iface, QWidget* parent = 0 );
+    QgsVBSSearchBox( QWidget* parent = 0 );
     ~QgsVBSSearchBox();
+
+    void init( QgsMapCanvas* canvas );
 
     void addSearchProvider( QgsVBSSearchProvider* provider );
     void removeSearchProvider( QgsVBSSearchProvider* provider );
+
+  public slots:
+    void clearSearch();
 
   private:
     class LineEdit;
@@ -56,7 +61,7 @@ class QgsVBSSearchBox : public QWidget
     static const int sCatCountRole;
     static const int sResultDataRole;
 
-    QgisInterface* mIface;
+    QgsMapCanvas* mMapCanvas;
     QgsRubberBand* mRubberBand;
     QgsMapToolDrawShape* mFilterTool;
     QList<QgsVBSSearchProvider*> mSearchProviders;
@@ -75,7 +80,6 @@ class QgsVBSSearchBox : public QWidget
   private slots:
     void textChanged();
     void startSearch();
-    void clearSearch();
     void searchResultFound( QgsVBSSearchProvider::SearchResult result );
     void searchProviderFinished();
     void resultSelected();

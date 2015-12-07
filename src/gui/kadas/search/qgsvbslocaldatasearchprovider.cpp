@@ -23,14 +23,15 @@
 #include "qgisinterface.h"
 #include "qgslegendinterface.h"
 #include "qgsfeaturerequest.h"
+#include "qgsmapcanvas.h"
 #include "qgsvectorlayer.h"
 #include "geometry/qgsgeometry.h"
 #include <QThread>
 #include <QMutexLocker>
 
 
-QgsVBSLocalDataSearchProvider::QgsVBSLocalDataSearchProvider( QgisInterface *iface )
-    : QgsVBSSearchProvider( iface )
+QgsVBSLocalDataSearchProvider::QgsVBSLocalDataSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsVBSSearchProvider( mapCanvas )
 {
 }
 
@@ -39,7 +40,7 @@ void QgsVBSLocalDataSearchProvider::startSearch( const QString& searchtext, cons
   QList<QgsMapLayer*> visibleLayers;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
-    if ( layer->type() == QgsMapLayer::VectorLayer && mIface->legendInterface()-> isLayerVisible( layer ) )
+    if ( layer->type() == QgsMapLayer::VectorLayer && mMapCanvas->layers().contains( layer ) )
       visibleLayers.append( layer );
   }
 

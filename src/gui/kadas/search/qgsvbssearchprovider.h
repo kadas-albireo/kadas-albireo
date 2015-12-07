@@ -24,6 +24,7 @@
 #include "qgscoordinatereferencesystem.h"
 
 class QgisInterface;
+class QgsMapCanvas;
 
 class QgsVBSSearchProvider : public QObject
 {
@@ -44,7 +45,7 @@ class QgsVBSSearchProvider : public QObject
       QgsCoordinateReferenceSystem crs;
     };
 
-    QgsVBSSearchProvider( QgisInterface* iface ) : mIface( iface ) { }
+    QgsVBSSearchProvider( QgsMapCanvas* mapCanvas ) : mMapCanvas( mapCanvas ) { }
     virtual ~QgsVBSSearchProvider() {}
     virtual void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) = 0;
     virtual void cancelSearch() {}
@@ -54,7 +55,7 @@ class QgsVBSSearchProvider : public QObject
     void searchFinished();
 
   protected:
-    QgisInterface* mIface;
+    QgsMapCanvas* mMapCanvas;
 };
 
 Q_DECLARE_METATYPE( QgsVBSSearchProvider::SearchResult )

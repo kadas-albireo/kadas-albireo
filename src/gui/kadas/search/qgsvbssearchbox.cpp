@@ -17,10 +17,11 @@
 
 #include "qgsapplication.h"
 #include "qgsvbssearchbox.h"
+#include "qgscoordinatetransform.h"
 #include "qgsgeometryrubberband.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaptooldrawshape.h"
-#include "qgscoordinatetransform.h"
+#include "qgsproject.h"
 #include "qgsvbssearchprovider.h"
 #include "qgsvbscoordinatesearchprovider.h"
 #include "qgsvbslocationsearchprovider.h"
@@ -64,9 +65,13 @@ class QgsVBSSearchBox::TreeWidget: public QTreeWidget
 };
 
 
-QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
-    : QWidget( parent ), mIface( iface )
+QgsVBSSearchBox::QgsVBSSearchBox( QWidget *parent )
+    : QWidget( parent )
+{ }
+
+void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
 {
+  mMapCanvas = canvas;
   mNumRunningProviders = 0;
   mRubberBand = 0;
   mFilterTool = 0;
@@ -149,7 +154,8 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
   connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
   connect( mTreeWidget, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
-  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( clearSearch() ) );
+#warning TODO // This does only handle open, not new
+  connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( clearSearch() ) );
 
   int frameWidth = mSearchBox->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
   mSearchBox->setStyleSheet( QString( "QLineEdit { padding-right: %1px; } " ).arg( mSearchButton->sizeHint().width() + frameWidth + 5 ) );
@@ -159,11 +165,11 @@ QgsVBSSearchBox::QgsVBSSearchBox( QgisInterface *iface, QWidget *parent )
   mSearchBox->setPlaceholderText( tr( "Search" ) );
 
   qRegisterMetaType<QgsVBSSearchProvider::SearchResult>( "QgsVBSSearchProvider::SearchResult" );
-  addSearchProvider( new QgsVBSCoordinateSearchProvider( mIface ) );
-  addSearchProvider( new QgsVBSLocationSearchProvider( mIface ) );
-  addSearchProvider( new QgsVBSLocalDataSearchProvider( mIface ) );
-  addSearchProvider( new QgsVBSRemoteDataSearchProvider( mIface ) );
-  addSearchProvider( new QgsVBSWorldLocationSearchProvider( mIface ) );
+  addSearchProvider( new QgsVBSCoordinateSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsVBSLocationSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsVBSLocalDataSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsVBSRemoteDataSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsVBSWorldLocationSearchProvider( mMapCanvas ) );
 
   mSearchBox->installEventFilter( this );
   mTreeWidget->installEventFilter( this );
@@ -294,7 +300,7 @@ void QgsVBSSearchBox::startSearch()
     if ( !poly.isEmpty() )
     {
       searchRegion.polygon = poly.front();
-      searchRegion.crs = mIface->mapCanvas()->mapSettings().destinationCrs();
+      searchRegion.crs = mMapCanvas->mapSettings().destinationCrs();
     }
   }
 
@@ -307,7 +313,7 @@ void QgsVBSSearchBox::clearSearch()
   mSearchBox->clear();
   mSearchButton->setVisible( true );
   mClearButton->setVisible( false );
-  mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+  mMapCanvas->scene()->removeItem( mRubberBand );
   delete mRubberBand;
   mRubberBand = 0;
   mTreeWidget->close();
@@ -380,7 +386,7 @@ void QgsVBSSearchBox::resultSelected()
     QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
     if ( !mRubberBand )
       createRubberBand();
-    QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
+    QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
     mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
     mSearchBox->blockSignals( true );
     mSearchBox->setText( result.text );
@@ -402,19 +408,19 @@ void QgsVBSSearchBox::resultActivated()
     QgsRectangle zoomExtent;
     if ( result.bbox.isEmpty() )
     {
-      zoomExtent = mIface->mapCanvas()->mapSettings().computeExtentForScale( result.pos, result.zoomScale, result.crs );
+      zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, result.crs );
       if ( !mRubberBand )
         createRubberBand();
-      QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
+      QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
       mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
     }
     else
     {
-      QgsCoordinateTransform t( result.crs, mIface->mapCanvas()->mapSettings().destinationCrs() );
+      QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
       zoomExtent = t.transform( result.bbox );
     }
-    mIface->mapCanvas()->setExtent( zoomExtent );
-    mIface->mapCanvas()->refresh();
+    mMapCanvas->setExtent( zoomExtent );
+    mMapCanvas->refresh();
     mSearchBox->blockSignals( true );
     mSearchBox->setText( result.text );
     mSearchBox->blockSignals( false );
@@ -426,7 +432,7 @@ void QgsVBSSearchBox::resultActivated()
 
 void QgsVBSSearchBox::createRubberBand()
 {
-  mRubberBand = new QgsRubberBand( mIface->mapCanvas(), QGis::Point );
+  mRubberBand = new QgsRubberBand( mMapCanvas, QGis::Point );
   QSize imgSize = QImageReader( ":/vbsfunctionality/icons/pin_blue.svg" ).size();
   mRubberBand->setSvgIcon( ":/vbsfunctionality/icons/pin_blue.svg", QPoint( -imgSize.width() / 2., -imgSize.height() ) );
 }
@@ -441,7 +447,7 @@ void QgsVBSSearchBox::cancelSearch()
   // result, which can be cleared by pressing the clear button
   if ( mRubberBand && !mClearButton->isVisible() )
   {
-    mIface->mapCanvas()->scene()->removeItem( mRubberBand );
+    mMapCanvas->scene()->removeItem( mRubberBand );
     delete mRubberBand;
     mRubberBand = 0;
   }
@@ -466,13 +472,13 @@ void QgsVBSSearchBox::setFilterTool()
   switch ( filterType )
   {
     case FilterRect:
-      mFilterTool = new QgsMapToolDrawRectangle( mIface->mapCanvas() ); break;
+      mFilterTool = new QgsMapToolDrawRectangle( mMapCanvas ); break;
     case FilterPoly:
-      mFilterTool = new QgsMapToolDrawPolyLine( mIface->mapCanvas(), true ); break;
+      mFilterTool = new QgsMapToolDrawPolyLine( mMapCanvas, true ); break;
     case FilterCircle:
-      mFilterTool = new QgsMapToolDrawCircle( mIface->mapCanvas() ); break;
+      mFilterTool = new QgsMapToolDrawCircle( mMapCanvas ); break;
   }
-  mIface->mapCanvas()->setMapTool( mFilterTool );
+  mMapCanvas->setMapTool( mFilterTool );
   action->setCheckable( true );
   action->setChecked( true );
   connect( mFilterTool, SIGNAL( finished() ), this, SLOT( filterToolFinished() ) );

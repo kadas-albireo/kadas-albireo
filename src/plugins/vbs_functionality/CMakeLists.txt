@@ -1,4 +1,3 @@
-FIND_PACKAGE(QJSON REQUIRED)
 FIND_PACKAGE(QuaZip REQUIRED)
 
 IF(MSVC)
@@ -15,12 +14,6 @@ SET (vbsfunctionality_SRCS
   multimap/qgsvbsmapwidget.cpp
   multimap/qgsvbsmultimapmanager.cpp
   ovl/qgsvbsovlimporter.cpp
-  search/qgsvbssearchbox.cpp
-  search/qgsvbscoordinatesearchprovider.cpp
-  search/qgsvbslocationsearchprovider.cpp
-  search/qgsvbslocaldatasearchprovider.cpp
-  search/qgsvbsremotedatasearchprovider.cpp
-  search/qgsvbsworldlocationsearchprovider.cpp
 )
 
 SET (vbsfunctionality_HDRS
@@ -33,13 +26,6 @@ SET (vbsfunctionality_MOC_HDRS
   qgsvbscrashhandler.h
   multimap/qgsvbsmapwidget.h
   multimap/qgsvbsmultimapmanager.h
-  search/qgsvbssearchbox.h
-  search/qgsvbssearchprovider.h
-  search/qgsvbscoordinatesearchprovider.h
-  search/qgsvbslocationsearchprovider.h
-  search/qgsvbslocaldatasearchprovider.h
-  search/qgsvbsremotedatasearchprovider.h
-  search/qgsvbsworldlocationsearchprovider.h
 )
 
 SET (vbsfunctionality_UIS
