@@ -1,10 +1,10 @@
 #ifndef QGSKADASRIBBONBUTTON_H
 #define QGSKADASRIBBONBUTTON_H
 
-#include <QAbstractButton>
+#include <QToolButton>
 
 /**A button which draws icon / text. The icon is above the text at (height - 10) / 2.0 y-position*/
-class GUI_EXPORT QgsKadasRibbonButton: public QAbstractButton
+class GUI_EXPORT QgsKadasRibbonButton: public QToolButton
 {
   public:
     QgsKadasRibbonButton( QWidget* parent = 0 );

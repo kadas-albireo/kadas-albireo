@@ -70,7 +70,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void userScale();
 
   private:
-    void setActionToButton( QAction* action, QAbstractButton* button );
+    void setActionToButton( QAction* action, QToolButton* button );
 
     bool addProject( const QString& projectFile );
     //! check to see if file is dirty and if so, prompt the user th save it
@@ -102,7 +102,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     void performDrag( const QIcon* icon = 0 );
 
-    void restoreFavoriteButton( QAbstractButton* button );
+    void restoreFavoriteButton( QToolButton* button );
 
     void configureButtons();
 
@@ -120,6 +120,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     QPoint mDragStartPos;
     QString mDragStartActionName;
+
+    QButtonGroup* mToggleButtonGroup;
 
     QgsVBSSlopeTool* mSlopeTool;
     QgsVBSHillshadeTool* mHillshadeTool;

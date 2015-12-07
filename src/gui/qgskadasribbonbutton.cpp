@@ -2,7 +2,7 @@
 #include <QDragEnterEvent>
 #include <QPainter>
 
-QgsKadasRibbonButton::QgsKadasRibbonButton( QWidget* parent ): QAbstractButton( parent )
+QgsKadasRibbonButton::QgsKadasRibbonButton( QWidget* parent ): QToolButton( parent )
 {
 }
 
@@ -21,7 +21,8 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
   p.setBrush( QBrush( palette().color( QPalette::Window ) ) );
   if ( isChecked() )
   {
-    QPen checkedPen( palette().color( QPalette::Dark ) );
+    //QPen checkedPen( palette().color( QPalette::Dark ) );
+    QPen checkedPen( Qt::red );
     checkedPen.setWidth( 3 );
     p.setPen( checkedPen );
   }
