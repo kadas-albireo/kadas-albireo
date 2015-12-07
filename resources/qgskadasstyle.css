@@ -49,15 +49,14 @@ QAbstractButton#mFavoriteButton4 {
   color: #FFFFFF;
 }
 
-/**mRibbonWidget*/
-#mRibbonWidget QWidget {
-  background-color: #263B4E;
-  border-left: 1px solid #BEDCF6;
+QFrame#mSeparatorFrame {
+  background-color: #BEDCF6;
+  border: 1px #BEDCF6;
 }
 
-#mRibbonWidget QPushButton { 
-  background-color: #5D7081;
-  color: #FFFFFF;
+/**mRibbonWidget*/
+QTabWidget#mRibbonWidget {
+  background-color: #263B4E;
 }
 
 #mRibbonWidget QAbstractButton { 
