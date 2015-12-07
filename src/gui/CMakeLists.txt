@@ -114,6 +114,12 @@ kadas/qgsvbspinannotationitem.cpp
 kadas/qgsvbshillshadetool.cpp
 kadas/qgsvbsslopetool.cpp
 kadas/qgsvbsviewshedtool.cpp
+kadas/search/qgsvbssearchbox.cpp
+kadas/search/qgsvbscoordinatesearchprovider.cpp
+kadas/search/qgsvbslocationsearchprovider.cpp
+kadas/search/qgsvbslocaldatasearchprovider.cpp
+kadas/search/qgsvbsremotedatasearchprovider.cpp
+kadas/search/qgsvbsworldlocationsearchprovider.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -357,6 +363,13 @@ SET(QGIS_GUI_MOC_HDRS
   kadas/qgsvbshillshadetool.h
   kadas/qgsvbsslopetool.h
   kadas/qgsvbsviewshedtool.h
+  kadas/search/qgsvbssearchbox.h
+  kadas/search/qgsvbssearchprovider.h
+  kadas/search/qgsvbscoordinatesearchprovider.h
+  kadas/search/qgsvbslocationsearchprovider.h
+  kadas/search/qgsvbslocaldatasearchprovider.h
+  kadas/search/qgsvbsremotedatasearchprovider.h
+  kadas/search/qgsvbsworldlocationsearchprovider.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
@@ -554,6 +567,7 @@ INCLUDE_DIRECTORIES(
   ${CMAKE_CURRENT_BINARY_DIR}/../ui
   ${QWT_INCLUDE_DIR}
   ${SQLITE3_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
 )
 
 INCLUDE_DIRECTORIES(${QSCINTILLA_INCLUDE_DIR})
@@ -625,6 +639,7 @@ TARGET_LINK_LIBRARIES(qgis_gui
   ${QWT_LIBRARY}
   ${QSCINTILLA_LIBRARY}
   ${EXIV2_LIBRARY}
+  ${QJSON_LIBRARIES}
 )
 
 IF(WIN32)

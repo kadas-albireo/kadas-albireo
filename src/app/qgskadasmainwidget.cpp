@@ -97,6 +97,8 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   initLayerTreeView();
   initMapCanvas();
 
+  mSearchWidget->init( mMapCanvas );
+
   // a bar to warn the user with non-blocking messages
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
