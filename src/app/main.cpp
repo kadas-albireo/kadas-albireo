@@ -577,7 +577,10 @@ int main( int argc, char *argv[] )
       }
       else if ( arg == "--kadasgui" )
       {
-          kadasGui = ( args.at( i ).compare( "true", Qt::CaseInsensitive ) == 0 );
+        if ( args.size() >= ( i + 2 ) )
+        {
+          kadasGui = ( args.at( ++i ).compare( "true", Qt::CaseInsensitive ) == 0 );
+        }
       }
       else
       {
@@ -926,13 +929,13 @@ int main( int argc, char *argv[] )
 
   //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
   QWidget* qgis = 0;
-  if( kadasGui )
+  if ( kadasGui )
   {
     qgis = new QgsKadasMainWidget();
   }
   else
   {
-     qgis = new QgisApp( mypSplash, myRestorePlugins );
+    qgis = new QgisApp( mypSplash, myRestorePlugins );
   }
   qgis->setObjectName( "QgisApp" );
 
