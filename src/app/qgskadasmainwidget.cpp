@@ -283,6 +283,13 @@ void QgsKadasMainWidget::configureButtons()
   //mActionImportOVL
   setActionToButton( mActionImportOVL, mImportOVLButton );
 
+  //view tab
+  setActionToButton( mActionZoomLast, mZoomLastButton );
+  setActionToButton( mActionZoomNext, mZoomNextButton );
+  setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
+  setActionToButton( mAction3D, m3DButton );
+  setActionToButton( mActionGrid, mGridButton );
+
   //draw tab
 
   //mActionPin
