@@ -20,6 +20,9 @@
    <property name="margin">
     <number>0</number>
    </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="mTopLayout">
      <item>
@@ -29,6 +32,9 @@
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <item>
           <widget class="QgsKadasRibbonButton" name="mFavoriteButton1">
            <property name="sizePolicy">
@@ -190,6 +196,25 @@
         <widget class="QWidget" name="mSearchWidget" native="true"/>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QFrame" name="mSeparatorFrame">
+       <property name="minimumSize">
+        <size>
+         <width>2</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QTabWidget" name="mRibbonWidget">
@@ -520,6 +545,68 @@
          <string>View</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="4">
+          <widget class="QgsKadasRibbonButton" name="mGridButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Grid</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QgsKadasRibbonButton" name="mNewMapWindowButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>New map window</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QgsKadasRibbonButton" name="mZoomLastButton">
            <property name="sizePolicy">
@@ -582,37 +669,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
-          <widget class="QgsKadasRibbonButton" name="mNewMapWindowButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>52</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>New map window</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="3">
           <widget class="QgsKadasRibbonButton" name="m3DButton">
            <property name="sizePolicy">
@@ -644,36 +700,18 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="4">
-          <widget class="QgsKadasRibbonButton" name="mGridButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+         <item row="0" column="5">
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-           <property name="minimumSize">
+           <property name="sizeHint" stdset="0">
             <size>
-             <width>52</width>
-             <height>80</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Grid</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-          </widget>
+          </spacer>
          </item>
         </layout>
        </widget>
@@ -1072,12 +1110,15 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QgsMapCanvas" name="mMapCanvas" native="true">
+    <widget class="QgsMapCanvas" name="mMapCanvas">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
@@ -1543,12 +1584,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsMapCanvas</class>
-   <extends>QWidget</extends>
-   <header>qgsmapcanvas.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QgsLayerTreeView</class>
    <extends>QTreeView</extends>
    <header>qgslayertreeview.h</header>
@@ -1567,6 +1602,12 @@
    <class>QgsKadasRibbonButton</class>
    <extends>QToolButton</extends>
    <header>qgskadasribbonbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMapCanvas</class>
+   <extends>QGraphicsView</extends>
+   <header>qgsmapcanvas.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
