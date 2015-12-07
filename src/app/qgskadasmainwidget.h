@@ -37,6 +37,9 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     //! starts/stops editing mode of a layer
     bool toggleEditing( QgsMapLayer *layer, bool allowCancel = true );
 
+  signals:
+    void newProject();
+
   protected:
     virtual void resizeEvent( QResizeEvent* event );
     virtual void mousePressEvent( QMouseEvent* event );
@@ -49,6 +52,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void fileNew();
     void open();
     bool save();
+    void zoomToPrevious();
+    void zoomToNext();
     void pin( bool enabled );
     void profile( bool enabled );
     void distance( bool enabled );
@@ -105,6 +110,11 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void restoreFavoriteButton( QToolButton* button );
 
     void configureButtons();
+
+    void fileNew( bool thePromptToSaveFlag, bool forceBlank = false );
+    //! Create a new file from a template project
+    void fileNewFromDefaultTemplate();
+    bool fileNewFromTemplate( QString fileName );
 
     //! list of recently opened/saved project files
     QStringList mRecentProjectPaths;
