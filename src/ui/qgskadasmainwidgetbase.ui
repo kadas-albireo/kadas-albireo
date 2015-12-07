@@ -519,6 +519,163 @@
         <attribute name="title">
          <string>View</string>
         </attribute>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QgsKadasRibbonButton" name="mZoomLastButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Zoom last</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsKadasRibbonButton" name="mZoomNextButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Zoom next</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QgsKadasRibbonButton" name="mNewMapWindowButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>New map window</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QgsKadasRibbonButton" name="m3DButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>3D</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QgsKadasRibbonButton" name="mGridButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>52</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Grid</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="mAnalysisTab">
         <attribute name="title">
@@ -1336,6 +1493,51 @@
    </property>
    <property name="text">
     <string>Import OVL</string>
+   </property>
+  </action>
+  <action name="mActionZoomLast">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom last</string>
+   </property>
+  </action>
+  <action name="mActionZoomNext">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom next</string>
+   </property>
+  </action>
+  <action name="mActionNewMapWindow">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>New map window</string>
+   </property>
+  </action>
+  <action name="mAction3D">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>3D</string>
+   </property>
+  </action>
+  <action name="mActionGrid">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/kadas/koordinatengitter.png</normaloff>:/images/kadas/koordinatengitter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Grid</string>
    </property>
   </action>
  </widget>
