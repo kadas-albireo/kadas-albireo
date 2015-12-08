@@ -108,7 +108,7 @@ double QgsVBSCoordinateDisplayer::getHeightAtPos( const QgsPoint& p, const QgsCo
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-#warning TODO
+#pragma message( "warning: TODO" )
     // mQGisIface->messageBar()->pushMessage(tr( "No heightmap is defined in the project."), tr("Right-click a raster layer in the layer tree and select it to be used as heightmap."), QgsMessageBar::INFO, 10);
     return 0;
   }

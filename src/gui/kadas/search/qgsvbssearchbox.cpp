@@ -154,7 +154,7 @@ void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
   connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
   connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
   connect( mTreeWidget, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
-#warning TODO // This does only handle open, not new
+#pragma message( "warning: TODO" )
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( clearSearch() ) );
 
   int frameWidth = mSearchBox->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
