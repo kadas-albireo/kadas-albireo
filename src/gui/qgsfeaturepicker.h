@@ -23,7 +23,7 @@ class QgsPoint;
 class QgsVectorLayer;
 class QgsMapCanvas;
 
-class QgsFeaturePicker
+class GUI_EXPORT QgsFeaturePicker
 {
   public:
     typedef bool( *filter_t )( const QgsFeature& );
