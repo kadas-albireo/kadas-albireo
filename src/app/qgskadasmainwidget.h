@@ -74,6 +74,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void pinActionToggled( bool enabled );
     void userScale();
 
+    void setNonEditMapTool();
+
   private:
     void setActionToButton( QAction* action, QToolButton* button );
 
