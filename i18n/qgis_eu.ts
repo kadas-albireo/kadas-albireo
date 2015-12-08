@@ -80,6 +80,17 @@
     </message>
 </context>
 <context>
+    <name>AbstractTool</name>
+    <message>
+        <source>The requested feature does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The feature geometry could not be fetched</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddModelFromFileAction</name>
     <message>
         <source>Add model from file</source>
@@ -632,11 +643,15 @@ Ireki emaitzen koadroa hura egiaztatzeko.</translation>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
         <translation>Nodata balioa, utzi hutsik sarrerako nodata balioa hartzeko</translation>
+    </message>
+    <message>
+        <source>Clipped</source>
+        <translation type="unfinished">Moztua</translation>
     </message>
 </context>
 <context>
@@ -740,7 +755,11 @@ Ireki emaitzen koadroa hura egiaztatzeko.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Color relief</source>
+        <translation type="unfinished">Kolore-erliebea</translation>
     </message>
 </context>
 <context>
@@ -3190,6 +3209,45 @@ Seguru zaude jarraitu nahi duzula?</translation>
     </message>
 </context>
 <context>
+    <name>DinfDistDownMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Zulo beteen garaiera-sareta</translation>
+    </message>
+    <message>
+        <source>Stream Raster Grid</source>
+        <translation type="unfinished">Korronte rasterren sareta</translation>
+    </message>
+    <message>
+        <source>Weight Path Grid</source>
+        <translation type="unfinished">Pisu-bideen sareta</translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished">Metodo estatistikoa</translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished">Distantzia-metodoa</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Egiaztatu ertzen kutsadura</translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished">D-Infinity tanta korronte-saretara</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
     <name>DinfDistUp</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
@@ -3226,6 +3284,45 @@ Seguru zaude jarraitu nahi duzula?</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>DinfDistUpMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Zulo beteen garaiera-sareta</translation>
+    </message>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished">Malda-sareta</translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished">Metodo estatistikoa</translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished">Distantzia-metodoa</translation>
+    </message>
+    <message>
+        <source>Proportion Threshold</source>
+        <translation type="unfinished">Proportzio-atalasea</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Egiaztatu ertzen kutsadura</translation>
+    </message>
+    <message>
+        <source>D-Infinity Distance Up</source>
+        <translation type="unfinished">D-Infinity distantzia gora</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -3304,6 +3401,84 @@ Seguru zaude jarraitu nahi duzula?</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccum2Multi</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished">Hornidura-sareta</translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished">Garraio-ahalmenaren sareta</translation>
+    </message>
+    <message>
+        <source>Input Concentration Grid</source>
+        <translation type="unfinished">Sarrerako kontzentrazio-sareta</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Hustubideen shapefile-a</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Egiaztatu ertzen kutsadura</translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished">Garraioak mugatutako metaketa-sareta</translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
+        <translation type="unfinished">Jalkitze-sareta</translation>
+    </message>
+    <message>
+        <source>Output Concentration Grid</source>
+        <translation type="unfinished">Irteerako kontzentrazio-sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccumMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished">Hornidura-sareta</translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished">Garraio-ahalmenaren sareta</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Hustubideen shapefile-a</translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished">Egiaztatu ertzen kutsadura</translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished">Garraioak mugatutako metaketa-sareta</translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
+        <translation type="unfinished">Jalkitze-sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -3939,6 +4114,53 @@ geometria-zutabea - balio oso bakarrak dituen zutabea</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>DropAnalysisMulti</name>
+    <message>
+        <source>D8 Contributing Area Grid</source>
+        <translation type="unfinished">D8 ekarpen-arearen sareta</translation>
+    </message>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished">D8 fluxu-norabideen sareta</translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished">Zulo beteen garaiera-sareta</translation>
+    </message>
+    <message>
+        <source>Accumulated Stream Source Grid</source>
+        <translation type="unfinished">Metatutako korronte-iturburuen sareta</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Hustubideen shapefile-a</translation>
+    </message>
+    <message>
+        <source>Minimum Threshold</source>
+        <translation type="unfinished">Atalase minimoa</translation>
+    </message>
+    <message>
+        <source>Maximum Threshold</source>
+        <translation type="unfinished">Atalase maximoa</translation>
+    </message>
+    <message>
+        <source>Number of Threshold Values</source>
+        <translation type="unfinished">Atalase-balioen kopurua</translation>
+    </message>
+    <message>
+        <source>Spacing for Threshold Values</source>
+        <translation type="unfinished">Tartea atalase-balioetarako</translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished">D-Infinity tanta korronte-saretara</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -5359,7 +5581,7 @@ and python executables.
 
 MacOS users usually need to set it to something like
 /Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
-        <translation>Bi puntuz bereizitako (Linux eta MacOS) edo
+        <translation type="obsolete">Bi puntuz bereizitako (Linux eta MacOS) edo
 puntu eta komaz bereizitako (Windows) bideak
 binarioetara eta Python exekutagarrietara.
 
@@ -5369,14 +5591,14 @@ edo horrelako zerbait ezarri behar dute normalean</translation>
     <message>
         <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
-        <translation>Bi puntuz bereizitako (Linux eta MacOS) edo
+        <translation type="obsolete">Bi puntuz bereizitako (Linux eta MacOS) edo
 puntu eta komaz bereizitako (Windows) bideak
 Python moduluetara.</translation>
     </message>
     <message>
         <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
-        <translation>Erabilgarria GDAL dokumentazio lokala irekitzeko, lineako laguntza ordez,
+        <translation type="obsolete">Erabilgarria GDAL dokumentazio lokala irekitzeko, lineako laguntza ordez,
 tresnaren Laguntz botoian sakatzean.</translation>
     </message>
     <message>
@@ -5390,6 +5612,28 @@ tresnaren Laguntz botoian sakatzean.</translation>
     <message>
         <source>Select directory with the GDAL documentation</source>
         <translation>Hautatu GDAL dokumentazioa duen direktorioa</translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to both binaries
+and python executables.
+
+MacOS users usually need to set it to something like
+/Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to python modules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Useful to open local GDAL documentation instead of online help
+when pressing on the tool dialog&apos;s Help button.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6092,6 +6336,13 @@ Erabilgarria kolore indexatuko datu-multzoak onartzen ez dituzten irteera-kontro
     </message>
 </context>
 <context>
+    <name>GenericGeoprocessingToolDialog</name>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoAlgorithm</name>
     <message>
         <source>Uncaught error while executing algorithm</source>
@@ -6311,6 +6562,298 @@ Hautatu beste eremu bat...</translation>
     </message>
 </context>
 <context>
+    <name>Geoprocessing::AbstractBinaryToolDialog</name>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Hautatutako elementuak soilik</translation>
+    </message>
+    <message>
+        <source>Operator layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer fields:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer CRS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::BufferToolDialog</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">Bufferra</translation>
+    </message>
+    <message>
+        <source>Buffer distance value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buffer distance field:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Round</source>
+        <translation type="unfinished">Borobildua</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished">Laua</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre</source>
+        <translation type="unfinished">Angelua</translation>
+    </message>
+    <message>
+        <source>Bevel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Single sided</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve buffer results</source>
+        <translation type="unfinished">Disolbatze-bufferraren emaitzak</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Segments:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cap style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre limit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Disolbatu</translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be non-zero for polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be positive for point and line layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::ConvexHullToolDialog</name>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::DissolveToolDialog</name>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Disolbatu</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingErrorDialog</name>
+    <message>
+        <source>Select faulty features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing/incomplete features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry errors</source>
+        <translation type="unfinished">Geometria-erroreak</translation>
+    </message>
+    <message>
+        <source>%1 features could not be written</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingToolDialog</name>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Exekutatu</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Canceled&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Completed&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%p% (Step %1/%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::SliverPolygonToolDialog</name>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">Ezabatu ezpal-poligonoak</translation>
+    </message>
+    <message>
+        <source>Largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longest shared boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer must be a polygon layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::GroupUI</name>
+    <message>
+        <source>%1 all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by attribute:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by expression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid expression:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Dena</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Taldea</translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::SummarizeUI</name>
+    <message>
+        <source>First</source>
+        <translation type="unfinished">Lehena</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Count</source>
+        <translation type="unfinished">Zenbaketa</translation>
+    </message>
+    <message>
+        <source>Sum</source>
+        <translation type="unfinished">Batuketa</translation>
+    </message>
+    <message>
+        <source>Mean</source>
+        <translation type="unfinished">Batez bestekoa</translation>
+    </message>
+    <message>
+        <source>Min</source>
+        <translation type="unfinished">Min</translation>
+    </message>
+    <message>
+        <source>Max</source>
+        <translation type="unfinished">Max</translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">Tartea</translation>
+    </message>
+    <message>
+        <source>StdDev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Null</source>
+        <translation type="unfinished">Nulua</translation>
+    </message>
+    <message>
+        <source>Summarize numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Summarize non-numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoprocessingDialog</name>
     <message>
         <source>Dissolve all</source>
@@ -6469,6 +7012,56 @@ Elementu-geometriaren errorea: Irteera-elementu bat edo gehiago ezikusi d(ir)a b
         <source>
 GEOS geoprocessing error: One or more input features have invalid geometry.</source>
         <translation>GEOS geoprozesuaren errorea: Sarrera-elementu batek edo gehiago baliogabeko geometria du(te).</translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingErrorDialog</name>
+    <message>
+        <source>Errors</source>
+        <translation type="unfinished">Erroreak</translation>
+    </message>
+    <message>
+        <source>Errors occurred while executing the process:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt; You can check for geometry errors via &lt;span style=&quot; font-style:italic;&quot;&gt;Vector-&amp;gt;Geometry Tools-&amp;gt;Check geometry validity&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingToolDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished">Elkarrizketa-koadroa</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Sarrerako geruza bektoriala</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Hautatutako elementuak soilik</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">Irteera</translation>
+    </message>
+    <message>
+        <source>Add result to canvas</source>
+        <translation type="unfinished">Gehitu emaitza oihalari</translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Arakatu</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Aukerak</translation>
     </message>
 </context>
 <context>
@@ -6795,7 +7388,7 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Irteera</translation>
+        <translation type="obsolete">Irteera</translation>
     </message>
     <message>
         <source>Invalid grid spacing: %s/%s</source>
@@ -6808,6 +7401,10 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     <message>
         <source>Vertical spacing is too small for the covered area</source>
         <translation>Tarte bertikala txikiegia azaleraren hedadurarako</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Sareta</translation>
     </message>
 </context>
 <context>
@@ -6846,7 +7443,11 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation type="unfinished">Batez bestekoa</translation>
     </message>
 </context>
 <context>
@@ -6889,7 +7490,11 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Interpolated metrics</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6936,11 +7541,15 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
     </message>
     <message>
         <source>Smoothing</source>
         <translation>Leuntzea</translation>
+    </message>
+    <message>
+        <source>Interpolated IDW</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7018,7 +7627,11 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Interpolated nearest neighbor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7054,6 +7667,41 @@ Instala ezazu GRASS algoritmoak exekutatu baino lehen.</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>GridNetMulti</name>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished">D8 fluxu-norabideen sareta</translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished">Hustubideen shapefile-a</translation>
+    </message>
+    <message>
+        <source>Mask Grid</source>
+        <translation type="unfinished">Maskara-sareta</translation>
+    </message>
+    <message>
+        <source>Mask Threshold</source>
+        <translation type="unfinished">Maskara-atalasea</translation>
+    </message>
+    <message>
+        <source>Longest Upslope Length Grid</source>
+        <translation type="unfinished">Gorako hegal-luzera luzeenen sareta</translation>
+    </message>
+    <message>
+        <source>Total Upslope Length Grid</source>
+        <translation type="unfinished">Gorako hegal-luzera totalen sareta</translation>
+    </message>
+    <message>
+        <source>Strahler Network Order Grid</source>
+        <translation type="unfinished">Sareko Strahler ordenen sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -7552,6 +8200,10 @@ bazada, haiek instalazio-karpetan gordetzen baitira</translation>
         <source>Elevation</source>
         <translation>Garaiera</translation>
     </message>
+    <message>
+        <source>Feature %d is smaller than raster cell size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImportIntoPostGIS</name>
@@ -7647,6 +8299,17 @@ bazada, haiek instalazio-karpetan gordetzen baitira</translation>
     <message>
         <source>Intersection</source>
         <translation>Ebaketa</translation>
+    </message>
+</context>
+<context>
+    <name>IntersectionTool</name>
+    <message>
+        <source>Dimensionality of the input layer must be less or equal the dimensionality of the operator layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7890,6 +8553,33 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
 </context>
 <context>
+    <name>LengthAreaMulti</name>
+    <message>
+        <source>Length Grid</source>
+        <translation type="unfinished">Luzeren sareta</translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished">Ekarpen-arearen sareta</translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation type="unfinished">Atalasea</translation>
+    </message>
+    <message>
+        <source>Exponent</source>
+        <translation type="unfinished">Berretzailea</translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished">Korronteen sorburu-sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
     <name>LidarToolsAlgorithmProvider</name>
     <message>
         <source>LAStools folder</source>
@@ -7950,7 +8640,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>Inprimatze-konposatzaileak</translation>
+        <translation type="obsolete">Inprimatze-konposatzaileak</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -7958,11 +8648,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>Hautatu</translation>
+        <translation type="obsolete">Hautatu</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>Neurtu</translation>
+        <translation type="obsolete">Neurtu</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -7974,7 +8664,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>Pl&amp;uginak</translation>
+        <translation type="obsolete">Pl&amp;uginak</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -7982,7 +8672,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>Ez&amp;arpenak</translation>
+        <translation type="obsolete">Ez&amp;arpenak</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -7990,7 +8680,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>Bekt&amp;oriala</translation>
+        <translation type="obsolete">Bekt&amp;oriala</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8070,19 +8760,19 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>Konposatzaile-kudeatzailea...</translation>
+        <translation type="obsolete">Konposatzaile-kudeatzailea...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>Berria txantiloitik</translation>
+        <translation type="obsolete">Berria txantiloitik</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>Aurrebista-modua</translation>
+        <translation type="obsolete">Aurrebista-modua</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>Sortu geruza</translation>
+        <translation type="obsolete">Sortu geruza</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8110,7 +8800,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>Irten QGISetik</translation>
+        <translation type="obsolete">Irten QGISetik</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8134,7 +8824,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>Moztu elementu geografikoak</translation>
+        <translation type="obsolete">Moztu elementu geografikoak</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8142,7 +8832,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>Kopiatu elementu geografikoak</translation>
+        <translation type="obsolete">Kopiatu elementu geografikoak</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8150,7 +8840,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>Itsatsi elementu geografikoak</translation>
+        <translation type="obsolete">Itsatsi elementu geografikoak</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8158,7 +8848,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>Gehitu elementua</translation>
+        <translation type="obsolete">Gehitu elementua</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8166,15 +8856,15 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>Mugitu elementua(k)</translation>
+        <translation type="obsolete">Mugitu elementua(k)</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>Aldatu elementuen forma</translation>
+        <translation type="obsolete">Aldatu elementuen forma</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>Zatitu elementuak</translation>
+        <translation type="obsolete">Zatitu elementuak</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8182,7 +8872,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>Ezabatu hautatuak</translation>
+        <translation type="obsolete">Ezabatu hautatuak</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8194,27 +8884,27 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>Sinplifikatu elementu geografikoa</translation>
+        <translation type="obsolete">Sinplifikatu elementu geografikoa</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>Ezabatu eraztuna</translation>
+        <translation type="obsolete">Ezabatu eraztuna</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>Ezabatu zatia</translation>
+        <translation type="obsolete">Ezabatu zatia</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>Fusionatu hautatutako elementuak</translation>
+        <translation type="obsolete">Fusionatu hautatutako elementuak</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>Fusionatu hautatutako elementuen atributuak</translation>
+        <translation type="obsolete">Fusionatu hautatutako elementuen atributuak</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>Nodoen tresna</translation>
+        <translation type="obsolete">Nodoen tresna</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8222,11 +8912,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>Desplazatu mapa</translation>
+        <translation type="obsolete">Desplazatu mapa</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>Handiagotu</translation>
+        <translation type="obsolete">Handiagotu</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8234,7 +8924,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>Txikiagotu</translation>
+        <translation type="obsolete">Txikiagotu</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8242,23 +8932,23 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>Hautatu elementuak poligono bidez</translation>
+        <translation type="obsolete">Hautatu elementuak poligono bidez</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>Hautatu elementuak esku hutsez</translation>
+        <translation type="obsolete">Hautatu elementuak esku hutsez</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>Hautatu elementuak erradio bidez</translation>
+        <translation type="obsolete">Hautatu elementuak erradio bidez</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>Desautatu geruza guztietako elementuak</translation>
+        <translation type="obsolete">Desautatu geruza guztietako elementuak</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>Identifikatu elementuak</translation>
+        <translation type="obsolete">Identifikatu elementuak</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8266,7 +8956,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>Neurtu lerroa</translation>
+        <translation type="obsolete">Neurtu lerroa</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8274,7 +8964,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>Neurtu azalera</translation>
+        <translation type="obsolete">Neurtu azalera</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8282,7 +8972,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>Neurtu angelua</translation>
+        <translation type="obsolete">Neurtu angelua</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -8298,11 +8988,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>Zoom hurrengora</translation>
+        <translation type="obsolete">Zoom hurrengora</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>Zoom uneko tamainara</translation>
+        <translation type="obsolete">Zoom uneko tamainara</translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -8318,7 +9008,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>Laster-marka berria...</translation>
+        <translation type="obsolete">Laster-marka berria...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -8326,7 +9016,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>Erakutsi laster-markak</translation>
+        <translation type="obsolete">Erakutsi laster-markak</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -8334,7 +9024,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>Freskatu</translation>
+        <translation type="obsolete">Freskatu</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -8350,7 +9040,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Labeling</source>
-        <translation>Etiketatzea</translation>
+        <translation type="obsolete">Etiketatzea</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -8358,7 +9048,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>Shapefile geruza berria...</translation>
+        <translation type="obsolete">Shapefile geruza berria...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -8370,7 +9060,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>Gehitu geruza bektoriala...</translation>
+        <translation type="obsolete">Gehitu geruza bektoriala...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -8378,7 +9068,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>Gehitu raster-geruza...</translation>
+        <translation type="obsolete">Gehitu raster-geruza...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -8386,7 +9076,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>Gehitu PostGIS geruzak...</translation>
+        <translation type="obsolete">Gehitu PostGIS geruzak...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -8394,7 +9084,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>Gehitu SpatiaLite geruza...</translation>
+        <translation type="obsolete">Gehitu SpatiaLite geruza...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -8402,11 +9092,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>Gehitu MSSQL Spatial geruza...</translation>
+        <translation type="obsolete">Gehitu MSSQL Spatial geruza...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation>Gehitu Oracle Spatial geruza...</translation>
+        <translation type="obsolete">Gehitu Oracle Spatial geruza...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -8414,7 +9104,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>Gehitu WMS/WMTS geruza...</translation>
+        <translation type="obsolete">Gehitu WMS/WMTS geruza...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -8422,7 +9112,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>Txandakatu edizioa</translation>
+        <translation type="obsolete">Txandakatu edizioa</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -8442,11 +9132,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>Konfiguratu laster-teklak...</translation>
+        <translation type="obsolete">Konfiguratu laster-teklak...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>API dokumentazioa</translation>
+        <translation type="obsolete">API dokumentazioa</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -8490,7 +9180,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>Hautatu adierazpenaren arabera...</translation>
+        <translation type="obsolete">Hautatu adierazpenaren arabera...</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -8502,15 +9192,15 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>Gehitu geruza-definizioko fitxategitik...</translation>
+        <translation type="obsolete">Gehitu geruza-definizioko fitxategitik...</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>Gorde geruza-definizioko fitxategi gisa...</translation>
+        <translation type="obsolete">Gorde geruza-definizioko fitxategi gisa...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Normala</translation>
+        <translation type="obsolete">Normala</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -8518,7 +9208,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>Simulatu fotokopia (gris-eskala)</translation>
+        <translation type="obsolete">Simulatu fotokopia (gris-eskala)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -8526,7 +9216,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>Simulatu faxa (monotonua)</translation>
+        <translation type="obsolete">Simulatu faxa (monotonua)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -8534,7 +9224,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>Simulatu daltonismoa (protanopia)</translation>
+        <translation type="obsolete">Simulatu daltonismoa (protanopia)</translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -8542,7 +9232,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>Simulatu daltonismoa (deuteranopia)</translation>
+        <translation type="obsolete">Simulatu daltonismoa (deuteranopia)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -8550,7 +9240,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>Ezarri geruz(ar)en ikusgaitasun-eskala</translation>
+        <translation type="obsolete">Ezarri geruz(ar)en ikusgaitasun-eskala</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -8558,7 +9248,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>Ezkutatu hautatutako geruzak</translation>
+        <translation type="obsolete">Ezkutatu hautatutako geruzak</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -8566,11 +9256,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>SpatiaLite geruza berria...</translation>
+        <translation type="obsolete">SpatiaLite geruza berria...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>Raster-kalkulagailua...</translation>
+        <translation type="obsolete">Raster-kalkulagailua...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -8582,15 +9272,15 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>Ezarri proiektuaren CRSa geruzatik hartuta</translation>
+        <translation type="obsolete">Ezarri proiektuaren CRSa geruzatik hartuta</translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>Kontsulta...</translation>
+        <translation type="obsolete">Kontsulta...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>Gehitu ikuspegi orokorrari</translation>
+        <translation type="obsolete">Gehitu ikuspegi orokorrari</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -8598,11 +9288,11 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>Kendu dena ikuspegi orokorretik</translation>
+        <translation type="obsolete">Kendu dena ikuspegi orokorretik</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>Erakutsi geruza guztiak</translation>
+        <translation type="obsolete">Erakutsi geruza guztiak</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -8610,7 +9300,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>Ezkutatu geruza guztiak</translation>
+        <translation type="obsolete">Ezkutatu geruza guztiak</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -8618,7 +9308,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>Kudeatu eta instalatu pluginak...</translation>
+        <translation type="obsolete">Kudeatu eta instalatu pluginak...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -8626,7 +9316,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>Gehitu testu mugatuko geruza...</translation>
+        <translation type="obsolete">Gehitu testu mugatuko geruza...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -8634,7 +9324,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>Geruza bektorial berria</translation>
+        <translation type="obsolete">Geruza bektorial berria</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -8642,7 +9332,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>Memoriako geruza bektorial berria</translation>
+        <translation type="obsolete">Memoriako geruza bektorial berria</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -8654,7 +9344,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>Hautatu elementua(k)</translation>
+        <translation type="obsolete">Hautatu elementua(k)</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -8678,7 +9368,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>CRS pertsonalizatua...</translation>
+        <translation type="obsolete">CRS pertsonalizatua...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -8690,7 +9380,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>Laguntzaren edukiak</translation>
+        <translation type="obsolete">Laguntzaren edukiak</translation>
     </message>
     <message>
         <source>F1</source>
@@ -8698,7 +9388,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>QGISen webgunea</translation>
+        <translation type="obsolete">QGISen webgunea</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -8714,7 +9404,7 @@ Konfigura ezazu LAStools algoritmoak erabili baino lehen.</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>Honi buruz</translation>
+        <translation type="obsolete">Honi buruz</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -8740,11 +9430,11 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>Estilo-kudeatzailea...</translation>
+        <translation type="obsolete">Estilo-kudeatzailea...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>Python kontsola</translation>
+        <translation type="obsolete">Python kontsola</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -8752,7 +9442,7 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>Pertsonalizazioa...</translation>
+        <translation type="obsolete">Pertsonalizazioa...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -8764,7 +9454,7 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>Kapsulatu geruzak eta taldeak...</translation>
+        <translation type="obsolete">Kapsulatu geruzak eta taldeak...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -8796,7 +9486,7 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>Gehitu WFS geruza...</translation>
+        <translation type="obsolete">Gehitu WFS geruza...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -8820,7 +9510,7 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>Desplazamendu-kurba</translation>
+        <translation type="obsolete">Desplazamendu-kurba</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -8832,7 +9522,7 @@ Ctrl (Cms) handitu 15 graduz.</translation>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>Gehitu WCS geruza...</translation>
+        <translation type="obsolete">Gehitu WCS geruza...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -8940,7 +9630,7 @@ Uneko geruza editagarrian du eragina</translation>
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>DXF esportazioa...</translation>
+        <translation type="obsolete">DXF esportazioa...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -9004,11 +9694,439 @@ Uneko geruza editagarrian du eragina</translation>
     </message>
     <message>
         <source>New Temporary Scratch Layer...</source>
-        <translation>Behin-behineko zirriborro-geruza berria...</translation>
+        <translation type="obsolete">Behin-behineko zirriborro-geruza berria...</translation>
     </message>
     <message>
         <source>New temporary scratch layer</source>
         <translation>Behin-behineko zirriborro-geruza berria</translation>
+    </message>
+    <message>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">&amp;Txikiagotu</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished">&amp;Freskatu</translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">&amp;Normala</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9440,6 +10558,10 @@ Uneko geruza editagarrian du eragina</translation>
     <message>
         <source>seconds</source>
         <translation>segundo</translation>
+    </message>
+    <message>
+        <source>Record parsing error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9905,6 +11027,10 @@ Ikusi egunkaria informazio gehiagorako.</translation>
     <message>
         <source>Overwrite %s?</source>
         <translation>%s gainidatzi?</translation>
+    </message>
+    <message>
+        <source>Name cannot contain &apos;/&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10574,6 +11700,33 @@ Egiaztatu konfigurazioa Prozesuen ezarpenetan.</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>PeukerDouglasMulti</name>
+    <message>
+        <source>Elevation Grid</source>
+        <translation type="unfinished">Garaieren sareta</translation>
+    </message>
+    <message>
+        <source>Center Smoothing Weight</source>
+        <translation type="unfinished">Erdiko leuntze-pisua</translation>
+    </message>
+    <message>
+        <source>Side Smoothing Weight</source>
+        <translation type="unfinished">Alboko leuntze-pisua</translation>
+    </message>
+    <message>
+        <source>Diagonal Smoothing Weight</source>
+        <translation type="unfinished">Leuntze-pisu diagonala</translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished">Korronteen sorburu-sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -12007,7 +13160,7 @@ Errorea(%2): %3</translation>
     </message>
     <message>
         <source>GEOS prior to 3.2 doesn&apos;t support GEOSInterpolate</source>
-        <translation>GEOS 3.2 bertsioa baino lehenagokoek ez dute GEOSInterpolate onartzen</translation>
+        <translation type="obsolete">GEOS 3.2 bertsioa baino lehenagokoek ez dute GEOSInterpolate onartzen</translation>
     </message>
     <message>
         <source>segment %1 of ring %2 of polygon %3 intersects segment %4 of ring %5 of polygon %6 at %7</source>
@@ -14108,7 +15261,7 @@ Erantzuna hau izan da:
     </message>
     <message>
         <source>Fatal error occurred in GRASS library. QGIS gets over the error but any next fatal error will cause QGIS exit without warning. This is a problem of GRASS 7.0.0beta1 but it is fixed in GRASS 7.1 and higher. Error message: %1</source>
-        <translation>Errore konponezina gertatu da GRASS liburutegian. QGISek errorea gaindituko du, baina hurrengo errore konponezinean QGIS abisurik gabe itxiko da. Arazo hau GRASS 7.0.0beta1 bertsioarena da, baina GRASS 7.1 edo berriagoan konponduta dago. Errore-mezua: %1</translation>
+        <translation type="obsolete">Errore konponezina gertatu da GRASS liburutegian. QGISek errorea gaindituko du, baina hurrengo errore konponezinean QGIS abisurik gabe itxiko da. Arazo hau GRASS 7.0.0beta1 bertsioarena da, baina GRASS 7.1 edo berriagoan konponduta dago. Errore-mezua: %1</translation>
     </message>
     <message>
         <source>Raster image fill</source>
@@ -14125,6 +15278,62 @@ Erantzuna hau izan da:
     <message>
         <source>NOTICE: %1</source>
         <translation>OHARRA: %1</translation>
+    </message>
+    <message>
+        <source>Recent colors</source>
+        <translation type="unfinished">Azken koloreak</translation>
+    </message>
+    <message>
+        <source>Standard colors</source>
+        <translation type="unfinished">Kolore estandarrak</translation>
+    </message>
+    <message>
+        <source>Project colors</source>
+        <translation type="unfinished">Proiektuaren koloreak</translation>
+    </message>
+    <message>
+        <source>Number of places must be positive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VectorAnalysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tools for vector data analysis and management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete the connection to %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1.%2?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -14361,7 +15570,7 @@ Erantzuna hau izan da:
     </message>
     <message>
         <source>QGIS </source>
-        <translation>QGIS </translation>
+        <translation type="obsolete">QGIS </translation>
     </message>
     <message>
         <source>Multiple instances of QGIS application object detected.
@@ -15415,11 +16624,11 @@ Erroreak: %3</translation>
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>Beharrezkoa da autentifikatzea</translation>
+        <translation type="obsolete">Beharrezkoa da autentifikatzea</translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>Proxy-autentifikazioa beharrezkoa da</translation>
+        <translation type="obsolete">Proxy-autentifikazioa beharrezkoa da</translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -15436,7 +16645,7 @@ Beti ezikusi errore hauek?</translation>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>SSL errorre %n gertatu da</numerusform>
             <numerusform>%n SSL errorre gertatu dira</numerusform>
         </translation>
@@ -15481,6 +16690,42 @@ Beti ezikusi errore hauek?</translation>
         <source>A problem occured during deletion of %1 feature(s)</source>
         <translation>Errorea gertatu da %1 elementu ezabatzean</translation>
     </message>
+    <message>
+        <source>QGIS Enterprise </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>QgisAppInterface</name>
@@ -15508,14 +16753,14 @@ Beti ezikusi errore hauek?</translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Lizentzia</translation>
+        <translation type="obsolete">Lizentzia</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -15534,7 +16779,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Join our user mailing list</source>
-        <translation>Egin bat gure erabiltzaileen posta-zerrendarekin</translation>
+        <translation type="obsolete">Egin bat gure erabiltzaileen posta-zerrendarekin</translation>
     </message>
     <message>
         <source>about:blank</source>
@@ -15542,7 +16787,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>What&apos;s New</source>
-        <translation>Berritasunak</translation>
+        <translation type="obsolete">Berritasunak</translation>
     </message>
     <message>
         <source>Providers</source>
@@ -15550,27 +16795,27 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers</source>
-        <translation>Garatzaileak</translation>
+        <translation type="obsolete">Garatzaileak</translation>
     </message>
     <message>
         <source>Essen (Germany), Developer meeting 2012</source>
-        <translation>Essen (Germany), garatzaileen topaketa 2012</translation>
+        <translation type="obsolete">Essen (Germany), garatzaileen topaketa 2012</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>Ekarpenak egin dituztenak</translation>
+        <translation type="obsolete">Ekarpenak egin dituztenak</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation>Itzultzaileak</translation>
+        <translation type="obsolete">Itzultzaileak</translation>
     </message>
     <message>
         <source>Donors</source>
-        <translation>Dohaintza-emaileak</translation>
+        <translation type="obsolete">Dohaintza-emaileak</translation>
     </message>
     <message>
         <source>&lt;p&gt;For a list of individuals and institutions who have contributed money to fund QGIS development and other project costs see &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;QGISen garapena eta proiektuaren beste kostu batzuk ordaintzeko dirua eman duten banakoen eta erakundeen zerrenda bat ikusteko, &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation type="obsolete">&lt;p&gt;QGISen garapena eta proiektuaren beste kostu batzuk ordaintzeko dirua eman duten banakoen eta erakundeen zerrenda bat ikusteko, &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Available QGIS Data Provider Plugins</source>
@@ -15590,7 +16835,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Developers Map</source>
-        <translation>Garatzaileen mapa</translation>
+        <translation type="obsolete">Garatzaileen mapa</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS Enterprise&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -15818,6 +17070,103 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Editatu...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">Konexio berria...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Editatu...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">Konexio berria...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -15848,7 +17197,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Map marker</source>
-        <translation>Mapa-markatzailea</translation>
+        <translation type="obsolete">Mapa-markatzailea</translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -15861,6 +17210,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Frame color</source>
         <translation>Markoaren kolorea</translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -16616,7 +17969,7 @@ Parser error:
     </message>
     <message>
         <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4</source>
-        <translation>Atributu-taula - %1 :: Elementuak guztira: %2, iragaziak: %3, hautatuak: %4</translation>
+        <translation type="obsolete">Atributu-taula - %1 :: Elementuak guztira: %2, iragaziak: %3, hautatuak: %4</translation>
     </message>
     <message>
         <source>Update Filtered</source>
@@ -16663,6 +18016,22 @@ Parser error:
     <message>
         <source>Update Selected</source>
         <translation>Eguneratu hautatua</translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation type="unfinished">Ctrl+R</translation>
+    </message>
+    <message>
+        <source>Show All Features In Initial Canvas Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4%5</source>
+        <translation type="unfinished">Atributu-taula - %1 :: Elementuak guztira: %2, iragaziak: %3, hautatuak: %4%5 {1 ?} {2,?} {3,?}</translation>
+    </message>
+    <message>
+        <source>, spatially limited</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17223,7 +18592,19 @@ Datu-basea: %2</translation>
     </message>
     <message>
         <source>Legend</source>
-        <translation>Legenda</translation>
+        <translation type="obsolete">Legenda</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Etiketa</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17266,7 +18647,7 @@ Datu-basea: %2</translation>
     </message>
     <message>
         <source>Join</source>
-        <translation>Lotu</translation>
+        <translation type="obsolete">Lotu</translation>
     </message>
     <message>
         <source>Advanced</source>
@@ -20892,6 +22273,14 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
         <source>Vertical descending</source>
         <translation>Bertikala beherantz</translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -21666,6 +23055,10 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
         <source>Scalebar line cap style</source>
         <translation>Eskala-barraren lerroaren estalki-estiloa</translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -21683,11 +23076,11 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     </message>
     <message>
         <source>Map</source>
-        <translation>Mapa</translation>
+        <translation type="obsolete">Mapa</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>Estiloa</translation>
+        <translation type="obsolete">Estiloa</translation>
     </message>
     <message>
         <source>Units</source>
@@ -21695,11 +23088,11 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Etiketa</translation>
+        <translation type="obsolete">Etiketa</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>Mapa-unitateak barra-unitateko</translation>
+        <translation type="obsolete">Mapa-unitateak barra-unitateko</translation>
     </message>
     <message>
         <source>Segments</source>
@@ -21715,7 +23108,7 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     </message>
     <message>
         <source>Size</source>
-        <translation>Tamaina</translation>
+        <translation type="obsolete">Tamaina</translation>
     </message>
     <message>
         <source> units</source>
@@ -21780,6 +23173,38 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     <message>
         <source>Font...</source>
         <translation>Letra-tipoa...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -22826,6 +24251,13 @@ eta uneko fitxategia hau da: [%3]</translation>
     </message>
 </context>
 <context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsCredentialDialog</name>
     <message>
         <source>Enter Credentials</source>
@@ -22852,7 +24284,7 @@ eta uneko fitxategia hau da: [%3]</translation>
     <name>QgsCustomColorScheme</name>
     <message>
         <source>Standard colors</source>
-        <translation>Kolore estandarrak</translation>
+        <translation type="obsolete">Kolore estandarrak</translation>
     </message>
 </context>
 <context>
@@ -24020,6 +25452,18 @@ ez dira erakusten</translation>
         <source>The file has been updated by another application - reloading</source>
         <translation>Beste aplikazio batek fitxategia eguneratu du - birkargatzen</translation>
     </message>
+    <message>
+        <source>Whole number (integer)</source>
+        <translation type="unfinished">Zenbaki osoa (osoa)</translation>
+    </message>
+    <message>
+        <source>Decimal number (double)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text, unlimited length (text)</source>
+        <translation type="unfinished">Testua, luzera mugagabea (text)</translation>
+    </message>
 </context>
 <context>
     <name>QgsDelimitedTextSourceSelect</name>
@@ -24860,15 +26304,35 @@ Leave empty to automatically apply the maximum value.</source>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1 gradu</translation>
+        <translation type="obsolete">%1 gradu</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1 radian</translation>
+        <translation type="obsolete">%1 radian</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1 gon</translation>
+        <translation type="obsolete">%1 gon</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">Graduak</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">Radianak</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -25337,6 +26801,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Load all unique values</source>
         <translation>Kargatu balio bakar guztiak</translation>
+    </message>
+    <message>
+        <source>%1...</source>
+        <translation type="unfinished">%1...</translation>
     </message>
 </context>
 <context>
@@ -26953,6 +28421,73 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -27045,6 +28580,923 @@ Please reselect a valid file.</source>
     <message>
         <source>Table retrieval finished.</source>
         <translation>Taula atzitu da.</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAngleCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete node with small angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAreaCheck</name>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with identical attribute value, if any, or leave as is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ezabatu elementua</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal area</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryChecker</name>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerDialog</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished">Emaitza</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixDialog</name>
+    <message>
+        <source>Fix errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation type="unfinished">Hurrengoa</translation>
+    </message>
+    <message>
+        <source>Fix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select how to fix error &quot;%1&quot;:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Fixed:&lt;/b&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;span color=&quot;red&quot;&gt;&lt;b&gt;Fixed failed:&lt;/b&gt; %1&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Error is obsolete&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixSummaryDialog</name>
+    <message>
+        <source>Summary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Balioa</translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 new errors were found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were not fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors are obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerPlugin</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">G&amp;eometria-tresnak</translation>
+    </message>
+    <message>
+        <source>Geometry Checker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check geometries for errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">Bektoriala</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">0.1 bertsioa</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerResultTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Inprimakia</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Geometry check result:&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Balioa</translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished">Bereizmena</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished">Esportatu</translation>
+    </message>
+    <message>
+        <source>Total errors: 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When a row is selected, move to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">Elementua</translation>
+    </message>
+    <message>
+        <source>Don&apos;t &amp;move</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight contour of selected features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors using default resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors, prompt for resolution method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error resolution settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show selected features in attribute table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute to use when merging features by attribute value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total errors: %1, fixed errors: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fixed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ESRI Shapefile (*.shp);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to export errors to shapefile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to fix %1 errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Error Resolutions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The layer has been removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerSetupTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Inprimakia</translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Sarrerako geruza bektoriala</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Hautatutako elementuak soilik</translation>
+    </message>
+    <message>
+        <source>Geometry validity:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than 3 nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed geometry types:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Puntua</translation>
+    </message>
+    <message>
+        <source>Multipoint</source>
+        <translation type="unfinished">Puntuanitza</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Lerroa</translation>
+    </message>
+    <message>
+        <source>Multiline</source>
+        <translation type="unfinished">Lerroanitza</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Poligonoa</translation>
+    </message>
+    <message>
+        <source>Multipolygon</source>
+        <translation type="unfinished">Poligonoanitza</translation>
+    </message>
+    <message>
+        <source>Geometry properties:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygons and multipolygons may not contain any holes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart objects must consist of more that one part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry conditions:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum angle between segments (deg):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal polygon area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No sliver polygons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum thinness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Thinness is the ratio between the area of the minimum square containing the polygon and the area of the polygon itself. A square has thinness 1. Default: 20.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Topology checks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for overlaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for gaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for features within other features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;new layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Arakatu</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Exekutatu</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abortatu</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as the input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editable Input Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The input layer is not allowed to be in editing mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Preparing output...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. The geometry check can be performed, but it will not be possible to fix any errors. Do you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Building spatial index...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Waiting for running checks to finish...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheck</name>
+    <message>
+        <source>Feature %1 within feature %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ezabatu elementua</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Within</source>
+        <translation type="unfinished">Barruan dago</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheckError</name>
+    <message>
+        <source>Within %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDegeneratePolygonCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ezabatu elementua</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than three nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateCheck</name>
+    <message>
+        <source>Duplicate check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateNodesCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryGapCheck</name>
+    <message>
+        <source>Gap check: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add gap area to neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryHoleCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryMultipartCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to single part feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ezabatu elementua</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart object with only one feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryOverlapCheck</name>
+    <message>
+        <source>Overlap check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to compute intersection between overlapping features: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find shared edges between intersection and overlapping features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove overlapping area from neighboring polygon with shortest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySegmentLengthCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySelfIntersectionCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into a multi-object feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into multiple single-object features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySliverPolygonCheck</name>
+    <message>
+        <source>Sliver polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapper</name>
+    <message>
+        <source>Failed to read feature %1 of input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperDialog</name>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">Sarrerako geruza bektoriala</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">Hautatutako elementuak soilik</translation>
+    </message>
+    <message>
+        <source>Reference layer</source>
+        <translation type="unfinished">Erreferentzia-geruza</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Aukerak</translation>
+    </message>
+    <message>
+        <source>Maximum snapping distance (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new &amp;layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Arakatu</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">Exekutatu</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as an input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. Please select another output file format.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The following errors occured:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperPlugin</name>
+    <message>
+        <source>Snap geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">G&amp;eometria-tresnak</translation>
+    </message>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snap geometries to a reference layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">Bektoriala</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">0.1 bertsioa</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheck</name>
+    <message>
+        <source>Unknown geometry type</source>
+        <translation type="unfinished">Geometria mota ezezaguna</translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to corresponding multi or single type if possible, otherwise delete feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">Ezabatu elementua</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry type</source>
+        <translation type="unfinished">Geometria mota</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheckError</name>
+    <message>
+        <source>Overlap with %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -27923,6 +30375,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Legend</source>
         <translation>Legenda</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -29469,7 +31929,7 @@ at line %2 column %3</source>
     </message>
     <message>
         <source>Cannot activate grass</source>
-        <translation>Ezin da grass aktibatu</translation>
+        <translation type="obsolete">Ezin da grass aktibatu</translation>
     </message>
 </context>
 <context>
@@ -30836,6 +33296,311 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">Esportatu uneko mapa-hedadura ebakitzen duten elementuak</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished">Gorde honela</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">Lehenetsia irekitzeak huts egin du: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">Ez da aurkitu lehenetsia: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished">Egikaritze-erroreak</translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">Ezin izan dira %1 geruzaren aldaketak egikaritu</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished">Erroreak: %1</translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">Erakutsi gehiago</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">Hautatu irekiko den QGIS proiektu-fitxategia</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">QGIS fitxategiak</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">Hautatu QGIS proiektu-fitxategia</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">Baimenik gutxiegi</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">Proiektu-fitxategia ez da idazgarria.</translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">Ezin izan da %1 proiektua gorde</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">Ezin izan da proiektua ireki</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">Gaitu makroak</translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">Segurtasun-abisua</translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">Proiektuaren makroak desgaitu egin dira.</translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">Proiektuak gorde gabeko edizioak ditu(zt)en eta oraindik edizioan dauden geruza(k) d(it)u, eta edizio horiek ez dira gordeko!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">Gorde?</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">Uneko proiektua gorde nahi duzu? %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">Gorde proiektua hona: %1</translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">Edizioaren hasierak huts egin du</translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished">Hornitzailea ezin da ireki ediziorako</translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished">Gelditu edizioa</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">%1 geruzaren aldaketak gorde nahi dituzu?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished">Arazoak atzera itzultzen</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Inprimakia</translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Kopiatu</translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">Berria</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">Ireki</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">Inprimatu</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Gorde</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">Bista</translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Sareta</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">Analisia</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">Azalera</translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Distantzia</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Mendien itzala</translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Zirkulua</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">Profila</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Malda</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Ezarpenak</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Laguntza</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -32049,6 +34814,45 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
         <source>&amp;Group Selected</source>
         <translation>&amp;Taldea hautatua</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">Gardentasuna:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsLegendGroupPropertiesBase</name>
+    <message>
+        <source>Legend group properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abstract</source>
+        <translation type="unfinished">Laburpena</translation>
+    </message>
+    <message>
+        <source>OWS Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendModel</name>
@@ -32425,7 +35229,7 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     </message>
     <message>
         <source>Cannot add feature. Unknown WKB type</source>
-        <translation>Ezin da elementua gehitu. WKB mota ezezaguna</translation>
+        <translation type="obsolete">Ezin da elementua gehitu. WKB mota ezezaguna</translation>
     </message>
     <message>
         <source>The feature could not be added because removing the polygon intersections would change the geometry type</source>
@@ -32550,6 +35354,13 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     <message>
         <source>Changed properties for label</source>
         <translation>Etiketaren propietateak aldatu dira</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapToolCircularStringRadius</name>
+    <message>
+        <source>Radius: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32771,7 +35582,7 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     <name>QgsMapToolNodeTool</name>
     <message>
         <source>Node tool</source>
-        <translation>Nodoen tresna</translation>
+        <translation type="obsolete">Nodoen tresna</translation>
     </message>
     <message>
         <source>could not snap to a segment on the current layer.</source>
@@ -32780,6 +35591,10 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     <message>
         <source>Inserted vertex</source>
         <translation>Erpina txertatu da</translation>
+    </message>
+    <message>
+        <source>Geometry has been cleared. Use the add part tool to set geometry for this feature.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33056,6 +35871,10 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
         <source>Info</source>
         <translation>Informazioa</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -33109,23 +35928,70 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>Segmentuak [%1]</translation>
+        <translation type="obsolete">Segmentuak [%1]</translation>
     </message>
     <message>
         <source>Meters</source>
-        <translation>Metroak</translation>
+        <translation type="obsolete">Metroak</translation>
     </message>
     <message>
         <source>Feet</source>
-        <translation>Oinak</translation>
+        <translation type="obsolete">Oinak</translation>
     </message>
     <message>
         <source>Degrees</source>
-        <translation>Graduak</translation>
+        <translation type="obsolete">Graduak</translation>
     </message>
     <message>
         <source>Nautical Miles</source>
-        <translation>Itsas miliak</translation>
+        <translation type="obsolete">Itsas miliak</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">Kopiatu arbelera</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">Gehitu oihalari</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33699,6 +36565,10 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
         <source>Unknown Geometry</source>
         <translation>Geometria ezezaguna</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -33772,6 +36642,14 @@ enhancement</source>
     <message>
         <source>Network</source>
         <translation>Sarea</translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">Beharrezkoa da autentifikatzea</translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">Proxy-autentifikazioa beharrezkoa da</translation>
     </message>
 </context>
 <context>
@@ -34345,6 +37223,13 @@ Errore-informazio hedatua:
     <message>
         <source>File encoding</source>
         <translation>Fitxategi-kodeketa</translation>
+    </message>
+</context>
+<context>
+    <name>QgsNodeEditor</name>
+    <message>
+        <source>Vertex editor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35740,7 +38625,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Qt lehenetsia</translation>
+        <translation type="obsolete">Qt lehenetsia</translation>
     </message>
     <message>
         <source>Size</source>
@@ -36256,7 +39141,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Meters</source>
-        <translation>Metroak</translation>
+        <translation type="obsolete">Metroak</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -36284,7 +39169,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>Gaitu elementuen sinplifikazio lehenetsia gehitzen diren geruza berrietarako</translation>
+        <translation type="obsolete">Gaitu elementuen sinplifikazio lehenetsia gehitzen diren geruza berrietarako</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -36524,7 +39409,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>Galdetu &amp;CRSa</translation>
+        <translation type="obsolete">Galdetu &amp;CRSa</translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -36540,7 +39425,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>Gaitu automatikoki birproiekzio dinamikoa geruzek CRS ezberdinak badituzte</translation>
+        <translation type="obsolete">Gaitu automatikoki birproiekzio dinamikoa geruzek CRS ezberdinak badituzte</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -36580,7 +39465,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>Gainidatzi sistemaren hizkuntza</translation>
+        <translation type="obsolete">Gainidatzi sistemaren hizkuntza</translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -36636,7 +39521,7 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>Erabili proxy-a web-sarbiderako</translation>
+        <translation type="obsolete">Erabili proxy-a web-sarbiderako</translation>
     </message>
     <message>
         <source>Host</source>
@@ -36681,6 +39566,54 @@ Beti sarea: kargatu beti saretik eta ez begiratu cache-ak baliozko sarrerarik du
     <message>
         <source>Default uses system&apos;s proxy</source>
         <translation>Lehenetsiak sistemaren proxy-a erabiltzen du</translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36882,9 +39815,15 @@ errorea:%2</translation>
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>Konexioak huts egin du - Egiaztatu ezarpenak eta saiatu berriro.
+        <translation type="obsolete">Konexioak huts egin du - Egiaztatu ezarpenak eta saiatu berriro.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37394,6 +40333,14 @@ Error: %2</source>
         <translation>Oracle errorea: %1
 Errorea: %2</translation>
     </message>
+    <message>
+        <source>Could not prepare get feature id statement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not retrieve feature id %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsOracleRootItem</name>
@@ -37652,11 +40599,15 @@ Errorea: %2</translation>
     <name>QgsPGLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>Ezabatu geruza</translation>
+        <translation type="obsolete">Ezabatu geruza</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>Geruza ongi ezabatu da.</translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37835,9 +40786,15 @@ Errorea: %2</translation>
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>Konexioak huts egin du - Egiaztatu ezarpenak eta saiatu berriro.
+        <translation type="obsolete">Konexioak huts egin du - Egiaztatu ezarpenak eta saiatu berriro.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39165,35 +42122,35 @@ Emaitza: %3 (%4)</translation>
     </message>
     <message>
         <source>Point</source>
-        <translation>Puntua</translation>
+        <translation type="obsolete">Puntua</translation>
     </message>
     <message>
         <source>Multipoint</source>
-        <translation>Puntuanitza</translation>
+        <translation type="obsolete">Puntuanitza</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Lerroa</translation>
+        <translation type="obsolete">Lerroa</translation>
     </message>
     <message>
         <source>Multiline</source>
-        <translation>Lerroanitza</translation>
+        <translation type="obsolete">Lerroanitza</translation>
     </message>
     <message>
         <source>Polygon</source>
-        <translation>Poligonoa</translation>
+        <translation type="obsolete">Poligonoa</translation>
     </message>
     <message>
         <source>Multipolygon</source>
-        <translation>Poligonoanitza</translation>
+        <translation type="obsolete">Poligonoanitza</translation>
     </message>
     <message>
         <source>No Geometry</source>
-        <translation>Geometriarik ez</translation>
+        <translation type="obsolete">Geometriarik ez</translation>
     </message>
     <message>
         <source>Unknown Geometry</source>
-        <translation>Geometria ezezaguna</translation>
+        <translation type="obsolete">Geometria ezezaguna</translation>
     </message>
     <message>
         <source>None</source>
@@ -39502,7 +42459,7 @@ Hautatu ezikustea falta diren geruzarik gabe kargatzen jarraitzeko. Hautatu uzte
     <name>QgsProjectColorScheme</name>
     <message>
         <source>Project colors</source>
-        <translation>Proiektuaren koloreak</translation>
+        <translation type="obsolete">Proiektuaren koloreak</translation>
     </message>
 </context>
 <context>
@@ -39690,6 +42647,14 @@ Jarraitu?</translation>
     <message>
         <source>Error writing palette file</source>
         <translation>Errorea paleta-fitxategia idaztean</translation>
+    </message>
+    <message>
+        <source>Publish group as single layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select group name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -40119,6 +43084,14 @@ Jarraitu?</translation>
     <message>
         <source>Python macros</source>
         <translation>Python makroak</translation>
+    </message>
+    <message>
+        <source>Publish group as layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exclusive layer groups</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42239,6 +45212,10 @@ desbiderapen estandarra ×</translation>
         <source>Import colors...</source>
         <translation>Inportatu koloreak...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -42311,7 +45288,70 @@ desbiderapen estandarra ×</translation>
     <name>QgsRecentColorScheme</name>
     <message>
         <source>Recent colors</source>
-        <translation>Azken koloreak</translation>
+        <translation type="obsolete">Azken koloreak</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished">Markatzailea</translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Puntua</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">Hirukia</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Lerroa</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">Laukizuzena</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Poligonoa</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Zirkulua</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">Testua</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42584,6 +45624,10 @@ desbiderapen estandarra ×</translation>
             <numerusform>Iragazkiak %n elementu itzuli ditu</numerusform>
         </translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
 </context>
 <context>
     <name>QgsRendererV2DataDefinedMenus</name>
@@ -42709,6 +45753,30 @@ desbiderapen estandarra ×</translation>
         <source>Change symbol size</source>
         <translation>Aldatu ikur-tamaina</translation>
     </message>
+    <message>
+        <source>Complete html support for Html output in GetLegendGraphic. For raster output, &amp;lt;br&amp;gt;,&amp;lt;b&amp;gt;,&amp;lt;i&amp;gt;,&amp;lt;u&amp;gt; are supported. &amp;lt;b&amp;gt;&amp;lt;i&amp;gt;&amp;lt;u&amp;gt; can be nested in that order only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Puntua</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Lerroa</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Poligonoa</translation>
+    </message>
+    <message>
+        <source>Select symbology type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished">Mota</translation>
+    </message>
 </context>
 <context>
     <name>QgsRuleBasedRendererV2Model</name>
@@ -42751,6 +45819,14 @@ desbiderapen estandarra ×</translation>
     <message>
         <source>Number of features in this rule which are also present in other rule(s).</source>
         <translation>Arau honetaz gain beste arau batzuetan ere ageri diren elementuen kopurua.</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42835,6 +45911,10 @@ desbiderapen estandarra ×</translation>
         <source>Abort</source>
         <translation>Abortatu</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
 </context>
 <context>
     <name>QgsRunProcess</name>
@@ -42915,11 +45995,15 @@ desbiderapen estandarra ×</translation>
     <name>QgsSLLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>Ezabatu geruza</translation>
+        <translation type="obsolete">Ezabatu geruza</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>Geruza ongi ezabatu da.</translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -43203,6 +46287,13 @@ desbiderapen estandarra ×</translation>
     </message>
 </context>
 <context>
+    <name>QgsSelectGroupLayerDialogBase</name>
+    <message>
+        <source>Select layers and groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsSelectedFeature</name>
     <message>
         <source>Validation started.</source>
@@ -43222,23 +46313,23 @@ desbiderapen estandarra ×</translation>
     </message>
     <message>
         <source>polygon %1, ring %2, vertex %3</source>
-        <translation>%1 poligonoa, %2 eraztuna, %3 erpina</translation>
+        <translation type="obsolete">%1 poligonoa, %2 eraztuna, %3 erpina</translation>
     </message>
     <message>
         <source>polyline %1, vertex %2</source>
-        <translation>%1 polilerroa, %2 erpina</translation>
+        <translation type="obsolete">%1 polilerroa, %2 erpina</translation>
     </message>
     <message>
         <source>vertex %1</source>
-        <translation>%1 erpina</translation>
+        <translation type="obsolete">%1 erpina</translation>
     </message>
     <message>
         <source>point %1</source>
-        <translation>%1 puntua</translation>
+        <translation type="obsolete">%1 puntua</translation>
     </message>
     <message>
         <source>single point</source>
-        <translation>puntu bakarra</translation>
+        <translation type="obsolete">puntu bakarra</translation>
     </message>
 </context>
 <context>
@@ -43614,6 +46705,29 @@ enhancement</source>
         <source>Symbol levels...</source>
         <translation>Ikur-mailak...</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSingleSymbolRendererV2WidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Inprimakia</translation>
+    </message>
+    <message>
+        <source>WMS legend settings (GetLegendGraphic)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsSmartGroupCondition</name>
@@ -43807,6 +46921,116 @@ enhancement</source>
     <message>
         <source>All layers</source>
         <translation>Geruza guztiak</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">Zerbitzari-konexioak</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished">&amp;Berria</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Editatu</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Ezabatu</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">Kargatu konexioak fitxategitik</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">Kargatu</translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Gorde</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished">Erakutsi hitz hau izenburuan, izenean edo laburpenean duten WFS FeatureType elementuak</translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">Erabili izenburua geruza-izenerako</translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">Irudi-kodeketa</translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished">Koordenatuen erreferentzia-sistema</translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished">Aldatu...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">&amp;Gehitu</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">&amp;Eraiki kontsulta</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">Sortu %1 konexioa berria</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished">Seguru zaude %1 konexioa eta hari lotutako ezarpen guztiak kendu nahi dituzula?</translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">Geruzarik ez</translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished">Kargatu konexioak</translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
+        <translation type="unfinished">XML fitxategiak (*.xml *XML)</translation>
     </message>
 </context>
 <context>
@@ -46067,6 +49291,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">Mendien itzala kalkulatzen...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abortatu</translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished">Geruzak</translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Itxi</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errorea</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Kendu</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">Elementua</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">Garbitu</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">Malda kalkulatzen...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abortatu</translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abortatu</translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">Ikusgarria</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -46258,6 +49767,14 @@ Errorea honakoa da: %2</translation>
     <message>
         <source>Height attribute</source>
         <translation>Altuera-atributua</translation>
+    </message>
+    <message>
+        <source>Millimeter</source>
+        <translation type="unfinished">Milimetroa</translation>
+    </message>
+    <message>
+        <source>Map unit</source>
+        <translation type="unfinished">Mapa-unitatea</translation>
     </message>
 </context>
 <context>
@@ -46989,6 +50506,26 @@ Errorea honakoa da: %2</translation>
         <source>Diagrams</source>
         <translation>Diagramak</translation>
     </message>
+    <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsVectorLayerSaveAsDialog</name>
@@ -47255,15 +50792,15 @@ Errorea honakoa da: %2</translation>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>&amp;Gehitu</translation>
+        <translation type="obsolete">&amp;Gehitu</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>&amp;Eraiki kontsulta</translation>
+        <translation type="obsolete">&amp;Eraiki kontsulta</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>Eraiki kontsulta</translation>
+        <translation type="obsolete">Eraiki kontsulta</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -47283,98 +50820,98 @@ Errorea honakoa da: %2</translation>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>Geruzarik ez</translation>
+        <translation type="obsolete">Geruzarik ez</translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>kapazitateen dokumentuak ez dauka geruzarik.</translation>
+        <translation type="obsolete">kapazitateen dokumentuak ez dauka geruzarik.</translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>Sortu WFS konexio berria</translation>
+        <translation type="obsolete">Sortu WFS konexio berria</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>Aldatu WFS konexioa</translation>
+        <translation type="obsolete">Aldatu WFS konexioa</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>Seguru zaude %1 konexioa eta hari lotutako ezarpen guztiak kendu nahi dituzula?</translation>
+        <translation type="obsolete">Seguru zaude %1 konexioa eta hari lotutako ezarpen guztiak kendu nahi dituzula?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>Baieztatu ezabaketa</translation>
+        <translation type="obsolete">Baieztatu ezabaketa</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>Kargatu konexioak</translation>
+        <translation type="obsolete">Kargatu konexioak</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>XML fitxategiak (*.xml *XML)</translation>
+        <translation type="obsolete">XML fitxategiak (*.xml *XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>Gehitu WFS geruza zerbitzari batetik</translation>
+        <translation type="obsolete">Gehitu WFS geruza zerbitzari batetik</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>Aldatu...</translation>
+        <translation type="obsolete">Aldatu...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>Iragazkia:</translation>
+        <translation type="obsolete">Iragazkia:</translation>
     </message>
     <message>
         <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation>Erakutsi hitz hau izenburuan, izenean edo laburpenean duten WFS FeatureType elementuak</translation>
+        <translation type="obsolete">Erakutsi hitz hau izenburuan, izenean edo laburpenean duten WFS FeatureType elementuak</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>Zerbitzari-konexioak</translation>
+        <translation type="obsolete">Zerbitzari-konexioak</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>&amp;Konektatu</translation>
+        <translation type="obsolete">&amp;Konektatu</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Berria</translation>
+        <translation type="obsolete">&amp;Berria</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Editatu</translation>
+        <translation type="obsolete">Editatu</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Ezabatu</translation>
+        <translation type="obsolete">Ezabatu</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>Kargatu konexioak fitxategitik</translation>
+        <translation type="obsolete">Kargatu konexioak fitxategitik</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>Kargatu</translation>
+        <translation type="obsolete">Kargatu</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>Gorde konexioak fitxategira</translation>
+        <translation type="obsolete">Gorde konexioak fitxategira</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Gorde</translation>
+        <translation type="obsolete">Gorde</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>Erabili izenburua geruza-izenerako</translation>
+        <translation type="obsolete">Erabili izenburua geruza-izenerako</translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>Koordenatuen erreferentzia-sistema</translation>
+        <translation type="obsolete">Koordenatuen erreferentzia-sistema</translation>
     </message>
 </context>
 <context>
@@ -49296,6 +52833,33 @@ Konfigura ezazu R script-ak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">Letra-tipoa:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">Biraketa:</translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -50173,6 +53737,54 @@ Arazoa %d lerroarekin</translation>
     </message>
 </context>
 <context>
+    <name>SlopeAreaMulti</name>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished">Malda-sareta</translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished">Ekarpen-arearen sareta</translation>
+    </message>
+    <message>
+        <source>Slope Exponent</source>
+        <translation type="unfinished">Malda-berretzailea</translation>
+    </message>
+    <message>
+        <source>Area Exponent</source>
+        <translation type="unfinished">Azalera-berretzailea</translation>
+    </message>
+    <message>
+        <source>Slope Area Grid</source>
+        <translation type="unfinished">Malda-azaleraren sareta</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SpatialJoin</name>
     <message>
         <source>Target vector layer</source>
@@ -50284,6 +53896,13 @@ Arazoa %d lerroarekin</translation>
     </message>
 </context>
 <context>
+    <name>SymDifferenceTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SymbolsListWidget</name>
     <message>
         <source>Form</source>
@@ -50338,23 +53957,46 @@ Arazoa %d lerroarekin</translation>
     <name>SymetricalDifference</name>
     <message>
         <source>Input layer</source>
-        <translation>Sarrera-geruza</translation>
+        <translation type="obsolete">Sarrera-geruza</translation>
     </message>
     <message>
         <source>Difference layer</source>
-        <translation>Diferentzia-geruza</translation>
+        <translation type="obsolete">Diferentzia-geruza</translation>
     </message>
     <message>
         <source>Symetrical difference</source>
-        <translation>Diferentzia simetrikoa</translation>
+        <translation type="obsolete">Diferentzia simetrikoa</translation>
     </message>
     <message>
         <source>Geometry exception while computing symetrical difference</source>
-        <translation>Geometria-salbuespena diferentzia simetrikoa kalkulatzean</translation>
+        <translation type="obsolete">Geometria-salbuespena diferentzia simetrikoa kalkulatzean</translation>
     </message>
     <message>
         <source>Feature exception while computing symetrical difference</source>
-        <translation>Elementu-salbuespena diferentzia simetrikoa kalkulatzean</translation>
+        <translation type="obsolete">Elementu-salbuespena diferentzia simetrikoa kalkulatzean</translation>
+    </message>
+</context>
+<context>
+    <name>SymmetricalDifference</name>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Difference layer</source>
+        <translation type="unfinished">Diferentzia-geruza</translation>
+    </message>
+    <message>
+        <source>Symetrical difference</source>
+        <translation type="unfinished">Diferentzia simetrikoa</translation>
+    </message>
+    <message>
+        <source>Geometry exception while computing symetrical difference</source>
+        <translation type="unfinished">Geometria-salbuespena diferentzia simetrikoa kalkulatzean</translation>
+    </message>
+    <message>
+        <source>Feature exception while computing symetrical difference</source>
+        <translation type="unfinished">Elementu-salbuespena diferentzia simetrikoa kalkulatzean</translation>
     </message>
 </context>
 <context>
@@ -50391,6 +54033,36 @@ Arazoa %d lerroarekin</translation>
     <message>
         <source>TauDEM (hydrologic analysis)</source>
         <translation>TauDEM (analisi hidrologikoa)</translation>
+    </message>
+    <message>
+        <source>TauDEM multifile command line tools folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable singlefile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable multifile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open TauDEM algorithm %s:
+%s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TauDEMMultifileAlgorithm</name>
+    <message>
+        <source>Could not load TauDEM algorithm: %s
+%s</source>
+        <translation type="unfinished">Ezin izan da TauDEM algoritmoa kargatu: %s
+%s</translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished">MPI prozesu kopuru okerra erabili da. Ezarri kopuru zuzena TauDEM algoritmoak exekutatu baino lehen.</translation>
     </message>
 </context>
 <context>
@@ -50511,6 +54183,17 @@ Arazoa %d lerroarekin</translation>
     </message>
 </context>
 <context>
+    <name>UnionTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UniqueValues</name>
     <message>
         <source>Input layer</source>
@@ -50619,6 +54302,53 @@ Arazoa %d lerroarekin</translation>
     <message>
         <source>Buffer</source>
         <translation>Bufferra</translation>
+    </message>
+</context>
+<context>
+    <name>VectorAnalysis</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">Bufferra</translation>
+    </message>
+    <message>
+        <source>Clip</source>
+        <translation type="unfinished">Moztu</translation>
+    </message>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Difference</source>
+        <translation type="unfinished">Diferentzia</translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">Disolbatu</translation>
+    </message>
+    <message>
+        <source>Intersect</source>
+        <translation type="unfinished">Ebaki</translation>
+    </message>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">Ezabatu ezpal-poligonoak</translation>
+    </message>
+    <message>
+        <source>Symmetric difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Union</source>
+        <translation type="unfinished">Batuketa</translation>
+    </message>
+    <message>
+        <source>&amp;Geoprocessing Tools</source>
+        <translation type="unfinished">&amp;Geoprozesu-tresnak</translation>
+    </message>
+    <message>
+        <source>Intersection</source>
+        <translation type="unfinished">Ebaketa</translation>
     </message>
 </context>
 <context>
@@ -51126,6 +54856,10 @@ Arazoa %d lerroarekin</translation>
     <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+    <message>
+        <source>on every curve point</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -51814,7 +55548,11 @@ Arazoa %d lerroarekin</translation>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Virtual</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -53484,6 +57222,13 @@ To edit values, select the field to modify with the filter button on the left an
     </message>
 </context>
 <context>
+    <name>differencetool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dxf2shpConverter</name>
     <message>
         <source>Converts DXF files in Shapefile format</source>
@@ -54378,7 +58123,11 @@ Plugina ez da gaituko.</translation>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -57234,7 +60983,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>xyz</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -57261,7 +61014,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Pyramidized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59086,7 +62843,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Mendien itzala</translation>
     </message>
 </context>
 <context>
@@ -60074,7 +63835,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Merged</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60093,7 +63858,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Nearblack</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60192,7 +63961,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>PCT to RGB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60207,7 +63980,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Vectorized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60242,7 +64019,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Distantzia</translation>
     </message>
 </context>
 <context>
@@ -60257,7 +64038,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Write values inside an existing raster layer(*)</source>
-        <translation>Idatzi balioak lehendik dagoen raster-geruza batean(*)</translation>
+        <translation type="obsolete">Idatzi balioak lehendik dagoen raster-geruza batean(*)</translation>
     </message>
     <message>
         <source>Set output raster size (ignored if above option is checked)</source>
@@ -60277,7 +64058,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer: mandatory to choose an existing raster layer if the (*) option is selected</source>
-        <translation>Irteera-geruza: derrigorrezkoa lehendik dagoen raster-geruza bat hautatzea (*) aukera hautatuta badago</translation>
+        <translation type="obsolete">Irteera-geruza: derrigorrezkoa lehendik dagoen raster-geruza bat hautatzea (*) aukera hautatuta badago</translation>
     </message>
     <message>
         <source>Nodata value</source>
@@ -60309,7 +64090,15 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
-        <translation>Behartu ESRIren mundu fitxategia (.tfw) sortzea</translation>
+        <translation type="obsolete">Behartu ESRIren mundu fitxategia (.tfw) sortzea</translation>
+    </message>
+    <message>
+        <source>Force the generation of an associated ESRI world file (.tfw)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rasterized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60324,7 +64113,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>RGB to PCT</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60343,7 +64136,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Roughness</source>
+        <translation type="unfinished">Malkartasuna</translation>
     </message>
 </context>
 <context>
@@ -60432,7 +64229,22 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
+    </message>
+    <message>
+        <source>Sieved</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>sliverpolygontool</name>
+    <message>
+        <source>Merge combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create multipolygon from merge results: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60463,7 +64275,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Malda</translation>
     </message>
 </context>
 <context>
@@ -60621,7 +64437,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>Irteera-fitxategia</translation>
+        <translation type="obsolete">Irteera-fitxategia</translation>
+    </message>
+    <message>
+        <source>Topographic Position Index</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60664,7 +64484,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -60697,6 +64517,10 @@ Format a date type or string into a custom string format. Uses Qt data time form
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
         <translation>Behartu ESRIren mundu fitxategia (.tfw) sortzea</translation>
+    </message>
+    <message>
+        <source>Translated</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60895,7 +64719,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>Irteera-geruza</translation>
+        <translation type="obsolete">Irteera-geruza</translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -60928,6 +64752,10 @@ Format a date type or string into a custom string format. Uses Qt data time form
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
         <translation>Behartu ESRIren mundu fitxategia (.tfw) sortzea</translation>
+    </message>
+    <message>
+        <source>Warped</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

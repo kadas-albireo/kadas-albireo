@@ -82,6 +82,17 @@
     </message>
 </context>
 <context>
+    <name>AbstractTool</name>
+    <message>
+        <source>The requested feature does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The feature geometry could not be fetched</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddModelFromFileAction</name>
     <message>
         <source>Add model from file</source>
@@ -636,10 +647,14 @@ Open the results dialog to check it.</source>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clipped</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -744,7 +759,11 @@ Open the results dialog to check it.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Color relief</source>
+        <translation type="unfinished">रंगीन उभार</translation>
     </message>
 </context>
 <context>
@@ -3188,7 +3207,85 @@ Are you sure you want to proceed?</source>
     </message>
 </context>
 <context>
+    <name>DinfDistDownMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stream Raster Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight Path Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DinfDistUp</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Statistical Method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance Method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proportion Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D-Infinity Distance Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DinfDistUpMulti</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
         <translation type="unfinished"></translation>
@@ -3297,6 +3394,84 @@ Are you sure you want to proceed?</source>
     </message>
     <message>
         <source>Output Concentration Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccum2Multi</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input Concentration Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Concentration Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DinfTransLimAccumMulti</name>
+    <message>
+        <source>D-Infinity Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Supply Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transport Capacity Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for edge contamination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transport Limited Accumulation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deposition Grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3894,6 +4069,53 @@ geometry column - column with unique integer values</source>
 </context>
 <context>
     <name>DropAnalysis</name>
+    <message>
+        <source>D8 Contributing Area Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pit Filled Elevation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accumulated Stream Source Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of Threshold Values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spacing for Threshold Values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D-Infinity Drop to Stream Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DropAnalysisMulti</name>
     <message>
         <source>D8 Contributing Area Grid</source>
         <translation type="unfinished"></translation>
@@ -5349,7 +5571,7 @@ and python executables.
 
 MacOS users usually need to set it to something like
 /Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
-        <translation>एक कॉलन-विभाजितों की  सूची (Linux और MacOS) या 
+        <translation type="obsolete">एक कॉलन-विभाजितों की  सूची (Linux और MacOS) या 
 सेमीकॉलन-विभाजित (Windows) दोनों बायनेरिज़ के पथो 
 और पायथन एक्जीक्यूटेबल्स.
 
@@ -5359,13 +5581,13 @@ MacOS उपयोगकर्ताओं को आमतौर पर ऐस�
     <message>
         <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
-        <translation>एक कॉलन-विभाजितों की  सूची (Linux और MacOS) या
+        <translation type="obsolete">एक कॉलन-विभाजितों की  सूची (Linux और MacOS) या
 सेमीकॉलन-विभाजित (Windows) पायथन मॉड्यूल के लिए पथ.</translation>
     </message>
     <message>
         <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
-        <translation>जब संवाद-साधन के सहायता बटन को दबा रहे हैं तब
+        <translation type="obsolete">जब संवाद-साधन के सहायता बटन को दबा रहे हैं तब
 ऑनलाइन सहायता के बजाय स्थानीय जीडाल प्रलेखन खोलना उपयोगी है</translation>
     </message>
     <message>
@@ -5379,6 +5601,28 @@ when pressing on the tool dialog&apos;s Help button.</source>
     <message>
         <source>Select directory with the GDAL documentation</source>
         <translation>जीडाल प्रलेखन के साथ डायरेक्टरी चयन करें </translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to both binaries
+and python executables.
+
+MacOS users usually need to set it to something like
+/Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+A list of colon-separated (Linux and MacOS) or
+semicolon-separated (Windows) paths to python modules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Useful to open local GDAL documentation instead of online help
+when pressing on the tool dialog&apos;s Help button.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6079,6 +6323,13 @@ The &apos;gray&apos; value (from GDAL 1.7.0) enables to expand a dataset with a 
     </message>
 </context>
 <context>
+    <name>GenericGeoprocessingToolDialog</name>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoAlgorithm</name>
     <message>
         <source>Uncaught error while executing algorithm</source>
@@ -6303,6 +6554,298 @@ Please choose another field...</source>
     </message>
 </context>
 <context>
+    <name>Geoprocessing::AbstractBinaryToolDialog</name>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">केवल चयनित नक्शा-अनुभाग</translation>
+    </message>
+    <message>
+        <source>Operator layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished">आगत लेयर</translation>
+    </message>
+    <message>
+        <source>Combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer fields:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output layer CRS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::BufferToolDialog</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">बफर</translation>
+    </message>
+    <message>
+        <source>Buffer distance value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buffer distance field:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Round</source>
+        <translation type="unfinished">गोल</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished">समतल</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">वर्ग</translation>
+    </message>
+    <message>
+        <source>Mitre</source>
+        <translation type="unfinished">माइटर </translation>
+    </message>
+    <message>
+        <source>Bevel</source>
+        <translation type="unfinished">झुकाव</translation>
+    </message>
+    <message>
+        <source>Single sided</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve buffer results</source>
+        <translation type="unfinished">बफर परिणामों को विलय करें</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Segments:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cap style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mitre limit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">विलय करें</translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be non-zero for polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance must be positive for point and line layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::ConvexHullToolDialog</name>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::DissolveToolDialog</name>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">विलय करें</translation>
+    </message>
+    <message>
+        <source>Allow multi-part features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingErrorDialog</name>
+    <message>
+        <source>Select faulty features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing/incomplete features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry errors</source>
+        <translation type="unfinished">ज्यामिति गलती</translation>
+    </message>
+    <message>
+        <source>%1 features could not be written</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::GeoprocessingToolDialog</name>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">चलायें</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Canceled&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Completed&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%p% (Step %1/%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::SliverPolygonToolDialog</name>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">विच्छेदित बहुभुज हटा दें</translation>
+    </message>
+    <message>
+        <source>Largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longest shared boundary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer must be a polygon layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::GroupUI</name>
+    <message>
+        <source>%1 all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by attribute:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 by expression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid expression:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">सभी</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">समूह</translation>
+    </message>
+</context>
+<context>
+    <name>Geoprocessing::Utils::SummarizeUI</name>
+    <message>
+        <source>First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Count</source>
+        <translation type="unfinished">गिनती करें</translation>
+    </message>
+    <message>
+        <source>Sum</source>
+        <translation type="unfinished">योग</translation>
+    </message>
+    <message>
+        <source>Mean</source>
+        <translation type="unfinished">औसत</translation>
+    </message>
+    <message>
+        <source>Min</source>
+        <translation type="unfinished">न्यूनतम</translation>
+    </message>
+    <message>
+        <source>Max</source>
+        <translation type="unfinished">अधिकतम</translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">रेंज</translation>
+    </message>
+    <message>
+        <source>StdDev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Null</source>
+        <translation type="unfinished">रिक्त</translation>
+    </message>
+    <message>
+        <source>Summarize numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Summarize non-numeric attributes:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeoprocessingDialog</name>
     <message>
         <source>Dissolve all</source>
@@ -6461,6 +7004,56 @@ Feature geometry error: One or more output features ignored due to invalid geome
 GEOS geoprocessing error: One or more input features have invalid geometry.</source>
         <translation>
 GEOS भूप्रक्रियाऐ गलती: एक या अधिक निर्गम नक्शा-अनुभागों में अवैध ज्यामिति है.</translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingErrorDialog</name>
+    <message>
+        <source>Errors</source>
+        <translation type="unfinished">गलतियां</translation>
+    </message>
+    <message>
+        <source>Errors occurred while executing the process:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt; You can check for geometry errors via &lt;span style=&quot; font-style:italic;&quot;&gt;Vector-&amp;gt;Geometry Tools-&amp;gt;Check geometry validity&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeoprocessingToolDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished">संवाद</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Ready&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">आगत वेक्टर लेयर</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">केवल चयनित नक्शा-अनुभाग</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">निर्गम</translation>
+    </message>
+    <message>
+        <source>Add result to canvas</source>
+        <translation type="unfinished">परिणाम कैनवास पर जोड़ें</translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">तलाशें</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">विकल्प</translation>
     </message>
 </context>
 <context>
@@ -6779,7 +7372,7 @@ Please install it before running GRASS algorithms.</source>
     </message>
     <message>
         <source>Output</source>
-        <translation>निर्गम</translation>
+        <translation type="obsolete">निर्गम</translation>
     </message>
     <message>
         <source>Invalid grid spacing: %s/%s</source>
@@ -6792,6 +7385,10 @@ Please install it before running GRASS algorithms.</source>
     <message>
         <source>Vertical spacing is too small for the covered area</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">जाली</translation>
     </message>
 </context>
 <context>
@@ -6830,7 +7427,11 @@ Please install it before running GRASS algorithms.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation type="unfinished">औसत</translation>
     </message>
 </context>
 <context>
@@ -6873,7 +7474,11 @@ Please install it before running GRASS algorithms.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Interpolated metrics</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6920,11 +7525,15 @@ Please install it before running GRASS algorithms.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
     </message>
     <message>
         <source>Smoothing</source>
         <translation>सुगम करना</translation>
+    </message>
+    <message>
+        <source>Interpolated IDW</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7002,11 +7611,50 @@ Please install it before running GRASS algorithms.</source>
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Interpolated nearest neighbor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>GridNet</name>
+    <message>
+        <source>D8 Flow Direction Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outlets Shapefile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mask Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mask Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Longest Upslope Length Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total Upslope Length Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strahler Network Order Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GridNetMulti</name>
     <message>
         <source>D8 Flow Direction Grid</source>
         <translation type="unfinished"></translation>
@@ -7535,6 +8183,10 @@ are stored on the installation folder</source>
         <source>Elevation</source>
         <translation>ऊंचाई</translation>
     </message>
+    <message>
+        <source>Feature %d is smaller than raster cell size</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImportIntoPostGIS</name>
@@ -7627,6 +8279,17 @@ are stored on the installation folder</source>
     </message>
     <message>
         <source>Intersection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IntersectionTool</name>
+    <message>
+        <source>Dimensionality of the input layer must be less or equal the dimensionality of the operator layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7870,6 +8533,33 @@ Please configure it before running LAStools algorithms.</source>
     </message>
 </context>
 <context>
+    <name>LengthAreaMulti</name>
+    <message>
+        <source>Length Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exponent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LidarToolsAlgorithmProvider</name>
     <message>
         <source>LAStools folder</source>
@@ -7930,7 +8620,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>छपाई रचयिता</translation>
+        <translation type="obsolete">छपाई रचयिता</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -7938,11 +8628,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select</source>
-        <translation>चयन करें</translation>
+        <translation type="obsolete">चयन करें</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>मापें</translation>
+        <translation type="obsolete">मापें</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -7954,7 +8644,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>&amp;प्लगिंस</translation>
+        <translation type="obsolete">&amp;प्लगिंस</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -7962,7 +8652,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>&amp;समायोजन</translation>
+        <translation type="obsolete">&amp;समायोजन</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -7970,7 +8660,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>&amp;वेक्टर</translation>
+        <translation type="obsolete">&amp;वेक्टर</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8050,19 +8740,19 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>प्रिंट र‍चयिता प्रबंधक ...</translation>
+        <translation type="obsolete">प्रिंट र‍चयिता प्रबंधक ...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>खाके से नया ले</translation>
+        <translation type="obsolete">खाके से नया ले</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>पूर्वदर्शन मोड</translation>
+        <translation type="obsolete">पूर्वदर्शन मोड</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>लेयर बनावें</translation>
+        <translation type="obsolete">लेयर बनावें</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8090,7 +8780,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>क्यू.जी.आई.एस. से बाहर निकलें</translation>
+        <translation type="obsolete">क्यू.जी.आई.एस. से बाहर निकलें</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8114,7 +8804,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>नक्शा अनुभागों को काटें</translation>
+        <translation type="obsolete">नक्शा अनुभागों को काटें</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8122,7 +8812,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>नक्शा अनुभागों को कॉपी करें</translation>
+        <translation type="obsolete">नक्शा अनुभागों को कॉपी करें</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8130,7 +8820,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>नक्शा अनुभागों को चिपकायें</translation>
+        <translation type="obsolete">नक्शा अनुभागों को चिपकायें</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8138,7 +8828,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>नक्शा अनुभाग जोडें</translation>
+        <translation type="obsolete">नक्शा अनुभाग जोडें</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8146,15 +8836,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>नक्शा-अनुभाग(s) खिसकाएँ</translation>
+        <translation type="obsolete">नक्शा-अनुभाग(s) खिसकाएँ</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>नक्शा अनुभागों को  नयी आकृति प्रदान करें</translation>
+        <translation type="obsolete">नक्शा अनुभागों को  नयी आकृति प्रदान करें</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>नक्शा अनुभागों को विभाजित करें</translation>
+        <translation type="obsolete">नक्शा अनुभागों को विभाजित करें</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8162,7 +8852,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>चयनित को मिटायें</translation>
+        <translation type="obsolete">चयनित को मिटायें</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8174,27 +8864,27 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>नक्शा अनुभाग का सरलीकरण करें</translation>
+        <translation type="obsolete">नक्शा अनुभाग का सरलीकरण करें</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>घेरा मिटायें</translation>
+        <translation type="obsolete">घेरा मिटायें</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>भाग मिटायें</translation>
+        <translation type="obsolete">भाग मिटायें</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>चयनित नक्शा अनुभागों का विलय करें</translation>
+        <translation type="obsolete">चयनित नक्शा अनुभागों का विलय करें</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>चयनित नक्शा अनुभागों के गुणधर्मों का विलय करें</translation>
+        <translation type="obsolete">चयनित नक्शा अनुभागों के गुणधर्मों का विलय करें</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>नोड-बिंदु साधन</translation>
+        <translation type="obsolete">नोड-बिंदु साधन</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8202,11 +8892,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>मैप चलाये</translation>
+        <translation type="obsolete">मैप चलाये</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>ज़ूम करें</translation>
+        <translation type="obsolete">ज़ूम करें</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8214,7 +8904,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>ज़ूम घटायें</translation>
+        <translation type="obsolete">ज़ूम घटायें</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8222,23 +8912,23 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>बहुभुज से नक्शा अनुभागों का चयन करें</translation>
+        <translation type="obsolete">बहुभुज से नक्शा अनुभागों का चयन करें</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>मुक्तहस्त से नक्शा अनुभागों का चयन करें</translation>
+        <translation type="obsolete">मुक्तहस्त से नक्शा अनुभागों का चयन करें</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>त्रिज्या से नक्शा अनुभागों का चयन करें</translation>
+        <translation type="obsolete">त्रिज्या से नक्शा अनुभागों का चयन करें</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>सभी लयरों से नक्शा अनुभागों का चयन रद्द करें</translation>
+        <translation type="obsolete">सभी लयरों से नक्शा अनुभागों का चयन रद्द करें</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>नक्शा अनुभागों की पहचान करें</translation>
+        <translation type="obsolete">नक्शा अनुभागों की पहचान करें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8246,7 +8936,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>रेखा मापें</translation>
+        <translation type="obsolete">रेखा मापें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8254,7 +8944,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>क्षेत्रफल मापें</translation>
+        <translation type="obsolete">क्षेत्रफल मापें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8262,7 +8952,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>कोण मापें</translation>
+        <translation type="obsolete">कोण मापें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -8278,11 +8968,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>अगला ज़ूम स्तर</translation>
+        <translation type="obsolete">अगला ज़ूम स्तर</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>वास्तविक आकार ज़ूम करें </translation>
+        <translation type="obsolete">वास्तविक आकार ज़ूम करें </translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -8298,7 +8988,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>नयी पृष्ठ-स्मृति...</translation>
+        <translation type="obsolete">नयी पृष्ठ-स्मृति...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -8306,7 +8996,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>बुकमार्क्स दिखायें</translation>
+        <translation type="obsolete">बुकमार्क्स दिखायें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -8314,7 +9004,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>ताजा करें</translation>
+        <translation type="obsolete">ताजा करें</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -8330,7 +9020,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Labeling</source>
-        <translation>लेबल लगाना</translation>
+        <translation type="obsolete">लेबल लगाना</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -8338,7 +9028,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>नयी शेपफाइल लेयर...</translation>
+        <translation type="obsolete">नयी शेपफाइल लेयर...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -8350,7 +9040,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>वेक्टर लेयर जोड़ें...</translation>
+        <translation type="obsolete">वेक्टर लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -8358,7 +9048,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>रास्टर लेयर जोड़ें...</translation>
+        <translation type="obsolete">रास्टर लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -8366,7 +9056,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>PostGIS लेयर जोड़ें...</translation>
+        <translation type="obsolete">PostGIS लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -8374,7 +9064,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>SpatiaLite लेयर जोड़ें...</translation>
+        <translation type="obsolete">SpatiaLite लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -8382,11 +9072,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>MSSQL Spatial लेयर जोड़ें ...</translation>
+        <translation type="obsolete">MSSQL Spatial लेयर जोड़ें ...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation> Oracle Spatial लेयर जोड़ें ...</translation>
+        <translation type="obsolete"> Oracle Spatial लेयर जोड़ें ...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -8394,7 +9084,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>WMS/WMTS लेयर जोड़ें...</translation>
+        <translation type="obsolete">WMS/WMTS लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -8402,7 +9092,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>संपादन/सामान्य ढंग</translation>
+        <translation type="obsolete">संपादन/सामान्य ढंग</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -8422,11 +9112,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>शॉर्टकट कॉन्फ़िगर करें...</translation>
+        <translation type="obsolete">शॉर्टकट कॉन्फ़िगर करें...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>API प्रलेखन</translation>
+        <translation type="obsolete">API प्रलेखन</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -8470,7 +9160,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>एक्सप्रेशन द्वारा चयन करें</translation>
+        <translation type="obsolete">एक्सप्रेशन द्वारा चयन करें</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -8482,15 +9172,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>लेयर परिभाषा फाइल से जोड़ें</translation>
+        <translation type="obsolete">लेयर परिभाषा फाइल से जोड़ें</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>लेयर परिभाषा फाइल की तरह संरक्षित करें...</translation>
+        <translation type="obsolete">लेयर परिभाषा फाइल की तरह संरक्षित करें...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>साधारण</translation>
+        <translation type="obsolete">साधारण</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -8498,7 +9188,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>फोटोकॉपी अनुरूपण (ग्रे-स्‍केेेेल)</translation>
+        <translation type="obsolete">फोटोकॉपी अनुरूपण (ग्रे-स्‍केेेेल)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -8506,7 +9196,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>फैक्‍स अनुरूप बनायें (एकल)</translation>
+        <translation type="obsolete">फैक्‍स अनुरूप बनायें (एकल)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -8514,7 +9204,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>रंग अन्धता अनुरूप बनायें (प्रोटानोपे) </translation>
+        <translation type="obsolete">रंग अन्धता अनुरूप बनायें (प्रोटानोपे) </translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -8522,7 +9212,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>रंग अन्धता अनुरूप बनायें (Deuteranope)</translation>
+        <translation type="obsolete">रंग अन्धता अनुरूप बनायें (Deuteranope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -8530,7 +9220,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>लेयर(s) का पैमाना दृश्‍यता सेट करें</translation>
+        <translation type="obsolete">लेयर(s) का पैमाना दृश्‍यता सेट करें</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -8538,7 +9228,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>चयनित लेयरों को छिपायें </translation>
+        <translation type="obsolete">चयनित लेयरों को छिपायें </translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -8546,11 +9236,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>नयी SpatiaLite लेयर...</translation>
+        <translation type="obsolete">नयी SpatiaLite लेयर...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>रास्टर गणक...</translation>
+        <translation type="obsolete">रास्टर गणक...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -8562,15 +9252,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>परियोजना का CRS लेयर से सैट करें</translation>
+        <translation type="obsolete">परियोजना का CRS लेयर से सैट करें</translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>पूछताछ...</translation>
+        <translation type="obsolete">पूछताछ...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>सिंहावलोकन में जोड़ें</translation>
+        <translation type="obsolete">सिंहावलोकन में जोड़ें</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -8578,11 +9268,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>सभी को सिंहावलोकन से हटायें</translation>
+        <translation type="obsolete">सभी को सिंहावलोकन से हटायें</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>सभी लेयरों को दिखायें</translation>
+        <translation type="obsolete">सभी लेयरों को दिखायें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -8590,7 +9280,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>सभी लेयरों को छिपायें</translation>
+        <translation type="obsolete">सभी लेयरों को छिपायें</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -8598,7 +9288,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>प्लगिंस का प्रबंधन और स्थापना...</translation>
+        <translation type="obsolete">प्लगिंस का प्रबंधन और स्थापना...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -8606,7 +9296,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>डेलिमिटेड वाक्‍य लेयर जोड़ें ...</translation>
+        <translation type="obsolete">डेलिमिटेड वाक्‍य लेयर जोड़ें ...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -8614,7 +9304,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>नयी वेक्टर लेयर</translation>
+        <translation type="obsolete">नयी वेक्टर लेयर</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -8622,7 +9312,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>नयी मेमोरी वेक्टर लेयर</translation>
+        <translation type="obsolete">नयी मेमोरी वेक्टर लेयर</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -8634,7 +9324,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>नक्शा-अनुभागों का चयन करें</translation>
+        <translation type="obsolete">नक्शा-अनुभागों का चयन करें</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -8658,7 +9348,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>कस्टम CRS...</translation>
+        <translation type="obsolete">कस्टम CRS...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -8670,7 +9360,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>मदद सामग्री</translation>
+        <translation type="obsolete">मदद सामग्री</translation>
     </message>
     <message>
         <source>F1</source>
@@ -8678,7 +9368,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>क्यू.जी.आई.एस. मुख पृष्ठ</translation>
+        <translation type="obsolete">क्यू.जी.आई.एस. मुख पृष्ठ</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -8694,7 +9384,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>About</source>
-        <translation>बारे में</translation>
+        <translation type="obsolete">बारे में</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -8720,11 +9410,11 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>शैली प्रबंधक ...</translation>
+        <translation type="obsolete">शैली प्रबंधक ...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>पायथन कंसोल</translation>
+        <translation type="obsolete">पायथन कंसोल</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -8732,7 +9422,7 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>अनुकूलन ...</translation>
+        <translation type="obsolete">अनुकूलन ...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -8744,7 +9434,7 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>लेयर और समूह शामिल करें...</translation>
+        <translation type="obsolete">लेयर और समूह शामिल करें...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -8776,7 +9466,7 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>WFS लेयर जोड़ें...</translation>
+        <translation type="obsolete">WFS लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -8800,7 +9490,7 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>खिसकन वक्र</translation>
+        <translation type="obsolete">खिसकन वक्र</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -8812,7 +9502,7 @@ Ctl (Cmd) 15 डिग्री की वृद्धि.</translation>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>WCS लेयर जोड़ें...</translation>
+        <translation type="obsolete">WCS लेयर जोड़ें...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -8920,7 +9610,7 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>DXF निर्यात	...</translation>
+        <translation type="obsolete">DXF निर्यात	...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -8984,11 +9674,439 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>New Temporary Scratch Layer...</source>
-        <translation>नयी अस्‍थायी खरोंच लेयर...</translation>
+        <translation type="obsolete">नयी अस्‍थायी खरोंच लेयर...</translation>
     </message>
     <message>
         <source>New temporary scratch layer</source>
         <translation>नयी अस्‍थायी खरोंच लेयर</translation>
+    </message>
+    <message>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">&amp;ज़ूम घटायें</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished">&amp;ताज़ा करें</translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">&amp;साधारण</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9420,6 +10538,10 @@ Acts on currently active editable layer</source>
     <message>
         <source>seconds</source>
         <translation>सेकंड</translation>
+    </message>
+    <message>
+        <source>Record parsing error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9885,6 +11007,10 @@ See the log for more information.</source>
     <message>
         <source>Overwrite %s?</source>
         <translation>%s अधिलेखित करें?</translation>
+    </message>
+    <message>
+        <source>Name cannot contain &apos;/&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10529,6 +11655,33 @@ Please check the configuration in the Processing settings dialog.</source>
 </context>
 <context>
     <name>PeukerDouglas</name>
+    <message>
+        <source>Elevation Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Center Smoothing Weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Side Smoothing Weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Diagonal Smoothing Weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stream Source Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PeukerDouglasMulti</name>
     <message>
         <source>Elevation Grid</source>
         <translation type="unfinished"></translation>
@@ -11988,7 +13141,7 @@ Error(%2): %3</source>
     </message>
     <message>
         <source>GEOS prior to 3.2 doesn&apos;t support GEOSInterpolate</source>
-        <translation>3.2 से पहले GEOS GEOSइंटरपोलेट का समर्थन नहीं करता </translation>
+        <translation type="obsolete">3.2 से पहले GEOS GEOSइंटरपोलेट का समर्थन नहीं करता </translation>
     </message>
     <message>
         <source>segment %1 of ring %2 of polygon %3 intersects segment %4 of ring %5 of polygon %6 at %7</source>
@@ -14092,10 +15245,6 @@ Response was:
         <translation>लिजेंड</translation>
     </message>
     <message>
-        <source>Fatal error occurred in GRASS library. QGIS gets over the error but any next fatal error will cause QGIS exit without warning. This is a problem of GRASS 7.0.0beta1 but it is fixed in GRASS 7.1 and higher. Error message: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Raster image fill</source>
         <translation>रास्‍टर इमेज भरण</translation>
     </message>
@@ -14109,6 +15258,62 @@ Response was:
     </message>
     <message>
         <source>NOTICE: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent colors</source>
+        <translation type="unfinished">हाल ही के रंग </translation>
+    </message>
+    <message>
+        <source>Standard colors</source>
+        <translation type="unfinished">मानक रंग </translation>
+    </message>
+    <message>
+        <source>Project colors</source>
+        <translation type="unfinished">परियोजना के रंग</translation>
+    </message>
+    <message>
+        <source>Number of places must be positive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VectorAnalysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tools for vector data analysis and management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete the connection to %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1.%2?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14346,7 +15551,7 @@ Response was:
     </message>
     <message>
         <source>QGIS </source>
-        <translation>क्यू.जी.आई.एस.</translation>
+        <translation type="obsolete">क्यू.जी.आई.एस.</translation>
     </message>
     <message>
         <source>Multiple instances of QGIS application object detected.
@@ -15403,11 +16608,11 @@ Errors: %3
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>प्रमाणीकरण जरूरी </translation>
+        <translation type="obsolete">प्रमाणीकरण जरूरी </translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>प्रॉक्सी सत्‍यापन जरूरी </translation>
+        <translation type="obsolete">प्रॉक्सी सत्‍यापन जरूरी </translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -15424,7 +16629,7 @@ Always ignore these errors?</source>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>%n SSL गलतियां आयी</numerusform>
             <numerusform>%n SSL गलतियां आयी</numerusform>
         </translation>
@@ -15469,6 +16674,42 @@ Always ignore these errors?</source>
         <source>A problem occured during deletion of %1 feature(s)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>QGIS Enterprise </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>QgisAppInterface</name>
@@ -15496,14 +16737,14 @@ Always ignore these errors?</source>
     </message>
     <message>
         <source>License</source>
-        <translation>लाइसेंस</translation>
+        <translation type="obsolete">लाइसेंस</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li {सफ़ेद-स्थान: लपेटने से पूर्व; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;क्यू.जी.आई.एस.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -15522,7 +16763,7 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
     <message>
         <source>Join our user mailing list</source>
-        <translation>हमारी उपयोग‍कर्ता मेलिंग सूची में शामिल हों</translation>
+        <translation type="obsolete">हमारी उपयोग‍कर्ता मेलिंग सूची में शामिल हों</translation>
     </message>
     <message>
         <source>about:blank</source>
@@ -15530,7 +16771,7 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
     <message>
         <source>What&apos;s New</source>
-        <translation>नया क्‍या है</translation>
+        <translation type="obsolete">नया क्‍या है</translation>
     </message>
     <message>
         <source>Providers</source>
@@ -15538,27 +16779,23 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
     <message>
         <source>Developers</source>
-        <translation>विकासक</translation>
+        <translation type="obsolete">विकासक</translation>
     </message>
     <message>
         <source>Essen (Germany), Developer meeting 2012</source>
-        <translation>एस्सेन (जर्मनी), विकासक बैठक 2012</translation>
+        <translation type="obsolete">एस्सेन (जर्मनी), विकासक बैठक 2012</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>योगदानकर्ता</translation>
+        <translation type="obsolete">योगदानकर्ता</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation>अनुवादक</translation>
+        <translation type="obsolete">अनुवादक</translation>
     </message>
     <message>
         <source>Donors</source>
-        <translation>दाता</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;For a list of individuals and institutions who have contributed money to fund QGIS development and other project costs see &lt;a href=&quot;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&quot;&gt;http://qgis.org/en/site/about/sponsorship.html#list-of-donors&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">दाता</translation>
     </message>
     <message>
         <source>Available QGIS Data Provider Plugins</source>
@@ -15578,7 +16815,14 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
     <message>
         <source>Developers Map</source>
-        <translation>विकासक मैप </translation>
+        <translation type="obsolete">विकासक मैप </translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;QGIS Enterprise&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -15806,6 +17050,103 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">संपादन...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">नया संपर्क...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">संपादन...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">नया संपर्क...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -15836,7 +17177,7 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     </message>
     <message>
         <source>Map marker</source>
-        <translation>मैप चिन्हक </translation>
+        <translation type="obsolete">मैप चिन्हक </translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -15849,6 +17190,10 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     <message>
         <source>Frame color</source>
         <translation>फ्रेम रंग </translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -16596,7 +17941,7 @@ Parser error:
     </message>
     <message>
         <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4</source>
-        <translation>गुणधर्म टेबल - %1 :: कुल नक्‍शा-अनुभाग: %2, फिल्‍टररित: %3, चयनित: %4</translation>
+        <translation type="obsolete">गुणधर्म टेबल - %1 :: कुल नक्‍शा-अनुभाग: %2, फिल्‍टररित: %3, चयनित: %4</translation>
     </message>
     <message>
         <source>Update Filtered</source>
@@ -16643,6 +17988,22 @@ Parser error:
     <message>
         <source>Update Selected</source>
         <translation>चयनित अद्यतन करें</translation>
+    </message>
+    <message>
+        <source>Ctrl+R</source>
+        <translation type="unfinished">कंट्रोल+R</translation>
+    </message>
+    <message>
+        <source>Show All Features In Initial Canvas Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute table - %1 :: Features total: %2, filtered: %3, selected: %4%5</source>
+        <translation type="unfinished">गुणधर्म टेबल - %1 :: कुल नक्‍शा-अनुभाग: %2, फिल्‍टररित: %3, चयनित: %4%5 {1 ?} {2,?} {3,?}</translation>
+    </message>
+    <message>
+        <source>, spatially limited</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17203,7 +18564,19 @@ Database: %2</source>
     </message>
     <message>
         <source>Legend</source>
-        <translation>लिजेंड</translation>
+        <translation type="obsolete">लिजेंड</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">लेबल</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17246,7 +18619,7 @@ Database: %2</source>
     </message>
     <message>
         <source>Join</source>
-        <translation>शामिल</translation>
+        <translation type="obsolete">शामिल</translation>
     </message>
     <message>
         <source>Advanced</source>
@@ -20870,6 +22243,14 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Vertical descending</source>
         <translation>लम्बवत अवरोहण </translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -21644,6 +23025,10 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Scalebar line cap style</source>
         <translation>पैमाना-पट्टी रेखा कैप शैली </translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -21661,11 +23046,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Map</source>
-        <translation>मैप</translation>
+        <translation type="obsolete">मैप</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>शैली</translation>
+        <translation type="obsolete">शैली</translation>
     </message>
     <message>
         <source>Units</source>
@@ -21673,11 +23058,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Label</source>
-        <translation>लेबल</translation>
+        <translation type="obsolete">लेबल</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>प्रति इकार्इ पट्टी मैप इकाईयां </translation>
+        <translation type="obsolete">प्रति इकार्इ पट्टी मैप इकाईयां </translation>
     </message>
     <message>
         <source>Segments</source>
@@ -21693,7 +23078,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Size</source>
-        <translation>आकार</translation>
+        <translation type="obsolete">आकार</translation>
     </message>
     <message>
         <source> units</source>
@@ -21758,6 +23143,38 @@ Please try a lower resolution or a smaller papersize</source>
     <message>
         <source>Font...</source>
         <translation>लिपि...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -22794,6 +24211,13 @@ and current file is [%3]</source>
     </message>
 </context>
 <context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsCredentialDialog</name>
     <message>
         <source>Enter Credentials</source>
@@ -22820,7 +24244,7 @@ and current file is [%3]</source>
     <name>QgsCustomColorScheme</name>
     <message>
         <source>Standard colors</source>
-        <translation>मानक रंग </translation>
+        <translation type="obsolete">मानक रंग </translation>
     </message>
 </context>
 <context>
@@ -23987,6 +25411,18 @@ not displayed</source>
         <source>The file has been updated by another application - reloading</source>
         <translation>फाइल दूसरे अनुप्रयोग के द्वारा  अद्यतन की गयी - पुन: ला रहा </translation>
     </message>
+    <message>
+        <source>Whole number (integer)</source>
+        <translation type="unfinished">पूर्ण संख्‍या (पूर्णांक)</translation>
+    </message>
+    <message>
+        <source>Decimal number (double)</source>
+        <translation type="unfinished">दशमलव संख्‍या (डबल)</translation>
+    </message>
+    <message>
+        <source>Text, unlimited length (text)</source>
+        <translation type="unfinished">वाक्‍य, असीमित लंबाई (वाक्‍य)</translation>
+    </message>
 </context>
 <context>
     <name>QgsDelimitedTextSourceSelect</name>
@@ -24827,15 +26263,35 @@ Leave empty to automatically apply the maximum value.</source>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1 डिग्री</translation>
+        <translation type="obsolete">%1 डिग्री</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1 रेडियन</translation>
+        <translation type="obsolete">%1 रेडियन</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1 गों</translation>
+        <translation type="obsolete">%1 गों</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">डिग्री</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">रेडियन</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -25306,6 +26762,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Load all unique values</source>
         <translation>सभी अद्वितीय मानों को लायें</translation>
+    </message>
+    <message>
+        <source>%1...</source>
+        <translation type="unfinished">%1...</translation>
     </message>
 </context>
 <context>
@@ -26903,6 +28363,73 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -26995,6 +28522,923 @@ Please reselect a valid file.</source>
     <message>
         <source>Table retrieval finished.</source>
         <translation>टेबल पुन: प्राप्‍त करना समाप्‍त हुआ. </translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAngleCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete node with small angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryAreaCheck</name>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with largest area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge with neighboring polygon with identical attribute value, if any, or leave as is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">नक्शा अनुभाग को मिटायें</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal area</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryChecker</name>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerDialog</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Result</source>
+        <translation type="unfinished">परिणाम </translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixDialog</name>
+    <message>
+        <source>Fix errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation type="unfinished">अगला</translation>
+    </message>
+    <message>
+        <source>Fix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select how to fix error &quot;%1&quot;:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Fixed:&lt;/b&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;span color=&quot;red&quot;&gt;&lt;b&gt;Fixed failed:&lt;/b&gt; %1&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Error is obsolete&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerFixSummaryDialog</name>
+    <message>
+        <source>Summary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">मान</translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 new errors were found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors were not fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 errors are obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerPlugin</name>
+    <message>
+        <source>Check Geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">ज्‍&amp;यामिति साधन </translation>
+    </message>
+    <message>
+        <source>Geometry Checker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check geometries for errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">वेक्टर</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">संस्करण 0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerResultTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">प्रपत्र</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Geometry check result:&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">मान</translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished">रिजॉल्यू‍शन</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total errors: 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When a row is selected, move to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">नक्शा-अनुभाग</translation>
+    </message>
+    <message>
+        <source>Don&apos;t &amp;move</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight contour of selected features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors using default resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix selected errors, prompt for resolution method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error resolution settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show selected features in attribute table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute to use when merging features by attribute value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following checks reported errors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total errors: %1, fixed errors: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fixed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ESRI Shapefile (*.shp);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to export errors to shapefile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fix errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to fix %1 errors?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Error Resolutions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The layer has been removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryCheckerSetupTab</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">प्रपत्र</translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">आगत वेक्टर लेयर</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">केवल चयनित नक्शा-अनुभाग</translation>
+    </message>
+    <message>
+        <source>Geometry validity:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than 3 nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed geometry types:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">बिंदु</translation>
+    </message>
+    <message>
+        <source>Multipoint</source>
+        <translation type="unfinished">बहुबिंदु</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multiline</source>
+        <translation type="unfinished">बहुरेखीय</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipolygon</source>
+        <translation type="unfinished">बहु-बहुभुज</translation>
+    </message>
+    <message>
+        <source>Geometry properties:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygons and multipolygons may not contain any holes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart objects must consist of more that one part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry conditions:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum angle between segments (deg):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal polygon area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No sliver polygons:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum thinness:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Thinness is the ratio between the area of the minimum square containing the polygon and the area of the polygon itself. A square has thinness 1. Default: 20.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. area (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Topology checks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for overlaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for gaps smaller than (map units sqr.):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for features within other features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create &amp;new layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">तलाशें</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">चलायें</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as the input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editable Input Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The input layer is not allowed to be in editing mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Preparing output...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. The geometry check can be performed, but it will not be possible to fix any errors. Do you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Building spatial index...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Waiting for running checks to finish...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheck</name>
+    <message>
+        <source>Feature %1 within feature %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">नक्शा अनुभाग को मिटायें</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Within</source>
+        <translation type="unfinished">अन्तर्गत</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryContainedCheckError</name>
+    <message>
+        <source>Within %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDegeneratePolygonCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">नक्शा अनुभाग को मिटायें</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with less than three nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateCheck</name>
+    <message>
+        <source>Duplicate check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryDuplicateNodesCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate node</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryGapCheck</name>
+    <message>
+        <source>Gap check: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to merge with neighbor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add gap area to neighboring polygon with longest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryHoleCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon with hole</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryMultipartCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to single part feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">नक्शा अनुभाग को मिटायें</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multipart object with only one feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryOverlapCheck</name>
+    <message>
+        <source>Overlap check between features %1 and %2: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to compute intersection between overlapping features: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find shared edges between intersection and overlapping features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove overlapping area from neighboring polygon with shortest shared edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySegmentLengthCheck</name>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimal segment length</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySelfIntersectionCheck</name>
+    <message>
+        <source>Resulting geometry is degenerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into a multi-object feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split feature into multiple single-object features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Self intersection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySliverPolygonCheck</name>
+    <message>
+        <source>Sliver polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapper</name>
+    <message>
+        <source>Failed to read feature %1 of input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperDialog</name>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input vector layer</source>
+        <translation type="unfinished">आगत वेक्टर लेयर</translation>
+    </message>
+    <message>
+        <source>Only selected features</source>
+        <translation type="unfinished">केवल चयनित नक्शा-अनुभाग</translation>
+    </message>
+    <message>
+        <source>Reference layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">विकल्प</translation>
+    </message>
+    <message>
+        <source>Maximum snapping distance (map units):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output vector layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Modify input layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create new &amp;layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">तलाशें</translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished">चलायें</translation>
+    </message>
+    <message>
+        <source>Select Output File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid Output Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chosen output layer is the same as an input layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Creation Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable Output Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The output file format does not support editing features. Please select another output file format.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Errors occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The following errors occured:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometrySnapperPlugin</name>
+    <message>
+        <source>Snap geometries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>G&amp;eometry Tools</source>
+        <translation type="unfinished">ज्‍&amp;यामिति साधन </translation>
+    </message>
+    <message>
+        <source>Geometry Snapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snap geometries to a reference layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector</source>
+        <translation type="unfinished">वेक्टर</translation>
+    </message>
+    <message>
+        <source>Version 0.1</source>
+        <translation type="unfinished">संस्करण 0.1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheck</name>
+    <message>
+        <source>Unknown geometry type</source>
+        <translation type="unfinished">अज्ञात ज्यामिति प्रकार</translation>
+    </message>
+    <message>
+        <source>Unknown method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Convert to corresponding multi or single type if possible, otherwise delete feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete feature</source>
+        <translation type="unfinished">नक्शा अनुभाग को मिटायें</translation>
+    </message>
+    <message>
+        <source>No action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geometry type</source>
+        <translation type="unfinished">ज्यामिति प्रकार</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryTypeCheckError</name>
+    <message>
+        <source>Overlap with %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -27873,6 +30317,14 @@ p, li {सफ़ेद-स्थान: लपेटने से पूर्व; 
     <message>
         <source>Legend</source>
         <translation>लिजेंड</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -29413,10 +31865,6 @@ at line %2 column %3</source>
         <source>New mapset successfully created and set as current working mapset.</source>
         <translation>नया मैपसेट सफलतापूर्वक बनाया गया और वर्तमान काम करे मैपसेट की तरह सेट करें </translation>
     </message>
-    <message>
-        <source>Cannot activate grass</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QgsGrassNewMapsetBase</name>
@@ -30782,6 +33230,311 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">वर्तमान मैप विस्‍तार को प्रतिच्‍छेद करने वाले नक्‍शा-अनुभागों का निर्यात करें </translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished">इस तरह संरक्षित करें</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">खोलने में स्‍वत: असफल: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">स्‍वत: नहीं पाया: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished">गलतियां की गईं</translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">लेयर %1 में परिवर्तन नहीं कर सकते</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">अधिक दिखायें</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">एक क्यू.जी.आई.एस. परियोजना फाइल खोलने के लिये चुनें</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">क्यू.जी.आई.एस. फाइलें</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">क्यू.जी.आई.एस. परियोजना फाइल चुनें</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">अपर्याप्त अनुमतियाँ</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">परियोजना फाइल लिखनेयोग्‍य नहीं </translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">%1 परियोजना संरक्षित करने में असमर्थ</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">परियोजना खोलने में असमर्थ</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">मैक्रो सक्षम करें </translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">सुरक्षा चेतावनी </translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">परियोजना मैक्रो निष्‍क्रिय किये गये. </translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">परियोजना में लेयर(s) असंरक्षित संपादनों के साथ संपादन मोड में हैं, जिन्हें संरक्षित नहीं किया जायेगा!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">संरक्षित करें?</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">क्‍या आप वर्तमान परियोजना को संरक्षित करना चाहते है? %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">परियोजना: %1 में संरक्षित की </translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">संपादन प्रारंभ असफल हुआ </translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished">प्रदाता को संपादन के लिये नहीं खोल सकते </translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished">संपादन रोकें</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">क्‍या आप लेयर %1 के परिवर्तनों को संरक्षित करना चाहते है?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished">वापस लाने के दौरान गलतियां </translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">प्रपत्र</translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">कॉपी करें</translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">नया</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">खोलें</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">छपाई</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">संरक्षित करें</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">त्रिआयामी</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">जाली</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">विश्लेषण</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">क्षेत्रफल</translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">दूरी</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">पहाड़-छाया</translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">वृत्त</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">प्रोफ़ाइल </translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">ढाल</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">समायोजन</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">सहायता</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -31995,6 +34748,45 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>&amp;Group Selected</source>
         <translation>&amp;चयनित समूह</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">पारदर्शिता:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsLegendGroupPropertiesBase</name>
+    <message>
+        <source>Legend group properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished">शीर्षक</translation>
+    </message>
+    <message>
+        <source>Abstract</source>
+        <translation type="unfinished"> ऐब्स्ट्रैक्ट</translation>
+    </message>
+    <message>
+        <source>OWS Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendModel</name>
@@ -32373,7 +35165,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Cannot add feature. Unknown WKB type</source>
-        <translation>नक्‍शा-अनुभाग नहीं जोड़ सकते. WKB प्रकार अज्ञात</translation>
+        <translation type="obsolete">नक्‍शा-अनुभाग नहीं जोड़ सकते. WKB प्रकार अज्ञात</translation>
     </message>
     <message>
         <source>The feature could not be added because removing the polygon intersections would change the geometry type</source>
@@ -32498,6 +35290,13 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Changed properties for label</source>
         <translation>लेबल के लिए बदली हुई विशेषतायें</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapToolCircularStringRadius</name>
+    <message>
+        <source>Radius: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32719,7 +35518,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     <name>QgsMapToolNodeTool</name>
     <message>
         <source>Node tool</source>
-        <translation>नोड-बिंदु साधन</translation>
+        <translation type="obsolete">नोड-बिंदु साधन</translation>
     </message>
     <message>
         <source>could not snap to a segment on the current layer.</source>
@@ -32728,6 +35527,10 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Inserted vertex</source>
         <translation>कोणबिंदु डाले गये</translation>
+    </message>
+    <message>
+        <source>Geometry has been cleared. Use the add part tool to set geometry for this feature.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33004,6 +35807,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Info</source>
         <translation>जानकारी</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -33057,23 +35864,70 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>खंड [%1]</translation>
+        <translation type="obsolete">खंड [%1]</translation>
     </message>
     <message>
         <source>Meters</source>
-        <translation>मीटर</translation>
+        <translation type="obsolete">मीटर</translation>
     </message>
     <message>
         <source>Feet</source>
-        <translation>फीट</translation>
+        <translation type="obsolete">फीट</translation>
     </message>
     <message>
         <source>Degrees</source>
-        <translation>डिग्री</translation>
+        <translation type="obsolete">डिग्री</translation>
     </message>
     <message>
         <source>Nautical Miles</source>
-        <translation>समुद्री मील</translation>
+        <translation type="obsolete">समुद्री मील</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">क्लिपबोर्ड में कॉपी</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">कैनवास पर जोड़ें</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -33651,6 +36505,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Unknown Geometry</source>
         <translation>अज्ञात ज्यामिति</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -33725,6 +36583,14 @@ enhancement</source>
     <message>
         <source>Network</source>
         <translation>नेटवर्क </translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">प्रमाणीकरण जरूरी </translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">प्रॉक्सी सत्‍यापन जरूरी </translation>
     </message>
 </context>
 <context>
@@ -34300,6 +37166,13 @@ Extended error information:
     <message>
         <source>File encoding</source>
         <translation>फाइल संकेतन</translation>
+    </message>
+</context>
+<context>
+    <name>QgsNodeEditor</name>
+    <message>
+        <source>Vertex editor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35688,7 +38561,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Qt स्वतः </translation>
+        <translation type="obsolete">Qt स्वतः </translation>
     </message>
     <message>
         <source>Size</source>
@@ -36204,7 +39077,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Meters</source>
-        <translation>मीटर</translation>
+        <translation type="obsolete">मीटर</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -36232,7 +39105,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>नयी जोड़ी गयी लेयरों के लिये स्‍वत: नक्‍शा-अनुभाग सरलीकरण सक्षम करें</translation>
+        <translation type="obsolete">नयी जोड़ी गयी लेयरों के लिये स्‍वत: नक्‍शा-अनुभाग सरलीकरण सक्षम करें</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -36472,7 +39345,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>&amp;CRS के लिये आदेश </translation>
+        <translation type="obsolete">&amp;CRS के लिये आदेश </translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -36488,7 +39361,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>यदि लेयरों में अलग CRS हों तो &apos;बाहर से&apos; पुन:प्रक्षेपण स्‍वत: सक्षम हो जाये</translation>
+        <translation type="obsolete">यदि लेयरों में अलग CRS हों तो &apos;बाहर से&apos; पुन:प्रक्षेपण स्‍वत: सक्षम हो जाये</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -36528,7 +39401,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>प्रणाली लोकैल अधिरोहण करें </translation>
+        <translation type="obsolete">प्रणाली लोकैल अधिरोहण करें </translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -36584,7 +39457,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>वैब पहुँच के लिये प्रॉक्‍सी उपयोग करें</translation>
+        <translation type="obsolete">वैब पहुँच के लिये प्रॉक्‍सी उपयोग करें</translation>
     </message>
     <message>
         <source>Host</source>
@@ -36628,6 +39501,54 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Default uses system&apos;s proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -36831,9 +39752,15 @@ SQL:%1
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>संपर्क असफल - समायोजन जाँचें और पुनः प्रयास करें.
+        <translation type="obsolete">संपर्क असफल - समायोजन जाँचें और पुनः प्रयास करें.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37344,6 +40271,14 @@ Error: %2</source>
         <translation>Oracle गलती: %1
 गलती: %2</translation>
     </message>
+    <message>
+        <source>Could not prepare get feature id statement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not retrieve feature id %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsOracleRootItem</name>
@@ -37602,11 +40537,15 @@ Error: %2</source>
     <name>QgsPGLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>लेयर मिटायें</translation>
+        <translation type="obsolete">लेयर मिटायें</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>लेयर सफलपूर्वक मिटायी गई. </translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37785,9 +40724,15 @@ Error: %2</source>
         <source>Connection failed - Check settings and try again.
 
 </source>
-        <translation>संपर्क असफल - समायोजन जाँचें और पुनः प्रयास करें.
+        <translation type="obsolete">संपर्क असफल - समायोजन जाँचें और पुनः प्रयास करें.
 
 </translation>
+    </message>
+    <message>
+        <source>Connection failed - consult message log for details.
+
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39095,35 +42040,35 @@ SQL: %2
     </message>
     <message>
         <source>Point</source>
-        <translation>बिंदु</translation>
+        <translation type="obsolete">बिंदु</translation>
     </message>
     <message>
         <source>Multipoint</source>
-        <translation>बहुबिंदु</translation>
+        <translation type="obsolete">बहुबिंदु</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>रेखा</translation>
+        <translation type="obsolete">रेखा</translation>
     </message>
     <message>
         <source>Multiline</source>
-        <translation>बहुरेखीय</translation>
+        <translation type="obsolete">बहुरेखीय</translation>
     </message>
     <message>
         <source>Polygon</source>
-        <translation>बहुभुज</translation>
+        <translation type="obsolete">बहुभुज</translation>
     </message>
     <message>
         <source>Multipolygon</source>
-        <translation>बहु-बहुभुज</translation>
+        <translation type="obsolete">बहु-बहुभुज</translation>
     </message>
     <message>
         <source>No Geometry</source>
-        <translation>कोई ज्यामिति नहीं</translation>
+        <translation type="obsolete">कोई ज्यामिति नहीं</translation>
     </message>
     <message>
         <source>Unknown Geometry</source>
-        <translation>अज्ञात ज्यामिति</translation>
+        <translation type="obsolete">अज्ञात ज्यामिति</translation>
     </message>
     <message>
         <source>None</source>
@@ -39430,7 +42375,7 @@ Choose ignore to continue loading without the missing layers. Choose cancel to r
     <name>QgsProjectColorScheme</name>
     <message>
         <source>Project colors</source>
-        <translation>परियोजना के रंग</translation>
+        <translation type="obsolete">परियोजना के रंग</translation>
     </message>
 </context>
 <context>
@@ -39618,6 +42563,14 @@ Proceed?</source>
     <message>
         <source>Error writing palette file</source>
         <translation>पैलेट फाइल लिखने में गलती </translation>
+    </message>
+    <message>
+        <source>Publish group as single layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select group name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -40047,6 +43000,14 @@ Proceed?</source>
     <message>
         <source>Python macros</source>
         <translation>पाइथन मैक्रो</translation>
+    </message>
+    <message>
+        <source>Publish group as layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exclusive layer groups</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42161,6 +45122,10 @@ standard deviation ×</source>
         <source>Import colors...</source>
         <translation>रंग लायें...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -42233,7 +45198,70 @@ standard deviation ×</source>
     <name>QgsRecentColorScheme</name>
     <message>
         <source>Recent colors</source>
-        <translation>हाल ही के रंग </translation>
+        <translation type="obsolete">हाल ही के रंग </translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished">चिन्हक</translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">बिंदु</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">वर्ग</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">त्रिभुज</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">आयत</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">वृत्त</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">वाक्‍य</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42507,6 +45535,10 @@ standard deviation ×</source>
             <numerusform>फिल्‍टर ने %n नक्‍शा-अनुभाग(s) लौटाया</numerusform>
         </translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
 </context>
 <context>
     <name>QgsRendererV2DataDefinedMenus</name>
@@ -42632,6 +45664,30 @@ standard deviation ×</source>
         <source>Change symbol size</source>
         <translation>प्रतीक आकार बदलें</translation>
     </message>
+    <message>
+        <source>Complete html support for Html output in GetLegendGraphic. For raster output, &amp;lt;br&amp;gt;,&amp;lt;b&amp;gt;,&amp;lt;i&amp;gt;,&amp;lt;u&amp;gt; are supported. &amp;lt;b&amp;gt;&amp;lt;i&amp;gt;&amp;lt;u&amp;gt; can be nested in that order only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">बिंदु</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select symbology type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRuleBasedRendererV2Model</name>
@@ -42674,6 +45730,14 @@ standard deviation ×</source>
     <message>
         <source>Number of features in this rule which are also present in other rule(s).</source>
         <translation>इस नियम में नक्‍शा-अनुभागों की संख्‍या जो कि अन्‍य नियम(s) में भी उपस्थित है.</translation>
+    </message>
+    <message>
+        <source>HTML (WMS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol (WMS)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42758,6 +45822,10 @@ standard deviation ×</source>
         <source>Abort</source>
         <translation>बंद करना</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
 </context>
 <context>
     <name>QgsRunProcess</name>
@@ -42838,11 +45906,15 @@ standard deviation ×</source>
     <name>QgsSLLayerItem</name>
     <message>
         <source>Delete layer</source>
-        <translation>लेयर मिटायें</translation>
+        <translation type="obsolete">लेयर मिटायें</translation>
     </message>
     <message>
         <source>Layer deleted successfully.</source>
         <translation>लेयर सफलपूर्वक मिटायी गई. </translation>
+    </message>
+    <message>
+        <source>Delete Layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -43127,6 +46199,13 @@ standard deviation ×</source>
     </message>
 </context>
 <context>
+    <name>QgsSelectGroupLayerDialogBase</name>
+    <message>
+        <source>Select layers and groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsSelectedFeature</name>
     <message>
         <source>Validation started.</source>
@@ -43146,23 +46225,23 @@ standard deviation ×</source>
     </message>
     <message>
         <source>polygon %1, ring %2, vertex %3</source>
-        <translation>बहुभुज %1, घेरा %2, कोणबिंदु %3</translation>
+        <translation type="obsolete">बहुभुज %1, घेरा %2, कोणबिंदु %3</translation>
     </message>
     <message>
         <source>polyline %1, vertex %2</source>
-        <translation>बहुरेखा %1, कोणबिंदु %2</translation>
+        <translation type="obsolete">बहुरेखा %1, कोणबिंदु %2</translation>
     </message>
     <message>
         <source>vertex %1</source>
-        <translation>कोणबिंदु %1</translation>
+        <translation type="obsolete">कोणबिंदु %1</translation>
     </message>
     <message>
         <source>point %1</source>
-        <translation>बिंदु %1</translation>
+        <translation type="obsolete">बिंदु %1</translation>
     </message>
     <message>
         <source>single point</source>
-        <translation>एक बिंदु</translation>
+        <translation type="obsolete">एक बिंदु</translation>
     </message>
 </context>
 <context>
@@ -43543,6 +46622,29 @@ enhancement</source>
         <source>Symbol levels...</source>
         <translation>लेबल प्रतीक...</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSingleSymbolRendererV2WidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">प्रपत्र</translation>
+    </message>
+    <message>
+        <source>WMS legend settings (GetLegendGraphic)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Legend symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsSmartGroupCondition</name>
@@ -43736,6 +46838,116 @@ enhancement</source>
     <message>
         <source>All layers</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">सर्वर संपर्क</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished">सं&amp;पर्क</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished">&amp;नया</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">संपादन</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">मिटायें</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">फाइल से संपर्को को लायें</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">लायें</translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished">संपर्को को फाइल में संरक्षित करें</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">संरक्षित करें</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">लेयर नाम के लिये शीर्षक का उपयोग करें </translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">इमेज संकेतन </translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished">निर्देशांक संदर्भ प्रणाली</translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished">बदलें...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">&amp;जोड़ें</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">&amp;पूछताछ निर्माण करें</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">नया %1 संपर्क बनायें</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished">%1 संपर्क और सभी संबद्ध समायोजनाें को हटाने के लिये क्या आप आश्वस्त हैं?</translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished">मिटाने की पुष्टि करें</translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">कोई लेयर नहीं                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished">संपर्को को लायें</translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
+        <translation type="unfinished">XML फाइलें (*.xml *XML)</translation>
     </message>
 </context>
 <context>
@@ -45977,6 +49189,291 @@ p, li {  सफ़ेद-स्थान: लपेटने से पूर्व
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">पहाड़-छाया की गणना कर रहा है...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">बंद करें</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">गलती</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">हटायें</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">नक्शा-अनुभाग</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">खोजें</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">साफ करें</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">ढलान की गणना कर रहा है...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">दर्शनीय</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -46168,6 +49665,14 @@ Error was:%2</source>
     <message>
         <source>Height attribute</source>
         <translation>ऊंचाई गुणधर्म </translation>
+    </message>
+    <message>
+        <source>Millimeter</source>
+        <translation type="unfinished">मिलीमीटर</translation>
+    </message>
+    <message>
+        <source>Map unit</source>
+        <translation type="unfinished">मैप इकाई</translation>
     </message>
 </context>
 <context>
@@ -46899,6 +50404,26 @@ Error was:%2</source>
         <source>Diagrams</source>
         <translation>आरेख</translation>
     </message>
+    <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsVectorLayerSaveAsDialog</name>
@@ -47165,15 +50690,15 @@ Error was:%2</source>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>&amp;जोड़ें</translation>
+        <translation type="obsolete">&amp;जोड़ें</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>&amp;पूछताछ निर्माण करें</translation>
+        <translation type="obsolete">&amp;पूछताछ निर्माण करें</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>पूछताछ निर्माण करें</translation>
+        <translation type="obsolete">पूछताछ निर्माण करें</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -47193,98 +50718,94 @@ Error was:%2</source>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>कोई लेयर नहीं                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </translation>
+        <translation type="obsolete">कोई लेयर नहीं                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>क्षमताएं दस्‍तावेज में कोई लेयर शामिल नहीं </translation>
+        <translation type="obsolete">क्षमताएं दस्‍तावेज में कोई लेयर शामिल नहीं </translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>नया WFS संपर्क बनायें</translation>
+        <translation type="obsolete">नया WFS संपर्क बनायें</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>WFS संपर्क संशोधित करें</translation>
+        <translation type="obsolete">WFS संपर्क संशोधित करें</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>%1 संपर्क और सभी संबद्ध समायोजनाें को हटाने के लिये क्या आप आश्वस्त हैं?</translation>
+        <translation type="obsolete">%1 संपर्क और सभी संबद्ध समायोजनाें को हटाने के लिये क्या आप आश्वस्त हैं?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>मिटाने की पुष्टि करें</translation>
+        <translation type="obsolete">मिटाने की पुष्टि करें</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>संपर्को को लायें</translation>
+        <translation type="obsolete">संपर्को को लायें</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>XML फाइलें (*.xml *XML)</translation>
+        <translation type="obsolete">XML फाइलें (*.xml *XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>सर्वर से WFS लेयर को जोड़ें</translation>
+        <translation type="obsolete">सर्वर से WFS लेयर को जोड़ें</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>बदलें...</translation>
+        <translation type="obsolete">बदलें...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>फिल्टर:</translation>
-    </message>
-    <message>
-        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">फिल्टर:</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>सर्वर संपर्क</translation>
+        <translation type="obsolete">सर्वर संपर्क</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>सं&amp;पर्क</translation>
+        <translation type="obsolete">सं&amp;पर्क</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;नया</translation>
+        <translation type="obsolete">&amp;नया</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>संपादन</translation>
+        <translation type="obsolete">संपादन</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>मिटायें</translation>
+        <translation type="obsolete">मिटायें</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>फाइल से संपर्को को लायें</translation>
+        <translation type="obsolete">फाइल से संपर्को को लायें</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>लायें</translation>
+        <translation type="obsolete">लायें</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>संपर्को को फाइल में संरक्षित करें</translation>
+        <translation type="obsolete">संपर्को को फाइल में संरक्षित करें</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>संरक्षित करें</translation>
+        <translation type="obsolete">संरक्षित करें</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>लेयर नाम के लिये शीर्षक का उपयोग करें </translation>
+        <translation type="obsolete">लेयर नाम के लिये शीर्षक का उपयोग करें </translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>निर्देशांक संदर्भ प्रणाली</translation>
+        <translation type="obsolete">निर्देशांक संदर्भ प्रणाली</translation>
     </message>
 </context>
 <context>
@@ -49198,6 +52719,33 @@ Please configure it before running R scripts.</source>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">लिपि:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">घूर्णन:</translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -50072,6 +53620,54 @@ Problem with line %d</source>
     </message>
 </context>
 <context>
+    <name>SlopeAreaMulti</name>
+    <message>
+        <source>Slope Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributing Area Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope Exponent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Area Exponent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope Area Grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SpatialJoin</name>
     <message>
         <source>Target vector layer</source>
@@ -50183,6 +53779,13 @@ Problem with line %d</source>
     </message>
 </context>
 <context>
+    <name>SymDifferenceTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SymbolsListWidget</name>
     <message>
         <source>Form</source>
@@ -50237,11 +53840,22 @@ Problem with line %d</source>
     <name>SymetricalDifference</name>
     <message>
         <source>Input layer</source>
-        <translation>आगत लेयर</translation>
+        <translation type="obsolete">आगत लेयर</translation>
     </message>
     <message>
         <source>Difference layer</source>
-        <translation>अंतर लेयर </translation>
+        <translation type="obsolete">अंतर लेयर </translation>
+    </message>
+</context>
+<context>
+    <name>SymmetricalDifference</name>
+    <message>
+        <source>Input layer</source>
+        <translation type="unfinished">आगत लेयर</translation>
+    </message>
+    <message>
+        <source>Difference layer</source>
+        <translation type="unfinished">अंतर लेयर </translation>
     </message>
     <message>
         <source>Symetrical difference</source>
@@ -50288,6 +53902,35 @@ Problem with line %d</source>
     </message>
     <message>
         <source>TauDEM (hydrologic analysis)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TauDEM multifile command line tools folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable singlefile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable multifile TauDEM tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open TauDEM algorithm %s:
+%s</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TauDEMMultifileAlgorithm</name>
+    <message>
+        <source>Could not load TauDEM algorithm: %s
+%s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -50409,6 +54052,17 @@ Problem with line %d</source>
     </message>
 </context>
 <context>
+    <name>UnionTool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GEOSIntersection returned empty geometry even though the geometries intersect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UniqueValues</name>
     <message>
         <source>Input layer</source>
@@ -50516,6 +54170,53 @@ Problem with line %d</source>
     <message>
         <source>Buffer</source>
         <translation>बफर</translation>
+    </message>
+</context>
+<context>
+    <name>VectorAnalysis</name>
+    <message>
+        <source>Buffer</source>
+        <translation type="unfinished">बफर</translation>
+    </message>
+    <message>
+        <source>Clip</source>
+        <translation type="unfinished">कतरें</translation>
+    </message>
+    <message>
+        <source>Convex Hull</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Difference</source>
+        <translation type="unfinished">अंतर</translation>
+    </message>
+    <message>
+        <source>Dissolve</source>
+        <translation type="unfinished">विलय करें</translation>
+    </message>
+    <message>
+        <source>Intersect</source>
+        <translation type="unfinished">प्रतिच्छेदन करें</translation>
+    </message>
+    <message>
+        <source>Eliminate sliver polygons</source>
+        <translation type="unfinished">विच्छेदित बहुभुज हटा दें</translation>
+    </message>
+    <message>
+        <source>Symmetric difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Union</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Geoprocessing Tools</source>
+        <translation type="unfinished">&amp;भूप्रक्रियाएँ साधन </translation>
+    </message>
+    <message>
+        <source>Intersection</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -51023,6 +54724,10 @@ Problem with line %d</source>
     <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+    <message>
+        <source>on every curve point</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -51711,7 +55416,11 @@ Problem with line %d</source>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Virtual</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -53379,6 +57088,13 @@ To edit values, select the field to modify with the filter button on the left an
     </message>
 </context>
 <context>
+    <name>differencetool</name>
+    <message>
+        <source>Input and operator layers must both be polygon layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dxf2shpConverter</name>
     <message>
         <source>Converts DXF files in Shapefile format</source>
@@ -54263,7 +57979,11 @@ Plugin will not be enabled.</source>
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -56983,7 +60703,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>xyz</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -57010,7 +60734,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Pyramidized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -58835,7 +62563,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">पहाड़-छाया</translation>
     </message>
 </context>
 <context>
@@ -59823,7 +63555,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Merged</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59842,7 +63578,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Nearblack</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59941,7 +63681,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>PCT to RGB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59956,7 +63700,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Vectorized</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -59991,7 +63739,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">दूरी</translation>
     </message>
 </context>
 <context>
@@ -60003,10 +63755,6 @@ Format a date type or string into a custom string format. Uses Qt data time form
     <message>
         <source>Attribute field</source>
         <translation>गुणधर्म स्‍तंभ</translation>
-    </message>
-    <message>
-        <source>Write values inside an existing raster layer(*)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Set output raster size (ignored if above option is checked)</source>
@@ -60022,10 +63770,6 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Raster type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output layer: mandatory to choose an existing raster layer if the (*) option is selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -60057,7 +63801,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Force the generation of an associated ESRI world file (.tfw))</source>
+        <source>Force the generation of an associated ESRI world file (.tfw)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rasterized</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -60073,7 +63821,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>RGB to PCT</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60092,7 +63844,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Roughness</source>
+        <translation type="unfinished">खुरदरापन</translation>
     </message>
 </context>
 <context>
@@ -60181,7 +63937,22 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
+    </message>
+    <message>
+        <source>Sieved</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>sliverpolygontool</name>
+    <message>
+        <source>Merge combine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create multipolygon from merge results: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60212,7 +63983,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">ढाल</translation>
     </message>
 </context>
 <context>
@@ -60370,7 +64145,11 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output file</source>
-        <translation>निर्गम फाइल</translation>
+        <translation type="obsolete">निर्गम फाइल</translation>
+    </message>
+    <message>
+        <source>Topographic Position Index</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60413,7 +64192,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -60445,6 +64224,10 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translated</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -60644,7 +64427,7 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Output layer</source>
-        <translation>निर्गम लेयर </translation>
+        <translation type="obsolete">निर्गम लेयर </translation>
     </message>
     <message>
         <source>Nodata value, leave blank to take the nodata value from input</source>
@@ -60676,6 +64459,10 @@ Format a date type or string into a custom string format. Uses Qt data time form
     </message>
     <message>
         <source>Force the generation of an associated ESRI world file (.tfw))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warped</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
