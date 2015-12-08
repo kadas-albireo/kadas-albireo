@@ -7062,14 +7062,6 @@ GEOS空間演算エラー:1個またはそれ以上の数の地物のジオメ�
         <source>Options</source>
         <translation type="unfinished">オプション</translation>
     </message>
-    <message>
-        <source>1E-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Precision:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GetModelsAction</name>
@@ -8626,7 +8618,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>プリントコンポーザ</translation>
+        <translation type="obsolete">プリントコンポーザ</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -8634,11 +8626,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Select</source>
-        <translation>選択</translation>
+        <translation type="obsolete">選択</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>計測</translation>
+        <translation type="obsolete">計測</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -8650,7 +8642,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>プラグイン(&amp;P)</translation>
+        <translation type="obsolete">プラグイン(&amp;P)</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -8658,7 +8650,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>設定(&amp;S)</translation>
+        <translation type="obsolete">設定(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -8666,7 +8658,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>ベクタ(&amp;O)</translation>
+        <translation type="obsolete">ベクタ(&amp;O)</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8746,19 +8738,19 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>コンポーザーマネージャ...</translation>
+        <translation type="obsolete">コンポーザーマネージャ...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>テンプレートをもとに新規作成</translation>
+        <translation type="obsolete">テンプレートをもとに新規作成</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>プレビューモード</translation>
+        <translation type="obsolete">プレビューモード</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>レイヤの作成</translation>
+        <translation type="obsolete">レイヤの作成</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8786,7 +8778,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>QGISを終了する</translation>
+        <translation type="obsolete">QGISを終了する</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8810,7 +8802,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>地物の切り取り</translation>
+        <translation type="obsolete">地物の切り取り</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8818,7 +8810,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>地物のコピー</translation>
+        <translation type="obsolete">地物のコピー</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8826,7 +8818,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>地物の貼り付け</translation>
+        <translation type="obsolete">地物の貼り付け</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8834,7 +8826,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>地物の追加</translation>
+        <translation type="obsolete">地物の追加</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8842,15 +8834,15 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>地物の移動</translation>
+        <translation type="obsolete">地物の移動</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>地物の変形</translation>
+        <translation type="obsolete">地物の変形</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>地物の分割</translation>
+        <translation type="obsolete">地物の分割</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8858,7 +8850,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>選択物の削除</translation>
+        <translation type="obsolete">選択物の削除</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8870,27 +8862,27 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>地物の簡素化</translation>
+        <translation type="obsolete">地物の簡素化</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>リングの削除</translation>
+        <translation type="obsolete">リングの削除</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>部分の削除</translation>
+        <translation type="obsolete">部分の削除</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>選択地物の結合</translation>
+        <translation type="obsolete">選択地物の結合</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>選択地物の属性結合</translation>
+        <translation type="obsolete">選択地物の属性結合</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>ノードツール</translation>
+        <translation type="obsolete">ノードツール</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8898,11 +8890,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>地図移動</translation>
+        <translation type="obsolete">地図移動</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>拡大</translation>
+        <translation type="obsolete">拡大</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8910,7 +8902,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>縮小</translation>
+        <translation type="obsolete">縮小</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8918,23 +8910,23 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>ポリゴンによる地物選択</translation>
+        <translation type="obsolete">ポリゴンによる地物選択</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>フリーハンドによる地物選択</translation>
+        <translation type="obsolete">フリーハンドによる地物選択</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>半径指定による地物選択</translation>
+        <translation type="obsolete">半径指定による地物選択</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>すべてのレイヤから地物選択を取り消す</translation>
+        <translation type="obsolete">すべてのレイヤから地物選択を取り消す</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>地物情報表示</translation>
+        <translation type="obsolete">地物情報表示</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8942,7 +8934,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>線の長さを測る</translation>
+        <translation type="obsolete">線の長さを測る</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8950,7 +8942,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>面積を測る</translation>
+        <translation type="obsolete">面積を測る</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8958,7 +8950,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>角度を測る</translation>
+        <translation type="obsolete">角度を測る</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -8974,11 +8966,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>次の表示領域にズーム</translation>
+        <translation type="obsolete">次の表示領域にズーム</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>実際のサイズにズーム</translation>
+        <translation type="obsolete">実際のサイズにズーム</translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -8994,7 +8986,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>新しいブックマーク...</translation>
+        <translation type="obsolete">新しいブックマーク...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -9002,7 +8994,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>ブックマーク一覧</translation>
+        <translation type="obsolete">ブックマーク一覧</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -9010,7 +9002,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Refresh</source>
-        <translation>再読み込み</translation>
+        <translation type="obsolete">再読み込み</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -9026,7 +9018,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Labeling</source>
-        <translation>ラベリング</translation>
+        <translation type="obsolete">ラベリング</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -9034,7 +9026,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>新規シェープファイルレイヤ...</translation>
+        <translation type="obsolete">新規シェープファイルレイヤ...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -9046,7 +9038,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>ベクタレイヤの追加...</translation>
+        <translation type="obsolete">ベクタレイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -9054,7 +9046,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>ラスタレイヤの追加...</translation>
+        <translation type="obsolete">ラスタレイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -9062,7 +9054,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>PostGISレイヤの追加...</translation>
+        <translation type="obsolete">PostGISレイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -9070,7 +9062,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>SpatiaLiteレイヤの追加...</translation>
+        <translation type="obsolete">SpatiaLiteレイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -9078,11 +9070,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>MSSQL 空間レイヤの追加...</translation>
+        <translation type="obsolete">MSSQL 空間レイヤの追加...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation>Oracle Spatial レイヤの追加...</translation>
+        <translation type="obsolete">Oracle Spatial レイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -9090,7 +9082,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>WMS/WMTSレイヤの追加...</translation>
+        <translation type="obsolete">WMS/WMTSレイヤの追加...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -9098,7 +9090,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>編集モード切替</translation>
+        <translation type="obsolete">編集モード切替</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -9118,11 +9110,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>ショートカットの構成...</translation>
+        <translation type="obsolete">ショートカットの構成...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>API文書</translation>
+        <translation type="obsolete">API文書</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -9166,7 +9158,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>式による選択...</translation>
+        <translation type="obsolete">式による選択...</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -9178,15 +9170,15 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>レイヤ定義ファイルからの追加...</translation>
+        <translation type="obsolete">レイヤ定義ファイルからの追加...</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>レイヤ定義ファイルとして保存...</translation>
+        <translation type="obsolete">レイヤ定義ファイルとして保存...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>通常</translation>
+        <translation type="obsolete">通常</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -9194,7 +9186,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>フォトコピーシミュレート (グレイスケール)</translation>
+        <translation type="obsolete">フォトコピーシミュレート (グレイスケール)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -9202,7 +9194,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>ファックスシミュレート(単色)</translation>
+        <translation type="obsolete">ファックスシミュレート(単色)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -9210,7 +9202,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>色覚異常シミュレート(Protanope)</translation>
+        <translation type="obsolete">色覚異常シミュレート(Protanope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -9218,7 +9210,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>色覚異常シミュレート(Deuteranope)</translation>
+        <translation type="obsolete">色覚異常シミュレート(Deuteranope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -9226,7 +9218,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>レイヤを表示するスケールの設定</translation>
+        <translation type="obsolete">レイヤを表示するスケールの設定</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -9234,7 +9226,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>選択されたレイヤを隠す</translation>
+        <translation type="obsolete">選択されたレイヤを隠す</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -9242,11 +9234,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>新規SpatiaLiteレイヤ...</translation>
+        <translation type="obsolete">新規SpatiaLiteレイヤ...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>ラスタ計算機...</translation>
+        <translation type="obsolete">ラスタ計算機...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -9258,15 +9250,15 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>レイヤのCRSをプロジェクトに設定する</translation>
+        <translation type="obsolete">レイヤのCRSをプロジェクトに設定する</translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>検索...</translation>
+        <translation type="obsolete">検索...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>全体図に追加</translation>
+        <translation type="obsolete">全体図に追加</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -9274,11 +9266,11 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>全体図から全て削除</translation>
+        <translation type="obsolete">全体図から全て削除</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>全てのレイヤを表示</translation>
+        <translation type="obsolete">全てのレイヤを表示</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -9286,7 +9278,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>全てのレイヤを隠す</translation>
+        <translation type="obsolete">全てのレイヤを隠す</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -9294,7 +9286,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>プラグインの管理とインストール...</translation>
+        <translation type="obsolete">プラグインの管理とインストール...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -9302,7 +9294,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>デリミティッドテキストレイヤの追加...</translation>
+        <translation type="obsolete">デリミティッドテキストレイヤの追加...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -9310,7 +9302,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>新規ベクターレイヤ</translation>
+        <translation type="obsolete">新規ベクターレイヤ</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -9318,7 +9310,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>新規メモリベクタレイヤ</translation>
+        <translation type="obsolete">新規メモリベクタレイヤ</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -9330,7 +9322,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>地物の選択</translation>
+        <translation type="obsolete">地物の選択</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -9354,7 +9346,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>カスタムCRS...</translation>
+        <translation type="obsolete">カスタムCRS...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -9366,7 +9358,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>QGIS ヘルプ</translation>
+        <translation type="obsolete">QGIS ヘルプ</translation>
     </message>
     <message>
         <source>F1</source>
@@ -9374,7 +9366,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>QGIS ホームページ</translation>
+        <translation type="obsolete">QGIS ホームページ</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -9390,7 +9382,7 @@ LAStoolsアルゴリズムを実行する前に設定をして下さい.</transl
     </message>
     <message>
         <source>About</source>
-        <translation>QGISについて</translation>
+        <translation type="obsolete">QGISについて</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -9416,11 +9408,11 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>スタイルマネージャ...</translation>
+        <translation type="obsolete">スタイルマネージャ...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>Pythonコンソール</translation>
+        <translation type="obsolete">Pythonコンソール</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -9428,7 +9420,7 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>カスタマイズ...</translation>
+        <translation type="obsolete">カスタマイズ...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -9440,7 +9432,7 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>埋め込みレイヤとグループ...</translation>
+        <translation type="obsolete">埋め込みレイヤとグループ...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -9472,7 +9464,7 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>WFSレイヤの追加...</translation>
+        <translation type="obsolete">WFSレイヤの追加...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -9496,7 +9488,7 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>曲線のオフセット</translation>
+        <translation type="obsolete">曲線のオフセット</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -9508,7 +9500,7 @@ Ctl(Cmd)15度増加.</translation>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>WCSレイヤの追加...</translation>
+        <translation type="obsolete">WCSレイヤの追加...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -9616,7 +9608,7 @@ Shift+クリックで非表示
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>DXFエクスポート...</translation>
+        <translation type="obsolete">DXFエクスポート...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -9680,18 +9672,438 @@ Shift+クリックで非表示
     </message>
     <message>
         <source>New Temporary Scratch Layer...</source>
-        <translation>新しい一時スクラッチレイヤ...</translation>
+        <translation type="obsolete">新しい一時スクラッチレイヤ...</translation>
     </message>
     <message>
         <source>New temporary scratch layer</source>
         <translation>新しい一時スクラッチレイヤ</translation>
     </message>
     <message>
-        <source>Add circular string</source>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">縮小(&amp;O)</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">通常(&amp;N)</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14882,6 +15294,18 @@ Response was:
         <translation>%1を削除します. よろしいですか?</translation>
     </message>
     <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>VectorAnalysis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16176,11 +16600,11 @@ Errors: %3
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>認証が必要です</translation>
+        <translation type="obsolete">認証が必要です</translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>プロキシの認証が必要です</translation>
+        <translation type="obsolete">プロキシの認証が必要です</translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -16197,7 +16621,7 @@ Always ignore these errors?</source>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>%n SSLエラーが発生しました</numerusform>
         </translation>
     </message>
@@ -16244,6 +16668,37 @@ Always ignore these errors?</source>
     <message>
         <source>QGIS Enterprise </source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -16589,6 +17044,103 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">編集...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">新しい接続...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">編集...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">新しい接続...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -16619,7 +17171,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Map marker</source>
-        <translation>マップメーカー</translation>
+        <translation type="obsolete">マップメーカー</translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -16632,6 +17184,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Frame color</source>
         <translation>フレームの色</translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17446,10 +18002,6 @@ Parser error:
     <message>
         <source>, spatially limited</source>
         <translation>, 空間的な制限あり</translation>
-    </message>
-    <message>
-        <source>Zoom to feature</source>
-        <translation type="unfinished">地物にズームする</translation>
     </message>
 </context>
 <context>
@@ -21686,6 +22238,14 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Vertical descending</source>
         <translation>垂直下向き</translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -22460,6 +23020,10 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Scalebar line cap style</source>
         <translation>スケールバーラインキャップスタイル</translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -22477,11 +23041,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Map</source>
-        <translation>地図</translation>
+        <translation type="obsolete">地図</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>スタイル</translation>
+        <translation type="obsolete">スタイル</translation>
     </message>
     <message>
         <source>Units</source>
@@ -22489,11 +23053,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Label</source>
-        <translation>ラベル</translation>
+        <translation type="obsolete">ラベル</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>バー単位毎の地図単位</translation>
+        <translation type="obsolete">バー単位毎の地図単位</translation>
     </message>
     <message>
         <source>Segments</source>
@@ -22509,7 +23073,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Size</source>
-        <translation>大きさ</translation>
+        <translation type="obsolete">大きさ</translation>
     </message>
     <message>
         <source> units</source>
@@ -22574,6 +23138,38 @@ Please try a lower resolution or a smaller papersize</source>
     <message>
         <source>Font...</source>
         <translation>フォント...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -23619,6 +24215,13 @@ and current file is [%3]</source>
     <message>
         <source>Save as standard gradient</source>
         <translation>標準階調で保存</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -25660,15 +26263,35 @@ Leave empty to automatically apply the maximum value.</source>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1度</translation>
+        <translation type="obsolete">%1度</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1ラジアン</translation>
+        <translation type="obsolete">%1ラジアン</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1グラード</translation>
+        <translation type="obsolete">%1グラード</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">度</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">ラジアン</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -27767,6 +28390,73 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -28564,6 +29254,17 @@ Please reselect a valid file.</source>
     </message>
     <message>
         <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -32554,6 +33255,312 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">現在の地図領域に交差する地物をエクスポート</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">デフォルトテンプレートのオープンに失敗しました: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">デフォルトテンプレートが見つかりません: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished">コミットエラー</translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">変更をレイヤ %1 にコミットできませんでした</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished">エラー: %1
+</translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">さらに表示する</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">開く QGIS プロジェクトファイルを選択</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">QGISファイル</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">QGIS プロジェクトファイルを選択</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">不十分な権限</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">プロジェクトファイルに書き込みできません.</translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">プロジェクトを%1に保存できません</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">プロジェクトを開けません</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">マクロを有効にする</translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">セキュリティ警告</translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">プロジェクトマクロが無効になりました.</translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">未保存の編集モードのレイヤがあります.これらは保存されません!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">保存しますか？</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">現在のプロジェクトを保存しますか？ %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">プロジェクトを保存しました: %1</translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">編集開始に失敗しました</translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished">指定プロバイダは編集できません</translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished">編集を終了</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">%1レイヤの変更を保存しますか？</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished">ロールバック中に問題が発生しました</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">フォーム</translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">コピー</translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">新規</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">開く</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">印刷</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">保存</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">ビュー</translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">グリッド</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">解析</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">距離</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">陰影図</translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">円</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">プロファイル</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">傾斜</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">設定</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">ヘルプ</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -33767,6 +34774,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>&amp;Group Selected</source>
         <translation>選択レイヤをグループにする(&amp;G)</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">透明度:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -34818,6 +35833,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Info</source>
         <translation>情報</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -34871,7 +35890,54 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>セグメント [%1]</translation>
+        <translation type="obsolete">セグメント [%1]</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">クリップボードへコピー</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">キャンバスに追加する</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35449,6 +36515,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Unknown Geometry</source>
         <translation>不明なジオメトリ</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -35523,6 +36593,14 @@ enhancement</source>
     <message>
         <source>Network</source>
         <translation>ネットワーク</translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">認証が必要です</translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">プロキシの認証が必要です</translation>
     </message>
 </context>
 <context>
@@ -37501,7 +38579,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Qt 既定値</translation>
+        <translation type="obsolete">Qt 既定値</translation>
     </message>
     <message>
         <source>Size</source>
@@ -38017,7 +39095,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Meters</source>
-        <translation>メートル</translation>
+        <translation type="obsolete">メートル</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -38045,7 +39123,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>新規に追加されたレイヤで地物簡素化をデフォルトで有効にする</translation>
+        <translation type="obsolete">新規に追加されたレイヤで地物簡素化をデフォルトで有効にする</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -38285,7 +39363,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>CRSを確認する(&amp;C)</translation>
+        <translation type="obsolete">CRSを確認する(&amp;C)</translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -38301,7 +39379,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>もしレイヤが異なる投影座標系をもつ場合、自動で &apos;オンザフライ&apos; 投影変換を有効にする</translation>
+        <translation type="obsolete">もしレイヤが異なる投影座標系をもつ場合、自動で &apos;オンザフライ&apos; 投影変換を有効にする</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -38341,7 +39419,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>システムロケールを上書きする</translation>
+        <translation type="obsolete">システムロケールを上書きする</translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -38397,7 +39475,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>Web接続にプロキシを使用する</translation>
+        <translation type="obsolete">Web接続にプロキシを使用する</translation>
     </message>
     <message>
         <source>Host</source>
@@ -38442,6 +39520,54 @@ Always network: always load from network and do not check if the cache has a val
     <message>
         <source>Default uses system&apos;s proxy</source>
         <translation>デフォルトではシステムのプロキシを使用します</translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -44009,6 +45135,10 @@ standard deviation ×</source>
         <source>Import colors...</source>
         <translation>色のインポート...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -44075,6 +45205,69 @@ standard deviation ×</source>
     <message>
         <source>Calculating ruggedness...</source>
         <translation>粗度の計算中...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished">マーカー</translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">点</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">角型</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">三角形</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">ライン</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">四角形</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">ポリゴン</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">円</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">テキスト</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -45639,6 +46832,116 @@ enhancement</source>
     <message>
         <source>All layers</source>
         <translation>全てのレイヤ</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">サーバ接続</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished">接続(&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished">新規 (&amp;N)</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">編集</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">接続情報をファイルからロードする</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">読み込み</translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished">接続情報をファイルに保存する</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">保存</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished">タイトルか要約にこの単語を含むWFS地物タイプを表示</translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">タイトルをレイヤ名として使う</translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">画像エンコード</translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished">空間参照システム</translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished">変更...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">追加(&amp;A)</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">クエリ作成(&amp;B)</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">新しい %1 コネクションの作成</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished">%1の接続と全ての設定を削除してもよろしいですか?</translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished">削除を確認</translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">レイヤがありません</translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
+        <translation type="unfinished">XMLファイル(*.xml *XML)</translation>
     </message>
 </context>
 <context>
@@ -47901,6 +49204,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">陰影図を計算しています...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished">レイヤ</translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">閉じる</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">地物</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">検索</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">クリア</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">傾斜を計算しています...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">表示</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -49104,15 +50692,15 @@ Error was:%2</source>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>追加(&amp;A)</translation>
+        <translation type="obsolete">追加(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>クエリ作成(&amp;B)</translation>
+        <translation type="obsolete">クエリ作成(&amp;B)</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>クエリ作成</translation>
+        <translation type="obsolete">クエリ作成</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -49132,98 +50720,98 @@ Error was:%2</source>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>レイヤがありません</translation>
+        <translation type="obsolete">レイヤがありません</translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>capabilitiesドキュメントにレイヤ情報がありません.</translation>
+        <translation type="obsolete">capabilitiesドキュメントにレイヤ情報がありません.</translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>新しいWFS接続を作成する</translation>
+        <translation type="obsolete">新しいWFS接続を作成する</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>WFS接続を修正する</translation>
+        <translation type="obsolete">WFS接続を修正する</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>%1の接続と全ての設定を削除してもよろしいですか?</translation>
+        <translation type="obsolete">%1の接続と全ての設定を削除してもよろしいですか?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>削除を確認</translation>
+        <translation type="obsolete">削除を確認</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>接続情報のロード</translation>
+        <translation type="obsolete">接続情報のロード</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>XMLファイル(*.xml *XML)</translation>
+        <translation type="obsolete">XMLファイル(*.xml *XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>サーバからWFSレイヤを追加</translation>
+        <translation type="obsolete">サーバからWFSレイヤを追加</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>変更...</translation>
+        <translation type="obsolete">変更...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>フィルター:</translation>
+        <translation type="obsolete">フィルター:</translation>
     </message>
     <message>
         <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation>タイトルか要約にこの単語を含むWFS地物タイプを表示</translation>
+        <translation type="obsolete">タイトルか要約にこの単語を含むWFS地物タイプを表示</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>サーバ接続</translation>
+        <translation type="obsolete">サーバ接続</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>接続(&amp;C)</translation>
+        <translation type="obsolete">接続(&amp;C)</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>新規 (&amp;N)</translation>
+        <translation type="obsolete">新規 (&amp;N)</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>編集</translation>
+        <translation type="obsolete">編集</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>削除</translation>
+        <translation type="obsolete">削除</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>接続情報をファイルからロードする</translation>
+        <translation type="obsolete">接続情報をファイルからロードする</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>読み込み</translation>
+        <translation type="obsolete">読み込み</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>接続情報をファイルに保存する</translation>
+        <translation type="obsolete">接続情報をファイルに保存する</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation type="obsolete">保存</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>タイトルをレイヤ名として使う</translation>
+        <translation type="obsolete">タイトルをレイヤ名として使う</translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>空間参照システム</translation>
+        <translation type="obsolete">空間参照システム</translation>
     </message>
 </context>
 <context>
@@ -51135,6 +52723,33 @@ Rスクリプトを実行する前に設定をして下さい.</translation>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">フォント:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">回転:</translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -52036,6 +53651,27 @@ Problem with line %d</source>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation>誤ったMPIプロセス数が使われました。TauDEMアルゴリズムを実行する前に、正しい数を設定して下さい</translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

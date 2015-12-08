@@ -7059,14 +7059,6 @@ Lỗi xử lý địa lý GEOS: Một hoặc nhiều đối tượng đầu vào
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>1E-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Precision:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GetModelsAction</name>
@@ -8632,7 +8624,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>Các Trình Biên tập In ấn</translation>
+        <translation type="obsolete">Các Trình Biên tập In ấn</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -8640,11 +8632,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select</source>
-        <translation>Chọn</translation>
+        <translation type="obsolete">Chọn</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>Đo</translation>
+        <translation type="obsolete">Đo</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -8656,7 +8648,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>Phần &amp;mở rộng</translation>
+        <translation type="obsolete">Phần &amp;mở rộng</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -8664,7 +8656,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>Th&amp;iết lập</translation>
+        <translation type="obsolete">Th&amp;iết lập</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -8672,7 +8664,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>Vect&amp;or</translation>
+        <translation type="obsolete">Vect&amp;or</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8752,19 +8744,19 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>Trình Quản lý Biên tập...</translation>
+        <translation type="obsolete">Trình Quản lý Biên tập...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>Mới theo mẫu</translation>
+        <translation type="obsolete">Mới theo mẫu</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>Chế độ xem trước</translation>
+        <translation type="obsolete">Chế độ xem trước</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>Tạo lớp</translation>
+        <translation type="obsolete">Tạo lớp</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8792,7 +8784,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>Thoát QGIS</translation>
+        <translation type="obsolete">Thoát QGIS</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8816,7 +8808,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>Cắt các đối tượng</translation>
+        <translation type="obsolete">Cắt các đối tượng</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8824,7 +8816,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>Chép các đối tượng</translation>
+        <translation type="obsolete">Chép các đối tượng</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8832,7 +8824,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>Dán các đối tượng</translation>
+        <translation type="obsolete">Dán các đối tượng</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8840,7 +8832,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>Thêm đối tượng</translation>
+        <translation type="obsolete">Thêm đối tượng</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8848,15 +8840,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>Di chuyển Đối tượng</translation>
+        <translation type="obsolete">Di chuyển Đối tượng</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>Chỉnh hình dạng đối tượng</translation>
+        <translation type="obsolete">Chỉnh hình dạng đối tượng</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>Chia Đối tượng</translation>
+        <translation type="obsolete">Chia Đối tượng</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8864,7 +8856,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>Xóa phần được chọn</translation>
+        <translation type="obsolete">Xóa phần được chọn</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8876,27 +8868,27 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>Đơn giản hoá đối tượng</translation>
+        <translation type="obsolete">Đơn giản hoá đối tượng</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>Xoá vòng</translation>
+        <translation type="obsolete">Xoá vòng</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>Xoá phần</translation>
+        <translation type="obsolete">Xoá phần</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>Gộp các đối tượng được chọn</translation>
+        <translation type="obsolete">Gộp các đối tượng được chọn</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>Gộp thuộc tính của các đối tượng được chọn</translation>
+        <translation type="obsolete">Gộp thuộc tính của các đối tượng được chọn</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>Công cụ Nốt</translation>
+        <translation type="obsolete">Công cụ Nốt</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8904,11 +8896,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>Di chuyển bản đồ</translation>
+        <translation type="obsolete">Di chuyển bản đồ</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>Phóng to</translation>
+        <translation type="obsolete">Phóng to</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8916,7 +8908,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>Thu nhỏ</translation>
+        <translation type="obsolete">Thu nhỏ</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8924,23 +8916,23 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>Chọn đối tượng theo vùng</translation>
+        <translation type="obsolete">Chọn đối tượng theo vùng</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>Chọn đối tượng theo kiểu vẽ tự do</translation>
+        <translation type="obsolete">Chọn đối tượng theo kiểu vẽ tự do</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>Chọn đối tượng theo bán kính</translation>
+        <translation type="obsolete">Chọn đối tượng theo bán kính</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>Khử chọn đối tượng khỏi tất cả các lớp</translation>
+        <translation type="obsolete">Khử chọn đối tượng khỏi tất cả các lớp</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>Nhận diện đối tượng</translation>
+        <translation type="obsolete">Nhận diện đối tượng</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8948,7 +8940,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>Đo đường</translation>
+        <translation type="obsolete">Đo đường</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8956,7 +8948,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>Đo diện tích</translation>
+        <translation type="obsolete">Đo diện tích</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8964,7 +8956,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>Đo góc</translation>
+        <translation type="obsolete">Đo góc</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -8980,11 +8972,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>Phóng Tiếp theo</translation>
+        <translation type="obsolete">Phóng Tiếp theo</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>Phóng kích thước thực</translation>
+        <translation type="obsolete">Phóng kích thước thực</translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -9000,7 +8992,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>Đánh dấu mới...</translation>
+        <translation type="obsolete">Đánh dấu mới...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -9008,7 +9000,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>Hiển thị các đánh dấu</translation>
+        <translation type="obsolete">Hiển thị các đánh dấu</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -9016,7 +9008,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>Làm tươi lại</translation>
+        <translation type="obsolete">Làm tươi lại</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -9032,7 +9024,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Labeling</source>
-        <translation>Dán nhãn</translation>
+        <translation type="obsolete">Dán nhãn</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -9040,7 +9032,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>Lớp shapfile mới...</translation>
+        <translation type="obsolete">Lớp shapfile mới...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -9052,7 +9044,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>Thêm lớp vector...</translation>
+        <translation type="obsolete">Thêm lớp vector...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -9060,7 +9052,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>Thêm lớp raster...</translation>
+        <translation type="obsolete">Thêm lớp raster...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -9068,7 +9060,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>Thêm lớp PostGIS...</translation>
+        <translation type="obsolete">Thêm lớp PostGIS...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -9076,7 +9068,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>Thêm lớp SpatialLite...</translation>
+        <translation type="obsolete">Thêm lớp SpatialLite...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -9084,11 +9076,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>Thêm lớp không gian MSSQL...</translation>
+        <translation type="obsolete">Thêm lớp không gian MSSQL...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation>Thêm lớp không gian Oracle...</translation>
+        <translation type="obsolete">Thêm lớp không gian Oracle...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -9096,7 +9088,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>Thêm lớp WMS/WMTS...</translation>
+        <translation type="obsolete">Thêm lớp WMS/WMTS...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -9104,7 +9096,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>Bật/tắt chỉnh sửa</translation>
+        <translation type="obsolete">Bật/tắt chỉnh sửa</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -9124,11 +9116,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>Cấu hình các phím tắt...</translation>
+        <translation type="obsolete">Cấu hình các phím tắt...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>Tài liệu API</translation>
+        <translation type="obsolete">Tài liệu API</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -9172,7 +9164,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>Chọn theo biểu thức...</translation>
+        <translation type="obsolete">Chọn theo biểu thức...</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -9184,15 +9176,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>Thêm vào từ tập tin định nghĩa lớp...</translation>
+        <translation type="obsolete">Thêm vào từ tập tin định nghĩa lớp...</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>Lưu thành tập tin định nghĩa lớp...</translation>
+        <translation type="obsolete">Lưu thành tập tin định nghĩa lớp...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Thường</translation>
+        <translation type="obsolete">Thường</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -9200,7 +9192,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>Giả lập bản Phô-tô (thang xám)</translation>
+        <translation type="obsolete">Giả lập bản Phô-tô (thang xám)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -9208,7 +9200,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>Giả lập bản Fax (Mono)</translation>
+        <translation type="obsolete">Giả lập bản Fax (Mono)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -9216,7 +9208,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>Giả lập độ Mù màu (Protanope)</translation>
+        <translation type="obsolete">Giả lập độ Mù màu (Protanope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -9224,7 +9216,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>Giả lập độ Mù màu (Deuteranope)</translation>
+        <translation type="obsolete">Giả lập độ Mù màu (Deuteranope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -9232,7 +9224,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>Thiết lập khả năng nhìn thấy theo tỷ lệ của lớp</translation>
+        <translation type="obsolete">Thiết lập khả năng nhìn thấy theo tỷ lệ của lớp</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -9240,7 +9232,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>Ẩn các lớp được chọn</translation>
+        <translation type="obsolete">Ẩn các lớp được chọn</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -9248,11 +9240,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>Lớp SpatiaLite mới...</translation>
+        <translation type="obsolete">Lớp SpatiaLite mới...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>Bộ tính toán raster...</translation>
+        <translation type="obsolete">Bộ tính toán raster...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -9264,15 +9256,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>Thiết lập HTĐ của dự án theo lớp </translation>
+        <translation type="obsolete">Thiết lập HTĐ của dự án theo lớp </translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>Truy vấn...</translation>
+        <translation type="obsolete">Truy vấn...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>Thêm vào vùng xem Tổng quát</translation>
+        <translation type="obsolete">Thêm vào vùng xem Tổng quát</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -9280,11 +9272,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>Loại bỏ tất cả khỏi vùng xem tổng quát</translation>
+        <translation type="obsolete">Loại bỏ tất cả khỏi vùng xem tổng quát</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>Hiển thị tất cả các lớp</translation>
+        <translation type="obsolete">Hiển thị tất cả các lớp</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -9292,7 +9284,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>Ẩn tất cả các lớp</translation>
+        <translation type="obsolete">Ẩn tất cả các lớp</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -9300,7 +9292,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>Quản lý và cài đặt phần mở rộng...</translation>
+        <translation type="obsolete">Quản lý và cài đặt phần mở rộng...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -9308,7 +9300,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>Them lớp văn bản phân tách...</translation>
+        <translation type="obsolete">Them lớp văn bản phân tách...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -9316,7 +9308,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>Lớp vector mới</translation>
+        <translation type="obsolete">Lớp vector mới</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -9324,7 +9316,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>Lớp vector bộ nhớ mới</translation>
+        <translation type="obsolete">Lớp vector bộ nhớ mới</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -9336,7 +9328,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>Chọn (các) đối tượng</translation>
+        <translation type="obsolete">Chọn (các) đối tượng</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -9360,7 +9352,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>Hệ toạ độ tự tạo...</translation>
+        <translation type="obsolete">Hệ toạ độ tự tạo...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -9372,7 +9364,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>Các nội dung trợ giúp</translation>
+        <translation type="obsolete">Các nội dung trợ giúp</translation>
     </message>
     <message>
         <source>F1</source>
@@ -9380,7 +9372,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>Trang chủ của QGIS</translation>
+        <translation type="obsolete">Trang chủ của QGIS</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -9396,7 +9388,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>About</source>
-        <translation>Nói về</translation>
+        <translation type="obsolete">Nói về</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -9422,11 +9414,11 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>Trình quản lý kiểu...</translation>
+        <translation type="obsolete">Trình quản lý kiểu...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>Bàn giao tiếp Python</translation>
+        <translation type="obsolete">Bàn giao tiếp Python</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -9434,7 +9426,7 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>Tùy biến...</translation>
+        <translation type="obsolete">Tùy biến...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -9446,7 +9438,7 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>Nhúng Lớp và Nhóm...</translation>
+        <translation type="obsolete">Nhúng Lớp và Nhóm...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -9478,7 +9470,7 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>Thêm lớp WFS...</translation>
+        <translation type="obsolete">Thêm lớp WFS...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -9502,7 +9494,7 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>Căn lệch đường cong</translation>
+        <translation type="obsolete">Căn lệch đường cong</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -9514,7 +9506,7 @@ Ctl (Cmd) tăng mỗi 15 độ.</translation>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>Thêm lớp WCS...</translation>
+        <translation type="obsolete">Thêm lớp WCS...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -9622,7 +9614,7 @@ Tác động lên lớp có thể chỉnh sửa đang được kích hoạt</tra
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>Xuất ra DXF...</translation>
+        <translation type="obsolete">Xuất ra DXF...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -9685,11 +9677,415 @@ Tác động lên lớp có thể chỉnh sửa đang được kích hoạt</tra
         <translation>Ctrl+Alt+P</translation>
     </message>
     <message>
-        <source>New Temporary Scratch Layer...</source>
+        <source>New temporary scratch layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New temporary scratch layer</source>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">Thu n&amp;hỏ</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished">&amp;Cập nhật lại</translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">Bình &amp;thường</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string by radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9697,7 +10093,19 @@ Tác động lên lớp có thể chỉnh sửa đang được kích hoạt</tra
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add circular string by radius</source>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14864,6 +15272,18 @@ Phản hồi là:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>VectorAnalysis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16176,11 +16596,11 @@ Lỗi: %3</translation>
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>Cần có yêu cầu chứng thực</translation>
+        <translation type="obsolete">Cần có yêu cầu chứng thực</translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>Cần có chứng thực ủy nhiệm</translation>
+        <translation type="obsolete">Cần có chứng thực ủy nhiệm</translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -16197,7 +16617,7 @@ Luôn bỏ qua các lỗi này?</translation>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>%n lỗi SSL đã xảy ra</numerusform>
         </translation>
     </message>
@@ -16244,6 +16664,37 @@ Luôn bỏ qua các lỗi này?</translation>
     <message>
         <source>QGIS Enterprise </source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -16585,6 +17036,103 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Chỉnh sửa...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Xóa</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">Kết nối mới...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Chỉnh sửa...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Xóa</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">Kết nối mới...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -16615,7 +17163,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Map marker</source>
-        <translation>Đánh dấu bản đồ</translation>
+        <translation type="obsolete">Đánh dấu bản đồ</translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -16628,6 +17176,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Frame color</source>
         <translation>Màu khung</translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17448,10 +18000,6 @@ Lỗi phân tách:
     <message>
         <source>, spatially limited</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zoom to feature</source>
-        <translation type="unfinished">Phóng đến đối tượng</translation>
     </message>
 </context>
 <context>
@@ -21690,6 +22238,14 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
         <source>Vertical descending</source>
         <translation>Giảm dần theo chiều đứng</translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -22464,6 +23020,10 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
         <source>Scalebar line cap style</source>
         <translation>Kiểu chóp đường của thước tỷ lệ</translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -22481,11 +23041,11 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     </message>
     <message>
         <source>Map</source>
-        <translation>Bản đồ</translation>
+        <translation type="obsolete">Bản đồ</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>Kiểu</translation>
+        <translation type="obsolete">Kiểu</translation>
     </message>
     <message>
         <source>Units</source>
@@ -22493,11 +23053,11 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     </message>
     <message>
         <source>Label</source>
-        <translation>Nhãn</translation>
+        <translation type="obsolete">Nhãn</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>Đơn vị bản đồ trên đơn vị cột</translation>
+        <translation type="obsolete">Đơn vị bản đồ trên đơn vị cột</translation>
     </message>
     <message>
         <source>Segments</source>
@@ -22513,7 +23073,7 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     </message>
     <message>
         <source>Size</source>
-        <translation>Kích thước</translation>
+        <translation type="obsolete">Kích thước</translation>
     </message>
     <message>
         <source> units</source>
@@ -22578,6 +23138,38 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     <message>
         <source>Font...</source>
         <translation>Phông chữ...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -23621,6 +24213,13 @@ và tập tin hiện tại là [%3]</translation>
     <message>
         <source>Save as standard gradient</source>
         <translation>Lưu dưới dạng độ dốc chuẩn</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -25670,15 +26269,35 @@ Bỏ trống để tự động dùng giá trị lớn nhất.</translation>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1 độ</translation>
+        <translation type="obsolete">%1 độ</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1 radian</translation>
+        <translation type="obsolete">%1 radian</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1 gon</translation>
+        <translation type="obsolete">%1 gon</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">Độ</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">Radian</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -27759,6 +28378,73 @@ Vui lòng chọn lại tập tin đúng.</translation>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -28556,6 +29242,17 @@ Vui lòng chọn lại tập tin đúng.</translation>
     </message>
     <message>
         <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -32535,6 +33232,311 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">Xuất các đối tượng giao với phạm vi bản đồ hiện tại</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished">Lưu thành</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">Thiết lập mặc định thất bại khi mở: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">Không tìm thấy mặc định: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">Không thể chuyển giao các thay đổi vào lớp %1</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished">Lỗi: %1</translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">HIển thị thêm</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">Chọn mở một tập tin dự án QGIS</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">Các tập tin QGIS</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">Hãy chọn một tập tin dự án QGIS</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">không có đủ quyền</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">Tập tin dự án không ghi được.</translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">Không thể lưu dự án %1</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">Không thể mở dự án</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">Bật vĩ lệnh</translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">Cảnh báo an ninh</translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">vĩ lệnh dự án đã bị bất hoạt.</translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">Dự dán có (các) lớp ở chế độ chỉnh sửa với các thay đổi chưa được lưu, như vậy thay đổi sẽ KHÔNG được lưu!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">Lưu?</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">Bạn có muốn lưu dự án hiện tại? %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">Đã lưu dự án vào: %1</translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">Khởi động chỉnh sửa thất bại</translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished">Ngừng chỉnh sửa</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">Bạn có muốn lưu các thay đổi của lớp %1 không?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished">Trục trặc khi quay ngược lại</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Biểu mẫu</translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">Mới</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">Mở</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">In</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Lưu</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">Xem</translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Lưới</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">Phân tích</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">Diện tích</translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Khoảng cách</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Bóng đổ</translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Hình tròn</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">Tiểu sử</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Độ dốc</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Thiết lập</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Trợ giúp</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -33748,6 +34750,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>&amp;Group Selected</source>
         <translation>Nhóm được &amp;chọn</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">Độ trong suốt:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -34798,6 +35808,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Info</source>
         <translation>Thông tin</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -34851,7 +35865,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>Các đoạn [%1]</translation>
+        <translation type="obsolete">Các đoạn [%1]</translation>
     </message>
     <message>
         <source>Meters</source>
@@ -34868,6 +35882,53 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Nautical Miles</source>
         <translation type="obsolete">Hải lý</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">Chép vào bộ nhớ</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">Thêm vào vùng xem</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35445,6 +36506,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Unknown Geometry</source>
         <translation>Hình học không rõ</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -35519,6 +36584,14 @@ tăng cường</translation>
     <message>
         <source>Network</source>
         <translation>Mạng</translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">Cần có yêu cầu chứng thực</translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">Cần có chứng thực ủy nhiệm</translation>
     </message>
 </context>
 <context>
@@ -37494,7 +38567,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Mặc định Qt</translation>
+        <translation type="obsolete">Mặc định Qt</translation>
     </message>
     <message>
         <source>Size</source>
@@ -38010,7 +39083,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Meters</source>
-        <translation>Mét</translation>
+        <translation type="obsolete">Mét</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -38038,7 +39111,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>Kích hoạt đơn giản hóa đối tượng theo mặc định đối với các lớp mới thêm vào</translation>
+        <translation type="obsolete">Kích hoạt đơn giản hóa đối tượng theo mặc định đối với các lớp mới thêm vào</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -38278,7 +39351,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>Nhắc về H&amp;TĐ</translation>
+        <translation type="obsolete">Nhắc về H&amp;TĐ</translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -38294,7 +39367,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>Tự động kích hoạt chuyển đổi hệ tọa độ khi đang mở nếu các lớp có HTĐ khác nhau</translation>
+        <translation type="obsolete">Tự động kích hoạt chuyển đổi hệ tọa độ khi đang mở nếu các lớp có HTĐ khác nhau</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -38334,7 +39407,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>Ghi đè ngôn ngữ hệ thống</translation>
+        <translation type="obsolete">Ghi đè ngôn ngữ hệ thống</translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -38390,7 +39463,7 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>Dùng proxy để truy cập web</translation>
+        <translation type="obsolete">Dùng proxy để truy cập web</translation>
     </message>
     <message>
         <source>Host</source>
@@ -38434,6 +39507,54 @@ Luôn dùng mạng: luôn nạp từ mạng và không cần kiểm tra nếu b�
     </message>
     <message>
         <source>Default uses system&apos;s proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -44028,6 +45149,10 @@ standard deviation ×</source>
         <source>Import colors...</source>
         <translation>Nhập các màu...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -44101,6 +45226,69 @@ standard deviation ×</source>
     <message>
         <source>Recent colors</source>
         <translation type="obsolete">Các màu dùng gần đây</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Điểm</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">Vuông</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">Hình tam giác</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Đường</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">Hình chữ nhật</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Hình tròn</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">Chữ</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -45670,6 +46858,116 @@ tăng cường</translation>
     <message>
         <source>All layers</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">Các kết nối đến máy chủ</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished">&amp;Kết nối</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Chỉnh sửa</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Xóa</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">Nạp các kết nối từ tập tin</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">Nạp</translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished">Lưu các kết nối vào tập tin</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Lưu</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished">Trình bày các kiểu đối tượng của WFS chứa từ này trong tiêu đề, trong tên hoặc trong tóm tắt</translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">Dùng tiêu đề làm tên lớp</translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">Mã hóa ảnh</translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished">Hệ tọa độ</translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">&amp;Thêm</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">&amp;Xây dựng truy vấn</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">Tạo một kết nối %1 mới</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">Không có các lớp</translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
+        <translation type="unfinished">Các tập tin XML (*.xml, *.XML)</translation>
     </message>
 </context>
 <context>
@@ -47929,6 +49227,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">Đang tính bóng đổ...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Bỏ</translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished">Các lớp</translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Đóng</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Lỗi</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Loại bỏ</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">Xóa</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">Đang tính độ dốc...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Bỏ</translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Bỏ</translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">Xem được</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -49132,15 +50715,15 @@ Lỗi là: %2</translation>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>&amp;Thêm</translation>
+        <translation type="obsolete">&amp;Thêm</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>&amp;Xây dựng truy vấn</translation>
+        <translation type="obsolete">&amp;Xây dựng truy vấn</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>Xây dựng truy vấn</translation>
+        <translation type="obsolete">Xây dựng truy vấn</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -49160,98 +50743,98 @@ Lỗi là: %2</translation>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>Không có các lớp</translation>
+        <translation type="obsolete">Không có các lớp</translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>bản ghi các khả năng không chứa lớp nào.</translation>
+        <translation type="obsolete">bản ghi các khả năng không chứa lớp nào.</translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>Tạo một kết nối WFS mới</translation>
+        <translation type="obsolete">Tạo một kết nối WFS mới</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>Thay đổi kết nối WFS</translation>
+        <translation type="obsolete">Thay đổi kết nối WFS</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>Có chắc bạn muốn loại bỏ kết nối %1 và các thiết lập liên quan?</translation>
+        <translation type="obsolete">Có chắc bạn muốn loại bỏ kết nối %1 và các thiết lập liên quan?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>Xác nhận việc xóa</translation>
+        <translation type="obsolete">Xác nhận việc xóa</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>Nạp các kết nối</translation>
+        <translation type="obsolete">Nạp các kết nối</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>Các tập tin XML (*.xml, *.XML)</translation>
+        <translation type="obsolete">Các tập tin XML (*.xml, *.XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>Thêm lớp WFS từ Server</translation>
+        <translation type="obsolete">Thêm lớp WFS từ Server</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>Thay đổi ...</translation>
+        <translation type="obsolete">Thay đổi ...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>Bộ lọc:</translation>
+        <translation type="obsolete">Bộ lọc:</translation>
     </message>
     <message>
         <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation>Trình bày các kiểu đối tượng của WFS chứa từ này trong tiêu đề, trong tên hoặc trong tóm tắt</translation>
+        <translation type="obsolete">Trình bày các kiểu đối tượng của WFS chứa từ này trong tiêu đề, trong tên hoặc trong tóm tắt</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>Các kết nối đến máy chủ</translation>
+        <translation type="obsolete">Các kết nối đến máy chủ</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>&amp;Kết nối</translation>
+        <translation type="obsolete">&amp;Kết nối</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Mới</translation>
+        <translation type="obsolete">&amp;Mới</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Chỉnh sửa</translation>
+        <translation type="obsolete">Chỉnh sửa</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Xóa</translation>
+        <translation type="obsolete">Xóa</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>Nạp các kết nối từ tập tin</translation>
+        <translation type="obsolete">Nạp các kết nối từ tập tin</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>Nạp</translation>
+        <translation type="obsolete">Nạp</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>Lưu các kết nối vào tập tin</translation>
+        <translation type="obsolete">Lưu các kết nối vào tập tin</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Lưu</translation>
+        <translation type="obsolete">Lưu</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>Dùng tiêu đề làm tên lớp</translation>
+        <translation type="obsolete">Dùng tiêu đề làm tên lớp</translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>Hệ tọa độ</translation>
+        <translation type="obsolete">Hệ tọa độ</translation>
     </message>
 </context>
 <context>
@@ -51159,6 +52742,33 @@ Please configure it before running R scripts.</source>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">Phông chữ:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -52057,6 +53667,27 @@ Trục trặc tại dòng: %d</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

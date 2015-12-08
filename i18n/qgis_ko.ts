@@ -7065,14 +7065,6 @@ GEOS 공간 연산 오류: 하나 이상의 객체의 지오메트리가 잘못�
         <source>Options</source>
         <translation type="unfinished">옵션</translation>
     </message>
-    <message>
-        <source>1E-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Precision:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GetModelsAction</name>
@@ -8640,7 +8632,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>인쇄 구성기</translation>
+        <translation type="obsolete">인쇄 구성기</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -8648,11 +8640,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select</source>
-        <translation>선택</translation>
+        <translation type="obsolete">선택</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>측정</translation>
+        <translation type="obsolete">측정</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -8664,7 +8656,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>플러그인(&amp;P)</translation>
+        <translation type="obsolete">플러그인(&amp;P)</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -8672,7 +8664,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>설정(&amp;S)</translation>
+        <translation type="obsolete">설정(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -8680,7 +8672,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>벡터(&amp;o)</translation>
+        <translation type="obsolete">벡터(&amp;o)</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8760,19 +8752,19 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>구성기 관리자...</translation>
+        <translation type="obsolete">구성기 관리자...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>템플릿이용하여 새로 만들기</translation>
+        <translation type="obsolete">템플릿이용하여 새로 만들기</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>미리보기 모드</translation>
+        <translation type="obsolete">미리보기 모드</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>레이어 생성</translation>
+        <translation type="obsolete">레이어 생성</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8800,7 +8792,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>QGIS 종료</translation>
+        <translation type="obsolete">QGIS 종료</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8824,7 +8816,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>객체 잘라내기</translation>
+        <translation type="obsolete">객체 잘라내기</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8832,7 +8824,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>객체 복사</translation>
+        <translation type="obsolete">객체 복사</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8840,7 +8832,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>객체 붙여넣기</translation>
+        <translation type="obsolete">객체 붙여넣기</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8848,7 +8840,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>객체 추가</translation>
+        <translation type="obsolete">객체 추가</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8856,15 +8848,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>객체 이동</translation>
+        <translation type="obsolete">객체 이동</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>객체 변형</translation>
+        <translation type="obsolete">객체 변형</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>객체 분할</translation>
+        <translation type="obsolete">객체 분할</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8872,7 +8864,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>선택 삭제</translation>
+        <translation type="obsolete">선택 삭제</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8884,27 +8876,27 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>객체 단순화</translation>
+        <translation type="obsolete">객체 단순화</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>링 삭제</translation>
+        <translation type="obsolete">링 삭제</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>파트 삭제</translation>
+        <translation type="obsolete">파트 삭제</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>선택된 객체 병합</translation>
+        <translation type="obsolete">선택된 객체 병합</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>선택된 객체의 속성 결합</translation>
+        <translation type="obsolete">선택된 객체의 속성 결합</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>노드 도구</translation>
+        <translation type="obsolete">노드 도구</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8912,11 +8904,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>지도 이동</translation>
+        <translation type="obsolete">지도 이동</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>확대</translation>
+        <translation type="obsolete">확대</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8924,7 +8916,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>축소</translation>
+        <translation type="obsolete">축소</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8932,23 +8924,23 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>폴리곤으로 객체 선택</translation>
+        <translation type="obsolete">폴리곤으로 객체 선택</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>프리핸드로 객체 선택</translation>
+        <translation type="obsolete">프리핸드로 객체 선택</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>반경으로 객체 선택</translation>
+        <translation type="obsolete">반경으로 객체 선택</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>모든 레이어에서 객체 선택 해제</translation>
+        <translation type="obsolete">모든 레이어에서 객체 선택 해제</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>객체 확인</translation>
+        <translation type="obsolete">객체 확인</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8956,7 +8948,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>선 길이 측정</translation>
+        <translation type="obsolete">선 길이 측정</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8964,7 +8956,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>면적 측정</translation>
+        <translation type="obsolete">면적 측정</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8972,7 +8964,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>각도 측정</translation>
+        <translation type="obsolete">각도 측정</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -8988,11 +8980,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>다음 영역 보기</translation>
+        <translation type="obsolete">다음 영역 보기</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>실제 크기로 확대</translation>
+        <translation type="obsolete">실제 크기로 확대</translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -9008,7 +9000,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>새 북마크....</translation>
+        <translation type="obsolete">새 북마크....</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -9016,7 +9008,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>북마크 목록보기</translation>
+        <translation type="obsolete">북마크 목록보기</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -9024,7 +9016,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>새로고침</translation>
+        <translation type="obsolete">새로고침</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -9040,7 +9032,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Labeling</source>
-        <translation>라벨링</translation>
+        <translation type="obsolete">라벨링</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -9048,7 +9040,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>새 Shape 파일 레이어...</translation>
+        <translation type="obsolete">새 Shape 파일 레이어...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -9060,7 +9052,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>벡터 레이어 추가...</translation>
+        <translation type="obsolete">벡터 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -9068,7 +9060,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>래스터 레이어 추가...</translation>
+        <translation type="obsolete">래스터 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -9076,7 +9068,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>PostGIS 레이어 추가...</translation>
+        <translation type="obsolete">PostGIS 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -9084,7 +9076,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>SpatiaLite 레이어 추가...</translation>
+        <translation type="obsolete">SpatiaLite 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -9092,11 +9084,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>MSSQL Spatial 레이어 추가...</translation>
+        <translation type="obsolete">MSSQL Spatial 레이어 추가...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation>Oracle Spatial 레이어 추가...</translation>
+        <translation type="obsolete">Oracle Spatial 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -9104,7 +9096,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>WMS/WMTS 레이어 추가...</translation>
+        <translation type="obsolete">WMS/WMTS 레이어 추가...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -9112,7 +9104,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>편집 전환</translation>
+        <translation type="obsolete">편집 전환</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -9132,11 +9124,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>바로가기 설정...</translation>
+        <translation type="obsolete">바로가기 설정...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>API 문서</translation>
+        <translation type="obsolete">API 문서</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -9180,7 +9172,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>계산식으로 선택...</translation>
+        <translation type="obsolete">계산식으로 선택...</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -9192,15 +9184,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>레이어 정의 파일에서 추가...</translation>
+        <translation type="obsolete">레이어 정의 파일에서 추가...</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>레이어 정의 파일로 저장...</translation>
+        <translation type="obsolete">레이어 정의 파일로 저장...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>일반</translation>
+        <translation type="obsolete">일반</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -9208,7 +9200,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>복사기 시뮬레이트 (회색조)</translation>
+        <translation type="obsolete">복사기 시뮬레이트 (회색조)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -9216,7 +9208,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>팩스 시뮬레이트 (흑백)</translation>
+        <translation type="obsolete">팩스 시뮬레이트 (흑백)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -9224,7 +9216,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>색맹 시뮬레이트 (적색맹)</translation>
+        <translation type="obsolete">색맹 시뮬레이트 (적색맹)</translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -9232,7 +9224,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>색맹 시뮬레이트 (녹색맹)</translation>
+        <translation type="obsolete">색맹 시뮬레이트 (녹색맹)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -9240,7 +9232,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>레이어의 축척에 따른 가시 설정</translation>
+        <translation type="obsolete">레이어의 축척에 따른 가시 설정</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -9248,7 +9240,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>선택된 레이어 감추기</translation>
+        <translation type="obsolete">선택된 레이어 감추기</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -9256,11 +9248,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>새 SpatiaLite 레이어...</translation>
+        <translation type="obsolete">새 SpatiaLite 레이어...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>래스터 계산기...</translation>
+        <translation type="obsolete">래스터 계산기...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -9272,15 +9264,15 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>레이어에서 프로젝트 좌표계 설정</translation>
+        <translation type="obsolete">레이어에서 프로젝트 좌표계 설정</translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>검색...</translation>
+        <translation type="obsolete">검색...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>오버뷰에 추가</translation>
+        <translation type="obsolete">오버뷰에 추가</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -9288,11 +9280,11 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>오버뷰의 모두 제거</translation>
+        <translation type="obsolete">오버뷰의 모두 제거</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>모든 레이어 표시</translation>
+        <translation type="obsolete">모든 레이어 표시</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -9300,7 +9292,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>모든 레이어 숨기기</translation>
+        <translation type="obsolete">모든 레이어 숨기기</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -9308,7 +9300,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>플러그인 관리 및 설치...</translation>
+        <translation type="obsolete">플러그인 관리 및 설치...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -9316,7 +9308,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>구분자로 분리된 텍스트 레이어를 추가...</translation>
+        <translation type="obsolete">구분자로 분리된 텍스트 레이어를 추가...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -9324,7 +9316,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>새 벡터 레이어</translation>
+        <translation type="obsolete">새 벡터 레이어</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -9332,7 +9324,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>새로운 메모리 벡터 레이어</translation>
+        <translation type="obsolete">새로운 메모리 벡터 레이어</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -9344,7 +9336,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>객체(들) 선택</translation>
+        <translation type="obsolete">객체(들) 선택</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -9368,7 +9360,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>사용자 정의 좌표계...</translation>
+        <translation type="obsolete">사용자 정의 좌표계...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -9380,7 +9372,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>QGIS 도움말</translation>
+        <translation type="obsolete">QGIS 도움말</translation>
     </message>
     <message>
         <source>F1</source>
@@ -9388,7 +9380,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>QGIS 홈페이지</translation>
+        <translation type="obsolete">QGIS 홈페이지</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -9404,7 +9396,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>About</source>
-        <translation>QGIS 정보</translation>
+        <translation type="obsolete">QGIS 정보</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -9429,11 +9421,11 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>스타일 관리자...</translation>
+        <translation type="obsolete">스타일 관리자...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>파이썬 콘솔</translation>
+        <translation type="obsolete">파이썬 콘솔</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -9441,7 +9433,7 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>사용자 정의...</translation>
+        <translation type="obsolete">사용자 정의...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -9453,7 +9445,7 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>레이어와 그룹 활성화...</translation>
+        <translation type="obsolete">레이어와 그룹 활성화...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -9485,7 +9477,7 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>WFS 레이어 추가...</translation>
+        <translation type="obsolete">WFS 레이어 추가...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -9509,7 +9501,7 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>곡선 옵셋</translation>
+        <translation type="obsolete">곡선 옵셋</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -9521,7 +9513,7 @@ Ctl (Cmd) increments by 15 deg.</source>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>WCS 레이어 추가...</translation>
+        <translation type="obsolete">WCS 레이어 추가...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -9629,7 +9621,7 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>DXF 내보내기...</translation>
+        <translation type="obsolete">DXF 내보내기...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -9693,18 +9685,438 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>New Temporary Scratch Layer...</source>
-        <translation>새 임시 스크래치 레이어...</translation>
+        <translation type="obsolete">새 임시 스크래치 레이어...</translation>
     </message>
     <message>
         <source>New temporary scratch layer</source>
         <translation>새 임시 스크래치 레이어</translation>
     </message>
     <message>
-        <source>Add circular string</source>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">축소 (&amp;O)</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">일반(&amp;N)</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14875,6 +15287,18 @@ Response was:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>VectorAnalysis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16189,11 +16613,11 @@ Errors: %3
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>인증이 필요함</translation>
+        <translation type="obsolete">인증이 필요함</translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>프록시 인증이 필요함</translation>
+        <translation type="obsolete">프록시 인증이 필요함</translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -16210,7 +16634,7 @@ Always ignore these errors?</source>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>%n개의 SSL 오류가 발생됨</numerusform>
         </translation>
     </message>
@@ -16257,6 +16681,37 @@ Always ignore these errors?</source>
     <message>
         <source>QGIS Enterprise </source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -16602,6 +17057,103 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">편집...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">삭제</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">새 연결...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">편집...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">삭제</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">새 연결...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -16632,7 +17184,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Map marker</source>
-        <translation>지도 마커</translation>
+        <translation type="obsolete">지도 마커</translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -16645,6 +17197,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Frame color</source>
         <translation>테두리 색상</translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17463,10 +18019,6 @@ Parser error:
     </message>
     <message>
         <source>, spatially limited</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zoom to feature</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21708,6 +22260,14 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Vertical descending</source>
         <translation>수직으로 내림차순</translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -22482,6 +23042,10 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Scalebar line cap style</source>
         <translation>스케일바 선 끝 스타일</translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -22499,11 +23063,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Map</source>
-        <translation>지도</translation>
+        <translation type="obsolete">지도</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>스타일</translation>
+        <translation type="obsolete">스타일</translation>
     </message>
     <message>
         <source>Units</source>
@@ -22511,11 +23075,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Label</source>
-        <translation>라벨</translation>
+        <translation type="obsolete">라벨</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>바 단위 당 지도 단위</translation>
+        <translation type="obsolete">바 단위 당 지도 단위</translation>
     </message>
     <message>
         <source>Segments</source>
@@ -22531,7 +23095,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Size</source>
-        <translation>크기</translation>
+        <translation type="obsolete">크기</translation>
     </message>
     <message>
         <source> units</source>
@@ -22596,6 +23160,38 @@ Please try a lower resolution or a smaller papersize</source>
     <message>
         <source>Font...</source>
         <translation>글꼴...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -23639,6 +24235,13 @@ and current file is [%3]</source>
     <message>
         <source>Save as standard gradient</source>
         <translation>표준 그래디언트로 저장</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -25688,15 +26291,35 @@ Leave empty to automatically apply the maximum value.</source>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1 도</translation>
+        <translation type="obsolete">%1 도</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1 라디안</translation>
+        <translation type="obsolete">%1 라디안</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1 gon</translation>
+        <translation type="obsolete">%1 gon</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">도</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">라디안</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -27785,6 +28408,73 @@ Please reselect a valid file.</source>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -28582,6 +29272,17 @@ Please reselect a valid file.</source>
     </message>
     <message>
         <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -32575,6 +33276,312 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">현재 지도 범위에 겹치는 객체 내보내기</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">다음을 여는 중 기본값 실패: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">기본값 발견 안됨: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished">커밋 오류</translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">레이어 %1에 변경을 커밋할 수 없음</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished">오류: %1
+</translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">더 보기</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">불러올 QGIS 프로젝트 파일을 선택</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">QGIS 파일</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">QGIS 프로젝트 파일을 선택</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">권한이 불충분함</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">프로젝트 파일이 쓰기가능하지 않음.</translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">프로젝트 %1 저장할 수 없음</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">프로젝트 열 수 없음</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">매크로 활성화</translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">보안 경고</translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">프로젝트 매크로가 비활성화 됨.</translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">프로젝트에 저장되지 않은 변경사항이 있는 편집모드 레이어가 있으며, 이는 저장되지 않습니다!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">저장하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">현재 프로젝트를 저장하시겠습니까? %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">다음에 저장된 프로젝트: %1</translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">편집 시작 실패</translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished">지정된 프로바이더는 편집모드로 열 수 없음</translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">레이어 %1의 변경사항을 저장하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">복사</translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">출력</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">저장</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">보기</translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">격자</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">분석</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">거리</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">원</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">프로파일 </translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">설정</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">도움말</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -33788,6 +34795,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>&amp;Group Selected</source>
         <translation>선택을 그룹으로(&amp;G)</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">투명도:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -34838,6 +35853,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Info</source>
         <translation>정보</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -34891,7 +35910,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>세그먼트 [%1]</translation>
+        <translation type="obsolete">세그먼트 [%1]</translation>
     </message>
     <message>
         <source>Meters</source>
@@ -34908,6 +35927,53 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Nautical Miles</source>
         <translation type="obsolete">해리</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">클립 보드에 복사</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">캔버스에 추가</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35482,6 +36548,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Unknown Geometry</source>
         <translation>알 수 없는 지오메트리</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -35555,6 +36625,14 @@ enhancement</source>
     <message>
         <source>Network</source>
         <translation>네트워크</translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">인증이 필요함</translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">프록시 인증이 필요함</translation>
     </message>
 </context>
 <context>
@@ -37529,7 +38607,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Qt 기본</translation>
+        <translation type="obsolete">Qt 기본</translation>
     </message>
     <message>
         <source>Size</source>
@@ -38045,7 +39123,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Meters</source>
-        <translation>미터</translation>
+        <translation type="obsolete">미터</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -38073,7 +39151,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>새로 추가된 레이어에 기본적으로 객체 단순화 적용하기</translation>
+        <translation type="obsolete">새로 추가된 레이어에 기본적으로 객체 단순화 적용하기</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -38313,7 +39391,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>좌표계 확인(&amp;C)</translation>
+        <translation type="obsolete">좌표계 확인(&amp;C)</translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -38329,7 +39407,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>레이어가 다른 좌표계를 가지고 있을 경우 &apos;실시간&apos; 좌표계 변환을 자동으로 활성화</translation>
+        <translation type="obsolete">레이어가 다른 좌표계를 가지고 있을 경우 &apos;실시간&apos; 좌표계 변환을 자동으로 활성화</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -38369,7 +39447,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>시스템 언어설정을 무시하고 사용</translation>
+        <translation type="obsolete">시스템 언어설정을 무시하고 사용</translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -38425,7 +39503,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>Web 연결에 프록시 사용</translation>
+        <translation type="obsolete">Web 연결에 프록시 사용</translation>
     </message>
     <message>
         <source>Host</source>
@@ -38469,6 +39547,54 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Default uses system&apos;s proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -44075,6 +45201,10 @@ standard deviation ×</source>
         <source>Import colors...</source>
         <translation>색상 가져오기...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -44148,6 +45278,69 @@ standard deviation ×</source>
     <message>
         <source>Recent colors</source>
         <translation type="obsolete">최근 색상</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished">마커</translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">삼각형</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">사각형</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">원</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">텍스트</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -45717,6 +46910,116 @@ enhancement</source>
     </message>
     <message>
         <source>All layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">서버 연결</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished">연결(&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished">새로 만들기(&amp;N)</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">편집</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">삭제</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">연결 정보를 파일에서 불러오기</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished">연결 정보를 파일에 저장</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">저장</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished">제목, 이름, 개요에 다음의 단어를 포함하고 있는 WFS 객체 유형 표시</translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">레이어 이름에 제목 이용</translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">이미지 인코딩</translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished">변경...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">추가(&amp;A)</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">질의 작성(&amp;B)</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">새로운 %1 연결 만들기</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished">삭제 확인</translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">레이어 없음</translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47982,6 +49285,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">힐쉬이드 계산...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished">레이어</translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">닫기</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">객체</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">검색</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">경사 계산...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">표시</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -49185,15 +50773,15 @@ Error was:%2</source>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>추가(&amp;A)</translation>
+        <translation type="obsolete">추가(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>질의 작성(&amp;B)</translation>
+        <translation type="obsolete">질의 작성(&amp;B)</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>질의 작성</translation>
+        <translation type="obsolete">질의 작성</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -49213,98 +50801,98 @@ Error was:%2</source>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>레이어 없음</translation>
+        <translation type="obsolete">레이어 없음</translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>capabilities 문서에 레이어 정보가 없습니다.</translation>
+        <translation type="obsolete">capabilities 문서에 레이어 정보가 없습니다.</translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>새로운 WFS 연결 만들기</translation>
+        <translation type="obsolete">새로운 WFS 연결 만들기</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>WFS 연결 수정</translation>
+        <translation type="obsolete">WFS 연결 수정</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>%1의 연결과 모든 관련 설정을 삭제 하시겠습니까?</translation>
+        <translation type="obsolete">%1의 연결과 모든 관련 설정을 삭제 하시겠습니까?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>삭제 확인</translation>
+        <translation type="obsolete">삭제 확인</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>연결정보 불러오기</translation>
+        <translation type="obsolete">연결정보 불러오기</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>XML 파일 (*.xml * XML)</translation>
+        <translation type="obsolete">XML 파일 (*.xml * XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>서버에서 WFS 레이어를 추가</translation>
+        <translation type="obsolete">서버에서 WFS 레이어를 추가</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>변경...</translation>
+        <translation type="obsolete">변경...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>필터:</translation>
+        <translation type="obsolete">필터:</translation>
     </message>
     <message>
         <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation>제목, 이름, 개요에 다음의 단어를 포함하고 있는 WFS 객체 유형 표시</translation>
+        <translation type="obsolete">제목, 이름, 개요에 다음의 단어를 포함하고 있는 WFS 객체 유형 표시</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>서버 연결</translation>
+        <translation type="obsolete">서버 연결</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>연결(&amp;C)</translation>
+        <translation type="obsolete">연결(&amp;C)</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>새로 만들기(&amp;N)</translation>
+        <translation type="obsolete">새로 만들기(&amp;N)</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>편집</translation>
+        <translation type="obsolete">편집</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>삭제</translation>
+        <translation type="obsolete">삭제</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>연결 정보를 파일에서 불러오기</translation>
+        <translation type="obsolete">연결 정보를 파일에서 불러오기</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>불러오기</translation>
+        <translation type="obsolete">불러오기</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>연결 정보를 파일에 저장</translation>
+        <translation type="obsolete">연결 정보를 파일에 저장</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>저장</translation>
+        <translation type="obsolete">저장</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>레이어 이름에 제목 이용</translation>
+        <translation type="obsolete">레이어 이름에 제목 이용</translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>좌표계</translation>
+        <translation type="obsolete">좌표계</translation>
     </message>
 </context>
 <context>
@@ -51211,6 +52799,33 @@ Please configure it before running R scripts.</source>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">폰트:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">회전:</translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -52109,6 +53724,27 @@ Problem with line %d</source>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

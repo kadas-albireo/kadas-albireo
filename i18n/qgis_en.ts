@@ -7074,14 +7074,6 @@ GEOS geoprocessing error: One or more input features have invalid geometry.</tra
         <source>Options</source>
         <translation type="unfinished">Options</translation>
     </message>
-    <message>
-        <source>1E-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Precision:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GetModelsAction</name>
@@ -8662,7 +8654,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Print Composers</source>
-        <translation>Print Composers</translation>
+        <translation type="obsolete">Print Composers</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -8670,11 +8662,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>Select</translation>
+        <translation type="obsolete">Select</translation>
     </message>
     <message>
         <source>Measure</source>
-        <translation>Measure</translation>
+        <translation type="obsolete">Measure</translation>
     </message>
     <message>
         <source>&amp;Decorations</source>
@@ -8686,7 +8678,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>&amp;Plugins</source>
-        <translation>&amp;Plugins</translation>
+        <translation type="obsolete">&amp;Plugins</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -8694,7 +8686,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>&amp;Settings</translation>
+        <translation type="obsolete">&amp;Settings</translation>
     </message>
     <message>
         <source>&amp;Raster</source>
@@ -8702,7 +8694,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Vect&amp;or</source>
-        <translation>Vect&amp;or</translation>
+        <translation type="obsolete">Vect&amp;or</translation>
     </message>
     <message>
         <source>&amp;OpenStreetMap</source>
@@ -8782,19 +8774,19 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Composer Manager...</source>
-        <translation>Composer Manager...</translation>
+        <translation type="obsolete">Composer Manager...</translation>
     </message>
     <message>
         <source>New From Template</source>
-        <translation>New From Template</translation>
+        <translation type="obsolete">New From Template</translation>
     </message>
     <message>
         <source>Preview Mode</source>
-        <translation>Preview Mode</translation>
+        <translation type="obsolete">Preview Mode</translation>
     </message>
     <message>
         <source>Create Layer</source>
-        <translation>Create Layer</translation>
+        <translation type="obsolete">Create Layer</translation>
     </message>
     <message>
         <source>Add Layer</source>
@@ -8822,7 +8814,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Exit QGIS</source>
-        <translation>Exit QGIS</translation>
+        <translation type="obsolete">Exit QGIS</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -8846,7 +8838,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Cut Features</source>
-        <translation>Cut Features</translation>
+        <translation type="obsolete">Cut Features</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -8854,7 +8846,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Copy Features</source>
-        <translation>Copy Features</translation>
+        <translation type="obsolete">Copy Features</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
@@ -8862,7 +8854,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Paste Features</source>
-        <translation>Paste Features</translation>
+        <translation type="obsolete">Paste Features</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
@@ -8870,7 +8862,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add Feature</source>
-        <translation>Add Feature</translation>
+        <translation type="obsolete">Add Feature</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
@@ -8878,15 +8870,15 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Move Feature(s)</source>
-        <translation>Move Feature(s)</translation>
+        <translation type="obsolete">Move Feature(s)</translation>
     </message>
     <message>
         <source>Reshape Features</source>
-        <translation>Reshape Features</translation>
+        <translation type="obsolete">Reshape Features</translation>
     </message>
     <message>
         <source>Split Features</source>
-        <translation>Split Features</translation>
+        <translation type="obsolete">Split Features</translation>
     </message>
     <message>
         <source>Split Parts</source>
@@ -8894,7 +8886,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Delete Selected</source>
-        <translation>Delete Selected</translation>
+        <translation type="obsolete">Delete Selected</translation>
     </message>
     <message>
         <source>Add Ring</source>
@@ -8906,27 +8898,27 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Simplify Feature</source>
-        <translation>Simplify Feature</translation>
+        <translation type="obsolete">Simplify Feature</translation>
     </message>
     <message>
         <source>Delete Ring</source>
-        <translation>Delete Ring</translation>
+        <translation type="obsolete">Delete Ring</translation>
     </message>
     <message>
         <source>Delete Part</source>
-        <translation>Delete Part</translation>
+        <translation type="obsolete">Delete Part</translation>
     </message>
     <message>
         <source>Merge Selected Features</source>
-        <translation>Merge Selected Features</translation>
+        <translation type="obsolete">Merge Selected Features</translation>
     </message>
     <message>
         <source>Merge Attributes of Selected Features</source>
-        <translation>Merge Attributes of Selected Features</translation>
+        <translation type="obsolete">Merge Attributes of Selected Features</translation>
     </message>
     <message>
         <source>Node Tool</source>
-        <translation>Node Tool</translation>
+        <translation type="obsolete">Node Tool</translation>
     </message>
     <message>
         <source>Rotate Point Symbols</source>
@@ -8934,11 +8926,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Pan Map</source>
-        <translation>Pan Map</translation>
+        <translation type="obsolete">Pan Map</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation>Zoom In</translation>
+        <translation type="obsolete">Zoom In</translation>
     </message>
     <message>
         <source>Ctrl++</source>
@@ -8946,7 +8938,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation>Zoom Out</translation>
+        <translation type="obsolete">Zoom Out</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
@@ -8954,23 +8946,23 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Select Features by Polygon</source>
-        <translation>Select Features by Polygon</translation>
+        <translation type="obsolete">Select Features by Polygon</translation>
     </message>
     <message>
         <source>Select Features by Freehand</source>
-        <translation>Select Features by Freehand</translation>
+        <translation type="obsolete">Select Features by Freehand</translation>
     </message>
     <message>
         <source>Select Features by Radius</source>
-        <translation>Select Features by Radius</translation>
+        <translation type="obsolete">Select Features by Radius</translation>
     </message>
     <message>
         <source>Deselect Features from All Layers</source>
-        <translation>Deselect Features from All Layers</translation>
+        <translation type="obsolete">Deselect Features from All Layers</translation>
     </message>
     <message>
         <source>Identify Features</source>
-        <translation>Identify Features</translation>
+        <translation type="obsolete">Identify Features</translation>
     </message>
     <message>
         <source>Ctrl+Shift+I</source>
@@ -8978,7 +8970,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Measure Line</source>
-        <translation>Measure Line</translation>
+        <translation type="obsolete">Measure Line</translation>
     </message>
     <message>
         <source>Ctrl+Shift+M</source>
@@ -8986,7 +8978,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Measure Area</source>
-        <translation>Measure Area</translation>
+        <translation type="obsolete">Measure Area</translation>
     </message>
     <message>
         <source>Ctrl+Shift+J</source>
@@ -8994,7 +8986,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Measure Angle</source>
-        <translation>Measure Angle</translation>
+        <translation type="obsolete">Measure Angle</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -9010,11 +9002,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Zoom Next</source>
-        <translation>Zoom Next</translation>
+        <translation type="obsolete">Zoom Next</translation>
     </message>
     <message>
         <source>Zoom Actual Size</source>
-        <translation>Zoom Actual Size</translation>
+        <translation type="obsolete">Zoom Actual Size</translation>
     </message>
     <message>
         <source>Zoom to Native Pixel Resolution</source>
@@ -9030,7 +9022,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>New Bookmark...</source>
-        <translation>New Bookmark...</translation>
+        <translation type="obsolete">New Bookmark...</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
@@ -9038,7 +9030,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation>Show Bookmarks</translation>
+        <translation type="obsolete">Show Bookmarks</translation>
     </message>
     <message>
         <source>Ctrl+Shift+B</source>
@@ -9046,7 +9038,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>Refresh</translation>
+        <translation type="obsolete">Refresh</translation>
     </message>
     <message>
         <source>Text Annotation</source>
@@ -9062,7 +9054,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Labeling</source>
-        <translation>Labeling</translation>
+        <translation type="obsolete">Labeling</translation>
     </message>
     <message>
         <source>Layer Labeling Options</source>
@@ -9070,7 +9062,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>New Shapefile Layer...</source>
-        <translation>New Shapefile Layer...</translation>
+        <translation type="obsolete">New Shapefile Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+N</source>
@@ -9082,7 +9074,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add Vector Layer...</source>
-        <translation>Add Vector Layer...</translation>
+        <translation type="obsolete">Add Vector Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+V</source>
@@ -9090,7 +9082,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add Raster Layer...</source>
-        <translation>Add Raster Layer...</translation>
+        <translation type="obsolete">Add Raster Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+R</source>
@@ -9098,7 +9090,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add PostGIS Layers...</source>
-        <translation>Add PostGIS Layers...</translation>
+        <translation type="obsolete">Add PostGIS Layers...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+D</source>
@@ -9106,7 +9098,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add SpatiaLite Layer...</source>
-        <translation>Add SpatiaLite Layer...</translation>
+        <translation type="obsolete">Add SpatiaLite Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+L</source>
@@ -9114,11 +9106,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add MSSQL Spatial Layer...</source>
-        <translation>Add MSSQL Spatial Layer...</translation>
+        <translation type="obsolete">Add MSSQL Spatial Layer...</translation>
     </message>
     <message>
         <source>Add Oracle Spatial Layer...</source>
-        <translation>Add Oracle Spatial Layer...</translation>
+        <translation type="obsolete">Add Oracle Spatial Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+O</source>
@@ -9126,7 +9118,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add WMS/WMTS Layer...</source>
-        <translation>Add WMS/WMTS Layer...</translation>
+        <translation type="obsolete">Add WMS/WMTS Layer...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+W</source>
@@ -9134,7 +9126,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Toggle Editing</source>
-        <translation>Toggle Editing</translation>
+        <translation type="obsolete">Toggle Editing</translation>
     </message>
     <message>
         <source>Toggles the editing state of the current layer</source>
@@ -9154,11 +9146,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Configure Shortcuts...</source>
-        <translation>Configure Shortcuts...</translation>
+        <translation type="obsolete">Configure Shortcuts...</translation>
     </message>
     <message>
         <source>API Documentation</source>
-        <translation>API Documentation</translation>
+        <translation type="obsolete">API Documentation</translation>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
@@ -9202,7 +9194,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Select By Expression...</source>
-        <translation>Select By Expression...</translation>
+        <translation type="obsolete">Select By Expression...</translation>
     </message>
     <message>
         <source>Need Commercial Support?</source>
@@ -9214,15 +9206,15 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add from Layer Definition File...</source>
-        <translation>Add from Layer Definition File...</translation>
+        <translation type="obsolete">Add from Layer Definition File...</translation>
     </message>
     <message>
         <source>Save As Layer Definition File...</source>
-        <translation>Save As Layer Definition File...</translation>
+        <translation type="obsolete">Save As Layer Definition File...</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation type="obsolete">Normal</translation>
     </message>
     <message>
         <source>Normal preview mode</source>
@@ -9230,7 +9222,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Simulate Photocopy (Grayscale)</source>
-        <translation>Simulate Photocopy (Grayscale)</translation>
+        <translation type="obsolete">Simulate Photocopy (Grayscale)</translation>
     </message>
     <message>
         <source>Simulate photocopy (grayscale)</source>
@@ -9238,7 +9230,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Simulate Fax (Mono)</source>
-        <translation>Simulate Fax (Mono)</translation>
+        <translation type="obsolete">Simulate Fax (Mono)</translation>
     </message>
     <message>
         <source>Simulate fax (mono)</source>
@@ -9246,7 +9238,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Simulate Color Blindness (Protanope)</source>
-        <translation>Simulate Color Blindness (Protanope)</translation>
+        <translation type="obsolete">Simulate Color Blindness (Protanope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (protanope)</source>
@@ -9254,7 +9246,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Simulate Color Blindness (Deuteranope)</source>
-        <translation>Simulate Color Blindness (Deuteranope)</translation>
+        <translation type="obsolete">Simulate Color Blindness (Deuteranope)</translation>
     </message>
     <message>
         <source>Simulate color blindness (deuteranope)</source>
@@ -9262,7 +9254,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Set Scale Visibility of Layer(s)</source>
-        <translation>Set Scale Visibility of Layer(s)</translation>
+        <translation type="obsolete">Set Scale Visibility of Layer(s)</translation>
     </message>
     <message>
         <source>Show Selected Layers</source>
@@ -9270,7 +9262,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Hide Selected Layers</source>
-        <translation>Hide Selected Layers</translation>
+        <translation type="obsolete">Hide Selected Layers</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
@@ -9278,11 +9270,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>New SpatiaLite Layer...</source>
-        <translation>New SpatiaLite Layer...</translation>
+        <translation type="obsolete">New SpatiaLite Layer...</translation>
     </message>
     <message>
         <source>Raster Calculator...</source>
-        <translation>Raster Calculator...</translation>
+        <translation type="obsolete">Raster Calculator...</translation>
     </message>
     <message>
         <source>Set CRS of Layer(s)</source>
@@ -9294,15 +9286,15 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Set Project CRS from Layer</source>
-        <translation>Set Project CRS from Layer</translation>
+        <translation type="obsolete">Set Project CRS from Layer</translation>
     </message>
     <message>
         <source>Query...</source>
-        <translation>Query...</translation>
+        <translation type="obsolete">Query...</translation>
     </message>
     <message>
         <source>Add to Overview</source>
-        <translation>Add to Overview</translation>
+        <translation type="obsolete">Add to Overview</translation>
     </message>
     <message>
         <source>Add All to Overview</source>
@@ -9310,11 +9302,11 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Remove All from Overview</source>
-        <translation>Remove All from Overview</translation>
+        <translation type="obsolete">Remove All from Overview</translation>
     </message>
     <message>
         <source>Show All Layers</source>
-        <translation>Show All Layers</translation>
+        <translation type="obsolete">Show All Layers</translation>
     </message>
     <message>
         <source>Ctrl+Shift+U</source>
@@ -9322,7 +9314,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Hide All Layers</source>
-        <translation>Hide All Layers</translation>
+        <translation type="obsolete">Hide All Layers</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
@@ -9330,7 +9322,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Manage and Install Plugins...</source>
-        <translation>Manage and Install Plugins...</translation>
+        <translation type="obsolete">Manage and Install Plugins...</translation>
     </message>
     <message>
         <source>Open Field Calculator</source>
@@ -9338,7 +9330,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer...</source>
-        <translation>Add Delimited Text Layer...</translation>
+        <translation type="obsolete">Add Delimited Text Layer...</translation>
     </message>
     <message>
         <source>Add Delimited Text Layer</source>
@@ -9346,7 +9338,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>New Vector Layer</source>
-        <translation>New Vector Layer</translation>
+        <translation type="obsolete">New Vector Layer</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new OGR vector layer.</source>
@@ -9354,7 +9346,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>New Memory Vector Layer</source>
-        <translation>New Memory Vector Layer</translation>
+        <translation type="obsolete">New Memory Vector Layer</translation>
     </message>
     <message>
         <source>Paste features in clipboard into a new memory vector layer.</source>
@@ -9366,7 +9358,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Select Feature(s)</source>
-        <translation>Select Feature(s)</translation>
+        <translation type="obsolete">Select Feature(s)</translation>
     </message>
     <message>
         <source>Select Features by area or single click</source>
@@ -9390,7 +9382,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Custom CRS...</source>
-        <translation>Custom CRS...</translation>
+        <translation type="obsolete">Custom CRS...</translation>
     </message>
     <message>
         <source>Local Histogram Stretch</source>
@@ -9402,7 +9394,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation>Help Contents</translation>
+        <translation type="obsolete">Help Contents</translation>
     </message>
     <message>
         <source>F1</source>
@@ -9410,7 +9402,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>QGIS Home Page</source>
-        <translation>QGIS Home Page</translation>
+        <translation type="obsolete">QGIS Home Page</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
@@ -9426,7 +9418,7 @@ Please configure it before running LAStools algorithms.</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>About</translation>
+        <translation type="obsolete">About</translation>
     </message>
     <message>
         <source>QGIS Sponsors</source>
@@ -9452,11 +9444,11 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Style Manager...</source>
-        <translation>Style Manager...</translation>
+        <translation type="obsolete">Style Manager...</translation>
     </message>
     <message>
         <source>Python Console</source>
-        <translation>Python Console</translation>
+        <translation type="obsolete">Python Console</translation>
     </message>
     <message>
         <source>Stretch Histogram to Full Dataset</source>
@@ -9464,7 +9456,7 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Customization...</source>
-        <translation>Customization...</translation>
+        <translation type="obsolete">Customization...</translation>
     </message>
     <message>
         <source>This is here just to avoid shortcut conflicts, the shortcut is caught in QgsCustomization</source>
@@ -9476,7 +9468,7 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Embed Layers and Groups...</source>
-        <translation>Embed Layers and Groups...</translation>
+        <translation type="obsolete">Embed Layers and Groups...</translation>
     </message>
     <message>
         <source>Embed layers and groups from other project files</source>
@@ -9508,7 +9500,7 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Add WFS Layer...</source>
-        <translation>Add WFS Layer...</translation>
+        <translation type="obsolete">Add WFS Layer...</translation>
     </message>
     <message>
         <source>Add WFS Layer</source>
@@ -9532,7 +9524,7 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Offset Curve</source>
-        <translation>Offset Curve</translation>
+        <translation type="obsolete">Offset Curve</translation>
     </message>
     <message>
         <source>Copy style</source>
@@ -9544,7 +9536,7 @@ Ctl (Cmd) increments by 15 deg.</translation>
     </message>
     <message>
         <source>Add WCS Layer...</source>
-        <translation>Add WCS Layer...</translation>
+        <translation type="obsolete">Add WCS Layer...</translation>
     </message>
     <message>
         <source>&amp;Grid</source>
@@ -9652,7 +9644,7 @@ Acts on currently active editable layer</translation>
     </message>
     <message>
         <source>DXF Export...</source>
-        <translation>DXF Export...</translation>
+        <translation type="obsolete">DXF Export...</translation>
     </message>
     <message>
         <source>Fill Ring</source>
@@ -9716,18 +9708,438 @@ Acts on currently active editable layer</translation>
     </message>
     <message>
         <source>New Temporary Scratch Layer...</source>
-        <translation>New Temporary Scratch Layer...</translation>
+        <translation type="obsolete">New Temporary Scratch Layer...</translation>
     </message>
     <message>
         <source>New temporary scratch layer</source>
         <translation>New temporary scratch layer</translation>
     </message>
     <message>
-        <source>Add circular string</source>
+        <source>Print Co&amp;mposers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;From Template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pre&amp;view Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Create Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pl&amp;ugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settin&amp;gs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ve&amp;ctor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Composer Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Exit QGIS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cut Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cop&amp;y Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Paste Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Move Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Res&amp;hape Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spl&amp;it Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Simplify Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>D&amp;elete Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;lete Part</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mer&amp;ge Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge Attri&amp;butes of Selected Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Node Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Pan Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Zoom In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom &amp;Out</source>
+        <translation type="unfinished">Zoom &amp;Out</translation>
+    </message>
+    <message>
+        <source>&amp;Select Feature(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;Features by Polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;elect Features by Freehand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Features by &amp;Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Deselect Features from All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Identify Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Measure Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>M&amp;easure Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Ne&amp;xt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom A&amp;ctual Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Bookmark...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Refresh</source>
+        <translation type="unfinished">&amp;Refresh</translation>
+    </message>
+    <message>
+        <source>&amp;Labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Shapefile Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Raster Calculator...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Vector Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Raster Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;PostGIS Layers...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;SpatiaLite Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS&amp;QL Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Oracle Spatial Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;WMS/WMTS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Toggle Editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove Layer/Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Pro&amp;ject CRS from Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Query...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to &amp;Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re&amp;move All from Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho&amp;w All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide All Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Manage and Install Plugins...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Custom CRS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Co&amp;nfigure Shortcuts...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;API Documentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;QGIS Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A&amp;bout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Style &amp;Manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Python Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;ustomization...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Embed Layers and Groups...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add W&amp;FS Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS FeatureServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS FeatureServer Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Offset Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WCS &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Duplicate Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;urrent Edits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select &amp;By Expression...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;Delimited Text Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;New Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp;Memory Vector Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DXF Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fill Ring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &amp;from Layer Definition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As Layer Defi&amp;nition File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished">&amp;Normal</translation>
+    </message>
+    <message>
+        <source>&amp;Simulate Photocopy (Grayscale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Fax (Mono)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate &amp;Color Blindness (Protanope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simulate Color &amp;Blindness (Deuteranope)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Scale &amp;Visibility of Layer(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H&amp;ide Selected Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Temporary Scratch &amp;Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;KML Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure &amp;Height Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Height Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add circular string by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add circular string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve to Clipboard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map Image to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ArcGIS MapServer Layer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14929,6 +15341,18 @@ Response was:
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBS Functionality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>VectorAnalysis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16229,11 +16653,11 @@ Errors: %3
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>Authentication required</translation>
+        <translation type="obsolete">Authentication required</translation>
     </message>
     <message>
         <source>Proxy authentication required</source>
-        <translation>Proxy authentication required</translation>
+        <translation type="obsolete">Proxy authentication required</translation>
     </message>
     <message>
         <source>SSL errors occured accessing URL %1:</source>
@@ -16250,7 +16674,7 @@ Always ignore these errors?</translation>
     <message numerus="yes">
         <source>%n SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation>
+        <translation type="obsolete">
             <numerusform>%n SSL errors occured</numerusform>
             <numerusform>%n SSL errors occured</numerusform>
         </translation>
@@ -16298,6 +16722,38 @@ Always ignore these errors?</translation>
     <message>
         <source>QGIS Enterprise </source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Feature Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Feature Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArcGIS Map Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get ArcGIS Map Server select dialog from provider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 SSL errors occured</source>
+        <comment>number of errors</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -16643,6 +17099,103 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Edit...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <source>Modify AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">New Connection...</translation>
+    </message>
+    <message>
+        <source>Create a new AFS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAfsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsConnectionItem</name>
+    <message>
+        <source>Edit...</source>
+        <translation type="unfinished">Edit...</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <source>Modify AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsProvider</name>
+    <message>
+        <source>Service Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsRootItem</name>
+    <message>
+        <source>New Connection...</source>
+        <translation type="unfinished">New Connection...</translation>
+    </message>
+    <message>
+        <source>Create a new AMS connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAmsSourceSelect</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Failed to retreive service capabilities:
+%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to query some layers:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAnnotationWidget</name>
     <message>
         <source>Select frame color</source>
@@ -16673,7 +17226,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Map marker</source>
-        <translation>Map marker</translation>
+        <translation type="obsolete">Map marker</translation>
     </message>
     <message>
         <source>Frame width</source>
@@ -16686,6 +17239,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Frame color</source>
         <translation>Frame color</translation>
+    </message>
+    <message>
+        <source>&amp;Map marker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17506,10 +18063,6 @@ Parser error:
     <message>
         <source>, spatially limited</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zoom to feature</source>
-        <translation type="unfinished">Zoom to feature</translation>
     </message>
 </context>
 <context>
@@ -21751,6 +22304,14 @@ Please try a lower resolution or a smaller papersize</translation>
         <source>Vertical descending</source>
         <translation>Vertical descending</translation>
     </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished">UTM</translation>
+    </message>
+    <message>
+        <source>MGRS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerMapWidgetBase</name>
@@ -22525,6 +23086,10 @@ Please try a lower resolution or a smaller papersize</translation>
         <source>Scalebar line cap style</source>
         <translation>Scalebar line cap style</translation>
     </message>
+    <message>
+        <source>Scalebar segment size mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerScaleBarWidgetBase</name>
@@ -22542,11 +23107,11 @@ Please try a lower resolution or a smaller papersize</translation>
     </message>
     <message>
         <source>Map</source>
-        <translation>Map</translation>
+        <translation type="obsolete">Map</translation>
     </message>
     <message>
         <source>Style</source>
-        <translation>Style</translation>
+        <translation type="obsolete">Style</translation>
     </message>
     <message>
         <source>Units</source>
@@ -22554,11 +23119,11 @@ Please try a lower resolution or a smaller papersize</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Label</translation>
+        <translation type="obsolete">Label</translation>
     </message>
     <message>
         <source>Map units per bar unit</source>
-        <translation>Map units per bar unit</translation>
+        <translation type="obsolete">Map units per bar unit</translation>
     </message>
     <message>
         <source>Segments</source>
@@ -22574,7 +23139,7 @@ Please try a lower resolution or a smaller papersize</translation>
     </message>
     <message>
         <source>Size</source>
-        <translation>Size</translation>
+        <translation type="obsolete">Size</translation>
     </message>
     <message>
         <source> units</source>
@@ -22639,6 +23204,38 @@ Please try a lower resolution or a smaller papersize</translation>
     <message>
         <source>Font...</source>
         <translation>Font...</translation>
+    </message>
+    <message>
+        <source>&amp;Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>St&amp;yle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map &amp;units per bar unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>max </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;xed width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fit segment width</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -23684,6 +24281,13 @@ and current file is [%3]</translation>
     <message>
         <source>Save as standard gradient</source>
         <translation>Save as standard gradient</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCrashPlugin</name>
+    <message>
+        <source>Crash</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -25733,15 +26337,35 @@ Leave empty to automatically apply the maximum value.</translation>
     <name>QgsDisplayAngle</name>
     <message>
         <source>%1 degrees</source>
-        <translation>%1 degrees</translation>
+        <translation type="obsolete">%1 degrees</translation>
     </message>
     <message>
         <source>%1 radians</source>
-        <translation>%1 radians</translation>
+        <translation type="obsolete">%1 radians</translation>
     </message>
     <message>
         <source>%1 gon</source>
-        <translation>%1 gon</translation>
+        <translation type="obsolete">%1 gon</translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">Degrees</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">Radians</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation type="unfinished">%1</translation>
     </message>
 </context>
 <context>
@@ -27846,6 +28470,73 @@ Please reselect a valid file.</translation>
     </message>
 </context>
 <context>
+    <name>QgsGPSRouteEditor</name>
+    <message>
+        <source>GPS Route Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import from GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export to GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints and %2 routes were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX Files (*.gpx)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file for writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsGPXProvider</name>
     <message>
         <source>Bad URI - you need to specify the feature type.</source>
@@ -28643,6 +29334,17 @@ Please reselect a valid file.</translation>
     </message>
     <message>
         <source>Overlap</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeometryRubberBand</name>
+    <message>
+        <source>Tot.: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -32644,6 +33346,312 @@ This may be a problem in your network connection or at the WMS server.</numerusf
     </message>
 </context>
 <context>
+    <name>QgsKMLExportDialog</name>
+    <message>
+        <source>Save KML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsKMLExportDialogBase</name>
+    <message>
+        <source>KML export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export features intersecting the current map extent</source>
+        <translation type="unfinished">Export features intersecting the current map extent</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished">Save as</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidget</name>
+    <message>
+        <source>Default failed to open: %1</source>
+        <translation type="unfinished">Default failed to open: %1</translation>
+    </message>
+    <message>
+        <source>Default not found: %1</source>
+        <translation type="unfinished">Default not found: %1</translation>
+    </message>
+    <message>
+        <source>Commit errors</source>
+        <translation type="unfinished">Commit errors</translation>
+    </message>
+    <message>
+        <source>Could not commit changes to layer %1</source>
+        <translation type="unfinished">Could not commit changes to layer %1</translation>
+    </message>
+    <message>
+        <source>Errors: %1
+</source>
+        <translation type="unfinished">Errors: %1
+</translation>
+    </message>
+    <message>
+        <source>Show more</source>
+        <translation type="unfinished">Show more</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file to open</source>
+        <translation type="unfinished">Choose a QGIS project file to open</translation>
+    </message>
+    <message>
+        <source>QGIS files</source>
+        <translation type="unfinished">QGIS files</translation>
+    </message>
+    <message>
+        <source>Choose a QGIS project file</source>
+        <translation type="unfinished">Choose a QGIS project file</translation>
+    </message>
+    <message>
+        <source>Insufficient permissions</source>
+        <translation type="unfinished">Insufficient permissions</translation>
+    </message>
+    <message>
+        <source>The project file is not writable.</source>
+        <translation type="unfinished">The project file is not writable.</translation>
+    </message>
+    <message>
+        <source>Unable to save project %1</source>
+        <translation type="unfinished">Unable to save project %1</translation>
+    </message>
+    <message>
+        <source>Unable to open project</source>
+        <translation type="unfinished">Unable to open project</translation>
+    </message>
+    <message>
+        <source>Enable macros</source>
+        <translation type="unfinished">Enable macros</translation>
+    </message>
+    <message>
+        <source>Security warning</source>
+        <translation type="unfinished">Security warning</translation>
+    </message>
+    <message>
+        <source>project macros have been disabled.</source>
+        <translation type="unfinished">project macros have been disabled.</translation>
+    </message>
+    <message>
+        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
+        <translation type="unfinished">Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</translation>
+    </message>
+    <message>
+        <source>Save?</source>
+        <translation type="unfinished">Save?</translation>
+    </message>
+    <message>
+        <source>Do you want to save the current project? %1</source>
+        <translation type="unfinished">Do you want to save the current project? %1</translation>
+    </message>
+    <message>
+        <source>Saved project to: %1</source>
+        <translation type="unfinished">Saved project to: %1</translation>
+    </message>
+    <message>
+        <source>Start editing failed</source>
+        <translation type="unfinished">Start editing failed</translation>
+    </message>
+    <message>
+        <source>Provider cannot be opened for editing</source>
+        <translation type="unfinished">Provider cannot be opened for editing</translation>
+    </message>
+    <message>
+        <source>Stop editing</source>
+        <translation type="unfinished">Stop editing</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes to layer %1?</source>
+        <translation type="unfinished">Do you want to save the changes to layer %1?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Problems during roll back</source>
+        <translation type="unfinished">Problems during roll back</translation>
+    </message>
+</context>
+<context>
+    <name>QgsKadasMainWidgetBase</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Copy to 
+ clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import
+ OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">New</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">Open</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">Print</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Save</translation>
+    </message>
+    <message>
+        <source>Save map
+ extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">View</translation>
+    </message>
+    <message>
+        <source>Zoom last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Grid</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">Analysis</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">Area</translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Distance</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Hillshade</translation>
+    </message>
+    <message>
+        <source>Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Circle</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation type="unfinished">Profile</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Slope</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Situation report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Settings</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Help</translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsLUDialogBase</name>
     <message>
         <source>Enter class bounds</source>
@@ -33857,6 +34865,14 @@ This may be a problem in your network connection or at the WMS server.</numerusf
         <source>&amp;Group Selected</source>
         <translation>&amp;Group Selected</translation>
     </message>
+    <message>
+        <source>Transparency:</source>
+        <translation type="unfinished">Transparency:</translation>
+    </message>
+    <message>
+        <source>Use as heightmap</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -34907,6 +35923,10 @@ This may be a problem in your network connection or at the WMS server.</numerusf
         <source>Info</source>
         <translation>Info</translation>
     </message>
+    <message>
+        <source>Measure existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureDialog</name>
@@ -34960,7 +35980,7 @@ This may be a problem in your network connection or at the WMS server.</numerusf
     </message>
     <message>
         <source>Segments [%1]</source>
-        <translation>Segments [%1]</translation>
+        <translation type="obsolete">Segments [%1]</translation>
     </message>
     <message>
         <source>Meters</source>
@@ -34977,6 +35997,53 @@ This may be a problem in your network connection or at the WMS server.</numerusf
     <message>
         <source>Nautical Miles</source>
         <translation type="obsolete">Nautical Miles</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureHeightProfileDialog</name>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure along existing line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished">Copy to clipboard</translation>
+    </message>
+    <message>
+        <source>Add to canvas</source>
+        <translation type="unfinished">Add to canvas</translation>
+    </message>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -35556,6 +36623,10 @@ This may be a problem in your network connection or at the WMS server.</numerusf
         <source>Unknown Geometry</source>
         <translation>Unknown Geometry</translation>
     </message>
+    <message>
+        <source>Mixed Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMultiBandColorRendererWidget</name>
@@ -35630,6 +36701,14 @@ enhancement</translation>
     <message>
         <source>Network</source>
         <translation>Network</translation>
+    </message>
+    <message>
+        <source>Authentication required</source>
+        <translation type="unfinished">Authentication required</translation>
+    </message>
+    <message>
+        <source>Proxy authentication required</source>
+        <translation type="unfinished">Proxy authentication required</translation>
     </message>
 </context>
 <context>
@@ -37609,7 +38688,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Qt default</source>
-        <translation>Qt default</translation>
+        <translation type="obsolete">Qt default</translation>
     </message>
     <message>
         <source>Size</source>
@@ -38125,7 +39204,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Meters</source>
-        <translation>Meters</translation>
+        <translation type="obsolete">Meters</translation>
     </message>
     <message>
         <source>Feet</source>
@@ -38153,7 +39232,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Enable feature simplification by default for newly added layers</source>
-        <translation>Enable feature simplification by default for newly added layers</translation>
+        <translation type="obsolete">Enable feature simplification by default for newly added layers</translation>
     </message>
     <message>
         <source>Radians</source>
@@ -38393,7 +39472,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Prompt for &amp;CRS</source>
-        <translation>Prompt for &amp;CRS</translation>
+        <translation type="obsolete">Prompt for &amp;CRS</translation>
     </message>
     <message>
         <source>When a new layer is created, or when a layer is loaded that has no CRS</source>
@@ -38409,7 +39488,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</source>
-        <translation>Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</translation>
+        <translation type="obsolete">Automatically enable &apos;on the fly&apos; reprojection if layers have different CRS</translation>
     </message>
     <message>
         <source>Enable &apos;on the &amp;fly&apos; reprojection by default</source>
@@ -38449,7 +39528,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Override system locale</source>
-        <translation>Override system locale</translation>
+        <translation type="obsolete">Override system locale</translation>
     </message>
     <message>
         <source>Locale to use instead</source>
@@ -38505,7 +39584,7 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Use proxy for web access</source>
-        <translation>Use proxy for web access</translation>
+        <translation type="obsolete">Use proxy for web access</translation>
     </message>
     <message>
         <source>Host</source>
@@ -38550,6 +39629,54 @@ Always network: always load from network and do not check if the cache has a val
     <message>
         <source>Default uses system&apos;s proxy</source>
         <translation>Default uses system&apos;s proxy</translation>
+    </message>
+    <message>
+        <source>&amp;Qt default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature si&amp;mplification by default for newly added layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Above active layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro&amp;mpt for CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically enable &apos;on the fly&apos; reprojection if layers ha&amp;ve different CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;verride system locale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attempt NTLM SSO (Single Sign-On) authentication for each connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use pro&amp;xy for web access</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -44157,6 +45284,10 @@ standard deviation ×</translation>
         <source>Import colors...</source>
         <translation>Import colors...</translation>
     </message>
+    <message>
+        <source>Limit to visible extent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRasterTerrainAnalysisPlugin</name>
@@ -44230,6 +45361,69 @@ standard deviation ×</translation>
     <message>
         <source>Recent colors</source>
         <translation type="obsolete">Recent colors</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedlining</name>
+    <message>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished">Marker</translation>
+    </message>
+    <message>
+        <source>Point</source>
+        <translation type="unfinished">Point</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished">Square</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished">Triangle</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Line</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">Rectangle</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Polygon</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Circle</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">Text</translation>
+    </message>
+    <message>
+        <source>New Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -45805,6 +46999,116 @@ enhancement</translation>
     <message>
         <source>All layers</source>
         <translation>All layers</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectBase</name>
+    <message>
+        <source>Server connections</source>
+        <translation type="unfinished">Server connections</translation>
+    </message>
+    <message>
+        <source>C&amp;onnect</source>
+        <translation type="unfinished">C&amp;onnect</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation type="unfinished">&amp;New</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Edit</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <source>Load connections from file</source>
+        <translation type="unfinished">Load connections from file</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">Load</translation>
+    </message>
+    <message>
+        <source>Save connections to file</source>
+        <translation type="unfinished">Save connections to file</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Save</translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
+        <translation type="unfinished">Display WFS FeatureTypes containing this word in the title, name or abstract</translation>
+    </message>
+    <message>
+        <source>Use title for layer name</source>
+        <translation type="unfinished">Use title for layer name</translation>
+    </message>
+    <message>
+        <source>Only request features overlapping the current view extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image encoding</source>
+        <translation type="unfinished">Image encoding</translation>
+    </message>
+    <message>
+        <source>Coordinate reference system</source>
+        <translation type="unfinished">Coordinate reference system</translation>
+    </message>
+    <message>
+        <source>Change...</source>
+        <translation type="unfinished">Change...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsSourceSelectDialog</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">&amp;Add</translation>
+    </message>
+    <message>
+        <source>&amp;Build query</source>
+        <translation type="unfinished">&amp;Build query</translation>
+    </message>
+    <message>
+        <source>Create a new %1 connection</source>
+        <translation type="unfinished">Create a new %1 connection</translation>
+    </message>
+    <message>
+        <source>Modify %1 connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
+        <translation type="unfinished">Are you sure you want to remove the %1 connection and all associated settings?</translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished">Confirm Delete</translation>
+    </message>
+    <message>
+        <source>No Layers</source>
+        <translation type="unfinished">No Layers</translation>
+    </message>
+    <message>
+        <source>The query returned no layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load connections</source>
+        <translation type="unfinished">Load connections</translation>
+    </message>
+    <message>
+        <source>XML files (*.xml *XML)</source>
+        <translation type="unfinished">XML files (*.xml *XML)</translation>
     </message>
 </context>
 <context>
@@ -48068,6 +49372,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsVBSCoordinateDisplayer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSFunctionality</name>
+    <message>
+        <source>Import ovl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute slope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compute hillshade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSHillshadeTool</name>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished">Calculating hillshade...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abort</translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocalDataSearchCrawler</name>
+    <message>
+        <source>Local data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSLocationSearchProvider</name>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished">Layers</translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Close</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSMultiMapManager</name>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSOvlImporter</name>
+    <message>
+        <source>Select OVL File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Files (*.ovl);;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot open file for reading: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OVL Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 features were imported.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSPinAnnotationItem</name>
+    <message>
+        <source>Position: %1
+Height: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Remove</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRemoteDataSearchProvider</name>
+    <message>
+        <source>Feature</source>
+        <translation type="unfinished">Feature</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Search</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">Clear</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSSlopeTool</name>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished">Calculating slope...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abort</translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSViewshedTool</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Abort</translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">Visible</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsValueMapConfigDlg</name>
     <message>
         <source>Select a file</source>
@@ -49284,15 +50873,15 @@ Error was:%2</translation>
     <name>QgsWFSSourceSelect</name>
     <message>
         <source>&amp;Add</source>
-        <translation>&amp;Add</translation>
+        <translation type="obsolete">&amp;Add</translation>
     </message>
     <message>
         <source>&amp;Build query</source>
-        <translation>&amp;Build query</translation>
+        <translation type="obsolete">&amp;Build query</translation>
     </message>
     <message>
         <source>Build query</source>
-        <translation>Build query</translation>
+        <translation type="obsolete">Build query</translation>
     </message>
     <message>
         <source>Network Error</source>
@@ -49312,98 +50901,98 @@ Error was:%2</translation>
     </message>
     <message>
         <source>No Layers</source>
-        <translation>No Layers</translation>
+        <translation type="obsolete">No Layers</translation>
     </message>
     <message>
         <source>capabilities document contained no layers.</source>
-        <translation>capabilities document contained no layers.</translation>
+        <translation type="obsolete">capabilities document contained no layers.</translation>
     </message>
     <message>
         <source>Create a new WFS connection</source>
-        <translation>Create a new WFS connection</translation>
+        <translation type="obsolete">Create a new WFS connection</translation>
     </message>
     <message>
         <source>Modify WFS connection</source>
-        <translation>Modify WFS connection</translation>
+        <translation type="obsolete">Modify WFS connection</translation>
     </message>
     <message>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
-        <translation>Are you sure you want to remove the %1 connection and all associated settings?</translation>
+        <translation type="obsolete">Are you sure you want to remove the %1 connection and all associated settings?</translation>
     </message>
     <message>
         <source>Confirm Delete</source>
-        <translation>Confirm Delete</translation>
+        <translation type="obsolete">Confirm Delete</translation>
     </message>
     <message>
         <source>Load connections</source>
-        <translation>Load connections</translation>
+        <translation type="obsolete">Load connections</translation>
     </message>
     <message>
         <source>XML files (*.xml *XML)</source>
-        <translation>XML files (*.xml *XML)</translation>
+        <translation type="obsolete">XML files (*.xml *XML)</translation>
     </message>
 </context>
 <context>
     <name>QgsWFSSourceSelectBase</name>
     <message>
         <source>Add WFS Layer from a Server</source>
-        <translation>Add WFS Layer from a Server</translation>
+        <translation type="obsolete">Add WFS Layer from a Server</translation>
     </message>
     <message>
         <source>Change...</source>
-        <translation>Change...</translation>
+        <translation type="obsolete">Change...</translation>
     </message>
     <message>
         <source>Filter:</source>
-        <translation>Filter:</translation>
+        <translation type="obsolete">Filter:</translation>
     </message>
     <message>
         <source>Display WFS FeatureTypes containing this word in the title, name or abstract</source>
-        <translation>Display WFS FeatureTypes containing this word in the title, name or abstract</translation>
+        <translation type="obsolete">Display WFS FeatureTypes containing this word in the title, name or abstract</translation>
     </message>
     <message>
         <source>Server connections</source>
-        <translation>Server connections</translation>
+        <translation type="obsolete">Server connections</translation>
     </message>
     <message>
         <source>C&amp;onnect</source>
-        <translation>C&amp;onnect</translation>
+        <translation type="obsolete">C&amp;onnect</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;New</translation>
+        <translation type="obsolete">&amp;New</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Edit</translation>
+        <translation type="obsolete">Edit</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Delete</translation>
+        <translation type="obsolete">Delete</translation>
     </message>
     <message>
         <source>Load connections from file</source>
-        <translation>Load connections from file</translation>
+        <translation type="obsolete">Load connections from file</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>Load</translation>
+        <translation type="obsolete">Load</translation>
     </message>
     <message>
         <source>Save connections to file</source>
-        <translation>Save connections to file</translation>
+        <translation type="obsolete">Save connections to file</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Save</translation>
+        <translation type="obsolete">Save</translation>
     </message>
     <message>
         <source>Use title for layer name</source>
-        <translation>Use title for layer name</translation>
+        <translation type="obsolete">Use title for layer name</translation>
     </message>
     <message>
         <source>Coordinate reference system</source>
-        <translation>Coordinate reference system</translation>
+        <translation type="obsolete">Coordinate reference system</translation>
     </message>
 </context>
 <context>
@@ -51332,6 +52921,33 @@ Please configure it before running R scripts.</translation>
     </message>
 </context>
 <context>
+    <name>RedliningTextDialog</name>
+    <message>
+        <source>Text Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Font:</source>
+        <translation type="unfinished">Font:</translation>
+    </message>
+    <message>
+        <source>Text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">Rotation:</translation>
+    </message>
+</context>
+<context>
     <name>RegularPoints</name>
     <message>
         <source>Input extent</source>
@@ -52233,6 +53849,27 @@ Problem with line %d</translation>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
         <translation type="unfinished">Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</translation>
+    </message>
+</context>
+<context>
+    <name>Smtp</name>
+    <message>
+        <source>Message sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qt Simple SMTP client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected reply from SMTP server:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to send message</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
