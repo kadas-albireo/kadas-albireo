@@ -17,16 +17,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -1081,7 +1072,7 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QgsMapCanvas" name="mMapCanvas" native="true">
+    <widget class="QgsMapCanvas" name="mMapCanvas">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -1552,12 +1543,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsMapCanvas</class>
-   <extends>QWidget</extends>
-   <header>qgsmapcanvas.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QgsLayerTreeView</class>
    <extends>QTreeView</extends>
    <header>qgslayertreeview.h</header>
@@ -1578,9 +1563,15 @@
    <header>qgskadasribbonbutton.h</header>
   </customwidget>
   <customwidget>
+   <class>QgsMapCanvas</class>
+   <extends>QGraphicsView</extends>
+   <header>qgsmapcanvas.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>QgsVBSSearchBox</class>
    <extends>QWidget</extends>
-   <header>kadas/qgsvbssearchbox.h</header>
+   <header>kadas/search/qgsvbssearchbox.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
