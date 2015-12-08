@@ -650,18 +650,21 @@ int main( int argc, char *argv[] )
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
   //set stylesheet if there
-  QString styleSheetPath = QgsApplication::styleSheetPath();
-  QFile styleSheetFile( styleSheetPath );
-  if ( styleSheetFile.exists() )
+  if( kadasGui )
   {
-    if ( styleSheetFile.open( QIODevice::ReadOnly ) )
+    QString styleSheetPath = QgsApplication::styleSheetPath();
+    QFile styleSheetFile( styleSheetPath );
+    if ( styleSheetFile.exists() )
     {
-      QTextStream styleStream( &styleSheetFile );
-      QString styleSheetText = styleStream.readAll();
-      if ( !styleSheetText.isEmpty() )
-      {
-        myApp.setStyleSheet( styleSheetText );
-      }
+        if ( styleSheetFile.open( QIODevice::ReadOnly ) )
+        {
+        QTextStream styleStream( &styleSheetFile );
+        QString styleSheetText = styleStream.readAll();
+        if ( !styleSheetText.isEmpty() )
+        {
+            myApp.setStyleSheet( styleSheetText );
+        }
+        }
     }
   }
 

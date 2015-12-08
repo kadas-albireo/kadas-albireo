@@ -67,7 +67,7 @@ QTabWidget#mRibbonWidget {
 /**Status bar*/
 
 QWidget#mStatusWidget {
-  background-color: #1E2126
+  background-color: #1E2126;
 }
 
 #mStatusWidget  QWidget {
@@ -84,7 +84,7 @@ QTabWidget::pane {
 
 #mRibbonWidget QTabBar::tab:selected {
     background-color: #263B4E;
-    color: #FFFFFF
+    color: #FFFFFF;
 }
 
 #mRibbonWidget QTabBar::tab:!selected {
@@ -99,11 +99,61 @@ QPushButton#mLayerTreeViewButton {
 /**+- button*/
 QPushButton#mZoomInButton {
   background-color: #263B4E;
-  color: #FFFFFF
+  color: #FFFFFF;
 }
 QPushButton#mZoomOutButton {
   background-color: #263B4E;
-  color: #FFFFFF
+  color: #FFFFFF;
 }
+
+/**Styling for dialogs*/
+
+QDialogButtonBox { 
+  dialogbuttonbox-buttons-have-icons: 0; 
+}
+
+QDialog QPushButton {
+  border-radius: 3px;
+  background-color: #e6e6e6;
+  border: 1px solid #cdcdcd;
+  padding: 6px;
+  border-style: outset;
+  min-width: 80px;
+}
+
+QDialog {
+  background-color: #FFFFFF;
+}
+
+QDialog QPushButton:pressed {
+    border-style: inset;
+}
+
+QDialog QPushButton[text="OK"], QPushButton[text="&Open"]{
+  background-color: #106BBC;
+  color: #FFFFFF;
+}
+
+QDialog QPushButton[text="Abbrechen"], QPushButton[text="Schließen"], QPushButton[text="Cancel"]{
+  background-color: #313B44;
+  color: #FFFFFF;
+}
+
+/*QDialog QSpinBox, QDialog QDoubleSpinBox*/
+QDialog QComboBox, QDialog QLineEdit {
+  background-color: #FFFFFF;
+}
+
+QDialog QComboBox
+{
+  frame: 1px solid #9a9a9a;
+}
+
+/*QDialog QSpinBox, QDialog QDoubleSpinBox,*/
+QDialog QLineEdit {
+  border-radius: 5px;
+  frame: 1px solid #9a9a9a;
+}
+
 
 
