@@ -5,6 +5,8 @@ INCLUDE_DIRECTORIES(
   ../../core/geometry
   ../../core/raster
   ../../gui
+  ${GEOS_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../../ui
 )
 
