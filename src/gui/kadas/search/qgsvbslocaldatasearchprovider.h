@@ -28,7 +28,7 @@ class QgsMapLayer;
 class QgsVectorLayer;
 class QgsVBSLocalDataSearchCrawler;
 
-class QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
@@ -41,7 +41,7 @@ class QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
 };
 
 
-class QgsVBSLocalDataSearchCrawler : public QObject
+class GUI_EXPORT QgsVBSLocalDataSearchCrawler : public QObject
 {
     Q_OBJECT
   public:

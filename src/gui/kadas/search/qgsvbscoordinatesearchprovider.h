@@ -21,7 +21,7 @@
 #include "qgsvbssearchprovider.h"
 #include <QRegExp>
 
-class QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:

@@ -33,7 +33,7 @@ class QgsPoint;
 class QgsRectangle;
 class QgsRubberBand;
 
-class QgsVBSSearchBox : public QWidget
+class GUI_EXPORT QgsVBSSearchBox : public QWidget
 {
     Q_OBJECT
 

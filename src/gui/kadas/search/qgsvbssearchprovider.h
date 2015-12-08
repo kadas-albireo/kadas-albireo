@@ -26,7 +26,7 @@
 class QgisInterface;
 class QgsMapCanvas;
 
-class QgsVBSSearchProvider : public QObject
+class GUI_EXPORT QgsVBSSearchProvider : public QObject
 {
     Q_OBJECT
   public:

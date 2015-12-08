@@ -27,7 +27,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
