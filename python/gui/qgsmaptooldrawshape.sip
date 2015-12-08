@@ -17,12 +17,13 @@ class QgsMapToolDrawShape : public QgsMapTool
     virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const = 0;
     void update();
     void reset();
+    enum State { StateReady, StateDrawing, StateFinished };
 
   signals:
     void finished();
 
   protected:
-    enum State { StateReady, StateDrawing, StateFinished };
+
     virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
     virtual void moveEvent( const QgsPoint& pos ) = 0;
     virtual void clear() = 0;

@@ -443,13 +443,8 @@ void QgsKadasMainWidget::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   //QgsVisibilityPresets::instance()->clear();
 
   // set the initial map tool
-#ifndef HAVE_TOUCH
   mMapCanvas->setMapTool( mMapTools.mPan );
-  mNonEditMapTool = mMapTools.mPan;  // signals are not yet setup to catch this
-#else
-  mMapCanvas->setMapTool( mMapTools.mTouch );
-  mNonEditMapTool = mMapTools.mTouch;  // signals are not yet setup to catch this
-#endif
+  mNonEditMapTool = mMapTools.mPan;
 }
 
 void QgsKadasMainWidget::fileNewFromDefaultTemplate()

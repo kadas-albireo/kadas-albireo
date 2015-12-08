@@ -40,11 +40,13 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void update();
     void reset();
 
+    enum State { StateReady, StateDrawing, StateFinished } mState;
+
   signals:
     void finished();
 
   protected:
-    enum State { StateReady, StateDrawing, StateFinished } mState;
+
     bool mIsArea;
     bool mMultipart;
     QgsGeometryRubberBand* mRubberBand;
