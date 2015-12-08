@@ -1164,6 +1164,9 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="mLayerTreeViewButton">
       <property name="geometry">
