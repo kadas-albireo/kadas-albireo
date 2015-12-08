@@ -18,6 +18,7 @@
 #include "qgscomposermapgrid.h"
 #include "qgscomposerutils.h"
 #include "qgsclipper.h"
+#include "qgsdistancearea.h"
 #include "qgsgeometry.h"
 #include "qgscomposermap.h"
 #include "qgscomposition.h"
@@ -293,6 +294,7 @@ bool QgsComposerMapGrid::writeXML( QDomElement& elem, QDomDocument& doc ) const
   {
     mCRS.writeXML( mapGridElem, doc );
   }
+  mapGridElem.setAttribute( "gridcrs", mGridCrs );
 
   mapGridElem.setAttribute( "annotationFormat", mGridAnnotationFormat );
   mapGridElem.setAttribute( "showAnnotation", mShowGridAnnotation );
@@ -390,6 +392,7 @@ bool QgsComposerMapGrid::readXML( const QDomElement& itemElem, const QDomDocumen
   {
     mCRS = QgsCoordinateReferenceSystem();
   }
+  mGridCrs = static_cast<GridCRS>( itemElem.attribute( "gridcrs", 0 ).toInt() );
   mBlendMode = ( QPainter::CompositionMode )( itemElem.attribute( "blendMode", "0" ).toUInt() );
 
   //annotation
@@ -440,7 +443,18 @@ bool QgsComposerMapGrid::readXML( const QDomElement& itemElem, const QDomDocumen
 
 void QgsComposerMapGrid::setCrs( const QgsCoordinateReferenceSystem &crs )
 {
+  mGridCrs = CrsUserSelected;
   mCRS = crs;
+  mTransformDirty = true;
+}
+
+void QgsComposerMapGrid::setGridCrs( GridCRS gridCrs )
+{
+  mGridCrs = gridCrs;
+  if ( gridCrs != CrsUserSelected )
+  {
+    mCRS = QgsCoordinateReferenceSystem( "EPSG:4326" );
+  }
   mTransformDirty = true;
 }
 
@@ -453,6 +467,89 @@ QPolygonF QgsComposerMapGrid::scalePolygon( const QPolygonF &polygon, const doub
 {
   QTransform t = QTransform::fromScale( scale, scale );
   return t.map( polygon );
+}
+
+void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &context, double dotsPerMM, QList<QPair<double, QLineF> > &horizontalLines, QList<QPair<double, QLineF> > &verticalLines )
+{
+  if ( !mComposerMap || !mEnabled )
+  {
+    return;
+  }
+
+  //has map extent/scale changed?
+  QPolygonF mapPolygon = mComposerMap->transformedMapPolygon();
+  if ( mapPolygon != mPrevMapPolygon )
+  {
+    mTransformDirty = true;
+    mPrevMapPolygon = mapPolygon;
+  }
+
+  QgsRectangle crsBoundingRect;
+  QgsCoordinateTransform inverseTr;
+  if ( crsGridParams( crsBoundingRect, inverseTr ) != 0 )
+  {
+    return;
+  }
+
+  QList<QPolygonF> zoneLines;
+  QList<QPolygonF> subZoneLines;
+  QList<QPolygonF> gridLines;
+  typedef QPair<QPointF, QString> LabelEntry;
+  QList<QgsLatLonToUTM::GridLabel> zoneLabels;
+  QList<QgsLatLonToUTM::GridLabel> subZoneLabels;
+  QList<QgsLatLonToUTM::GridLabel> gridLabels;
+  QgsLatLonToUTM::computeGrid( crsBoundingRect, mComposerMap->scale(), zoneLines, subZoneLines, gridLines, zoneLabels, subZoneLabels, gridLabels );
+
+  double origWidth = mGridLineSymbol->width();
+
+  mGridLineSymbol->setWidth( 5 * origWidth );
+  foreach ( const QPolygonF& zoneLine, zoneLines )
+  {
+    QPolygonF itemLine;
+    foreach ( const QPointF& point, zoneLine )
+    {
+      itemLine.append( mComposerMap->mapToItemCoords( inverseTr.transform( point.x(), point.y() ).toQPointF() ) );
+    }
+
+    drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
+  }
+  mGridLineSymbol->setWidth( 2.5 * origWidth );
+  foreach ( const QPolygonF& subZoneLine, subZoneLines )
+  {
+    QPolygonF itemLine;
+    foreach ( const QPointF& point, subZoneLine )
+    {
+      itemLine.append( mComposerMap->mapToItemCoords( inverseTr.transform( point.x(), point.y() ).toQPointF() ) );
+    }
+
+    drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
+  }
+  mGridLineSymbol->setWidth( origWidth );
+  foreach ( const QPolygonF& gridLine, gridLines )
+  {
+    QPolygonF itemLine;
+    foreach ( const QPointF& point, gridLine )
+    {
+      itemLine.append( mComposerMap->mapToItemCoords( inverseTr.transform( point.x(), point.y() ).toQPointF() ) );
+    }
+
+    drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
+  }
+
+  //draw labels
+  painter->restore();
+
+  QFont annotationFontBak = mGridAnnotationFont;
+
+  mGridAnnotationFont.setPointSizeF( 2 * annotationFontBak.pointSizeF() );
+  foreach ( const LabelEntry& zoneLabel, zoneLabels )
+  {
+    const QPointF& pos = zoneLabel.first;
+    QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
+    drawAnnotation( painter, QPointF( labelPos.x() + 0.5, labelPos.y() - 0.5 ), 0, zoneLabel.second );
+  }
+
+  mGridAnnotationFont = annotationFontBak;
 }
 
 void QgsComposerMapGrid::drawGridCRSTransform( QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
@@ -655,7 +752,12 @@ void QgsComposerMapGrid::draw( QPainter* p )
   QList< QPair< double, QLineF > > horizontalLines;
 
   //is grid in a different crs than map?
-  if ( mGridUnit == MapUnit && mCRS.isValid() && mCRS != ms.destinationCrs() )
+  if ( mGridCrs == CrsMGRS || mGridCrs == CrsUTM )
+  {
+    drawGridUTM( p, context, dotsPerMM, horizontalLines, verticalLines );
+    return;
+  }
+  else if ( mGridUnit == MapUnit && mCRS.isValid() && mCRS != ms.destinationCrs() )
   {
     drawGridCRSTransform( context, dotsPerMM, horizontalLines, verticalLines );
   }

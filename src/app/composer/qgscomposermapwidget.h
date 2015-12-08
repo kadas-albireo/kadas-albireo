@@ -91,13 +91,15 @@ class QgsComposerMapWidget: public QgsComposerItemBaseWidget, private Ui::QgsCom
     void on_mGridFrameFill1ColorButton_colorChanged( const QColor& newColor );
     void on_mGridFrameFill2ColorButton_colorChanged( const QColor& newColor );
     void on_mGridTypeComboBox_currentIndexChanged( const QString& text );
-    void on_mMapGridCRSButton_clicked();
     void on_mMapGridUnitComboBox_currentIndexChanged( const QString& text );
     void on_mGridBlendComboBox_currentIndexChanged( int index );
     void on_mCheckGridLeftSide_toggled( bool checked );
     void on_mCheckGridRightSide_toggled( bool checked );
     void on_mCheckGridTopSide_toggled( bool checked );
     void on_mCheckGridBottomSide_toggled( bool checked );
+    void selectMapGridCrs();
+    void setMapGridCrsUTM();
+    void setMapGridCrsMGRS();
 
     //frame divisions display
     void on_mFrameDivisionsLeftComboBox_currentIndexChanged( int index );

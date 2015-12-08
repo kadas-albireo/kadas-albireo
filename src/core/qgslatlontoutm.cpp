@@ -17,6 +17,7 @@
 
 #include "qgslatlontoutm.h"
 #include "qgspoint.h"
+#include "qgsdistancearea.h"
 #include <qmath.h>
 
 
@@ -90,40 +91,7 @@ QgsLatLonToUTM::UTMCoo QgsLatLonToUTM::LL2UTM( const QgsPoint &pLatLong )
   double Lat = pLatLong.y();
   double LatRad = Lat / 180. * M_PI;
   double LongRad = Long / 180. * M_PI;
-  int ZoneNumber = qFloor(( Long + 180. ) / 6. ) + 1;
-
-  //Make sure the longitude 180.00 is in Zone 60
-  if ( Long >= 180.0 )
-  {
-    ZoneNumber = 60;
-  }
-
-  // Special zone for Norway
-  if ( Lat >= 56.0 && Lat < 64.0 && Long >= 3.0 && Long < 12.0 )
-  {
-    ZoneNumber = 32;
-  }
-
-  // Special zones for Svalbard
-  if ( Lat >= 72.0 && Lat < 84.0 )
-  {
-    if ( Long >= 0.0 && Long < 9.0 )
-    {
-      ZoneNumber = 31;
-    }
-    else if ( Long >= 9.0 && Long < 21.0 )
-    {
-      ZoneNumber = 33;
-    }
-    else if ( Long >= 21.0 && Long < 33.0 )
-    {
-      ZoneNumber = 35;
-    }
-    else if ( Long >= 33.0 && Long < 42.0 )
-    {
-      ZoneNumber = 37;
-    }
-  }
+  int ZoneNumber = getZoneNumber( Long, Lat );
 
   //+3 puts origin in middle of zone
   double LongOriginRad = (( ZoneNumber - 1 ) * 6 - 180 + 3 ) / 180. * M_PI;
@@ -153,6 +121,45 @@ QgsLatLonToUTM::UTMCoo QgsLatLonToUTM::LL2UTM( const QgsPoint &pLatLong )
   coo.zoneNumber = ZoneNumber;
   coo.zoneLetter = getHemisphereLetter( Lat );
   return coo;
+}
+
+int QgsLatLonToUTM::getZoneNumber( double lon, double lat )
+{
+  int zoneNumber = qFloor(( lon + 180. ) / 6. ) + 1;
+
+  //Make sure the longitude 180.00 is in Zone 60
+  if ( lon >= 180.0 )
+  {
+    zoneNumber = 60;
+  }
+
+  // Special zone for Norway
+  if ( lat >= 56.0 && lat < 64.0 && lon >= 3.0 && lon < 12.0 )
+  {
+    zoneNumber = 32;
+  }
+
+  // Special zones for Svalbard
+  if ( lat >= 72.0 && lat < 84.0 )
+  {
+    if ( lon >= 0.0 && lon < 9.0 )
+    {
+      zoneNumber = 31;
+    }
+    else if ( lon >= 9.0 && lon < 21.0 )
+    {
+      zoneNumber = 33;
+    }
+    else if ( lon >= 21.0 && lon < 33.0 )
+    {
+      zoneNumber = 35;
+    }
+    else if ( lon >= 33.0 && lon < 42.0 )
+    {
+      zoneNumber = 37;
+    }
+  }
+  return zoneNumber;
 }
 
 QString QgsLatLonToUTM::getHemisphereLetter( double lat )
@@ -479,4 +486,186 @@ QString QgsLatLonToUTM::getLetter100kID( int column, int row, int parm )
   }
 
   return QString( "%1%2" ).arg( QChar( colInt ) ).arg( QChar( rowInt ) );
+}
+
+static inline QPolygonF polyGridLineX( double x, double y1, double y2, double stepY )
+{
+  QPolygonF poly;
+  for ( double y = y1; y <= y2; y += stepY )
+  {
+    poly.append( QPointF( x, y ) );
+  }
+  poly.append( QPointF( x, y2 ) );
+  return poly;
+}
+
+static inline QPolygonF polyGridLineY( double x1, double x2, double stepX, double y )
+{
+  QPolygonF poly;
+  for ( double x = x1; x <= x2; x += stepX )
+  {
+    poly.append( QPointF( x, y ) );
+  }
+  poly.append( QPointF( x2, y ) );
+  return poly;
+}
+
+void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
+                                  QList<QPolygonF> &zoneLines, QList<QPolygonF> &subZoneLines, QList<QPolygonF> &gridLines,
+                                  QList<GridLabel> &zoneLabels, QList<GridLabel> &subZoneLabels, QList<GridLabel> &gridLabels )
+{
+
+  QgsDistanceArea da;
+  da.setEllipsoidalMode( true );
+  da.setEllipsoid( "WGS84" );
+
+  double lats[] = { -90, -80, -72, -64, -56, -48, -40, -32, -24, -16, -8, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84, 90 };
+  for ( int iy = 0, ny = sizeof( lats ) / sizeof( lats[0] ); iy < ny; ++iy )
+  {
+    for ( int ix = -30; ix < 30; ++ix )
+    {
+      double x1 = ix * 6;
+      double x2 = ( ix + 1 ) * 6;
+      double y1 = lats[iy];
+      double y2 = lats[iy + 1];
+
+      // Special zone for Norway
+      if ( y1 == 56. && y2 ==  64. )
+      {
+        if ( x1 == 0 )
+        {
+          x2 = 3;
+        }
+        else if ( x1 == 6 )
+        {
+          x1 = 3;
+        }
+      }
+
+      // Special zones from Svalbard
+      if ( y1 == 72 && y2 == 84 )
+      {
+        if ( x1 == 0 )
+        {
+          x2 = 9;
+        }
+        else if ( x1 == 12 )
+        {
+          x1 = 9;
+          x2 = 21;
+        }
+        else if ( x1 == 24 )
+        {
+          x1 = 21;
+          x2 = 33;
+        }
+        else if ( x1 == 36 )
+        {
+          x1 = 33;
+        }
+        else if ( x1 == 6 || x1 == 18 || x1 == 30 )
+        {
+          continue;
+        }
+      }
+
+      // Check if within area of interest
+      if ( x1 > bbox.xMaximum() || x2 < bbox.xMinimum() ||
+           y1 > bbox.yMaximum() || y2 < bbox.yMinimum() )
+      {
+        continue;
+      }
+
+      double xMin = qMax( x1, bbox.xMinimum() );
+      double xMax = qMin( x2, bbox.xMaximum() );
+      double yMin = qMax( y1, bbox.yMinimum() );
+      double yMax = qMin( y2, bbox.yMaximum() );
+
+      // Split box perimeter into pieces and compute lines
+      zoneLines << polyGridLineX( xMin, yMin, yMax, 1 ) << polyGridLineX( xMax, yMin, yMax, 1. );
+      zoneLines << polyGridLineY( xMin, xMax, 1., yMin ) << polyGridLineY( xMin, xMax, 1., yMax );
+      zoneLabels.append( qMakePair( QPointF( xMin, yMin ), QString( "%1%2" ).arg( QgsLatLonToUTM::getZoneNumber( x1, y1 ) ).arg( QgsLatLonToUTM::getHemisphereLetter( y1 ) ) ) );
+
+      // Sub-grid
+      if ( mapScale > 5000000 )
+      {
+        continue;
+      }
+      double cellSize = 0;
+      if ( mapScale > 500000 )
+      {
+        cellSize = 100000;
+      }
+      else if ( mapScale > 50000 )
+      {
+        cellSize = 10000;
+      }
+      else if ( mapScale > 5000 )
+      {
+        cellSize = 1000;
+      }
+      else
+      {
+        cellSize = 100;
+      }
+
+      double xMid = 0.5 * ( x1 + x2 );
+
+      double ly = da.measureLine( QgsPoint( x1, y1 ), QgsPoint( x1, y2 ) );
+      double incy = ( y2 - y1 ) / ly * cellSize;
+      QList<double> incx;
+      QList<double> yvals;
+      // Y lines
+      double y = y1 + qFloor(( yMin - y1 ) / incy ) * incy;
+      yvals.append( y );
+      double lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
+      incx.append(( x2 - x1 ) / lx * cellSize );
+      for ( ; y < yMax; y += incy )
+      {
+        if ( y < bbox.yMinimum() )
+        {
+          continue;
+        }
+        else
+        {
+          gridLines << polyGridLineY( x1, x2, 1., y );
+        }
+        yvals.append( y );
+        lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
+        incx.append(( x2 - x1 ) / lx * cellSize );
+      }
+      y = qMin( y2, y );
+      yvals.append( y );
+      lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
+      incx.append(( x2 - x1 ) / lx * cellSize );
+
+      // X lines
+      gridLines << polyGridLineX( xMid, yMin, yMax, 1. );
+      int nXLines = qCeil( qMax(( xMid - x1 ) / incx.front(), ( xMid - x1 ) / incx.last() ) );
+      for ( int i = 1; i < nXLines; ++i )
+      {
+        QPolygonF lineLeft, lineRight;
+        for ( int j = 0; j < yvals.size(); ++j )
+        {
+          double y = yvals[j];
+
+          double x = xMid - i * incx[j];
+          if ( x >= xMin )
+            lineLeft.append( QPointF( x, y ) );
+
+          x = xMid + i * incx[j];
+          if ( x <= xMax )
+            lineRight.append( QPointF( x, y ) );
+        }
+        if ( !lineLeft.isEmpty() )
+        {
+          gridLines << lineLeft;
+        }
+        if ( !lineRight.isEmpty() )
+        {
+          gridLines << lineRight;
+        }
+      }
+    }
+  }
 }

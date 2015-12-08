@@ -19,8 +19,11 @@
 #define QGSLATLONTOUTM_H
 
 #include <QString>
+#include <QPair>
+#include <QPolygonF>
 
 class QgsPoint;
+class QgsRectangle;
 
 class CORE_EXPORT QgsLatLonToUTM
 {
@@ -47,12 +50,19 @@ class CORE_EXPORT QgsLatLonToUTM
     static MGRSCoo UTM2MGRS( const UTMCoo& utmcoo );
     static UTMCoo MGRS2UTM( const MGRSCoo& mgrs, bool& ok );
 
+    static int getZoneNumber( double lon, double lat );
+    static QString getHemisphereLetter( double lat );
+
+    typedef QPair<QPointF, QString> GridLabel;
+    static void computeGrid( const QgsRectangle& bbox, double mapScale,
+                             QList<QPolygonF>& zoneLines, QList<QPolygonF>& subZoneLines, QList<QPolygonF>& gridLines,
+                             QList<GridLabel>& zoneLabels, QList<GridLabel>& subZoneLabels, QList<GridLabel>& gridLabels );
+
   private:
     static const int NUM_100K_SETS;
     static const QString SET_ORIGIN_COLUMN_LETTERS;
     static const QString SET_ORIGIN_ROW_LETTERS;
 
-    static QString getHemisphereLetter( double lat );
     static QString getLetter100kID( int column, int row, int parm );
     static double getMinNorthing( int zoneLetter );
 };
