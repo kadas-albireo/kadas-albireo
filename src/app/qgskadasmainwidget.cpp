@@ -152,6 +152,13 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
     zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - 15 - zoomLayoutGeometry.width(), 15, 35, zoomLayoutGeometry.height() ) );
   }
   QWidget::resizeEvent( event );
+
+  //resize mLayerTreeView and mLayerTreeViewButton
+  int distanceToTopBottom = 40;
+  int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
+  int layerTreePosY = distanceToTopBottom;
+  mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
+  mLayerTreeView->setGeometry( mLayerTreeView->pos().x(), distanceToTopBottom, mLayerTreeView->geometry().width(), layerTreeHeight );
 }
 
 void QgsKadasMainWidget::mousePressEvent( QMouseEvent* event )

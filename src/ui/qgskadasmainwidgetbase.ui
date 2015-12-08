@@ -1142,7 +1142,7 @@
        <rect>
         <x>0</x>
         <y>60</y>
-        <width>115</width>
+        <width>200</width>
         <height>192</height>
        </rect>
       </property>
@@ -1157,6 +1157,12 @@
         <width>200</width>
         <height>16777215</height>
        </size>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
      </widget>
      <widget class="QPushButton" name="mLayerTreeViewButton">
