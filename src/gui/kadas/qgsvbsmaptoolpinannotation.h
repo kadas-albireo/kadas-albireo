@@ -22,7 +22,7 @@
 
 class QgsVBSCoordinateDisplayer;
 
-class QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
+class GUI_EXPORT QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
 {
   public:
     QgsVBSMapToolPinAnnotation( QgsMapCanvas* canvas, QgsVBSCoordinateDisplayer* coordinateDisplayer )

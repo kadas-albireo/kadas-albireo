@@ -27,7 +27,7 @@ class QLineEdit;
 class QgsCoordinateReferenceSystem;
 class QgsMapCanvas;
 
-class QgsVBSCoordinateDisplayer : public QWidget
+class GUI_EXPORT QgsVBSCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:

@@ -22,7 +22,7 @@
 
 class QgsMapCanvas;
 
-class QgsVBSCrsSelection : public QToolButton
+class GUI_EXPORT QgsVBSCrsSelection : public QToolButton
 {
     Q_OBJECT
   public:

@@ -23,7 +23,7 @@
 class QgsPoint;
 class QgsCoordinateReferenceSystem;
 
-class QgsVBSCoordinateConverter : public QObject
+class GUI_EXPORT QgsVBSCoordinateConverter : public QObject
 {
   public:
     QgsVBSCoordinateConverter( QObject* parent ) : QObject( parent ) {}
@@ -32,7 +32,7 @@ class QgsVBSCoordinateConverter : public QObject
 };
 
 
-class QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     QgsEPSGCoordinateConverter( const QString& targetEPSG, QObject* parent );
@@ -43,7 +43,7 @@ class QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
 };
 
 
-class QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     enum Format { DegMinSec, DegMin, DecDeg };
@@ -56,7 +56,7 @@ class QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
 };
 
 
-class QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
 {
   public:
     QgsUTMCoordinateConverter( QObject* parent );
@@ -66,7 +66,7 @@ class QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
     QgsCoordinateReferenceSystem* mWgs84Srs;
 };
 
-class QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
+class GUI_EXPORT QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
 {
   public:
     QgsMGRSCoordinateConverter( QObject* parent ) : QgsUTMCoordinateConverter( parent ) {}

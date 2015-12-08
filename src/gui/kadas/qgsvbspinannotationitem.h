@@ -22,7 +22,7 @@
 
 class QgsVBSCoordinateDisplayer;
 
-class QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
+class GUI_EXPORT QgsVBSPinAnnotationItem: public QgsSvgAnnotationItem
 {
     Q_OBJECT
   public:

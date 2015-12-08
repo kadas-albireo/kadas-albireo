@@ -27,7 +27,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class QgsVBSRemoteDataSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsVBSRemoteDataSearchProvider : public QgsVBSSearchProvider
 {
     Q_OBJECT
   public:
