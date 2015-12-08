@@ -164,6 +164,15 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
       CM /*< grid units in centimetres */
     };
 
+    /** CRS for grid
+     */
+    enum GridCRS
+    {
+      CrsUserSelected = 0, /*< user selected */
+      CrsUTM, /*< UTM */
+      CrsMGRS /*< MGRS */
+    };
+
     /** Grid drawing style
      */
     enum GridStyle
@@ -298,7 +307,10 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
      * @returns coordinate reference system for grid
      * @see setCrs
     */
-    QgsCoordinateReferenceSystem crs() const { return mCRS; }
+    const QgsCoordinateReferenceSystem& crs() const { return mCRS; }
+
+    void setGridCrs( GridCRS gridCrs );
+    GridCRS gridCrs() const { return mGridCrs; }
 
     /**Sets the blending mode used for drawing the grid.
      * @param mode blending mode for grid
@@ -863,6 +875,7 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
     QgsLineSymbolV2* mGridLineSymbol;
     QgsMarkerSymbolV2* mGridMarkerSymbol;
 
+    GridCRS mGridCrs;
     QgsCoordinateReferenceSystem mCRS;
 
     GridUnit mGridUnit;
@@ -940,6 +953,8 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
 
     QPolygonF scalePolygon( const QPolygonF &polygon, const double scale ) const;
 
+    void drawGridUTM( QPainter *painter, QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
+                      QList< QPair< double, QLineF > > &verticalLines );
     /**Draws grid if CRS is different to map CRS*/
     void drawGridCRSTransform( QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
                                QList< QPair< double, QLineF > > &verticalLines );

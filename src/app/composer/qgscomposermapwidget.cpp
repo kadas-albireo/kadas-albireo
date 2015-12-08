@@ -70,6 +70,12 @@ QgsComposerMapWidget::QgsComposerMapWidget( QgsComposerMap* composerMap )
   mGridTypeComboBox->insertItem( 2, tr( "Markers" ) );
   mGridTypeComboBox->insertItem( 3, tr( "Frame and annotations only" ) );
 
+  QMenu* gridCrsMenu = new QMenu( mMapGridCRSButton );
+  gridCrsMenu->addAction( tr( "Select..." ), this, SLOT( selectMapGridCrs() ) );
+  gridCrsMenu->addAction( "UTM", this, SLOT( setMapGridCrsUTM() ) );
+  gridCrsMenu->addAction( "MGRS", this, SLOT( setMapGridCrsMGRS() ) );
+  mMapGridCRSButton->setMenu( gridCrsMenu );
+
   insertFrameDisplayEntries( mFrameDivisionsLeftComboBox );
   insertFrameDisplayEntries( mFrameDivisionsRightComboBox );
   insertFrameDisplayEntries( mFrameDivisionsTopComboBox );
@@ -1528,9 +1534,17 @@ void QgsComposerMapWidget::setGridItems( const QgsComposerMapGrid* grid )
   }
 
   //CRS button
-  QgsCoordinateReferenceSystem gridCrs = grid->crs();
-  QString crsButtonText = gridCrs.isValid() ? gridCrs.authid() : tr( "change..." );
-  mMapGridCRSButton->setText( crsButtonText );
+  switch ( grid->gridCrs() )
+  {
+    case QgsComposerMapGrid::CrsUTM:
+      mMapGridCRSButton->setText( "UTM" );
+      break;
+    case QgsComposerMapGrid::CrsMGRS:
+      mMapGridCRSButton->setText( "MGRS" );
+      break;
+    case QgsComposerMapGrid::CrsUserSelected:
+      mMapGridCRSButton->setText( grid->crs().isValid() ? grid->crs().authid() : tr( "change..." ) );
+  }
 
   blockGridItemsSignals( false );
 }
@@ -1972,7 +1986,7 @@ void QgsComposerMapWidget::on_mGridTypeComboBox_currentIndexChanged( const QStri
   mComposerMap->endCommand();
 }
 
-void QgsComposerMapWidget::on_mMapGridCRSButton_clicked()
+void QgsComposerMapWidget::selectMapGridCrs()
 {
   QgsComposerMapGrid* grid = currentGrid();
   if ( !grid || !mComposerMap )
@@ -1993,6 +2007,32 @@ void QgsComposerMapWidget::on_mMapGridCRSButton_clicked()
     mMapGridCRSButton->setText( selectedAuthId );
     mComposerMap->endCommand();
   }
+}
+
+void QgsComposerMapWidget::setMapGridCrsUTM()
+{
+  QgsComposerMapGrid* grid = currentGrid();
+  if ( !grid || !mComposerMap )
+  {
+    return;
+  }
+  mComposerMap->beginCommand( tr( "Grid CRS changed" ) );
+  grid->setGridCrs( QgsComposerMapGrid::CrsUTM );
+  mMapGridCRSButton->setText( "UTM" );
+  mComposerMap->endCommand();
+}
+
+void QgsComposerMapWidget::setMapGridCrsMGRS()
+{
+  QgsComposerMapGrid* grid = currentGrid();
+  if ( !grid || !mComposerMap )
+  {
+    return;
+  }
+  mComposerMap->beginCommand( tr( "Grid CRS changed" ) );
+  grid->setGridCrs( QgsComposerMapGrid::CrsMGRS );
+  mMapGridCRSButton->setText( "MGRS" );
+  mComposerMap->endCommand();
 }
 
 void QgsComposerMapWidget::on_mDrawAnnotationGroupBox_toggled( bool state )
