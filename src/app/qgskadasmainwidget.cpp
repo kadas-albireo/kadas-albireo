@@ -760,7 +760,7 @@ void QgsKadasMainWidget::slope( bool enabled )
   if ( enabled )
   {
     mSlopeTool = new QgsVBSSlopeTool( mMapCanvas, this );
-    connect( mSlopeTool, SIGNAL( finished() ), mActionSlope, SLOT( toggle() ) );
+    connect( mSlopeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
   {
@@ -775,7 +775,7 @@ void QgsKadasMainWidget::hillshade( bool enabled )
   if ( enabled )
   {
     mHillshadeTool = new QgsVBSHillshadeTool( mMapCanvas, this );
-    connect( mHillshadeTool, SIGNAL( finished() ), mActionHillshade, SLOT( toggle() ) );
+    connect( mHillshadeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
   {
@@ -790,7 +790,7 @@ void QgsKadasMainWidget::viewshed( bool enabled )
   if ( enabled )
   {
     mViewshedTool = new QgsVBSViewshedTool( mMapCanvas, false, this );
-    connect( mViewshedTool, SIGNAL( finished() ), mActionViewshed, SLOT( toggle() ) );
+    connect( mViewshedTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
   {
@@ -812,6 +812,14 @@ void QgsKadasMainWidget::userScale()
   if ( mMapCanvas )
   {
     mMapCanvas->zoomScale( 1.0 / mScaleComboBox->scale() );
+  }
+}
+
+void QgsKadasMainWidget::setNonEditMapTool()
+{
+  if ( mMapCanvas )
+  {
+    mMapCanvas->setMapTool( mNonEditMapTool );
   }
 }
 

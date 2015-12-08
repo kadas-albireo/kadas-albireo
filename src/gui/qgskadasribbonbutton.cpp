@@ -21,8 +21,8 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
   p.setBrush( QBrush( palette().color( QPalette::Window ) ) );
   if ( isChecked() )
   {
-    //QPen checkedPen( palette().color( QPalette::Dark ) );
-    QPen checkedPen( Qt::red );
+    QPen checkedPen( palette().color( QPalette::Dark ) );
+    //QPen checkedPen( Qt::red );
     checkedPen.setWidth( 3 );
     p.setPen( checkedPen );
   }
