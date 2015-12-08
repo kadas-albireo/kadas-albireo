@@ -156,7 +156,6 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
   //resize mLayerTreeView and mLayerTreeViewButton
   int distanceToTopBottom = 40;
   int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
-  int layerTreePosY = distanceToTopBottom;
   mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
   mLayerTreeView->setGeometry( mLayerTreeView->pos().x(), distanceToTopBottom, mLayerTreeView->geometry().width(), layerTreeHeight );
 }
