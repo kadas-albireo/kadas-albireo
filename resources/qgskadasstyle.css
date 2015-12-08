@@ -49,19 +49,37 @@ QAbstractButton#mFavoriteButton4 {
   color: #FFFFFF;
 }
 
+#search
+QWidget#mSearchWidget {
+  background-color: #5D7081;
+}
+
 QFrame#mSeparatorFrame {
   background-color: #BEDCF6;
   border: 1px #BEDCF6;
 }
 
 /**mRibbonWidget*/
-QTabWidget#mRibbonWidget {
-  background-color: #263B4E;
+QWidget#mRibbonBackgroundWidget {
+  background-color: #BEDCF6;
 }
 
-#mRibbonWidget QAbstractButton { 
+QWidget#mMyMapsTab, QWidget#mViewTab, QWidget#mAnalysisTab, QWidget#mDrawTab, QWidget#mSituationReportTab, QWidget#mSettingsTab, QWidget#mHelpTab {
+  background-color: #263B4E
+}
+
+QTabWidget QAbstractButton{ 
   background-color: #5D7081;
   color: #FFFFFF;
+}
+
+#mRibbonWidget QTabBar::tab:selected {
+    background-color: #263B4E;
+    color: #FFFFFF;
+}
+
+#mRibbonWidget QTabBar::tab:!selected {
+    background-color: #BEDCF6; /* make non-selected tabs look smaller */
 }
 
 /**Status bar*/
@@ -80,15 +98,6 @@ QWidget#mStatusWidget {
 }*/
 
 QTabWidget::pane {
-}
-
-#mRibbonWidget QTabBar::tab:selected {
-    background-color: #263B4E;
-    color: #FFFFFF;
-}
-
-#mRibbonWidget QTabBar::tab:!selected {
-    background-color: #BEDCF6; /* make non-selected tabs look smaller */
 }
 
 /**Tree view button*/
