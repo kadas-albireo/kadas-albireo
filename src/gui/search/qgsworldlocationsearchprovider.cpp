@@ -44,7 +44,7 @@ QgsWorldLocationSearchProvider::QgsWorldLocationSearchProvider( QgsMapCanvas* ma
 
 void QgsWorldLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( QSettings().value( "search/worldlocationsearchurl", "http://cm004695.lt.admin.ch/MGDIServices/Service/SearchServer.svc/Search" ).toString() );
+  QUrl url( QSettings().value( "search/worldlocationsearchurl", "https://npe.lt.admin.ch/MGDIServices/SearchServer.svc/Search" ).toString() );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
