@@ -140,8 +140,19 @@ void QgsRedliningLayer::write( QDomElement &redliningElem )
 
 void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
 {
-  foreach ( const QgsFeature& feature, features )
+  foreach ( QgsFeature feature, features )
   {
-    addShape( new QgsGeometry( feature.geometry()->geometry()->clone() ), Qt::red, Qt::blue, 1, Qt::SolidLine, Qt::SolidPattern );
+    if ( feature.attribute( "size" ).isNull() )
+      feature.setAttribute( "size", 1 );
+    if ( feature.attribute( "outline" ).isNull() )
+      feature.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( Qt::red ) );
+    if ( feature.attribute( "fill" ).isNull() )
+      feature.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( Qt::blue ) );
+    if ( feature.attribute( "outline_style" ).isNull() )
+      feature.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( Qt::SolidLine ) );
+    if ( feature.attribute( "fill_style" ).isNull() )
+      feature.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( Qt::SolidPattern ) );
+
+    dataProvider()->addFeatures( QgsFeatureList() << feature );
   }
 }
