@@ -1194,10 +1194,12 @@ void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
 
   if ( !visible )
   {
+    mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_unfolded.png" ) );
     mLayerTreeViewButton->move( mLayerTreeView->size().width() /*mLayerTreeView->frameSize().width()*/, mLayerTreeViewButton->y() );
   }
   else
   {
+    mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_folded.png" ) );
     mLayerTreeViewButton->move( 0, mLayerTreeViewButton->y() );
   }
 }

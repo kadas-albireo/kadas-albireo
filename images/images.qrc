@@ -525,6 +525,8 @@
 	<file>kadas/zoom_in.png</file>
 	<file>kadas/zoom_out.png</file>
 	<file>kadas/question_mark.png</file>
+	<file>kadas/layerbaum_folded.png</file>
+	<file>kadas/layerbaum_unfolded.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>
