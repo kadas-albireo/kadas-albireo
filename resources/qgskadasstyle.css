@@ -1,7 +1,6 @@
 /**General styling*/
 QWidget {
-  font-family: "Frutiger LT Pro";
-  font-style: 55 Roman;
+  font-family: "Frutiger LT Pro 55 Roman";
   font-size: 14px; 
 }
 
@@ -59,7 +58,7 @@ QFrame#mSeparatorFrame {
   border: 1px #BEDCF6;
 }
 
-/**mRibbonWidget*/
+/**Ribbon widget*/
 QWidget#mRibbonBackgroundWidget {
   background-color: #BEDCF6;
 }
