@@ -384,11 +384,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
   else if ( mSectorStage == HaveArc )
   {
     mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
-    if ( mStopAngles.back() > mStartAngles.back() + M_PI )
-    {
-      mStopAngles.back() -= 2 * M_PI;
-    }
-    else if ( mStopAngles.back() < mStartAngles.back() - M_PI )
+    if ( mStopAngles.back() < mStartAngles.back() )
     {
       mStopAngles.back() += 2 * M_PI;
     }
