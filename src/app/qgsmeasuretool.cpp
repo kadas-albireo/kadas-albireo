@@ -147,6 +147,23 @@ void QgsMeasureTool::pickGeometry()
   setCursor( QCursor( Qt::ArrowCursor ) );
 }
 
+void QgsMeasureTool::setGeometry( QgsGeometry *geometry, QgsVectorLayer* layer )
+{
+  mRubberBand->addGeometry( geometry, layer );
+  mRubberBandPoints->addGeometry( geometry, layer );
+  int idx = mCurrentPart;
+  while ( mCurrentPart < mRubberBand->getPoints().size() )
+  {
+    addPart( toCanvasCoordinates( mRubberBand->partMidpoint( mCurrentPart ) ) );
+    mDialog->updateMeasurements();
+    ++mCurrentPart;
+  }
+  while ( idx < mCurrentPart )
+  {
+    updateLabel( idx++ );
+  }
+}
+
 //////////////////////////
 
 void QgsMeasureTool::canvasMoveEvent( QMouseEvent * e )
@@ -170,19 +187,7 @@ void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
     QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
     if ( pickResult.first.isValid() )
     {
-      mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );
-      mRubberBandPoints->addGeometry( pickResult.first.geometry(), pickResult.second );
-      int idx = mCurrentPart;
-      while ( mCurrentPart < mRubberBand->getPoints().size() )
-      {
-        addPart( toCanvasCoordinates( mRubberBand->partMidpoint( mCurrentPart ) ) );
-        mDialog->updateMeasurements();
-        ++mCurrentPart;
-      }
-      while ( idx < mCurrentPart )
-      {
-        updateLabel( idx++ );
-      }
+      setGeometry( pickResult.first.geometry(), pickResult.second );
     }
     mPickFeature = false;
     setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );

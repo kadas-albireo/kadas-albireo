@@ -42,6 +42,8 @@ class APP_EXPORT QgsMeasureCircleTool : public QgsMeasureTool
 
     virtual void keyPressEvent( QKeyEvent* /*e*/ ) override {}
 
+    void setGeometry( QgsGeometry* geometry, QgsVectorLayer *layer ) override;
+
   private:
     QgsPoint mCenterPos;
 

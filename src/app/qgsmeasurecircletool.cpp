@@ -53,6 +53,18 @@ void QgsMeasureCircleTool::updateRubberbandGeometry( const QgsPoint& point )
   }
 }
 
+void QgsMeasureCircleTool::setGeometry( QgsGeometry *geometry, QgsVectorLayer* layer )
+{
+  QgsRectangle bbox = geometry->boundingBox();
+  QgsPoint p1 = toMapCoordinates( layer, QgsPoint( bbox.xMinimum(), bbox.yMinimum() ) );
+  QgsPoint p2 = toMapCoordinates( layer, QgsPoint( bbox.xMaximum(), bbox.yMaximum() ) );
+  QgsPoint center( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) );
+  double radius = qSqrt( p1.sqrDist( center ) );
+  initCircle( toMapCoordinates( layer, center ), radius );
+  updateLabel( mCurrentPart );
+  ++mCurrentPart;
+}
+
 //////////////////////////
 
 void QgsMeasureCircleTool::canvasMoveEvent( QMouseEvent * e )
@@ -77,14 +89,7 @@ void QgsMeasureCircleTool::canvasReleaseEvent( QMouseEvent * e )
     QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::Polygon );
     if ( pickResult.first.isValid() )
     {
-      QgsRectangle bbox = pickResult.first.geometry()->boundingBox();
-      QgsPoint p1 = toMapCoordinates( pickResult.second, QgsPoint( bbox.xMinimum(), bbox.yMinimum() ) );
-      QgsPoint p2 = toMapCoordinates( pickResult.second, QgsPoint( bbox.xMaximum(), bbox.yMaximum() ) );
-      QgsPoint center( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) );
-      double radius = qSqrt( p1.sqrDist( center ) );
-      initCircle( toMapCoordinates( pickResult.second, center ), radius );
-      updateLabel( mCurrentPart );
-      ++mCurrentPart;
+      setGeometry( pickResult.first.geometry(), pickResult.second );
     }
     mPickFeature = false;
     setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );

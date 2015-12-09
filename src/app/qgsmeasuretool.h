@@ -23,6 +23,8 @@ class QgsMapCanvas;
 class QgsMeasureDialog;
 class QgsRubberBand;
 class QGraphicsTextItem;
+class QgsGeometry;
+class QgsVectorLayer;
 
 
 class APP_EXPORT QgsMeasureTool : public QgsMapTool
@@ -62,6 +64,9 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
 
     //! update measurement labels
     void updateLabels();
+
+    //! Sets the geometry to be measured
+    virtual void setGeometry( QgsGeometry* geometry, QgsVectorLayer *layer );
 
   public slots:
     //! updates the projections we're using
