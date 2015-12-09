@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>QGIS Kadas</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_7">
    <property name="margin">
@@ -232,6 +232,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="currentIndex">
            <number>0</number>

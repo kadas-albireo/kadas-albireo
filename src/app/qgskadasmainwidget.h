@@ -73,6 +73,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     void pinActionToggled( bool enabled );
     void userScale();
+    void showScale( double theScale );
 
     void setNonEditMapTool();
 
