@@ -109,6 +109,8 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   //initLayerTreeView
 
+  connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
+
   mLayerTreeCanvasBridge = new QgsLayerTreeMapCanvasBridge( QgsProject::instance()->layerTreeRoot(), mMapCanvas, this );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), mLayerTreeCanvasBridge, SLOT( writeProject( QDomDocument& ) ) );
   connect( QgsProject::instance(), SIGNAL( readProject( const QDomDocument& ) ), mLayerTreeCanvasBridge, SLOT( readProject( const QDomDocument& ) ) );
@@ -812,6 +814,14 @@ void QgsKadasMainWidget::userScale()
   if ( mMapCanvas )
   {
     mMapCanvas->zoomScale( 1.0 / mScaleComboBox->scale() );
+  }
+}
+
+void QgsKadasMainWidget::showScale( double theScale )
+{
+  if ( mScaleComboBox )
+  {
+    mScaleComboBox->setScale( theScale );
   }
 }
 
