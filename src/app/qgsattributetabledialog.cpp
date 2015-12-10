@@ -69,7 +69,10 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   setupUi( this );
 
   // Fix selection color on loosing focus (Windows)
-  setStyleSheet( QgisApp::instance()->styleSheet() );
+  if ( QgisApp::instance() )
+  {
+    setStyleSheet( QgisApp::instance()->styleSheet() );
+  }
 
   setAttribute( Qt::WA_DeleteOnClose );
 
@@ -228,9 +231,6 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   mUpdateExpressionText->setLayer( mLayer );
   mUpdateExpressionText->setLeftHandButtonStyle( true );
   editingToggled();
-
-  QObject::connect( mMainView->tableView(), SIGNAL( willShowContextMenu( QMenu*, QModelIndex ) ), this, SLOT( viewWillShowContextMenu( QMenu*, QModelIndex ) ) );
-
 }
 
 QgsAttributeTableDialog::~QgsAttributeTableDialog()
@@ -789,24 +789,4 @@ void QgsAttributeTableDialog::setFilterExpression( QString filterString )
     QgisApp::instance()->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
     return;
   }
-}
-
-void QgsAttributeTableDialog::viewWillShowContextMenu( QMenu* menu, QModelIndex atIndex )
-{
-  if ( menu )
-  {
-    menu->addAction( tr( "Zoom to feature" ), this, SLOT( zoomToFeature() ) );
-  }
-}
-
-void QgsAttributeTableDialog::zoomToFeature()
-{
-  QModelIndex currentIndex = mMainView->tableView()->currentIndex();
-  if ( !currentIndex.isValid() )
-  {
-    return;
-  }
-
-  QgsFeatureId id = mMainView->filterModel()->rowToId( currentIndex );
-  QgisApp::instance()->mapCanvas()->zoomToFeatureId( mLayer, id );
 }

@@ -2,11 +2,13 @@
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
 #include "qgsdecorationgrid.h"
+#include "qgskadaslayertreeviewmenuprovider.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
 #include "qgslayertreemapcanvasbridge.h"
 #include "qgslayertreeregistrybridge.h"
 #include "qgslayertreemodel.h"
+#include "qgslayertree.h"
 #include "qgsapplayertreeviewmenuprovider.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
@@ -602,7 +604,7 @@ void QgsKadasMainWidget::initLayerTreeView()
   model->setAutoCollapseLegendNodes( 10 );
 
   mLayerTreeView->setModel( model );
-  mLayerTreeView->setMenuProvider( new QgsAppLayerTreeViewMenuProvider( mLayerTreeView, mMapCanvas ) );
+  mLayerTreeView->setMenuProvider( new QgsKadasLayerTreeViewMenuProvider( mLayerTreeView, this ) );
 
   //setup connections
   connect( mLayerTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( layerTreeViewDoubleClicked( QModelIndex ) ) );
@@ -1990,6 +1992,50 @@ bool QgsKadasMainWidget::toggleEditing( QgsMapLayer *layer, bool allowCancel )
   }
 
   return res;
+}
+
+void QgsKadasMainWidget::removeLayer()
+{
+  if ( !mLayerTreeView )
+  {
+    return;
+  }
+
+  foreach ( QgsMapLayer * layer, mLayerTreeView->selectedLayers() )
+  {
+    QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer*>( layer );
+    if ( vlayer && vlayer->isEditable() && !toggleEditing( vlayer, true ) )
+      return;
+  }
+
+  QList<QgsLayerTreeNode*> selectedNodes = mLayerTreeView->selectedNodes( true );
+
+  //validate selection
+  if ( selectedNodes.isEmpty() )
+  {
+    messageBar()->pushMessage( tr( "No legend entries selected" ),
+                               tr( "Select the layers and groups you want to remove in the legend." ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+
+  bool promptConfirmation = QSettings().value( "qgis/askToDeleteLayers", true ).toBool();
+  //display a warning
+  if ( promptConfirmation && QMessageBox::warning( this, tr( "Remove layers and groups" ), tr( "Remove %n legend entries?", "number of legend items to remove", selectedNodes.count() ), QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Cancel )
+  {
+    return;
+  }
+
+  foreach ( QgsLayerTreeNode* node, selectedNodes )
+  {
+    QgsLayerTreeGroup* parentGroup = qobject_cast<QgsLayerTreeGroup*>( node->parent() );
+    if ( parentGroup )
+      parentGroup->removeChildNode( node );
+  }
+
+  //showStatusMessage( tr( "%n legend entries removed.", "number of removed legend entries", selectedNodes.count() ) );
+
+  mMapCanvas->refresh();
 }
 
 void QgsKadasMainWidget::showLayerProperties( QgsMapLayer *ml )
