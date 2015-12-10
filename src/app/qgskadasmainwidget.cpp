@@ -290,6 +290,7 @@ void QgsKadasMainWidget::configureButtons()
   //mActionPrint
   setActionToButton( mActionPrint, mPrintButton );
   //mActionSaveMapExtent
+  connect( mActionSaveMapExtent, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
   setActionToButton( mActionSaveMapExtent, mSaveMapExtentButton );
   //mActionExportKML
   setActionToButton( mActionExportKML, mExportKMLButton );
@@ -732,6 +733,18 @@ bool QgsKadasMainWidget::save()
 #endif //0
 
   return true;
+}
+
+void QgsKadasMainWidget::saveMapAsImage()
+{
+  QPair< QString, QString> myFileNameAndFilter = QgisGui::getSaveAsImageName( this, tr( "Choose a file name to save the map image as" ) );
+  if ( myFileNameAndFilter.first != "" )
+  {
+    //save the mapview to the selected file
+    mMapCanvas->saveAsImage( myFileNameAndFilter.first, NULL, myFileNameAndFilter.second );
+    messageBar()->pushMessage( tr( "Saved map image to %1" ).arg( myFileNameAndFilter.first ), QgsMessageBar::INFO, 5 );
+    //statusBar()->showMessage( tr( "Saved map image to %1" ).arg( myFileNameAndFilter.first ) );
+  }
 }
 
 void QgsKadasMainWidget::zoomToPrevious()
