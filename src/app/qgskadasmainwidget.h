@@ -54,6 +54,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void fileNew();
     void open();
     bool save();
+    void saveMapAsImage();
     void zoomToPrevious();
     void zoomToNext();
     void pin( bool enabled );
