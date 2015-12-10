@@ -2,10 +2,12 @@
 #define QGSKADASMAINWIDGET_H
 
 #include "ui_qgskadasmainwidgetbase.h"
+#include <QSslError>
 
 class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
 class QgsMessageBar;
+class QNetworkReply;
 class QgsVBSCoordinateDisplayer;
 class QgsVBSHillshadeTool;
 class QgsVBSSlopeTool;
@@ -77,6 +79,11 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     void setNonEditMapTool();
 
+#ifndef QT_NO_OPENSSL
+    void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
+#endif
+    void namRequestTimedOut( QNetworkReply *reply );
+
   private:
     void setActionToButton( QAction* action, QToolButton* button );
 
@@ -100,6 +107,9 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     Is called from the legend when the current legend item has changed*/
     void activateDeactivateLayerRelatedActions( QgsMapLayer *layer );
     void initMapCanvas();
+    //! initialize network manager
+    void namSetup();
+    void namUpdate();
     void initLayerTreeView();
 
     void showLayerProperties( QgsMapLayer *ml );
