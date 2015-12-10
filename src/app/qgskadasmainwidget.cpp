@@ -10,6 +10,7 @@
 #include "qgsmessageviewer.h"
 #include "qgsmessagebar.h"
 #include "qgsmessagebaritem.h"
+#include "qgsnetworkaccessmanager.h"
 #include "qgspluginlayer.h"
 #include "qgspluginlayerregistry.h"
 #include "qgsproject.h"
@@ -80,6 +81,7 @@
 QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
     mNonEditMapTool( 0 ), mSlopeTool( 0 )
 {
+  namSetup(); //setup network access manager
   setupUi( this );
   mToggleButtonGroup = new QButtonGroup( this );
   mLayerTreeView->setVisible( false );
@@ -534,6 +536,51 @@ void QgsKadasMainWidget::initMapCanvas()
   mMapCanvas->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
   mMapCanvas->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", false ).toBool() );
   mMapCanvas->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
+}
+
+void QgsKadasMainWidget::namSetup()
+{
+  QgsNetworkAccessManager *nam = QgsNetworkAccessManager::instance();
+
+  namUpdate();
+
+#ifndef QT_NO_OPENSSL
+  connect( nam, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
+           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ) );
+#endif
+  connect( nam, SIGNAL( requestTimedOut( QNetworkReply* ) ),
+           this, SLOT( namRequestTimedOut( QNetworkReply* ) ) );
+}
+
+#ifndef QT_NO_OPENSSL
+void QgsKadasMainWidget::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &errors, bool *ok )
+{
+  QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( url.toString() );
+  foreach ( QSslError error, errors )
+  {
+    msg += "\n" + error.errorString();
+  }
+  msg += tr( "\n\nAlways ignore these errors?" );
+  *ok = QMessageBox::warning( this,
+                              tr( "%1 SSL errors occured", "number of errors", errors.size() ),
+                              msg,
+                              QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes;
+}
+#endif
+
+void QgsKadasMainWidget::namRequestTimedOut( QNetworkReply *reply )
+{
+  Q_UNUSED( reply );
+  QLabel *msgLabel = new QLabel( tr( "A network request timed out, any data received is likely incomplete." ) +
+                                 tr( " Please check the <a href=\"#messageLog\">message log</a> for further info." ), messageBar() );
+  msgLabel->setWordWrap( true );
+  //connect( msgLabel, SIGNAL( linkActivated( QString ) ), mLogDock, SLOT( show() ) );
+  messageBar()->pushItem( new QgsMessageBarItem( msgLabel, QgsMessageBar::WARNING, messageTimeout() ) );
+}
+
+void QgsKadasMainWidget::namUpdate()
+{
+  QgsNetworkAccessManager::instance()->setupDefaultProxyAndCache();
 }
 
 void QgsKadasMainWidget::initLayerTreeView()
