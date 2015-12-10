@@ -21,6 +21,7 @@
 #include <QObject>
 #include "qgslogger.h"
 
+class QgsMapCanvas;
 class QPainter;
 
 class APP_EXPORT QgsDecorationItem: public QObject
@@ -28,7 +29,7 @@ class APP_EXPORT QgsDecorationItem: public QObject
     Q_OBJECT
   public:
     //! Constructor
-    QgsDecorationItem( QObject* parent = NULL );
+    QgsDecorationItem( QObject* parent = NULL, QgsMapCanvas* mapCanvas = 0 );
     //! Destructor
     virtual ~ QgsDecorationItem();
 
@@ -62,6 +63,8 @@ class APP_EXPORT QgsDecorationItem: public QObject
     QString mName;
     QString mNameConfig;
     QString mNameTranslated;
+
+    QgsMapCanvas* mMapCanvas;
 };
 
 #endif

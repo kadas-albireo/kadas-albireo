@@ -19,7 +19,6 @@
 #include "qgsdecorationgrid.h"
 #include "qgsdecorationgriddialog.h"
 
-#include "qgisapp.h"
 #include "qgslogger.h"
 #include "qgsmaplayer.h"
 #include "qgsrasterlayer.h"
@@ -54,8 +53,8 @@
 #define FONT_WORKAROUND_SCALE 10 //scale factor for upscaling fontsize and downscaling painter
 
 
-QgsDecorationGrid::QgsDecorationGrid( QObject* parent )
-    : QgsDecorationItem( parent )
+QgsDecorationGrid::QgsDecorationGrid( QgsMapCanvas* mapCanvas, QObject* parent )
+    : QgsDecorationItem( parent, mapCanvas )
 {
   setName( "Grid" );
 
@@ -63,8 +62,11 @@ QgsDecorationGrid::QgsDecorationGrid( QObject* parent )
   mMarkerSymbol = 0;
   projectRead();
 
-  connect( QgisApp::instance()->mapCanvas(), SIGNAL( mapUnitsChanged() ),
-           this, SLOT( checkMapUnitsChanged() ) );
+  if ( mMapCanvas )
+  {
+    connect( mMapCanvas, SIGNAL( mapUnitsChanged() ),
+             this, SLOT( checkMapUnitsChanged() ) );
+  }
 }
 
 QgsDecorationGrid::~QgsDecorationGrid()
@@ -232,7 +234,11 @@ void QgsDecorationGrid::render( QPainter * p )
     if ( ! mLineSymbol )
       return;
 
-    QgsRenderContext context = QgsRenderContext::fromMapSettings( QgisApp::instance()->mapCanvas()->mapSettings() );
+    QgsRenderContext context;
+    if ( mMapCanvas )
+    {
+      context = QgsRenderContext::fromMapSettings( mMapCanvas->mapSettings() );
+    }
     context.setPainter( p );
     mLineSymbol->startRender( context, 0 );
 
@@ -310,7 +316,11 @@ void QgsDecorationGrid::render( QPainter * p )
     if ( ! mMarkerSymbol )
       return;
 
-    QgsRenderContext context = QgsRenderContext::fromMapSettings( QgisApp::instance()->mapCanvas()->mapSettings() );
+    QgsRenderContext context;
+    if ( mMapCanvas )
+    {
+      context = QgsRenderContext::fromMapSettings( mMapCanvas->mapSettings() );
+    }
     context.setPainter( p );
     mMarkerSymbol->startRender( context, 0 );
 
@@ -513,17 +523,15 @@ void QgsDecorationGrid::drawAnnotation( QPainter* p, const QPointF& pos, int rot
   p->restore();
 }
 
-const QgsMapCanvas& canvas()
-{
-  return *QgisApp::instance()->mapCanvas();
-}
-
-QPolygonF canvasPolygon()
+QPolygonF canvasPolygon( const QgsMapCanvas* canvas )
 {
   QPolygonF poly;
+  if ( !canvas )
+  {
+    return poly;
+  }
 
-  const QgsMapCanvas& mapCanvas = canvas();
-  const QgsMapSettings& mapSettings = mapCanvas.mapSettings();
+  const QgsMapSettings& mapSettings = canvas->mapSettings();
   return mapSettings.visiblePolygon();
 }
 
@@ -555,10 +563,16 @@ bool clipByRect( QLineF& line, const QPolygonF& rect )
   return true;
 }
 
-QPolygonF canvasExtent()
+
+QPolygonF canvasExtent( const QgsMapCanvas* canvas )
 {
   QPolygonF poly;
-  QgsRectangle extent = canvas().extent();
+  if ( !canvas )
+  {
+    return poly;
+  }
+
+  QgsRectangle extent = canvas->extent();
   poly << QPointF( extent.xMinimum(), extent.yMaximum() );
   poly << QPointF( extent.xMaximum(), extent.yMaximum() );
   poly << QPointF( extent.xMaximum(), extent.yMinimum() );
@@ -568,6 +582,11 @@ QPolygonF canvasExtent()
 
 int QgsDecorationGrid::xGridLines( QList< QPair< double, QLineF > >& lines ) const
 {
+  if ( !mMapCanvas )
+  {
+    return 1;
+  }
+
   // prepare horizontal lines
   lines.clear();
   if ( mGridIntervalY <= 0.0 )
@@ -575,7 +594,7 @@ int QgsDecorationGrid::xGridLines( QList< QPair< double, QLineF > >& lines ) con
     return 1;
   }
 
-  const QgsMapCanvas& mapCanvas = canvas();
+  const QgsMapCanvas& mapCanvas = *mMapCanvas;
   const QgsMapSettings& mapSettings = mapCanvas.mapSettings();
   const QgsMapToPixel& m2p = mapSettings.mapToPixel();
 
@@ -585,8 +604,8 @@ int QgsDecorationGrid::xGridLines( QList< QPair< double, QLineF > >& lines ) con
   if ( mGridIntervalY / mapSettings.mapUnitsPerPixel() < 1 )
     return 1;
 
-  const QPolygonF& canvasPoly = canvasPolygon();
-  const QPolygonF& mapPolygon = canvasExtent();
+  const QPolygonF& canvasPoly = canvasPolygon( mMapCanvas );
+  const QPolygonF& mapPolygon = canvasExtent( mMapCanvas );
   const QRectF& mapBoundingRect = mapPolygon.boundingRect();
   QLineF lineEast( mapPolygon[2], mapPolygon[1] );
   QLineF lineWest( mapPolygon[3], mapPolygon[0] );
@@ -616,14 +635,18 @@ int QgsDecorationGrid::yGridLines( QList< QPair< double, QLineF > >& lines ) con
 {
   // prepare vertical lines
 
+  if ( !mMapCanvas )
+  {
+    return 1;
+  }
+
   lines.clear();
   if ( mGridIntervalX <= 0.0 )
   {
     return 1;
   }
 
-  const QgsMapCanvas& mapCanvas = canvas();
-  const QgsMapSettings& mapSettings = mapCanvas.mapSettings();
+  const QgsMapSettings& mapSettings = mMapCanvas->mapSettings();
   const QgsMapToPixel& m2p = mapSettings.mapToPixel();
 
   // draw nothing if the distance between grid lines would be less than 1px
@@ -632,8 +655,8 @@ int QgsDecorationGrid::yGridLines( QList< QPair< double, QLineF > >& lines ) con
   if ( mGridIntervalX / mapSettings.mapUnitsPerPixel() < 1 )
     return 1;
 
-  const QPolygonF& canvasPoly = canvasPolygon();
-  const QPolygonF& mapPolygon = canvasExtent();
+  const QPolygonF& canvasPoly = canvasPolygon( mMapCanvas );
+  const QPolygonF& mapPolygon = canvasExtent( mMapCanvas );
   QLineF lineSouth( mapPolygon[3], mapPolygon[2] );
   QLineF lineNorth( mapPolygon[0], mapPolygon[1] );
 
@@ -749,12 +772,18 @@ void QgsDecorationGrid::checkMapUnitsChanged()
   // this is to avoid problems when CRS changes to/from geographic and projected
   // a better solution would be to change the grid interval, but this is a little tricky
   // note: we could be less picky (e.g. from degrees to DMS)
-  QGis::UnitType mapUnits = QgisApp::instance()->mapCanvas()->mapSettings().mapUnits();
+
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+
+  QGis::UnitType mapUnits = mMapCanvas->mapSettings().mapUnits();
   if ( mEnabled && ( mMapUnits != mapUnits ) )
   {
     mEnabled = false;
     mMapUnits = QGis::UnknownUnit; // make sure isDirty() returns true
-    if ( ! QgisApp::instance()->mapCanvas()->isFrozen() )
+    if ( ! mMapCanvas->isFrozen() )
     {
       update();
     }
@@ -763,10 +792,15 @@ void QgsDecorationGrid::checkMapUnitsChanged()
 
 bool QgsDecorationGrid::isDirty()
 {
+  if ( !mMapCanvas )
+  {
+    return false;
+  }
+
   // checks if stored map units is undefined or different from canvas map units
   // or if interval is 0
   if ( mMapUnits == QGis::UnknownUnit ||
-       mMapUnits != QgisApp::instance()->mapCanvas()->mapSettings().mapUnits() ||
+       mMapUnits != mMapCanvas->mapSettings().mapUnits() ||
        mGridIntervalX == 0 || mGridIntervalY == 0 )
     return true;
   return false;
@@ -774,23 +808,33 @@ bool QgsDecorationGrid::isDirty()
 
 void QgsDecorationGrid::setDirty( bool dirty )
 {
+  if ( !mMapCanvas )
+  {
+    return;
+  }
+
   if ( dirty )
   {
     mMapUnits = QGis::UnknownUnit;
   }
   else
   {
-    mMapUnits = QgisApp::instance()->mapCanvas()->mapSettings().mapUnits();
+    mMapUnits = mMapCanvas->mapSettings().mapUnits();
   }
 }
 
 bool QgsDecorationGrid::getIntervalFromExtent( double* values, bool useXAxis )
 {
+  if ( !mMapCanvas )
+  {
+    return false;
+  }
+
   // get default interval from current extents
   // calculate a default interval that is approx (extent width)/5, adjusted so that it is a rounded number
   // e.g. 12.7 -> 10  66556 -> 70000
   double interval = 0;
-  QgsRectangle extent = QgisApp::instance()->mapCanvas()->extent();
+  QgsRectangle extent = mMapCanvas->extent();
   if ( useXAxis )
     interval = ( extent.xMaximum() - extent.xMinimum() ) / 5;
   else
@@ -815,8 +859,13 @@ bool QgsDecorationGrid::getIntervalFromExtent( double* values, bool useXAxis )
 
 bool QgsDecorationGrid::getIntervalFromCurrentLayer( double* values )
 {
+  if ( !mMapCanvas )
+  {
+    return false;
+  }
+
   // get current layer and make sure it is a raster layer and CRSs match
-  QgsMapLayer* layer = QgisApp::instance()->mapCanvas()->currentLayer();
+  QgsMapLayer* layer = mMapCanvas->currentLayer();
   if ( ! layer )
   {
     QMessageBox::warning( 0, tr( "Error" ), tr( "No active layer" ) );
@@ -834,8 +883,7 @@ bool QgsDecorationGrid::getIntervalFromCurrentLayer( double* values )
     return false;
   }
   const QgsCoordinateReferenceSystem& layerCRS = layer->crs();
-  const QgsCoordinateReferenceSystem& mapCRS =
-    QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs();
+  const QgsCoordinateReferenceSystem& mapCRS = mMapCanvas->mapSettings().destinationCrs();
   // is this the best way to compare CRS? should we also make sure map has OTF enabled?
   // TODO calculate transformed values if necessary
   if ( layerCRS != mapCRS )

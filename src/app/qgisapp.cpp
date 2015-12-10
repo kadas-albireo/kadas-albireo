@@ -2654,7 +2654,7 @@ void QgisApp::createDecorations()
   QgsDecorationScaleBar* mDecorationScaleBar = new QgsDecorationScaleBar( this );
   connect( mActionDecorationScaleBar, SIGNAL( triggered() ), mDecorationScaleBar, SLOT( run() ) );
 
-  QgsDecorationGrid* mDecorationGrid = new QgsDecorationGrid( this );
+  QgsDecorationGrid* mDecorationGrid = new QgsDecorationGrid( mMapCanvas, this );
   connect( mActionDecorationGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
 
   // add the decorations in a particular order so they are rendered in that order

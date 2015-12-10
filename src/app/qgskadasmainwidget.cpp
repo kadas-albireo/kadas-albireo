@@ -1,6 +1,7 @@
 #include "qgskadasmainwidget.h"
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
+#include "qgsdecorationgrid.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
 #include "qgslayertreemapcanvasbridge.h"
@@ -99,6 +100,7 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
 
   mMapCanvas->freeze();
   initLayerTreeView();
+  createDecorations();
   initMapCanvas();
 
   mSearchWidget->init( mMapCanvas );
@@ -606,6 +608,33 @@ void QgsKadasMainWidget::initLayerTreeView()
   connect( mLayerTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( layerTreeViewDoubleClicked( QModelIndex ) ) );
 
   //setupLayerTreeViewFromSettings();
+}
+
+void QgsKadasMainWidget::createDecorations()
+{
+  QgsDecorationGrid* mDecorationGrid = new QgsDecorationGrid( mMapCanvas, this );
+  connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
+
+  mDecorationItems.append( mDecorationGrid );
+  connect( mMapCanvas, SIGNAL( renderComplete( QPainter * ) ), this, SLOT( renderDecorationItems( QPainter * ) ) );
+  connect( this, SIGNAL( newProject() ), this, SLOT( projectReadDecorationItems() ) );
+  connect( this, SIGNAL( projectRead() ), this, SLOT( projectReadDecorationItems() ) );
+}
+
+void QgsKadasMainWidget::renderDecorationItems( QPainter *p )
+{
+  foreach ( QgsDecorationItem* item, mDecorationItems )
+  {
+    item->render( p );
+  }
+}
+
+void QgsKadasMainWidget::projectReadDecorationItems()
+{
+  foreach ( QgsDecorationItem* item, mDecorationItems )
+  {
+    item->projectRead();
+  }
 }
 
 void QgsKadasMainWidget::setActionToButton( QAction* action, QToolButton* button )

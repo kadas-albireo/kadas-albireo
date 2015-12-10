@@ -4,6 +4,7 @@
 #include "ui_qgskadasmainwidgetbase.h"
 #include <QSslError>
 
+class QgsDecorationItem;
 class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
 class QgsMessageBar;
@@ -85,6 +86,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
 #endif
     void namRequestTimedOut( QNetworkReply *reply );
+    void renderDecorationItems( QPainter *p );
+    void projectReadDecorationItems();
 
   private:
     void setActionToButton( QAction* action, QToolButton* button );
@@ -113,6 +116,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void namSetup();
     void namUpdate();
     void initLayerTreeView();
+    void createDecorations();
 
     void showLayerProperties( QgsMapLayer *ml );
     QgsMapLayer *activeLayer();
@@ -145,6 +149,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 
     QPoint mDragStartPos;
     QString mDragStartActionName;
+
+    QList<QgsDecorationItem*> mDecorationItems;
 
     QButtonGroup* mToggleButtonGroup;
 

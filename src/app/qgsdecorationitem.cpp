@@ -42,8 +42,8 @@
 //non qt includes
 #include <cmath>
 
-QgsDecorationItem::QgsDecorationItem( QObject* parent )
-    : QObject( parent )
+QgsDecorationItem::QgsDecorationItem( QObject* parent, QgsMapCanvas* mapCanvas )
+    : QObject( parent ), mMapCanvas( mapCanvas )
 {
   mEnabled = false;
 }
@@ -56,7 +56,14 @@ QgsDecorationItem::~QgsDecorationItem()
 void QgsDecorationItem::update()
 {
   saveToProject();
-  QgisApp::instance()->mapCanvas()->refresh();
+  if ( mMapCanvas )
+  {
+    mMapCanvas->refresh();
+  }
+  else
+  {
+    QgisApp::instance()->mapCanvas()->refresh();
+  }
 }
 
 void QgsDecorationItem::projectRead()

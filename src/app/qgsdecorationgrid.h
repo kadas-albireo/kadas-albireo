@@ -23,6 +23,7 @@
 
 class QPainter;
 class QgsLineSymbolV2;
+class QgsMapCanvas;
 class QgsMarkerSymbolV2;
 
 #include <QColor>
@@ -34,7 +35,7 @@ class APP_EXPORT QgsDecorationGrid: public QgsDecorationItem
     Q_OBJECT
   public:
     //! Constructor
-    QgsDecorationGrid( QObject* parent = NULL );
+    QgsDecorationGrid( QgsMapCanvas* mapCanvas = 0, QObject* parent = NULL );
     //! Destructor
     virtual ~ QgsDecorationGrid();
 
