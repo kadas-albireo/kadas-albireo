@@ -39,6 +39,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void toggleEditing();
     //! starts/stops editing mode of a layer
     bool toggleEditing( QgsMapLayer *layer, bool allowCancel = true );
+    //! Remove layers from the map and legend
+    void removeLayer();
 
   signals:
     void newProject();

@@ -69,7 +69,10 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   setupUi( this );
 
   // Fix selection color on loosing focus (Windows)
-  setStyleSheet( QgisApp::instance()->styleSheet() );
+  if ( QgisApp::instance() )
+  {
+    setStyleSheet( QgisApp::instance()->styleSheet() );
+  }
 
   setAttribute( Qt::WA_DeleteOnClose );
 
