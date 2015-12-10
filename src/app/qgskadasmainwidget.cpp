@@ -1,6 +1,8 @@
 #include "qgskadasmainwidget.h"
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
+#include "qgskmlexport.h"
+#include "qgskmlexportdialog.h"
 #include "qgslayertreemapcanvasbridge.h"
 #include "qgslayertreeregistrybridge.h"
 #include "qgslayertreemodel.h"
@@ -293,6 +295,7 @@ void QgsKadasMainWidget::configureButtons()
   connect( mActionSaveMapExtent, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
   setActionToButton( mActionSaveMapExtent, mSaveMapExtentButton );
   //mActionExportKML
+  connect( mActionExportKML, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
   setActionToButton( mActionExportKML, mExportKMLButton );
   //mActionImportOVL
   setActionToButton( mActionImportOVL, mImportOVLButton );
@@ -744,6 +747,30 @@ void QgsKadasMainWidget::saveMapAsImage()
     mMapCanvas->saveAsImage( myFileNameAndFilter.first, NULL, myFileNameAndFilter.second );
     messageBar()->pushMessage( tr( "Saved map image to %1" ).arg( myFileNameAndFilter.first ), QgsMessageBar::INFO, 5 );
     //statusBar()->showMessage( tr( "Saved map image to %1" ).arg( myFileNameAndFilter.first ) );
+  }
+}
+
+void QgsKadasMainWidget::kmlExport()
+{
+  QgsKMLExportDialog d( mMapCanvas->mapSettings().layers() );
+  if ( d.exec() == QDialog::Accepted )
+  {
+    QgsKMLExport kmlExport;
+    kmlExport.setLayers( d.selectedLayers() );
+
+    QString fileName = d.saveFile();
+    QFile kmlFile( fileName );
+
+    QApplication::setOverrideCursor( Qt::BusyCursor );
+    if ( kmlExport.writeToDevice( &kmlFile, mMapCanvas->mapSettings() ) == 0 )
+    {
+      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
+    }
+    else
+    {
+      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
+    }
+    QApplication::restoreOverrideCursor();
   }
 }
 
