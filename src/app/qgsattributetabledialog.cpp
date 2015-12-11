@@ -43,6 +43,7 @@
 #include "qgsfeaturelistmodel.h"
 #include "qgsexpressionbuilderdialog.h"
 #include "qgsrubberband.h"
+#include "qgskadasmainwidget.h"
 
 class QgsAttributeTableDock : public QDockWidget
 {
@@ -60,16 +61,22 @@ class QgsAttributeTableDock : public QDockWidget
     }
 };
 
-QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWidget *parent, Qt::WindowFlags flags )
+QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsKadasMainWidget* mainWidget,
+    QWidget *parent, Qt::WindowFlags flags )
     : QDialog( parent, flags )
     , mDock( 0 )
     , mLayer( theLayer )
     , mRubberBand( 0 )
+    , mMainWidget( mainWidget )
 {
   setupUi( this );
 
   // Fix selection color on loosing focus (Windows)
-  if ( QgisApp::instance() )
+  if ( mMainWidget )
+  {
+    //?
+  }
+  else if ( QgisApp::instance() )
   {
     setStyleSheet( QgisApp::instance()->styleSheet() );
   }
@@ -86,17 +93,24 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   myDa = new QgsDistanceArea();
 
   myDa->setSourceCrs( mLayer->crs() );
-  myDa->setEllipsoidalMode( QgisApp::instance()->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
+  myDa->setEllipsoidalMode( mapCanvas()->mapSettings().hasCrsTransformEnabled() );
   myDa->setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
 
   context.setDistanceArea( *myDa );
-  context.setVectorLayerTools( QgisApp::instance()->vectorLayerTools() );
+  if ( mMainWidget )
+  {
+    context.setVectorLayerTools( mMainWidget->vectorLayerTools() );
+  }
+  else
+  {
+    context.setVectorLayerTools( QgisApp::instance()->vectorLayerTools() );
+  }
 
   QgsFeatureRequest r;
   if ( mLayer->geometryType() != QGis::NoGeometry &&
        settings.value( "/qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt() == QgsAttributeTableFilterModel::ShowVisible )
   {
-    QgsMapCanvas *mc = QgisApp::instance()->mapCanvas();
+    QgsMapCanvas *mc = mapCanvas();
     QgsRectangle extent( mc->mapSettings().mapToLayerCoordinates( theLayer, mc->extent() ) );
     r.setFilterRect( extent );
 
@@ -109,7 +123,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   }
 
   // Initialize dual view
-  mMainView->init( mLayer, QgisApp::instance()->mapCanvas(), r, context );
+  mMainView->init( mLayer, mapCanvas(), r, context );
 
   // Initialize filter gui elements
   mFilterActionMapper = new QSignalMapper( this );
@@ -147,10 +161,17 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWid
   connect( mMainView, SIGNAL( filterChanged() ), this, SLOT( updateTitle() ) );
 
   // info from table to application
-  connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), QgisApp::instance(), SLOT( saveEdits( QgsMapLayer * ) ) );
+  if ( mMainWidget )
+  {
+    connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), mMainWidget, SLOT( saveEdits( QgsMapLayer * ) ) );
+  }
+  else
+  {
+    connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), QgisApp::instance(), SLOT( saveEdits( QgsMapLayer * ) ) );
+  }
 
   bool myDockFlag = settings.value( "/qgis/dockAttributeTable", false ).toBool();
-  if ( myDockFlag )
+  if ( myDockFlag && !mMainWidget ) //not supported in kadas gui
   {
     mDock = new QgsAttributeTableDock( tr( "Attribute table - %1 (%n Feature(s))", "feature count", mMainView->featureCount() ).arg( mLayer->name() ), QgisApp::instance() );
     mDock->setAllowedAreas( Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea );
@@ -282,7 +303,14 @@ void QgsAttributeTableDialog::keyPressEvent( QKeyEvent* event )
 
   if (( event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete ) && mDeleteSelectedButton->isEnabled() )
   {
-    QgisApp::instance()->deleteSelected( mLayer, this );
+    if ( mMainWidget )
+    {
+
+    }
+    else
+    {
+      QgisApp::instance()->deleteSelected( mLayer, this );
+    }
   }
 }
 
@@ -423,7 +451,7 @@ void QgsAttributeTableDialog::filterExpressionBuilder()
 
   QgsDistanceArea myDa;
   myDa.setSourceCrs( mLayer->crs().srsid() );
-  myDa.setEllipsoidalMode( QgisApp::instance()->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
+  myDa.setEllipsoidalMode( mapCanvas()->mapSettings().hasCrsTransformEnabled() );
   myDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
   dlg.setGeomCalculator( myDa );
 
@@ -510,7 +538,14 @@ void QgsAttributeTableDialog::on_mOpenFieldCalculator_clicked()
 
 void QgsAttributeTableDialog::on_mSaveEditsButton_clicked()
 {
-  QgisApp::instance()->saveEdits( mLayer, true, true );
+  if ( mMainWidget )
+  {
+    mMainWidget->saveEdits( mLayer, true, true );
+  }
+  else if ( QgisApp::instance() )
+  {
+    QgisApp::instance()->saveEdits( mLayer, true, true );
+  }
 }
 
 void QgsAttributeTableDialog::on_mAddFeature_clicked()
@@ -537,17 +572,24 @@ void QgsAttributeTableDialog::on_mExpressionSelectButton_clicked()
 
 void QgsAttributeTableDialog::on_mCopySelectedRowsButton_clicked()
 {
-  QgisApp::instance()->editCopy( mLayer );
+  if ( mMainWidget )
+  {
+    mMainWidget->editCopy( mLayer );
+  }
+  else
+  {
+    QgisApp::instance()->editCopy( mLayer );
+  }
 }
 
 void QgsAttributeTableDialog::on_mZoomMapToSelectedRowsButton_clicked()
 {
-  QgisApp::instance()->mapCanvas()->zoomToSelected( mLayer );
+  mapCanvas()->zoomToSelected( mLayer );
 }
 
 void QgsAttributeTableDialog::on_mPanMapToSelectedRowsButton_clicked()
 {
-  QgisApp::instance()->mapCanvas()->panToSelected( mLayer );
+  mapCanvas()->panToSelected( mLayer );
 }
 
 void QgsAttributeTableDialog::on_mInvertSelectionButton_clicked()
@@ -562,7 +604,14 @@ void QgsAttributeTableDialog::on_mRemoveSelectionButton_clicked()
 
 void QgsAttributeTableDialog::on_mDeleteSelectedButton_clicked()
 {
-  QgisApp::instance()->deleteSelected( mLayer, this );
+  if ( mMainWidget )
+  {
+    mMainWidget->deleteSelected( mLayer, this );
+  }
+  else
+  {
+    QgisApp::instance()->deleteSelected( mLayer, this );
+  }
 }
 
 void QgsAttributeTableDialog::on_mMainView_currentChanged( int viewMode )
@@ -574,10 +623,20 @@ void QgsAttributeTableDialog::on_mToggleEditingButton_toggled()
 {
   if ( !mLayer )
     return;
-  if ( !QgisApp::instance()->toggleEditing( mLayer ) )
+  if ( mMainWidget )
   {
-    // restore gui state if toggling was canceled or layer commit/rollback failed
-    editingToggled();
+    if ( !mMainWidget->toggleEditing( mLayer ) )
+    {
+      editingToggled();
+    }
+  }
+  else if ( QgisApp::instance() )
+  {
+    if ( !QgisApp::instance()->toggleEditing( mLayer ) )
+    {
+      // restore gui state if toggling was canceled or layer commit/rollback failed
+      editingToggled();
+    }
   }
 }
 
@@ -656,7 +715,14 @@ void QgsAttributeTableDialog::on_mRemoveAttribute_clicked()
     }
     else
     {
-      QgisApp::instance()->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+      if ( mMainWidget )
+      {
+        mMainWidget->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+      }
+      else if ( QgisApp::instance() )
+      {
+        QgisApp::instance()->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+      }
       mLayer->destroyEditCommand();
     }
     // update model - a field has been added or updated
@@ -737,20 +803,34 @@ void QgsAttributeTableDialog::setFilterExpression( QString filterString )
   QgsDistanceArea myDa;
 
   myDa.setSourceCrs( mLayer->crs().srsid() );
-  myDa.setEllipsoidalMode( QgisApp::instance()->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
+  myDa.setEllipsoidalMode( mapCanvas()->mapSettings().hasCrsTransformEnabled() );
   myDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
 
   // parse search string and build parsed tree
   QgsExpression filterExpression( filterString );
   if ( filterExpression.hasParserError() )
   {
-    QgisApp::instance()->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    if ( mMainWidget )
+    {
+      mMainWidget->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
+    }
+    else if ( QgisApp::instance() )
+    {
+      QgisApp::instance()->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    }
     return;
   }
 
   if ( ! filterExpression.prepare( mLayer->pendingFields() ) )
   {
-    QgisApp::instance()->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    if ( mMainWidget )
+    {
+      mMainWidget->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
+    }
+    else if ( QgisApp::instance() )
+    {
+      QgisApp::instance()->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    }
   }
 
   bool fetchGeom = filterExpression.needsGeometry();
@@ -786,7 +866,28 @@ void QgsAttributeTableDialog::setFilterExpression( QString filterString )
 
   if ( filterExpression.hasEvalError() )
   {
-    QgisApp::instance()->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    if ( mMainWidget )
+    {
+      mMainWidget->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
+    }
+    else
+    {
+      QgisApp::instance()->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
+    }
     return;
   }
+}
+
+QgsMapCanvas* QgsAttributeTableDialog::mapCanvas()
+{
+  QgsMapCanvas* canvas = 0;
+  if ( mMainWidget )
+  {
+    canvas = mMainWidget->mapCanvas();
+  }
+  else if ( QgisApp::instance() )
+  {
+    canvas = QgisApp::instance()->mapCanvas();
+  }
+  return canvas;
 }

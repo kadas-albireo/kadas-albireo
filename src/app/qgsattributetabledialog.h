@@ -40,6 +40,7 @@ class QSignalMapper;
 
 class QgsAttributeTableModel;
 class QgsAttributeTableFilterModel;
+class QgsKadasMainWidget;
 class QgsRubberBand;
 
 class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttributeTableDialog
@@ -53,7 +54,7 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
      * @param parent parent object
      * @param flags window flags
      */
-    QgsAttributeTableDialog( QgsVectorLayer *theLayer, QWidget *parent = 0, Qt::WindowFlags flags = Qt::Window );
+    QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsKadasMainWidget* mainWidget = 0, QWidget *parent = 0, Qt::WindowFlags flags = Qt::Window );
     ~QgsAttributeTableDialog();
 
     /**
@@ -190,9 +191,6 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
     void updateFieldFromExpression();
     void updateFieldFromExpressionSelected();
 
-    void viewWillShowContextMenu( QMenu* menu, QModelIndex atIndex );
-    void zoomToFeature();
-
   private:
     QMenu* mMenuActions;
     QAction* mActionToggleEditing;
@@ -207,6 +205,10 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
     QgsFieldModel* mFieldModel;
 
     QgsRubberBand *mRubberBand;
+
+    QgsKadasMainWidget* mMainWidget;
+
+    QgsMapCanvas* mapCanvas();
 };
 
 #endif
