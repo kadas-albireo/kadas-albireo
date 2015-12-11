@@ -4,6 +4,7 @@
 #include "ui_qgskadasmainwidgetbase.h"
 #include <QSslError>
 
+class QgsClipboard;
 class QgsDecorationItem;
 class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
@@ -13,6 +14,7 @@ class QgsVBSCoordinateDisplayer;
 class QgsVBSHillshadeTool;
 class QgsVBSSlopeTool;
 class QgsVBSViewshedTool;
+class QgsVectorLayerTools;
 
 class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
 {
@@ -29,6 +31,11 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     //! mark project dirty
     void markDirty();
 
+    QgsVectorLayerTools* vectorLayerTools() { return mVectorLayerTools; };
+
+    //! Returns a pointer to the internal clipboard
+    QgsClipboard* clipboard() { return mInternalClipboard; }
+
   public slots:
     //! open the properties dialog for the currently selected layer
     void layerProperties();
@@ -41,6 +48,21 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     bool toggleEditing( QgsMapLayer *layer, bool allowCancel = true );
     //! Remove layers from the map and legend
     void removeLayer();
+
+    /** Save edits of a layer
+     * @param leaveEditable leave the layer in editing mode when done
+     * @param triggerRepaint send layer signal to repaint canvas when done
+     */
+    void saveEdits( QgsMapLayer *layer, bool leaveEditable = true, bool triggerRepaint = true );
+    //! copies selected features on the active layer to the clipboard
+    /**
+       \param layerContainingSelection  The layer that the selection will be taken from
+                                        (defaults to the active layer on the legend)
+     */
+    void editCopy( QgsMapLayer *layerContainingSelection = 0 );
+
+    /**Deletes the selected attributes for the currently selected vector layer*/
+    void deleteSelected( QgsMapLayer *layer = 0, QWidget *parent = 0, bool promptConfirmation = false );
 
   signals:
     void newProject();
@@ -255,6 +277,14 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
         QgsMapTool *mChangeLabelProperties;
         QgsMapTool *mMapToolPinAnnotation;
     } mMapTools;
+
+    //! Flag to indicate an edits save/rollback for active layer is in progress
+    bool mSaveRollbackInProgress;
+
+    QgsVectorLayerTools* mVectorLayerTools;
+
+    /** QGIS-internal vector feature clipboard */
+    QgsClipboard* mInternalClipboard;
 };
 
 #endif // QGSKADASMAINWIDGET_H

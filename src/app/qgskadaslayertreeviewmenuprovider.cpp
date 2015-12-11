@@ -37,22 +37,27 @@ QMenu* QgsKadasLayerTreeViewMenuProvider::createContextMenu()
   }
   else if ( QgsLayerTreeNode* node = mView->layerTreeModel()->index2node( idx ) )
   {
+    menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
     menu->addAction( QgsApplication::getThemeIcon( "/mActionRemoveLayer.svg" ), tr( "&Remove" ), mMainWidget, SLOT( removeLayer() ) );
     if ( QgsLayerTree::isLayer( node ) )
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
-      menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
+
       if ( layer->type() != QgsMapLayer::RedliningLayer )
       {
         if ( vlayer )
         {
-          //todo: remove QgisApp::instance() calls in QgsAttributeTableDialog
-          /*menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
-                       mMainWidget, SLOT( attributeTable() ) );*/
+          menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
+                           mMainWidget, SLOT( attributeTable() ) );
+        }
+        if ( rlayer )
+        {
+          menu->addAction( actions->actionUseAsHightMap( mMainWidget->mapCanvas() ) );
         }
       }
+      menu->addAction( tr( "&Properties" ), mMainWidget, SLOT( layerProperties() ) );
     }
   }
   return menu;

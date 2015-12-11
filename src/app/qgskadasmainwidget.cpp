@@ -1,6 +1,7 @@
 #include "qgskadasmainwidget.h"
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
+#include "qgsclipboard.h"
 #include "qgsdecorationgrid.h"
 #include "qgskadaslayertreeviewmenuprovider.h"
 #include "qgskmlexport.h"
@@ -77,6 +78,7 @@
 #include "qgsmaptoolrotatelabel.h"
 #include "qgsmaptoolchangelabelproperties.h"
 #include "nodetool/qgsmaptoolnodetool.h"
+#include "qgsguivectorlayertools.h"
 
 #include "qgsvbshillshadetool.h"
 #include "qgsvbsslopetool.h"
@@ -84,8 +86,10 @@
 
 
 QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
-    mNonEditMapTool( 0 ), mSlopeTool( 0 )
+    mNonEditMapTool( 0 ), mSlopeTool( 0 ), mSaveRollbackInProgress( false )
 {
+  mVectorLayerTools = new QgsGuiVectorLayerTools();
+
   namSetup(); //setup network access manager
   setupUi( this );
   mToggleButtonGroup = new QButtonGroup( this );
@@ -138,10 +142,15 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   restoreFavoriteButton( mFavoriteButton2 );
   restoreFavoriteButton( mFavoriteButton3 );
   restoreFavoriteButton( mFavoriteButton4 );
+
+  mInternalClipboard = new QgsClipboard; // create clipboard
+  //connect( mInternalClipboard, SIGNAL( changed() ), this, SLOT( clipboardChanged() ) );
 }
 
 QgsKadasMainWidget::~QgsKadasMainWidget()
 {
+  delete mVectorLayerTools;
+  delete mInternalClipboard;
 }
 
 int QgsKadasMainWidget::messageTimeout()
@@ -1862,7 +1871,7 @@ void QgsKadasMainWidget::attributeTable()
     return;
   }
 
-  QgsAttributeTableDialog *mDialog = new QgsAttributeTableDialog( myLayer );
+  QgsAttributeTableDialog *mDialog = new QgsAttributeTableDialog( myLayer, this );
   mDialog->show();
   // the dialog will be deleted by itself on close
 }
@@ -2036,6 +2045,117 @@ void QgsKadasMainWidget::removeLayer()
   //showStatusMessage( tr( "%n legend entries removed.", "number of removed legend entries", selectedNodes.count() ) );
 
   mMapCanvas->refresh();
+}
+
+void QgsKadasMainWidget::saveEdits( QgsMapLayer *layer, bool leaveEditable, bool triggerRepaint )
+{
+  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
+  if ( !vlayer || !vlayer->isEditable() || !vlayer->isModified() )
+    return;
+
+  if ( vlayer == activeLayer() )
+    mSaveRollbackInProgress = true;
+
+  if ( !vlayer->commitChanges() )
+  {
+    mSaveRollbackInProgress = false;
+    commitError( vlayer );
+  }
+
+  if ( leaveEditable )
+  {
+    vlayer->startEditing();
+  }
+  if ( triggerRepaint )
+  {
+    vlayer->triggerRepaint();
+  }
+}
+
+void QgsKadasMainWidget::editCopy( QgsMapLayer * layerContainingSelection )
+{
+  QgsVectorLayer* selectionVectorLayer = qobject_cast<QgsVectorLayer *>( layerContainingSelection ? layerContainingSelection : activeLayer() );
+  if ( !selectionVectorLayer )
+    return;
+
+  // Test for feature support in this layer
+  clipboard()->replaceWithCopyOf( selectionVectorLayer );
+}
+
+void QgsKadasMainWidget::deleteSelected( QgsMapLayer *layer, QWidget* parent, bool promptConfirmation )
+{
+  if ( !layer )
+  {
+    layer = mLayerTreeView->currentLayer();
+  }
+
+  if ( !parent )
+  {
+    parent = this;
+  }
+
+  if ( !layer )
+  {
+    messageBar()->pushMessage( tr( "No Layer Selected" ),
+                               tr( "To delete features, you must select a vector layer in the legend" ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+
+  QgsVectorLayer* vlayer = qobject_cast<QgsVectorLayer *>( layer );
+  if ( !vlayer )
+  {
+    messageBar()->pushMessage( tr( "No Vector Layer Selected" ),
+                               tr( "Deleting features only works on vector layers" ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+
+  if ( !( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::DeleteFeatures ) )
+  {
+    messageBar()->pushMessage( tr( "Provider does not support deletion" ),
+                               tr( "Data provider does not support deleting features" ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+
+  if ( !vlayer->isEditable() )
+  {
+    messageBar()->pushMessage( tr( "Layer not editable" ),
+                               tr( "The current layer is not editable. Choose 'Start editing' in the digitizing toolbar." ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+
+  //validate selection
+  int numberOfSelectedFeatures = vlayer->selectedFeaturesIds().size();
+  if ( numberOfSelectedFeatures == 0 )
+  {
+    messageBar()->pushMessage( tr( "No Features Selected" ),
+                               tr( "The current layer has no selected features" ),
+                               QgsMessageBar::INFO, messageTimeout() );
+    return;
+  }
+  //display a warning
+  if ( promptConfirmation && QMessageBox::warning( parent, tr( "Delete features" ), tr( "Delete %n feature(s)?", "number of features to delete", numberOfSelectedFeatures ), QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Cancel )
+  {
+    return;
+  }
+
+  vlayer->beginEditCommand( tr( "Features deleted" ) );
+  int deletedCount = 0;
+  if ( !vlayer->deleteSelectedFeatures( &deletedCount ) )
+  {
+    messageBar()->pushMessage( tr( "Problem deleting features" ),
+                               tr( "A problem occured during deletion of %1 feature(s)" ).arg( numberOfSelectedFeatures - deletedCount ),
+                               QgsMessageBar::WARNING );
+  }
+  else
+  {
+    //showStatusMessage( tr( "%n feature(s) deleted.", "number of features deleted", numberOfSelectedFeatures ) );
+  }
+
+  vlayer->endEditCommand();
 }
 
 void QgsKadasMainWidget::showLayerProperties( QgsMapLayer *ml )
