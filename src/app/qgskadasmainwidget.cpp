@@ -168,7 +168,10 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
   if ( zoomLayoutWidget )
   {
     QRect zoomLayoutGeometry = zoomLayoutWidget->geometry();
-    zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - 15 - zoomLayoutGeometry.width(), 15, 35, zoomLayoutGeometry.height() ) );
+    int distanceToRightBorder = 9;
+    int distanceToTop = 20;
+    zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(),
+                                          distanceToTop, zoomLayoutGeometry.width(), zoomLayoutGeometry.height() ) );
   }
   QWidget::resizeEvent( event );
 
@@ -1322,12 +1325,12 @@ void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
   if ( !visible )
   {
     mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_unfolded.png" ) );
-    mLayerTreeViewButton->move( mLayerTreeView->size().width() /*mLayerTreeView->frameSize().width()*/, mLayerTreeViewButton->y() );
+    mLayerTreeViewButton->move( mLayerTreeView->size().width() - 5, mLayerTreeViewButton->y() );
   }
   else
   {
     mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_folded.png" ) );
-    mLayerTreeViewButton->move( 0, mLayerTreeViewButton->y() );
+    mLayerTreeViewButton->move( -2, mLayerTreeViewButton->y() );
   }
 }
 
