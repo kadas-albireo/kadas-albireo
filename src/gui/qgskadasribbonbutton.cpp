@@ -42,13 +42,29 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
   }
   p.drawRoundedRect( 0, 0, width(), height(), 5, 5 );
 
+  int iconBottomY = 0;
+  bool smallIcon = false;
+  if ( iconSize().height() <= 20 )
+  {
+    smallIcon = true;
+  }
+
+  if ( smallIcon )
+  {
+    iconBottomY = height() / 2.0 - 5.0;
+  }
+  else
+  {
+    iconBottomY = height() / 2.0 + 5;
+  }
+
   //icon
   QIcon buttonIcon = icon();
   if ( !buttonIcon.isNull() )
   {
     QSize iSize = iconSize();
     QPixmap pixmap = buttonIcon.pixmap( iSize, QIcon::Normal, QIcon::On );
-    int pixmapY = height() / 2.0 + 5.0 - iSize.height();
+    int pixmapY = iconBottomY - iSize.height();
     int pixmapX = width() / 2.0 - iSize.width() / 2.0;
     p.drawPixmap( pixmapX, pixmapY, pixmap );
   }
@@ -60,11 +76,21 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
     QFontMetricsF fm( font() );
     p.setFont( font() );
     p.setPen( QPen( palette().color( QPalette::Text ) ) );
-    double textWidth = fm.width( buttonText );
-    double textHeight = fm.boundingRect( buttonText ).height();
-    int textX = ( width() - textWidth ) / 2.0;
-    int textY = height() / 2.0 + 5.0 + textHeight;
-    p.drawText( textX, textY, buttonText );
+
+    QStringList textLines = buttonText.split( "\n" );
+    for ( int i = 0; i < textLines.size(); ++i )
+    {
+      QString textLine = textLines.at( i );
+      double textWidth = fm.width( textLine );
+      double textHeight = fm.boundingRect( textLine ).height();
+      int textX = ( width() - textWidth ) / 2.0;
+      int textY = iconBottomY + textHeight * ( i + 1 ) /*+ i * 1*/;
+      if ( smallIcon )
+      {
+        textY += 10;
+      }
+      p.drawText( textX, textY, textLine );
+    }
   }
 }
 
