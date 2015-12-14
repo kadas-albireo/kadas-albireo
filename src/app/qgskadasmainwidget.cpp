@@ -303,7 +303,7 @@ void QgsKadasMainWidget::configureButtons()
   //mActionCopy
   setActionToButton( mActionCopy, mCopyButton );
   //mActionCopyToClipboard
-  setActionToButton( mActionCopyToClipboard, mCopyToClipboardButton );
+  //setActionToButton( mActionCopyToClipboard, mCopyToClipboardButton );
   //mActionPrint
   setActionToButton( mActionPrint, mPrintButton );
   //mActionSaveMapExtent
@@ -313,7 +313,7 @@ void QgsKadasMainWidget::configureButtons()
   connect( mActionExportKML, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
   setActionToButton( mActionExportKML, mExportKMLButton );
   //mActionImportOVL
-  setActionToButton( mActionImportOVL, mImportOVLButton );
+  //setActionToButton( mActionImportOVL, mImportOVLButton );
 
   //view tab
   connect( mActionZoomLast, SIGNAL( triggered() ), this, SLOT( zoomToPrevious() ) );
