@@ -71,7 +71,8 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string/>
+            <string>Add
+Favorite</string>
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
@@ -79,8 +80,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>32</width>
-             <height>32</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
            <property name="checkable">
@@ -112,7 +113,8 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string/>
+            <string>Add
+Favorite</string>
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
@@ -120,8 +122,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>32</width>
-             <height>32</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
           </widget>
@@ -150,7 +152,8 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string/>
+            <string>Add
+Favorite</string>
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
@@ -158,8 +161,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>32</width>
-             <height>32</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
           </widget>
@@ -188,7 +191,8 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string/>
+            <string>Add
+Favorite</string>
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
@@ -196,8 +200,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>32</width>
-             <height>32</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
           </widget>
