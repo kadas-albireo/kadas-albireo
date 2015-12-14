@@ -170,8 +170,7 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
     QRect zoomLayoutGeometry = zoomLayoutWidget->geometry();
     int distanceToRightBorder = 9;
     int distanceToTop = 20;
-    zoomLayoutWidget->setGeometry( QRect( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(),
-                                          distanceToTop, zoomLayoutGeometry.width(), zoomLayoutGeometry.height() ) );
+    zoomLayoutWidget->move( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(), distanceToTop );
   }
   QWidget::resizeEvent( event );
 
