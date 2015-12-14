@@ -19,6 +19,10 @@ QTreeView::indicator::unchecked {
   image: url(:/images/kadas/unchecked.png);
 }
 
+QTreeView {
+  background-color: rgba(255,255,255, 220);
+}
+
 /*QCheckBox::indicator:unchecked {
     image: url(:/images/checkbox_unchecked.png);
 }*/
@@ -54,8 +58,8 @@ QWidget#mSearchWidget {
 }
 
 QFrame#mSeparatorFrame {
-  background-color: #BEDCF6;
-  border: 1px #BEDCF6;
+  background-color: #5D7081;
+  border: 0.5px #5D7081;
 }
 
 /**Ribbon widget*/
@@ -64,7 +68,7 @@ QWidget#mRibbonBackgroundWidget {
 }
 
 QWidget#mMyMapsTab, QWidget#mViewTab, QWidget#mAnalysisTab, QWidget#mDrawTab, QWidget#mSituationReportTab, QWidget#mSettingsTab, QWidget#mHelpTab {
-  background-color: #263B4E
+  background-color: #263B4E;
 }
 
 QTabWidget QAbstractButton{ 
@@ -79,6 +83,7 @@ QTabWidget QAbstractButton{
 
 #mRibbonWidget QTabBar::tab:!selected {
     background-color: #BEDCF6; /* make non-selected tabs look smaller */
+    height: 45px;
 }
 
 /**Status bar*/
@@ -162,6 +167,5 @@ QDialog QLineEdit {
   border-radius: 5px;
   frame: 1px solid #9a9a9a;
 }
-
 
 
