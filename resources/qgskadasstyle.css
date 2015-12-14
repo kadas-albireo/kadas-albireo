@@ -34,22 +34,22 @@ QgsKadasMainWidget {
 /**UI left of mRibbonWidget*/
 QAbstractButton#mFavoriteButton1 {
   background-color: #5D7081;
-  color: #FFFFFF;
+  color: #263B4E;
 }
 
 QAbstractButton#mFavoriteButton2 {
   background-color: #5D7081;
-  color: #FFFFFF;
+  color: #263B4E;
 }
 
 QAbstractButton#mFavoriteButton3 {
   background-color: #5D7081;
-  color: #FFFFFF;
+  color: #263B4E;
 }
 
 QAbstractButton#mFavoriteButton4 {
   background-color: #5D7081;
-  color: #FFFFFF;
+  color: #263B4E;
 }
 
 #search
