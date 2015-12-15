@@ -75,6 +75,10 @@ QWidget#mMyMapsTab, QWidget#mViewTab, QWidget#mAnalysisTab, QWidget#mDrawTab, QW
   background-color: #263B4E;
 }
 
+QWidget#mDrawTab > QLabel {
+    color: white;
+}
+
 QTabWidget QAbstractButton{ 
   background-color: #5D7081;
   color: #FFFFFF;
@@ -89,6 +93,28 @@ QTabWidget QAbstractButton{
     background-color: #BEDCF6; /* make non-selected tabs look smaller */
     height: 45px;
 }
+
+QLineEdit#searchBox {
+    border: 1px solid #9db2c5;
+    background: #5d7081;
+    color: white;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    margin: 0;
+    padding: 5px;
+}
+
+QToolButton#searchFilter {
+    border-right: 1px solid #9db2c5;
+    border-top: 1px solid #9db2c5;
+    border-bottom: 1px solid #9db2c5;
+    background: #5d7081;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    margin: 0;
+    padding: 5px;
+}
+
 
 /**Status bar*/
 
