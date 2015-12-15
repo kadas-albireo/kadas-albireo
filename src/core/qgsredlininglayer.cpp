@@ -21,8 +21,8 @@
 
 #include <QUuid>
 
-QgsRedliningLayer::QgsRedliningLayer( const QString& name ) : QgsVectorLayer(
-      QString( "mixed?crs=EPSG:4326&memoryid=%1" ).arg( QUuid::createUuid().toString() ),
+QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs ) : QgsVectorLayer(
+      QString( "mixed?crs=%1&memoryid=%2" ).arg( crs ).arg( QUuid::createUuid().toString() ),
       name,
       "memory" )
 {
