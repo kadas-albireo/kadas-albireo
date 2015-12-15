@@ -36,6 +36,8 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     //! Returns a pointer to the internal clipboard
     QgsClipboard* clipboard() { return mInternalClipboard; }
 
+    Ui::QgsKadasMainWidgetBase* getUi() { return this; }
+
   public slots:
     //! open the properties dialog for the currently selected layer
     void layerProperties();

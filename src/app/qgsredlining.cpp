@@ -16,6 +16,7 @@
 #include "qgsredlining.h"
 #include "qgisapp.h"
 #include "qgscolorbuttonv2.h"
+#include "qgskadasmainwidget.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaptooladdfeature.h"
@@ -28,11 +29,12 @@
 
 #include <QSettings>
 
-QgsRedlining::QgsRedlining( QgisApp* app )
-    : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
+QgsRedlining::QgsRedlining( QgisApp* app, QgsKadasMainWidget* kadasWidget )
+    : QObject( kadasWidget ? static_cast<QObject*>( kadasWidget ) : static_cast<QObject*>( app ) )
+    , mLayer( 0 )
+    , mLayerRefCount( 0 )
 {
-
-  QToolBar* redliningToolbar = mApp->addToolBar( tr( "Redlining" ) );
+  mMapCanvas = kadasWidget ? kadasWidget->mapCanvas() : app->mapCanvas();
 
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
@@ -64,7 +66,7 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mActionNewText->setCheckable( true );
   connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
 
-  mBtnNewObject = new QToolButton();
+  mBtnNewObject = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningNewObject : new QToolButton();
   mBtnNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();
   menuNewMarker->addAction( mActionNewPoint );
@@ -82,32 +84,25 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
   mBtnNewObject->setDefaultAction( mActionNewPoint );
   connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
-  redliningToolbar->addWidget( mBtnNewObject );
 
   mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
   mActionEditObject->setToolTip( tr( "Edit Object" ) );
   mActionEditObject->setCheckable( true );
-  redliningToolbar->addAction( mActionEditObject );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
-  redliningToolbar->addWidget( new QLabel( tr( "Border/Size:" ) ) );
-  mSpinBorderSize = new QSpinBox();
+  mSpinBorderSize = kadasWidget ? kadasWidget->getUi()->mSpinBoxRedliningSize : new QSpinBox();
   mSpinBorderSize->setRange( 1, 20 );
   mSpinBorderSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
   connect( mSpinBorderSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
-  redliningToolbar->addWidget( mSpinBorderSize );
 
-  redliningToolbar->addWidget( new QLabel( tr( "Outline:" ) ) );
-
-  mBtnOutlineColor = new QgsColorButtonV2();
+  mBtnOutlineColor = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningBorderColor : new QgsColorButtonV2();
   mBtnOutlineColor->setAllowAlpha( true );
   mBtnOutlineColor->setProperty( "settings_key", "outline_color" );
   QColor initialOutlineColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/outline_color", "0,0,0,255" ).toString() );
   mBtnOutlineColor->setColor( initialOutlineColor );
   connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
-  redliningToolbar->addWidget( mBtnOutlineColor );
 
-  mOutlineStyleCombo = new QComboBox();
+  mOutlineStyleCombo = kadasWidget ? kadasWidget->getUi()->mComboBoxRedliningBorderStyle : new QComboBox();
   mOutlineStyleCombo->setProperty( "settings_key", "outline_style" );
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
@@ -116,19 +111,15 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
   mOutlineStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
   connect( mOutlineStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
-  redliningToolbar->addWidget( mOutlineStyleCombo );
 
-  redliningToolbar->addWidget( new QLabel( tr( "Fill:" ) ) );
-
-  mBtnFillColor = new QgsColorButtonV2();
+  mBtnFillColor = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningFillColor : new QgsColorButtonV2();
   mBtnFillColor->setAllowAlpha( true );
   mBtnFillColor->setProperty( "settings_key", "fill_color" );
   QColor initialFillColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/fill_color", "255,0,0,255" ).toString() );
   mBtnFillColor->setColor( initialFillColor );
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
-  redliningToolbar->addWidget( mBtnFillColor );
 
-  mFillStyleCombo = new QComboBox();
+  mFillStyleCombo = kadasWidget ? kadasWidget->getUi()->mComboBoxRedliningFillStyle : new QComboBox();
   mFillStyleCombo->setProperty( "settings_key", "fill_style" );
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
@@ -140,9 +131,27 @@ QgsRedlining::QgsRedlining( QgisApp* app )
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
   mFillStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
   connect( mFillStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
-  redliningToolbar->addWidget( mFillStyleCombo );
 
-  connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+  if ( !kadasWidget )
+  {
+    QToolBar* redliningToolbar = app->addToolBar( tr( "Redlining" ) );
+    redliningToolbar->addWidget( mBtnNewObject );
+    redliningToolbar->addAction( mActionEditObject );
+    redliningToolbar->addWidget( new QLabel( tr( "Border/Size:" ) ) );
+    redliningToolbar->addWidget( mSpinBorderSize );
+    redliningToolbar->addWidget( new QLabel( tr( "Outline:" ) ) );
+    redliningToolbar->addWidget( mBtnOutlineColor );
+    redliningToolbar->addWidget( mOutlineStyleCombo );
+    redliningToolbar->addWidget( new QLabel( tr( "Fill:" ) ) );
+    redliningToolbar->addWidget( mBtnFillColor );
+    redliningToolbar->addWidget( mFillStyleCombo );
+    connect( app, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+  }
+  else
+  {
+    connect( kadasWidget, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+  }
+
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
 }
@@ -174,7 +183,7 @@ void QgsRedlining::clearLayer()
 
 void QgsRedlining::editObject()
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -183,42 +192,42 @@ void QgsRedlining::editObject()
 
 void QgsRedlining::newPoint()
 {
-  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "circle" ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newSquare()
 {
-  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "rectangle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "rectangle" ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newTriangle()
 {
-  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "triangle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "triangle" ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newLine()
 {
-  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newRectangle()
 {
-  activateTool( new QgsRedliningRectangleMapTool( mApp->mapCanvas(), getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningRectangleMapTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newPolygon()
 {
-  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), true ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), true ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newCircle()
 {
-  activateTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningCircleMapTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::newText()
 {
-  activateTool( new QgsRedliningTextTool( mApp->mapCanvas(), getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  activateTool( new QgsRedliningTextTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
 }
 
 void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
@@ -227,11 +236,11 @@ void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
   connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
   if ( mLayerRefCount == 0 )
   {
-    mApp->mapCanvas()->setCurrentLayer( getOrCreateLayer() );
+    mMapCanvas->setCurrentLayer( getOrCreateLayer() );
     mLayer->startEditing();
   }
   ++mLayerRefCount;
-  mApp->mapCanvas()->setMapTool( tool );
+  mMapCanvas->setMapTool( tool );
   mRedliningTool = tool;
 }
 
@@ -245,9 +254,9 @@ void QgsRedlining::deactivateTool()
       if ( mLayerRefCount == 0 )
       {
         mLayer->commitChanges();
-        if ( mApp->mapCanvas()->currentLayer() == mLayer )
+        if ( mMapCanvas->currentLayer() == mLayer )
         {
-          mApp->mapCanvas()->setCurrentLayer( 0 );
+          mMapCanvas->setCurrentLayer( 0 );
         }
       }
     }
@@ -301,8 +310,8 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mFillStyleCombo->itemData( mFillStyleCombo->currentIndex() ).toInt() ) ) );
-  mApp->mapCanvas()->clearCache( mLayer->id() );
-  mApp->mapCanvas()->refresh();
+  mMapCanvas->clearCache( mLayer->id() );
+  mMapCanvas->refresh();
 }
 
 void QgsRedlining::saveColor()
