@@ -27,12 +27,13 @@ class QToolButton;
 class QgisApp;
 class QgsColorButtonV2;
 class QgsRedliningLayer;
+class QgsKadasMainWidget;
 
 class QgsRedlining : public QObject
 {
     Q_OBJECT
   public:
-    QgsRedlining( QgisApp* app );
+    QgsRedlining( QgisApp* app , QgsKadasMainWidget *kadasWidget = 0 );
     QgsRedliningLayer *getOrCreateLayer();
     QAction* actionNewPoint() const { return mActionNewPoint; }
     QAction* actionNewSquare() const { return mActionNewSquare; }
@@ -47,7 +48,7 @@ class QgsRedlining : public QObject
     void featureStyleChanged();
 
   private:
-    QgisApp* mApp;
+    QgsMapCanvas* mMapCanvas;
     QToolButton* mBtnNewObject;
     QAction* mActionEditObject;
     QgsColorButtonV2* mBtnOutlineColor;

@@ -22,6 +22,7 @@
 #include "qgsproject.h"
 #include "qgsproviderregistry.h"
 #include "qgsrasterlayerproperties.h"
+#include "qgsredlining.h"
 #include "qgstemporaryfile.h"
 #include "kadas/qgsvbscoordinatedisplayer.h"
 #include "kadas/qgsvbscrsselection.h"
@@ -110,6 +111,7 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   initMapCanvas();
 
   mSearchWidget->init( mMapCanvas );
+  new QgsRedlining( 0, this );
 
   // a bar to warn the user with non-blocking messages
   mInfoBar = new QgsMessageBar( mMapCanvas );
