@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1299</width>
+    <width>1501</width>
     <height>613</height>
    </rect>
   </property>
@@ -298,7 +298,7 @@
            <bool>false</bool>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="mMyMapsTab">
            <attribute name="title">
