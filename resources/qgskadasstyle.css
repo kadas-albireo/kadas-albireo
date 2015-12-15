@@ -122,15 +122,7 @@ QPushButton#mZoomOutButton {
   background-color: #263B4E;
   color: #FFFFFF;
 }
-/* #263B4E */
-QWidget #mZoomInOutLayout {
-  border: 1px solid #737476;
-  background-color: #263B4E;
-}
 
-QFrame#mZoomSeparatorFrame {
-  background-color: #c7cacf;
-}
 /**Styling for dialogs*/
 
 QDialogButtonBox { 
