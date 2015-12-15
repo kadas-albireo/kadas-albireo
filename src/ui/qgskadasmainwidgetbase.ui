@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1263</width>
+    <width>1299</width>
     <height>613</height>
    </rect>
   </property>
@@ -316,7 +316,7 @@
            <bool>false</bool>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="mMyMapsTab">
            <attribute name="title">
@@ -589,15 +589,21 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_6">
             <property name="leftMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>10</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
             </property>
             <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <property name="horizontalSpacing">
+             <number>10</number>
+            </property>
+            <property name="verticalSpacing">
              <number>0</number>
             </property>
             <item row="0" column="3">
@@ -776,15 +782,21 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_5">
             <property name="leftMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>10</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
             </property>
             <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <property name="horizontalSpacing">
+             <number>10</number>
+            </property>
+            <property name="verticalSpacing">
              <number>0</number>
             </property>
             <item row="0" column="11">
@@ -1117,16 +1129,25 @@
             <string>Draw</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_4">
-            <property name="topMargin">
+            <property name="leftMargin">
              <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>10</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
             </property>
             <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <property name="horizontalSpacing">
+             <number>10</number>
+            </property>
+            <property name="verticalSpacing">
              <number>0</number>
             </property>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1169,6 +1190,77 @@
                </size>
               </property>
              </widget>
+            </item>
+            <item row="0" column="1">
+             <layout class="QGridLayout" name="mGridLayoutRedlining">
+              <property name="spacing">
+               <number>10</number>
+              </property>
+              <item row="0" column="2">
+               <widget class="QLabel" name="mLabelRedliningBorderColor">
+                <property name="text">
+                 <string>Border:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="mLabelRedliningColor">
+                <property name="text">
+                 <string>Color:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="mLabelRedliningSize">
+                <property name="text">
+                 <string>Size:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" colspan="2">
+               <widget class="QToolButton" name="mToolButtonRedliningShape">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QgsColorButtonV2" name="mToolButtonRedliningColor">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QgsColorButtonV2" name="mToolButtonRedliningSize">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QgsColorButtonV2" name="mToolButtonRedliningBorderColor">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -1825,6 +1917,11 @@
    <extends>QWidget</extends>
    <header>kadas/search/qgsvbssearchbox.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QgsColorButtonV2</class>
+   <extends>QToolButton</extends>
+   <header>qgscolorbuttonv2.h</header>
   </customwidget>
  </customwidgets>
  <resources>

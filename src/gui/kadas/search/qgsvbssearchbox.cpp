@@ -77,6 +77,8 @@ void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
   mFilterTool = 0;
 
   mSearchBox = new LineEdit( this );
+  mSearchBox->setObjectName( "searchBox" );
+  mSearchBox->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
 
   mTreeWidget = new TreeWidget( mSearchBox );
   mTreeWidget->setWindowFlags( Qt::Popup );
@@ -134,6 +136,8 @@ void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
   filterMenu->addActions( QList<QAction*>() << noFilterAction << circleFilterAction << rectangleFilterAction << polygonFilterAction );
 
   mFilterButton = new QToolButton( this );
+  mFilterButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::MinimumExpanding );
+  mFilterButton->setObjectName( "searchFilter" );
   mFilterButton->setDefaultAction( noFilterAction );
   mFilterButton->setIconSize( QSize( 16, 16 ) );
   mFilterButton->setPopupMode( QToolButton::InstantPopup );
@@ -145,8 +149,8 @@ void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
   setLayout( new QHBoxLayout );
   layout()->addWidget( mSearchBox );
   layout()->addWidget( mFilterButton );
-  layout()->setContentsMargins( 0, 0, 0, 0 );
-  layout()->setSpacing( 2 );
+  layout()->setContentsMargins( 0, 5, 0, 5 );
+  layout()->setSpacing( 0 );
 
   connect( mSearchBox, SIGNAL( textEdited( QString ) ), this, SLOT( textChanged() ) );
   connect( mSearchButton, SIGNAL( clicked() ), this, SLOT( startSearch() ) );
