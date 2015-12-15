@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1078</width>
+    <width>1088</width>
     <height>613</height>
    </rect>
   </property>
@@ -24,9 +24,15 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,1">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <layout class="QVBoxLayout" name="mFavouritesSearchLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -249,6 +255,12 @@
      </item>
      <item>
       <widget class="QWidget" name="mRibbonBackgroundWidget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="acceptDrops">
         <bool>false</bool>
        </property>
