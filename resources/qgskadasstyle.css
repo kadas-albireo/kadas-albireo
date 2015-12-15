@@ -62,6 +62,10 @@ QFrame#mSeparatorFrame {
   border: 0.5px #5D7081;
 }
 
+QFrame#mSeparatorFrameBackground {
+  background-color: #263B4E;
+}
+
 /**Ribbon widget*/
 QWidget#mRibbonBackgroundWidget {
   background-color: #BEDCF6;
