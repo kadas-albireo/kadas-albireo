@@ -24,7 +24,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,3">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,0">
      <item>
       <layout class="QVBoxLayout" name="mFavouritesSearchLayout">
        <property name="sizeConstraint">
@@ -253,6 +253,9 @@ Favorite</string>
      </item>
      <item>
       <widget class="QWidget" name="mRibbonBackgroundWidget" native="true">
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
@@ -260,7 +263,10 @@ Favorite</string>
         <property name="margin">
          <number>0</number>
         </property>
-        <item row="0" column="0">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="1">
          <widget class="QTabWidget" name="mRibbonWidget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -292,7 +298,7 @@ Favorite</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <property name="leftMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
              <number>10</number>
@@ -1221,6 +1227,37 @@ Favorite</string>
             <string>Help</string>
            </attribute>
           </widget>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QFrame" name="mSeparatorFrameBackground">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>10</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>10</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
          </widget>
         </item>
        </layout>
