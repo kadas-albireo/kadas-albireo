@@ -74,7 +74,7 @@ QgsColorButtonV2::~QgsColorButtonV2()
 
 QSize QgsColorButtonV2::minimumSizeHint() const
 {
-  return QSize( 24, 22 );
+  return QSize( 48, 22 );
 }
 
 

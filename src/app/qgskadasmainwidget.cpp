@@ -124,6 +124,7 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   //initLayerTreeView
 
   connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
+  connect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool*, QgsMapTool* ) ), this, SLOT( mapToolChanged( QgsMapTool*, QgsMapTool* ) ) );
 
   mLayerTreeCanvasBridge = new QgsLayerTreeMapCanvasBridge( QgsProject::instance()->layerTreeRoot(), mMapCanvas, this );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), mLayerTreeCanvasBridge, SLOT( writeProject( QDomDocument& ) ) );
@@ -820,71 +821,41 @@ void QgsKadasMainWidget::kmlExport()
 
 void QgsKadasMainWidget::zoomToPrevious()
 {
-  if ( mMapCanvas )
-  {
-    mMapCanvas->zoomToPreviousExtent();
-  }
+  mMapCanvas->zoomToPreviousExtent();
 }
 
 void QgsKadasMainWidget::zoomToNext()
 {
-  if ( mMapCanvas )
-  {
-    mMapCanvas->zoomToNextExtent();
-  }
+  mMapCanvas->zoomToNextExtent();
 }
 
 void QgsKadasMainWidget::pin( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMapToolPinAnnotation : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::profile( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureHeightProfile : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::distance( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureDist : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::area( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureArea : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::azimuth( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureAngle : mNonEditMapTool );
 }
 
 void QgsKadasMainWidget::circle( bool enabled )
 {
-  if ( !mMapCanvas )
-  {
-    return;
-  }
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureCircle : mNonEditMapTool );
 }
 
@@ -958,9 +929,15 @@ void QgsKadasMainWidget::showScale( double theScale )
 
 void QgsKadasMainWidget::setNonEditMapTool()
 {
-  if ( mMapCanvas )
+  mMapCanvas->setMapTool( mNonEditMapTool );
+}
+
+void QgsKadasMainWidget::mapToolChanged( QgsMapTool* newTool, QgsMapTool* oldTool )
+{
+  // Automatically return to pan tool if no tool is active
+  if ( !newTool && oldTool != mMapTools.mPan )
   {
-    mMapCanvas->setMapTool( mNonEditMapTool );
+    mMapCanvas->setMapTool( mMapTools.mPan );
   }
 }
 
