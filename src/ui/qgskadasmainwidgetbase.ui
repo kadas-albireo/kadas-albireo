@@ -17,16 +17,7 @@
    <string>QGIS Kadas</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_7">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <property name="spacing">
@@ -277,16 +268,7 @@
         <bool>false</bool>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
         <property name="spacing">
@@ -1337,7 +1319,7 @@
         <x>1020</x>
         <y>18</y>
         <width>40</width>
-        <height>81</height>
+        <height>79</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="mZoomInOutLayout">
@@ -1383,6 +1365,60 @@
          <property name="flat">
           <bool>false</bool>
          </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="mZoomBackgroundFrame">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>1</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>1</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>1</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>1</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
         </widget>
        </item>
        <item>
@@ -1517,23 +1553,14 @@
       </size>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
       <property name="horizontalSpacing">
        <number>40</number>
       </property>
       <property name="verticalSpacing">
        <number>0</number>
+      </property>
+      <property name="margin">
+       <number>3</number>
       </property>
       <item row="0" column="2">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1887,6 +1914,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QgsColorButtonV2</class>
+   <extends>QToolButton</extends>
+   <header>qgscolorbuttonv2.h</header>
+  </customwidget>
+  <customwidget>
    <class>QgsLayerTreeView</class>
    <extends>QTreeView</extends>
    <header>qgslayertreeview.h</header>
@@ -1917,11 +1949,6 @@
    <extends>QWidget</extends>
    <header>kadas/search/qgsvbssearchbox.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QgsColorButtonV2</class>
-   <extends>QToolButton</extends>
-   <header>qgscolorbuttonv2.h</header>
   </customwidget>
  </customwidgets>
  <resources>
