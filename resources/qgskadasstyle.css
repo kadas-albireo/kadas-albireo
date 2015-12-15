@@ -180,4 +180,8 @@ QDialog QLineEdit {
   frame: 1px solid #9a9a9a;
 }
 
+QWidget #mMousePositionLabel, QWidget #mScaleLabel, QWidget #mCRSLabel {
+  background-color: #1e2126;
+}
+
 
