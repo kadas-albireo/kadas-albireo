@@ -41,7 +41,6 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QWidget *parent )
   crsSelectionMenu->addSeparator();
   crsSelectionMenu->addAction( tr( "More..." ), this, SLOT( selectMapCrs() ) );
 
-  setIcon( QIcon( ":/vbsfunctionality/icons/mapcoordinates.svg" ) );
   setToolButtonStyle( Qt::ToolButtonTextBesideIcon );
   setMenu( crsSelectionMenu );
   setPopupMode( QToolButton::InstantPopup );
