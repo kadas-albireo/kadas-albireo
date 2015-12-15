@@ -107,6 +107,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     void showScale( double theScale );
 
     void setNonEditMapTool();
+    void mapToolChanged( QgsMapTool* newTool, QgsMapTool* oldTool );
 
 #ifndef QT_NO_OPENSSL
     void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );

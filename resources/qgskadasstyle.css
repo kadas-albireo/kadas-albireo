@@ -79,7 +79,9 @@ QWidget#mDrawTab > QLabel {
     color: white;
 }
 
-QTabWidget QAbstractButton{ 
+QTabWidget QAbstractButton,
+QTabWidget QComboBox,
+QTabWidget QSpinBox {
   background-color: #5D7081;
   color: #FFFFFF;
 }
@@ -94,13 +96,13 @@ QTabWidget QAbstractButton{
     height: 45px;
 }
 
+
 QLineEdit#searchBox {
     border: 1px solid #9db2c5;
-    background: #5d7081;
+    background-color: #5d7081;
     color: white;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
-    margin: 0;
     padding: 5px;
 }
 
@@ -108,13 +110,12 @@ QToolButton#searchFilter {
     border-right: 1px solid #9db2c5;
     border-top: 1px solid #9db2c5;
     border-bottom: 1px solid #9db2c5;
-    background: #5d7081;
+    background-color: #5d7081;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     margin: 0;
     padding: 5px;
 }
-
 
 /**Status bar*/
 
@@ -147,6 +148,11 @@ QPushButton#mZoomInButton {
 QPushButton#mZoomOutButton {
   background-color: #263B4E;
   color: #FFFFFF;
+}
+
+QFrame#mZoomInOutFrame {
+    border: 1px solid #737373;
+    border-radius: 2px;
 }
 
 QFrame#mZoomBackgroundFrame {
