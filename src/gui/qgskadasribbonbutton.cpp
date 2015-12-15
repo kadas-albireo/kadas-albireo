@@ -77,7 +77,39 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
     p.setFont( font() );
     p.setPen( QPen( palette().color( QPalette::Text ) ) );
 
-    QStringList textLines = buttonText.split( "\n" );
+    QStringList rawRextLines = buttonText.split( "\n" );
+    // Insert additional line breaks where exceeds button width
+    QStringList textLines;
+    int maxWidth = width() - 10;
+    foreach ( const QString& line, rawRextLines )
+    {
+      if ( fm.width( line ) > maxWidth )
+      {
+        QString newline;
+        // Measure widths at whitespace pos, fit as many words into a line as possible
+        foreach ( const QString& word, line.split( " " ) )
+        {
+          if ( fm.width( newline + " " + word ) > maxWidth )
+          {
+            if ( !newline.isEmpty() )
+            {
+              textLines.append( newline );
+            }
+            newline = word;
+          }
+          else
+          {
+            newline += QString( " " ) + word;
+          }
+        }
+        textLines.append( newline );
+      }
+      else
+      {
+        textLines.append( line );
+      }
+    }
+
     for ( int i = 0; i < textLines.size(); ++i )
     {
       QString textLine = textLines.at( i );
