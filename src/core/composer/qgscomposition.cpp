@@ -314,14 +314,17 @@ void QgsComposition::setPaperSize( const double width, const double height )
   }
 
   //update item positions
-  QList<QGraphicsItem *> itemList = items();
-  QList<QGraphicsItem *>::iterator itemIt = itemList.begin();
-  for ( ; itemIt != itemList.end(); ++itemIt )
+  if ( mPages.size() > 1 )
   {
-    QgsComposerItem* composerItem = dynamic_cast<QgsComposerItem *>( *itemIt );
-    if ( composerItem )
+    QList<QGraphicsItem *> itemList = items();
+    QList<QGraphicsItem *>::iterator itemIt = itemList.begin();
+    for ( ; itemIt != itemList.end(); ++itemIt )
     {
-      composerItem->updatePagePos( width, height );
+      QgsComposerItem* composerItem = dynamic_cast<QgsComposerItem *>( *itemIt );
+      if ( composerItem )
+      {
+        composerItem->updatePagePos( width, height );
+      }
     }
   }
   //update guide positions and size
