@@ -1,14 +1,14 @@
-#ifndef QGSKADASRIBBONBUTTON_H
-#define QGSKADASRIBBONBUTTON_H
+#ifndef QGSRIBBONBUTTON_H
+#define QGSRIBBONBUTTON_H
 
 #include <QToolButton>
 
 /**A button which draws icon / text. The icon is above the text at (height - 10) / 2.0 y-position*/
-class GUI_EXPORT QgsKadasRibbonButton: public QToolButton
+class GUI_EXPORT QgsRibbonButton: public QToolButton
 {
   public:
-    QgsKadasRibbonButton( QWidget* parent = 0 );
-    virtual ~QgsKadasRibbonButton();
+    QgsRibbonButton( QWidget* parent = 0 );
+    virtual ~QgsRibbonButton();
 
   protected:
     virtual void paintEvent( QPaintEvent* e );
@@ -20,4 +20,4 @@ class GUI_EXPORT QgsKadasRibbonButton: public QToolButton
     virtual void mouseMoveEvent( QMouseEvent* event );
 };
 
-#endif // QGSKADASRIBBONBUTTON_H
+#endif // QGSRIBBONBUTTON_H

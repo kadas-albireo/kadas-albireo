@@ -609,7 +609,7 @@ const QString QgsApplication::libexecPath()
 
 const QString QgsApplication::styleSheetPath()
 {
-  return ABISYM( mPkgDataPath ) + QString( "/resources/qgskadasstyle.css" );
+  return ABISYM( mPkgDataPath ) + QString( "/resources/qgsribbonstyle.css" );
 }
 
 QgsApplication::endian_t QgsApplication::endian()

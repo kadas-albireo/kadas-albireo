@@ -38,7 +38,7 @@
 
 #include "qgscustomization.h"
 #include "qgsfontutils.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgspluginregistry.h"
 #include "qgsmessagelog.h"
 #include "qgspythonrunner.h"
@@ -492,7 +492,7 @@ int main( int argc, char *argv[] )
 
   QString customizationfile;
 
-  bool kadasGui = true;
+  bool ribbonGui = true;
 
 #if defined(ANDROID)
   QgsDebugMsg( QString( "Android: All params stripped" ) );// Param %1" ).arg( argv[0] ) );
@@ -575,11 +575,11 @@ int main( int argc, char *argv[] )
       {
         myRestoreDefaultWindowState = true;
       }
-      else if ( arg == "--kadasgui" )
+      else if ( arg == "--ribbongui" )
       {
         if ( args.size() >= ( i + 2 ) )
         {
-          kadasGui = ( args.at( ++i ).compare( "true", Qt::CaseInsensitive ) == 0 );
+          ribbonGui = ( args.at( ++i ).compare( "true", Qt::CaseInsensitive ) == 0 );
         }
       }
       else
@@ -650,21 +650,21 @@ int main( int argc, char *argv[] )
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
   //set stylesheet if there
-  if( kadasGui )
+  if ( ribbonGui )
   {
     QString styleSheetPath = QgsApplication::styleSheetPath();
     QFile styleSheetFile( styleSheetPath );
     if ( styleSheetFile.exists() )
     {
-        if ( styleSheetFile.open( QIODevice::ReadOnly ) )
-        {
+      if ( styleSheetFile.open( QIODevice::ReadOnly ) )
+      {
         QTextStream styleStream( &styleSheetFile );
         QString styleSheetText = styleStream.readAll();
         if ( !styleSheetText.isEmpty() )
         {
-            myApp.setStyleSheet( styleSheetText );
+          myApp.setStyleSheet( styleSheetText );
         }
-        }
+      }
     }
   }
 
@@ -722,7 +722,7 @@ int main( int argc, char *argv[] )
     gdalShares << QCoreApplication::applicationDirPath().append( "/share/gdal" )
     << appResources.append( "/share/gdal" )
     << appResources.append( "/gdal" );
-    Q_FOREACH( const QString& gdalShare, gdalShares )
+    Q_FOREACH ( const QString& gdalShare, gdalShares )
     {
       if ( QFile::exists( gdalShare ) )
       {
@@ -932,9 +932,9 @@ int main( int argc, char *argv[] )
 
   //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
   QWidget* qgis = 0;
-  if ( kadasGui )
+  if ( ribbonGui )
   {
-    qgis = new QgsKadasMainWidget();
+    qgis = new QgsRibbonApp();
   }
   else
   {

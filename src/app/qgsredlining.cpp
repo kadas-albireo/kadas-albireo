@@ -16,7 +16,7 @@
 #include "qgsredlining.h"
 #include "qgisapp.h"
 #include "qgscolorbuttonv2.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaptooladdfeature.h"
@@ -29,7 +29,7 @@
 
 #include <QSettings>
 
-QgsRedlining::QgsRedlining( QgisApp* app, QgsKadasMainWidget* kadasWidget )
+QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
     : QObject( kadasWidget ? static_cast<QObject*>( kadasWidget ) : static_cast<QObject*>( app ) )
     , mLayer( 0 )
     , mLayerRefCount( 0 )

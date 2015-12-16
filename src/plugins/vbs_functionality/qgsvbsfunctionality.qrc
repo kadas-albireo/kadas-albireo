@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/vbsfunctionality">
         <file>icons/icon.svg</file>
-        <file>icons/mousecoordinates.svg</file>
         <file>icons/mapcoordinates.svg</file>
         <file>icons/search.svg</file>
         <file>icons/clear.svg</file>

@@ -12,11 +12,11 @@ QTreeView::indicator {
 }
 
 QTreeView::indicator::checked {
-  image: url(:/images/kadas/checked.png);
+  image: url(:/images/ribbon/checked.png);
 }
 
 QTreeView::indicator::unchecked {
-  image: url(:/images/kadas/unchecked.png);
+  image: url(:/images/ribbon/unchecked.png);
 }
 
 QTreeView {
@@ -27,7 +27,7 @@ QTreeView {
     image: url(:/images/checkbox_unchecked.png);
 }*/
 
-QgsKadasMainWidget {
+QgsRibbonApp {
   background-color: #263B4E;
 }
 

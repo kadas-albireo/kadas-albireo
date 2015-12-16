@@ -34,7 +34,7 @@
 #include "qgslabelinggui.h"
 #include "qgslabel.h"
 #include "qgsgenericprojectionselector.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgslogger.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayerstyleguiutils.h"
@@ -69,7 +69,7 @@
 
 QgsVectorLayerProperties::QgsVectorLayerProperties(
   QgsVectorLayer *lyr,
-  QgsKadasMainWidget* mainWidget,
+  QgsRibbonApp* mainWidget,
   QWidget * parent,
   Qt::WindowFlags fl
 )
