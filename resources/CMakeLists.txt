@@ -1,7 +1,7 @@
 INSTALL(FILES srs.db qgis.db symbology-ng-style.db spatialite.db customization.xml
         DESTINATION ${QGIS_DATA_DIR}/resources)
 INSTALL(DIRECTORY cpt-city-qgis-min DESTINATION ${QGIS_DATA_DIR}/resources)
-INSTALL ( FILES qgskadasstyle.css
+INSTALL ( FILES qgsribbonstyle.css
          DESTINATION ${QGIS_DATA_DIR}/resources)
 
 ADD_SUBDIRECTORY(context_help)

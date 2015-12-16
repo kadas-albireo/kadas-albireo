@@ -37,8 +37,8 @@ SET(QGIS_APP_SRCS
   qgsidentifyresultsdialog.cpp
   qgsfeatureaction.cpp
   qgsgpsrouteeditor.cpp
-  qgskadaslayertreeviewmenuprovider.cpp
-  qgskadasmainwidget.cpp
+  qgsribbonlayertreeviewmenuprovider.cpp
+  qgsribbonapp.cpp
   qgskmlexportdialog.cpp
   qgslabeldialog.cpp
   qgslabelpropertydialog.cpp
@@ -204,8 +204,8 @@ SET (QGIS_APP_MOC_HDRS
   qgsgpsrouteeditor.h
 
   qgsidentifyresultsdialog.h
-  qgskadaslayertreeviewmenuprovider.h
-  qgskadasmainwidget.h
+  qgsribbonlayertreeviewmenuprovider.h
+  qgsribbonapp.h
   qgskmlexportdialog.h
   qgslabeldialog.h
   qgslabelengineconfigdialog.h

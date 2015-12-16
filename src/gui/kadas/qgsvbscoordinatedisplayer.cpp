@@ -54,7 +54,6 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QL
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( QPixmap( ":/vbsfunctionality/icons/mousecoordinates.svg" ) );
 
   mCRSSelectionCombo->addItem( "LV03", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:21781", mCRSSelectionCombo ) ) );
   mCRSSelectionCombo->addItem( "LV95", ptr2variant( new QgsEPSGCoordinateConverter( "EPSG:2056", mCRSSelectionCombo ) ) );

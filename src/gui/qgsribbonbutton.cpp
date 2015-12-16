@@ -1,16 +1,16 @@
-#include "qgskadasribbonbutton.h"
+#include "qgsribbonbutton.h"
 #include <QDragEnterEvent>
 #include <QPainter>
 
-QgsKadasRibbonButton::QgsKadasRibbonButton( QWidget* parent ): QToolButton( parent )
+QgsRibbonButton::QgsRibbonButton( QWidget* parent ): QToolButton( parent )
 {
 }
 
-QgsKadasRibbonButton::~QgsKadasRibbonButton()
+QgsRibbonButton::~QgsRibbonButton()
 {
 }
 
-void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
+void QgsRibbonButton::paintEvent( QPaintEvent* e )
 {
   QPainter p( this );
   p.setRenderHint( QPainter::Antialiasing );
@@ -126,38 +126,38 @@ void QgsKadasRibbonButton::paintEvent( QPaintEvent* e )
   }
 }
 
-void QgsKadasRibbonButton::enterEvent( QEvent* event )
+void QgsRibbonButton::enterEvent( QEvent* event )
 {
   update();
   QAbstractButton::enterEvent( event );
 }
 
-void QgsKadasRibbonButton::leaveEvent( QEvent* event )
+void QgsRibbonButton::leaveEvent( QEvent* event )
 {
   update();
   QAbstractButton::leaveEvent( event );
 }
 
-void QgsKadasRibbonButton::focusInEvent( QFocusEvent* event )
+void QgsRibbonButton::focusInEvent( QFocusEvent* event )
 {
   update();
   QAbstractButton::focusInEvent( event );
 }
 
-void QgsKadasRibbonButton::focusOutEvent( QFocusEvent* event )
+void QgsRibbonButton::focusOutEvent( QFocusEvent* event )
 {
   update();
   QAbstractButton::focusOutEvent( event );
 }
 
 
-void QgsKadasRibbonButton::mousePressEvent( QMouseEvent* event )
+void QgsRibbonButton::mousePressEvent( QMouseEvent* event )
 {
   QAbstractButton::mousePressEvent( event );
   event->ignore();
 }
 
-void QgsKadasRibbonButton::mouseMoveEvent( QMouseEvent* event )
+void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
 {
   event->ignore();
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QgsKadasMainWidgetBase</class>
- <widget class="QWidget" name="QgsKadasMainWidgetBase">
+ <class>QgsRibbonAppBase</class>
+ <widget class="QWidget" name="QgsRibbonAppBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -63,7 +63,7 @@
           <number>6</number>
          </property>
          <item>
-          <widget class="QgsKadasRibbonButton" name="mFavoriteButton1">
+          <widget class="QgsRibbonButton" name="mFavoriteButton1">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+             <normaloff>:/images/ribbon/favorit.png</normaloff>:/images/ribbon/favorit.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -104,7 +104,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QgsKadasRibbonButton" name="mFavoriteButton2">
+          <widget class="QgsRibbonButton" name="mFavoriteButton2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -131,7 +131,7 @@
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+             <normaloff>:/images/ribbon/favorit.png</normaloff>:/images/ribbon/favorit.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -142,7 +142,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QgsKadasRibbonButton" name="mFavoriteButton3">
+          <widget class="QgsRibbonButton" name="mFavoriteButton3">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -169,7 +169,7 @@
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+             <normaloff>:/images/ribbon/favorit.png</normaloff>:/images/ribbon/favorit.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -180,7 +180,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QgsKadasRibbonButton" name="mFavoriteButton4">
+          <widget class="QgsRibbonButton" name="mFavoriteButton4">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -207,7 +207,7 @@
            </property>
            <property name="icon">
             <iconset resource="../../images/images.qrc">
-             <normaloff>:/images/kadas/favorit.png</normaloff>:/images/kadas/favorit.png</iconset>
+             <normaloff>:/images/ribbon/favorit.png</normaloff>:/images/ribbon/favorit.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -355,7 +355,7 @@
              </spacer>
             </item>
             <item row="0" column="1">
-             <widget class="QgsKadasRibbonButton" name="mOpenButton">
+             <widget class="QgsRibbonButton" name="mOpenButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -386,7 +386,7 @@
              </widget>
             </item>
             <item row="0" column="5">
-             <widget class="QgsKadasRibbonButton" name="mSaveMapExtentButton">
+             <widget class="QgsRibbonButton" name="mSaveMapExtentButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -418,7 +418,7 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QgsKadasRibbonButton" name="mSaveButton">
+             <widget class="QgsRibbonButton" name="mSaveButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -449,7 +449,7 @@
              </widget>
             </item>
             <item row="0" column="4">
-             <widget class="QgsKadasRibbonButton" name="mPrintButton">
+             <widget class="QgsRibbonButton" name="mPrintButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -480,7 +480,7 @@
              </widget>
             </item>
             <item row="0" column="6">
-             <widget class="QgsKadasRibbonButton" name="mExportKMLButton">
+             <widget class="QgsRibbonButton" name="mExportKMLButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -512,7 +512,7 @@
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QgsKadasRibbonButton" name="mNewButton">
+             <widget class="QgsRibbonButton" name="mNewButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -543,7 +543,7 @@
              </widget>
             </item>
             <item row="0" column="3">
-             <widget class="QgsKadasRibbonButton" name="mCopyButton">
+             <widget class="QgsRibbonButton" name="mCopyButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -607,7 +607,7 @@
              <number>0</number>
             </property>
             <item row="0" column="3">
-             <widget class="QgsKadasRibbonButton" name="m3DButton">
+             <widget class="QgsRibbonButton" name="m3DButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -638,7 +638,7 @@
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QgsKadasRibbonButton" name="mZoomLastButton">
+             <widget class="QgsRibbonButton" name="mZoomLastButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -669,7 +669,7 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QgsKadasRibbonButton" name="mNewMapWindowButton">
+             <widget class="QgsRibbonButton" name="mNewMapWindowButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -700,7 +700,7 @@
              </widget>
             </item>
             <item row="0" column="4">
-             <widget class="QgsKadasRibbonButton" name="mGridButton">
+             <widget class="QgsRibbonButton" name="mGridButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -731,7 +731,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QgsKadasRibbonButton" name="mZoomNextButton">
+             <widget class="QgsRibbonButton" name="mZoomNextButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -813,7 +813,7 @@
              </spacer>
             </item>
             <item row="0" column="1">
-             <widget class="QgsKadasRibbonButton" name="mAreaButton">
+             <widget class="QgsRibbonButton" name="mAreaButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -844,7 +844,7 @@
              </widget>
             </item>
             <item row="0" column="5">
-             <widget class="QgsKadasRibbonButton" name="mAzimuthButton">
+             <widget class="QgsRibbonButton" name="mAzimuthButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -875,7 +875,7 @@
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QgsKadasRibbonButton" name="mDistanceButton">
+             <widget class="QgsRibbonButton" name="mDistanceButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -906,7 +906,7 @@
              </widget>
             </item>
             <item row="0" column="8">
-             <widget class="QgsKadasRibbonButton" name="mHillshadeButton">
+             <widget class="QgsRibbonButton" name="mHillshadeButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -937,7 +937,7 @@
              </widget>
             </item>
             <item row="0" column="6">
-             <widget class="QgsKadasRibbonButton" name="mLineOfSightButton">
+             <widget class="QgsRibbonButton" name="mLineOfSightButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -968,7 +968,7 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QgsKadasRibbonButton" name="mMeasureCircleButton">
+             <widget class="QgsRibbonButton" name="mMeasureCircleButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -999,7 +999,7 @@
              </widget>
             </item>
             <item row="0" column="4">
-             <widget class="QgsKadasRibbonButton" name="mProfileButton">
+             <widget class="QgsRibbonButton" name="mProfileButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1030,7 +1030,7 @@
              </widget>
             </item>
             <item row="0" column="7">
-             <widget class="QgsKadasRibbonButton" name="mSlopeButton">
+             <widget class="QgsRibbonButton" name="mSlopeButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1061,7 +1061,7 @@
              </widget>
             </item>
             <item row="0" column="9">
-             <widget class="QgsKadasRibbonButton" name="mViewshedButton">
+             <widget class="QgsRibbonButton" name="mViewshedButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1092,7 +1092,7 @@
              </widget>
             </item>
             <item row="0" column="10">
-             <widget class="QgsKadasRibbonButton" name="mWPSButton">
+             <widget class="QgsRibbonButton" name="mWPSButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1161,7 +1161,7 @@
              </spacer>
             </item>
             <item row="0" column="0">
-             <widget class="QgsKadasRibbonButton" name="mPinButton">
+             <widget class="QgsRibbonButton" name="mPinButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1438,7 +1438,7 @@
       </property>
       <property name="icon">
        <iconset resource="../../images/images.qrc">
-        <normaloff>:/images/kadas/layerbaum_folded.png</normaloff>:/images/kadas/layerbaum_folded.png</iconset>
+        <normaloff>:/images/ribbon/layerbaum_folded.png</normaloff>:/images/ribbon/layerbaum_folded.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -1500,7 +1500,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../images/images.qrc">
-           <normaloff>:/images/kadas/zoom_in.png</normaloff>:/images/kadas/zoom_in.png</iconset>
+           <normaloff>:/images/ribbon/zoom_in.png</normaloff>:/images/ribbon/zoom_in.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -1592,7 +1592,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../images/images.qrc">
-           <normaloff>:/images/kadas/zoom_out.png</normaloff>:/images/kadas/zoom_out.png</iconset>
+           <normaloff>:/images/ribbon/zoom_out.png</normaloff>:/images/ribbon/zoom_out.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -1739,7 +1739,7 @@
   <action name="mActionOpen">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/oeffnen.png</normaloff>:/images/kadas/oeffnen.png</iconset>
+     <normaloff>:/images/ribbon/oeffnen.png</normaloff>:/images/ribbon/oeffnen.png</iconset>
    </property>
    <property name="text">
     <string>Open</string>
@@ -1751,7 +1751,7 @@
   <action name="mActionSave">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/speichern.png</normaloff>:/images/kadas/speichern.png</iconset>
+     <normaloff>:/images/ribbon/speichern.png</normaloff>:/images/ribbon/speichern.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -1763,7 +1763,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/stecknadel.png</normaloff>:/images/kadas/stecknadel.png</iconset>
+     <normaloff>:/images/ribbon/stecknadel.png</normaloff>:/images/ribbon/stecknadel.png</iconset>
    </property>
    <property name="text">
     <string>Pin</string>
@@ -1772,7 +1772,7 @@
   <action name="mActionNew">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/new.png</normaloff>:/images/kadas/new.png</iconset>
+     <normaloff>:/images/ribbon/new.png</normaloff>:/images/ribbon/new.png</iconset>
    </property>
    <property name="text">
     <string>New</string>
@@ -1784,7 +1784,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/distanz.png</normaloff>:/images/kadas/distanz.png</iconset>
+     <normaloff>:/images/ribbon/distanz.png</normaloff>:/images/ribbon/distanz.png</iconset>
    </property>
    <property name="text">
     <string>Distance</string>
@@ -1796,7 +1796,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/flaeche.png</normaloff>:/images/kadas/flaeche.png</iconset>
+     <normaloff>:/images/ribbon/flaeche.png</normaloff>:/images/ribbon/flaeche.png</iconset>
    </property>
    <property name="text">
     <string>Area</string>
@@ -1808,7 +1808,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/hoehenprofil.png</normaloff>:/images/kadas/hoehenprofil.png</iconset>
+     <normaloff>:/images/ribbon/hoehenprofil.png</normaloff>:/images/ribbon/hoehenprofil.png</iconset>
    </property>
    <property name="text">
     <string>Profile</string>
@@ -1820,7 +1820,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/azimuth.png</normaloff>:/images/kadas/azimuth.png</iconset>
+     <normaloff>:/images/ribbon/azimuth.png</normaloff>:/images/ribbon/azimuth.png</iconset>
    </property>
    <property name="text">
     <string>Azimuth</string>
@@ -1829,7 +1829,7 @@
   <action name="mActionLineOfSight">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/lineofsight.png</normaloff>:/images/kadas/lineofsight.png</iconset>
+     <normaloff>:/images/ribbon/lineofsight.png</normaloff>:/images/ribbon/lineofsight.png</iconset>
    </property>
    <property name="text">
     <string>Line of Sight</string>
@@ -1841,7 +1841,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/gelaendeneigung.png</normaloff>:/images/kadas/gelaendeneigung.png</iconset>
+     <normaloff>:/images/ribbon/gelaendeneigung.png</normaloff>:/images/ribbon/gelaendeneigung.png</iconset>
    </property>
    <property name="text">
     <string>Slope</string>
@@ -1853,7 +1853,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Hillshade</string>
@@ -1865,7 +1865,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/einsehbarkeitsanalyse.png</normaloff>:/images/kadas/einsehbarkeitsanalyse.png</iconset>
+     <normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</iconset>
    </property>
    <property name="text">
     <string>Viewshed</string>
@@ -1874,7 +1874,7 @@
   <action name="mActionWPS">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>WPS</string>
@@ -1886,7 +1886,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Circle</string>
@@ -1895,7 +1895,7 @@
   <action name="mActionCopy">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/kopieren.png</normaloff>:/images/kadas/kopieren.png</iconset>
+     <normaloff>:/images/ribbon/kopieren.png</normaloff>:/images/ribbon/kopieren.png</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -1904,7 +1904,7 @@
   <action name="mActionCopyToClipboard">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Copy to Clipboard</string>
@@ -1913,7 +1913,7 @@
   <action name="mActionPrint">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/drucken.png</normaloff>:/images/kadas/drucken.png</iconset>
+     <normaloff>:/images/ribbon/drucken.png</normaloff>:/images/ribbon/drucken.png</iconset>
    </property>
    <property name="text">
     <string>Print</string>
@@ -1922,7 +1922,7 @@
   <action name="mActionSaveMapExtent">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Save map extent</string>
@@ -1931,7 +1931,7 @@
   <action name="mActionExportKML">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Export KML/KMZ</string>
@@ -1940,7 +1940,7 @@
   <action name="mActionImportOVL">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Import OVL</string>
@@ -1949,7 +1949,7 @@
   <action name="mActionZoomLast">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Zoom last</string>
@@ -1958,7 +1958,7 @@
   <action name="mActionZoomNext">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>Zoom next</string>
@@ -1967,7 +1967,7 @@
   <action name="mActionNewMapWindow">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>New map window</string>
@@ -1976,7 +1976,7 @@
   <action name="mAction3D">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/question_mark.png</normaloff>:/images/kadas/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
     <string>3D</string>
@@ -1985,7 +1985,7 @@
   <action name="mActionGrid">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/kadas/koordinatengitter.png</normaloff>:/images/kadas/koordinatengitter.png</iconset>
+     <normaloff>:/images/ribbon/koordinatengitter.png</normaloff>:/images/ribbon/koordinatengitter.png</iconset>
    </property>
    <property name="text">
     <string>Grid</string>
@@ -2009,9 +2009,9 @@
    <header>kadas/qgsvbscrsselection.h</header>
   </customwidget>
   <customwidget>
-   <class>QgsKadasRibbonButton</class>
+   <class>QgsRibbonButton</class>
    <extends>QToolButton</extends>
-   <header>qgskadasribbonbutton.h</header>
+   <header>qgsribbonbutton.h</header>
   </customwidget>
   <customwidget>
    <class>QgsMapCanvas</class>

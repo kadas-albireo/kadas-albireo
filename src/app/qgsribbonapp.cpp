@@ -1,9 +1,9 @@
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgsapplication.h"
 #include "qgsattributetabledialog.h"
 #include "qgsclipboard.h"
 #include "qgsdecorationgrid.h"
-#include "qgskadaslayertreeviewmenuprovider.h"
+#include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
 #include "qgslayertreemapcanvasbridge.h"
@@ -86,7 +86,7 @@
 #include "qgsvbsviewshedtool.h"
 
 
-QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
+QgsRibbonApp::QgsRibbonApp( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
     mNonEditMapTool( 0 ), mSlopeTool( 0 ), mSaveRollbackInProgress( false )
 {
   mVectorLayerTools = new QgsGuiVectorLayerTools();
@@ -150,19 +150,19 @@ QgsKadasMainWidget::QgsKadasMainWidget( QWidget* parent, Qt::WindowFlags f ): QW
   //connect( mInternalClipboard, SIGNAL( changed() ), this, SLOT( clipboardChanged() ) );
 }
 
-QgsKadasMainWidget::~QgsKadasMainWidget()
+QgsRibbonApp::~QgsRibbonApp()
 {
   delete mVectorLayerTools;
   delete mInternalClipboard;
 }
 
-int QgsKadasMainWidget::messageTimeout()
+int QgsRibbonApp::messageTimeout()
 {
   QSettings settings;
   return settings.value( "/qgis/messageTimeout", 5 ).toInt();
 }
 
-void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
+void QgsRibbonApp::resizeEvent( QResizeEvent* event )
 {
   QRect mapCanvasGeometry = mMapCanvas->geometry();
 
@@ -184,7 +184,7 @@ void QgsKadasMainWidget::resizeEvent( QResizeEvent* event )
   mLayerTreeView->setGeometry( mLayerTreeView->pos().x(), distanceToTopBottom, mLayerTreeView->geometry().width(), layerTreeHeight );
 }
 
-void QgsKadasMainWidget::mousePressEvent( QMouseEvent* event )
+void QgsRibbonApp::mousePressEvent( QMouseEvent* event )
 {
   if ( event->button() == Qt::LeftButton )
   {
@@ -198,11 +198,11 @@ void QgsKadasMainWidget::mousePressEvent( QMouseEvent* event )
   QWidget::mousePressEvent( event );
 }
 
-void QgsKadasMainWidget::mouseMoveEvent( QMouseEvent* event )
+void QgsRibbonApp::mouseMoveEvent( QMouseEvent* event )
 {
   if ( event->buttons() & Qt::LeftButton )
   {
-    QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+    QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
     if ( button )
     {
       int distance = ( event->pos() - mDragStartPos ).manhattanLength();
@@ -216,7 +216,7 @@ void QgsKadasMainWidget::mouseMoveEvent( QMouseEvent* event )
   QWidget::mouseMoveEvent( event );
 }
 
-void QgsKadasMainWidget::dropEvent( QDropEvent* event )
+void QgsRibbonApp::dropEvent( QDropEvent* event )
 {
   if ( !event || mDragStartActionName.isEmpty() )
   {
@@ -224,7 +224,7 @@ void QgsKadasMainWidget::dropEvent( QDropEvent* event )
   }
 
   //get button under mouse
-  QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+  QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
   if ( !button )
   {
     return;
@@ -245,16 +245,16 @@ void QgsKadasMainWidget::dropEvent( QDropEvent* event )
   mDragStartActionName.clear();
 }
 
-void QgsKadasMainWidget::dragEnterEvent( QDragEnterEvent* event )
+void QgsRibbonApp::dragEnterEvent( QDragEnterEvent* event )
 {
-  QgsKadasRibbonButton* button = dynamic_cast<QgsKadasRibbonButton*>( childAt( event->pos() ) );
+  QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
   if ( button && button->acceptDrops() )
   {
     event->acceptProposedAction();
   }
 }
 
-void QgsKadasMainWidget::performDrag( const QIcon* icon )
+void QgsRibbonApp::performDrag( const QIcon* icon )
 {
   QMimeData *mimeData = new QMimeData();
 
@@ -267,7 +267,7 @@ void QgsKadasMainWidget::performDrag( const QIcon* icon )
   drag->exec( Qt::CopyAction );
 }
 
-void QgsKadasMainWidget::restoreFavoriteButton( QToolButton* button )
+void QgsRibbonApp::restoreFavoriteButton( QToolButton* button )
 {
   if ( !button )
   {
@@ -290,7 +290,7 @@ void QgsKadasMainWidget::restoreFavoriteButton( QToolButton* button )
   setActionToButton( action, button );
 }
 
-void QgsKadasMainWidget::configureButtons()
+void QgsRibbonApp::configureButtons()
 {
   //My maps tab
 
@@ -365,7 +365,7 @@ void QgsKadasMainWidget::configureButtons()
   setActionToButton( mActionWPS, mWPSButton );
 }
 
-void QgsKadasMainWidget::fileNew( bool thePromptToSaveFlag, bool forceBlank )
+void QgsRibbonApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
 {
   if ( thePromptToSaveFlag )
   {
@@ -472,7 +472,7 @@ void QgsKadasMainWidget::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   mNonEditMapTool = mMapTools.mPan;
 }
 
-void QgsKadasMainWidget::fileNewFromDefaultTemplate()
+void QgsRibbonApp::fileNewFromDefaultTemplate()
 {
   QString projectTemplate = QgsApplication::qgisSettingsDirPath() + QString( "project_default.qgs" );
   QString msgTxt;
@@ -493,7 +493,7 @@ void QgsKadasMainWidget::fileNewFromDefaultTemplate()
                              QgsMessageBar::WARNING );*/
 }
 
-bool QgsKadasMainWidget::fileNewFromTemplate( QString fileName )
+bool QgsRibbonApp::fileNewFromTemplate( QString fileName )
 {
   if ( !saveDirty() )
   {
@@ -510,7 +510,7 @@ bool QgsKadasMainWidget::fileNewFromTemplate( QString fileName )
   return false;
 }
 
-void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
+void QgsRibbonApp::commitError( QgsVectorLayer *vlayer )
 {
   QgsMessageViewer *mv = new QgsMessageViewer();
   mv->setWindowTitle( tr( "Commit errors" ) );
@@ -543,7 +543,7 @@ void QgsKadasMainWidget::commitError( QgsVectorLayer *vlayer )
   messageBar()->pushItem( errorMsg );
 }
 
-void QgsKadasMainWidget::initMapCanvas()
+void QgsRibbonApp::initMapCanvas()
 {
   if ( !mMapCanvas )
   {
@@ -560,7 +560,7 @@ void QgsKadasMainWidget::initMapCanvas()
   mMapCanvas->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
 }
 
-void QgsKadasMainWidget::namSetup()
+void QgsRibbonApp::namSetup()
 {
   QgsNetworkAccessManager *nam = QgsNetworkAccessManager::instance();
 
@@ -575,7 +575,7 @@ void QgsKadasMainWidget::namSetup()
 }
 
 #ifndef QT_NO_OPENSSL
-void QgsKadasMainWidget::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &errors, bool *ok )
+void QgsRibbonApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &errors, bool *ok )
 {
   QString msg = tr( "SSL errors occured accessing URL %1:" ).arg( url.toString() );
   foreach ( QSslError error, errors )
@@ -590,7 +590,7 @@ void QgsKadasMainWidget::namConfirmSslErrors( const QUrl& url, const QList<QSslE
 }
 #endif
 
-void QgsKadasMainWidget::namRequestTimedOut( QNetworkReply *reply )
+void QgsRibbonApp::namRequestTimedOut( QNetworkReply *reply )
 {
   Q_UNUSED( reply );
   QLabel *msgLabel = new QLabel( tr( "A network request timed out, any data received is likely incomplete." ) +
@@ -600,12 +600,12 @@ void QgsKadasMainWidget::namRequestTimedOut( QNetworkReply *reply )
   messageBar()->pushItem( new QgsMessageBarItem( msgLabel, QgsMessageBar::WARNING, messageTimeout() ) );
 }
 
-void QgsKadasMainWidget::namUpdate()
+void QgsRibbonApp::namUpdate()
 {
   QgsNetworkAccessManager::instance()->setupDefaultProxyAndCache();
 }
 
-void QgsKadasMainWidget::initLayerTreeView()
+void QgsRibbonApp::initLayerTreeView()
 {
   QgsLayerTreeModel* model = new QgsLayerTreeModel( QgsProject::instance()->layerTreeRoot(), this );
 #ifdef ENABLE_MODELTEST
@@ -618,7 +618,7 @@ void QgsKadasMainWidget::initLayerTreeView()
   model->setAutoCollapseLegendNodes( 10 );
 
   mLayerTreeView->setModel( model );
-  mLayerTreeView->setMenuProvider( new QgsKadasLayerTreeViewMenuProvider( mLayerTreeView, this ) );
+  mLayerTreeView->setMenuProvider( new QgsRibbonLayerTreeViewMenuProvider( mLayerTreeView, this ) );
 
   //setup connections
   connect( mLayerTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( layerTreeViewDoubleClicked( QModelIndex ) ) );
@@ -626,7 +626,7 @@ void QgsKadasMainWidget::initLayerTreeView()
   //setupLayerTreeViewFromSettings();
 }
 
-void QgsKadasMainWidget::createDecorations()
+void QgsRibbonApp::createDecorations()
 {
   QgsDecorationGrid* mDecorationGrid = new QgsDecorationGrid( mMapCanvas, this );
   connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
@@ -637,7 +637,7 @@ void QgsKadasMainWidget::createDecorations()
   connect( this, SIGNAL( projectRead() ), this, SLOT( projectReadDecorationItems() ) );
 }
 
-void QgsKadasMainWidget::renderDecorationItems( QPainter *p )
+void QgsRibbonApp::renderDecorationItems( QPainter *p )
 {
   foreach ( QgsDecorationItem* item, mDecorationItems )
   {
@@ -645,7 +645,7 @@ void QgsKadasMainWidget::renderDecorationItems( QPainter *p )
   }
 }
 
-void QgsKadasMainWidget::projectReadDecorationItems()
+void QgsRibbonApp::projectReadDecorationItems()
 {
   foreach ( QgsDecorationItem* item, mDecorationItems )
   {
@@ -653,7 +653,7 @@ void QgsKadasMainWidget::projectReadDecorationItems()
   }
 }
 
-void QgsKadasMainWidget::setActionToButton( QAction* action, QToolButton* button )
+void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button )
 {
   button->setDefaultAction( action );
   button->setProperty( "actionName", action->objectName() );
@@ -663,16 +663,16 @@ void QgsKadasMainWidget::setActionToButton( QAction* action, QToolButton* button
   }
 }
 
-void QgsKadasMainWidget::addToFavorites()
+void QgsRibbonApp::addToFavorites()
 {
 }
 
-void QgsKadasMainWidget::fileNew()
+void QgsRibbonApp::fileNew()
 {
   fileNew( true ); // prompts whether to save project
 }
 
-void QgsKadasMainWidget::open()
+void QgsRibbonApp::open()
 {
   // possibly save any pending work before opening a new project
   if ( saveDirty() )
@@ -702,7 +702,7 @@ void QgsKadasMainWidget::open()
   }
 }
 
-bool QgsKadasMainWidget::save()
+bool QgsRibbonApp::save()
 {
   // if we don't have a file name, then obviously we need to get one; note
   // that the project file name is reset to null in fileNew()
@@ -783,7 +783,7 @@ bool QgsKadasMainWidget::save()
   return true;
 }
 
-void QgsKadasMainWidget::saveMapAsImage()
+void QgsRibbonApp::saveMapAsImage()
 {
   QPair< QString, QString> myFileNameAndFilter = QgisGui::getSaveAsImageName( this, tr( "Choose a file name to save the map image as" ) );
   if ( myFileNameAndFilter.first != "" )
@@ -795,7 +795,7 @@ void QgsKadasMainWidget::saveMapAsImage()
   }
 }
 
-void QgsKadasMainWidget::kmlExport()
+void QgsRibbonApp::kmlExport()
 {
   QgsKMLExportDialog d( mMapCanvas->mapSettings().layers() );
   if ( d.exec() == QDialog::Accepted )
@@ -819,47 +819,47 @@ void QgsKadasMainWidget::kmlExport()
   }
 }
 
-void QgsKadasMainWidget::zoomToPrevious()
+void QgsRibbonApp::zoomToPrevious()
 {
   mMapCanvas->zoomToPreviousExtent();
 }
 
-void QgsKadasMainWidget::zoomToNext()
+void QgsRibbonApp::zoomToNext()
 {
   mMapCanvas->zoomToNextExtent();
 }
 
-void QgsKadasMainWidget::pin( bool enabled )
+void QgsRibbonApp::pin( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMapToolPinAnnotation : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::profile( bool enabled )
+void QgsRibbonApp::profile( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureHeightProfile : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::distance( bool enabled )
+void QgsRibbonApp::distance( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureDist : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::area( bool enabled )
+void QgsRibbonApp::area( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureArea : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::azimuth( bool enabled )
+void QgsRibbonApp::azimuth( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureAngle : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::circle( bool enabled )
+void QgsRibbonApp::circle( bool enabled )
 {
   mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureCircle : mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::slope( bool enabled )
+void QgsRibbonApp::slope( bool enabled )
 {
   if ( enabled )
   {
@@ -874,7 +874,7 @@ void QgsKadasMainWidget::slope( bool enabled )
   }
 }
 
-void QgsKadasMainWidget::hillshade( bool enabled )
+void QgsRibbonApp::hillshade( bool enabled )
 {
   if ( enabled )
   {
@@ -889,7 +889,7 @@ void QgsKadasMainWidget::hillshade( bool enabled )
   }
 }
 
-void QgsKadasMainWidget::viewshed( bool enabled )
+void QgsRibbonApp::viewshed( bool enabled )
 {
   if ( enabled )
   {
@@ -903,7 +903,7 @@ void QgsKadasMainWidget::viewshed( bool enabled )
   }
 }
 
-void QgsKadasMainWidget::pinActionToggled( bool enabled )
+void QgsRibbonApp::pinActionToggled( bool enabled )
 {
   if ( !enabled )
   {
@@ -911,7 +911,7 @@ void QgsKadasMainWidget::pinActionToggled( bool enabled )
   }
 }
 
-void QgsKadasMainWidget::userScale()
+void QgsRibbonApp::userScale()
 {
   if ( mMapCanvas )
   {
@@ -919,7 +919,7 @@ void QgsKadasMainWidget::userScale()
   }
 }
 
-void QgsKadasMainWidget::showScale( double theScale )
+void QgsRibbonApp::showScale( double theScale )
 {
   if ( mScaleComboBox )
   {
@@ -927,12 +927,12 @@ void QgsKadasMainWidget::showScale( double theScale )
   }
 }
 
-void QgsKadasMainWidget::setNonEditMapTool()
+void QgsRibbonApp::setNonEditMapTool()
 {
   mMapCanvas->setMapTool( mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::mapToolChanged( QgsMapTool* newTool, QgsMapTool* oldTool )
+void QgsRibbonApp::mapToolChanged( QgsMapTool* newTool, QgsMapTool* oldTool )
 {
   // Automatically return to pan tool if no tool is active
   if ( !newTool && oldTool != mMapTools.mPan )
@@ -941,7 +941,7 @@ void QgsKadasMainWidget::mapToolChanged( QgsMapTool* newTool, QgsMapTool* oldToo
   }
 }
 
-bool QgsKadasMainWidget::addProject( const QString& projectFile )
+bool QgsRibbonApp::addProject( const QString& projectFile )
 {
   QFileInfo pfi( projectFile );
   //statusBar()->showMessage( tr( "Loading project: %1" ).arg( pfi.fileName() ) );
@@ -1046,7 +1046,7 @@ bool QgsKadasMainWidget::addProject( const QString& projectFile )
   return true;
 }
 
-bool QgsKadasMainWidget::saveDirty()
+bool QgsRibbonApp::saveDirty()
 {
   QString whyDirty = "";
   bool hasUnsavedEdits = false;
@@ -1115,13 +1115,13 @@ bool QgsKadasMainWidget::saveDirty()
   return answer != QMessageBox::Cancel;
 }
 
-void QgsKadasMainWidget::markDirty()
+void QgsRibbonApp::markDirty()
 {
   // notify the project that there was a change
   QgsProject::instance()->dirty( true );
 }
 
-bool QgsKadasMainWidget::fileSave()
+bool QgsRibbonApp::fileSave()
 {
   // if we don't have a file name, then obviously we need to get one; note
   // that the project file name is reset to null in fileNew()
@@ -1206,7 +1206,7 @@ bool QgsKadasMainWidget::fileSave()
   return true;
 }
 
-void QgsKadasMainWidget::saveRecentProjectPath( QString projectPath, QSettings & settings )
+void QgsRibbonApp::saveRecentProjectPath( QString projectPath, QSettings & settings )
 {
   // Get canonical absolute path
   QFileInfo myFileInfo( projectPath );
@@ -1232,12 +1232,12 @@ void QgsKadasMainWidget::saveRecentProjectPath( QString projectPath, QSettings &
   updateRecentProjectPaths();
 }
 
-void QgsKadasMainWidget::updateRecentProjectPaths()
+void QgsRibbonApp::updateRecentProjectPaths()
 {
   //don't have this currently in kadas widget
 }
 
-void QgsKadasMainWidget::closeProject()
+void QgsRibbonApp::closeProject()
 {
 #if 0
   // unload the project macros before changing anything
@@ -1266,12 +1266,12 @@ void QgsKadasMainWidget::closeProject()
   QgsTemporaryFile::clear();
 }
 
-void QgsKadasMainWidget::removeAllLayers()
+void QgsRibbonApp::removeAllLayers()
 {
   QgsMapLayerRegistry::instance()->removeAllMapLayers();
 }
 
-void QgsKadasMainWidget::readProject( const QDomDocument & )
+void QgsRibbonApp::readProject( const QDomDocument & )
 {
   //projectChanged( doc );
 
@@ -1290,7 +1290,7 @@ void QgsKadasMainWidget::readProject( const QDomDocument & )
     mLayerTreeCanvasBridge->setAutoSetupOnFirstLayer( true );
 }
 
-void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
+void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
 {
   if ( !mLayerTreeView )
   {
@@ -1312,7 +1312,7 @@ void QgsKadasMainWidget::on_mLayerTreeViewButton_clicked()
   }
 }
 
-void QgsKadasMainWidget::on_mZoomInButton_clicked()
+void QgsRibbonApp::on_mZoomInButton_clicked()
 {
   if ( mMapCanvas )
   {
@@ -1320,7 +1320,7 @@ void QgsKadasMainWidget::on_mZoomInButton_clicked()
   }
 }
 
-void QgsKadasMainWidget::on_mZoomOutButton_clicked()
+void QgsRibbonApp::on_mZoomOutButton_clicked()
 {
   if ( mMapCanvas )
   {
@@ -1328,7 +1328,7 @@ void QgsKadasMainWidget::on_mZoomOutButton_clicked()
   }
 }
 
-void QgsKadasMainWidget::activateDeactivateLayerRelatedActions( QgsMapLayer *layer )
+void QgsRibbonApp::activateDeactivateLayerRelatedActions( QgsMapLayer *layer )
 {
 #if 0 //disable those actions for now...
   bool enableMove = false, enableRotate = false, enablePin = false, enableShowHide = false, enableChange = false;
@@ -1721,7 +1721,7 @@ void QgsKadasMainWidget::activateDeactivateLayerRelatedActions( QgsMapLayer *lay
   mMapCanvas->setMapTool( mNonEditMapTool );
 }
 
-void QgsKadasMainWidget::createCanvasTools()
+void QgsRibbonApp::createCanvasTools()
 {
   // create tools
   mMapTools.mZoomIn = new QgsMapToolZoom( mMapCanvas, false /* zoomIn */ );
@@ -1822,7 +1822,7 @@ void QgsKadasMainWidget::createCanvasTools()
   mNonEditMapTool = mMapTools.mPan;
 }
 
-void QgsKadasMainWidget::layerTreeViewDoubleClicked( const QModelIndex& index )
+void QgsRibbonApp::layerTreeViewDoubleClicked( const QModelIndex& index )
 {
   Q_UNUSED( index )
   QSettings settings;
@@ -1839,12 +1839,12 @@ void QgsKadasMainWidget::layerTreeViewDoubleClicked( const QModelIndex& index )
   }
 }
 
-void QgsKadasMainWidget::layerProperties()
+void QgsRibbonApp::layerProperties()
 {
   showLayerProperties( activeLayer() );
 }
 
-void QgsKadasMainWidget::attributeTable()
+void QgsRibbonApp::attributeTable()
 {
   QgsVectorLayer *myLayer = qobject_cast<QgsVectorLayer *>( activeLayer() );
   if ( !myLayer )
@@ -1857,7 +1857,7 @@ void QgsKadasMainWidget::attributeTable()
   // the dialog will be deleted by itself on close
 }
 
-void QgsKadasMainWidget::toggleEditing()
+void QgsRibbonApp::toggleEditing()
 {
   QgsVectorLayer *currentLayer = qobject_cast<QgsVectorLayer*>( activeLayer() );
   if ( currentLayer )
@@ -1871,7 +1871,7 @@ void QgsKadasMainWidget::toggleEditing()
   }
 }
 
-bool QgsKadasMainWidget::toggleEditing( QgsMapLayer *layer, bool allowCancel )
+bool QgsRibbonApp::toggleEditing( QgsMapLayer *layer, bool allowCancel )
 {
   QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
   if ( !vlayer )
@@ -1984,7 +1984,7 @@ bool QgsKadasMainWidget::toggleEditing( QgsMapLayer *layer, bool allowCancel )
   return res;
 }
 
-void QgsKadasMainWidget::removeLayer()
+void QgsRibbonApp::removeLayer()
 {
   if ( !mLayerTreeView )
   {
@@ -2028,7 +2028,7 @@ void QgsKadasMainWidget::removeLayer()
   mMapCanvas->refresh();
 }
 
-void QgsKadasMainWidget::saveEdits( QgsMapLayer *layer, bool leaveEditable, bool triggerRepaint )
+void QgsRibbonApp::saveEdits( QgsMapLayer *layer, bool leaveEditable, bool triggerRepaint )
 {
   QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
   if ( !vlayer || !vlayer->isEditable() || !vlayer->isModified() )
@@ -2053,7 +2053,7 @@ void QgsKadasMainWidget::saveEdits( QgsMapLayer *layer, bool leaveEditable, bool
   }
 }
 
-void QgsKadasMainWidget::editCopy( QgsMapLayer * layerContainingSelection )
+void QgsRibbonApp::editCopy( QgsMapLayer * layerContainingSelection )
 {
   QgsVectorLayer* selectionVectorLayer = qobject_cast<QgsVectorLayer *>( layerContainingSelection ? layerContainingSelection : activeLayer() );
   if ( !selectionVectorLayer )
@@ -2063,7 +2063,7 @@ void QgsKadasMainWidget::editCopy( QgsMapLayer * layerContainingSelection )
   clipboard()->replaceWithCopyOf( selectionVectorLayer );
 }
 
-void QgsKadasMainWidget::deleteSelected( QgsMapLayer *layer, QWidget* parent, bool promptConfirmation )
+void QgsRibbonApp::deleteSelected( QgsMapLayer *layer, QWidget* parent, bool promptConfirmation )
 {
   if ( !layer )
   {
@@ -2139,7 +2139,7 @@ void QgsKadasMainWidget::deleteSelected( QgsMapLayer *layer, QWidget* parent, bo
   vlayer->endEditCommand();
 }
 
-void QgsKadasMainWidget::showLayerProperties( QgsMapLayer *ml )
+void QgsRibbonApp::showLayerProperties( QgsMapLayer *ml )
 {
   if ( !ml )
     return;
@@ -2185,7 +2185,7 @@ void QgsKadasMainWidget::showLayerProperties( QgsMapLayer *ml )
   }
 }
 
-QgsMapLayer* QgsKadasMainWidget::activeLayer()
+QgsMapLayer* QgsRibbonApp::activeLayer()
 {
   return mLayerTreeView ? mLayerTreeView->currentLayer() : 0;
 }

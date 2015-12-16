@@ -35,7 +35,7 @@ class QgsMapLayer;
 
 class QgsAttributeActionDialog;
 class QgsApplyDialog;
-class QgsKadasMainWidget;
+class QgsRibbonApp;
 class QgsLabelDialog;
 class QgsVectorLayer;
 class QgsLabelingGui;
@@ -54,7 +54,7 @@ class APP_EXPORT QgsVectorLayerProperties : public QgsOptionsDialogBase, private
       DB,
     };
 
-    QgsVectorLayerProperties( QgsVectorLayer *lyr = 0, QgsKadasMainWidget* mainWidget = 0, QWidget *parent = 0,
+    QgsVectorLayerProperties( QgsVectorLayer *lyr = 0, QgsRibbonApp* mainWidget = 0, QWidget *parent = 0,
                               Qt::WindowFlags fl = QgisGui::ModalDialogFlags );
     ~QgsVectorLayerProperties();
     /**Returns the display name entered in the dialog*/
@@ -176,7 +176,7 @@ class APP_EXPORT QgsVectorLayerProperties : public QgsOptionsDialogBase, private
     //! List of joins of a layer at the time of creation of the dialog. Used to return joins to previous state if dialog is cancelled
     QList< QgsVectorJoinInfo > mOldJoins;
 
-    QgsKadasMainWidget* mMainWidget;
+    QgsRibbonApp* mMainWidget;
 
     void initDiagramTab();
 

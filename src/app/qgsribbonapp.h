@@ -1,7 +1,7 @@
-#ifndef QGSKADASMAINWIDGET_H
-#define QGSKADASMAINWIDGET_H
+#ifndef QGSRIBBONAPP_H
+#define QGSRIBBONAPP_H
 
-#include "ui_qgskadasmainwidgetbase.h"
+#include "ui_qgsribbonappbase.h"
 #include <QSslError>
 
 class QgsClipboard;
@@ -16,12 +16,12 @@ class QgsVBSSlopeTool;
 class QgsVBSViewshedTool;
 class QgsVectorLayerTools;
 
-class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
+class QgsRibbonApp: public QWidget, private Ui::QgsRibbonAppBase
 {
     Q_OBJECT
   public:
-    QgsKadasMainWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
-    ~QgsKadasMainWidget();
+    QgsRibbonApp( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+    ~QgsRibbonApp();
 
     QgsMapCanvas* mapCanvas() { return mMapCanvas; }
     /** Return the messageBar object which allows displaying unobtrusive messages to the user.*/
@@ -36,7 +36,7 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     //! Returns a pointer to the internal clipboard
     QgsClipboard* clipboard() { return mInternalClipboard; }
 
-    Ui::QgsKadasMainWidgetBase* getUi() { return this; }
+    Ui::QgsRibbonAppBase* getUi() { return this; }
 
   public slots:
     //! open the properties dialog for the currently selected layer
@@ -290,4 +290,4 @@ class QgsKadasMainWidget: public QWidget, private Ui::QgsKadasMainWidgetBase
     QgsClipboard* mInternalClipboard;
 };
 
-#endif // QGSKADASMAINWIDGET_H
+#endif // QGSRIBBONAPP_H

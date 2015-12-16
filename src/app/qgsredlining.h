@@ -27,13 +27,13 @@ class QToolButton;
 class QgisApp;
 class QgsColorButtonV2;
 class QgsRedliningLayer;
-class QgsKadasMainWidget;
+class QgsRibbonApp;
 
 class QgsRedlining : public QObject
 {
     Q_OBJECT
   public:
-    QgsRedlining( QgisApp* app , QgsKadasMainWidget *kadasWidget = 0 );
+    QgsRedlining( QgisApp* app , QgsRibbonApp *kadasWidget = 0 );
     QgsRedliningLayer *getOrCreateLayer();
     QAction* actionNewPoint() const { return mActionNewPoint; }
     QAction* actionNewSquare() const { return mActionNewSquare; }

@@ -1,6 +1,6 @@
-#include "qgskadaslayertreeviewmenuprovider.h"
+#include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsapplication.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgslayertreeviewdefaultactions.h"
 #include "qgslayertree.h"
 #include "qgslayertreemodel.h"
@@ -8,20 +8,20 @@
 #include "qgsvectorlayer.h"
 #include <QMenu>
 
-QgsKadasLayerTreeViewMenuProvider::QgsKadasLayerTreeViewMenuProvider( QgsLayerTreeView* view, QgsKadasMainWidget* mainWidget ):
+QgsRibbonLayerTreeViewMenuProvider::QgsRibbonLayerTreeViewMenuProvider( QgsLayerTreeView* view, QgsRibbonApp* mainWidget ):
     mView( view ), mMainWidget( mainWidget )
 {
 }
 
-QgsKadasLayerTreeViewMenuProvider::QgsKadasLayerTreeViewMenuProvider(): mView( 0 ), mMainWidget( 0 )
+QgsRibbonLayerTreeViewMenuProvider::QgsRibbonLayerTreeViewMenuProvider(): mView( 0 ), mMainWidget( 0 )
 {
 }
 
-QgsKadasLayerTreeViewMenuProvider::~QgsKadasLayerTreeViewMenuProvider()
+QgsRibbonLayerTreeViewMenuProvider::~QgsRibbonLayerTreeViewMenuProvider()
 {
 }
 
-QMenu* QgsKadasLayerTreeViewMenuProvider::createContextMenu()
+QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
 {
   if ( !mView || !mMainWidget )
   {

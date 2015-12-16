@@ -43,7 +43,7 @@
 #include "qgsfeaturelistmodel.h"
 #include "qgsexpressionbuilderdialog.h"
 #include "qgsrubberband.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 
 class QgsAttributeTableDock : public QDockWidget
 {
@@ -61,7 +61,7 @@ class QgsAttributeTableDock : public QDockWidget
     }
 };
 
-QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsKadasMainWidget* mainWidget,
+QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsRibbonApp* mainWidget,
     QWidget *parent, Qt::WindowFlags flags )
     : QDialog( parent, flags )
     , mDock( 0 )

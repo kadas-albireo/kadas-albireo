@@ -23,7 +23,7 @@
 #include <qgsmaplayerregistry.h>
 
 #include "qgsdatadefinedbutton.h"
-#include "qgskadasmainwidget.h"
+#include "qgsribbonapp.h"
 #include "qgslabelengineconfigdialog.h"
 #include "qgsexpressionbuilderdialog.h"
 #include "qgsexpression.h"
@@ -39,7 +39,7 @@
 #include <QSettings>
 
 
-QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsKadasMainWidget* mainWidget )
+QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsRibbonApp* mainWidget )
     : QWidget( parent )
     , mLayer( layer )
     , mMapCanvas( mapCanvas )

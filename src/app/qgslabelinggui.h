@@ -22,7 +22,7 @@
 #include <QFontDatabase>
 #include <ui_qgslabelingguibase.h>
 
-class QgsKadasMainWidget;
+class QgsRibbonApp;
 class QgsVectorLayer;
 class QgsMapCanvas;
 class QgsCharacterSelectorDialog;
@@ -34,7 +34,7 @@ class APP_EXPORT QgsLabelingGui : public QWidget, private Ui::QgsLabelingGuiBase
     Q_OBJECT
 
   public:
-    QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsKadasMainWidget* mainWidget = 0 );
+    QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsRibbonApp* mainWidget = 0 );
     ~QgsLabelingGui();
 
     QgsPalLayerSettings layerSettings();
@@ -117,7 +117,7 @@ class APP_EXPORT QgsLabelingGui : public QWidget, private Ui::QgsLabelingGuiBase
 
     bool mLoadSvgParams;
 
-    QgsKadasMainWidget* mMainWidget;
+    QgsRibbonApp* mMainWidget;
 
     void enableDataDefinedAlignment( bool enable );
 

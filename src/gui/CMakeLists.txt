@@ -189,7 +189,7 @@ qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
 qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
-qgskadasribbonbutton.cpp
+qgsribbonbutton.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
