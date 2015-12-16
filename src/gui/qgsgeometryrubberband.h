@@ -29,8 +29,9 @@ class QgsDistanceArea;
 class QgsPointV2;
 struct QgsVertexId;
 
-class GUI_EXPORT QgsGeometryRubberBand: public QgsMapCanvasItem
+class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
 {
+    Q_OBJECT
   public:
     enum IconType
     {
@@ -112,6 +113,9 @@ class GUI_EXPORT QgsGeometryRubberBand: public QgsMapCanvasItem
     void measureGeometry( QgsAbstractGeometryV2* geometry );
     QString formatMeasurement( double value, bool isArea ) const;
     void addMeasurements( const QStringList& measurements, const QgsPointV2 &mapPos );
+
+  private slots:
+    void redrawMeasurements();
 };
 
 #endif // QGSGEOMETRYRUBBERBAND_H
