@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoordinateconverter.h                                            *
+ *  qgscoordinateconverter.h                                            *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,24 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCOORDINATECONVERTER_H
-#define QGSVBSCOORDINATECONVERTER_H
+#ifndef QGSCOORDINATECONVERTER_H
+#define QGSCOORDINATECONVERTER_H
 
 #include <QObject>
 
 class QgsPoint;
 class QgsCoordinateReferenceSystem;
 
-class GUI_EXPORT QgsVBSCoordinateConverter : public QObject
+class GUI_EXPORT QgsCoordinateConverter : public QObject
 {
   public:
-    QgsVBSCoordinateConverter( QObject* parent ) : QObject( parent ) {}
-    virtual ~QgsVBSCoordinateConverter() {}
+    QgsCoordinateConverter( QObject* parent ) : QObject( parent ) {}
+    virtual ~QgsCoordinateConverter() {}
     virtual QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const = 0;
 };
 
 
-class GUI_EXPORT QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsEPSGCoordinateConverter : public QgsCoordinateConverter
 {
   public:
     QgsEPSGCoordinateConverter( const QString& targetEPSG, QObject* parent );
@@ -43,7 +43,7 @@ class GUI_EXPORT QgsEPSGCoordinateConverter : public QgsVBSCoordinateConverter
 };
 
 
-class GUI_EXPORT QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsWGS84CoordinateConverter : public QgsCoordinateConverter
 {
   public:
     enum Format { DegMinSec, DegMin, DecDeg };
@@ -56,7 +56,7 @@ class GUI_EXPORT QgsWGS84CoordinateConverter : public QgsVBSCoordinateConverter
 };
 
 
-class GUI_EXPORT QgsUTMCoordinateConverter : public QgsVBSCoordinateConverter
+class GUI_EXPORT QgsUTMCoordinateConverter : public QgsCoordinateConverter
 {
   public:
     QgsUTMCoordinateConverter( QObject* parent );
@@ -73,4 +73,4 @@ class GUI_EXPORT QgsMGRSCoordinateConverter : public QgsUTMCoordinateConverter
     QString convert( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs ) const override;
 };
 
-#endif // QGSVBSCOORDINATECONVERTER_H
+#endif // QGSCOORDINATECONVERTER_H

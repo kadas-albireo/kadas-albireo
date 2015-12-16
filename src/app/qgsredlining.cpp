@@ -29,12 +29,12 @@
 
 #include <QSettings>
 
-QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
-    : QObject( kadasWidget ? static_cast<QObject*>( kadasWidget ) : static_cast<QObject*>( app ) )
+QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* ribbonWidget )
+    : QObject( ribbonWidget ? static_cast<QObject*>( ribbonWidget ) : static_cast<QObject*>( app ) )
     , mLayer( 0 )
     , mLayerRefCount( 0 )
 {
-  mMapCanvas = kadasWidget ? kadasWidget->mapCanvas() : app->mapCanvas();
+  mMapCanvas = ribbonWidget ? ribbonWidget->mapCanvas() : app->mapCanvas();
 
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
@@ -66,7 +66,7 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
   mActionNewText->setCheckable( true );
   connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
 
-  mBtnNewObject = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningNewObject : new QToolButton();
+  mBtnNewObject = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningNewObject : new QToolButton();
   mBtnNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();
   menuNewMarker->addAction( mActionNewPoint );
@@ -90,19 +90,19 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
   mActionEditObject->setCheckable( true );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
-  mSpinBorderSize = kadasWidget ? kadasWidget->getUi()->mSpinBoxRedliningSize : new QSpinBox();
+  mSpinBorderSize = ribbonWidget ? ribbonWidget->getUi()->mSpinBoxRedliningSize : new QSpinBox();
   mSpinBorderSize->setRange( 1, 20 );
   mSpinBorderSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
   connect( mSpinBorderSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
 
-  mBtnOutlineColor = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningBorderColor : new QgsColorButtonV2();
+  mBtnOutlineColor = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningBorderColor : new QgsColorButtonV2();
   mBtnOutlineColor->setAllowAlpha( true );
   mBtnOutlineColor->setProperty( "settings_key", "outline_color" );
   QColor initialOutlineColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/outline_color", "0,0,0,255" ).toString() );
   mBtnOutlineColor->setColor( initialOutlineColor );
   connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
-  mOutlineStyleCombo = kadasWidget ? kadasWidget->getUi()->mComboBoxRedliningBorderStyle : new QComboBox();
+  mOutlineStyleCombo = ribbonWidget ? ribbonWidget->getUi()->mComboBoxRedliningBorderStyle : new QComboBox();
   mOutlineStyleCombo->setProperty( "settings_key", "outline_style" );
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
   mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
@@ -112,14 +112,14 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
   mOutlineStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
   connect( mOutlineStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
-  mBtnFillColor = kadasWidget ? kadasWidget->getUi()->mToolButtonRedliningFillColor : new QgsColorButtonV2();
+  mBtnFillColor = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningFillColor : new QgsColorButtonV2();
   mBtnFillColor->setAllowAlpha( true );
   mBtnFillColor->setProperty( "settings_key", "fill_color" );
   QColor initialFillColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/fill_color", "255,0,0,255" ).toString() );
   mBtnFillColor->setColor( initialFillColor );
   connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
-  mFillStyleCombo = kadasWidget ? kadasWidget->getUi()->mComboBoxRedliningFillStyle : new QComboBox();
+  mFillStyleCombo = ribbonWidget ? ribbonWidget->getUi()->mComboBoxRedliningFillStyle : new QComboBox();
   mFillStyleCombo->setProperty( "settings_key", "fill_style" );
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
   mFillStyleCombo->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
@@ -132,7 +132,7 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
   mFillStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
   connect( mFillStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
-  if ( !kadasWidget )
+  if ( !ribbonWidget )
   {
     QToolBar* redliningToolbar = app->addToolBar( tr( "Redlining" ) );
     redliningToolbar->addWidget( mBtnNewObject );
@@ -149,7 +149,7 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* kadasWidget )
   }
   else
   {
-    connect( kadasWidget, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+    connect( ribbonWidget, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   }
 
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );

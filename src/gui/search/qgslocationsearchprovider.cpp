@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslocationsearchprovider.cpp                                       *
+ *  qgslocationsearchprovider.cpp                                       *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbslocationsearchprovider.h"
+#include "qgslocationsearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
 #include "qgslogger.h"
@@ -25,12 +25,12 @@
 #include <qjson/parser.h>
 
 
-const int QgsVBSLocationSearchProvider::sSearchTimeout = 2000;
-const int QgsVBSLocationSearchProvider::sResultCountLimit = 50;
+const int QgsLocationSearchProvider::sSearchTimeout = 2000;
+const int QgsLocationSearchProvider::sResultCountLimit = 50;
 
 
-QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgsMapCanvas* mapCanvas )
-    : QgsVBSSearchProvider( mapCanvas )
+QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsSearchProvider( mapCanvas )
 {
   mNetReply = 0;
 
@@ -47,7 +47,7 @@ QgsVBSLocationSearchProvider::QgsVBSLocationSearchProvider( QgsMapCanvas* mapCan
   connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
 }
 
-void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
+void QgsLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
   QUrl url( QSettings().value( "vbsfunctionality/search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
   url.addQueryItem( "type", "locations" );
@@ -61,7 +61,7 @@ void QgsVBSLocationSearchProvider::startSearch( const QString &searchtext , cons
   mTimeoutTimer.start( sSearchTimeout );
 }
 
-void QgsVBSLocationSearchProvider::cancelSearch()
+void QgsLocationSearchProvider::cancelSearch()
 {
   if ( mNetReply )
   {
@@ -73,7 +73,7 @@ void QgsVBSLocationSearchProvider::cancelSearch()
   }
 }
 
-void QgsVBSLocationSearchProvider::replyFinished()
+void QgsLocationSearchProvider::replyFinished()
 {
   if ( !mNetReply )
     return;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsslopetool.cpp                                                    *
+ *  qgsslopetool.cpp                                                    *
  *  -------------------                                                    *
  *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsslopetool.h"
+#include "qgsslopetool.h"
 #include "qgscolorrampshader.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
@@ -24,14 +24,14 @@
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgstemporaryfile.h"
-#include "raster/qgssinglebandpseudocolorrenderer.h"
-#include "raster/qgsslopefilter.h"
+#include "qgssinglebandpseudocolorrenderer.h"
+#include "qgsslopefilter.h"
 
 #include <QDir>
 #include <QProgressDialog>
 
 
-QgsVBSSlopeTool::QgsVBSSlopeTool( QgsMapCanvas* mapCanvas, QObject *parent )
+QgsSlopeTool::QgsSlopeTool( QgsMapCanvas* mapCanvas, QObject *parent )
     : QObject( parent ), mMapCanvas( mapCanvas )
 {
   mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
@@ -39,12 +39,12 @@ QgsVBSSlopeTool::QgsVBSSlopeTool( QgsMapCanvas* mapCanvas, QObject *parent )
   mMapCanvas->setMapTool( mRectangleTool );
 }
 
-QgsVBSSlopeTool::~QgsVBSSlopeTool()
+QgsSlopeTool::~QgsSlopeTool()
 {
   delete mRectangleTool;
 }
 
-void QgsVBSSlopeTool::drawFinished()
+void QgsSlopeTool::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );

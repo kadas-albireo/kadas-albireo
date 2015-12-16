@@ -10,10 +10,10 @@ class QgsLayerTreeView;
 class QgsLayerTreeMapCanvasBridge;
 class QgsMessageBar;
 class QNetworkReply;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSHillshadeTool;
-class QgsVBSSlopeTool;
-class QgsVBSViewshedTool;
+class QgsCoordinateDisplayer;
+class QgsHillshadeTool;
+class QgsSlopeTool;
+class QgsViewshedTool;
 class QgsVectorLayerTools;
 
 class QgsRibbonApp: public QWidget, private Ui::QgsRibbonAppBase
@@ -172,7 +172,7 @@ class QgsRibbonApp: public QWidget, private Ui::QgsRibbonAppBase
     //! a bar to display warnings in a non-blocker manner
     QgsMessageBar* mInfoBar;
 
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
+    QgsCoordinateDisplayer* mCoordinateDisplayer;
 
     QPoint mDragStartPos;
     QString mDragStartActionName;
@@ -181,9 +181,9 @@ class QgsRibbonApp: public QWidget, private Ui::QgsRibbonAppBase
 
     QButtonGroup* mToggleButtonGroup;
 
-    QgsVBSSlopeTool* mSlopeTool;
-    QgsVBSHillshadeTool* mHillshadeTool;
-    QgsVBSViewshedTool* mViewshedTool;
+    QgsSlopeTool* mSlopeTool;
+    QgsHillshadeTool* mHillshadeTool;
+    QgsViewshedTool* mViewshedTool;
 
     class Tools
     {

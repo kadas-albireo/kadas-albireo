@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsviewshedtool.cpp                                                 *
+ *  qgsviewshedtool.cpp                                                 *
  *  -------------------                                                    *
  *  begin                : Nov 12, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsviewshedtool.h"
+#include "qgsviewshedtool.h"
 #include "qgisinterface.h"
 #include "qgscircularstringv2.h"
 #include "qgscurvepolygonv2.h"
@@ -29,8 +29,8 @@
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgstemporaryfile.h"
-#include "raster/qgssinglebandpseudocolorrenderer.h"
-#include "raster/qgsviewshed.h"
+#include "qgssinglebandpseudocolorrenderer.h"
+#include "qgsviewshed.h"
 
 #include <QDialogButtonBox>
 #include <QDir>
@@ -40,7 +40,7 @@
 #include <QProgressDialog>
 
 
-QgsVBSViewshedTool::QgsVBSViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly , QObject *parent )
+QgsViewshedTool::QgsViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly , QObject *parent )
     : QObject( parent ), mMapCanvas( mapCanvas )
 {
   if ( sectorOnly )
@@ -55,12 +55,12 @@ QgsVBSViewshedTool::QgsVBSViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly
   mMapCanvas->setMapTool( mDrawTool );
 }
 
-QgsVBSViewshedTool::~QgsVBSViewshedTool()
+QgsViewshedTool::~QgsViewshedTool()
 {
   delete mDrawTool;
 }
 
-void QgsVBSViewshedTool::drawFinished()
+void QgsViewshedTool::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
@@ -162,7 +162,7 @@ void QgsVBSViewshedTool::drawFinished()
   emit finished();
 }
 
-void QgsVBSViewshedTool::adjustRadius( double newRadius )
+void QgsViewshedTool::adjustRadius( double newRadius )
 {
   QGis::UnitType measureUnit = QGis::Meters;
   QGis::UnitType targetUnit = mMapCanvas->mapSettings().destinationCrs().mapUnits();

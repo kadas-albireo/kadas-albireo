@@ -1,7 +1,7 @@
 /**General styling*/
 QWidget {
   font-family: "Frutiger LT Pro 55 Roman";
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 QTreeView::indicator {

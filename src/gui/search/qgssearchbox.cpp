@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbssearchbox.cpp                                                    *
+ *  qgssearchbox.cpp                                                    *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -16,18 +16,18 @@
  ***************************************************************************/
 
 #include "qgsapplication.h"
-#include "qgsvbssearchbox.h"
+#include "qgssearchbox.h"
 #include "qgscoordinatetransform.h"
 #include "qgsgeometryrubberband.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaptooldrawshape.h"
 #include "qgsproject.h"
-#include "qgsvbssearchprovider.h"
-#include "qgsvbscoordinatesearchprovider.h"
-#include "qgsvbslocationsearchprovider.h"
-#include "qgsvbslocaldatasearchprovider.h"
-#include "qgsvbsremotedatasearchprovider.h"
-#include "qgsvbsworldlocationsearchprovider.h"
+#include "qgssearchprovider.h"
+#include "qgscoordinatesearchprovider.h"
+#include "qgslocationsearchprovider.h"
+#include "qgslocaldatasearchprovider.h"
+#include "qgsremotedatasearchprovider.h"
+#include "qgsworldlocationsearchprovider.h"
 #include "qgsrubberband.h"
 #include <QCheckBox>
 #include <QHeaderView>
@@ -42,13 +42,13 @@
 #include <QImageReader>
 
 
-const int QgsVBSSearchBox::sEntryTypeRole = Qt::UserRole;
-const int QgsVBSSearchBox::sCatNameRole = Qt::UserRole + 1;
-const int QgsVBSSearchBox::sCatCountRole = Qt::UserRole + 2;
-const int QgsVBSSearchBox::sResultDataRole = Qt::UserRole + 3;
+const int QgsSearchBox::sEntryTypeRole = Qt::UserRole;
+const int QgsSearchBox::sCatNameRole = Qt::UserRole + 1;
+const int QgsSearchBox::sCatCountRole = Qt::UserRole + 2;
+const int QgsSearchBox::sResultDataRole = Qt::UserRole + 3;
 
 // Overridden to make event() public
-class QgsVBSSearchBox::LineEdit : public QLineEdit
+class QgsSearchBox::LineEdit : public QLineEdit
 {
   public:
     LineEdit( QWidget* parent ) : QLineEdit( parent ) {}
@@ -57,7 +57,7 @@ class QgsVBSSearchBox::LineEdit : public QLineEdit
 
 
 // Overridden to make event() public
-class QgsVBSSearchBox::TreeWidget: public QTreeWidget
+class QgsSearchBox::TreeWidget: public QTreeWidget
 {
   public:
     TreeWidget( QWidget* parent ) : QTreeWidget( parent ) {}
@@ -65,11 +65,11 @@ class QgsVBSSearchBox::TreeWidget: public QTreeWidget
 };
 
 
-QgsVBSSearchBox::QgsVBSSearchBox( QWidget *parent )
+QgsSearchBox::QgsSearchBox( QWidget *parent )
     : QWidget( parent )
 { }
 
-void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
+void QgsSearchBox::init( QgsMapCanvas *canvas )
 {
   mMapCanvas = canvas;
   mNumRunningProviders = 0;
@@ -168,37 +168,37 @@ void QgsVBSSearchBox::init( QgsMapCanvas *canvas )
                               std::max( msz.height(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ) );
   mSearchBox->setPlaceholderText( tr( "Search" ) );
 
-  qRegisterMetaType<QgsVBSSearchProvider::SearchResult>( "QgsVBSSearchProvider::SearchResult" );
-  addSearchProvider( new QgsVBSCoordinateSearchProvider( mMapCanvas ) );
-  addSearchProvider( new QgsVBSLocationSearchProvider( mMapCanvas ) );
-  addSearchProvider( new QgsVBSLocalDataSearchProvider( mMapCanvas ) );
-  addSearchProvider( new QgsVBSRemoteDataSearchProvider( mMapCanvas ) );
-  addSearchProvider( new QgsVBSWorldLocationSearchProvider( mMapCanvas ) );
+  qRegisterMetaType<QgsSearchProvider::SearchResult>( "QgsSearchProvider::SearchResult" );
+  addSearchProvider( new QgsCoordinateSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsLocationSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsLocalDataSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsRemoteDataSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsWorldLocationSearchProvider( mMapCanvas ) );
 
   mSearchBox->installEventFilter( this );
   mTreeWidget->installEventFilter( this );
 }
 
-QgsVBSSearchBox::~QgsVBSSearchBox()
+QgsSearchBox::~QgsSearchBox()
 {
   qDeleteAll( mSearchProviders );
 }
 
-void QgsVBSSearchBox::addSearchProvider( QgsVBSSearchProvider* provider )
+void QgsSearchBox::addSearchProvider( QgsSearchProvider* provider )
 {
   mSearchProviders.append( provider );
   connect( provider, SIGNAL( searchFinished() ), this, SLOT( searchProviderFinished() ) );
-  connect( provider, SIGNAL( searchResultFound( QgsVBSSearchProvider::SearchResult ) ), this, SLOT( searchResultFound( QgsVBSSearchProvider::SearchResult ) ) );
+  connect( provider, SIGNAL( searchResultFound( QgsSearchProvider::SearchResult ) ), this, SLOT( searchResultFound( QgsSearchProvider::SearchResult ) ) );
 }
 
-void QgsVBSSearchBox::removeSearchProvider( QgsVBSSearchProvider* provider )
+void QgsSearchBox::removeSearchProvider( QgsSearchProvider* provider )
 {
   mSearchProviders.removeAll( provider );
   disconnect( provider, SIGNAL( searchFinished() ), this, SLOT( searchProviderFinished() ) );
-  disconnect( provider, SIGNAL( searchResultFound( QgsVBSSearchProvider::SearchResult ) ), this, SLOT( searchResultFound( QgsVBSSearchProvider::SearchResult ) ) );
+  disconnect( provider, SIGNAL( searchResultFound( QgsSearchProvider::SearchResult ) ), this, SLOT( searchResultFound( QgsSearchProvider::SearchResult ) ) );
 }
 
-bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
+bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
 {
   if ( obj == mSearchBox && ev->type() == QEvent::FocusIn )
   {
@@ -275,7 +275,7 @@ bool QgsVBSSearchBox::eventFilter( QObject* obj, QEvent* ev )
   return false;
 }
 
-void QgsVBSSearchBox::textChanged()
+void QgsSearchBox::textChanged()
 {
   mSearchButton->setVisible( true );
   mClearButton->setVisible( false );
@@ -283,7 +283,7 @@ void QgsVBSSearchBox::textChanged()
   mTimer.start();
 }
 
-void QgsVBSSearchBox::startSearch()
+void QgsSearchBox::startSearch()
 {
   mTimer.stop();
 
@@ -297,7 +297,7 @@ void QgsVBSSearchBox::startSearch()
 
   mNumRunningProviders = mSearchProviders.count();
 
-  QgsVBSSearchProvider::SearchRegion searchRegion;
+  QgsSearchProvider::SearchRegion searchRegion;
   if ( mFilterTool )
   {
     QgsPolygon poly = QgsGeometry( mFilterTool->getRubberBand()->geometry()->clone() ).asPolygon();
@@ -308,11 +308,11 @@ void QgsVBSSearchBox::startSearch()
     }
   }
 
-  foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
+  foreach ( QgsSearchProvider* provider, mSearchProviders )
     provider->startSearch( searchtext, searchRegion );
 }
 
-void QgsVBSSearchBox::clearSearch()
+void QgsSearchBox::clearSearch()
 {
   mSearchBox->clear();
   mSearchButton->setVisible( true );
@@ -326,12 +326,12 @@ void QgsVBSSearchBox::clearSearch()
   mTreeWidget->blockSignals( false );
 }
 
-void QgsVBSSearchBox::searchProviderFinished()
+void QgsSearchBox::searchProviderFinished()
 {
   --mNumRunningProviders;
 }
 
-void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult result )
+void QgsSearchBox::searchResultFound( QgsSearchProvider::SearchResult result )
 {
   // Search category item
   QTreeWidgetItem* categoryItem = 0;
@@ -379,7 +379,7 @@ void QgsVBSSearchBox::searchResultFound( QgsVBSSearchProvider::SearchResult resu
   categoryItem->setData( 0, Qt::DisplayRole, QString( "%1 (%2)" ).arg( categoryItem->data( 0, sCatNameRole ).toString() ).arg( categoryCount ) );
 }
 
-void QgsVBSSearchBox::resultSelected()
+void QgsSearchBox::resultSelected()
 {
   if ( mTreeWidget->currentItem() )
   {
@@ -387,7 +387,7 @@ void QgsVBSSearchBox::resultSelected()
     if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
       return;
 
-    QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
+    QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
     if ( !mRubberBand )
       createRubberBand();
     QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
@@ -400,7 +400,7 @@ void QgsVBSSearchBox::resultSelected()
   }
 }
 
-void QgsVBSSearchBox::resultActivated()
+void QgsSearchBox::resultActivated()
 {
   if ( mTreeWidget->currentItem() )
   {
@@ -408,7 +408,7 @@ void QgsVBSSearchBox::resultActivated()
     if ( item->data( 0, sEntryTypeRole ) != EntryTypeResult )
       return;
 
-    QgsVBSSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsVBSSearchProvider::SearchResult>();
+    QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
     QgsRectangle zoomExtent;
     if ( result.bbox.isEmpty() )
     {
@@ -434,16 +434,16 @@ void QgsVBSSearchBox::resultActivated()
   }
 }
 
-void QgsVBSSearchBox::createRubberBand()
+void QgsSearchBox::createRubberBand()
 {
   mRubberBand = new QgsRubberBand( mMapCanvas, QGis::Point );
   QSize imgSize = QImageReader( ":/vbsfunctionality/icons/pin_blue.svg" ).size();
   mRubberBand->setSvgIcon( ":/vbsfunctionality/icons/pin_blue.svg", QPoint( -imgSize.width() / 2., -imgSize.height() ) );
 }
 
-void QgsVBSSearchBox::cancelSearch()
+void QgsSearchBox::cancelSearch()
 {
-  foreach ( QgsVBSSearchProvider* provider, mSearchProviders )
+  foreach ( QgsSearchProvider* provider, mSearchProviders )
   {
     provider->cancelSearch();
   }
@@ -457,7 +457,7 @@ void QgsVBSSearchBox::cancelSearch()
   }
 }
 
-void QgsVBSSearchBox::clearFilter()
+void QgsSearchBox::clearFilter()
 {
   if ( mFilterTool != 0 )
   {
@@ -468,7 +468,7 @@ void QgsVBSSearchBox::clearFilter()
   }
 }
 
-void QgsVBSSearchBox::setFilterTool()
+void QgsSearchBox::setFilterTool()
 {
   QAction* action = qobject_cast<QAction*>( QObject::sender() );
   FilterType filterType = static_cast<FilterType>( action->data().toInt() );
@@ -488,7 +488,7 @@ void QgsVBSSearchBox::setFilterTool()
   connect( mFilterTool, SIGNAL( finished() ), this, SLOT( filterToolFinished() ) );
 }
 
-void QgsVBSSearchBox::filterToolFinished()
+void QgsSearchBox::filterToolFinished()
 {
   mFilterButton->defaultAction()->setChecked( false );
   mFilterButton->defaultAction()->setCheckable( false );

@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsviewshedtool.h                                                   *
+ *  qgssearchprovider.h                                                 *
  *  -------------------                                                    *
- *  begin                : Nov 12, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,31 +15,49 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSVIEWSHEDTOOL_H
-#define QGSVBSVIEWSHEDTOOL_H
+#ifndef QGSSEARCHPROVIDER_H
+#define QGSSEARCHPROVIDER_H
 
 #include <QObject>
+#include "qgsgeometry.h"
+#include "qgsrectangle.h"
+#include "qgscoordinatereferencesystem.h"
 
+class QgisInterface;
 class QgsMapCanvas;
-class QgsMapToolDrawShape;
 
-class GUI_EXPORT QgsVBSViewshedTool : public QObject
+class GUI_EXPORT QgsSearchProvider : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly, QObject* parent = 0 );
-    ~QgsVBSViewshedTool();
+    struct SearchResult
+    {
+      QString category;
+      QString text;
+      QgsPoint pos;
+      QgsRectangle bbox;
+      QgsCoordinateReferenceSystem crs;
+      double zoomScale;
+    };
+    struct SearchRegion
+    {
+      QgsPolyline polygon;
+      QgsCoordinateReferenceSystem crs;
+    };
+
+    QgsSearchProvider( QgsMapCanvas* mapCanvas ) : mMapCanvas( mapCanvas ) { }
+    virtual ~QgsSearchProvider() {}
+    virtual void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) = 0;
+    virtual void cancelSearch() {}
 
   signals:
-    void finished();
+    void searchResultFound( QgsSearchProvider::SearchResult result );
+    void searchFinished();
 
-  private:
+  protected:
     QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawShape* mDrawTool;
-
-  private slots:
-    void drawFinished();
-    void adjustRadius( double newRadius );
 };
 
-#endif // QGSVBSVIEWSHEDTOOL_H
+Q_DECLARE_METATYPE( QgsSearchProvider::SearchResult )
+
+#endif // QGSSEARCHPROVIDER_H

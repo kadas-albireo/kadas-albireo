@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsloccaldatasearchprovider.h                                       *
+ *  qgsloccaldatasearchprovider.h                                       *
  *  -------------------                                                    *
  *  begin                : Aug 03, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -16,37 +16,37 @@
  ***************************************************************************/
 
 
-#ifndef QGSVBSLOCALDATASEARCHPROVIDER_HPP
-#define QGSVBSLOCALDATASEARCHPROVIDER_HPP
+#ifndef QGSLOCALDATASEARCHPROVIDER_HPP
+#define QGSLOCALDATASEARCHPROVIDER_HPP
 
-#include "qgsvbssearchprovider.h"
+#include "qgssearchprovider.h"
 #include <QMutex>
 #include <QPointer>
 
 class QgsFeature;
 class QgsMapLayer;
 class QgsVectorLayer;
-class QgsVBSLocalDataSearchCrawler;
+class QgsLocalDataSearchCrawler;
 
-class GUI_EXPORT QgsVBSLocalDataSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsLocalDataSearchProvider : public QgsSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSLocalDataSearchProvider( QgsMapCanvas *mapCanvas );
+    QgsLocalDataSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
     void cancelSearch() override;
 
   private:
-    QPointer<QgsVBSLocalDataSearchCrawler> mCrawler;
+    QPointer<QgsLocalDataSearchCrawler> mCrawler;
 };
 
 
-class GUI_EXPORT QgsVBSLocalDataSearchCrawler : public QObject
+class GUI_EXPORT QgsLocalDataSearchCrawler : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSLocalDataSearchCrawler( const QString& searchText,
-                                  const QgsVBSSearchProvider::SearchRegion& searchRegion,
+    QgsLocalDataSearchCrawler( const QString& searchText,
+                                  const QgsSearchProvider::SearchRegion& searchRegion,
                                   QList<QgsMapLayer*> layers, QObject* parent = 0 )
         : QObject( parent ), mSearchText( searchText ), mSearchRegion( searchRegion ), mLayers( layers ), mAborted( false ) {}
 
@@ -56,14 +56,14 @@ class GUI_EXPORT QgsVBSLocalDataSearchCrawler : public QObject
     void run();
 
   signals:
-    void searchResultFound( QgsVBSSearchProvider::SearchResult result );
+    void searchResultFound( QgsSearchProvider::SearchResult result );
     void searchFinished();
 
   private:
     static const int sResultCountLimit;
 
     QString mSearchText;
-    QgsVBSSearchProvider::SearchRegion mSearchRegion;
+    QgsSearchProvider::SearchRegion mSearchRegion;
     QList<QgsMapLayer*> mLayers;
     QMutex mAbortMutex;
     bool mAborted;
@@ -71,4 +71,4 @@ class GUI_EXPORT QgsVBSLocalDataSearchCrawler : public QObject
     void buildResult( const QgsFeature& feature, QgsVectorLayer *layer );
 };
 
-#endif // QGSVBSLOCALDATASEARCHPROVIDER_HPP
+#endif // QGSLOCALDATASEARCHPROVIDER_HPP

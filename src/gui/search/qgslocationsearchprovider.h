@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsmaptoolpin.h                                                     *
+ *  qgslocationsearchprovider.h                                         *
  *  -------------------                                                    *
- *  begin                : Jul 22, 2015                                    *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,25 +15,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMAPTOOLPIN_H
-#define QGSVBSMAPTOOLPIN_H
 
-#include "qgsmaptoolannotation.h"
+#ifndef QGSLOCATIONSEARCHPROVIDER_HPP
+#define QGSLOCATIONSEARCHPROVIDER_HPP
 
-class QgsVBSCoordinateDisplayer;
+#include "qgssearchprovider.h"
+#include <QMap>
+#include <QRegExp>
+#include <QTimer>
 
-class GUI_EXPORT QgsVBSMapToolPinAnnotation: public QgsMapToolAnnotation
+class QNetworkAccessManager;
+class QNetworkReply;
+
+class GUI_EXPORT QgsLocationSearchProvider : public QgsSearchProvider
 {
+    Q_OBJECT
   public:
-    QgsVBSMapToolPinAnnotation( QgsMapCanvas* canvas, QgsVBSCoordinateDisplayer* coordinateDisplayer )
-        : QgsMapToolAnnotation( canvas ), mCoordinateDisplayer( coordinateDisplayer ) {}
-
-  protected:
-    QgsAnnotationItem* createItem( const QPoint &pos ) override;
+    QgsLocationSearchProvider( QgsMapCanvas *mapCanvas );
+    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
+    void cancelSearch() override;
 
   private:
-    QgsVBSCoordinateDisplayer* mCoordinateDisplayer;
+    static const int sSearchTimeout;
+    static const int sResultCountLimit;
+    static const QByteArray sGeoAdminUrl;
+
+    QNetworkReply* mNetReply;
+    QMap<QString, QString> mCategoryMap;
+    QRegExp mPatBox;
+    QTimer mTimeoutTimer;
+
+  private slots:
+    void replyFinished();
 };
 
-#endif // QGSVBSMAPTOOLPIN_H
-
+#endif // QGSLOCATIONSEARCHPROVIDER_HPP

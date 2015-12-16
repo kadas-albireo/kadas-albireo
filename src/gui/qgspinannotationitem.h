@@ -1,9 +1,9 @@
 /***************************************************************************
- *  qgsvbshillshadetool.h                                                  *
- *  -------------------                                                    *
- *  begin                : Nov 15, 2015                                    *
- *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
- *  email                : smani@sourcepole.ch                             *
+                              qgspinannotationitem.h
+                              ------------------------
+  begin                : August, 2015
+  copyright            : (C) 2015 by Sandro Mani
+  email                : smani@sourcepole.ch
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,30 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSHILLSHADETOOL_H
-#define QGSVBSHILLSHADETOOL_H
+#ifndef QGSPINANNOTATIONITEM_H
+#define QGSPINANNOTATIONITEM_H
 
-#include <QObject>
+#include "qgssvgannotationitem.h"
 
-class QgsMapCanvas;
-class QgsMapToolDrawRectangle;
+class QgsCoordinateDisplayer;
 
-class GUI_EXPORT QgsVBSHillshadeTool : public QObject
+class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 {
     Q_OBJECT
   public:
-    QgsVBSHillshadeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
-    ~QgsVBSHillshadeTool();
 
-  signals:
-    void finished();
+    QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsCoordinateDisplayer* coordinateDisplayer );
+
+    void setMapPosition( const QgsPoint& pos ) override;
+    void showContextMenu( const QPoint& screenPos );
 
   private:
-    QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawRectangle* mRectangleTool;
+    QgsCoordinateDisplayer* mCoordinateDisplayer;
+
 
   private slots:
-    void drawFinished();
+    void copyPosition();
+    void updateToolTip();
 };
 
-#endif // QGSVBSHILLSHADETOOL_H
+#endif // QGSPINANNOTATIONITEM_H

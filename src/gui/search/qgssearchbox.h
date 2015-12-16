@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbssearchbox.h                                                      *
+ *  qgssearchbox.h                                                      *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,10 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSSEARCHBOX_H
-#define QGSVBSSEARCHBOX_H
+#ifndef QGSSEARCHBOX_H
+#define QGSSEARCHBOX_H
 
-#include "qgsvbssearchprovider.h"
+#include "qgssearchprovider.h"
 #include <QList>
 #include <QTimer>
 #include <QWidget>
@@ -33,18 +33,18 @@ class QgsPoint;
 class QgsRectangle;
 class QgsRubberBand;
 
-class GUI_EXPORT QgsVBSSearchBox : public QWidget
+class GUI_EXPORT QgsSearchBox : public QWidget
 {
     Q_OBJECT
 
   public:
-    QgsVBSSearchBox( QWidget* parent = 0 );
-    ~QgsVBSSearchBox();
+    QgsSearchBox( QWidget* parent = 0 );
+    ~QgsSearchBox();
 
     void init( QgsMapCanvas* canvas );
 
-    void addSearchProvider( QgsVBSSearchProvider* provider );
-    void removeSearchProvider( QgsVBSSearchProvider* provider );
+    void addSearchProvider( QgsSearchProvider* provider );
+    void removeSearchProvider( QgsSearchProvider* provider );
 
   public slots:
     void clearSearch();
@@ -64,7 +64,7 @@ class GUI_EXPORT QgsVBSSearchBox : public QWidget
     QgsMapCanvas* mMapCanvas;
     QgsRubberBand* mRubberBand;
     QgsMapToolDrawShape* mFilterTool;
-    QList<QgsVBSSearchProvider*> mSearchProviders;
+    QList<QgsSearchProvider*> mSearchProviders;
     QTimer mTimer;
     LineEdit* mSearchBox;
     QToolButton* mFilterButton;
@@ -80,7 +80,7 @@ class GUI_EXPORT QgsVBSSearchBox : public QWidget
   private slots:
     void textChanged();
     void startSearch();
-    void searchResultFound( QgsVBSSearchProvider::SearchResult result );
+    void searchResultFound( QgsSearchProvider::SearchResult result );
     void searchProviderFinished();
     void resultSelected();
     void resultActivated();
@@ -89,4 +89,4 @@ class GUI_EXPORT QgsVBSSearchBox : public QWidget
     void filterToolFinished();
 };
 
-#endif // QGSVBSSEARCHBOX_H
+#endif // QGSSEARCHBOX_H

@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbslocationsearchprovider.h                                         *
+ *  qgsremotedatasearchprovider.h                                       *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -16,10 +16,10 @@
  ***************************************************************************/
 
 
-#ifndef QGSVBSLOCATIONSEARCHPROVIDER_HPP
-#define QGSVBSLOCATIONSEARCHPROVIDER_HPP
+#ifndef QGSREMOTEDATASEARCHPROVIDER_HPP
+#define QGSREMOTEDATASEARCHPROVIDER_HPP
 
-#include "qgsvbssearchprovider.h"
+#include "qgssearchprovider.h"
 #include <QMap>
 #include <QRegExp>
 #include <QTimer>
@@ -27,11 +27,11 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class GUI_EXPORT QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsRemoteDataSearchProvider : public QgsSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSLocationSearchProvider( QgsMapCanvas *mapCanvas );
+    QgsRemoteDataSearchProvider( QgsMapCanvas *mapCanvas );
     void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
     void cancelSearch() override;
 
@@ -41,7 +41,7 @@ class GUI_EXPORT QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
     static const QByteArray sGeoAdminUrl;
 
     QNetworkReply* mNetReply;
-    QMap<QString, QString> mCategoryMap;
+    QgsGeometry* mReplyFilter;
     QRegExp mPatBox;
     QTimer mTimeoutTimer;
 
@@ -49,4 +49,4 @@ class GUI_EXPORT QgsVBSLocationSearchProvider : public QgsVBSSearchProvider
     void replyFinished();
 };
 
-#endif // QGSVBSLOCATIONSEARCHPROVIDER_HPP
+#endif // QGSREMOTEDATASEARCHPROVIDER_HPP

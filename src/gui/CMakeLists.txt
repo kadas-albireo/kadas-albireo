@@ -106,20 +106,17 @@ editorwidgets/qgswebviewconfigdlg.cpp
 editorwidgets/qgswebviewwidgetwrapper.cpp
 editorwidgets/qgswebviewwidgetfactory.cpp
 
-kadas/qgsvbscoordinateconverter.cpp
-kadas/qgsvbscoordinatedisplayer.cpp
-kadas/qgsvbscrsselection.cpp
-kadas/qgsvbsmaptoolpinannotation.cpp
-kadas/qgsvbspinannotationitem.cpp
-kadas/qgsvbshillshadetool.cpp
-kadas/qgsvbsslopetool.cpp
-kadas/qgsvbsviewshedtool.cpp
-kadas/search/qgsvbssearchbox.cpp
-kadas/search/qgsvbscoordinatesearchprovider.cpp
-kadas/search/qgsvbslocationsearchprovider.cpp
-kadas/search/qgsvbslocaldatasearchprovider.cpp
-kadas/search/qgsvbsremotedatasearchprovider.cpp
-kadas/search/qgsvbsworldlocationsearchprovider.cpp
+qgscoordinateconverter.cpp
+qgscoordinatedisplayer.cpp
+qgscrsselection.cpp
+qgsmaptoolpinannotation.cpp
+qgspinannotationitem.cpp
+search/qgssearchbox.cpp
+search/qgscoordinatesearchprovider.cpp
+search/qgslocationsearchprovider.cpp
+search/qgslocaldatasearchprovider.cpp
+search/qgsremotedatasearchprovider.cpp
+search/qgsworldlocationsearchprovider.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -355,21 +352,18 @@ SET(QGIS_GUI_MOC_HDRS
   qgshtmlannotationdialog.h
   qgssvgannotationdialog.h
   qgstextannotationdialog.h
-  
-  kadas/qgsvbscoordinateconverter.h
-  kadas/qgsvbscoordinatedisplayer.h
-  kadas/qgsvbscrsselection.h
-  kadas/qgsvbspinannotationitem.h
-  kadas/qgsvbshillshadetool.h
-  kadas/qgsvbsslopetool.h
-  kadas/qgsvbsviewshedtool.h
-  kadas/search/qgsvbssearchbox.h
-  kadas/search/qgsvbssearchprovider.h
-  kadas/search/qgsvbscoordinatesearchprovider.h
-  kadas/search/qgsvbslocationsearchprovider.h
-  kadas/search/qgsvbslocaldatasearchprovider.h
-  kadas/search/qgsvbsremotedatasearchprovider.h
-  kadas/search/qgsvbsworldlocationsearchprovider.h
+
+  qgscoordinateconverter.h
+  qgscoordinatedisplayer.h
+  qgscrsselection.h
+  qgspinannotationitem.h
+  search/qgssearchbox.h
+  search/qgssearchprovider.h
+  search/qgscoordinatesearchprovider.h
+  search/qgslocationsearchprovider.h
+  search/qgslocaldatasearchprovider.h
+  search/qgsremotedatasearchprovider.h
+  search/qgsworldlocationsearchprovider.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
