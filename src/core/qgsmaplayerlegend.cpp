@@ -318,6 +318,24 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultRasterLayerLegend::createLayerTree
     nodes << new QgsWMSLegendNode( nodeLayer );
   }
 
+  //for palletted and multiband raster symbolisation, we only show an icon instead of all the color entries
+  QgsRasterRenderer* rasterRenderer = mLayer->renderer();
+  if ( !rasterRenderer )
+  {
+    return nodes;
+  }
+
+  if ( rasterRenderer->type() == "paletted" )
+  {
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QIcon( ":/images/themes/default/paletted_raster.png" ), nodeLayer );
+    return nodes;
+  }
+  else if ( rasterRenderer->type() == "multibandcolor" )
+  {
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QIcon( ":/images/themes/default/multibandcolor_raster.png" ), nodeLayer );
+    return nodes;
+  }
+
   QgsLegendColorList rasterItemList = mLayer->legendSymbologyItems();
   if ( rasterItemList.count() == 0 )
     return nodes;
