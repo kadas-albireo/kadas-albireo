@@ -96,7 +96,7 @@ QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
   {
     return mLayer;
   }
-  mLayer = new QgsRedliningLayer( tr( "GPS Routes" ) );
+  mLayer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 
@@ -193,7 +193,7 @@ void QgsGPSRouteEditor::updateFeatureStyle( const QgsFeatureId &fid )
   const QgsFields& fields = mLayer->pendingFields();
   mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), sFeatureSize );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::green ) ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( Qt::SolidLine ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( Qt::SolidPattern ) ) );
   mApp->mapCanvas()->clearCache( mLayer->id() );
@@ -248,6 +248,7 @@ void QgsGPSRouteEditor::importGpx()
 
   int nWpts = 0;
   int nRtes = 0;
+  int nTracks = 0;
 
   QDomDocument doc;
   doc.setContent( &file );
@@ -259,7 +260,7 @@ void QgsGPSRouteEditor::importGpx()
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
     QString flags = "symbol=circle,w=5*\"size\",h=5*\"size\",r=0";
-    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, name );
+    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, name );
     ++nWpts;
   }
   QDomNodeList rtes = doc.elementsByTagName( "rte" );
@@ -278,31 +279,31 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
     ++nRtes;
   }
   QDomNodeList trks = doc.elementsByTagName( "trk" );
   for ( int i = 0, n = trks.size(); i < n; ++i )
   {
-    QDomElement trkEl = rtes.at( i ).toElement();
+    QDomElement trkEl = trks.at( i ).toElement();
     QString name = trkEl.firstChildElement( "name" ).text();
     QList<QgsPointV2> pts;
-    QDomNodeList trksegs = trkEl.elementsByTagName( "trkseg" );
-    for ( int j = 0, m = trksegs.size(); j < m; ++j )
+    QDomNodeList trkpts = trkEl.firstChildElement( "trkseg" ).elementsByTagName( "trkpt" );
+    for ( int j = 0, m = trkpts.size(); j < m; ++j )
     {
-      QDomElement trkptEl = trksegs.at( j ).toElement();
+      QDomElement trkptEl = trkpts.at( j ).toElement();
       double lat = trkptEl.attribute( "lat" ).toDouble();
       double lon = trkptEl.attribute( "lon" ).toDouble();
       pts.append( QgsPointV2( lon, lat ) );
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::green, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
-    ++nRtes;
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    ++nTracks;
   }
   mApp->mapCanvas()->clearCache( mLayer->id() );
   mApp->mapCanvas()->refresh();
-  QMessageBox::information( mApp, tr( "GPX Import" ), tr( "%1 waypoints and %2 routes were read." ).arg( nWpts ).arg( nRtes ) );
+  QMessageBox::information( mApp, tr( "GPX Import" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
 }
 
 void QgsGPSRouteEditor::exportGpx()
