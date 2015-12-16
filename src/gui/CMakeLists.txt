@@ -293,6 +293,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsfilterlineedit.h
   qgsformannotationitem.h
   qgsgenericprojectionselector.h
+  qgsgeometryrubberband.h
   qgshtmlannotationitem.h
   qgsgeoimageannotationitem.h
   qgsidentifymenu.h

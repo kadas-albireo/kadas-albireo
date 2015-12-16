@@ -39,6 +39,7 @@ QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::Geo
   mDa.setSourceCrs( mMapCanvas->mapSettings().destinationCrs() );
   mDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
   mDa.setEllipsoidalMode( mMapCanvas->mapSettings().hasCrsTransformEnabled() );
+  connect( mapCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( redrawMeasurements() ) );
 }
 
 QgsGeometryRubberBand::~QgsGeometryRubberBand()
@@ -121,6 +122,30 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
     case ICON_CIRCLE:
       p->drawEllipse( x - s, y - s, mIconSize, mIconSize );
       break;
+  }
+}
+
+void QgsGeometryRubberBand::redrawMeasurements()
+{
+  qDeleteAll( mMeasurementLabels );
+  mMeasurementLabels.clear();
+  if ( mGeometry )
+  {
+    if ( mMeasurementMode != MEASURE_NONE )
+    {
+      if ( dynamic_cast<QgsGeometryCollectionV2*>( mGeometry ) )
+      {
+        QgsGeometryCollectionV2* collection = static_cast<QgsGeometryCollectionV2*>( mGeometry );
+        for ( int i = 0, n = collection->numGeometries(); i < n; ++i )
+        {
+          measureGeometry( collection->geometryN( i ) );
+        }
+      }
+      else
+      {
+        measureGeometry( mGeometry );
+      }
+    }
   }
 }
 
