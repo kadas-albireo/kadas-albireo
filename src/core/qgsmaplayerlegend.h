@@ -20,10 +20,10 @@
 
 class QgsLayerTreeLayer;
 class QgsLayerTreeModelLegendNode;
+class QgsLegendSymbolItemV2;
 class QgsPluginLayer;
 class QgsRasterLayer;
 class QgsVectorLayer;
-
 
 /**
  * The QgsMapLayerLegend class is abstract interface for implementations
@@ -96,6 +96,7 @@ class CORE_EXPORT QgsDefaultVectorLayerLegend : public QgsMapLayerLegend
     virtual QList<QgsLayerTreeModelLegendNode*> createLayerTreeModelLegendNodes( QgsLayerTreeLayer* nodeLayer ) override;
 
   private:
+    static bool legendSymbolIsEmpty( const QgsLegendSymbolItemV2& symbolItem );
     QgsVectorLayer* mLayer;
 };
 

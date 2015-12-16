@@ -510,7 +510,123 @@ void QgsSymbolV2LegendNode::updateLabel()
   }
 }
 
+// -------------------------------------------------------------------------
 
+QgsVectorLabelLegendNode::QgsVectorLabelLegendNode( QgsLayerTreeLayer* nodeLayer, QObject* parent ):
+    QgsLayerTreeModelLegendNode( nodeLayer, parent ), mLabelsEnabled( false ), mFontSize( 0.0 ), mFontSizeInMapUnits( false )
+{
+  updateSettings();
+}
+
+QgsVectorLabelLegendNode::~QgsVectorLabelLegendNode()
+{
+}
+
+QVariant QgsVectorLabelLegendNode::data( int role ) const
+{
+  if ( role == Qt::DisplayRole )
+  {
+    return mLayerLabel;
+  }
+  if ( role == Qt::DecorationRole )
+  {
+    double fontSizePoints = mFontSizeInMapUnits ? 10.0 : mFontSize; //for fontsizes in map units, use 10pt as default
+    QFont font = mFont;
+    font.setPointSizeF( fontSizePoints );
+
+    QFontMetricsF fontMetrics( font );
+    QPixmap pix( 16, 16 ); //icons size seems to be hardcoded to 16/16
+
+    pix.fill( QColor( 255, 255, 255 ) );
+    QPainter painter( &pix );
+    painter.setPen( mFontColor );
+    painter.setFont( font );
+    painter.drawText( QPoint( 0, 16 ), "Aa" );
+
+    return pix;
+  }
+  return QVariant();
+}
+
+QSizeF QgsVectorLabelLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const
+{
+  Q_UNUSED( itemHeight );
+  double fontSizePoints = mFontSizeInMapUnits ? mFontSize * settings.mmPerMapUnit() / 0.376 : mFontSize;
+
+  //take default size if no map extent associated with settings
+  if ( qgsDoubleNear( settings.mmPerMapUnit(), 1.0 ) )
+  {
+    fontSizePoints = 10;
+  }
+
+  QFont font = mFont;
+  font.setPointSizeF( fontSizePoints );
+
+
+  double textHeight = settings.fontHeightCharacterMM( font, QChar( 'A' ) );
+  double textWidth = settings.textWidthMillimeters( font, "Aa" );
+
+  if ( ctx && ctx->painter )
+  {
+    ctx->painter->setPen( mFontColor );
+    settings.drawText( ctx->painter, ctx->point.x() + settings.symbolSize().width() / 2.0 - textWidth / 2.0, ctx->point.y() + settings.symbolSize().height() / 2.0 + textHeight / 2.0, "Aa", font );
+  }
+
+  double symbolWidth = qMax( textWidth, settings.symbolSize().width() );
+  double symbolHeight = qMax( textHeight, settings.symbolSize().height() );
+  return QSizeF( symbolWidth, symbolHeight );
+}
+
+void QgsVectorLabelLegendNode::updateSettings()
+{
+  QgsLayerTreeLayer* treeLayer = layerNode();
+  if ( !treeLayer )
+  {
+    return;
+  }
+
+  QgsVectorLayer* layer = dynamic_cast<QgsVectorLayer*>( treeLayer->layer() );
+  if ( !layer )
+  {
+    return;
+  }
+
+  bool showFeatureCount = mLayerNode->customProperty( "showFeatureCount", 0 ).toBool();
+  mLayerLabel = layer->name();
+  if ( showFeatureCount && layer && layer->pendingFeatureCount() >= 0 )
+  {
+    mLayerLabel += QString( " [%1]" ).arg( layer->pendingFeatureCount() );
+  }
+
+  //labeling enabled?
+  mLabelsEnabled = layer->customProperty( "labeling/enabled", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+  if ( !mLabelsEnabled )
+  {
+    return;
+  }
+
+  //color
+  int alpha = layer->customProperty( "labeling/textColorA", "255" ).toInt();
+  int red = layer->customProperty( "labeling/textColorR", "0" ).toInt();
+  int green = layer->customProperty( "labeling/textColorG", "0" ).toInt();
+  int blue = layer->customProperty( "labeling/textColorB", "0" ).toInt();
+
+  mFontColor = QColor( red, green, blue, alpha );
+
+  mFontSize = layer->customProperty( "labeling/fontSize", "9" ).toDouble();
+  mFontSizeInMapUnits = layer->customProperty( "labeling/fontSizeInMapUnits", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+  QString fontFamily = layer->customProperty( "labeling/fontFamily", "" ).toString();
+  bool italic = layer->customProperty( "labeling/fontItalic", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+  bool bold = layer->customProperty( "labeling/fontBold", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+  bool underline = layer->customProperty( "labeling/fontUnderline", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+  bool strikeout = layer->customProperty( "labeling/fontStrikeout", "false" ).toString().compare( "true", Qt::CaseInsensitive ) == 0;
+
+  mFont.setFamily( fontFamily );
+  mFont.setItalic( italic );
+  mFont.setBold( bold );
+  mFont.setUnderline( underline );
+  mFont.setStrikeOut( strikeout );
+}
 
 // -------------------------------------------------------------------------
 
