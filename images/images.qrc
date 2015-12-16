@@ -481,6 +481,8 @@
         <file>flags/zh.png</file>
 	<file>themes/default/mActionCircularStringCurvePoint.png</file>
 	<file>themes/default/mActionCircularStringRadius.png</file>
+	<file>themes/default/paletted_raster.png</file>
+	<file>themes/default/multibandcolor_raster.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>
