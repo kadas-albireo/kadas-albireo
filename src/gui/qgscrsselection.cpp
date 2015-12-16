@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscrsselection.cpp                                                 *
+ *  qgscrsselection.cpp                                                 *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscrsselection.h"
+#include "qgscrsselection.h"
 #include "qgsprojectionselectionwidget.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgsmapcanvas.h"
@@ -30,7 +30,7 @@
 #include <QStatusBar>
 #include <QToolButton>
 
-QgsVBSCrsSelection::QgsVBSCrsSelection( QWidget *parent )
+QgsCrsSelection::QgsCrsSelection( QWidget *parent )
     : QToolButton( parent ), mMapCanvas( 0 )
 {
   QMenu* crsSelectionMenu = new QMenu( this );
@@ -76,7 +76,7 @@ QgsVBSCrsSelection::QgsVBSCrsSelection( QWidget *parent )
 #endif //0
 }
 
-QgsVBSCrsSelection::~QgsVBSCrsSelection()
+QgsCrsSelection::~QgsCrsSelection()
 {
 #if 0
   QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
@@ -91,7 +91,7 @@ QgsVBSCrsSelection::~QgsVBSCrsSelection()
 #endif //0
 }
 
-void QgsVBSCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
+void QgsCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
 {
     mMapCanvas = canvas;
     if( mMapCanvas )
@@ -103,12 +103,12 @@ void QgsVBSCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
 
         connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
 
-        //todo: needs to be connected from main widget (e.g. KadasMainWidget)
+        //todo: needs to be connected from main widget (e.g. RibbonMainWidget)
         //connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
     }
 }
 
-void QgsVBSCrsSelection::syncCrsButton()
+void QgsCrsSelection::syncCrsButton()
 {
     if( mMapCanvas )
     {
@@ -117,7 +117,7 @@ void QgsVBSCrsSelection::syncCrsButton()
     }
 }
 
-void QgsVBSCrsSelection::selectMapCrs()
+void QgsCrsSelection::selectMapCrs()
 {
     if( !mMapCanvas )
     {
@@ -136,7 +136,7 @@ void QgsVBSCrsSelection::selectMapCrs()
   setText( crs.description() );
 }
 
-void QgsVBSCrsSelection::setMapCrs()
+void QgsCrsSelection::setMapCrs()
 {
     if( !mMapCanvas )
     {

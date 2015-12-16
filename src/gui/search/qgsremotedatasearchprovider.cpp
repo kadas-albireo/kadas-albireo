@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsremotedatasearchprovider.cpp                                     *
+ *  qgsremotedatasearchprovider.cpp                                     *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsremotedatasearchprovider.h"
+#include "qgsremotedatasearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
 #include "qgslinestringv2.h"
@@ -31,12 +31,12 @@
 #include <qjson/parser.h>
 
 
-const int QgsVBSRemoteDataSearchProvider::sSearchTimeout = 2000;
-const int QgsVBSRemoteDataSearchProvider::sResultCountLimit = 100;
+const int QgsRemoteDataSearchProvider::sSearchTimeout = 2000;
+const int QgsRemoteDataSearchProvider::sResultCountLimit = 100;
 
 
-QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgsMapCanvas* mapCanvas )
-    : QgsVBSSearchProvider( mapCanvas )
+QgsRemoteDataSearchProvider::QgsRemoteDataSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsSearchProvider( mapCanvas )
 {
   mNetReply = 0;
   mReplyFilter = 0;
@@ -47,7 +47,7 @@ QgsVBSRemoteDataSearchProvider::QgsVBSRemoteDataSearchProvider( QgsMapCanvas* ma
   connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
 }
 
-void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
+void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
   QStringList remoteLayers;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
@@ -94,7 +94,7 @@ void QgsVBSRemoteDataSearchProvider::startSearch( const QString &searchtext, con
   mTimeoutTimer.start( sSearchTimeout );
 }
 
-void QgsVBSRemoteDataSearchProvider::cancelSearch()
+void QgsRemoteDataSearchProvider::cancelSearch()
 {
   if ( mNetReply )
   {
@@ -108,7 +108,7 @@ void QgsVBSRemoteDataSearchProvider::cancelSearch()
   }
 }
 
-void QgsVBSRemoteDataSearchProvider::replyFinished()
+void QgsRemoteDataSearchProvider::replyFinished()
 {
   if ( !mNetReply )
     return;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsloccaldatasearchprovider.cpp                                     *
+ *  qgsloccaldatasearchprovider.cpp                                     *
  *  -------------------                                                    *
  *  begin                : Aug 03, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbslocaldatasearchprovider.h"
+#include "qgslocaldatasearchprovider.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayer.h"
 #include "qgslinestringv2.h"
@@ -30,12 +30,12 @@
 #include <QMutexLocker>
 
 
-QgsVBSLocalDataSearchProvider::QgsVBSLocalDataSearchProvider( QgsMapCanvas* mapCanvas )
-    : QgsVBSSearchProvider( mapCanvas )
+QgsLocalDataSearchProvider::QgsLocalDataSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsSearchProvider( mapCanvas )
 {
 }
 
-void QgsVBSLocalDataSearchProvider::startSearch( const QString& searchtext, const SearchRegion& searchRegion )
+void QgsLocalDataSearchProvider::startSearch( const QString& searchtext, const SearchRegion& searchRegion )
 {
   QList<QgsMapLayer*> visibleLayers;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
@@ -45,27 +45,27 @@ void QgsVBSLocalDataSearchProvider::startSearch( const QString& searchtext, cons
   }
 
   QThread* crawlerThread = new QThread( this );
-  mCrawler = new QgsVBSLocalDataSearchCrawler( searchtext, searchRegion, visibleLayers );
+  mCrawler = new QgsLocalDataSearchCrawler( searchtext, searchRegion, visibleLayers );
   mCrawler->moveToThread( crawlerThread );
   connect( crawlerThread, SIGNAL( started() ), mCrawler, SLOT( run() ) );
   connect( crawlerThread, SIGNAL( finished() ), crawlerThread, SLOT( deleteLater() ) );
-  connect( mCrawler, SIGNAL( searchResultFound( QgsVBSSearchProvider::SearchResult ) ), this, SIGNAL( searchResultFound( QgsVBSSearchProvider::SearchResult ) ) );
+  connect( mCrawler, SIGNAL( searchResultFound( QgsSearchProvider::SearchResult ) ), this, SIGNAL( searchResultFound( QgsSearchProvider::SearchResult ) ) );
   connect( mCrawler, SIGNAL( searchFinished() ), this, SIGNAL( searchFinished() ) );
   connect( mCrawler, SIGNAL( searchFinished() ), crawlerThread, SLOT( quit() ) );
   connect( mCrawler, SIGNAL( searchFinished() ), mCrawler, SLOT( deleteLater() ) );
   crawlerThread->start();
 }
 
-void QgsVBSLocalDataSearchProvider::cancelSearch()
+void QgsLocalDataSearchProvider::cancelSearch()
 {
   if ( mCrawler )
     mCrawler->abort();
 }
 
 
-const int QgsVBSLocalDataSearchCrawler::sResultCountLimit = 50;
+const int QgsLocalDataSearchCrawler::sResultCountLimit = 50;
 
-void QgsVBSLocalDataSearchCrawler::run()
+void QgsLocalDataSearchCrawler::run()
 {
   int resultCount = 0;
 
@@ -148,9 +148,9 @@ void QgsVBSLocalDataSearchCrawler::run()
   emit searchFinished();
 }
 
-void QgsVBSLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVectorLayer* layer )
+void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVectorLayer* layer )
 {
-  QgsVBSSearchProvider::SearchResult result;
+  QgsSearchProvider::SearchResult result;
   result.pos = feature.geometry()->boundingBox().center();
   result.category = tr( "Local data" );
   result.crs = layer->crs();
@@ -169,7 +169,7 @@ void QgsVBSLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVe
   emit searchResultFound( result );
 }
 
-void QgsVBSLocalDataSearchCrawler::abort()
+void QgsLocalDataSearchCrawler::abort()
 {
   mAbortMutex.lock();
   mAborted = true;

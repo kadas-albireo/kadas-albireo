@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>QGIS Kadas</string>
+   <string>QGIS</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_7">
    <property name="leftMargin">
@@ -220,7 +220,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QgsVBSSearchBox" name="mSearchWidget" native="true">
+        <widget class="QgsSearchBox" name="mSearchWidget" native="true">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -1255,7 +1255,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="mLabelRedliningSize">
                 <property name="text">
-                 <string>Size:</string>
+                 <string>Si&amp;ze:</string>
                 </property>
                </widget>
               </item>
@@ -1724,7 +1724,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QgsVBSCrsSelection" name="mCRSSelectionButton">
+         <widget class="QgsCrsSelection" name="mCRSSelectionButton">
           <property name="text">
            <string/>
           </property>
@@ -2004,9 +2004,9 @@
    <header>qgsscalecombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>QgsVBSCrsSelection</class>
+   <class>QgsCrsSelection</class>
    <extends>QToolButton</extends>
-   <header>kadas/qgsvbscrsselection.h</header>
+   <header>qgscrsselection.h</header>
   </customwidget>
   <customwidget>
    <class>QgsRibbonButton</class>
@@ -2020,9 +2020,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QgsVBSSearchBox</class>
+   <class>QgsSearchBox</class>
    <extends>QWidget</extends>
-   <header>kadas/search/qgsvbssearchbox.h</header>
+   <header>search/qgssearchbox.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

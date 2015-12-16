@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoordinatedisplayer.cpp                                          *
+ *  qgscoordinatedisplayer.cpp                                          *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscoordinatedisplayer.h"
-#include "qgsvbscoordinateconverter.h"
+#include "qgscoordinatedisplayer.h"
+#include "qgscoordinateconverter.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
 #include "qgsproject.h"
@@ -47,7 +47,7 @@ static inline T* variant2ptr( const QVariant& v )
 }
 
 
-QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
+QgsCoordinateDisplayer::QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
     QWidget *parent ) : QWidget( parent ), mMapCanvas( mapCanvas ),
     mCRSSelectionCombo( crsComboBox ), mCoordinateLineEdit( coordLineEdit )
 {
@@ -81,18 +81,18 @@ QgsVBSCoordinateDisplayer::QgsVBSCoordinateDisplayer( QComboBox* crsComboBox, QL
   syncProjectCrs();
 }
 
-QgsVBSCoordinateDisplayer::~QgsVBSCoordinateDisplayer()
+QgsCoordinateDisplayer::~QgsCoordinateDisplayer()
 {
   disconnect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   disconnect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
 }
 
-QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
+QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
 {
   if ( mCRSSelectionCombo )
   {
     QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
-    QgsVBSCoordinateConverter* conv = variant2ptr<QgsVBSCoordinateConverter>( v );
+    QgsCoordinateConverter* conv = variant2ptr<QgsCoordinateConverter>( v );
     if ( conv )
     {
       return conv->convert( p, crs );
@@ -101,7 +101,7 @@ QString QgsVBSCoordinateDisplayer::getDisplayString( const QgsPoint& p, const Qg
   return QString();
 }
 
-double QgsVBSCoordinateDisplayer::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit )
+double QgsCoordinateDisplayer::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit )
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
@@ -178,7 +178,7 @@ double QgsVBSCoordinateDisplayer::getHeightAtPos( const QgsPoint& p, const QgsCo
 }
 
 
-void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
+void QgsCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 {
   if ( mCoordinateLineEdit )
   {
@@ -186,7 +186,7 @@ void QgsVBSCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
   }
 }
 
-void QgsVBSCoordinateDisplayer::syncProjectCrs()
+void QgsCoordinateDisplayer::syncProjectCrs()
 {
   const QgsCoordinateReferenceSystem& crs = mMapCanvas->mapSettings().destinationCrs();
   if ( crs.srsid() == 4326 )

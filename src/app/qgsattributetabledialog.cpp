@@ -171,7 +171,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsR
   }
 
   bool myDockFlag = settings.value( "/qgis/dockAttributeTable", false ).toBool();
-  if ( myDockFlag && !mMainWidget ) //not supported in kadas gui
+  if ( myDockFlag && !mMainWidget ) //not supported in ribbon gui
   {
     mDock = new QgsAttributeTableDock( tr( "Attribute table - %1 (%n Feature(s))", "feature count", mMainView->featureCount() ).arg( mLayer->name() ), QgisApp::instance() );
     mDock->setAllowedAreas( Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea );

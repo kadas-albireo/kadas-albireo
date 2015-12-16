@@ -1,5 +1,5 @@
 /***************************************************************************
-                              qgsvbspinannotationitem.cpp
+                              qgspinannotationitem.cpp
                               ------------------------
   begin                : August, 2015
   copyright            : (C) 2015 by Sandro Mani
@@ -15,9 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbspinannotationitem.h"
+#include "qgspinannotationitem.h"
 #include "qgscoordinatetransform.h"
-#include "qgsvbscoordinatedisplayer.h"
+#include "qgscoordinatedisplayer.h"
 #include "qgsmapcanvas.h"
 #include <QApplication>
 #include <QClipboard>
@@ -27,7 +27,7 @@
 #include <QMenu>
 #include <QSettings>
 
-QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSCoordinateDisplayer *coordinateDisplayer )
+QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinateDisplayer *coordinateDisplayer )
     : QgsSvgAnnotationItem( canvas ), mCoordinateDisplayer( coordinateDisplayer )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
@@ -41,7 +41,7 @@ QgsVBSPinAnnotationItem::QgsVBSPinAnnotationItem( QgsMapCanvas* canvas , QgsVBSC
   connect( mCoordinateDisplayer, SIGNAL( displayFormatChanged() ), this, SLOT( updateToolTip() ) );
 }
 
-void QgsVBSPinAnnotationItem::updateToolTip()
+void QgsPinAnnotationItem::updateToolTip()
 {
   QString posStr = mCoordinateDisplayer->getDisplayString( mGeoPos, mGeoPosCrs );
   if ( posStr.isEmpty() )
@@ -54,13 +54,13 @@ void QgsVBSPinAnnotationItem::updateToolTip()
   setToolTip( toolTipText );
 }
 
-void QgsVBSPinAnnotationItem::setMapPosition( const QgsPoint& pos )
+void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos )
 {
   QgsSvgAnnotationItem::setMapPosition( pos );
   updateToolTip();
 }
 
-void QgsVBSPinAnnotationItem::showContextMenu( const QPoint& screenPos )
+void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )
 {
   QMenu menu;
   menu.addAction( tr( "Copy position" ), this, SLOT( copyPosition() ) );
@@ -68,7 +68,7 @@ void QgsVBSPinAnnotationItem::showContextMenu( const QPoint& screenPos )
   menu.exec( screenPos );
 }
 
-void QgsVBSPinAnnotationItem::copyPosition()
+void QgsPinAnnotationItem::copyPosition()
 {
   QApplication::clipboard()->setText( toolTip() );
 }

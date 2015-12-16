@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbshillshadetool.cpp                                                *
+ *  qgshillshadetool.cpp                                                *
  *  -------------------                                                    *
  *  begin                : Nov 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbshillshadetool.h"
+#include "qgshillshadetool.h"
 #include "qgscolorrampshader.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
@@ -25,8 +25,8 @@
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgstemporaryfile.h"
-#include "raster/qgssinglebandpseudocolorrenderer.h"
-#include "raster/qgshillshadefilter.h"
+#include "qgssinglebandpseudocolorrenderer.h"
+#include "qgshillshadefilter.h"
 
 #include <QDialogButtonBox>
 #include <QDir>
@@ -36,7 +36,7 @@
 #include <QProgressDialog>
 
 
-QgsVBSHillshadeTool::QgsVBSHillshadeTool( QgsMapCanvas* mapCanvas, QObject *parent )
+QgsHillshadeTool::QgsHillshadeTool( QgsMapCanvas* mapCanvas, QObject *parent )
     : QObject( parent ), mMapCanvas( mapCanvas )
 {
   mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
@@ -44,12 +44,12 @@ QgsVBSHillshadeTool::QgsVBSHillshadeTool( QgsMapCanvas* mapCanvas, QObject *pare
   mMapCanvas->setMapTool( mRectangleTool );
 }
 
-QgsVBSHillshadeTool::~QgsVBSHillshadeTool()
+QgsHillshadeTool::~QgsHillshadeTool()
 {
   delete mRectangleTool;
 }
 
-void QgsVBSHillshadeTool::drawFinished()
+void QgsHillshadeTool::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );

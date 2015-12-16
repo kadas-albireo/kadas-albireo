@@ -91,6 +91,10 @@ SET(QGIS_APP_SRCS
   qgsmaptooltextannotation.cpp
   qgsmaptoolsredlining.cpp
 
+  qgshillshadetool.cpp
+  qgsslopetool.cpp
+  qgsviewshedtool.cpp
+
   nodetool/qgsmaptoolnodetool.cpp
   nodetool/qgsselectedfeature.cpp
   nodetool/qgsvertexentry.cpp
@@ -252,6 +256,10 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsplitparts.h
   qgsmaptoolsredlining.h
   qgsmaptooladdcircularstring.h
+
+  qgshillshadetool.h
+  qgsslopetool.h
+  qgsviewshedtool.h
 
   nodetool/qgsmaptoolnodetool.h
   nodetool/qgsselectedfeature.h
@@ -487,7 +495,6 @@ INCLUDE_DIRECTORIES(
   ../gui/editorwidgets
   ../gui/editorwidgets/core
   ../gui/layertree
-  ../gui/kadas
   ../plugins
   ../python
   gps

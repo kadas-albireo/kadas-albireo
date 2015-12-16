@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoordinatesearchprovider.cpp                                     *
+ *  qgscoordinatesearchprovider.cpp                                     *
  *  -------------------                                                    *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,14 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscoordinatesearchprovider.h"
+#include "qgscoordinatesearchprovider.h"
 #include "qgscoordinatetransform.h"
 #include "qgslatlontoutm.h"
 
-const QString QgsVBSCoordinateSearchProvider::sCategoryName = QgsVBSCoordinateSearchProvider::tr( "Coordinates" );
+const QString QgsCoordinateSearchProvider::sCategoryName = QgsCoordinateSearchProvider::tr( "Coordinates" );
 
-QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgsMapCanvas* mapCanvas )
-    : QgsVBSSearchProvider( mapCanvas )
+QgsCoordinateSearchProvider::QgsCoordinateSearchProvider( QgsMapCanvas* mapCanvas )
+    : QgsSearchProvider( mapCanvas )
 {
   QString degChar = QString( "%1" ).arg( QChar( 0x00B0 ) );
   QString minChars = QString( "'%1%2%3" ).arg( QChar( 0x2032 ) ).arg( QChar( 0x02BC ) ).arg( QChar( 0x2019 ) );
@@ -36,7 +36,7 @@ QgsVBSCoordinateSearchProvider::QgsVBSCoordinateSearchProvider( QgsMapCanvas* ma
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
 }
 
-void QgsVBSCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &/*searchRegion*/ )
+void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &/*searchRegion*/ )
 {
   SearchResult searchResult;
   searchResult.zoomScale = 1000;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscoordinateconverter.cpp                                          *
+ *  qgscoordinateconverter.cpp                                          *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,14 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscoordinateconverter.h"
+#include "qgscoordinateconverter.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
 #include "qgspoint.h"
 #include "qgslatlontoutm.h"
 
 QgsEPSGCoordinateConverter::QgsEPSGCoordinateConverter( const QString &targetEPSG, QObject *parent )
-    : QgsVBSCoordinateConverter( parent )
+    : QgsCoordinateConverter( parent )
 {
   mDestSrs = new QgsCoordinateReferenceSystem( targetEPSG );
 }
@@ -41,7 +41,7 @@ QString QgsEPSGCoordinateConverter::convert( const QgsPoint &p, const QgsCoordin
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsWGS84CoordinateConverter::QgsWGS84CoordinateConverter( Format format, QObject *parent )
-    : QgsVBSCoordinateConverter( parent )
+    : QgsCoordinateConverter( parent )
 {
   mFormat = format;
   mDestSrs = new QgsCoordinateReferenceSystem( "EPSG:4326" );
@@ -77,7 +77,7 @@ QString QgsWGS84CoordinateConverter::convert( const QgsPoint &p, const QgsCoordi
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsUTMCoordinateConverter::QgsUTMCoordinateConverter( QObject *parent )
-    : QgsVBSCoordinateConverter( parent )
+    : QgsCoordinateConverter( parent )
 {
   mWgs84Srs = new QgsCoordinateReferenceSystem( "EPSG:4326" );
 }

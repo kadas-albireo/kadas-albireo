@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsmaptoolpin.cpp                                                   *
+ *  qgshillshadetool.h                                                  *
  *  -------------------                                                    *
- *  begin                : Jul 22, 2015                                    *
+ *  begin                : Nov 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,15 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsmaptoolpinannotation.h"
-#include "qgsvbspinannotationitem.h"
-#include "qgsmapcanvas.h"
-#include <QMouseEvent>
+#ifndef QGSHILLSHADETOOL_H
+#define QGSHILLSHADETOOL_H
 
-QgsAnnotationItem* QgsVBSMapToolPinAnnotation::createItem( const QPoint &pos )
+#include <QObject>
+
+class QgsMapCanvas;
+class QgsMapToolDrawRectangle;
+
+class GUI_EXPORT QgsHillshadeTool : public QObject
 {
-  QgsVBSPinAnnotationItem* pinItem = new QgsVBSPinAnnotationItem( mCanvas, mCoordinateDisplayer );
-  pinItem->setMapPosition( toMapCoordinates( pos ) );
-  pinItem->setSelected( true );
-  return pinItem;
-}
+    Q_OBJECT
+  public:
+    QgsHillshadeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
+    ~QgsHillshadeTool();
+
+  signals:
+    void finished();
+
+  private:
+    QgsMapCanvas* mMapCanvas;
+    QgsMapToolDrawRectangle* mRectangleTool;
+
+  private slots:
+    void drawFinished();
+};
+
+#endif // QGSHILLSHADETOOL_H

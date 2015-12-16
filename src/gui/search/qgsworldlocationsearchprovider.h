@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsslopetool.h                                                      *
+ *  qgsworldlocationsearchprovider.h                                    *
  *  -------------------                                                    *
- *  begin                : Nov 11, 2015                                    *
+ *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,30 +15,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSSLOPETOOL_H
-#define QGSVBSSLOPETOOL_H
 
-#include <QObject>
+#ifndef QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#define QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
 
-class QgsMapCanvas;
-class QgsMapToolDrawRectangle;
+#include "qgssearchprovider.h"
+#include <QMap>
+#include <QRegExp>
+#include <QTimer>
 
-class GUI_EXPORT QgsVBSSlopeTool : public QObject
+class QNetworkAccessManager;
+class QNetworkReply;
+
+class GUI_EXPORT QgsWorldLocationSearchProvider : public QgsSearchProvider
 {
     Q_OBJECT
   public:
-    QgsVBSSlopeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
-    ~QgsVBSSlopeTool();
-
-  signals:
-    void finished();
+    QgsWorldLocationSearchProvider( QgsMapCanvas *mapCanvas );
+    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
+    void cancelSearch() override;
 
   private:
-    QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawRectangle* mRectangleTool;
+    static const int sSearchTimeout;
+    static const int sResultCountLimit;
+    static const QByteArray sGeoAdminUrl;
+
+    QNetworkReply* mNetReply;
+    QMap<QString, QString> mCategoryMap;
+    QRegExp mPatBox;
+    QTimer mTimeoutTimer;
 
   private slots:
-    void drawFinished();
+    void replyFinished();
 };
 
-#endif // QGSVBSSLOPETOOL_H
+#endif // QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP

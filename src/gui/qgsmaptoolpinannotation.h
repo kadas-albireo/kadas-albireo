@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbscrsselection.h                                                   *
+ *  qgsmaptoolpin.h                                                     *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Jul 22, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,29 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCRSSELECTION_H
-#define QGSVBSCRSSELECTION_H
+#ifndef QGSMAPTOOLPIN_H
+#define QGSMAPTOOLPIN_H
 
-#include <QToolButton>
+#include "qgsmaptoolannotation.h"
 
-class QgsMapCanvas;
+class QgsCoordinateDisplayer;
 
-class GUI_EXPORT QgsVBSCrsSelection : public QToolButton
+class GUI_EXPORT QgsMapToolPinAnnotation: public QgsMapToolAnnotation
 {
-    Q_OBJECT
   public:
-    QgsVBSCrsSelection( QWidget* parent = 0 );
-    ~QgsVBSCrsSelection();
+    QgsMapToolPinAnnotation( QgsMapCanvas* canvas, QgsCoordinateDisplayer* coordinateDisplayer )
+        : QgsMapToolAnnotation( canvas ), mCoordinateDisplayer( coordinateDisplayer ) {}
 
-    void setMapCanvas( QgsMapCanvas* canvas );
+  protected:
+    QgsAnnotationItem* createItem( const QPoint &pos ) override;
 
   private:
-    QgsMapCanvas* mMapCanvas;
-
-  private slots:
-    void syncCrsButton();
-    void setMapCrs();
-    void selectMapCrs();
+    QgsCoordinateDisplayer* mCoordinateDisplayer;
 };
 
-#endif // QGSVBSCRSSELECTION_H
+#endif // QGSMAPTOOLPIN_H
+

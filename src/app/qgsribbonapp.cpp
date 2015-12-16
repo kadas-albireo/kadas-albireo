@@ -24,10 +24,10 @@
 #include "qgsrasterlayerproperties.h"
 #include "qgsredlining.h"
 #include "qgstemporaryfile.h"
-#include "kadas/qgsvbscoordinatedisplayer.h"
-#include "kadas/qgsvbscrsselection.h"
-#include "kadas/qgsvbsmaptoolpinannotation.h"
-#include "kadas/qgsvbspinannotationitem.h"
+#include "qgscoordinatedisplayer.h"
+#include "qgscrsselection.h"
+#include "qgsmaptoolpinannotation.h"
+#include "qgspinannotationitem.h"
 #include "qgsvectordataprovider.h"
 #include "qgsvectorlayer.h"
 #include "qgsvectorlayerproperties.h"
@@ -81,9 +81,9 @@
 #include "nodetool/qgsmaptoolnodetool.h"
 #include "qgsguivectorlayertools.h"
 
-#include "qgsvbshillshadetool.h"
-#include "qgsvbsslopetool.h"
-#include "qgsvbsviewshedtool.h"
+#include "qgshillshadetool.h"
+#include "qgsslopetool.h"
+#include "qgsviewshedtool.h"
 
 
 QgsRibbonApp::QgsRibbonApp( QWidget* parent, Qt::WindowFlags f ): QWidget( parent, f ), mLayerTreeCanvasBridge( 0 ),
@@ -98,7 +98,7 @@ QgsRibbonApp::QgsRibbonApp( QWidget* parent, Qt::WindowFlags f ): QWidget( paren
 
   QgsApplication::initQgis();
 
-  mCoordinateDisplayer = new QgsVBSCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
+  mCoordinateDisplayer = new QgsCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
@@ -863,7 +863,7 @@ void QgsRibbonApp::slope( bool enabled )
 {
   if ( enabled )
   {
-    mSlopeTool = new QgsVBSSlopeTool( mMapCanvas, this );
+    mSlopeTool = new QgsSlopeTool( mMapCanvas, this );
     connect( mSlopeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
@@ -878,7 +878,7 @@ void QgsRibbonApp::hillshade( bool enabled )
 {
   if ( enabled )
   {
-    mHillshadeTool = new QgsVBSHillshadeTool( mMapCanvas, this );
+    mHillshadeTool = new QgsHillshadeTool( mMapCanvas, this );
     connect( mHillshadeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
@@ -893,7 +893,7 @@ void QgsRibbonApp::viewshed( bool enabled )
 {
   if ( enabled )
   {
-    mViewshedTool = new QgsVBSViewshedTool( mMapCanvas, false, this );
+    mViewshedTool = new QgsViewshedTool( mMapCanvas, false, this );
     connect( mViewshedTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
   }
   else
@@ -1234,7 +1234,7 @@ void QgsRibbonApp::saveRecentProjectPath( QString projectPath, QSettings & setti
 
 void QgsRibbonApp::updateRecentProjectPaths()
 {
-  //don't have this currently in kadas widget
+  //don't have this currently in ribbon widget
 }
 
 void QgsRibbonApp::closeProject()
@@ -1302,12 +1302,12 @@ void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
 
   if ( !visible )
   {
-    mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_unfolded.png" ) );
+    mLayerTreeViewButton->setIcon( QIcon( ":/images/ribbon/layerbaum_unfolded.png" ) );
     mLayerTreeViewButton->move( mLayerTreeView->size().width() - 5, mLayerTreeViewButton->y() );
   }
   else
   {
-    mLayerTreeViewButton->setIcon( QIcon( ":/images/kadas/layerbaum_folded.png" ) );
+    mLayerTreeViewButton->setIcon( QIcon( ":/images/ribbon/layerbaum_folded.png" ) );
     mLayerTreeViewButton->move( -2, mLayerTreeViewButton->y() );
   }
 }
@@ -1816,7 +1816,7 @@ void QgsRibbonApp::createCanvasTools()
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mMapCanvas );
   //mMapTools.mRotateLabel->setAction( mActionRotateLabel );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mMapCanvas );
-  mMapTools.mMapToolPinAnnotation = new QgsVBSMapToolPinAnnotation( mMapCanvas, mCoordinateDisplayer );
+  mMapTools.mMapToolPinAnnotation = new QgsMapToolPinAnnotation( mMapCanvas, mCoordinateDisplayer );
   //mMapTools.mChangeLabelProperties->setAction( mActionChangeLabelProperties );
   //ensure that non edit tool is initialised or we will get crashes in some situations
   mNonEditMapTool = mMapTools.mPan;

@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsworldlocationsearchprovider.h                                    *
+ *  qgscoordinatedisplayer.h                                            *
  *  -------------------                                                    *
- *  begin                : Sep 16, 2015                                    *
+ *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,38 +15,39 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef QGSCOORDINATEDISPAYER_H
+#define QGSCOORDINATEDISPAYER_H
 
-#ifndef QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
-#define QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#include <QWidget>
+#include <qgspoint.h>
 
-#include "qgsvbssearchprovider.h"
-#include <QMap>
-#include <QRegExp>
-#include <QTimer>
+class QComboBox;
+class QLabel;
+class QLineEdit;
+class QgsCoordinateReferenceSystem;
+class QgsMapCanvas;
 
-class QNetworkAccessManager;
-class QNetworkReply;
-
-class GUI_EXPORT QgsVBSWorldLocationSearchProvider : public QgsVBSSearchProvider
+class GUI_EXPORT QgsCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsVBSWorldLocationSearchProvider( QgsMapCanvas *mapCanvas );
-    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
-    void cancelSearch() override;
+    QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
+    ~QgsCoordinateDisplayer();
+    QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
+    double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
 
   private:
-    static const int sSearchTimeout;
-    static const int sResultCountLimit;
-    static const QByteArray sGeoAdminUrl;
+    QgsMapCanvas* mMapCanvas;
+    QComboBox* mCRSSelectionCombo;
+    QLabel* mIconLabel;
+    QLineEdit* mCoordinateLineEdit;
 
-    QNetworkReply* mNetReply;
-    QMap<QString, QString> mCategoryMap;
-    QRegExp mPatBox;
-    QTimer mTimeoutTimer;
+  signals:
+    void displayFormatChanged();
 
   private slots:
-    void replyFinished();
+    void displayCoordinates( const QgsPoint& p );
+    void syncProjectCrs();
 };
 
-#endif // QGSWORLDVBSLOCATIONSEARCHPROVIDER_HPP
+#endif // QGSCOORDINATEDISPAYER_H

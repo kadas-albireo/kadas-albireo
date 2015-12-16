@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbscoordinatesearchprovider.h                                       *
+ *  qgsslopetool.h                                                      *
  *  -------------------                                                    *
- *  begin                : Jul 09, 2015                                    *
+ *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,28 +15,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCOORDINATESEARCHPROVIDER_HPP
-#define QGSVBSCOORDINATESEARCHPROVIDER_HPP
+#ifndef QGSSLOPETOOL_H
+#define QGSSLOPETOOL_H
 
-#include "qgsvbssearchprovider.h"
-#include <QRegExp>
+#include <QObject>
 
-class GUI_EXPORT QgsVBSCoordinateSearchProvider : public QgsVBSSearchProvider
+class QgsMapCanvas;
+class QgsMapToolDrawRectangle;
+
+class GUI_EXPORT QgsSlopeTool : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSCoordinateSearchProvider( QgsMapCanvas *mapCanvas );
-    void startSearch( const QString& searchtext, const SearchRegion& searchRegion ) override;
+    QgsSlopeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
+    ~QgsSlopeTool();
+
+  signals:
+    void finished();
 
   private:
-    QRegExp mPatLVDD;
-    QRegExp mPatDM;
-    QRegExp mPatDMS;
-    QRegExp mPatUTM;
-    QRegExp mPatUTM2;
-    QRegExp mPatMGRS;
+    QgsMapCanvas* mMapCanvas;
+    QgsMapToolDrawRectangle* mRectangleTool;
 
-    static const QString sCategoryName;
+  private slots:
+    void drawFinished();
 };
 
-#endif // QGSVBSCOORDINATESEARCHPROVIDER_HPP
+#endif // QGSSLOPETOOL_H

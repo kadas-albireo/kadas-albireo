@@ -33,7 +33,7 @@ class QgsRedlining : public QObject
 {
     Q_OBJECT
   public:
-    QgsRedlining( QgisApp* app , QgsRibbonApp *kadasWidget = 0 );
+    QgsRedlining( QgisApp* app , QgsRibbonApp *ribbonWidget = 0 );
     QgsRedliningLayer *getOrCreateLayer();
     QAction* actionNewPoint() const { return mActionNewPoint; }
     QAction* actionNewSquare() const { return mActionNewSquare; }
