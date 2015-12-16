@@ -19,6 +19,7 @@
 #ifndef QGSLAYERTREEMODELLEGENDNODE_H
 #define QGSLAYERTREEMODELLEGENDNODE_H
 
+#include <QFont>
 #include <QIcon>
 #include <QObject>
 
@@ -173,6 +174,26 @@ class CORE_EXPORT QgsSymbolV2LegendNode : public QgsLayerTreeModelLegendNode
     mutable QPixmap mPixmap; // cached symbol preview
     QString mLabel;
     bool mSymbolUsesMapUnits;
+};
+
+class CORE_EXPORT QgsVectorLabelLegendNode : public QgsLayerTreeModelLegendNode
+{
+  public:
+    QgsVectorLabelLegendNode( QgsLayerTreeLayer* nodeLayer, QObject* parent = 0 );
+    ~QgsVectorLabelLegendNode();
+
+    virtual QVariant data( int role ) const override;
+    QSizeF drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const override;
+
+  private:
+    QFont mFont;
+    bool mLabelsEnabled;
+    QColor mFontColor;
+    double mFontSize;
+    bool mFontSizeInMapUnits;
+    QString mLayerLabel;
+
+    void updateSettings();
 };
 
 
