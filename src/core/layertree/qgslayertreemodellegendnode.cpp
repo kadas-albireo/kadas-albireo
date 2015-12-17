@@ -630,11 +630,27 @@ void QgsVectorLabelLegendNode::updateSettings()
 
 // -------------------------------------------------------------------------
 
-
 QgsSimpleLegendNode::QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QIcon& icon, QObject* parent, const QString& key )
     : QgsLayerTreeModelLegendNode( nodeLayer, parent )
     , mLabel( label )
-    , mIcon( icon )
+    , mKey( key )
+{
+  if ( !icon.isNull() )
+  {
+    QList<QSize> sizeList = icon.availableSizes();
+    if ( sizeList.size() > 0 )
+    {
+      mImage = icon.pixmap( sizeList.last() ).toImage();
+    }
+  }
+}
+
+
+
+QgsSimpleLegendNode::QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QImage& img , QObject* parent, const QString& key )
+    : QgsLayerTreeModelLegendNode( nodeLayer, parent )
+    , mLabel( label )
+    , mImage( img )
     , mKey( key )
 {
 }
@@ -644,11 +660,20 @@ QVariant QgsSimpleLegendNode::data( int role ) const
   if ( role == Qt::DisplayRole || role == Qt::EditRole )
     return mUserLabel.isEmpty() ? mLabel : mUserLabel;
   else if ( role == Qt::DecorationRole )
-    return mIcon;
+    return QPixmap::fromImage( mImage.scaled( 16, 16 ) );
   else if ( role == RuleKeyRole && !mKey.isEmpty() )
     return mKey;
   else
     return QVariant();
+}
+
+QSizeF QgsSimpleLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const
+{
+  if ( ctx && !mImage.isNull() )
+  {
+    ctx->painter->drawImage( QRectF( ctx->point.x(), ctx->point.y(), settings.symbolSize().width(), settings.symbolSize().height() ), mImage, QRectF( 0, 0, mImage.width(), mImage.height() ) );
+  }
+  return QSizeF( settings.symbolSize().width(), settings.symbolSize().height() );
 }
 
 

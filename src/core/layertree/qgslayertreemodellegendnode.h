@@ -205,14 +205,17 @@ class CORE_EXPORT QgsVectorLabelLegendNode : public QgsLayerTreeModelLegendNode
 class CORE_EXPORT QgsSimpleLegendNode : public QgsLayerTreeModelLegendNode
 {
   public:
-    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QIcon& icon = QIcon(), QObject* parent = 0, const QString& key = QString() );
+    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QIcon& icon, QObject* parent = 0, const QString& key = QString() );
+    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QImage& img = QImage(), QObject* parent = 0, const QString& key = QString() );
 
     virtual QVariant data( int role ) const override;
+
+    QSizeF drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const override;
 
   private:
     QString mLabel;
     QString mId;
-    QIcon mIcon;
+    QImage mImage;
     QString mKey;
 };
 
