@@ -161,12 +161,14 @@ QList<QgsLegendRenderer::Atom> QgsLegendRenderer::createAtomList( QgsLayerTreeGr
 
       // Group subitems
       QList<Atom> groupAtoms = createAtomList( nodeGroup, splitLayer );
+      bool hasSubItems = groupAtoms.size() > 0;
 
       if ( nodeLegendStyle( nodeGroup ) != QgsComposerLegendStyle::Hidden )
       {
         Nucleon nucleon;
         nucleon.item = node;
         nucleon.size = drawGroupTitle( nodeGroup );
+
 
         if ( groupAtoms.size() > 0 )
         {
@@ -188,7 +190,12 @@ QList<QgsLegendRenderer::Atom> QgsLegendRenderer::createAtomList( QgsLayerTreeGr
           groupAtoms.append( atom );
         }
       }
-      atoms.append( groupAtoms );
+
+      if ( hasSubItems ) //leave away groups without content
+      {
+        atoms.append( groupAtoms );
+      }
+
     }
     else if ( QgsLayerTree::isLayer( node ) )
     {
