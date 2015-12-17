@@ -16,6 +16,7 @@
 #include "qgsmaplayerlegend.h"
 
 #include <QSettings>
+#include "qgsapplication.h"
 #include "qgsfillsymbollayerv2.h"
 #include "qgslayertree.h"
 #include "qgslayertreemodellegendnode.h"
@@ -327,12 +328,12 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultRasterLayerLegend::createLayerTree
 
   if ( rasterRenderer->type() == "paletted" )
   {
-    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QIcon( ":/images/themes/default/paletted_raster.png" ), nodeLayer );
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QImage( QgsApplication::iconsPath() + "paletted_raster.png" ) );
     return nodes;
   }
   else if ( rasterRenderer->type() == "multibandcolor" )
   {
-    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QIcon( ":/images/themes/default/multibandcolor_raster.png" ), nodeLayer );
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QImage( QgsApplication::iconsPath() + "multibandcolor_raster.png" ) );
     return nodes;
   }
 
@@ -383,7 +384,7 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultPluginLayerLegend::createLayerTree
   typedef QPair<QString, QPixmap> XY;
   foreach ( XY item, symbologyList )
   {
-    nodes << new QgsSimpleLegendNode( nodeLayer, item.first, QIcon( item.second ) );
+    nodes << new QgsSimpleLegendNode( nodeLayer, item.first, item.second.toImage() );
   }
 
   return nodes;
