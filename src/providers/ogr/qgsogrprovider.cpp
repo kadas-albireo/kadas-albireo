@@ -2481,7 +2481,7 @@ bool QgsOgrProvider::syncToDisc()
     sbnIndexFile.chop( suffixLength );
     sbnIndexFile.append( "sbn" );
 
-    if ( !sbnIndexFile.isEmpty() )
+    if ( QFile::exists( sbnIndexFile ) )
     {
       shapeIndex = true;
       close();
