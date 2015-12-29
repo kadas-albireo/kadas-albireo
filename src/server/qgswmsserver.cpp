@@ -721,14 +721,16 @@ QString QgsWMSServer::getLegendGraphicHtml()
   // TODO: not available: layer title space
   legendSettings.rstyle( QgsComposerLegendStyle::Symbol ).setMargin( QgsComposerLegendStyle::Top, symbolSpace );
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setMargin( QgsComposerLegendStyle::Left, iconLabelSpace );
-  legendSettings.setSymbolSize( QSizeF( symbolWidth, symbolHeight ) );
   legendSettings.rstyle( QgsComposerLegendStyle::Subgroup ).setFont( layerFont );
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
   // TODO: not available: layer font color
   legendSettings.setFontColor( itemFontColor );
   legendSettings.setWMSLegend( true );
 
-
+  if ( scaleDenominator > 0 )
+  {
+    legendSettings.setMapScale( scaleDenominator );
+  }
 
   //create first image (to find out dpi)
   QImage* theImage = createImage( 10, 10 );
@@ -736,6 +738,10 @@ QString QgsWMSServer::getLegendGraphicHtml()
   {
     return emptyHtml();
   }
+
+  legendSettings.setDpi( theImage->dotsPerMeterX() * 25.4 / 1000.0 );
+  double dotsPerMM = theImage->dotsPerMeterX() / 1000.0;
+  legendSettings.setSymbolSize( QSizeF( symbolWidth, symbolHeight ) );
 
   // Create the layer tree root
   QgsLayerTreeGroup rootGroup;
@@ -794,19 +800,6 @@ QString QgsWMSServer::getLegendGraphicHtml()
       double currentSymbolHeight = symbolHeight;
       double currentSymbolWidth = symbolWidth;
 
-      //embed png image directly
-      QImage img( currentSymbolWidth + 0.5, currentSymbolHeight + 0.5, QImage::Format_ARGB32_Premultiplied );
-      img.setDotsPerMeterX( theImage->dotsPerMeterX() );
-      img.setDotsPerMeterY( theImage->dotsPerMeterY() );
-      img.fill( 0 );
-      QPainter p;
-      p.begin( &img );
-
-      QgsLayerTreeModelLegendNode::ItemContext itemCtx;
-      itemCtx.painter = &p;
-      itemCtx.point = QPointF( 0.0, 0.0 );
-      itemCtx.labelXOffset = 0;
-
       if ( layerTitle || ruleLabel )
       {
         htmlString.append( "<TR>\n" );
@@ -817,7 +810,25 @@ QString QgsWMSServer::getLegendGraphicHtml()
         continue;
       }
 
-      QSizeF size = ( *lIt )->drawSymbol( legendSettings, &itemCtx, symbolHeight );
+      QSizeF size = ( *lIt )->drawSymbol( legendSettings, 0, symbolHeight );
+
+      //embed png image directly
+      QImage img( size.width() * dotsPerMM + 1.0, size.height() * dotsPerMM + 1.0, QImage::Format_ARGB32_Premultiplied );
+      img.setDotsPerMeterX( theImage->dotsPerMeterX() );
+      img.setDotsPerMeterY( theImage->dotsPerMeterY() );
+      img.fill( 0 );
+      QPainter p;
+      p.begin( &img );
+      p.setRenderHint( QPainter::Antialiasing, true );
+      p.scale( dotsPerMM, dotsPerMM );
+
+      QgsLayerTreeModelLegendNode::ItemContext itemCtx;
+      itemCtx.point = QPointF( 0.0, 0.0 );
+      itemCtx.labelXOffset = 0;
+      itemCtx.painter = 0;
+      itemCtx.painter = &p;
+
+      ( *lIt )->drawSymbol( legendSettings, &itemCtx, symbolHeight );
 
       QByteArray ba;
       QBuffer buffer( &ba );
