@@ -2491,6 +2491,11 @@ bool QgsOgrProvider::syncToDisc()
     }
   }
 
+  if ( OGR_L_SyncToDisk( ogrLayer ) != OGRERR_NONE )
+  {
+    pushError( tr( "OGR error syncing to disk: %1" ).arg( CPLGetLastErrorMsg() ) );
+  }
+
   mDataModified = true;
 
   if ( shapeIndex )
