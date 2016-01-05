@@ -57,6 +57,7 @@
 
 #include <QTextStream>
 #include <QFileDialog>
+#include <QMenu>
 #include <QMessageBox>
 #include <QPainter>
 #include <QLinearGradient>

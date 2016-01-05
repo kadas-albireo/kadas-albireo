@@ -57,6 +57,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFontDialog>
+#include <QMenu>
 #include <QSettings>
 #include <QComboBox>
 #include <QCheckBox>

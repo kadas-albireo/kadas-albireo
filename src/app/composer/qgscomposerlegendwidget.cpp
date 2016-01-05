@@ -38,6 +38,7 @@
 #include "qgsproject.h"
 #include "qgsvectorlayer.h"
 
+#include <QMenu>
 #include <QMessageBox>
 #include <QInputDialog>
 

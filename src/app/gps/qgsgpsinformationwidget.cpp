@@ -63,6 +63,7 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <QPen>
+#include <QStatusBar>
 
 QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWidget * parent, Qt::WindowFlags f )
     : QWidget( parent, f )

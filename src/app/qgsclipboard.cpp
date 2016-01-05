@@ -246,6 +246,7 @@ void QgsClipboard::setData( const QString& mimeType, const QByteArray& data, con
   QApplication::clipboard()->setMimeData( mdata, QClipboard::Selection );
 #endif
   QApplication::clipboard()->setMimeData( mdata, QClipboard::Clipboard );
+  emit dataChanged();
 }
 
 void QgsClipboard::setData( const QString& mimeType, const QByteArray& data, const QString& text )

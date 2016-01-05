@@ -33,6 +33,7 @@
 #include <QDomDocument>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QMenu>
 #include <QSettings>
 
 
@@ -42,7 +43,7 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
     : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
 {
 
-  QToolBar* gpseditorToolbar = mApp->addToolBar( tr( "GPS Route Editor" ) );
+//  QToolBar* gpseditorToolbar = mApp->addToolBar( tr( "GPS Route Editor" ) );
 
   QAction* actionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Waypoint" ), this );
   actionNewPoint->setCheckable( true );
@@ -61,12 +62,14 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
   mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
   mBtnNewObject->setDefaultAction( actionNewPoint );
   connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
-  gpseditorToolbar->addWidget( mBtnNewObject );
+#pragma message( "warning: TODO" )
+//  gpseditorToolbar->addWidget( mBtnNewObject );
 
   mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
   mActionEditObject->setToolTip( tr( "Edit Object" ) );
   mActionEditObject->setCheckable( true );
-  gpseditorToolbar->addAction( mActionEditObject );
+#pragma message( "warning: TODO" )
+//  gpseditorToolbar->addAction( mActionEditObject );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
   connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
@@ -77,14 +80,14 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
   connect( mActionImportGpx, SIGNAL( triggered( bool ) ), this, SLOT( importGpx() ) );
   mActionExportGpx = new QAction( tr( "Export to GPX" ), this );
   connect( mActionExportGpx, SIGNAL( triggered( bool ) ), this, SLOT( exportGpx() ) );
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionImportGpx, "", "gpxImport", QgsMapLayer::RedliningLayer, false );
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionExportGpx, "", "gpxExport", QgsMapLayer::RedliningLayer, false );
+//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionImportGpx, "", "gpxImport", QgsMapLayer::RedliningLayer, false );
+//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionExportGpx, "", "gpxExport", QgsMapLayer::RedliningLayer, false );
 }
 
 QgsGPSRouteEditor::~QgsGPSRouteEditor()
 {
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionImportGpx );
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionExportGpx );
+//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionImportGpx );
+//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionExportGpx );
 }
 
 QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()

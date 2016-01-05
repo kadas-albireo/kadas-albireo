@@ -1,5 +1,6 @@
 SET(QGIS_APP_SRCS
   qgisapp.cpp
+  qgsclassicapp.cpp
   qgisappinterface.cpp
   qgisappstylesheet.cpp
   qgsabout.cpp
@@ -173,6 +174,7 @@ SET(QGIS_APP_SRCS
 
 SET (QGIS_APP_MOC_HDRS
   qgisapp.h
+  qgsclassicapp.h
   qgisappinterface.h
   qgisappstylesheet.h
   qgsabout.h

@@ -39,6 +39,7 @@
 #include "qgscustomization.h"
 #include "qgsfontutils.h"
 #include "qgsribbonapp.h"
+#include "qgsclassicapp.h"
 #include "qgspluginregistry.h"
 #include "qgsmessagelog.h"
 #include "qgspythonrunner.h"
@@ -468,8 +469,9 @@ int main( int argc, char *argv[] )
 #endif
 
   bool myRestoreDefaultWindowState = false;
-  bool myRestorePlugins = true;
+  bool myRestorePlugins = false;
   bool myCustomization = true;
+  bool ribbonGui = true;
 
   // This behaviour will set initial extent of map canvas, but only if
   // there are no command line arguments. This gives a usable map
@@ -491,8 +493,6 @@ int main( int argc, char *argv[] )
   QString pythonfile;
 
   QString customizationfile;
-
-  bool ribbonGui = true;
 
 #if defined(ANDROID)
   QgsDebugMsg( QString( "Android: All params stripped" ) );// Param %1" ).arg( argv[0] ) );
@@ -931,14 +931,14 @@ int main( int argc, char *argv[] )
   QgsApplication::setMaxThreads( QSettings().value( "/qgis/max_threads", -1 ).toInt() );
 
   //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
-  QWidget* qgis = 0;
+  QgisApp* qgis = 0;
   if ( ribbonGui )
   {
-    qgis = new QgsRibbonApp();
+    qgis = new QgsRibbonApp( mypSplash, myRestorePlugins );
   }
   else
   {
-    qgis = new QgisApp( mypSplash, myRestorePlugins );
+    qgis = new QgsClassicApp( mypSplash, myRestorePlugins );
   }
   qgis->setObjectName( "QgisApp" );
 

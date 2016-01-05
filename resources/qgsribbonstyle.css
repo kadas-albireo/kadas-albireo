@@ -119,12 +119,22 @@ QToolButton#searchFilter {
 
 /**Status bar*/
 
-QWidget#mStatusWidget {
+#mStatusWidget {
   background-color: #1E2126;
+  color: #FFFFFF;
 }
 
-#mStatusWidget  QWidget {
+#mStatusWidget #mCoordinateLineEdit,
+#mStatusWidget #mCRSComboBox,
+#mStatusWidget #mCRSComboBox,
+#mStatusWidget #mScaleComboBox,
+#mStatusWidget #mCRSSelectionButton
+{
   background-color: #16171B;
+  color: #FFFFFF;
+}
+
+#mStatusWidget QLabel {
   color: #FFFFFF;
 }
 
