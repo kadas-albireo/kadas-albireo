@@ -146,8 +146,11 @@ class APP_EXPORT QgsClipboard : public QObject
     void systemClipboardChanged();
 
   signals:
-    /** Emitted when content changed */
+    /** Emitted when feature content changes */
     void changed();
+
+    /** Emitted when data content changes */
+    void dataChanged();
 
   private:
     /*

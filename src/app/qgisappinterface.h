@@ -23,6 +23,7 @@
 #include "qgsapppluginmanagerinterface.h"
 
 class QgisApp;
+class QgsClassicApp;
 
 
 /** \class QgisAppInterface
@@ -480,6 +481,7 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     //! Pointer to the QgisApp object
     QgisApp *qgis;
+    QgsClassicApp * qgisc;
 
     QTimer *mTimer;
 

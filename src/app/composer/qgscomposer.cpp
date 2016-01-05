@@ -19,6 +19,7 @@
 #include <stdexcept>
 
 #include "qgisapp.h"
+#include "qgsclassicapp.h"
 #include "qgsapplication.h"
 #include "qgsbusyindicatordialog.h"
 #include "qgscomposerruler.h"
@@ -2590,7 +2591,7 @@ void QgsComposer::on_mActionAddArrow_triggered()
 
 void QgsComposer::on_mActionSaveProject_triggered()
 {
-  mQgis->actionSaveProject()->trigger();
+  mQgis->fileSave();
 }
 
 void QgsComposer::on_mActionNewComposer_triggered()
@@ -2634,7 +2635,7 @@ void QgsComposer::on_mActionComposerManager_triggered()
   // NOTE: Avoid crash where composer that spawned modal manager from toolbar ends up
   // being deleted by user, but event loop tries to return to composer on manager close
   // (does not seem to be an issue for menu action)
-  QTimer::singleShot( 0, mQgis->actionShowComposerManager(), SLOT( trigger() ) );
+  QTimer::singleShot( 0, mQgis, SLOT( showComposerManager() ) );
 }
 
 void QgsComposer::on_mActionSaveAsTemplate_triggered()
@@ -3589,12 +3590,18 @@ void QgsComposer::populatePrintComposersMenu()
 
 void QgsComposer::populateWindowMenu()
 {
-  populateWithOtherMenu( mWindowMenu, mQgis->windowMenu() );
+  if ( QgsClassicApp::instance() )
+  {
+    populateWithOtherMenu( mWindowMenu, QgsClassicApp::instance()->windowMenu() );
+  }
 }
 
 void QgsComposer::populateHelpMenu()
 {
-  populateWithOtherMenu( mHelpMenu, mQgis->helpMenu() );
+  if ( QgsClassicApp::instance() )
+  {
+    populateWithOtherMenu( mHelpMenu, QgsClassicApp::instance()->helpMenu() );
+  }
 }
 
 void QgsComposer::populateWithOtherMenu( QMenu* thisMenu, QMenu* otherMenu )

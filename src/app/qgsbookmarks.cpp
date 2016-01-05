@@ -27,6 +27,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QMenu>
 #include <QSettings>
 #include <QPushButton>
 #include <QSqlTableModel>
@@ -259,7 +260,7 @@ void QgsBookmarks::zoomToBookmark()
   }
 
   // set the extent to the bookmark and refresh
-  QgisApp::instance()->setExtent( rect );
+  QgisApp::instance()->mapCanvas()->setExtent( rect );
   QgisApp::instance()->mapCanvas()->refresh();
 }
 

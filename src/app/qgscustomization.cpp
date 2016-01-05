@@ -35,6 +35,7 @@
 #include <QToolButton>
 #include <QStatusBar>
 #include <QMetaObject>
+#include <QMenuBar>
 
 #ifdef Q_OS_MACX
 QgsCustomizationDialog::QgsCustomizationDialog( QWidget *parent, QSettings* settings )

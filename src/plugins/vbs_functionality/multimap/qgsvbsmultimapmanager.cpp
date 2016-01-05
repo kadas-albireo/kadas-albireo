@@ -34,7 +34,10 @@ QgsVBSMultiMapManager::QgsVBSMultiMapManager( QgisInterface *iface, QObject *par
   mActionAddMapWidget->setToolTip( tr( "Add Map View" ) );
   connect( mActionAddMapWidget, SIGNAL( triggered( bool ) ), this, SLOT( addMapWidget() ) );
 
-  mIface->pluginToolBar()->addAction( mActionAddMapWidget );
+  if ( mIface->pluginToolBar() )
+  {
+    mIface->pluginToolBar()->addAction( mActionAddMapWidget );
+  }
 
   connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( clearMapWidgets() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProjectSettings( QDomDocument ) ) );
@@ -44,7 +47,8 @@ QgsVBSMultiMapManager::QgsVBSMultiMapManager( QgisInterface *iface, QObject *par
 QgsVBSMultiMapManager::~QgsVBSMultiMapManager()
 {
   clearMapWidgets();
-  mIface->pluginToolBar()->removeAction( mActionAddMapWidget );
+  if ( mIface->pluginToolBar() )
+    mIface->pluginToolBar()->removeAction( mActionAddMapWidget );
 }
 
 void QgsVBSMultiMapManager::addMapWidget()

@@ -56,33 +56,7 @@ void QgsRasterTerrainAnalysisPlugin::initGui()
   //create Action
   if ( mIface )
   {
-    //find raster menu
-    QString rasterText = QCoreApplication::translate( "QgisApp", "&Raster" );
-    QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
-    if ( !mainWindow )
-    {
-      return;
-    }
-
-    QMenuBar* menuBar = mainWindow->menuBar();
-    if ( !menuBar )
-    {
-      return;
-    }
-
-    QMenu* rasterMenu = 0;
-    QList<QAction *> menuBarActions = menuBar->actions();
-    QList<QAction *>::iterator menuActionIt =  menuBarActions.begin();
-    for ( ; menuActionIt != menuBarActions.end(); ++menuActionIt )
-    {
-      if (( *menuActionIt )->menu() && ( *menuActionIt )->menu()->title() == rasterText )
-      {
-        rasterMenu = ( *menuActionIt )->menu();
-        rasterMenu->addSeparator();
-        break;
-      }
-    }
-
+    QMenu* rasterMenu = mIface->rasterMenu();
     if ( !rasterMenu )
     {
       return;

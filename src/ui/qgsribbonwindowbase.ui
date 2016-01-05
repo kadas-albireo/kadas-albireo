@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QgsRibbonWindowBase</class>
+ <widget class="QMainWindow" name="QgsRibbonWindowBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayoutCentralWidget">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QgsMapCanvas" name="mMapCanvas">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <widget class="QgsLayerTreeView" name="mLayerTreeView">
+       <property name="geometry">
+        <rect>
+         <x>-2</x>
+         <y>60</y>
+         <width>200</width>
+         <height>192</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="indentation">
+        <number>20</number>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="mLayerTreeViewButton">
+       <property name="geometry">
+        <rect>
+         <x>-2</x>
+         <y>60</y>
+         <width>35</width>
+         <height>192</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>35</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>35</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../images/images.qrc">
+         <normaloff>:/images/ribbon/layerbaum_folded.png</normaloff>:/images/ribbon/layerbaum_folded.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QFrame" name="mZoomInOutFrame">
+       <property name="geometry">
+        <rect>
+         <x>1200</x>
+         <y>20</y>
+         <width>41</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="mZoomInOutLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetFixedSize</enum>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="mZoomInButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../../images/images.qrc">
+            <normaloff>:/images/ribbon/zoom_in.png</normaloff>:/images/ribbon/zoom_in.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="mZoomBackgroundFrame">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>1</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>1</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>1</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="mZoomOutButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../../images/images.qrc">
+            <normaloff>:/images/ribbon/zoom_out.png</normaloff>:/images/ribbon/zoom_out.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>38</width>
+            <height>38</height>
+           </size>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="mStatusWidget"/>
+  <action name="mActionOpen">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/oeffnen.png</normaloff>:/images/ribbon/oeffnen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open project</string>
+   </property>
+  </action>
+  <action name="mActionSave">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/speichern.png</normaloff>:/images/ribbon/speichern.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="mActionPin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/stecknadel.png</normaloff>:/images/ribbon/stecknadel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pin</string>
+   </property>
+  </action>
+  <action name="mActionNew">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/new.png</normaloff>:/images/ribbon/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="mActionDistance">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/distanz.png</normaloff>:/images/ribbon/distanz.png</iconset>
+   </property>
+   <property name="text">
+    <string>Distance</string>
+   </property>
+  </action>
+  <action name="mActionArea">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/flaeche.png</normaloff>:/images/ribbon/flaeche.png</iconset>
+   </property>
+   <property name="text">
+    <string>Area</string>
+   </property>
+  </action>
+  <action name="mActionProfile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/hoehenprofil.png</normaloff>:/images/ribbon/hoehenprofil.png</iconset>
+   </property>
+   <property name="text">
+    <string>Profile</string>
+   </property>
+  </action>
+  <action name="mActionAzimuth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/azimuth.png</normaloff>:/images/ribbon/azimuth.png</iconset>
+   </property>
+   <property name="text">
+    <string>Azimuth</string>
+   </property>
+  </action>
+  <action name="mActionLineOfSight">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/lineofsight.png</normaloff>:/images/ribbon/lineofsight.png</iconset>
+   </property>
+   <property name="text">
+    <string>Line of Sight</string>
+   </property>
+  </action>
+  <action name="mActionSlope">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/gelaendeneigung.png</normaloff>:/images/ribbon/gelaendeneigung.png</iconset>
+   </property>
+   <property name="text">
+    <string>Slope</string>
+   </property>
+  </action>
+  <action name="mActionHillshade">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hillshade</string>
+   </property>
+  </action>
+  <action name="mActionViewshed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</iconset>
+   </property>
+   <property name="text">
+    <string>Viewshed</string>
+   </property>
+  </action>
+  <action name="mActionWPS">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>WPS</string>
+   </property>
+  </action>
+  <action name="mActionCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="mActionCopy">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/kopieren.png</normaloff>:/images/ribbon/kopieren.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="mActionCopyToClipboard">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy to Clipboard</string>
+   </property>
+  </action>
+  <action name="mActionPrint">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/drucken.png</normaloff>:/images/ribbon/drucken.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="mActionSaveMapExtent">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save map extent</string>
+   </property>
+  </action>
+  <action name="mActionExportKML">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Export KML/KMZ</string>
+   </property>
+  </action>
+  <action name="mActionImportOVL">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import OVL</string>
+   </property>
+  </action>
+  <action name="mActionZoomLast">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom last</string>
+   </property>
+  </action>
+  <action name="mActionZoomNext">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom next</string>
+   </property>
+  </action>
+  <action name="mActionNewMapWindow">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>New map window</string>
+   </property>
+  </action>
+  <action name="mAction3D">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>3D</string>
+   </property>
+  </action>
+  <action name="mActionGrid">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/koordinatengitter.png</normaloff>:/images/ribbon/koordinatengitter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Grid</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsLayerTreeView</class>
+   <extends>QTreeView</extends>
+   <header>qgslayertreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMapCanvas</class>
+   <extends>QGraphicsView</extends>
+   <header>qgsmapcanvas.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

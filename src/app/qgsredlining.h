@@ -33,7 +33,17 @@ class QgsRedlining : public QObject
 {
     Q_OBJECT
   public:
-    QgsRedlining( QgisApp* app , QgsRibbonApp *ribbonWidget = 0 );
+    struct RedliningUi
+    {
+      QToolButton* buttonNewObject;
+      QSpinBox* spinBoxSize;
+      QgsColorButtonV2* colorButtonOutlineColor;
+      QgsColorButtonV2* colorButtonFillColor;
+      QComboBox* comboOutlineStyle;
+      QComboBox* comboFillStyle;
+    };
+
+    QgsRedlining( QgisApp* app, const RedliningUi &ui );
     QgsRedliningLayer *getOrCreateLayer();
     QAction* actionNewPoint() const { return mActionNewPoint; }
     QAction* actionNewSquare() const { return mActionNewSquare; }
@@ -49,13 +59,8 @@ class QgsRedlining : public QObject
 
   private:
     QgsMapCanvas* mMapCanvas;
-    QToolButton* mBtnNewObject;
+    RedliningUi mUi;
     QAction* mActionEditObject;
-    QgsColorButtonV2* mBtnOutlineColor;
-    QgsColorButtonV2* mBtnFillColor;
-    QSpinBox* mSpinBorderSize;
-    QComboBox* mOutlineStyleCombo;
-    QComboBox* mFillStyleCombo;
     QAction* mActionNewPoint;
     QAction* mActionNewSquare;
     QAction* mActionNewTriangle;

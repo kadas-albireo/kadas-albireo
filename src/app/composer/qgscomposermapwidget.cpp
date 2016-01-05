@@ -40,6 +40,7 @@
 #include "qgsvisibilitypresets.h"
 #include "qgisgui.h"
 
+#include <QMenu>
 #include <QMessageBox>
 
 QgsComposerMapWidget::QgsComposerMapWidget( QgsComposerMap* composerMap )

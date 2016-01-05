@@ -19,6 +19,7 @@
 #include "qgslayertreeview.h"
 #include "qgsmaplayer.h"
 #include "qgsmapcanvas.h"
+#include "qgslogger.h"
 
 
 QgsUndoWidget::QgsUndoWidget( QWidget * parent, QgsMapCanvas * mapCanvas )

@@ -26,6 +26,7 @@
 #include <qgsmaprenderer.h>
 #include <qgslayertreeview.h>
 #include <qgsproject.h>
+#include <QStatusBar>
 
 QgsSelectedFeature::QgsSelectedFeature( QgsFeatureId featureId,
                                         QgsVectorLayer *vlayer,

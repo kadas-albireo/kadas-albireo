@@ -27,7 +27,7 @@
 
 #include "qgisappinterface.h"
 #include "qgisappstylesheet.h"
-#include "qgisapp.h"
+#include "qgsclassicapp.h"
 #include "qgscomposer.h"
 #include "qgscomposerview.h"
 #include "qgsmaplayer.h"
@@ -45,8 +45,9 @@
 #include "qgsattributetabledialog.h"
 
 
-QgisAppInterface::QgisAppInterface( QgisApp * _qgis )
+QgisAppInterface::QgisAppInterface( QgisApp *_qgis )
     : qgis( _qgis )
+    , qgisc( qobject_cast<QgsClassicApp*>( _qgis ) )
     , mTimer( NULL )
     , legendIface( _qgis->layerTreeView() )
     , pluginManagerIface( _qgis->pluginManager() )
@@ -161,147 +162,147 @@ bool QgisAppInterface::setActiveLayer( QgsMapLayer *layer )
 
 void QgisAppInterface::addPluginToMenu( QString name, QAction* action )
 {
-  qgis->addPluginToMenu( name, action );
+  if ( qgisc ) qgisc->addPluginToMenu( name, action );
 }
 
 void QgisAppInterface::insertAddLayerAction( QAction *action )
 {
-  qgis->insertAddLayerAction( action );
+  if ( qgisc ) qgisc->insertAddLayerAction( action );
 }
 
 void QgisAppInterface::removeAddLayerAction( QAction *action )
 {
-  qgis->removeAddLayerAction( action );
+  if ( qgisc ) qgisc->removeAddLayerAction( action );
 }
 
 void QgisAppInterface::removePluginMenu( QString name, QAction* action )
 {
-  qgis->removePluginMenu( name, action );
+  if ( qgisc ) qgisc->removePluginMenu( name, action );
 }
 
 void QgisAppInterface::addPluginToDatabaseMenu( QString name, QAction* action )
 {
-  qgis->addPluginToDatabaseMenu( name, action );
+  if ( qgisc ) qgisc->addPluginToDatabaseMenu( name, action );
 }
 
 void QgisAppInterface::removePluginDatabaseMenu( QString name, QAction* action )
 {
-  qgis->removePluginDatabaseMenu( name, action );
+  if ( qgisc ) qgisc->removePluginDatabaseMenu( name, action );
 }
 
 void QgisAppInterface::addPluginToRasterMenu( QString name, QAction* action )
 {
-  qgis->addPluginToRasterMenu( name, action );
+  if ( qgisc ) qgisc->addPluginToRasterMenu( name, action );
 }
 
 void QgisAppInterface::removePluginRasterMenu( QString name, QAction* action )
 {
-  qgis->removePluginRasterMenu( name, action );
+  if ( qgisc ) qgisc->removePluginRasterMenu( name, action );
 }
 
 void QgisAppInterface::addPluginToVectorMenu( QString name, QAction* action )
 {
-  qgis->addPluginToVectorMenu( name, action );
+  if ( qgisc ) qgisc->addPluginToVectorMenu( name, action );
 }
 
 void QgisAppInterface::removePluginVectorMenu( QString name, QAction* action )
 {
-  qgis->removePluginVectorMenu( name, action );
+  if ( qgisc ) qgisc->removePluginVectorMenu( name, action );
 }
 
 void QgisAppInterface::addPluginToWebMenu( QString name, QAction* action )
 {
-  qgis->addPluginToWebMenu( name, action );
+  if ( qgisc ) qgisc->addPluginToWebMenu( name, action );
 }
 
 void QgisAppInterface::removePluginWebMenu( QString name, QAction* action )
 {
-  qgis->removePluginWebMenu( name, action );
+  if ( qgisc ) qgisc->removePluginWebMenu( name, action );
 }
 
 int QgisAppInterface::addToolBarIcon( QAction * qAction )
 {
-  return qgis->addPluginToolBarIcon( qAction );
+  return qgisc ? qgisc->addPluginToolBarIcon( qAction ) : -1;
 }
 
 QAction *QgisAppInterface::addToolBarWidget( QWidget* widget )
 {
-  return qgis->addPluginToolBarWidget( widget );
+  return qgisc ? qgisc->addPluginToolBarWidget( widget ) : 0;
 }
 
 void QgisAppInterface::removeToolBarIcon( QAction *qAction )
 {
-  qgis->removePluginToolBarIcon( qAction );
+  if ( qgisc ) qgisc->removePluginToolBarIcon( qAction );
 }
 
 int QgisAppInterface::addRasterToolBarIcon( QAction * qAction )
 {
-  return qgis->addRasterToolBarIcon( qAction );
+  return qgisc ? qgisc->addRasterToolBarIcon( qAction ) : -1;
 }
 
 QAction *QgisAppInterface::addRasterToolBarWidget( QWidget* widget )
 {
-  return qgis->addRasterToolBarWidget( widget );
+  return qgisc ? qgisc->addRasterToolBarWidget( widget ) : 0;
 }
 
 void QgisAppInterface::removeRasterToolBarIcon( QAction *qAction )
 {
-  qgis->removeRasterToolBarIcon( qAction );
+  if ( qgisc ) qgisc->removeRasterToolBarIcon( qAction );
 }
 
 int QgisAppInterface::addVectorToolBarIcon( QAction * qAction )
 {
-  return qgis->addVectorToolBarIcon( qAction );
+  return qgisc ? qgisc->addVectorToolBarIcon( qAction ) : -1;
 }
 
 QAction *QgisAppInterface::addVectorToolBarWidget( QWidget* widget )
 {
-  return qgis->addVectorToolBarWidget( widget );
+  return qgisc ? qgisc->addVectorToolBarWidget( widget ) : 0;
 }
 
 void QgisAppInterface::removeVectorToolBarIcon( QAction *qAction )
 {
-  qgis->removeVectorToolBarIcon( qAction );
+  if ( qgisc ) qgisc->removeVectorToolBarIcon( qAction );
 }
 
 int QgisAppInterface::addDatabaseToolBarIcon( QAction * qAction )
 {
-  return qgis->addDatabaseToolBarIcon( qAction );
+  return qgisc ? qgisc->addDatabaseToolBarIcon( qAction ) : -1;
 }
 
 QAction *QgisAppInterface::addDatabaseToolBarWidget( QWidget* widget )
 {
-  return qgis->addDatabaseToolBarWidget( widget );
+  return qgisc ? qgisc->addDatabaseToolBarWidget( widget ) : 0;
 }
 
 void QgisAppInterface::removeDatabaseToolBarIcon( QAction *qAction )
 {
-  qgis->removeDatabaseToolBarIcon( qAction );
+  if ( qgisc ) qgisc->removeDatabaseToolBarIcon( qAction );
 }
 
 int QgisAppInterface::addWebToolBarIcon( QAction * qAction )
 {
-  return qgis->addWebToolBarIcon( qAction );
+  return qgisc ? qgisc->addWebToolBarIcon( qAction ) : -1;
 }
 
 QAction *QgisAppInterface::addWebToolBarWidget( QWidget* widget )
 {
-  return qgis->addWebToolBarWidget( widget );
+  return qgisc ? qgisc->addWebToolBarWidget( widget ) : 0;
 }
 
 void QgisAppInterface::removeWebToolBarIcon( QAction *qAction )
 {
-  qgis->removeWebToolBarIcon( qAction );
+  if ( qgisc ) qgisc->removeWebToolBarIcon( qAction );
 }
 
 QToolBar* QgisAppInterface::addToolBar( QString name )
 {
-  return qgis->addToolBar( name );
+  return qgisc ? qgisc->addToolBar( name ) : 0;
 }
 
 void QgisAppInterface::addToolBar( QToolBar *toolbar, Qt::ToolBarArea area )
 {
-  return qgis->addToolBar( toolbar, area );
+  if ( qgisc ) qgisc->addToolBar( toolbar, area );
 }
 
 void QgisAppInterface::openURL( QString url, bool useQgisDocDirectory )
@@ -473,118 +474,118 @@ QMenu *QgisAppInterface::windowMenu() { return qgis->windowMenu(); }
 QMenu *QgisAppInterface::helpMenu() { return qgis->helpMenu(); }
 
 //! ToolBars
-QToolBar *QgisAppInterface::fileToolBar() { return qgis->fileToolBar(); }
-QToolBar *QgisAppInterface::layerToolBar() { return qgis->layerToolBar(); }
-QToolBar *QgisAppInterface::mapNavToolToolBar() { return qgis->mapNavToolToolBar(); }
-QToolBar *QgisAppInterface::digitizeToolBar() { return qgis->digitizeToolBar(); }
-QToolBar *QgisAppInterface::advancedDigitizeToolBar() { return qgis->advancedDigitizeToolBar(); }
-QToolBar *QgisAppInterface::attributesToolBar() { return qgis->attributesToolBar(); }
-QToolBar *QgisAppInterface::pluginToolBar() { return qgis->pluginToolBar(); }
-QToolBar *QgisAppInterface::helpToolBar() { return qgis->helpToolBar(); }
-QToolBar *QgisAppInterface::rasterToolBar() { return qgis->rasterToolBar(); }
-QToolBar *QgisAppInterface::vectorToolBar() { return qgis->vectorToolBar(); }
-QToolBar *QgisAppInterface::databaseToolBar() { return qgis->databaseToolBar(); }
-QToolBar *QgisAppInterface::webToolBar() { return qgis->webToolBar(); }
+QToolBar *QgisAppInterface::fileToolBar() { return qgisc ? qgisc->fileToolBar() : 0; }
+QToolBar *QgisAppInterface::layerToolBar() { return qgisc ? qgisc->layerToolBar() : 0; }
+QToolBar *QgisAppInterface::mapNavToolToolBar() { return qgisc ? qgisc->mapNavToolToolBar() : 0; }
+QToolBar *QgisAppInterface::digitizeToolBar() { return qgisc ? qgisc->digitizeToolBar() : 0; }
+QToolBar *QgisAppInterface::advancedDigitizeToolBar() { return qgisc ? qgisc->advancedDigitizeToolBar() : 0; }
+QToolBar *QgisAppInterface::attributesToolBar() { return qgisc ? qgisc->attributesToolBar() : 0; }
+QToolBar *QgisAppInterface::pluginToolBar() { return qgisc ? qgisc->pluginToolBar() : 0; }
+QToolBar *QgisAppInterface::helpToolBar() { return qgisc ? qgisc->helpToolBar() : 0; }
+QToolBar *QgisAppInterface::rasterToolBar() { return qgisc ? qgisc->rasterToolBar() : 0; }
+QToolBar *QgisAppInterface::vectorToolBar() { return qgisc ? qgisc->vectorToolBar() : 0; }
+QToolBar *QgisAppInterface::databaseToolBar() { return qgisc ? qgisc->databaseToolBar() : 0; }
+QToolBar *QgisAppInterface::webToolBar() { return qgisc ? qgisc->webToolBar() : 0; }
 
 //! Project menu actions
-QAction *QgisAppInterface::actionNewProject() { return qgis->actionNewProject(); }
-QAction *QgisAppInterface::actionOpenProject() { return qgis->actionOpenProject(); }
-QAction *QgisAppInterface::actionSaveProject() { return qgis->actionSaveProject(); }
-QAction *QgisAppInterface::actionSaveProjectAs() { return qgis->actionSaveProjectAs(); }
-QAction *QgisAppInterface::actionSaveMapAsImage() { return qgis->actionSaveMapAsImage(); }
-QAction *QgisAppInterface::actionProjectProperties() { return qgis->actionProjectProperties(); }
-QAction *QgisAppInterface::actionPrintComposer() { return qgis->actionNewPrintComposer(); }
-QAction *QgisAppInterface::actionShowComposerManager() { return qgis->actionShowComposerManager(); }
-QAction *QgisAppInterface::actionExit() { return qgis->actionExit(); }
+QAction *QgisAppInterface::actionNewProject() { return qgisc ? qgisc->actionNewProject() : 0; }
+QAction *QgisAppInterface::actionOpenProject() { return qgisc ? qgisc->actionOpenProject() : 0; }
+QAction *QgisAppInterface::actionSaveProject() { return qgisc ? qgisc->actionSaveProject() : 0; }
+QAction *QgisAppInterface::actionSaveProjectAs() { return qgisc ? qgisc->actionSaveProjectAs() : 0; }
+QAction *QgisAppInterface::actionSaveMapAsImage() { return qgisc ? qgisc->actionSaveMapAsImage() : 0; }
+QAction *QgisAppInterface::actionProjectProperties() { return qgisc ? qgisc->actionProjectProperties() : 0; }
+QAction *QgisAppInterface::actionPrintComposer() { return qgisc ? qgisc->actionNewPrintComposer() : 0; }
+QAction *QgisAppInterface::actionShowComposerManager() { return qgisc ? qgisc->actionShowComposerManager() : 0; }
+QAction *QgisAppInterface::actionExit() { return qgisc ? qgisc->actionExit() : 0; }
 
 //! Edit menu actions
-QAction *QgisAppInterface::actionCutFeatures() { return qgis->actionCutFeatures(); }
-QAction *QgisAppInterface::actionCopyFeatures() { return qgis->actionCopyFeatures(); }
-QAction *QgisAppInterface::actionPasteFeatures() { return qgis->actionPasteFeatures(); }
-QAction *QgisAppInterface::actionAddFeature() { return qgis->actionAddFeature(); }
-QAction *QgisAppInterface::actionDeleteSelected() { return qgis->actionDeleteSelected(); }
-QAction *QgisAppInterface::actionMoveFeature() { return qgis->actionMoveFeature(); }
-QAction *QgisAppInterface::actionSplitFeatures() { return qgis->actionSplitFeatures(); }
-QAction *QgisAppInterface::actionSplitParts() { return qgis->actionSplitParts(); }
-QAction *QgisAppInterface::actionAddRing() { return qgis->actionAddRing(); }
-QAction *QgisAppInterface::actionAddPart() { return qgis->actionAddPart(); }
-QAction *QgisAppInterface::actionSimplifyFeature() { return qgis->actionSimplifyFeature(); }
-QAction *QgisAppInterface::actionDeleteRing() { return qgis->actionDeleteRing(); }
-QAction *QgisAppInterface::actionDeletePart() { return qgis->actionDeletePart(); }
-QAction *QgisAppInterface::actionNodeTool() { return qgis->actionNodeTool(); }
+QAction *QgisAppInterface::actionCutFeatures() { return qgisc ? qgisc->actionCutFeatures() : 0; }
+QAction *QgisAppInterface::actionCopyFeatures() { return qgisc ? qgisc->actionCopyFeatures() : 0; }
+QAction *QgisAppInterface::actionPasteFeatures() { return qgisc ? qgisc->actionPasteFeatures() : 0; }
+QAction *QgisAppInterface::actionAddFeature() { return qgisc ? qgisc->actionAddFeature() : 0; }
+QAction *QgisAppInterface::actionDeleteSelected() { return qgisc ? qgisc->actionDeleteSelected() : 0; }
+QAction *QgisAppInterface::actionMoveFeature() { return qgisc ? qgisc->actionMoveFeature() : 0; }
+QAction *QgisAppInterface::actionSplitFeatures() { return qgisc ? qgisc->actionSplitFeatures() : 0; }
+QAction *QgisAppInterface::actionSplitParts() { return qgisc ? qgisc->actionSplitParts() : 0; }
+QAction *QgisAppInterface::actionAddRing() { return qgisc ? qgisc->actionAddRing() : 0; }
+QAction *QgisAppInterface::actionAddPart() { return qgisc ? qgisc->actionAddPart() : 0; }
+QAction *QgisAppInterface::actionSimplifyFeature() { return qgisc ? qgisc->actionSimplifyFeature() : 0; }
+QAction *QgisAppInterface::actionDeleteRing() { return qgisc ? qgisc->actionDeleteRing() : 0; }
+QAction *QgisAppInterface::actionDeletePart() { return qgisc ? qgisc->actionDeletePart() : 0; }
+QAction *QgisAppInterface::actionNodeTool() { return qgisc ? qgisc->actionNodeTool() : 0; }
 
 //! View menu actions
-QAction *QgisAppInterface::actionPan() { return qgis->actionPan(); }
-QAction *QgisAppInterface::actionPanToSelected() { return qgis->actionPanToSelected(); }
-QAction *QgisAppInterface::actionZoomIn() { return qgis->actionZoomIn(); }
-QAction *QgisAppInterface::actionZoomOut() { return qgis->actionZoomOut(); }
-QAction *QgisAppInterface::actionSelect() { return qgis->actionSelect(); }
-QAction *QgisAppInterface::actionSelectRectangle() { return qgis->actionSelectRectangle(); }
-QAction *QgisAppInterface::actionSelectPolygon() { return qgis->actionSelectPolygon(); }
-QAction *QgisAppInterface::actionSelectFreehand() { return qgis->actionSelectFreehand(); }
-QAction *QgisAppInterface::actionSelectRadius() { return qgis->actionSelectRadius(); }
-QAction *QgisAppInterface::actionIdentify() { return qgis->actionIdentify(); }
-QAction *QgisAppInterface::actionFeatureAction() { return qgis->actionFeatureAction(); }
-QAction *QgisAppInterface::actionMeasure() { return qgis->actionMeasure(); }
-QAction *QgisAppInterface::actionMeasureArea() { return qgis->actionMeasureArea(); }
-QAction *QgisAppInterface::actionZoomFullExtent() { return qgis->actionZoomFullExtent(); }
-QAction *QgisAppInterface::actionZoomToLayer() { return qgis->actionZoomToLayer(); }
-QAction *QgisAppInterface::actionZoomToSelected() { return qgis->actionZoomToSelected(); }
-QAction *QgisAppInterface::actionZoomLast() { return qgis->actionZoomLast(); }
-QAction *QgisAppInterface::actionZoomNext() { return qgis->actionZoomNext(); }
-QAction *QgisAppInterface::actionZoomActualSize() { return qgis->actionZoomActualSize(); }
-QAction *QgisAppInterface::actionMapTips() { return qgis->actionMapTips(); }
-QAction *QgisAppInterface::actionNewBookmark() { return qgis->actionNewBookmark(); }
-QAction *QgisAppInterface::actionShowBookmarks() { return qgis->actionShowBookmarks(); }
-QAction *QgisAppInterface::actionDraw() { return qgis->actionDraw(); }
+QAction *QgisAppInterface::actionPan() { return qgisc ? qgisc->actionPan() : 0; }
+QAction *QgisAppInterface::actionPanToSelected() { return qgisc ? qgisc->actionPanToSelected() : 0; }
+QAction *QgisAppInterface::actionZoomIn() { return qgisc ? qgisc->actionZoomIn() : 0; }
+QAction *QgisAppInterface::actionZoomOut() { return qgisc ? qgisc->actionZoomOut() : 0; }
+QAction *QgisAppInterface::actionSelect() { return qgisc ? qgisc->actionSelect() : 0; }
+QAction *QgisAppInterface::actionSelectRectangle() { return qgisc ? qgisc->actionSelectRectangle() : 0; }
+QAction *QgisAppInterface::actionSelectPolygon() { return qgisc ? qgisc->actionSelectPolygon() : 0; }
+QAction *QgisAppInterface::actionSelectFreehand() { return qgisc ? qgisc->actionSelectFreehand() : 0; }
+QAction *QgisAppInterface::actionSelectRadius() { return qgisc ? qgisc->actionSelectRadius() : 0; }
+QAction *QgisAppInterface::actionIdentify() { return qgisc ? qgisc->actionIdentify() : 0; }
+QAction *QgisAppInterface::actionFeatureAction() { return qgisc ? qgisc->actionFeatureAction() : 0; }
+QAction *QgisAppInterface::actionMeasure() { return qgisc ? qgisc->actionMeasure() : 0; }
+QAction *QgisAppInterface::actionMeasureArea() { return qgisc ? qgisc->actionMeasureArea() : 0; }
+QAction *QgisAppInterface::actionZoomFullExtent() { return qgisc ? qgisc->actionZoomFullExtent() : 0; }
+QAction *QgisAppInterface::actionZoomToLayer() { return qgisc ? qgisc->actionZoomToLayer() : 0; }
+QAction *QgisAppInterface::actionZoomToSelected() { return qgisc ? qgisc->actionZoomToSelected() : 0; }
+QAction *QgisAppInterface::actionZoomLast() { return qgisc ? qgisc->actionZoomLast() : 0; }
+QAction *QgisAppInterface::actionZoomNext() { return qgisc ? qgisc->actionZoomNext() : 0; }
+QAction *QgisAppInterface::actionZoomActualSize() { return qgisc ? qgisc->actionZoomActualSize() : 0; }
+QAction *QgisAppInterface::actionMapTips() { return qgisc ? qgisc->actionMapTips() : 0; }
+QAction *QgisAppInterface::actionNewBookmark() { return qgisc ? qgisc->actionNewBookmark() : 0; }
+QAction *QgisAppInterface::actionShowBookmarks() { return qgisc ? qgisc->actionShowBookmarks() : 0; }
+QAction *QgisAppInterface::actionDraw() { return qgisc ? qgisc->actionDraw() : 0; }
 
 //! Layer menu actions
-QAction *QgisAppInterface::actionNewVectorLayer() { return qgis->actionNewVectorLayer(); }
-QAction *QgisAppInterface::actionAddOgrLayer() { return qgis->actionAddOgrLayer(); }
-QAction *QgisAppInterface::actionAddRasterLayer() { return qgis->actionAddRasterLayer(); }
-QAction *QgisAppInterface::actionAddPgLayer() { return qgis->actionAddPgLayer(); }
-QAction *QgisAppInterface::actionAddWmsLayer() { return qgis->actionAddWmsLayer(); }
-QAction *QgisAppInterface::actionCopyLayerStyle() { return qgis->actionCopyLayerStyle(); }
-QAction *QgisAppInterface::actionPasteLayerStyle() { return qgis->actionPasteLayerStyle(); }
-QAction *QgisAppInterface::actionOpenTable() { return qgis->actionOpenTable(); }
-QAction *QgisAppInterface::actionOpenFieldCalculator() { return qgis->actionOpenFieldCalculator(); }
-QAction *QgisAppInterface::actionToggleEditing() { return qgis->actionToggleEditing(); }
-QAction *QgisAppInterface::actionSaveActiveLayerEdits() { return qgis->actionSaveActiveLayerEdits(); }
-QAction *QgisAppInterface::actionAllEdits() { return qgis->actionAllEdits(); }
-QAction *QgisAppInterface::actionSaveEdits() { return qgis->actionSaveEdits(); }
-QAction *QgisAppInterface::actionSaveAllEdits() { return qgis->actionSaveAllEdits(); }
-QAction *QgisAppInterface::actionRollbackEdits() { return qgis->actionRollbackEdits(); }
-QAction *QgisAppInterface::actionRollbackAllEdits() { return qgis->actionRollbackAllEdits(); }
-QAction *QgisAppInterface::actionCancelEdits() { return qgis->actionCancelEdits(); }
-QAction *QgisAppInterface::actionCancelAllEdits() { return qgis->actionCancelAllEdits(); }
-QAction *QgisAppInterface::actionLayerSaveAs() { return qgis->actionLayerSaveAs(); }
+QAction *QgisAppInterface::actionNewVectorLayer() { return qgisc ? qgisc->actionNewVectorLayer() : 0; }
+QAction *QgisAppInterface::actionAddOgrLayer() { return qgisc ? qgisc->actionAddOgrLayer() : 0; }
+QAction *QgisAppInterface::actionAddRasterLayer() { return qgisc ? qgisc->actionAddRasterLayer() : 0; }
+QAction *QgisAppInterface::actionAddPgLayer() { return qgisc ? qgisc->actionAddPgLayer() : 0; }
+QAction *QgisAppInterface::actionAddWmsLayer() { return qgisc ? qgisc->actionAddWmsLayer() : 0; }
+QAction *QgisAppInterface::actionCopyLayerStyle() { return qgisc ? qgisc->actionCopyLayerStyle() : 0; }
+QAction *QgisAppInterface::actionPasteLayerStyle() { return qgisc ? qgisc->actionPasteLayerStyle() : 0; }
+QAction *QgisAppInterface::actionOpenTable() { return qgisc ? qgisc->actionOpenTable() : 0; }
+QAction *QgisAppInterface::actionOpenFieldCalculator() { return qgisc ? qgisc->actionOpenFieldCalculator() : 0; }
+QAction *QgisAppInterface::actionToggleEditing() { return qgisc ? qgisc->actionToggleEditing() : 0; }
+QAction *QgisAppInterface::actionSaveActiveLayerEdits() { return qgisc ? qgisc->actionSaveActiveLayerEdits() : 0; }
+QAction *QgisAppInterface::actionAllEdits() { return qgisc ? qgisc->actionAllEdits() : 0; }
+QAction *QgisAppInterface::actionSaveEdits() { return qgisc ? qgisc->actionSaveEdits() : 0; }
+QAction *QgisAppInterface::actionSaveAllEdits() { return qgisc ? qgisc->actionSaveAllEdits() : 0; }
+QAction *QgisAppInterface::actionRollbackEdits() { return qgisc ? qgisc->actionRollbackEdits() : 0; }
+QAction *QgisAppInterface::actionRollbackAllEdits() { return qgisc ? qgisc->actionRollbackAllEdits() : 0; }
+QAction *QgisAppInterface::actionCancelEdits() { return qgisc ? qgisc->actionCancelEdits() : 0; }
+QAction *QgisAppInterface::actionCancelAllEdits() { return qgisc ? qgisc->actionCancelAllEdits() : 0; }
+QAction *QgisAppInterface::actionLayerSaveAs() { return qgisc ? qgisc->actionLayerSaveAs() : 0; }
 QAction *QgisAppInterface::actionLayerSelectionSaveAs() { return 0; }
-QAction *QgisAppInterface::actionRemoveLayer() { return qgis->actionRemoveLayer(); }
-QAction *QgisAppInterface::actionDuplicateLayer() { return qgis->actionDuplicateLayer(); }
-QAction *QgisAppInterface::actionLayerProperties() { return qgis->actionLayerProperties(); }
-QAction *QgisAppInterface::actionAddToOverview() { return qgis->actionAddToOverview(); }
-QAction *QgisAppInterface::actionAddAllToOverview() { return qgis->actionAddAllToOverview(); }
-QAction *QgisAppInterface::actionRemoveAllFromOverview() { return qgis->actionRemoveAllFromOverview(); }
-QAction *QgisAppInterface::actionHideAllLayers() { return qgis->actionHideAllLayers(); }
-QAction *QgisAppInterface::actionShowAllLayers() { return qgis->actionShowAllLayers(); }
-QAction *QgisAppInterface::actionHideSelectedLayers() { return qgis->actionHideSelectedLayers(); }
-QAction *QgisAppInterface::actionShowSelectedLayers() { return qgis->actionShowSelectedLayers(); }
+QAction *QgisAppInterface::actionRemoveLayer() { return qgisc ? qgisc->actionRemoveLayer() : 0; }
+QAction *QgisAppInterface::actionDuplicateLayer() { return qgisc ? qgisc->actionDuplicateLayer() : 0; }
+QAction *QgisAppInterface::actionLayerProperties() { return qgisc ? qgisc->actionLayerProperties() : 0; }
+QAction *QgisAppInterface::actionAddToOverview() { return qgisc ? qgisc->actionAddToOverview() : 0; }
+QAction *QgisAppInterface::actionAddAllToOverview() { return qgisc ? qgisc->actionAddAllToOverview() : 0; }
+QAction *QgisAppInterface::actionRemoveAllFromOverview() { return qgisc ? qgisc->actionRemoveAllFromOverview() : 0; }
+QAction *QgisAppInterface::actionHideAllLayers() { return qgisc ? qgisc->actionHideAllLayers() : 0; }
+QAction *QgisAppInterface::actionShowAllLayers() { return qgisc ? qgisc->actionShowAllLayers() : 0; }
+QAction *QgisAppInterface::actionHideSelectedLayers() { return qgisc ? qgisc->actionHideSelectedLayers() : 0; }
+QAction *QgisAppInterface::actionShowSelectedLayers() { return qgisc ? qgisc->actionShowSelectedLayers() : 0; }
 
 //! Plugin menu actions
-QAction *QgisAppInterface::actionManagePlugins() { return qgis->actionManagePlugins(); }
-QAction *QgisAppInterface::actionPluginListSeparator() { return qgis->actionPluginListSeparator(); }
-QAction *QgisAppInterface::actionShowPythonDialog() { return qgis->actionShowPythonDialog(); }
+QAction *QgisAppInterface::actionManagePlugins() { return qgisc ? qgisc->actionManagePlugins() : 0; }
+QAction *QgisAppInterface::actionPluginListSeparator() { return qgisc ? qgisc->actionPluginListSeparator() : 0; }
+QAction *QgisAppInterface::actionShowPythonDialog() { return qgisc ? qgisc->actionShowPythonDialog() : 0; }
 
 //! Settings menu actions
-QAction *QgisAppInterface::actionToggleFullScreen() { return qgis->actionToggleFullScreen(); }
-QAction *QgisAppInterface::actionOptions() { return qgis->actionOptions(); }
-QAction *QgisAppInterface::actionCustomProjection() { return qgis->actionCustomProjection(); }
+QAction *QgisAppInterface::actionToggleFullScreen() { return qgisc ? qgisc->actionToggleFullScreen() : 0; }
+QAction *QgisAppInterface::actionOptions() { return qgisc ? qgisc->actionOptions() : 0; }
+QAction *QgisAppInterface::actionCustomProjection() { return qgisc ? qgisc->actionCustomProjection() : 0; }
 
 //! Help menu actions
-QAction *QgisAppInterface::actionHelpContents() { return qgis->actionHelpContents(); }
-QAction *QgisAppInterface::actionQgisHomePage() { return qgis->actionQgisHomePage(); }
-QAction *QgisAppInterface::actionCheckQgisVersion() { return qgis->actionCheckQgisVersion(); }
-QAction *QgisAppInterface::actionAbout() { return qgis->actionAbout(); }
+QAction *QgisAppInterface::actionHelpContents() { return qgisc ? qgisc->actionHelpContents() : 0; }
+QAction *QgisAppInterface::actionQgisHomePage() { return qgisc ? qgisc->actionQgisHomePage() : 0; }
+QAction *QgisAppInterface::actionCheckQgisVersion() { return qgisc ? qgisc->actionCheckQgisVersion() : 0; }
+QAction *QgisAppInterface::actionAbout() { return qgisc ? qgisc->actionAbout() : 0; }
 
 bool QgisAppInterface::openFeatureForm( QgsVectorLayer *vlayer, QgsFeature &f, bool updateFeatureOnly, bool showModal )
 {

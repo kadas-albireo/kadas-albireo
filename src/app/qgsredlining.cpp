@@ -27,15 +27,17 @@
 #include "qgssymbollayerv2utils.h"
 #include "qgsproject.h"
 
+#include <QMenu>
 #include <QSettings>
+#include <QToolBar>
 
-QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* ribbonWidget )
-    : QObject( ribbonWidget ? static_cast<QObject*>( ribbonWidget ) : static_cast<QObject*>( app ) )
+QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
+    : QObject( app )
+    , mMapCanvas( app->mapCanvas() )
+    , mUi( ui )
     , mLayer( 0 )
     , mLayerRefCount( 0 )
 {
-  mMapCanvas = ribbonWidget ? ribbonWidget->mapCanvas() : app->mapCanvas();
-
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
   mActionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
@@ -66,8 +68,7 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* ribbonWidget )
   mActionNewText->setCheckable( true );
   connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
 
-  mBtnNewObject = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningNewObject : new QToolButton();
-  mBtnNewObject->setToolTip( tr( "New Object" ) );
+  mUi.buttonNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();
   menuNewMarker->addAction( mActionNewPoint );
   menuNewMarker->addAction( mActionNewSquare );
@@ -80,78 +81,55 @@ QgsRedlining::QgsRedlining( QgisApp* app, QgsRibbonApp* ribbonWidget )
   menuNewObject->addAction( mActionNewPolygon );
   menuNewObject->addAction( mActionNewCircle );
   menuNewObject->addAction( mActionNewText );
-  mBtnNewObject->setMenu( menuNewObject );
-  mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
-  mBtnNewObject->setDefaultAction( mActionNewPoint );
-  connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
+  mUi.buttonNewObject->setMenu( menuNewObject );
+  mUi.buttonNewObject->setPopupMode( QToolButton::MenuButtonPopup );
+  mUi.buttonNewObject->setDefaultAction( mActionNewPoint );
+  connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mUi.buttonNewObject, SLOT( setDefaultAction( QAction* ) ) );
 
+#warning TODO
   mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
   mActionEditObject->setToolTip( tr( "Edit Object" ) );
   mActionEditObject->setCheckable( true );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
-  mSpinBorderSize = ribbonWidget ? ribbonWidget->getUi()->mSpinBoxRedliningSize : new QSpinBox();
-  mSpinBorderSize->setRange( 1, 20 );
-  mSpinBorderSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
-  connect( mSpinBorderSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
+  mUi.spinBoxSize->setRange( 1, 20 );
+  mUi.spinBoxSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
+  connect( mUi.spinBoxSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
 
-  mBtnOutlineColor = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningBorderColor : new QgsColorButtonV2();
-  mBtnOutlineColor->setAllowAlpha( true );
-  mBtnOutlineColor->setProperty( "settings_key", "outline_color" );
+  mUi.colorButtonOutlineColor->setAllowAlpha( true );
+  mUi.colorButtonOutlineColor->setProperty( "settings_key", "outline_color" );
   QColor initialOutlineColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/outline_color", "0,0,0,255" ).toString() );
-  mBtnOutlineColor->setColor( initialOutlineColor );
-  connect( mBtnOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
+  mUi.colorButtonOutlineColor->setColor( initialOutlineColor );
+  connect( mUi.colorButtonOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
-  mOutlineStyleCombo = ribbonWidget ? ribbonWidget->getUi()->mComboBoxRedliningBorderStyle : new QComboBox();
-  mOutlineStyleCombo->setProperty( "settings_key", "outline_style" );
-  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
-  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
-  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DashLine ), QString(), Qt::DashLine );
-  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DashDotLine ), QString(), Qt::DashDotLine );
-  mOutlineStyleCombo->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
-  mOutlineStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
-  connect( mOutlineStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
+  mUi.comboOutlineStyle->setProperty( "settings_key", "outline_style" );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashLine ), QString(), Qt::DashLine );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashDotLine ), QString(), Qt::DashDotLine );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
+  mUi.comboOutlineStyle->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
+  connect( mUi.comboOutlineStyle, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
-  mBtnFillColor = ribbonWidget ? ribbonWidget->getUi()->mToolButtonRedliningFillColor : new QgsColorButtonV2();
-  mBtnFillColor->setAllowAlpha( true );
-  mBtnFillColor->setProperty( "settings_key", "fill_color" );
+  mUi.colorButtonFillColor->setAllowAlpha( true );
+  mUi.colorButtonFillColor->setProperty( "settings_key", "fill_color" );
   QColor initialFillColor = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/Redlining/fill_color", "255,0,0,255" ).toString() );
-  mBtnFillColor->setColor( initialFillColor );
-  connect( mBtnFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
+  mUi.colorButtonFillColor->setColor( initialFillColor );
+  connect( mUi.colorButtonFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
-  mFillStyleCombo = ribbonWidget ? ribbonWidget->getUi()->mComboBoxRedliningFillStyle : new QComboBox();
-  mFillStyleCombo->setProperty( "settings_key", "fill_style" );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::HorPattern ), QString(), Qt::HorPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::VerPattern ), QString(), Qt::VerPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::BDiagPattern ), QString(), Qt::BDiagPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::DiagCrossPattern ), QString(), Qt::DiagCrossPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::FDiagPattern ), QString(), Qt::FDiagPattern );
-  mFillStyleCombo->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
-  mFillStyleCombo->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
-  connect( mFillStyleCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
+  mUi.comboFillStyle->setProperty( "settings_key", "fill_style" );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::HorPattern ), QString(), Qt::HorPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::VerPattern ), QString(), Qt::VerPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::BDiagPattern ), QString(), Qt::BDiagPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::DiagCrossPattern ), QString(), Qt::DiagCrossPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::FDiagPattern ), QString(), Qt::FDiagPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
+  mUi.comboFillStyle->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
+  connect( mUi.comboFillStyle, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
-  if ( !ribbonWidget )
-  {
-    QToolBar* redliningToolbar = app->addToolBar( tr( "Redlining" ) );
-    redliningToolbar->addWidget( mBtnNewObject );
-    redliningToolbar->addAction( mActionEditObject );
-    redliningToolbar->addWidget( new QLabel( tr( "Border/Size:" ) ) );
-    redliningToolbar->addWidget( mSpinBorderSize );
-    redliningToolbar->addWidget( new QLabel( tr( "Outline:" ) ) );
-    redliningToolbar->addWidget( mBtnOutlineColor );
-    redliningToolbar->addWidget( mOutlineStyleCombo );
-    redliningToolbar->addWidget( new QLabel( tr( "Fill:" ) ) );
-    redliningToolbar->addWidget( mBtnFillColor );
-    redliningToolbar->addWidget( mFillStyleCombo );
-    connect( app, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
-  }
-  else
-  {
-    connect( ribbonWidget, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
-  }
-
+  connect( app, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
 }
@@ -276,21 +254,21 @@ void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
   {
     return;
   }
-  mSpinBorderSize->blockSignals( true );
-  mSpinBorderSize->setValue( f.attribute( "size" ).toInt() );
-  mSpinBorderSize->blockSignals( false );
-  mBtnOutlineColor->blockSignals( true );
-  mBtnOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
-  mBtnOutlineColor->blockSignals( false );
-  mBtnFillColor->blockSignals( true );
-  mBtnFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "fill" ).toString() ) );
-  mBtnFillColor->blockSignals( false );
-  mOutlineStyleCombo->blockSignals( true );
-  mOutlineStyleCombo->setCurrentIndex( mOutlineStyleCombo->findData( QgsSymbolLayerV2Utils::decodePenStyle( f.attribute( "outline_style" ).toString() ) ) );
-  mOutlineStyleCombo->blockSignals( false );
-  mFillStyleCombo->blockSignals( true );
-  mFillStyleCombo->setCurrentIndex( mFillStyleCombo->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( f.attribute( "fill_style" ).toString() ) ) );
-  mFillStyleCombo->blockSignals( false );
+  mUi.spinBoxSize->blockSignals( true );
+  mUi.spinBoxSize->setValue( f.attribute( "size" ).toInt() );
+  mUi.spinBoxSize->blockSignals( false );
+  mUi.colorButtonOutlineColor->blockSignals( true );
+  mUi.colorButtonOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
+  mUi.colorButtonOutlineColor->blockSignals( false );
+  mUi.colorButtonFillColor->blockSignals( true );
+  mUi.colorButtonFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "fill" ).toString() ) );
+  mUi.colorButtonFillColor->blockSignals( false );
+  mUi.comboOutlineStyle->blockSignals( true );
+  mUi.comboOutlineStyle->setCurrentIndex( mUi.comboOutlineStyle->findData( QgsSymbolLayerV2Utils::decodePenStyle( f.attribute( "outline_style" ).toString() ) ) );
+  mUi.comboOutlineStyle->blockSignals( false );
+  mUi.comboFillStyle->blockSignals( true );
+  mUi.comboFillStyle->setCurrentIndex( mUi.comboFillStyle->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( f.attribute( "fill_style" ).toString() ) ) );
+  mUi.comboFillStyle->blockSignals( false );
 }
 
 void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
@@ -305,11 +283,11 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
     return;
   }
   const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mSpinBorderSize->value() );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mBtnOutlineColor->color() ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mBtnFillColor->color() ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mOutlineStyleCombo->itemData( mOutlineStyleCombo->currentIndex() ).toInt() ) ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mFillStyleCombo->itemData( mFillStyleCombo->currentIndex() ).toInt() ) ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), mUi.spinBoxSize->value() );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( mUi.colorButtonOutlineColor->color() ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mUi.colorButtonFillColor->color() ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mUi.comboOutlineStyle->itemData( mUi.comboOutlineStyle->currentIndex() ).toInt() ) ) );
+  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mUi.comboFillStyle->itemData( mUi.comboFillStyle->currentIndex() ).toInt() ) ) );
   mMapCanvas->clearCache( mLayer->id() );
   mMapCanvas->refresh();
 }
@@ -324,7 +302,7 @@ void QgsRedlining::saveColor()
 
 void QgsRedlining::saveOutlineWidth()
 {
-  QSettings().setValue( "/Redlining/size", mSpinBorderSize->value() );
+  QSettings().setValue( "/Redlining/size", mUi.spinBoxSize->value() );
   emit featureStyleChanged();
 }
 

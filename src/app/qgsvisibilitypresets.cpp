@@ -28,6 +28,7 @@
 #include "qgisapp.h"
 
 #include <QInputDialog>
+#include <QMenu>
 
 
 QgsVisibilityPresets* QgsVisibilityPresets::sInstance;
@@ -36,11 +37,10 @@ QgsVisibilityPresets* QgsVisibilityPresets::sInstance;
 QgsVisibilityPresets::QgsVisibilityPresets()
     : mMenu( new QMenu )
 {
-
-  mMenu->addAction( QgisApp::instance()->actionShowAllLayers() );
-  mMenu->addAction( QgisApp::instance()->actionHideAllLayers() );
-  mMenu->addAction( QgisApp::instance()->actionShowSelectedLayers() );
-  mMenu->addAction( QgisApp::instance()->actionHideSelectedLayers() );
+  mMenu->addAction( tr( "Show all layers" ), QgisApp::instance(), SLOT( showAllLayers() ) );
+  mMenu->addAction( tr( "Hide all layers" ), QgisApp::instance(), SLOT( hideAllLayers() ) );
+  mMenu->addAction( tr( "Show selected layers" ), QgisApp::instance(), SLOT( showSelectedLayers() ) );
+  mMenu->addAction( tr( "Hide selected layers" ), QgisApp::instance(), SLOT( hideSelectedLayers() ) );
   mMenu->addSeparator();
 
   mMenu->addAction( tr( "Add Preset..." ), this, SLOT( addPreset() ) );

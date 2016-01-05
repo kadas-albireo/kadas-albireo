@@ -15,7 +15,7 @@
 
 #include "qgsmapmouseevent.h"
 #include "qgsmaptooladvanceddigitizing.h"
-#include "qgisapp.h"
+#include "qgsclassicapp.h"
 
 
 QgsMapToolAdvancedDigitizing::QgsMapToolAdvancedDigitizing( QgsMapCanvas* canvas )
@@ -27,9 +27,10 @@ QgsMapToolAdvancedDigitizing::QgsMapToolAdvancedDigitizing( QgsMapCanvas* canvas
     , mSnapOnMove( false )
     , mSnapOnDoubleClick( false )
 {
-  if ( QgisApp::instance() )
+#pragma message( "warning: Assuming this feature is only exposed in the classic UI" )
+  if ( QgsClassicApp::instance() )
   {
-    mCadDockWidget = QgisApp::instance()->cadDockWidget();
+    mCadDockWidget = QgsClassicApp::instance()->cadDockWidget();
   }
 }
 

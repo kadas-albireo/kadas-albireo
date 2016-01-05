@@ -23,6 +23,7 @@
 #include <QDoubleSpinBox>
 #include <QGraphicsProxyWidget>
 #include <QMouseEvent>
+#include <QStatusBar>
 #include "qgisapp.h"
 
 QgsMapToolOffsetCurve::QgsMapToolOffsetCurve( QgsMapCanvas* canvas )

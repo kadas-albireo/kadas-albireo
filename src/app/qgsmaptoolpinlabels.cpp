@@ -26,6 +26,7 @@
 #include "qgsmaptoolselectutils.h"
 #include "qgsrubberband.h"
 #include <qgslogger.h>
+#include <QAction>
 #include <QMouseEvent>
 
 QgsMapToolPinLabels::QgsMapToolPinLabels( QgsMapCanvas* canvas )
@@ -36,10 +37,7 @@ QgsMapToolPinLabels::QgsMapToolPinLabels( QgsMapCanvas* canvas )
 {
   mToolName = tr( "Pin labels" );
 
-  if ( QgisApp::instance() && QgisApp::instance()->actionToggleEditing() )
-  {
-    connect( QgisApp::instance()->actionToggleEditing(), SIGNAL( triggered() ), this, SLOT( updatePinnedLabels() ) );
-  }
+  connect( QgisApp::instance(), SIGNAL( editingToggled() ), this, SLOT( updatePinnedLabels() ) );
   connect( canvas, SIGNAL( renderComplete( QPainter * ) ), this, SLOT( highlightPinnedLabels() ) );
 }
 
@@ -320,7 +318,7 @@ void QgsMapToolPinLabels::pinUnpinLabels( const QgsRectangle& ext, QMouseEvent *
     if ( !mShowPinned )
     {
       // toggle it on (pin-unpin tool doesn't work well without it)
-      QgisApp::instance()->actionShowPinnedLabels()->setChecked( true );
+      action()->setChecked( true );
     }
   }
 }

@@ -269,8 +269,9 @@ QgsIdentifyResultsDialog::QgsIdentifyResultsDialog( QgsMapCanvas *canvas, QWidge
   mDock->setWidget( this );
   if ( !QgisApp::instance()->restoreDockWidget( mDock ) )
     QgisApp::instance()->addDockWidget( Qt::LeftDockWidgetArea, mDock );
-  else
+  else if ( QgisApp::instance()->panelMenu() )
     QgisApp::instance()->panelMenu()->addAction( mDock->toggleViewAction() );
+
 
   mExpandNewToolButton->setChecked( mySettings.value( "/Map/identifyExpand", false ).toBool() );
   mCopyToolButton->setEnabled( false );

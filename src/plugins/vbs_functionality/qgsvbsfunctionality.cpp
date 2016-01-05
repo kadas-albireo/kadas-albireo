@@ -38,6 +38,10 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mCrashHandler( 0 )
     , mMultiMapManager( 0 )
     , mActionOvlImport( 0 )
+    , mActionSlope( 0 )
+    , mActionViewshed( 0 )
+    , mActionViewshedSector( 0 )
+    , mActionHillshade( 0 )
     /*, mSlopeTool( 0 )
     , mViewshedTool( 0 )
     , mHillshadeTool( 0 )*/
@@ -60,7 +64,10 @@ void QgsVBSFunctionality::initGui()
 
   mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
-  mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
+  if ( mQGisIface->pluginToolBar() )
+  {
+    mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
+  }
 
 #if 0
   mActionSlope = new QAction( QIcon( ":/vbsfunctionality/icons/slope.svg" ), tr( "Compute slope" ), this );

@@ -30,6 +30,7 @@
 #include "qgsscaleutils.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgsproject.h"
+#include "qgsrasterlayer.h"
 
 #include "qgsattributetablefiltermodel.h"
 #include "qgsrasterformatsaveoptionswidget.h"

@@ -83,8 +83,6 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdi
 
 QgsCoordinateDisplayer::~QgsCoordinateDisplayer()
 {
-  disconnect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
-  disconnect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
 }
 
 QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
