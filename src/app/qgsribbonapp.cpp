@@ -59,6 +59,9 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   setMenuWidget( topWidget );
   statusBar()->addPermanentWidget( statusWidget, 1 );
   mLayerTreeView->setVisible( false );
+  mLayerTreeView->setCursor( Qt::ArrowCursor );
+  mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
+  mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
