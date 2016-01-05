@@ -113,7 +113,7 @@
       <widget class="QFrame" name="mZoomInOutFrame">
        <property name="geometry">
         <rect>
-         <x>1200</x>
+         <x>400</x>
          <y>20</y>
          <width>41</width>
          <height>81</height>
