@@ -1100,15 +1100,6 @@ void QgsMapCanvas::panToSelected( QgsVectorLayer* layer )
   refresh();
 } // panToSelected
 
-void QgsMapCanvas::contextMenuEvent( QContextMenuEvent *event )
-{
-  QgsAnnotationItem* selItem = selectedAnnotationItem();
-  if ( selItem && selItem == annotationItemAtPos( event->pos() ) )
-  {
-    selItem->showContextMenu( mapToGlobal( event->pos() ) );
-  }
-}
-
 void QgsMapCanvas::keyPressEvent( QKeyEvent * e )
 {
   if ( mCanvasProperties->mouseButtonDown || mCanvasProperties->panSelectorDown )

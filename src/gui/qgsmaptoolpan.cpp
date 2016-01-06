@@ -95,7 +95,17 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
   }
   else if ( e->button() == Qt::RightButton )
   {
-    emit contextMenuRequested( mCanvas->mapToGlobal( e->pos() ), toMapCoordinates( e->pos() ) );
+    // First, try to show menu for annotation items
+    QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
+    if ( selItem && selItem == canvas()->annotationItemAtPos( e->pos() ) )
+    {
+      selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
+    }
+    // Otherwise, request application context menu
+    else
+    {
+      emit contextMenuRequested( mCanvas->mapToGlobal( e->pos() ), toMapCoordinates( e->pos() ) );
+    }
   }
 }
 

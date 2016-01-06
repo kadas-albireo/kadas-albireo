@@ -26,6 +26,7 @@
 #include "qgsundowidget.h"
 
 #include <QMenu>
+#include <QMouseEvent>
 
 QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget* parent, Qt::WindowFlags fl )
     : QgisApp( splash, parent, fl )

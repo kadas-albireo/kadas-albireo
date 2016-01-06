@@ -47,6 +47,8 @@
 #include "qgsmaptoolrotatelabel.h"
 #include "qgsmaptoolrotatepointsymbols.h"
 #include "qgsproject.h"
+#include "qgspythonutils.h"
+#include "qgsrasterlayer.h"
 #include "qgsredlining.h"
 #include "qgsscalecombobox.h"
 #include "qgsundowidget.h"
@@ -2366,7 +2368,7 @@ void QgsClassicApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
     if ( !isEditable && mMapCanvas->mapTool()
          && mMapCanvas->mapTool()->isEditTool() && !mSaveRollbackInProgress )
     {
-      mMapCanvas->setMapTool( mNonEditMapTool );
+      mMapCanvas->unsetMapTool( mMapCanvas->mapTool() );
     }
 
     if ( dprovider )

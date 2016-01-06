@@ -106,7 +106,7 @@ void QgsRedliningLayer::read( const QDomElement& redliningElem )
       feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
       feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
       feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
-      feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip") );
+      feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip" ) );
       feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
       features.append( feature );
     }
@@ -133,7 +133,15 @@ void QgsRedliningLayer::write( QDomElement &redliningElem )
     redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
     redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
     redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
-    redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip").toString() );
+    redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip" ).toString() );
     redliningElem.appendChild( redliningItemElem );
+  }
+}
+
+void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
+{
+  foreach ( const QgsFeature& feature, features )
+  {
+    addShape( new QgsGeometry( feature.geometry()->geometry()->clone() ), Qt::red, Qt::blue, 1, Qt::SolidLine, Qt::SolidPattern );
   }
 }
