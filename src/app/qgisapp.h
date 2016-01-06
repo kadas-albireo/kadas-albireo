@@ -18,35 +18,36 @@
 #ifndef QGISAPP_H
 #define QGISAPP_H
 
-class QActionGroup;
-class QCheckBox;
 class QCursor;
-class QFileInfo;
+class QDomDocument;
+class QGestureEvent;
 class QKeyEvent;
-class QLabel;
 class QMenu;
+class QModelIndex;
+class QNetworkReply;
 class QPixmap;
-class QProgressBar;
-class QPushButton;
 class QRect;
 class QSettings;
-class QSpinBox;
 class QSplashScreen;
 class QStringList;
+class QTapAndHoldGesture;
 class QToolButton;
-class QTcpSocket;
-class QValidator;
 
 class QgisAppInterface;
 class QgisAppStyleSheet;
+class QgsAdvancedDigitizingDockWidget;
 class QgsAnnotationItem;
+class QgsBrowserDockWidget;
 class QgsClipboard;
 class QgsComposer;
 class QgsComposerView;
 class QgsComposerManager;
-class QgsContrastEnhancement;
+class QgsCoordinateReferenceSystem;
 class QgsCustomLayerOrderWidget;
+class QgsDecorationItem;
+class QgsFeatureStore;
 class QgsGeometry;
+class QgsGPSInformationWidget;
 class QgsGPSRouteEditor;
 class QgsFeature;
 class QgsLayerTreeMapCanvasBridge;
@@ -56,59 +57,35 @@ class QgsMapCanvas;
 class QgsMapLayer;
 class QgsMapTip;
 class QgsMapTool;
-class QgsMapToolAdvancedDigitizing;
-class QgsPoint;
-class QgsProviderRegistry;
+class QgsMessageBar;
+class QgsMessageLogViewer;
+class QgsPluginManager;
 class QgsPythonUtils;
+class QgsRasterLayer;
 class QgsRectangle;
 class QgsRedlining;
 class QgsRedliningLayer;
+class QgsSnappingDialog;
 class QgsSnappingUtils;
+class QgsTileScaleWidget;
 class QgsUndoWidget;
 class QgsVectorLayer;
 class QgsVectorLayerTools;
-class QgsDoubleSpinBox;
 class QgsDecorationCopyright;
 class QgsDecorationNorthArrow;
 class QgsDecorationScaleBar;
 class QgsDecorationGrid;
 
-class QDomDocument;
-class QNetworkReply;
-
-class QgsBrowserDockWidget;
-class QgsAdvancedDigitizingDockWidget;
-class QgsSnappingDialog;
-class QgsGPSInformationWidget;
-
-class QgsDecorationItem;
-
-class QgsMessageLogViewer;
-class QgsMessageBar;
-
-class QgsScaleComboBox;
-
-class QgsDataItem;
-class QgsTileScaleWidget;
-
-class QGestureEvent;
-class QTapAndHoldGesture;
 
 #include <QMainWindow>
-#include <QToolBar>
-#include <QAbstractSocket>
-#include <QPointer>
+#include <QSet>
 #include <QSslError>
 
-#include "qgsconfig.h"
-#include "qgsfeature.h"
-#include "qgsfeaturestore.h"
 #include "qgscoordinateutils.h"
-#include "qgspoint.h"
-#include "qgsrasterlayer.h"
-#include "qgssnappingdialog.h"
-#include "qgspluginmanager.h"
+#include "qgsfeature.h"
 #include "qgsmessagebar.h"
+#include "qgspoint.h"
+#include "qgsraster.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -130,6 +107,104 @@ class APP_EXPORT QgisApp : public QMainWindow
     void destroy();
 
   public:
+    class Tools
+    {
+      public:
+        Tools()
+            : mZoomIn( 0 )
+            , mZoomOut( 0 )
+            , mPan( 0 )
+            , mIdentify( 0 )
+            , mFeatureAction( 0 )
+            , mMeasureDist( 0 )
+            , mMeasureArea( 0 )
+            , mMeasureAngle( 0 )
+            , mAddFeature( 0 )
+            , mMoveFeature( 0 )
+            , mOffsetCurve( 0 )
+            , mReshapeFeatures( 0 )
+            , mSplitFeatures( 0 )
+            , mSplitParts( 0 )
+            , mSelect( 0 )
+            , mSelectFeatures( 0 )
+            , mSelectPolygon( 0 )
+            , mSelectFreehand( 0 )
+            , mSelectRadius( 0 )
+            , mVertexAdd( 0 )
+            , mVertexMove( 0 )
+            , mVertexDelete( 0 )
+            , mAddRing( 0 )
+            , mFillRing( 0 )
+            , mAddPart( 0 )
+            , mSimplifyFeature( 0 )
+            , mDeleteRing( 0 )
+            , mDeletePart( 0 )
+            , mNodeTool( 0 )
+            , mRotatePointSymbolsTool( 0 )
+            , mFormAnnotation( 0 )
+            , mHtmlAnnotation( 0 )
+            , mSvgAnnotation( 0 )
+            , mTextAnnotation( 0 )
+            , mPinAnnotation( 0 )
+            , mPinLabels( 0 )
+            , mShowHideLabels( 0 )
+            , mMoveLabel( 0 )
+            , mRotateFeature( 0 )
+            , mRotateLabel( 0 )
+            , mChangeLabelProperties( 0 )
+        {}
+
+        QgsMapTool *mZoomIn;
+        QgsMapTool *mZoomOut;
+        QgsMapTool *mPan;
+        QgsMapTool *mIdentify;
+        QgsMapTool *mFeatureAction;
+        QgsMapTool *mMeasureDist;
+        QgsMapTool *mMeasureArea;
+        QgsMapTool *mMeasureCircle;
+        QgsMapTool *mMeasureHeightProfile;
+        QgsMapTool *mMeasureAngle;
+        QgsMapTool *mAddFeature;
+        QgsMapTool *mCircularStringCurvePoint;
+        QgsMapTool *mCircularStringRadius;
+        QgsMapTool *mMoveFeature;
+        QgsMapTool *mOffsetCurve;
+        QgsMapTool *mReshapeFeatures;
+        QgsMapTool *mSplitFeatures;
+        QgsMapTool *mSplitParts;
+        QgsMapTool *mSelect;
+        QgsMapTool *mSelectFeatures;
+        QgsMapTool *mSelectPolygon;
+        QgsMapTool *mSelectFreehand;
+        QgsMapTool *mSelectRadius;
+        QgsMapTool *mVertexAdd;
+        QgsMapTool *mVertexMove;
+        QgsMapTool *mVertexDelete;
+        QgsMapTool *mAddRing;
+        QgsMapTool *mFillRing;
+        QgsMapTool *mAddPart;
+        QgsMapTool *mSimplifyFeature;
+        QgsMapTool *mDeleteRing;
+        QgsMapTool *mDeletePart;
+        QgsMapTool *mNodeTool;
+        QgsMapTool *mRotatePointSymbolsTool;
+        QgsMapTool *mFormAnnotation;
+        QgsMapTool *mHtmlAnnotation;
+        QgsMapTool *mSvgAnnotation;
+        QgsMapTool *mTextAnnotation;
+        QgsMapTool *mPinAnnotation;
+        QgsMapTool *mPinLabels;
+        QgsMapTool *mShowHideLabels;
+        QgsMapTool *mMoveLabel;
+        QgsMapTool *mRotateFeature;
+        QgsMapTool *mRotateLabel;
+        QgsMapTool *mChangeLabelProperties;
+        QgsMapTool *mSlope;
+        QgsMapTool *mHillshade;
+        QgsMapTool *mViewshed;
+        QgsMapTool *mViewshedSector;
+    };
+
     //! Destructor
     ~QgisApp() {}
 
@@ -325,6 +400,13 @@ class APP_EXPORT QgisApp : public QMainWindow
     /** Returns the legend interface */
     QgsLegendInterface* legendInterface() const;
 
+    const Tools* mapTools() const { return &mMapTools; }
+
+    QgsRedlining* redlining() const { return mRedlining; }
+    QgsRedliningLayer* redliningLayer() const;
+
+    virtual void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) = 0;
+
   public slots:
     void layerTreeViewDoubleClicked( const QModelIndex& index );
     //! Make sure the insertion point for new layers is up-to-date with the current item in layer tree view
@@ -420,6 +502,8 @@ class APP_EXPORT QgisApp : public QMainWindow
                                 (defaults to the active layer on the legend)
      */
     void editPaste( QgsMapLayer *destinationLayer = 0 );
+    /** Returns whether there are features to paste */
+    bool editCanPaste();
     //! copies features on the clipboard to a new vector layer
     void pasteAsNewVector();
     //! copies features on the clipboard to a new memory vector layer
@@ -487,7 +571,10 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Save project as
     void fileSaveAs();
 
-    virtual void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) = 0;
+    //! Save the map view as an image - user is prompted for image name using a dialog
+    void saveMapAsImage();
+    //! Save the map image to clipboard
+    void saveMapToClipboard();
 
   protected:
 
@@ -614,10 +701,6 @@ class APP_EXPORT QgisApp : public QMainWindow
      * @note added in QGIS 2.7
      */
     void runScript( const QString& filePath );
-    //! Save the map view as an image - user is prompted for image name using a dialog
-    void saveMapAsImage();
-    //! Save the map image to clipboard
-    void saveMapToClipboard();
     //! Open a project
     void fileOpen();
     //! Create a new project
@@ -659,8 +742,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     void hideSelectedLayers();
     //reimplements method from base (gui) class
     void showSelectedLayers();
-    //! Returns the default redlining layer
-    QgsRedliningLayer* redliningLayer();
     //! Return pointer to the active layer
     QgsMapLayer *activeLayer();
     //! set the active layer
@@ -973,6 +1054,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     /** Make the user feel dizzy */
     void dizzy();
 
+    void showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos );
+
   signals:
     /** emitted when a key is pressed and we want non widget sublasses to be able
       to pick up on this (e.g. maplayer) */
@@ -1030,10 +1113,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat format, QString epsg );
 
   protected:
-    static bool cmpByText_( QAction* a, QAction* b )
-    {
-      return QString::localeAwareCompare( a->text(), b->text() ) < 0;
-    }
+    static bool cmpByText_( QAction* a, QAction* b );
 
     /** This method will open a dialog so the user can select GDAL sublayers to load
      * @returns true if any items were loaded
@@ -1130,104 +1210,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     QAction *mWindowAction;
 #endif
 
-    class Tools
-    {
-      public:
-
-        Tools()
-            : mZoomIn( 0 )
-            , mZoomOut( 0 )
-            , mPan( 0 )
-            , mIdentify( 0 )
-            , mFeatureAction( 0 )
-            , mMeasureDist( 0 )
-            , mMeasureArea( 0 )
-            , mMeasureAngle( 0 )
-            , mAddFeature( 0 )
-            , mMoveFeature( 0 )
-            , mOffsetCurve( 0 )
-            , mReshapeFeatures( 0 )
-            , mSplitFeatures( 0 )
-            , mSplitParts( 0 )
-            , mSelect( 0 )
-            , mSelectFeatures( 0 )
-            , mSelectPolygon( 0 )
-            , mSelectFreehand( 0 )
-            , mSelectRadius( 0 )
-            , mVertexAdd( 0 )
-            , mVertexMove( 0 )
-            , mVertexDelete( 0 )
-            , mAddRing( 0 )
-            , mFillRing( 0 )
-            , mAddPart( 0 )
-            , mSimplifyFeature( 0 )
-            , mDeleteRing( 0 )
-            , mDeletePart( 0 )
-            , mNodeTool( 0 )
-            , mRotatePointSymbolsTool( 0 )
-            , mFormAnnotation( 0 )
-            , mHtmlAnnotation( 0 )
-            , mSvgAnnotation( 0 )
-            , mTextAnnotation( 0 )
-            , mPinAnnotation( 0 )
-            , mPinLabels( 0 )
-            , mShowHideLabels( 0 )
-            , mMoveLabel( 0 )
-            , mRotateFeature( 0 )
-            , mRotateLabel( 0 )
-            , mChangeLabelProperties( 0 )
-        {}
-
-        QgsMapTool *mZoomIn;
-        QgsMapTool *mZoomOut;
-        QgsMapTool *mPan;
-        QgsMapTool *mIdentify;
-        QgsMapTool *mFeatureAction;
-        QgsMapTool *mMeasureDist;
-        QgsMapTool *mMeasureArea;
-        QgsMapTool *mMeasureCircle;
-        QgsMapTool *mMeasureHeightProfile;
-        QgsMapTool *mMeasureAngle;
-        QgsMapTool *mAddFeature;
-        QgsMapTool *mCircularStringCurvePoint;
-        QgsMapTool *mCircularStringRadius;
-        QgsMapTool *mMoveFeature;
-        QgsMapTool *mOffsetCurve;
-        QgsMapTool *mReshapeFeatures;
-        QgsMapTool *mSplitFeatures;
-        QgsMapTool *mSplitParts;
-        QgsMapTool *mSelect;
-        QgsMapTool *mSelectFeatures;
-        QgsMapTool *mSelectPolygon;
-        QgsMapTool *mSelectFreehand;
-        QgsMapTool *mSelectRadius;
-        QgsMapTool *mVertexAdd;
-        QgsMapTool *mVertexMove;
-        QgsMapTool *mVertexDelete;
-        QgsMapTool *mAddRing;
-        QgsMapTool *mFillRing;
-        QgsMapTool *mAddPart;
-        QgsMapTool *mSimplifyFeature;
-        QgsMapTool *mDeleteRing;
-        QgsMapTool *mDeletePart;
-        QgsMapTool *mNodeTool;
-        QgsMapTool *mRotatePointSymbolsTool;
-        QgsMapTool *mFormAnnotation;
-        QgsMapTool *mHtmlAnnotation;
-        QgsMapTool *mSvgAnnotation;
-        QgsMapTool *mTextAnnotation;
-        QgsMapTool *mPinAnnotation;
-        QgsMapTool *mPinLabels;
-        QgsMapTool *mShowHideLabels;
-        QgsMapTool *mMoveLabel;
-        QgsMapTool *mRotateFeature;
-        QgsMapTool *mRotateLabel;
-        QgsMapTool *mChangeLabelProperties;
-        QgsMapTool *mSlope;
-        QgsMapTool *mHillshade;
-        QgsMapTool *mViewshed;
-        QgsMapTool *mViewshedSector;
-    } mMapTools;
+    Tools mMapTools;
 
     QgsMapTool *mNonEditMapTool;
 

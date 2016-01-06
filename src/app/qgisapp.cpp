@@ -23,44 +23,34 @@
 #include <QAction>
 #include <QApplication>
 #include <QBitmap>
-#include <QCheckBox>
-#include <QSpinBox>
 #include <QClipboard>
 #include <QColor>
 #include <QCursor>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QDialog>
 #include <QDir>
 #include <QDockWidget>
 #include <QEvent>
 #include <QFile>
 #include <QFileInfo>
-#include <QImageWriter>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLibrary>
 #include <QMenu>
-#include <QMenuBar>
 #include <QMessageBox>
+#include <QNetworkReply>
+#include <QNetworkProxy>
 #include <QPainter>
-#include <QPictureIO>
 #include <QPixmap>
 #include <QPoint>
-#include <QPrinter>
 #include <QProcess>
-#include <QProgressBar>
 #include <QProgressDialog>
 #include <QRegExp>
-#include <QRegExpValidator>
 #include <QSettings>
 #include <QSplashScreen>
-#include <QStatusBar>
 #include <QStringList>
 #include <QTapAndHoldGesture>
-#include <QTcpSocket>
-#include <QTextStream>
 #include <QtGlobal>
 #include <QTimer>
 #include <QToolButton>
@@ -68,17 +58,6 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 #include <QThread>
-
-#include <qgsnetworkaccessmanager.h>
-#include <qgsapplication.h>
-#include <qgscomposition.h>
-#include <qgsgeoimageannotationitem.h>
-
-#include <QNetworkReply>
-#include <QNetworkProxy>
-#include <QAuthenticator>
-#include <QNetworkDiskCache>
-
 //
 // Mac OS X Includes
 // Must include before GEOS 3 due to unqualified use of 'Point'
@@ -95,14 +74,12 @@
 //
 // QGIS Specific Includes
 //
-
 #include "qgisapp.h"
 #include "qgisappinterface.h"
 #include "qgisappstylesheet.h"
 #include "qgis.h"
 #include "qgisplugin.h"
 #include "qgsabout.h"
-#include "qgsapplayertreeviewmenuprovider.h"
 #include "qgsapplication.h"
 #include "qgsattributeaction.h"
 #include "qgsattributetabledialog.h"
@@ -111,6 +88,7 @@
 #include "qgsadvanceddigitizingdockwidget.h"
 #include "qgsclipboard.h"
 #include "qgscomposer.h"
+#include "qgscomposition.h"
 #include "qgscomposermanager.h"
 #include "qgscomposerview.h"
 #include "qgsconfigureshortcutsdialog.h"
@@ -118,7 +96,6 @@
 #include "qgscredentialdialog.h"
 #include "qgscursors.h"
 #include "qgscustomization.h"
-#include "qgscustomlayerorderwidget.h"
 #include "qgscustomprojectiondialog.h"
 #include "qgsdatasourceuri.h"
 #include "qgsdatumtransformdialog.h"
@@ -136,11 +113,12 @@
 #include "qgsfeature.h"
 #include "qgsformannotationitem.h"
 #include "qgsfieldcalculator.h"
-#include "qgsgpsrouteeditor.h"
-#include "qgshtmlannotationitem.h"
+#include "qgsgeoimageannotationitem.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgsgpsinformationwidget.h"
+#include "qgsgpsrouteeditor.h"
 #include "qgsguivectorlayertools.h"
+#include "qgshtmlannotationitem.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
 #include "qgslabelinggui.h"
@@ -155,6 +133,7 @@
 #include "qgslegendgroupproperties.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
+#include "qgsmapcanvascontextmenu.h"
 #include "qgsmapcanvasmap.h"
 #include "qgsmapcanvassnappingutils.h"
 #include "qgsmaplayer.h"
@@ -171,6 +150,7 @@
 #include "qgsmimedatautils.h"
 #include "qgsmessagelog.h"
 #include "qgsmultibandcolorrenderer.h"
+#include "qgsnetworkaccessmanager.h"
 #include "qgsnewvectorlayerdialog.h"
 #include "qgsnewmemorylayerdialog.h"
 #include "qgsoptions.h"
@@ -196,6 +176,7 @@
 #include "qgsrasterrenderer.h"
 #include "qgsrasterlayersaveasdialog.h"
 #include "qgsredlining.h"
+#include "qgsredlininglayer.h"
 #include "qgsrectangle.h"
 #include "qgsscalecombobox.h"
 #include "qgsscalevisibilitydialog.h"
@@ -495,7 +476,6 @@ QgisApp::QgisApp( QSplashScreen *splash, QWidget * parent, Qt::WindowFlags fl )
 #ifdef Q_OS_WIN
     , mSkipNextContextMenuEvent( 0 )
 #endif
-    , mNonEditMapTool( 0 )
     , mLayerTreeCanvasBridge( 0 )
     , mSplash( splash )
     , mMousePrecisionDecimalPlaces( 0 )
@@ -805,7 +785,6 @@ void QgisApp::init( bool restorePlugins )
 
 QgisApp::QgisApp()
     : QMainWindow( 0, 0 )
-    , mNonEditMapTool( 0 )
     , mLayerTreeCanvasBridge( 0 )
     , mMapLayerOrder( 0 )
     , mOverviewMapCursor( 0 )
@@ -1197,6 +1176,8 @@ void QgisApp::createCanvasTools()
   mMapTools.mZoomIn = new QgsMapToolZoom( mapCanvas(), false /* zoomIn */ );
   mMapTools.mZoomOut = new QgsMapToolZoom( mapCanvas(), true /* zoomOut */ );
   mMapTools.mPan = new QgsMapToolPan( mapCanvas() );
+  connect( mMapTools.mPan, SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ),
+           this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mapCanvas() );
   connect( mMapTools.mIdentify, SIGNAL( copyToClipboard( QgsFeatureStore & ) ),
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
@@ -1248,8 +1229,6 @@ void QgisApp::createCanvasTools()
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
-//ensure that non edit tool is initialised or we will get crashes in some situations
-  mNonEditMapTool = mMapTools.mPan;
 }
 
 void QgisApp::createOverview()
@@ -1808,6 +1787,11 @@ bool QgisApp::addVectorLayers( const QStringList &theLayerQStringList, const QSt
 
   return true;
 } // QgisApp::addVectorLayer()
+
+bool QgisApp::cmpByText_( QAction* a, QAction* b )
+{
+  return QString::localeAwareCompare( a->text(), b->text() ) < 0;
+}
 
 // present a dialog to choose zipitem layers
 bool QgisApp::askUserForZipItemLayers( QString path )
@@ -2571,8 +2555,6 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
 
   // set the initial map tool
   mapCanvas()->setMapTool( mMapTools.mPan );
-  mNonEditMapTool = mMapTools.mPan;  // signals are not yet setup to catch this
-
 } // QgisApp::fileNew(bool thePromptToSaveFlag)
 
 bool QgisApp::fileNewFromTemplate( QString fileName )
@@ -5248,7 +5230,14 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
     ++featureIt;
   }
 
-  pasteVectorLayer->addFeatures( features );
+  if ( pasteVectorLayer->type() == QgsMapLayer::RedliningLayer )
+  {
+    static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( features );
+  }
+  else
+  {
+    pasteVectorLayer->addFeatures( features );
+  }
   pasteVectorLayer->endEditCommand();
 
   int nCopiedFeatures = features.count();
@@ -5273,6 +5262,11 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
   }
 
   mapCanvas()->refresh();
+}
+
+bool QgisApp::editCanPaste()
+{
+  return clipboard()->hasFeatures();
 }
 
 void QgisApp::pasteAsNewVector()
@@ -5899,6 +5893,11 @@ void QgisApp::dizzy()
   QTransform matrix;
   matrix.rotate(( qrand() % ( 2 * r ) ) - r );
   mapCanvas()->setTransform( matrix );
+}
+
+void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
+{
+  QgsMapCanvasContextMenu( mapPos ).exec( screenPos );
 }
 
 // toggle overview status
@@ -6765,7 +6764,7 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
 #endif
 }
 
-QgsRedliningLayer* QgisApp::redliningLayer()
+QgsRedliningLayer* QgisApp::redliningLayer() const
 {
   return mRedlining->getOrCreateLayer();
 }
@@ -7117,11 +7116,6 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
 
   if ( newTool )
   {
-    if ( !newTool->isEditTool() )
-    {
-      mNonEditMapTool = newTool;
-    }
-
     connect( newTool, SIGNAL( messageEmitted( QString ) ), this, SLOT( displayMapToolMessage( QString ) ) );
     connect( newTool, SIGNAL( messageEmitted( QString, QgsMessageBar::MessageLevel ) ), this, SLOT( displayMapToolMessage( QString, QgsMessageBar::MessageLevel ) ) );
     connect( newTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );

@@ -97,6 +97,11 @@ class APP_EXPORT QgsClipboard : public QObject
     bool empty();
 
     /*
+     *  Returns true if the internal has any features
+     */
+    bool hasFeatures() { return !mFeatureClipboard.empty(); }
+
+    /*
      *  Returns a copy of features on the internal clipboard, transformed
      *  from the clipboard CRS to the destCRS.
      *  The caller assumes responsibility for destroying the contents

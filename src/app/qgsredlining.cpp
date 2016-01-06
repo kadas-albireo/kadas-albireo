@@ -42,31 +42,31 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
 
   mActionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Point" ), this );
   mActionNewPoint->setCheckable( true );
-  connect( mActionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint() ) );
+  connect( mActionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint( bool ) ) );
 
-  mActionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
+  QAction* mActionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
   mActionNewSquare->setCheckable( true );
-  connect( mActionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare() ) );
+  connect( mActionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare( bool ) ) );
 
   mActionNewTriangle = new QAction( QIcon( ":/images/themes/default/redlining_triangle.svg" ), tr( "Triangle" ), this );
   mActionNewTriangle->setCheckable( true );
-  connect( mActionNewTriangle, SIGNAL( triggered( bool ) ), this, SLOT( newTriangle() ) );
+  connect( mActionNewTriangle, SIGNAL( triggered( bool ) ), this, SLOT( newTriangle( bool ) ) );
 
   mActionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Line" ), this );
   mActionNewLine->setCheckable( true );
-  connect( mActionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine() ) );
+  connect( mActionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine( bool ) ) );
   mActionNewRectangle = new QAction( QIcon( ":/images/themes/default/redlining_rectangle.svg" ), tr( "Rectangle" ), this );
   mActionNewRectangle->setCheckable( true );
-  connect( mActionNewRectangle, SIGNAL( triggered( bool ) ), this, SLOT( newRectangle() ) );
+  connect( mActionNewRectangle, SIGNAL( triggered( bool ) ), this, SLOT( newRectangle( bool ) ) );
   mActionNewPolygon = new QAction( QIcon( ":/images/themes/default/redlining_polygon.svg" ), tr( "Polygon" ), this );
   mActionNewPolygon->setCheckable( true );
-  connect( mActionNewPolygon, SIGNAL( triggered( bool ) ), this, SLOT( newPolygon() ) );
+  connect( mActionNewPolygon, SIGNAL( triggered( bool ) ), this, SLOT( newPolygon( bool ) ) );
   mActionNewCircle = new QAction( QIcon( ":/images/themes/default/redlining_circle.svg" ), tr( "Circle" ), this );
   mActionNewCircle->setCheckable( true );
-  connect( mActionNewCircle, SIGNAL( triggered( bool ) ), this, SLOT( newCircle() ) );
+  connect( mActionNewCircle, SIGNAL( triggered( bool ) ), this, SLOT( newCircle( bool ) ) );
   mActionNewText = new QAction( QIcon( ":/images/themes/default/redlining_text.svg" ), tr( "Text" ), this );
   mActionNewText->setCheckable( true );
-  connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText() ) );
+  connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( newText( bool ) ) );
 
   mUi.buttonNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();
@@ -84,13 +84,12 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   mUi.buttonNewObject->setMenu( menuNewObject );
   mUi.buttonNewObject->setPopupMode( QToolButton::MenuButtonPopup );
   mUi.buttonNewObject->setDefaultAction( mActionNewPoint );
-  connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mUi.buttonNewObject, SLOT( setDefaultAction( QAction* ) ) );
 
 #warning TODO
-  mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
-  mActionEditObject->setToolTip( tr( "Edit Object" ) );
-  mActionEditObject->setCheckable( true );
-  connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
+  QAction* actionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
+  actionEditObject->setToolTip( tr( "Edit Object" ) );
+  actionEditObject->setCheckable( true );
+  connect( actionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
   mUi.spinBoxSize->setRange( 1, 20 );
   mUi.spinBoxSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
@@ -165,61 +164,76 @@ void QgsRedlining::editObject()
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
-  activateTool( tool, qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( tool, qobject_cast<QAction*>( QObject::sender() ) );
 }
 
-void QgsRedlining::newPoint()
+void QgsRedlining::newPoint( bool active )
 {
-  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "circle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "circle" ), mActionNewPoint, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewPoint );
 }
 
-void QgsRedlining::newSquare()
+void QgsRedlining::newSquare( bool active )
 {
-  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "rectangle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "rectangle" ), mActionNewSquare, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewSquare );
 }
 
-void QgsRedlining::newTriangle()
+void QgsRedlining::newTriangle( bool active )
 {
-  activateTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "triangle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "triangle" ), mActionNewTriangle, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewTriangle );
 }
 
-void QgsRedlining::newLine()
+void QgsRedlining::newLine( bool active )
 {
-  activateTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), false ), mActionNewLine, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewLine );
 }
 
-void QgsRedlining::newRectangle()
+void QgsRedlining::newRectangle( bool active )
 {
-  activateTool( new QgsRedliningRectangleMapTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningRectangleMapTool( mMapCanvas, getOrCreateLayer() ), mActionNewRectangle, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewRectangle );
 }
 
-void QgsRedlining::newPolygon()
+void QgsRedlining::newPolygon( bool active )
 {
-  activateTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), true ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), true ), mActionNewPolygon, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewPolygon );
 }
 
-void QgsRedlining::newCircle()
+void QgsRedlining::newCircle( bool active )
 {
-  activateTool( new QgsRedliningCircleMapTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningCircleMapTool( mMapCanvas, getOrCreateLayer() ), mActionNewCircle, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewCircle );
 }
 
-void QgsRedlining::newText()
+void QgsRedlining::newText( bool active )
 {
-  activateTool( new QgsRedliningTextTool( mMapCanvas, getOrCreateLayer() ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningTextTool( mMapCanvas, getOrCreateLayer() ), mActionNewText, active );
+  mUi.buttonNewObject->setDefaultAction( mActionNewText );
 }
 
-void QgsRedlining::activateTool( QgsMapTool *tool, QAction* action )
+void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
 {
-  tool->setAction( action );
-  connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
-  if ( mLayerRefCount == 0 )
+  if ( active && ( mMapCanvas->mapTool() == 0 || mMapCanvas->mapTool()->action() != action ) )
   {
-    mMapCanvas->setCurrentLayer( getOrCreateLayer() );
-    mLayer->startEditing();
+    tool->setAction( action );
+    connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
+    if ( mLayerRefCount == 0 )
+    {
+      mMapCanvas->setCurrentLayer( getOrCreateLayer() );
+      mLayer->startEditing();
+    }
+    ++mLayerRefCount;
+    mMapCanvas->setMapTool( tool );
+    mRedliningTool = tool;
   }
-  ++mLayerRefCount;
-  mMapCanvas->setMapTool( tool );
-  mRedliningTool = tool;
+  else if ( !active && mMapCanvas->mapTool() && mMapCanvas->mapTool()->action() == action )
+  {
+    mMapCanvas->unsetMapTool( mMapCanvas->mapTool() );
+  }
 }
 
 void QgsRedlining::deactivateTool()

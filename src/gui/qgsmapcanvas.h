@@ -558,9 +558,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! Overridden standard event to be gestures aware
     bool event( QEvent * e ) override;
 
-    //! Overridden context menu event
-    void contextMenuEvent( QContextMenuEvent *event ) override;
-
     //! Overridden key press event
     void keyPressEvent( QKeyEvent * e ) override;
 

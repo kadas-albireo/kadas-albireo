@@ -18,6 +18,10 @@
 #ifndef QGSCLASSICAPP_H
 #define QGSCLASSICAPP_H
 
+class QCheckBox;
+class QgsDoubleSpinBox;
+class QgsScaleComboBox;
+
 #include "qgisapp.h"
 
 #include "ui_qgsclassicapp.h"

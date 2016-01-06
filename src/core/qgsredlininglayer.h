@@ -27,6 +27,7 @@ class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
     bool addText( const QString &text, const QgsPointV2 &pos, const QColor& color, const QFont& font , const QString &tooltip = QString() , double rotation = 0 );
     void read( const QDomElement& redliningElem );
     void write( QDomElement& redliningElem );
+    void pasteFeatures( const QList<QgsFeature> &features );
 };
 
 #endif // QGSREDLININGLAYER_H

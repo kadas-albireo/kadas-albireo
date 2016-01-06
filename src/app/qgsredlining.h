@@ -45,14 +45,16 @@ class QgsRedlining : public QObject
 
     QgsRedlining( QgisApp* app, const RedliningUi &ui );
     QgsRedliningLayer *getOrCreateLayer();
-    QAction* actionNewPoint() const { return mActionNewPoint; }
-    QAction* actionNewSquare() const { return mActionNewSquare; }
-    QAction* actionNewTriangle() const { return mActionNewTriangle; }
-    QAction* actionNewLine() const { return mActionNewLine; }
-    QAction* actionNewRectangle() const { return mActionNewRectangle; }
-    QAction* actionNewPolygon() const { return mActionNewPolygon; }
-    QAction* actionNewCircle() const { return mActionNewCircle; }
-    QAction* actionNewText() const { return mActionNewText; }
+
+  public slots:
+    void newPoint( bool active = true );
+    void newSquare( bool active = true );
+    void newTriangle( bool active = true );
+    void newLine( bool active = true );
+    void newRectangle( bool active = true );
+    void newPolygon( bool active = true );
+    void newCircle( bool active = true );
+    void newText( bool active = true );
 
   signals:
     void featureStyleChanged();
@@ -74,7 +76,7 @@ class QgsRedlining : public QObject
     QPointer<QgsMapTool> mRedliningTool;
     int mLayerRefCount;
 
-    void activateTool( QgsMapTool* tool, QAction *action );
+    void setTool( QgsMapTool* tool, QAction *action, bool active = true );
     static QIcon createOutlineStyleIcon( Qt::PenStyle style );
     static QIcon createFillStyleIcon( Qt::BrushStyle style );
 
@@ -82,14 +84,6 @@ class QgsRedlining : public QObject
     void clearLayer();
     void deactivateTool();
     void editObject();
-    void newPoint();
-    void newSquare();
-    void newTriangle();
-    void newLine();
-    void newRectangle();
-    void newPolygon();
-    void newCircle();
-    void newText();
     void saveColor();
     void saveOutlineWidth();
     void saveStyle();

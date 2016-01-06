@@ -55,6 +55,7 @@ SET(QGIS_APP_SRCS
   qgsselectgrouplayerdialog.cpp
   qgscoordinatedisplayer.cpp
   qgscrsselection.cpp
+  qgsmapcanvascontextmenu.cpp
 
   qgsmaptooladdfeature.cpp
   qgsmaptooladdpart.cpp
@@ -213,6 +214,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsgpsrouteeditor.h
   qgscoordinatedisplayer.h
   qgscrsselection.h
+  qgsmapcanvascontextmenu.h
 
   qgsidentifyresultsdialog.h
   qgsribbonlayertreeviewmenuprovider.h

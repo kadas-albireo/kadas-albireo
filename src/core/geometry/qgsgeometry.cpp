@@ -922,6 +922,9 @@ QgsGeometry* QgsGeometry::convertToType( QGis::GeometryType destType, bool destM
     case QGis::Polygon:
       return convertToPolygon( destMultipart );
 
+    case QGis::AnyGeometry:
+      return new QgsGeometry( *this );
+
     default:
       return 0;
   }
