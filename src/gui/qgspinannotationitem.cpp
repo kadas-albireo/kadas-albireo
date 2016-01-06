@@ -29,8 +29,8 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinate
                 QgsAnnotationItem::ItemHasNoFrame |
                 QgsAnnotationItem::ItemHasNoMarker |
                 QgsAnnotationItem::ItemIsNotEditable );
-  QSize imageSize = QImageReader( ":/themes/default/pin_red.svg" ).size();
-  setFilePath( ":/themes/default/pin_red.svg" );
+  QSize imageSize = QImageReader( ":/images/themes/default/pin_red.svg" ).size();
+  setFilePath( ":/images/themes/default/pin_red.svg" );
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
 }
