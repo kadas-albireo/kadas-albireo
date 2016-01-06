@@ -22,7 +22,7 @@
 #include <QStringList>
 #include <QtTest/QtTest>
 
-#include <qgisapp.h>
+#include <qgsclassicapp.h>
 #include <qgsapplication.h>
 #include <qgsfeature.h>
 #include <qgsfield.h>
@@ -67,7 +67,7 @@ void TestQgisAppClipboard::initTestCase()
   QgsApplication::init();
   QgsApplication::initQgis();
   mTestDataDir = QString( TEST_DATA_DIR ) + QDir::separator(); //defined in CmakeLists.txt
-  mQgisApp = new QgisApp();
+  mQgisApp = new QgsClassicApp();
 }
 
 //runs after all tests
