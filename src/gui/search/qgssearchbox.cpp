@@ -97,14 +97,14 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   mTimer.setInterval( 500 );
 
   mSearchButton = new QToolButton( mSearchBox );
-  mSearchButton->setIcon( QIcon( ":/themes/default/icons/search.svg" ) );
+  mSearchButton->setIcon( QIcon( ":/images/themes/default/search.svg" ) );
   mSearchButton->setIconSize( QSize( 16, 16 ) );
   mSearchButton->setCursor( Qt::PointingHandCursor );
   mSearchButton->setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
   mSearchButton->setToolTip( tr( "Search" ) );
 
   mClearButton = new QToolButton( mSearchBox );
-  mClearButton->setIcon( QIcon( ":/themes/default/icons/clear.svg" ) );
+  mClearButton->setIcon( QIcon( ":/images/themes/default/clear.svg" ) );
   mClearButton->setIconSize( QSize( 16, 16 ) );
   mClearButton->setCursor( Qt::PointingHandCursor );
   mClearButton->setStyleSheet( "QToolButton { border: none; padding: 0px; }" );
@@ -114,21 +114,21 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
 
   QMenu* filterMenu = new QMenu( mSearchBox );
   QActionGroup* filterActionGroup = new QActionGroup( filterMenu );
-  QAction* noFilterAction = new QAction( QIcon( ":/themes/default/icons/search_filter_none.svg" ), tr( "No filter" ), filterMenu );
+  QAction* noFilterAction = new QAction( QIcon( ":/images/themes/default/search_filter_none.svg" ), tr( "No filter" ), filterMenu );
   filterActionGroup->addAction( noFilterAction );
   connect( noFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( clearFilter() ) );
 
-  QAction* circleFilterAction = new QAction( QIcon( ":/themes/default/icons/search_filter_circle.svg" ), tr( "Filter by radius" ), filterMenu );
+  QAction* circleFilterAction = new QAction( QIcon( ":/images/themes/default/search_filter_circle.svg" ), tr( "Filter by radius" ), filterMenu );
   circleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterCircle ) ) );
   filterActionGroup->addAction( circleFilterAction );
   connect( circleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
 
-  QAction* rectangleFilterAction = new QAction( QIcon( ":/themes/default/icons/search_filter_rect.svg" ), tr( "Filter by rectangle" ), filterMenu );
+  QAction* rectangleFilterAction = new QAction( QIcon( ":/images/themes/default/search_filter_rect.svg" ), tr( "Filter by rectangle" ), filterMenu );
   rectangleFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterRect ) ) );
   filterActionGroup->addAction( rectangleFilterAction );
   connect( rectangleFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
 
-  QAction* polygonFilterAction = new QAction( QIcon( ":/themes/default/icons/search_filter_poly.svg" ), tr( "Filter by polygon" ), filterMenu );
+  QAction* polygonFilterAction = new QAction( QIcon( ":/images/themes/default/search_filter_poly.svg" ), tr( "Filter by polygon" ), filterMenu );
   polygonFilterAction->setData( QVariant::fromValue( static_cast<int>( FilterPoly ) ) );
   filterActionGroup->addAction( polygonFilterAction );
   connect( polygonFilterAction, SIGNAL( triggered( bool ) ), this, SLOT( setFilterTool() ) );
@@ -437,8 +437,8 @@ void QgsSearchBox::resultActivated()
 void QgsSearchBox::createRubberBand()
 {
   mRubberBand = new QgsRubberBand( mMapCanvas, QGis::Point );
-  QSize imgSize = QImageReader( ":/themes/default/icons/pin_blue.svg" ).size();
-  mRubberBand->setSvgIcon( ":/themes/default/icons/pin_blue.svg", QPoint( -imgSize.width() / 2., -imgSize.height() ) );
+  QSize imgSize = QImageReader( ":/images/themes/default/pin_blue.svg" ).size();
+  mRubberBand->setSvgIcon( ":/images/themes/default/pin_blue.svg", QPoint( -imgSize.width() / 2., -imgSize.height() ) );
 }
 
 void QgsSearchBox::cancelSearch()
