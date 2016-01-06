@@ -110,7 +110,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     int itemFlags() const { return mFlags; }
 
     void showItemEditor();
-    virtual void showContextMenu( const QPoint& /*screenPos*/ ) {}
+    virtual void showContextMenu( const QPoint& screenPos );
 
   protected:
     /**Flags specifying the features of the item*/
