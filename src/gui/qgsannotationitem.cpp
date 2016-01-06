@@ -20,6 +20,7 @@
 #include "qgsrendercontext.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgssymbolv2.h"
+#include <QMenu>
 #include <QPainter>
 #include <QPen>
 
@@ -575,6 +576,13 @@ void QgsAnnotationItem::showItemEditor()
   {
     _showItemEditor();
   }
+}
+
+void QgsAnnotationItem::showContextMenu( const QPoint &screenPos )
+{
+  QMenu menu;
+  menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
+  menu.exec( screenPos );
 }
 
 void QgsAnnotationItem::syncGeoPos()
