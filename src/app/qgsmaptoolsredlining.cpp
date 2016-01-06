@@ -120,9 +120,23 @@ void QgsRedliningTextTool::canvasReleaseEvent( QMouseEvent *e )
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLayer *layer )
-    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false )
+    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
 {
   connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
+}
+
+QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas *canvas, QgsVectorLayer *layer, const QgsFeature &feature )
+    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( true )
+{
+  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
+  selectFeature( feature );
+}
+
+QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas *canvas, QgsVectorLayer *layer, const QgsLabelPosition &labelPos )
+    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( true )
+{
+  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
+  selectLabel( labelPos );
 }
 
 QgsRedliningEditTool::~QgsRedliningEditTool()
@@ -148,7 +162,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
   {
     foreach ( const QgsLabelPosition& labelPos, labelPositions )
     {
-      if ( labelPos.layerID == mLayer->id() && labelPos.labelRect == mCurrentLabel.labelRect )
+      if ( labelPos.layerID == mLayer->id() && labelPos.featureId == mCurrentLabel.featureId )
       {
         return;
       }
@@ -167,7 +181,12 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
     }
   }
 
-  // Else, start anew
+  // Else, quit or start anew
+  if ( mUnsetOnMiss )
+  {
+    canvas()->unsetMapTool( this );
+    return;
+  }
   clearCurrent( true );
 
   // First, look for a label below the cursor
@@ -175,21 +194,7 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
   {
     if ( labelPos.layerID == mLayer->id() )
     {
-      mCurrentLabel = labelPos;
-      mMode = TextSelected;
-      mRubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
-      const QgsRectangle& rect = mCurrentLabel.labelRect;
-      QgsLineStringV2* geom = new QgsLineStringV2();
-      geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
-      geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMaximum() ) );
-      geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMaximum() ) );
-      geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMinimum() ) );
-      geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
-      mRubberBand->setGeometry( geom );
-      mRubberBand->setOutlineColor( QColor( 0, 255, 0, 150 ) );
-      mRubberBand->setOutlineWidth( 3 );
-      mRubberBand->setLineStyle( Qt::DotLine );
-      emit featureSelected( mCurrentLabel.featureId );
+      selectLabel( labelPos );
       return;
     }
   }
@@ -198,40 +203,63 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
   QgsFeatureIterator fit = mLayer->getFeatures( QgsFeatureRequest( selectRect ) );
   if ( fit.nextFeature( feature ) && feature.attribute( "text" ).toString().isEmpty() )
   {
-    mMode = FeatureSelected;
-    emit featureSelected( feature.id() );
-    mRubberBand = new QgsGeometryRubberBand( mCanvas, feature.geometry()->type() );
-    mRubberBand->setOutlineColor( QColor( 0, 255, 0, 170 ) );
-    mRubberBand->setFillColor( QColor( 0, 255, 0, 15 ) );
-    mRubberBand->setOutlineWidth( 3 );
-    mRubberBand->setLineStyle( Qt::DotLine );
-    mCurrentFeature = new QgsSelectedFeature( feature.id(), mLayer, mCanvas );
-    mIsRectangle = false;
-    foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
-    {
-      if ( flag.startsWith( "rect" ) )
-      {
-        mIsRectangle = true;
-        mRectangleCRS = flag.mid( 5 );
-      }
-    }
-    if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::LineString )
-    {
-      mRubberBand->setMeasurementMode( QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
-    }
-    else if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::Polygon )
-    {
-      mRubberBand->setMeasurementMode( mIsRectangle ? QgsGeometryRubberBand::MEASURE_RECTANGLE : QgsGeometryRubberBand::MEASURE_POLYGON, QGis::Meters );
-    }
-    else if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::CurvePolygon )
-    {
-      mRubberBand->setMeasurementMode( mIsRectangle ? QgsGeometryRubberBand::MEASURE_CIRCLE : QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
-    }
-    QgsCoordinateTransform ct( mLayer->crs(), mCanvas->mapSettings().destinationCrs() );
-    mRubberBand->setGeometry( feature.geometry()->geometry()->transformed( ct ) );
-    checkVertexSelection();
-    return;
+    selectFeature( feature );
   }
+}
+
+void QgsRedliningEditTool::selectLabel( const QgsLabelPosition &labelPos )
+{
+  mCurrentLabel = labelPos;
+  mMode = TextSelected;
+  mRubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
+  const QgsRectangle& rect = mCurrentLabel.labelRect;
+  QgsLineStringV2* geom = new QgsLineStringV2();
+  geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
+  geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMaximum() ) );
+  geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMaximum() ) );
+  geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMinimum() ) );
+  geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
+  mRubberBand->setGeometry( geom );
+  mRubberBand->setOutlineColor( QColor( 0, 255, 0, 150 ) );
+  mRubberBand->setOutlineWidth( 3 );
+  mRubberBand->setLineStyle( Qt::DotLine );
+  emit featureSelected( mCurrentLabel.featureId );
+}
+
+void QgsRedliningEditTool::selectFeature( const QgsFeature &feature )
+{
+  mMode = FeatureSelected;
+  emit featureSelected( feature.id() );
+  mRubberBand = new QgsGeometryRubberBand( mCanvas, feature.geometry()->type() );
+  mRubberBand->setOutlineColor( QColor( 0, 255, 0, 170 ) );
+  mRubberBand->setFillColor( QColor( 0, 255, 0, 15 ) );
+  mRubberBand->setOutlineWidth( 3 );
+  mRubberBand->setLineStyle( Qt::DotLine );
+  mCurrentFeature = new QgsSelectedFeature( feature.id(), mLayer, mCanvas );
+  mIsRectangle = false;
+  foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
+  {
+    if ( flag.startsWith( "rect" ) )
+    {
+      mIsRectangle = true;
+      mRectangleCRS = flag.mid( 5 );
+    }
+  }
+  if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::LineString )
+  {
+    mRubberBand->setMeasurementMode( QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
+  }
+  else if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::Polygon )
+  {
+    mRubberBand->setMeasurementMode( mIsRectangle ? QgsGeometryRubberBand::MEASURE_RECTANGLE : QgsGeometryRubberBand::MEASURE_POLYGON, QGis::Meters );
+  }
+  else if ( feature.geometry()->geometry()->wkbType() == QgsWKBTypes::CurvePolygon )
+  {
+    mRubberBand->setMeasurementMode( mIsRectangle ? QgsGeometryRubberBand::MEASURE_CIRCLE : QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
+  }
+  QgsCoordinateTransform ct( mLayer->crs(), mCanvas->mapSettings().destinationCrs() );
+  mRubberBand->setGeometry( feature.geometry()->geometry()->transformed( ct ) );
+  checkVertexSelection();
 }
 
 void QgsRedliningEditTool::checkVertexSelection()

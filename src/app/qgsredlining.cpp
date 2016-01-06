@@ -85,11 +85,10 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   mUi.buttonNewObject->setPopupMode( QToolButton::MenuButtonPopup );
   mUi.buttonNewObject->setDefaultAction( mActionNewPoint );
 
-#warning TODO
-  QAction* actionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
-  actionEditObject->setToolTip( tr( "Edit Object" ) );
-  actionEditObject->setCheckable( true );
-  connect( actionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
+  mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
+  mActionEditObject->setToolTip( tr( "Edit Object" ) );
+  mActionEditObject->setCheckable( true );
+  connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
   mUi.spinBoxSize->setRange( 1, 20 );
   mUi.spinBoxSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
@@ -149,6 +148,29 @@ QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
   connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearLayer() ) );
 
   return mLayer;
+}
+
+QgsRedliningLayer* QgsRedlining::getLayer() const
+{
+  return mLayer.data();
+}
+
+void QgsRedlining::editFeature( const QgsFeature& feature )
+{
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), feature );
+  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  setTool( tool, mActionEditObject );
+}
+
+void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
+{
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), labelPos );
+  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  setTool( tool, mActionEditObject );
 }
 
 void QgsRedlining::clearLayer()

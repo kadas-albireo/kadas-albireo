@@ -45,6 +45,9 @@ class QgsRedlining : public QObject
 
     QgsRedlining( QgisApp* app, const RedliningUi &ui );
     QgsRedliningLayer *getOrCreateLayer();
+    QgsRedliningLayer *getLayer() const;
+    void editFeature( const QgsFeature &feature );
+    void editLabel( const QgsLabelPosition &labelPos );
 
   public slots:
     void newPoint( bool active = true );

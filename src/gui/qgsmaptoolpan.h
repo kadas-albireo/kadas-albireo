@@ -19,6 +19,8 @@
 #include "qgsmaptool.h"
 #include "qgsannotationitem.h"
 
+class QgsFeature;
+class QgsLabelPosition;
 class QgsMapCanvas;
 class QgsRubberBand;
 class QPinchGesture;
@@ -61,6 +63,8 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
   signals:
     void contextMenuRequested( QPoint screenPos, QgsPoint mapPos );
+    void featurePicked( const QgsFeature& feature, QgsVectorLayer* layer );
+    void labelPicked( const QgsLabelPosition& labelPos );
 
   private:
 
@@ -77,7 +81,7 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     QRect mZoomRect;
 
     //!Flag to indicate whether mouseRelease is a click (i.e. no moves inbetween)
-    bool mAnnotationPickClick;
+    bool mPickClick;
 
     //! Current annotation move action
     QgsAnnotationItem::MouseMoveAction mAnnotationMoveAction;

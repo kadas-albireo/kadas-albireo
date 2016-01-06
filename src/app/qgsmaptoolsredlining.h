@@ -86,7 +86,9 @@ class QgsRedliningEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
+    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsFeature &feature );
     QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsLabelPosition& labelPos );
     ~QgsRedliningEditTool();
     void canvasPressEvent( QMouseEvent *e ) override;
     void canvasReleaseEvent( QMouseEvent *e ) override;
@@ -114,9 +116,12 @@ class QgsRedliningEditTool : public QgsMapTool
     QString mRectangleCRS;
     QgsPoint mPressPos;
     QgsPoint mPrevPos;
+    bool mUnsetOnMiss;
 
     void clearCurrent( bool refresh = true );
     void checkVertexSelection();
+    void selectFeature( const QgsFeature &feature );
+    void selectLabel( const QgsLabelPosition& labelPos );
 
   private slots:
     void updateLabelBoundingBox();

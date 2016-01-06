@@ -1178,6 +1178,10 @@ void QgisApp::createCanvasTools()
   mMapTools.mPan = new QgsMapToolPan( mapCanvas() );
   connect( mMapTools.mPan, SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ),
            this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
+  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsFeature, QgsVectorLayer* ) ),
+           this, SLOT( handleFeaturePicked( QgsFeature, QgsVectorLayer* ) ) );
+  connect( mMapTools.mPan, SIGNAL( labelPicked( QgsLabelPosition ) ),
+           this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mapCanvas() );
   connect( mMapTools.mIdentify, SIGNAL( copyToClipboard( QgsFeatureStore & ) ),
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
@@ -5898,6 +5902,22 @@ void QgisApp::dizzy()
 void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
 {
   QgsMapCanvasContextMenu( mapPos ).exec( screenPos );
+}
+
+void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *layer )
+{
+  if ( mRedlining->getLayer() && layer == mRedlining->getLayer() )
+  {
+    mRedlining->editFeature( feature );
+  }
+}
+
+void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
+{
+  if ( mRedlining->getLayer() && mRedlining->getLayer()->id() == labelPos.layerID )
+  {
+    mRedlining->editLabel( labelPos );
+  }
 }
 
 // toggle overview status

@@ -50,6 +50,7 @@ class QgsGeometry;
 class QgsGPSInformationWidget;
 class QgsGPSRouteEditor;
 class QgsFeature;
+class QgsLabelPosition;
 class QgsLayerTreeMapCanvasBridge;
 class QgsLayerTreeView;
 class QgsLegendInterface;
@@ -1055,6 +1056,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     void dizzy();
 
     void showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos );
+    void handleFeaturePicked( const QgsFeature& feature, QgsVectorLayer* layer );
+    void handleLabelPicked( const QgsLabelPosition& labelPos );
 
   signals:
     /** emitted when a key is pressed and we want non widget sublasses to be able
