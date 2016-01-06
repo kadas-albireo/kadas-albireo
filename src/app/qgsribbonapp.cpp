@@ -71,9 +71,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   // Base class init
   init( restorePlugins );
 
-  mToggleButtonGroup = new QButtonGroup( this );
-
   mCoordinateDisplayer = new QgsCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
+  connect( mCoordinateDisplayer, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ), this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ) );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
@@ -131,6 +130,11 @@ void QgsRibbonApp::setTheme( QString themeName )
   }
 
   emit currentThemeChanged( themeName );
+}
+
+void QgsRibbonApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
+{
+  mCoordinateDisplayer->getCoordinateDisplayFormat( format, epsg );
 }
 
 void QgsRibbonApp::resizeEvent( QResizeEvent* event )
@@ -331,49 +335,47 @@ void QgsRibbonApp::configureButtons()
 
   //draw tab
 
-  //mActionPin
-  connect( mActionPin, SIGNAL( toggled( bool ) ), this, SLOT( pin( bool ) ) );
-  setActionToButton( mActionPin, mPinButton );
+  connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
+  setActionToButton( mActionPin, mPinButton, mMapTools.mPinAnnotation );
 
   //Analysis tab
 
-  //mActionDistance
-  connect( mActionDistance, SIGNAL( toggled( bool ) ), this, SLOT( distance( bool ) ) );
-  setActionToButton( mActionDistance, mDistanceButton );
-  //mActionArea
-  connect( mActionArea, SIGNAL( toggled( bool ) ), this, SLOT( area( bool ) ) );
-  setActionToButton( mActionArea, mAreaButton );
-  //mActionCircle
-  connect( mActionCircle, SIGNAL( toggled( bool ) ), this, SLOT( circle( bool ) ) );
-  setActionToButton( mActionCircle, mMeasureCircleButton );
-  //mActionProfile
-  connect( mActionProfile, SIGNAL( toggled( bool ) ), this, SLOT( profile( bool ) ) );
-  setActionToButton( mActionProfile, mProfileButton );
-  //mActionAzimuth
-  connect( mActionAzimuth, SIGNAL( toggled( bool ) ), this, SLOT( azimuth( bool ) ) );
-  setActionToButton( mActionAzimuth, mAzimuthButton );
-  //mActionLineOfSight
-  setActionToButton( mActionLineOfSight, mLineOfSightButton );
-  //mActionSlope
-  connect( mActionSlope, SIGNAL( toggled( bool ) ), this, SLOT( slope( bool ) ) );
-  setActionToButton( mActionSlope, mSlopeButton );
-  //mActionHillshade
-  connect( mActionHillshade, SIGNAL( toggled( bool ) ), this, SLOT( hillshade( bool ) ) );
-  setActionToButton( mActionHillshade, mHillshadeButton );
-  //mAcionViewshed
-  connect( mActionViewshed, SIGNAL( toggled( bool ) ), this, SLOT( viewshed( bool ) ) );
-  setActionToButton( mActionViewshed, mViewshedButton );
+  connect( mActionDistance, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
+  setActionToButton( mActionDistance, mDistanceButton, mMapTools.mMeasureDist );
+
+  connect( mActionArea, SIGNAL( triggered( bool ) ), this, SLOT( measureArea( bool ) ) );
+  setActionToButton( mActionArea, mAreaButton, mMapTools.mMeasureArea );
+
+  connect( mActionCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle( bool ) ) );
+  setActionToButton( mActionCircle, mMeasureCircleButton, mMapTools.mMeasureCircle );
+
+  connect( mActionProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile( bool ) ) );
+  setActionToButton( mActionProfile, mProfileButton, mMapTools.mMeasureHeightProfile );
+
+  connect( mActionAzimuth, SIGNAL( triggered( bool ) ), this, SLOT( measureAngle( bool ) ) );
+  setActionToButton( mActionAzimuth, mAzimuthButton, mMapTools.mMeasureAngle );
+
+  connect( mActionSlope, SIGNAL( triggered( bool ) ), this, SLOT( slope( bool ) ) );
+  setActionToButton( mActionSlope, mSlopeButton, mMapTools.mSlope );
+
+  connect( mActionHillshade, SIGNAL( triggered( bool ) ), this, SLOT( hillshade( bool ) ) );
+  setActionToButton( mActionHillshade, mHillshadeButton, mMapTools.mHillshade );
+
+  connect( mActionViewshed, SIGNAL( triggered( bool ) ), this, SLOT( viewshed( bool ) ) );
+  setActionToButton( mActionViewshed, mViewshedButton, mMapTools.mViewshed );
+
   //mActionWPS
   setActionToButton( mActionWPS, mWPSButton );
 }
 
-void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button )
+void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )
 {
   button->setDefaultAction( action );
   button->setProperty( "actionName", action->objectName() );
-  if ( action->isCheckable() )
+  if ( tool )
   {
-    mToggleButtonGroup->addButton( button );
+    tool->setAction( action );
+    button->setCheckable( true );
   }
 }
 
@@ -414,88 +416,3 @@ void QgsRibbonApp::on_mZoomOutButton_clicked()
     mMapCanvas->zoomOut();
   }
 }
-
-#warning "TODO: move to qgisapp"
-/*
-void QgsRibbonApp::pin( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMapToolPinAnnotation : mNonEditMapTool );
-}
-
-void QgsRibbonApp::profile( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureHeightProfile : mNonEditMapTool );
-}
-
-void QgsRibbonApp::distance( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureDist : mNonEditMapTool );
-}
-
-void QgsRibbonApp::area( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureArea : mNonEditMapTool );
-}
-
-void QgsRibbonApp::azimuth( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureAngle : mNonEditMapTool );
-}
-
-void QgsRibbonApp::circle( bool enabled )
-{
-  mMapCanvas->setMapTool( enabled ? mMapTools.mMeasureCircle : mNonEditMapTool );
-}
-
-void QgsRibbonApp::slope( bool enabled )
-{
-  if ( enabled )
-  {
-    mSlopeTool = new QgsSlopeTool( mMapCanvas, this );
-    connect( mSlopeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
-  }
-  else
-  {
-    delete mSlopeTool;
-    mSlopeTool = 0;
-    mMapCanvas->setMapTool( mNonEditMapTool );
-  }
-}
-
-void QgsRibbonApp::hillshade( bool enabled )
-{
-  if ( enabled )
-  {
-    mHillshadeTool = new QgsHillshadeTool( mMapCanvas, this );
-    connect( mHillshadeTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
-  }
-  else
-  {
-    delete mHillshadeTool;
-    mHillshadeTool = 0;
-    mMapCanvas->setMapTool( mNonEditMapTool );
-  }
-}
-
-void QgsRibbonApp::viewshed( bool enabled )
-{
-  if ( enabled )
-  {
-    mViewshedTool = new QgsViewshedTool( mMapCanvas, false, this );
-    connect( mViewshedTool, SIGNAL( finished() ), this, SLOT( setNonEditMapTool() ) );
-  }
-  else
-  {
-    delete mViewshedTool;
-    mViewshedTool = 0;
-  }
-}
-
-void QgsRibbonApp::pinActionToggled( bool enabled )
-{
-  if ( !enabled )
-  {
-    mMapCanvas->setMapTool( mNonEditMapTool );
-  }
-}
-*/

@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgscrsselection.h                                                   *
+ *  qgsmaptoolhillshade.h                                                  *
  *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  begin                : Nov 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,29 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSCRSSELECTION_H
-#define QGSCRSSELECTION_H
+#ifndef QGSMAPTOOLHILLSHADE_H
+#define QGSMAPTOOLHILLSHADE_H
 
-#include <QToolButton>
+#include "qgsmaptooldrawshape.h"
 
-class QgsMapCanvas;
-
-class GUI_EXPORT QgsCrsSelection : public QToolButton
+class APP_EXPORT QgsMapToolHillshade : public QgsMapToolDrawRectangle
 {
     Q_OBJECT
   public:
-    QgsCrsSelection( QWidget* parent = 0 );
-    ~QgsCrsSelection();
-
-    void setMapCanvas( QgsMapCanvas* canvas );
-
-  private:
-    QgsMapCanvas* mMapCanvas;
+    QgsMapToolHillshade( QgsMapCanvas* mapCanvas );
 
   private slots:
-    void syncCrsButton();
-    void setMapCrs();
-    void selectMapCrs();
+    void drawFinished();
 };
 
-#endif // QGSCRSSELECTION_H
+#endif // QGSMAPTOOLHILLSHADE_H

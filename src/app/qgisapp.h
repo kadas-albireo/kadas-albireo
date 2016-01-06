@@ -103,6 +103,7 @@ class QTapAndHoldGesture;
 #include "qgsconfig.h"
 #include "qgsfeature.h"
 #include "qgsfeaturestore.h"
+#include "qgscoordinateutils.h"
 #include "qgspoint.h"
 #include "qgsrasterlayer.h"
 #include "qgssnappingdialog.h"
@@ -486,6 +487,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Save project as
     void fileSaveAs();
 
+    virtual void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) = 0;
+
   protected:
 
     //! Handle state changes (WindowTitleChange)
@@ -811,15 +814,23 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Identify feature(s) on the currently selected layer
     void identify();
     //! Measure distance
-    void measure();
+    void measure( bool active );
     //! Measure area
-    void measureArea();
+    void measureArea( bool active );
     //! Measure circle
-    void measureCircle();
+    void measureCircle( bool active );
     //! Measure height profile
-    void measureHeightProfile();
+    void measureHeightProfile( bool active );
     //! Measure angle
-    void measureAngle();
+    void measureAngle( bool active );
+    //! Compute terrain slope
+    void slope( bool active );
+    //! Compute terrain hillshade
+    void hillshade( bool active );
+    //! Compute terrain viewshed
+    void viewshed( bool active );
+    //! Compute terrain viewshed of a sector
+    void viewshedSector( bool active );
 
     //! Run the default feature action on the current layer
     void doFeatureAction();
@@ -829,11 +840,11 @@ class APP_EXPORT QgisApp : public QMainWindow
     void refreshFeatureActions();
 
     //annotations
-    void addFormAnnotation();
-    void addTextAnnotation();
-    void addHtmlAnnotation();
-    void addSvgAnnotation();
-    void modifyAnnotation();
+    void addFormAnnotation( bool active );
+    void addTextAnnotation( bool active );
+    void addHtmlAnnotation( bool active );
+    void addSvgAnnotation( bool active );
+    void addPinAnnotation( bool active );
 
     /** Alerts user when labeling font for layer has not been found on system */
     void labelingFontNotFound( QgsVectorLayer *vlayer, const QString& fontfamily );
@@ -1016,6 +1027,8 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     void editingToggled();
 
+    void coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat format, QString epsg );
+
   protected:
     static bool cmpByText_( QAction* a, QAction* b )
     {
@@ -1100,6 +1113,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     /**Apply raster brightness */
     void adjustBrightnessContrast( int delta, bool updateBrightness = true );
 
+    void toggleTool( QgsMapTool* tool, bool active );
+
     QgisAppStyleSheet *mStyleSheetBuilder;
 
 
@@ -1150,11 +1165,11 @@ class APP_EXPORT QgisApp : public QMainWindow
             , mDeletePart( 0 )
             , mNodeTool( 0 )
             , mRotatePointSymbolsTool( 0 )
-            , mAnnotation( 0 )
             , mFormAnnotation( 0 )
             , mHtmlAnnotation( 0 )
             , mSvgAnnotation( 0 )
             , mTextAnnotation( 0 )
+            , mPinAnnotation( 0 )
             , mPinLabels( 0 )
             , mShowHideLabels( 0 )
             , mMoveLabel( 0 )
@@ -1197,17 +1212,21 @@ class APP_EXPORT QgisApp : public QMainWindow
         QgsMapTool *mDeletePart;
         QgsMapTool *mNodeTool;
         QgsMapTool *mRotatePointSymbolsTool;
-        QgsMapTool *mAnnotation;
         QgsMapTool *mFormAnnotation;
         QgsMapTool *mHtmlAnnotation;
         QgsMapTool *mSvgAnnotation;
         QgsMapTool *mTextAnnotation;
+        QgsMapTool *mPinAnnotation;
         QgsMapTool *mPinLabels;
         QgsMapTool *mShowHideLabels;
         QgsMapTool *mMoveLabel;
         QgsMapTool *mRotateFeature;
         QgsMapTool *mRotateLabel;
         QgsMapTool *mChangeLabelProperties;
+        QgsMapTool *mSlope;
+        QgsMapTool *mHillshade;
+        QgsMapTool *mViewshed;
+        QgsMapTool *mViewshedSector;
     } mMapTools;
 
     QgsMapTool *mNonEditMapTool;

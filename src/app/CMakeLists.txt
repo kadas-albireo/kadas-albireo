@@ -53,6 +53,8 @@ SET(QGIS_APP_SRCS
   qgssavestyletodbdialog.cpp
   qgsguivectorlayertools.cpp
   qgsselectgrouplayerdialog.cpp
+  qgscoordinatedisplayer.cpp
+  qgscrsselection.cpp
 
   qgsmaptooladdfeature.cpp
   qgsmaptooladdpart.cpp
@@ -66,6 +68,7 @@ SET(QGIS_APP_SRCS
   qgsmaptoolfeatureaction.cpp
   qgsmaptoolformannotation.cpp
   qgsmaptoolhtmlannotation.cpp
+  qgsmaptoolpinannotation.cpp
   qgsmaptoolpinlabels.cpp
   qgsmaptoolshowhidelabels.cpp
   qgsmaptoolidentifyaction.cpp
@@ -92,9 +95,9 @@ SET(QGIS_APP_SRCS
   qgsmaptooltextannotation.cpp
   qgsmaptoolsredlining.cpp
 
-  qgshillshadetool.cpp
-  qgsslopetool.cpp
-  qgsviewshedtool.cpp
+  qgsmaptoolhillshade.cpp
+  qgsmaptoolslope.cpp
+  qgsmaptoolviewshed.cpp
 
   nodetool/qgsmaptoolnodetool.cpp
   nodetool/qgsselectedfeature.cpp
@@ -208,6 +211,8 @@ SET (QGIS_APP_MOC_HDRS
   qgsfieldcalculator.h
   qgsfieldsproperties.h
   qgsgpsrouteeditor.h
+  qgscoordinatedisplayer.h
+  qgscrsselection.h
 
   qgsidentifyresultsdialog.h
   qgsribbonlayertreeviewmenuprovider.h
@@ -259,9 +264,9 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsredlining.h
   qgsmaptooladdcircularstring.h
 
-  qgshillshadetool.h
-  qgsslopetool.h
-  qgsviewshedtool.h
+  qgsmaptoolhillshade.h
+  qgsmaptoolslope.h
+  qgsmaptoolviewshed.h
 
   nodetool/qgsmaptoolnodetool.h
   nodetool/qgsselectedfeature.h

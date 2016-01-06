@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsmaptoolpin.h                                                     *
+ *  qgsmaptoolslope.h                                                      *
  *  -------------------                                                    *
- *  begin                : Jul 22, 2015                                    *
+ *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,25 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSMAPTOOLPIN_H
-#define QGSMAPTOOLPIN_H
+#ifndef QGSMAPTOOLSLOPE_H
+#define QGSMAPTOOLSLOPE_H
 
-#include "qgsmaptoolannotation.h"
+#include "qgsmaptooldrawshape.h"
 
-class QgsCoordinateDisplayer;
-
-class GUI_EXPORT QgsMapToolPinAnnotation: public QgsMapToolAnnotation
+class APP_EXPORT QgsMapToolSlope : public QgsMapToolDrawRectangle
 {
+    Q_OBJECT
   public:
-    QgsMapToolPinAnnotation( QgsMapCanvas* canvas, QgsCoordinateDisplayer* coordinateDisplayer )
-        : QgsMapToolAnnotation( canvas ), mCoordinateDisplayer( coordinateDisplayer ) {}
+    QgsMapToolSlope(QgsMapCanvas* mapCanvas);
 
-  protected:
-    QgsAnnotationItem* createItem( const QPoint &pos ) override;
-
-  private:
-    QgsCoordinateDisplayer* mCoordinateDisplayer;
+  private slots:
+    void drawFinished();
 };
 
-#endif // QGSMAPTOOLPIN_H
-
+#endif // QGSMAPTOOLSLOPE_H

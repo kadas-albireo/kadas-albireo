@@ -106,10 +106,6 @@ editorwidgets/qgswebviewconfigdlg.cpp
 editorwidgets/qgswebviewwidgetwrapper.cpp
 editorwidgets/qgswebviewwidgetfactory.cpp
 
-qgscoordinateconverter.cpp
-qgscoordinatedisplayer.cpp
-qgscrsselection.cpp
-qgsmaptoolpinannotation.cpp
 qgspinannotationitem.cpp
 search/qgssearchbox.cpp
 search/qgscoordinatesearchprovider.cpp
@@ -352,11 +348,8 @@ SET(QGIS_GUI_MOC_HDRS
   qgshtmlannotationdialog.h
   qgssvgannotationdialog.h
   qgstextannotationdialog.h
-
-  qgscoordinateconverter.h
-  qgscoordinatedisplayer.h
-  qgscrsselection.h
   qgspinannotationitem.h
+
   search/qgssearchbox.h
   search/qgssearchprovider.h
   search/qgscoordinatesearchprovider.h

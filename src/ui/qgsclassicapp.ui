@@ -1151,18 +1151,6 @@
     <string>Form Annotation</string>
    </property>
   </action>
-  <action name="mActionAnnotation">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/themes/default/mActionAnnotation.png</normaloff>:/images/themes/default/mActionAnnotation.png</iconset>
-   </property>
-   <property name="text">
-    <string>Move Annotation</string>
-   </property>
-  </action>
   <action name="mActionLabeling">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
@@ -2390,6 +2378,21 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>Add ArcGIS MapServer Layer</string>
+   </property>
+  </action>
+  <action name="mActionPinAnnotation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/pin_red.svg</normaloff>:/images/themes/default/pin_red.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Pin Annotation</string>
+   </property>
+   <property name="toolTip">
+    <string>Pin Annotation</string>
    </property>
   </action>
  </widget>

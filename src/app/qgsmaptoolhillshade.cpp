@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgshillshadetool.cpp                                                *
+ *  qgsmaptoolhillshade.cpp                                                *
  *  -------------------                                                    *
  *  begin                : Nov 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,13 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgshillshadetool.h"
+#include "qgisapp.h"
+#include "qgsmaptoolhillshade.h"
 #include "qgscolorrampshader.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsmaptooldrawshape.h"
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgstemporaryfile.h"
@@ -36,28 +36,19 @@
 #include <QProgressDialog>
 
 
-QgsHillshadeTool::QgsHillshadeTool( QgsMapCanvas* mapCanvas, QObject *parent )
-    : QObject( parent ), mMapCanvas( mapCanvas )
+QgsMapToolHillshade::QgsMapToolHillshade(QgsMapCanvas* mapCanvas)
+  : QgsMapToolDrawRectangle( mapCanvas )
 {
-  mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
-  connect( mRectangleTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-  mMapCanvas->setMapTool( mRectangleTool );
+  connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 
-QgsHillshadeTool::~QgsHillshadeTool()
-{
-  delete mRectangleTool;
-}
-
-void QgsHillshadeTool::drawFinished()
+void QgsMapToolHillshade::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-#pragma message( "warning: TODO" )
-//  mIface->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
-    emit finished();
+    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
     return;
   }
 
@@ -87,15 +78,14 @@ void QgsHillshadeTool::drawFinished()
   anglesDialog.setFixedSize( anglesDialog.sizeHint() );
   if ( anglesDialog.exec() == QDialog::Rejected )
   {
-    emit finished();
     return;
   }
 
   QgsPoint p1, p2;
-  mRectangleTool->getPart( 0, p1, p2 );
+  getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
   rect.normalize();
-  QgsCoordinateReferenceSystem rectCrs = mMapCanvas->mapSettings().destinationCrs();
+  QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "hillshade_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
@@ -111,5 +101,4 @@ void QgsHillshadeTool::drawFinished()
     layer->renderer()->setOpacity( 0.6 );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
-  emit finished();
 }

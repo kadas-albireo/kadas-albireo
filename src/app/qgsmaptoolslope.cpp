@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsslopetool.cpp                                                    *
+ *  qgsmaptoolslope.cpp                                                    *
  *  -------------------                                                    *
  *  begin                : Nov 11, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,12 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsslopetool.h"
+#include "qgisapp.h"
+#include "qgsmaptoolslope.h"
 #include "qgscolorrampshader.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsmaptooldrawshape.h"
 #include "qgsproject.h"
 #include "qgsrasterlayer.h"
 #include "qgstemporaryfile.h"
@@ -31,36 +31,27 @@
 #include <QProgressDialog>
 
 
-QgsSlopeTool::QgsSlopeTool( QgsMapCanvas* mapCanvas, QObject *parent )
-    : QObject( parent ), mMapCanvas( mapCanvas )
+QgsMapToolSlope::QgsMapToolSlope( QgsMapCanvas* mapCanvas )
+    : QgsMapToolDrawRectangle( mapCanvas )
 {
-  mRectangleTool = new QgsMapToolDrawRectangle( mMapCanvas );
-  connect( mRectangleTool, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-  mMapCanvas->setMapTool( mRectangleTool );
+  connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 
-QgsSlopeTool::~QgsSlopeTool()
-{
-  delete mRectangleTool;
-}
-
-void QgsSlopeTool::drawFinished()
+void QgsMapToolSlope::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
-#pragma message( "warning: TODO" )
-//  mIface->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
-    emit finished();
+    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
     return;
   }
 
   QgsPoint p1, p2;
-  mRectangleTool->getPart( 0, p1, p2 );
+  getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
   rect.normalize();
-  QgsCoordinateReferenceSystem rectCrs = mMapCanvas->mapSettings().destinationCrs();
+  QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
@@ -91,5 +82,4 @@ void QgsSlopeTool::drawFinished()
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
-  emit finished();
 }

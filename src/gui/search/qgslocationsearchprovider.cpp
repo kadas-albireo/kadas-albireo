@@ -49,13 +49,13 @@ QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
 
 void QgsLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( QSettings().value( "vbsfunctionality/search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
+  QUrl url( QSettings().value( "search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
 
   QNetworkRequest req( url );
-  req.setRawHeader( "Referer", QSettings().value( "/vbsfunctionality/referrer", "http://localhost" ).toByteArray() );
+  req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
   mNetReply = QgsNetworkAccessManager::instance()->get( req );
   connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );

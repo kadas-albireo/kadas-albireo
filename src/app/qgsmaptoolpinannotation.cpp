@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgshillshadetool.h                                                  *
+ *  qgsmaptoolpin.cpp                                                   *
  *  -------------------                                                    *
- *  begin                : Nov 15, 2015                                    *
+ *  begin                : Jul 22, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,30 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSHILLSHADETOOL_H
-#define QGSHILLSHADETOOL_H
+#include "qgisapp.h"
+#include "qgscoordinateutils.h"
+#include "qgsmaptoolpinannotation.h"
+#include "qgspinannotationitem.h"
 
-#include <QObject>
-
-class QgsMapCanvas;
-class QgsMapToolDrawRectangle;
-
-class GUI_EXPORT QgsHillshadeTool : public QObject
+QgsAnnotationItem* QgsMapToolPinAnnotation::createItem( const QPoint &pos )
 {
-    Q_OBJECT
-  public:
-    QgsHillshadeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
-    ~QgsHillshadeTool();
-
-  signals:
-    void finished();
-
-  private:
-    QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawRectangle* mRectangleTool;
-
-  private slots:
-    void drawFinished();
-};
-
-#endif // QGSHILLSHADETOOL_H
+  QgsCoordinateUtils::TargetFormat format;
+  QString epsg;
+  QgisApp::instance()->getCoordinateDisplayFormat(format, epsg);
+  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas, format, epsg );
+  connect(QgisApp::instance(), SIGNAL(coordinateDisplayFormatChanged(QgsCoordinateUtils::TargetFormat&,QString&)), pinItem, SLOT(changeCoordinateFormatter(QgsCoordinateUtils::TargetFormat,QString)));
+  pinItem->setMapPosition( toMapCoordinates( pos ) );
+  pinItem->setSelected( true );
+  return pinItem;
+}

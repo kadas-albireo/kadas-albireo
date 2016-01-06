@@ -66,6 +66,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QMenu *panelMenu() const override { return mPanelMenu; }
     QMenu *featureActionMenu() const override { return mFeatureActionMenu; }
     void setTheme( QString themeName ) override;
+    void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) override;
 
   private slots:
     void activateDeactivateLayerRelatedActions( QgsMapLayer */*layer*/ ) override {}
@@ -94,7 +95,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QMenu* mProjectTemplatesMenu;
     QMenu* mPanelMenu;
     QMenu* mFeatureActionMenu;
-    QButtonGroup* mToggleButtonGroup;
     QgsCoordinateDisplayer* mCoordinateDisplayer;
     QgsMessageBar* mInfoBar;
 
@@ -109,7 +109,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void performDrag( const QIcon* icon );
     void restoreFavoriteButton( QToolButton* button );
     void configureButtons();
-    void setActionToButton( QAction* action, QToolButton* button );
+    void setActionToButton( QAction* action, QToolButton* button , QgsMapTool *tool = 0 );
     void updateWidgetPositions();
     void initLayerTreeView();
 };

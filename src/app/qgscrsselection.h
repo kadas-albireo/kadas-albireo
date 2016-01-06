@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgscoordinatedisplayer.h                                            *
+ *  qgscrsselection.h                                                   *
  *  -------------------                                                    *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,39 +15,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSCOORDINATEDISPAYER_H
-#define QGSCOORDINATEDISPAYER_H
+#ifndef QGSCRSSELECTION_H
+#define QGSCRSSELECTION_H
 
-#include <QWidget>
-#include <qgspoint.h>
+#include <QToolButton>
 
-class QComboBox;
-class QLabel;
-class QLineEdit;
-class QgsCoordinateReferenceSystem;
 class QgsMapCanvas;
 
-class GUI_EXPORT QgsCoordinateDisplayer : public QWidget
+class APP_EXPORT QgsCrsSelection : public QToolButton
 {
     Q_OBJECT
   public:
-    QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
-    ~QgsCoordinateDisplayer();
-    QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
-    double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
+    QgsCrsSelection( QWidget* parent = 0 );
+    ~QgsCrsSelection();
+
+    void setMapCanvas( QgsMapCanvas* canvas );
 
   private:
     QgsMapCanvas* mMapCanvas;
-    QComboBox* mCRSSelectionCombo;
-    QLabel* mIconLabel;
-    QLineEdit* mCoordinateLineEdit;
-
-  signals:
-    void displayFormatChanged();
 
   private slots:
-    void displayCoordinates( const QgsPoint& p );
-    void syncProjectCrs();
+    void syncCrsButton();
+    void setMapCrs();
+    void selectMapCrs();
 };
 
-#endif // QGSCOORDINATEDISPAYER_H
+#endif // QGSCRSSELECTION_H

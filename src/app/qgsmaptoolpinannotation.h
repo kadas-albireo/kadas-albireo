@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsmaptoolpin.cpp                                                   *
+ *  qgsmaptoolpin.h                                                     *
  *  -------------------                                                    *
  *  begin                : Jul 22, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,15 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsmaptoolpinannotation.h"
-#include "qgspinannotationitem.h"
-#include "qgsmapcanvas.h"
-#include <QMouseEvent>
+#ifndef QGSMAPTOOLPIN_H
+#define QGSMAPTOOLPIN_H
 
-QgsAnnotationItem* QgsMapToolPinAnnotation::createItem( const QPoint &pos )
+#include "qgsmaptoolannotation.h"
+
+class APP_EXPORT QgsMapToolPinAnnotation: public QgsMapToolAnnotation
 {
-  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas, mCoordinateDisplayer );
-  pinItem->setMapPosition( toMapCoordinates( pos ) );
-  pinItem->setSelected( true );
-  return pinItem;
-}
+  public:
+    QgsMapToolPinAnnotation( QgsMapCanvas* canvas )
+        : QgsMapToolAnnotation( canvas ) {}
+
+  protected:
+    QgsAnnotationItem* createItem( const QPoint &pos ) override;
+};
+
+#endif // QGSMAPTOOLPIN_H
+
