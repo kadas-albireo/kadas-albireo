@@ -982,8 +982,6 @@ void QgsCoordinateReferenceSystem::setMapUnits()
     if ( qAbs( toMeter - feetToMeter ) < smallNum )
       unit = "Foot";
 
-    QgsDebugMsg( "Projection has linear units of " + unit );
-
     if ( qgsDoubleNear( toMeter, 1.0 ) ) //Unit name for meters would be "metre"
       mMapUnits = QGis::Meters;
     else if ( unit == "Foot" )
