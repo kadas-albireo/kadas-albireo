@@ -107,6 +107,7 @@ void QgsMapToolViewshed::drawFinished()
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
     QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
+    reset();
     return;
   }
 
@@ -121,6 +122,7 @@ void QgsMapToolViewshed::drawFinished()
   connect( &viewshedDialog, SIGNAL( radiusChanged( double ) ), this, SLOT( adjustRadius( double ) ) );
   if ( viewshedDialog.exec() == QDialog::Rejected )
   {
+    reset();
     return;
   }
 
@@ -146,6 +148,7 @@ void QgsMapToolViewshed::drawFinished()
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
+  reset();
 }
 
 void QgsMapToolViewshed::adjustRadius( double newRadius )
@@ -175,6 +178,7 @@ void QgsViewshedSectorTool::drawFinished()
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
     QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
+    reset();
     return;
   }
 
@@ -191,6 +195,7 @@ void QgsViewshedSectorTool::drawFinished()
   connect( &viewshedDialog, SIGNAL( radiusChanged( double ) ), this, SLOT( adjustRadius( double ) ) );
   if ( viewshedDialog.exec() == QDialog::Rejected )
   {
+    reset();
     return;
   }
 
@@ -222,6 +227,7 @@ void QgsViewshedSectorTool::drawFinished()
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
+  reset();
 }
 
 void QgsViewshedSectorTool::adjustRadius( double newRadius )

@@ -44,6 +44,7 @@ void QgsMapToolSlope::drawFinished()
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
     QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
+    reset();
     return;
   }
 
@@ -82,4 +83,5 @@ void QgsMapToolSlope::drawFinished()
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
+  reset();
 }

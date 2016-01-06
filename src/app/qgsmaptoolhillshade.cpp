@@ -36,8 +36,8 @@
 #include <QProgressDialog>
 
 
-QgsMapToolHillshade::QgsMapToolHillshade(QgsMapCanvas* mapCanvas)
-  : QgsMapToolDrawRectangle( mapCanvas )
+QgsMapToolHillshade::QgsMapToolHillshade( QgsMapCanvas* mapCanvas )
+    : QgsMapToolDrawRectangle( mapCanvas )
 {
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
@@ -49,6 +49,7 @@ void QgsMapToolHillshade::drawFinished()
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
     QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
+    reset();
     return;
   }
 
@@ -78,6 +79,7 @@ void QgsMapToolHillshade::drawFinished()
   anglesDialog.setFixedSize( anglesDialog.sizeHint() );
   if ( anglesDialog.exec() == QDialog::Rejected )
   {
+    reset();
     return;
   }
 
@@ -101,4 +103,5 @@ void QgsMapToolHillshade::drawFinished()
     layer->renderer()->setOpacity( 0.6 );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
+  reset();
 }
