@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsslopetool.h                                                      *
+ *  qgsmaptoolviewshed.h                                                   *
  *  -------------------                                                    *
- *  begin                : Nov 11, 2015                                    *
+ *  begin                : Nov 12, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,30 +15,51 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSSLOPETOOL_H
-#define QGSSLOPETOOL_H
+#ifndef QGSMAPTOOLVIEWSHED_H
+#define QGSMAPTOOLVIEWSHED_H
 
-#include <QObject>
+#include "qgsmaptooldrawshape.h"
 
-class QgsMapCanvas;
-class QgsMapToolDrawRectangle;
+#include <QDialog>
 
-class GUI_EXPORT QgsSlopeTool : public QObject
+class QDoubleSpinBox;
+
+class APP_EXPORT QgsViewshedDialog : public QDialog
+{
+  Q_OBJECT
+public:
+  QgsViewshedDialog(double radius, QWidget* parent = 0);
+  double getObserverHeight() const;
+  double getTargetHeight() const;
+
+signals:
+  void radiusChanged(double radius);
+
+private:
+  QDoubleSpinBox* mSpinBoxObserverHeight;
+  QDoubleSpinBox* mSpinBoxTargetHeight;
+};
+
+class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircle
 {
     Q_OBJECT
   public:
-    QgsSlopeTool( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
-    ~QgsSlopeTool();
-
-  signals:
-    void finished();
-
-  private:
-    QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawRectangle* mRectangleTool;
+    QgsMapToolViewshed( QgsMapCanvas* mapCanvas );
 
   private slots:
     void drawFinished();
+    void adjustRadius( double newRadius );
 };
 
-#endif // QGSSLOPETOOL_H
+class APP_EXPORT QgsViewshedSectorTool : public QgsMapToolDrawCircularSector
+{
+    Q_OBJECT
+  public:
+    QgsViewshedSectorTool( QgsMapCanvas* mapCanvas );
+
+  private slots:
+    void drawFinished();
+    void adjustRadius( double newRadius );
+};
+
+#endif // QGSMAPTOOLVIEWSHED_H

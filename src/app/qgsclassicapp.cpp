@@ -356,7 +356,6 @@ void QgsClassicApp::setTheme( QString theThemeName )
   mActionAddAfsLayer->setIcon( QgsApplication::getThemeIcon( "/mActionAddAfsLayer.svg" ) );
   mActionAddAmsLayer->setIcon( QgsApplication::getThemeIcon( "/mActionAddAmsLayer.svg" ) );
   mActionAddToOverview->setIcon( QgsApplication::getThemeIcon( "/mActionInOverview.svg" ) );
-  mActionAnnotation->setIcon( QgsApplication::getThemeIcon( "/mActionAnnotation.png" ) );
   mActionFormAnnotation->setIcon( QgsApplication::getThemeIcon( "/mActionFormAnnotation.png" ) );
   mActionHtmlAnnotation->setIcon( QgsApplication::getThemeIcon( "/mActionFormAnnotation.png" ) );
   mActionTextAnnotation->setIcon( QgsApplication::getThemeIcon( "/mActionTextAnnotation.png" ) );
@@ -380,6 +379,12 @@ void QgsClassicApp::setTheme( QString theThemeName )
   }
 
   emit currentThemeChanged( theThemeName );
+}
+
+void QgsClassicApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
+{
+  format = QgsCoordinateUtils::EPSG;
+  epsg = mapCanvas()->mapSettings().destinationCrs().authid();
 }
 
 void QgsClassicApp::createActions()
@@ -451,11 +456,11 @@ void QgsClassicApp::createActions()
   connect( mActionSelectByExpression, SIGNAL( triggered() ), this, SLOT( selectByExpression() ) );
   connect( mActionIdentify, SIGNAL( triggered() ), this, SLOT( identify() ) );
   connect( mActionFeatureAction, SIGNAL( triggered() ), this, SLOT( doFeatureAction() ) );
-  connect( mActionMeasure, SIGNAL( triggered() ), this, SLOT( measure() ) );
-  connect( mActionMeasureArea, SIGNAL( triggered() ), this, SLOT( measureArea() ) );
-  connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle() ) );
-  connect( mActionMeasureHeightProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile() ) );
-  connect( mActionMeasureAngle, SIGNAL( triggered() ), this, SLOT( measureAngle() ) );
+  connect( mActionMeasure, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
+  connect( mActionMeasureArea, SIGNAL( triggered( bool ) ), this, SLOT( measureArea( bool ) ) );
+  connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle( bool ) ) );
+  connect( mActionMeasureHeightProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile( bool ) ) );
+  connect( mActionMeasureAngle, SIGNAL( triggered( bool ) ), this, SLOT( measureAngle( bool ) ) );
   connect( mActionZoomFullExtent, SIGNAL( triggered() ), this, SLOT( zoomFull() ) );
   connect( mActionZoomToLayer, SIGNAL( triggered() ), this, SLOT( zoomToLayerExtent() ) );
   connect( mActionZoomToSelected, SIGNAL( triggered() ), this, SLOT( zoomToSelected() ) );
@@ -466,11 +471,11 @@ void QgsClassicApp::createActions()
   connect( mActionNewBookmark, SIGNAL( triggered() ), this, SLOT( newBookmark() ) );
   connect( mActionShowBookmarks, SIGNAL( triggered() ), this, SLOT( showBookmarks() ) );
   connect( mActionDraw, SIGNAL( triggered() ), this, SLOT( refreshMapCanvas() ) );
-  connect( mActionTextAnnotation, SIGNAL( triggered() ), this, SLOT( addTextAnnotation() ) );
-  connect( mActionFormAnnotation, SIGNAL( triggered() ), this, SLOT( addFormAnnotation() ) );
-  connect( mActionHtmlAnnotation, SIGNAL( triggered() ), this, SLOT( addHtmlAnnotation() ) );
-  connect( mActionSvgAnnotation, SIGNAL( triggered() ), this, SLOT( addSvgAnnotation() ) );
-  connect( mActionAnnotation, SIGNAL( triggered() ), this, SLOT( modifyAnnotation() ) );
+  connect( mActionTextAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addTextAnnotation( bool ) ) );
+  connect( mActionFormAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addFormAnnotation( bool ) ) );
+  connect( mActionHtmlAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addHtmlAnnotation( bool ) ) );
+  connect( mActionSvgAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addSvgAnnotation( bool ) ) );
+  connect( mActionPinAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   connect( mActionLabeling, SIGNAL( triggered() ), this, SLOT( labeling() ) );
 
   // Layer Menu Items
@@ -905,7 +910,7 @@ void QgsClassicApp::createToolBars()
   bt->addAction( mActionFormAnnotation );
   bt->addAction( mActionHtmlAnnotation );
   bt->addAction( mActionSvgAnnotation );
-  bt->addAction( mActionAnnotation );
+  bt->addAction( mActionPinAnnotation );
 
   QAction* defAnnotationAction = mActionTextAnnotation;
   switch ( settings.value( "/UI/annotationTool", 0 ).toInt() )
@@ -914,7 +919,7 @@ void QgsClassicApp::createToolBars()
     case 1: defAnnotationAction = mActionFormAnnotation; break;
     case 2: defAnnotationAction = mActionHtmlAnnotation; break;
     case 3: defAnnotationAction = mActionSvgAnnotation; break;
-    case 4: defAnnotationAction =  mActionAnnotation; break;
+    case 4: defAnnotationAction = mActionPinAnnotation; break;
 
   }
   bt->setDefaultAction( defAnnotationAction );
@@ -1309,7 +1314,7 @@ void QgsClassicApp::setToolActions()
   mMapTools.mFormAnnotation->setAction( mActionFormAnnotation );
   mMapTools.mHtmlAnnotation->setAction( mActionHtmlAnnotation );
   mMapTools.mSvgAnnotation->setAction( mActionSvgAnnotation );
-  mMapTools.mAnnotation->setAction( mActionAnnotation );
+  mMapTools.mPinAnnotation->setAction( mActionPinAnnotation );
   mMapTools.mAddFeature->setAction( mActionAddFeature );
   mMapTools.mCircularStringCurvePoint->setAction( mActionCircularStringCurvePoint );
   mMapTools.mCircularStringRadius->setAction( mActionCircularStringRadius );
@@ -1902,7 +1907,7 @@ void QgsClassicApp::toolButtonActionTriggered( QAction *action )
     settings.setValue( "/UI/annotationTool", 2 );
   else if ( action == mActionSvgAnnotation )
     settings.setValue( "UI/annotationTool", 3 );
-  else if ( action == mActionAnnotation )
+  else if ( action == mActionPinAnnotation )
     settings.setValue( "/UI/annotationTool", 4 );
   else if ( action == mActionNewSpatiaLiteLayer )
     settings.setValue( "/UI/defaultNewLayer", 0 );
@@ -2142,6 +2147,7 @@ void QgsClassicApp::updateCRSStatusBar()
       tr( "Current CRS: %1 (OTFR disabled)" ).arg( mapCanvas()->mapSettings().destinationCrs().description() ) );
     mOnTheFlyProjectionStatusButton->setIcon( QgsApplication::getThemeIcon( "mIconProjectionDisabled.png" ) );
   }
+  emit coordinateDisplayFormatChanged( QgsCoordinateUtils::EPSG, mapCanvas()->mapSettings().destinationCrs().authid() );
 }
 
 void QgsClassicApp::updateUndoActions()

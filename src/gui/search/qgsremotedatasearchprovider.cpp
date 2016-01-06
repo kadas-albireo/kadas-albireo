@@ -65,7 +65,7 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
     }
   }
 
-  QUrl url( QSettings().value( "vbsfunctionality/search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
+  QUrl url( QSettings().value( "search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
   url.addQueryItem( "type", "featuresearch" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "features", remoteLayers.join( "," ) );
@@ -88,7 +88,7 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
   }
 
   QNetworkRequest req( url );
-  req.setRawHeader( "Referer", QSettings().value( "/vbsfunctionality/referrer", "http://localhost" ).toByteArray() );
+  req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
   mNetReply = QgsNetworkAccessManager::instance()->get( req );
   connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );

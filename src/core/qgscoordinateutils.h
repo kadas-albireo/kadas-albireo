@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsviewshedtool.h                                                   *
+ *  qgscoordinateutils.h                                                   *
  *  -------------------                                                    *
- *  begin                : Nov 12, 2015                                    *
+ *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,31 +15,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVIEWSHEDTOOL_H
-#define QGSVIEWSHEDTOOL_H
+#ifndef QGSCOORDINATEUTILS_H
+#define QGSCOORDINATEUTILS_H
 
 #include <QObject>
+#include "qgscoordinatereferencesystem.h"
 
-class QgsMapCanvas;
-class QgsMapToolDrawShape;
+class QgsPoint;
+class QgsCoordinateReferenceSystem;
 
-class GUI_EXPORT QgsViewshedTool : public QObject
+class CORE_EXPORT QgsCoordinateUtils : public QObject
 {
-    Q_OBJECT
   public:
-    QgsViewshedTool( QgsMapCanvas* mapCanvas, bool sectorOnly, QObject* parent = 0 );
-    ~QgsViewshedTool();
+    enum TargetFormat
+    {
+      EPSG,
+      DegMinSec,
+      DegMin,
+      DecDeg,
+      UTM,
+      MGRS
+    };
 
-  signals:
-    void finished();
-
-  private:
-    QgsMapCanvas* mMapCanvas;
-    QgsMapToolDrawShape* mDrawTool;
-
-  private slots:
-    void drawFinished();
-    void adjustRadius( double newRadius );
+    /** Returns the height at the specified position */
+    static double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg = 0 );
+    static QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, TargetFormat targetFormat, const QString& targetEpsg = QString() );
 };
 
-#endif // QGSVIEWSHEDTOOL_H
+#endif // QGSCOORDINATEUTILS_H

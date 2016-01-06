@@ -27,7 +27,7 @@ QTreeView {
     image: url(:/images/checkbox_unchecked.png);
 }*/
 
-QgsRibbonApp, QToolBar {
+QgsRibbonApp, QgsRibbonWindowBase QToolBar {
   background-color: #263B4E;
 }
 

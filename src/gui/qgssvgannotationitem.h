@@ -36,7 +36,7 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
     void setFilePath( const QString& file );
     QString filePath() const { return mFilePath; }
 
-  private:
+  protected:
     QSvgRenderer mSvgRenderer;
     QString mFilePath;
 

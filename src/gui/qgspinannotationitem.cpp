@@ -16,41 +16,42 @@
  ***************************************************************************/
 
 #include "qgspinannotationitem.h"
-#include "qgscoordinatetransform.h"
-#include "qgscoordinatedisplayer.h"
-#include "qgsmapcanvas.h"
+#include "qgsproject.h"
 #include <QApplication>
 #include <QClipboard>
-#include <QGraphicsSceneContextMenuEvent>
 #include <QImageReader>
-#include <qmath.h>
 #include <QMenu>
-#include <QSettings>
 
-QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinateDisplayer *coordinateDisplayer )
-    : QgsSvgAnnotationItem( canvas ), mCoordinateDisplayer( coordinateDisplayer )
+QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinateUtils::TargetFormat targetFormat , const QString &targetEPSG )
+    : QgsSvgAnnotationItem( canvas ), mTargetFormat( targetFormat ), mTargetEPSG( targetEPSG )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
                 QgsAnnotationItem::ItemHasNoFrame |
                 QgsAnnotationItem::ItemHasNoMarker |
                 QgsAnnotationItem::ItemIsNotEditable );
-  QSize imageSize = QImageReader( ":/vbsfunctionality/icons/pin_red.svg" ).size();
-  setFilePath( ":/vbsfunctionality/icons/pin_red.svg" );
+  QSize imageSize = QImageReader( ":/themes/default/pin_red.svg" ).size();
+  setFilePath( ":/themes/default/pin_red.svg" );
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
-  connect( mCoordinateDisplayer, SIGNAL( displayFormatChanged() ), this, SLOT( updateToolTip() ) );
+}
+
+void QgsPinAnnotationItem::changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat targetFormat, const QString &targetEPSG )
+{
+  mTargetFormat = targetFormat;
+  mTargetEPSG = targetEPSG;
+  updateToolTip();
 }
 
 void QgsPinAnnotationItem::updateToolTip()
 {
-  QString posStr = mCoordinateDisplayer->getDisplayString( mGeoPos, mGeoPosCrs );
+  QString posStr = QgsCoordinateUtils::getDisplayString( mGeoPos, mGeoPosCrs, mTargetFormat, mTargetEPSG );
   if ( posStr.isEmpty() )
   {
     posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
   }
   QString toolTipText = tr( "Position: %1\nHeight: %3" )
                         .arg( posStr )
-                        .arg( mCoordinateDisplayer->getHeightAtPos( mGeoPos, mGeoPosCrs, QGis::Meters ) );
+                        .arg( QgsCoordinateUtils::getHeightAtPos( mGeoPos, mGeoPosCrs, QGis::Meters ) );
   setToolTip( toolTipText );
 }
 
@@ -66,6 +67,18 @@ void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )
   menu.addAction( tr( "Copy position" ), this, SLOT( copyPosition() ) );
   menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
+}
+
+void QgsPinAnnotationItem::writeXML( QDomDocument& doc ) const
+{
+  QDomElement documentElem = doc.documentElement();
+  if ( !documentElem.isNull() )
+  {
+    QDomElement pinAnnotationElem = doc.createElement( "PinAnnotationItem" );
+    pinAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
+    _writeXML( doc, pinAnnotationElem );
+    documentElem.appendChild( pinAnnotationElem );
+  }
 }
 
 void QgsPinAnnotationItem::copyPosition()

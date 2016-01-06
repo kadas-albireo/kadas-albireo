@@ -205,6 +205,7 @@
 #include "qgssourceselectdialog.h"
 #include "qgssponsors.h"
 #include "qgssvgannotationitem.h"
+#include "qgspinannotationitem.h"
 #include "qgsimageannotationitem.h"
 #include "qgstemporaryfile.h"
 #include "qgstextannotationitem.h"
@@ -270,6 +271,7 @@
 #include "qgsmaptoolrotatefeature.h"
 #include "qgsmaptooloffsetcurve.h"
 #include "qgsmaptoolpan.h"
+#include "qgsmaptoolpinannotation.h"
 #include "qgsmaptoolselect.h"
 #include "qgsmaptoolselectrectangle.h"
 #include "qgsmaptoolselectfreehand.h"
@@ -291,6 +293,9 @@
 #include "qgsmaptoolmovelabel.h"
 #include "qgsmaptoolrotatelabel.h"
 #include "qgsmaptoolchangelabelproperties.h"
+#include "qgsmaptoolslope.h"
+#include "qgsmaptoolhillshade.h"
+#include "qgsmaptoolviewshed.h"
 
 #include "nodetool/qgsmaptoolnodetool.h"
 
@@ -860,7 +865,6 @@ void QgisApp::destroy()
   delete mMapTools.mAddPart;
   delete mMapTools.mAddRing;
   delete mMapTools.mFillRing;
-  delete mMapTools.mAnnotation;
   delete mMapTools.mChangeLabelProperties;
   delete mMapTools.mDeletePart;
   delete mMapTools.mDeleteRing;
@@ -892,6 +896,11 @@ void QgisApp::destroy()
   delete mMapTools.mSplitParts;
   delete mMapTools.mSvgAnnotation;
   delete mMapTools.mTextAnnotation;
+  delete mMapTools.mPinAnnotation;
+  delete mMapTools.mSlope;
+  delete mMapTools.mHillshade;
+  delete mMapTools.mViewshed;
+  delete mMapTools.mViewshedSector;
 
   delete mpMaptip;
 
@@ -1198,10 +1207,10 @@ void QgisApp::createCanvasTools()
   mMapTools.mMeasureHeightProfile = new QgsMeasureHeightProfileTool( mapCanvas() );
   mMapTools.mMeasureAngle = new QgsMapToolMeasureAngle( mapCanvas() );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mapCanvas() );
+  mMapTools.mPinAnnotation = new QgsMapToolPinAnnotation( mapCanvas() );
   mMapTools.mFormAnnotation = new QgsMapToolFormAnnotation( mapCanvas() );
   mMapTools.mHtmlAnnotation = new QgsMapToolHtmlAnnotation( mapCanvas() );
   mMapTools.mSvgAnnotation = new QgsMapToolSvgAnnotation( mapCanvas() );
-  mMapTools.mAnnotation = new QgsMapToolAnnotation( mapCanvas() );
   mMapTools.mAddFeature = new QgsMapToolAddFeature( mapCanvas() );
   mMapTools.mCircularStringCurvePoint = new QgsMapToolCircularStringCurvePoint( dynamic_cast<QgsMapToolAddFeature*>( mMapTools.mAddFeature ), mapCanvas() );
   mMapTools.mCircularStringRadius = new QgsMapToolCircularStringRadius( dynamic_cast<QgsMapToolAddFeature*>( mMapTools.mAddFeature ), mapCanvas() );
@@ -1232,6 +1241,10 @@ void QgisApp::createCanvasTools()
   mMapTools.mPinLabels = new QgsMapToolPinLabels( mapCanvas() );
   mMapTools.mShowHideLabels = new QgsMapToolShowHideLabels( mapCanvas() );
   mMapTools.mMoveLabel = new QgsMapToolMoveLabel( mapCanvas() );
+  mMapTools.mSlope = new QgsMapToolSlope( mapCanvas() );
+  mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
+  mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
+  mMapTools.mViewshedSector = new QgsViewshedSectorTool( mapCanvas() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
@@ -3709,54 +3722,82 @@ void QgisApp::refreshFeatureActions()
 
 }
 
-void QgisApp::measure()
+void QgisApp::toggleTool( QgsMapTool* tool, bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mMeasureDist );
+  if ( active )
+    mapCanvas()->setMapTool( tool );
+  else
+    mapCanvas()->unsetMapTool( tool );
 }
 
-void QgisApp::measureArea()
+void QgisApp::measure( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mMeasureArea );
+  toggleTool( mMapTools.mMeasureDist, active );
 }
 
-void QgisApp::measureCircle()
+void QgisApp::measureArea( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mMeasureCircle );
+  toggleTool( mMapTools.mMeasureArea, active );
 }
 
-void QgisApp::measureHeightProfile()
+void QgisApp::measureCircle( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mMeasureHeightProfile );
+  toggleTool( mMapTools.mMeasureCircle, active );
 }
 
-void QgisApp::measureAngle()
+void QgisApp::measureHeightProfile( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mMeasureAngle );
+  toggleTool( mMapTools.mMeasureHeightProfile, active );
 }
 
-void QgisApp::addFormAnnotation()
+void QgisApp::measureAngle( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mFormAnnotation );
+  toggleTool( mMapTools.mMeasureAngle, active );
 }
 
-void QgisApp::addHtmlAnnotation()
+void QgisApp::slope( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mHtmlAnnotation );
+  toggleTool( mMapTools.mSlope, active );
 }
 
-void QgisApp::addTextAnnotation()
+void QgisApp::hillshade( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mTextAnnotation );
+  toggleTool( mMapTools.mHillshade, active );
 }
 
-void QgisApp::addSvgAnnotation()
+void QgisApp::viewshed( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mSvgAnnotation );
+  toggleTool( mMapTools.mViewshed, active );
 }
 
-void QgisApp::modifyAnnotation()
+void QgisApp::viewshedSector( bool active )
 {
-  mapCanvas()->setMapTool( mMapTools.mAnnotation );
+  toggleTool( mMapTools.mViewshedSector, active );
+}
+
+void QgisApp::addFormAnnotation( bool active )
+{
+  toggleTool( mMapTools.mFormAnnotation, active );
+}
+
+void QgisApp::addHtmlAnnotation( bool active )
+{
+  toggleTool( mMapTools.mHtmlAnnotation, active );
+}
+
+void QgisApp::addTextAnnotation( bool active )
+{
+  toggleTool( mMapTools.mTextAnnotation, active );
+}
+
+void QgisApp::addPinAnnotation( bool active )
+{
+  toggleTool( mMapTools.mPinAnnotation, active );
+}
+
+void QgisApp::addSvgAnnotation( bool active )
+{
+  toggleTool( mMapTools.mSvgAnnotation, active );
 }
 
 void QgisApp::labelingFontNotFound( QgsVectorLayer* vlayer, const QString& fontfamily )
@@ -4674,6 +4715,17 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   {
     QgsSvgAnnotationItem* newSvgItem = new QgsSvgAnnotationItem( mapCanvas() );
     newSvgItem->readXML( doc, svgItemList.at( i ).toElement() );
+  }
+
+  QDomNodeList pinItemList = doc.elementsByTagName( "PinAnnotationItem" );
+  for ( int i = 0; i < pinItemList.size(); ++i )
+  {
+    QgsCoordinateUtils::TargetFormat format;
+    QString epsg;
+    getCoordinateDisplayFormat( format, epsg );
+    QgsPinAnnotationItem* newPinItem = new QgsPinAnnotationItem( mapCanvas(), format, epsg );
+    connect( this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ), newPinItem, SLOT( changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat, QString ) ) );
+    newPinItem->readXML( doc, svgItemList.at( i ).toElement() );
   }
 
   QDomNodeList imageItemList = doc.elementsByTagName( "ImageAnnotationItem" );

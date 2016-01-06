@@ -105,6 +105,8 @@
         <file>themes/default/mActionAddAllToOverview.svg</file>
         <file>themes/default/mActionAddArrow.png</file>
         <file>themes/default/mActionAddBasicShape.png</file>
+        <file>themes/default/mActionAddAfsLayer.svg</file>
+        <file>themes/default/mActionAddAmsLayer.svg</file>
         <file>themes/default/mActionAddGPSLayer.png</file>
         <file>themes/default/mActionAddGroup.png</file>
         <file>themes/default/mActionAddHtml.png</file>
@@ -292,6 +294,8 @@
         <file>themes/default/mActionZoomOut.svg</file>
         <file>themes/default/mActionZoomToLayer.svg</file>
         <file>themes/default/mActionZoomToSelected.svg</file>
+        <file>themes/default/mIconAfs.svg</file>
+        <file>themes/default/mIconAms.svg</file>
         <file>themes/default/mIconAtlas.svg</file>
         <file>themes/default/mIconAutoPlacementSettings.svg</file>
         <file>themes/default/mIconClear.svg</file>
@@ -479,8 +483,67 @@
         <file>themes/default/bubble.svg</file>
         <file>themes/default/mIconClear.png</file>
         <file>flags/zh.png</file>
-	<file>themes/default/mActionCircularStringCurvePoint.png</file>
-	<file>themes/default/mActionCircularStringRadius.png</file>
+        <file>themes/default/redlining_text.svg</file>
+        <file>themes/default/redlining_circle.svg</file>
+        <file>themes/default/redlining_line.svg</file>
+        <file>themes/default/redlining_point.svg</file>
+        <file>themes/default/redlining_polygon.svg</file>
+        <file>themes/default/mActionEditLabel.svg</file>
+        <file>themes/default/redlining_rectangle.svg</file>
+        <file>themes/default/redlining_square.svg</file>
+        <file>themes/default/redlining_triangle.svg</file>
+        <file>themes/default/mActionMeasureCircle.png</file>
+        <file>themes/default/mActionMeasureHeightProfile.png</file>
+        <file>themes/default/mActionCircularStringCurvePoint.png</file>
+        <file>themes/default/mActionCircularStringRadius.png</file>
+        <file>themes/default/mActionSaveMapToClipboard.png</file>
+        <file>themes/default/observer.svg</file>
+        <file>ribbon/analyse_flaechen.png</file>
+        <file>ribbon/anwenderhandbuch.png</file>
+        <file>ribbon/azimuth.png</file>
+        <file>ribbon/distanz.png</file>
+        <file>ribbon/drucken.png</file>
+        <file>ribbon/einsehbarkeitsanalyse.png</file>
+        <file>ribbon/favorit.png</file>
+        <file>ribbon/flaeche.png</file>
+        <file>ribbon/gelaendeneigung.png</file>
+        <file>ribbon/hoehenprofil.png</file>
+        <file>ribbon/inklination.png</file>
+        <file>ribbon/koordinatengitter.png</file>
+        <file>ribbon/kopieren.png</file>
+        <file>ribbon/kreismessung.png</file>
+        <file>ribbon/layerbaum.png</file>
+        <file>ribbon/lineofsight.png</file>
+        <file>ribbon/linie.png</file>
+        <file>ribbon/neues_kartenfenster.png</file>
+        <file>ribbon/oeffnen.png</file>
+        <file>ribbon/speichern.png</file>
+        <file>ribbon/stecknadel.png</file>
+        <file>ribbon/text.png</file>
+        <file>ribbon/checked.png</file>
+        <file>ribbon/unchecked.png</file>
+        <file>ribbon/zoom_in.png</file>
+        <file>ribbon/zoom_out.png</file>
+        <file>ribbon/question_mark.png</file>
+        <file>ribbon/layerbaum_folded.png</file>
+        <file>ribbon/layerbaum_unfolded.png</file>
+        <file>ribbon/new.png</file>
+        <file>themes/default/add_map_view.svg</file>
+        <file>themes/default/clear.svg</file>
+        <file>themes/default/hillshade.svg</file>
+        <file>themes/default/ovl.svg</file>
+        <file>themes/default/pin_blue.svg</file>
+        <file>themes/default/pin_red.svg</file>
+        <file>themes/default/search_filter_circle.svg</file>
+        <file>themes/default/search_filter_none.svg</file>
+        <file>themes/default/search_filter_poly.svg</file>
+        <file>themes/default/search_filter_rect.svg</file>
+        <file>themes/default/search_filter.svg</file>
+        <file>themes/default/search.svg</file>
+        <file>themes/default/slope.svg</file>
+        <file>themes/default/sync_views.svg</file>
+        <file>themes/default/viewshed.svg</file>
+        <file>themes/default/viewshed_sector.svg</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

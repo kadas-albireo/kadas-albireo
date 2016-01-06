@@ -18,7 +18,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -126,7 +135,16 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetFixedSize</enum>
         </property>
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -266,261 +284,6 @@
    </layout>
   </widget>
   <widget class="QStatusBar" name="mStatusWidget"/>
-  <action name="mActionOpen">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/oeffnen.png</normaloff>:/images/ribbon/oeffnen.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open</string>
-   </property>
-   <property name="toolTip">
-    <string>Open project</string>
-   </property>
-  </action>
-  <action name="mActionSave">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/speichern.png</normaloff>:/images/ribbon/speichern.png</iconset>
-   </property>
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="mActionPin">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/stecknadel.png</normaloff>:/images/ribbon/stecknadel.png</iconset>
-   </property>
-   <property name="text">
-    <string>Pin</string>
-   </property>
-  </action>
-  <action name="mActionNew">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/new.png</normaloff>:/images/ribbon/new.png</iconset>
-   </property>
-   <property name="text">
-    <string>New</string>
-   </property>
-  </action>
-  <action name="mActionDistance">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/distanz.png</normaloff>:/images/ribbon/distanz.png</iconset>
-   </property>
-   <property name="text">
-    <string>Distance</string>
-   </property>
-  </action>
-  <action name="mActionArea">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/flaeche.png</normaloff>:/images/ribbon/flaeche.png</iconset>
-   </property>
-   <property name="text">
-    <string>Area</string>
-   </property>
-  </action>
-  <action name="mActionProfile">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/hoehenprofil.png</normaloff>:/images/ribbon/hoehenprofil.png</iconset>
-   </property>
-   <property name="text">
-    <string>Profile</string>
-   </property>
-  </action>
-  <action name="mActionAzimuth">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/azimuth.png</normaloff>:/images/ribbon/azimuth.png</iconset>
-   </property>
-   <property name="text">
-    <string>Azimuth</string>
-   </property>
-  </action>
-  <action name="mActionLineOfSight">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/lineofsight.png</normaloff>:/images/ribbon/lineofsight.png</iconset>
-   </property>
-   <property name="text">
-    <string>Line of Sight</string>
-   </property>
-  </action>
-  <action name="mActionSlope">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/gelaendeneigung.png</normaloff>:/images/ribbon/gelaendeneigung.png</iconset>
-   </property>
-   <property name="text">
-    <string>Slope</string>
-   </property>
-  </action>
-  <action name="mActionHillshade">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Hillshade</string>
-   </property>
-  </action>
-  <action name="mActionViewshed">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</normaloff>:/images/ribbon/einsehbarkeitsanalyse.png</iconset>
-   </property>
-   <property name="text">
-    <string>Viewshed</string>
-   </property>
-  </action>
-  <action name="mActionWPS">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>WPS</string>
-   </property>
-  </action>
-  <action name="mActionCircle">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Circle</string>
-   </property>
-  </action>
-  <action name="mActionCopy">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/kopieren.png</normaloff>:/images/ribbon/kopieren.png</iconset>
-   </property>
-   <property name="text">
-    <string>Copy</string>
-   </property>
-  </action>
-  <action name="mActionCopyToClipboard">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Copy to Clipboard</string>
-   </property>
-  </action>
-  <action name="mActionPrint">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/drucken.png</normaloff>:/images/ribbon/drucken.png</iconset>
-   </property>
-   <property name="text">
-    <string>Print</string>
-   </property>
-  </action>
-  <action name="mActionSaveMapExtent">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Save map extent</string>
-   </property>
-  </action>
-  <action name="mActionExportKML">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Export KML/KMZ</string>
-   </property>
-  </action>
-  <action name="mActionImportOVL">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Import OVL</string>
-   </property>
-  </action>
-  <action name="mActionZoomLast">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Zoom last</string>
-   </property>
-  </action>
-  <action name="mActionZoomNext">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>Zoom next</string>
-   </property>
-  </action>
-  <action name="mActionNewMapWindow">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>New map window</string>
-   </property>
-  </action>
-  <action name="mAction3D">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>3D</string>
-   </property>
-  </action>
-  <action name="mActionGrid">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/koordinatengitter.png</normaloff>:/images/ribbon/koordinatengitter.png</iconset>
-   </property>
-   <property name="text">
-    <string>Grid</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
