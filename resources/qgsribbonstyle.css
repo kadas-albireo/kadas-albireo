@@ -4,6 +4,14 @@ QWidget {
   font-size: 14px;
 }
 
+QgsRibbonApp, QgsRibbonWindowBase QToolBar {
+  background-color: #263B4E;
+}
+
+QDockWidget #mapWidgetTitleWidget {
+    background: #BEDCF6;
+}
+
 QTreeView::indicator {
     width: 13px;
     height: 13px;
@@ -19,94 +27,47 @@ QTreeView::indicator::unchecked {
   image: url(:/images/ribbon/unchecked.png);
 }
 
-QTreeView {
-  background-color: rgba(255,255,255, 220);
-}
 
 /*QCheckBox::indicator:unchecked {
     image: url(:/images/checkbox_unchecked.png);
 }*/
 
-QgsRibbonApp, QgsRibbonWindowBase QToolBar {
+
+/** Layer tree view */
+QTreeView#mLayerTreeView {
+  background-color: rgba(255,255,255, 220);
+}
+
+QPushButton#mLayerTreeViewButton {
   background-color: #263B4E;
 }
 
-/**UI left of mRibbonWidget*/
-QAbstractButton#mFavoriteButton1 {
-  background-color: #5D7081;
-  color: #263B4E;
-}
 
-QAbstractButton#mFavoriteButton2 {
-  background-color: #5D7081;
-  color: #263B4E;
-}
-
-QAbstractButton#mFavoriteButton3 {
-  background-color: #5D7081;
-  color: #263B4E;
-}
-
+/** Favorite buttons */
+QAbstractButton#mFavoriteButton1,
+QAbstractButton#mFavoriteButton2,
+QAbstractButton#mFavoriteButton3,
 QAbstractButton#mFavoriteButton4 {
   background-color: #5D7081;
   color: #263B4E;
 }
 
-#search
-QWidget#mSearchWidget {
+
+/** Search **/
+#mSearchWidget {
   background-color: #5D7081;
 }
 
-QFrame#mSeparatorFrame {
-  background-color: #5D7081;
-  border: 0.5px #5D7081;
-}
-
-QFrame#mSeparatorFrameBackground {
-  background-color: #263B4E;
-}
-
-/**Ribbon widget*/
-QWidget#mRibbonBackgroundWidget {
-  background-color: #BEDCF6;
-}
-
-QWidget#mMyMapsTab, QWidget#mViewTab, QWidget#mAnalysisTab, QWidget#mDrawTab, QWidget#mSituationReportTab, QWidget#mSettingsTab, QWidget#mHelpTab {
-  background-color: #263B4E;
-}
-
-QWidget#mDrawTab > QLabel {
-    color: white;
-}
-
-QTabWidget QAbstractButton,
-QTabWidget QComboBox,
-QTabWidget QSpinBox {
-  background-color: #5D7081;
-  color: #FFFFFF;
-}
-
-#mRibbonWidget QTabBar::tab:selected {
-    background-color: #263B4E;
-    color: #FFFFFF;
-}
-
-#mRibbonWidget QTabBar::tab:!selected {
-    background-color: #BEDCF6; /* make non-selected tabs look smaller */
-    height: 45px;
-}
-
-
-QLineEdit#searchBox {
+#searchBox {
     border: 1px solid #9db2c5;
-    background-color: #5d7081;
-    color: white;
+    background-color: white;
+    color: black;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
     padding: 5px;
 }
 
-QToolButton#searchFilter {
+#searchFilter {
     border-right: 1px solid #9db2c5;
     border-top: 1px solid #9db2c5;
     border-bottom: 1px solid #9db2c5;
@@ -117,8 +78,48 @@ QToolButton#searchFilter {
     padding: 5px;
 }
 
-/**Status bar*/
 
+/** Separator between favorites and ribbon tab widget **/
+#mSeparatorFrame {
+  border: 0.5px solid #5D7081;
+}
+
+/** Ribbon widget **/
+#mRibbonBackgroundWidget {
+  background-color: #BEDCF6;
+}
+
+#mRibbonWidget QTabBar::tab:!selected {
+    background-color: #BEDCF6; /* make non-selected tabs look smaller */
+    height: 45px;
+}
+
+#mRibbonWidget QTabBar::tab:selected {
+    background-color: #263B4E;
+    color: #FFFFFF;
+}
+
+#mRibbonWidget > QWidget {
+  background-color: #263B4E;
+}
+
+#mRibbonWidget QLabel {
+  color: #FFFFFF;
+}
+
+#mRibbonWidget QAbstractButton,
+#mRibbonWidget QComboBox,
+#mRibbonWidget QSpinBox {
+  background-color: #5D7081;
+  color: #FFFFFF;
+}
+
+#mRibbonWidget::pane {
+    /* Don't remove this, it is needed. */
+}
+
+
+/** Status bar **/
 #mStatusWidget {
   background-color: #1E2126;
   color: #FFFFFF;
@@ -138,23 +139,9 @@ QToolButton#searchFilter {
   color: #FFFFFF;
 }
 
-/*QTabWidget#mRibbonWidget { 
-  font-family: "Frutiger LT Pro" 
-}*/
 
-QTabWidget::pane {
-}
-
-/**Tree view button*/
-QPushButton#mLayerTreeViewButton {
-  background-color: #263B4E;
-}
-
-/**+- button*/
-QPushButton#mZoomInButton {
-  background-color: #263B4E;
-  color: #FFFFFF;
-}
+/** +- buttons **/
+QPushButton#mZoomInButton,
 QPushButton#mZoomOutButton {
   background-color: #263B4E;
   color: #FFFFFF;
@@ -171,10 +158,13 @@ QFrame#mZoomBackgroundFrame {
   background-color: #c7cacf;
 }
 
-/**Styling for dialogs*/
+/** Styling for dialogs **/
+QDialog {
+  background-color: #FFFFFF;
+}
 
-QDialogButtonBox { 
-  dialogbuttonbox-buttons-have-icons: 0; 
+QDialog QDialogButtonBox {
+  dialogbuttonbox-buttons-have-icons: 0;
 }
 
 QDialog QPushButton {
@@ -184,10 +174,6 @@ QDialog QPushButton {
   padding: 6px;
   border-style: outset;
   min-width: 80px;
-}
-
-QDialog {
-  background-color: #FFFFFF;
 }
 
 QDialog QPushButton:pressed {
@@ -204,24 +190,8 @@ QDialog QPushButton[text="Abbrechen"], QPushButton[text="Schließen"], QPushButt
   color: #FFFFFF;
 }
 
-/*QDialog QSpinBox, QDialog QDoubleSpinBox*/
 QDialog QComboBox, QDialog QLineEdit {
   background-color: #FFFFFF;
-}
-
-QDialog QComboBox
-{
   frame: 1px solid #9a9a9a;
-}
-
-/*QDialog QSpinBox, QDialog QDoubleSpinBox,*/
-QDialog QLineEdit {
   border-radius: 5px;
-  frame: 1px solid #9a9a9a;
 }
-
-QWidget #mMousePositionLabel, QWidget #mScaleLabel, QWidget #mCRSLabel {
-  background-color: #1e2126;
-}
-
-

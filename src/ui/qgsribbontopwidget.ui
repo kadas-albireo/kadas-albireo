@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1336</width>
-    <height>134</height>
+    <width>1243</width>
+    <height>152</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="layoutTopWidget">
    <property name="spacing">
-    <number>0</number>
+    <number>10</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -41,7 +41,7 @@
       <number>10</number>
      </property>
      <property name="rightMargin">
-      <number>10</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
       <number>0</number>
@@ -243,6 +243,12 @@
        <height>0</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>1</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -284,7 +290,7 @@
       <property name="spacing">
        <number>0</number>
       </property>
-      <item row="0" column="1">
+      <item row="0" column="0">
        <widget class="QTabWidget" name="mRibbonWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -1282,37 +1288,6 @@ Line of Sight</string>
           <string>Help</string>
          </attribute>
         </widget>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QFrame" name="mSeparatorFrameBackground">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>10</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>10</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
        </widget>
       </item>
      </layout>
