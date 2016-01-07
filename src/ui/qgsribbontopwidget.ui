@@ -64,14 +64,14 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>114</width>
+           <width>0</width>
            <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>114</width>
-           <height>16777215</height>
+           <width>80</width>
+           <height>80</height>
           </size>
          </property>
          <property name="acceptDrops">
@@ -105,14 +105,14 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>114</width>
+           <width>0</width>
            <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>80</width>
-           <height>16777215</height>
+           <height>80</height>
           </size>
          </property>
          <property name="acceptDrops">
@@ -143,14 +143,14 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>114</width>
+           <width>0</width>
            <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>80</width>
-           <height>16777215</height>
+           <height>80</height>
           </size>
          </property>
          <property name="acceptDrops">
@@ -181,14 +181,14 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>114</width>
+           <width>0</width>
            <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>80</width>
-           <height>16777215</height>
+           <height>80</height>
           </size>
          </property>
          <property name="acceptDrops">
@@ -349,13 +349,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -380,13 +380,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -411,13 +411,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -442,13 +442,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -473,13 +473,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -505,13 +505,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -549,13 +549,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -606,20 +606,20 @@
           <item row="0" column="3">
            <widget class="QgsRibbonButton" name="m3DButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -637,25 +637,25 @@
           <item row="0" column="0">
            <widget class="QgsRibbonButton" name="mZoomLastButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
             <property name="text">
-             <string>Zoom last</string>
+             <string>Previous Extent</string>
             </property>
             <property name="iconSize">
              <size>
@@ -668,20 +668,20 @@
           <item row="0" column="2">
            <widget class="QgsRibbonButton" name="mNewMapWindowButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -699,20 +699,20 @@
           <item row="0" column="4">
            <widget class="QgsRibbonButton" name="mGridButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -730,25 +730,25 @@
           <item row="0" column="1">
            <widget class="QgsRibbonButton" name="mZoomNextButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
             <property name="text">
-             <string>Zoom next</string>
+             <string>Next Extent</string>
             </property>
             <property name="iconSize">
              <size>
@@ -806,13 +806,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -850,13 +850,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -881,13 +881,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -912,13 +912,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -944,14 +944,14 @@ Line of Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
-              <height>16777215</height>
+              <width>80</width>
+              <height>80</height>
              </size>
             </property>
             <property name="text">
@@ -975,13 +975,13 @@ Line of Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1006,13 +1006,13 @@ Line of Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1037,13 +1037,13 @@ Line of Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1068,13 +1068,13 @@ Line of Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>52</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1114,8 +1114,14 @@ Line of Sight</string>
           <property name="verticalSpacing">
            <number>0</number>
           </property>
-          <item row="0" column="2">
+          <item row="0" column="3">
            <spacer name="horizontalSpacer_2">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1130,20 +1136,20 @@ Line of Sight</string>
           <item row="0" column="0">
            <widget class="QgsRibbonButton" name="mPinButton">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>0</width>
               <height>80</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>114</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1165,6 +1171,12 @@ Line of Sight</string>
             </property>
             <item row="1" column="2">
              <widget class="QLabel" name="mLabelRedliningFillColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>Fill:</string>
               </property>
@@ -1172,6 +1184,12 @@ Line of Sight</string>
             </item>
             <item row="0" column="2">
              <widget class="QLabel" name="mLabelRedliningBorderColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>Border:</string>
               </property>
@@ -1184,6 +1202,12 @@ Line of Sight</string>
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="text">
                <string>...</string>
@@ -1207,6 +1231,12 @@ Line of Sight</string>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
              </widget>
             </item>
             <item row="1" column="3">
@@ -1217,10 +1247,22 @@ Line of Sight</string>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="mLabelRedliningSize">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>Size:</string>
               </property>
@@ -1233,6 +1275,12 @@ Line of Sight</string>
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="sizeAdjustPolicy">
                <enum>QComboBox::AdjustToMinimumContentsLength</enum>
@@ -1250,6 +1298,12 @@ Line of Sight</string>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="sizeAdjustPolicy">
                <enum>QComboBox::AdjustToMinimumContentsLength</enum>
               </property>
@@ -1265,6 +1319,12 @@ Line of Sight</string>
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -1342,7 +1402,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1373,7 +1433,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1404,7 +1464,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1435,7 +1495,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1466,7 +1526,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1483,6 +1543,12 @@ Line of Sight</string>
           </item>
           <item row="0" column="8">
            <spacer name="horizontalSpacer_3">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1510,7 +1576,7 @@ Line of Sight</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>80</width>
               <height>80</height>
              </size>
             </property>
@@ -1749,7 +1815,10 @@ Line of Sight</string>
      <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom last</string>
+    <string>Previous Extent</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom to previous Extent</string>
    </property>
   </action>
   <action name="mActionZoomNext">
@@ -1758,7 +1827,10 @@ Line of Sight</string>
      <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom next</string>
+    <string>Next Extent</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom to next Extent</string>
    </property>
   </action>
   <action name="mActionNewMapWindow">
