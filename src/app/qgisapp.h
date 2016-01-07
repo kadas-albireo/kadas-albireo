@@ -1334,6 +1334,8 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     QgsMultiMapManager* mMultiMapManager;
 
+    QString mWindowStateSuffix;
+
     bool gestureEvent( QGestureEvent *event );
     void tapAndHoldTriggered( QTapAndHoldGesture *gesture );
 
