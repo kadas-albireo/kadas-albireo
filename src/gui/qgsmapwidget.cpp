@@ -31,8 +31,8 @@
 #include <QStackedWidget>
 #include <QToolButton>
 
-QgsMapWidget::QgsMapWidget(int number, const QString &title, QgsMapCanvas *masterCanvas, QWidget *parent )
-    : QDockWidget( parent ), mNumber( number ), mMasterCanvas(masterCanvas), mUnsetFixedSize( true )
+QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *masterCanvas, QWidget *parent )
+    : QDockWidget( parent ), mNumber( number ), mMasterCanvas( masterCanvas ), mUnsetFixedSize( true )
 {
   QSettings settings;
 
@@ -71,6 +71,7 @@ QgsMapWidget::QgsMapWidget(int number, const QString &title, QgsMapCanvas *maste
   connect( mCloseButton, SIGNAL( clicked( bool ) ), this, SLOT( close() ) );
 
   QWidget* titleWidget = new QWidget( this );
+  titleWidget->setObjectName( "mapWidgetTitleWidget" );
   titleWidget->setLayout( new QHBoxLayout() );
   titleWidget->layout()->addWidget( mLayerSelectionButton );
   titleWidget->layout()->addWidget( mLockViewButton );
