@@ -150,6 +150,7 @@
 #include "qgsmimedatautils.h"
 #include "qgsmessagelog.h"
 #include "qgsmultibandcolorrenderer.h"
+#include "qgsmultimapmanager.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgsnewvectorlayerdialog.h"
 #include "qgsnewmemorylayerdialog.h"
@@ -573,6 +574,10 @@ void QgisApp::init( bool restorePlugins )
 
   //GPS route editor
   mGpsRouteEditor = new QgsGPSRouteEditor( this );
+
+  // Multi map manager
+  mMultiMapManager = new QgsMultiMapManager( mapCanvas(), this );
+  connect( this, SIGNAL( newProject() ), mMultiMapManager, SLOT( clearMapWidgets() ) );
 
   // initialize the plugin manager
   mPluginManager = new QgsPluginManager( this, restorePlugins );

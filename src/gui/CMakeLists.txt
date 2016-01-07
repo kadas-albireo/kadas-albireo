@@ -205,6 +205,8 @@ qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
 qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
+qgsmapwidget.cpp
+qgsmultimapmanager.cpp
 qgsmessagebar.cpp
 qgsmessagebaritem.cpp
 qgsmessagelogviewer.cpp
@@ -314,6 +316,8 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
   qgsmaptoolpan.h
+  qgsmapwidget.h
+  qgsmultimapmanager.h
   qgsmessagebar.h
   qgsmessagebaritem.h
   qgsmessagelogviewer.h

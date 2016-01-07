@@ -124,6 +124,7 @@
     <addaction name="mActionShowBookmarks"/>
     <addaction name="mActionDraw"/>
     <addaction name="separator"/>
+    <addaction name="mActionAddMapView"/>
    </widget>
    <widget class="QMenu" name="mLayerMenu">
     <property name="title">
@@ -397,6 +398,7 @@
    <addaction name="mActionZoomLast"/>
    <addaction name="mActionZoomNext"/>
    <addaction name="mActionDraw"/>
+   <addaction name="mActionAddMapView"/>
   </widget>
   <widget class="QToolBar" name="mAttributesToolBar">
    <property name="windowTitle">
@@ -2393,6 +2395,18 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>Pin Annotation</string>
+   </property>
+  </action>
+  <action name="mActionAddMapView">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddMap.png</normaloff>:/images/themes/default/mActionAddMap.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add Map View</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Map View</string>
    </property>
   </action>
  </widget>
