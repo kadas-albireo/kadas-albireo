@@ -18,13 +18,14 @@
 #ifndef QGSCRASHRPT_H
 #define QGSCRASHRPT_H
 
-class QgsCrashRpt {
-public:
-  QgsCrashRpt();
-  ~QgsCrashRpt();
-  bool install();
-private:
-  bool mHandlerInstalled;
+class APP_EXPORT QgsCrashRpt
+{
+  public:
+    QgsCrashRpt();
+    ~QgsCrashRpt();
+    bool install();
+  private:
+    bool mHandlerInstalled;
 };
 
 #endif // QGSCRASHRPT_H
