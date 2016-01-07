@@ -46,6 +46,7 @@
 #include "qgsmaptoolshowhidelabels.h"
 #include "qgsmaptoolrotatelabel.h"
 #include "qgsmaptoolrotatepointsymbols.h"
+#include "qgsmultimapmanager.h"
 #include "qgsproject.h"
 #include "qgspythonutils.h"
 #include "qgsrasterlayer.h"
@@ -372,6 +373,7 @@ void QgsClassicApp::setTheme( QString theThemeName )
   mActionDecorationNorthArrow->setIcon( QgsApplication::getThemeIcon( "/north_arrow.png" ) );
   mActionDecorationScaleBar->setIcon( QgsApplication::getThemeIcon( "/scale_bar.png" ) );
   mActionDecorationGrid->setIcon( QgsApplication::getThemeIcon( "/transformed.png" ) );
+  mActionAddMapView->setIcon( QgsApplication::getThemeIcon( "/mActionAddMap.png" ) );
 
   //change themes of all composers
   QSet<QgsComposer*>::iterator composerIt = mPrintComposers.begin();
@@ -479,6 +481,7 @@ void QgsClassicApp::createActions()
   connect( mActionSvgAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addSvgAnnotation( bool ) ) );
   connect( mActionPinAnnotation, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   connect( mActionLabeling, SIGNAL( triggered() ), this, SLOT( labeling() ) );
+  connect( mActionAddMapView, SIGNAL( triggered() ), mMultiMapManager, SLOT( addMapWidget() ) );
 
   // Layer Menu Items
 

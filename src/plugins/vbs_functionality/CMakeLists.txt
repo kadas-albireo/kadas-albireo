@@ -11,8 +11,6 @@ ENDIF(MSVC)
 SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
   qgsvbscrashhandler.cpp
-  multimap/qgsvbsmapwidget.cpp
-  multimap/qgsvbsmultimapmanager.cpp
   ovl/qgsvbsovlimporter.cpp
 )
 
@@ -24,8 +22,6 @@ SET (vbsfunctionality_HDRS
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   qgsvbscrashhandler.h
-  multimap/qgsvbsmapwidget.h
-  multimap/qgsvbsmultimapmanager.h
 )
 
 SET (vbsfunctionality_UIS

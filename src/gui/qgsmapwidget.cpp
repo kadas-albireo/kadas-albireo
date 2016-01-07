@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsmapwidget.cpp                                                    *
+ *  qgsmapwidget.cpp                                                    *
  *  -------------------                                                    *
  *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsmapwidget.h"
+#include "qgsmapwidget.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
@@ -31,8 +31,8 @@
 #include <QStackedWidget>
 #include <QToolButton>
 
-QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterface* iface, QWidget *parent )
-    : QDockWidget( parent ), mIface( iface ), mNumber( number ), mUnsetFixedSize( true )
+QgsMapWidget::QgsMapWidget(int number, const QString &title, QgsMapCanvas *masterCanvas, QWidget *parent )
+    : QDockWidget( parent ), mNumber( number ), mMasterCanvas(masterCanvas), mUnsetFixedSize( true )
 {
   QSettings settings;
 
@@ -85,7 +85,7 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
 
   mMapCanvas = new QgsMapCanvas( this );
   mMapCanvas->setCanvasColor( Qt::transparent );
-  mMapCanvas->enableAntiAliasing( mIface->mapCanvas()->antiAliasingEnabled() );
+  mMapCanvas->enableAntiAliasing( mMasterCanvas->antiAliasingEnabled() );
   QgsMapCanvas::WheelAction wheelAction = static_cast<QgsMapCanvas::WheelAction>( settings.value( "/qgis/wheel_action", "0" ).toInt() );
   double zoomFactor = settings.value( "/qgis/zoom_factor", "2.0" ).toDouble();
   mMapCanvas->setWheelAction( wheelAction, zoomFactor );
@@ -95,29 +95,29 @@ QgsVBSMapWidget::QgsVBSMapWidget( int number, const QString &title, QgisInterfac
   connect( mapTool, SIGNAL( deactivated() ), mapTool, SLOT( deleteLater() ) );
   mMapCanvas->setMapTool( mapTool );
 
-  connect( mIface->mapCanvas(), SIGNAL( extentsChanged() ), this, SLOT( syncCanvasExtents() ) );
-  connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( updateMapProjection() ) );
-  connect( mIface->mapCanvas(), SIGNAL( mapUnitsChanged() ), this, SLOT( updateMapProjection() ) );
-  connect( mIface->mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( updateMapProjection() ) );
-  connect( mIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
+  connect( mMasterCanvas, SIGNAL( extentsChanged() ), this, SLOT( syncCanvasExtents() ) );
+  connect( mMasterCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( updateMapProjection() ) );
+  connect( mMasterCanvas, SIGNAL( mapUnitsChanged() ), this, SLOT( updateMapProjection() ) );
+  connect( mMasterCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( updateMapProjection() ) );
+  connect( mMasterCanvas, SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
 
   updateLayerSelectionMenu();
   mMapCanvas->setRenderFlag( false );
   updateMapProjection();
-  mMapCanvas->setExtent( mIface->mapCanvas()->extent() );
+  mMapCanvas->setExtent( mMasterCanvas->extent() );
   mMapCanvas->setRenderFlag( true );
 }
 
-void QgsVBSMapWidget::setInitialLayers( const QStringList &initialLayers, bool updateMenu )
+void QgsMapWidget::setInitialLayers( const QStringList &initialLayers, bool updateMenu )
 {
   mInitialLayers = initialLayers;
   if ( updateMenu )
     updateLayerSelectionMenu();
 }
 
-QStringList QgsVBSMapWidget::getLayers() const
+QStringList QgsMapWidget::getLayers() const
 {
   QStringList layers;
   foreach ( QAction* layerAction, mLayerSelectionMenu->actions() )
@@ -130,28 +130,28 @@ QStringList QgsVBSMapWidget::getLayers() const
   return layers;
 }
 
-QgsRectangle QgsVBSMapWidget::getMapExtent() const
+QgsRectangle QgsMapWidget::getMapExtent() const
 {
   return mMapCanvas->extent();
 }
 
-void QgsVBSMapWidget::setMapExtent( const QgsRectangle& extent )
+void QgsMapWidget::setMapExtent( const QgsRectangle& extent )
 {
   mMapCanvas->setExtent( extent );
   mMapCanvas->refresh();
 }
 
-bool QgsVBSMapWidget::getLocked() const
+bool QgsMapWidget::getLocked() const
 {
   return mLockViewButton->isChecked();
 }
 
-void QgsVBSMapWidget::setLocked( bool locked )
+void QgsMapWidget::setLocked( bool locked )
 {
   mLockViewButton->setChecked( locked );
 }
 
-void QgsVBSMapWidget::setCanvasLocked( bool locked )
+void QgsMapWidget::setCanvasLocked( bool locked )
 {
   if ( locked )
   {
@@ -164,18 +164,18 @@ void QgsVBSMapWidget::setCanvasLocked( bool locked )
   }
 }
 
-void QgsVBSMapWidget::syncCanvasExtents()
+void QgsMapWidget::syncCanvasExtents()
 {
   if ( mLockViewButton->isChecked() )
   {
-    QgsPoint center = mIface->mapCanvas()->extent().center();
-    double w = width() * mIface->mapCanvas()->mapUnitsPerPixel();
-    double h = height() * mIface->mapCanvas()->mapUnitsPerPixel();
+    QgsPoint center = mMasterCanvas->extent().center();
+    double w = width() * mMasterCanvas->mapUnitsPerPixel();
+    double h = height() * mMasterCanvas->mapUnitsPerPixel();
     setMapExtent( QgsRectangle( center.x() - .5 * w, center.y() - .5 * h, center.x() + .5 * w, center.y() + .5 * h ) );
   }
 }
 
-void QgsVBSMapWidget::updateLayerSelectionMenu()
+void QgsMapWidget::updateLayerSelectionMenu()
 {
   QList<QgsMapLayer*> currentLayers = mMapCanvas->layers();
   mLayerSelectionMenu->clear();
@@ -196,7 +196,7 @@ void QgsVBSMapWidget::updateLayerSelectionMenu()
   mInitialLayers.clear();
 }
 
-void QgsVBSMapWidget::updateLayerSet()
+void QgsMapWidget::updateLayerSet()
 {
   QList<QgsMapCanvasLayer> layerSet;
   foreach ( QAction* layerAction, mLayerSelectionMenu->actions() )
@@ -209,14 +209,14 @@ void QgsVBSMapWidget::updateLayerSet()
   mMapCanvas->setLayerSet( layerSet );
 }
 
-void QgsVBSMapWidget::updateMapProjection()
+void QgsMapWidget::updateMapProjection()
 {
-  mMapCanvas->setDestinationCrs( mIface->mapCanvas()->mapSettings().destinationCrs() );
-  mMapCanvas->setCrsTransformEnabled( mIface->mapCanvas()->hasCrsTransformEnabled() );
-  mMapCanvas->setMapUnits( mIface->mapCanvas()->mapSettings().mapUnits() );
+  mMapCanvas->setDestinationCrs( mMasterCanvas->mapSettings().destinationCrs() );
+  mMapCanvas->setCrsTransformEnabled( mMasterCanvas->hasCrsTransformEnabled() );
+  mMapCanvas->setMapUnits( mMasterCanvas->mapSettings().mapUnits() );
 }
 
-void QgsVBSMapWidget::showEvent( QShowEvent * )
+void QgsMapWidget::showEvent( QShowEvent * )
 {
   if ( mUnsetFixedSize )
   {
@@ -228,7 +228,7 @@ void QgsVBSMapWidget::showEvent( QShowEvent * )
   }
 }
 
-bool QgsVBSMapWidget::eventFilter( QObject *obj, QEvent *ev )
+bool QgsMapWidget::eventFilter( QObject *obj, QEvent *ev )
 {
   if ( obj == mTitleLabel && ev->type() == QEvent::MouseButtonPress )
   {

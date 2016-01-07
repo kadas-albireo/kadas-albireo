@@ -30,7 +30,6 @@ class QgsMapTool;
 class QgsMapLayer;
 class QgsMessageBarItem;
 class QgsVBSCrashHandler;
-class QgsVBSMultiMapManager;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -48,7 +47,6 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QgsVBSSearchBox* mSearchBox;
     QPointer<QgsMessageBarItem> mReprojMsgItem;
     QgsVBSCrashHandler* mCrashHandler;
-    QgsVBSMultiMapManager* mMultiMapManager;
     QAction* mActionOvlImport;
     QAction* mActionSlope;
     QAction* mActionViewshed;

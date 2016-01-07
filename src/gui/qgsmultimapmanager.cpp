@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsmultimapmanager.cpp                                              *
+ *  qgsmultimapmanager.cpp                                              *
  *  -------------------                                                    *
  *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsmultimapmanager.h"
-#include "qgsvbsmapwidget.h"
+#include "qgsmultimapmanager.h"
+#include "qgsmapwidget.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsproject.h"
@@ -26,35 +26,22 @@
 #include <QMainWindow>
 #include <QToolBar>
 
-QgsVBSMultiMapManager::QgsVBSMultiMapManager( QgisInterface *iface, QObject *parent )
-    : QObject( parent ), mIface( iface )
+QgsMultiMapManager::QgsMultiMapManager(QgsMapCanvas *masterCanvas, QMainWindow *parent )
+    : QObject( parent ), mMainWindow( parent), mMasterCanvas( masterCanvas )
 {
-
-  mActionAddMapWidget = new QAction( QIcon( ":/vbsfunctionality/icons/add_map_view.svg" ), tr( "Add Map View" ), this );
-  mActionAddMapWidget->setToolTip( tr( "Add Map View" ) );
-  connect( mActionAddMapWidget, SIGNAL( triggered( bool ) ), this, SLOT( addMapWidget() ) );
-
-  if ( mIface->pluginToolBar() )
-  {
-    mIface->pluginToolBar()->addAction( mActionAddMapWidget );
-  }
-
-  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( clearMapWidgets() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProjectSettings( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProjectSettings( QDomDocument& ) ) );
 }
 
-QgsVBSMultiMapManager::~QgsVBSMultiMapManager()
+QgsMultiMapManager::~QgsMultiMapManager()
 {
   clearMapWidgets();
-  if ( mIface->pluginToolBar() )
-    mIface->pluginToolBar()->removeAction( mActionAddMapWidget );
 }
 
-void QgsVBSMultiMapManager::addMapWidget()
+void QgsMultiMapManager::addMapWidget()
 {
   int highestNumber = 1;
-  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
+  foreach ( const QPointer<QgsMapWidget>& mapWidget, mMapWidgets )
   {
     if ( mapWidget->getNumber() >= highestNumber )
     {
@@ -62,7 +49,7 @@ void QgsVBSMultiMapManager::addMapWidget()
     }
   }
 
-  QgsVBSMapWidget* mapWidget = new QgsVBSMapWidget( highestNumber, tr( "View #%1" ).arg( highestNumber ), mIface );
+  QgsMapWidget* mapWidget = new QgsMapWidget( highestNumber, tr( "View #%1" ).arg( highestNumber ), mMasterCanvas );
   mapWidget->setAttribute( Qt::WA_DeleteOnClose );
   connect( mapWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( mapWidgetDestroyed( QObject* ) ) );
 
@@ -70,10 +57,9 @@ void QgsVBSMultiMapManager::addMapWidget()
   int nRight = 0, nBottom = 0;
   double rightAreaWidth = 0;
   double bottomAreaHeight = 0;
-  QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
-  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
+  foreach ( const QPointer<QgsMapWidget>& mapWidget, mMapWidgets )
   {
-    Qt::DockWidgetArea area = mainWindow->dockWidgetArea( mapWidget );
+    Qt::DockWidgetArea area = mMainWindow->dockWidgetArea( mapWidget );
     if ( area == Qt::RightDockWidgetArea )
     {
       ++nRight;
@@ -90,14 +76,14 @@ void QgsVBSMultiMapManager::addMapWidget()
   if ( nBottom >= nRight - 1 )
   {
     addArea = Qt::RightDockWidgetArea;
-    initialSize.setHeight(( mIface->mapCanvas()->height() + bottomAreaHeight ) / ( nRight + 1 ) );
-    initialSize.setWidth( nRight > 0 ? rightAreaWidth : mIface->mapCanvas()->width() / 2 );
+    initialSize.setHeight(( mMasterCanvas->height() + bottomAreaHeight ) / ( nRight + 1 ) );
+    initialSize.setWidth( nRight > 0 ? rightAreaWidth : mMasterCanvas->width() / 2 );
   }
   else
   {
     addArea = Qt::BottomDockWidgetArea;
-    initialSize.setHeight( nBottom > 0 ? bottomAreaHeight : mIface->mapCanvas()->height() / 2 );
-    initialSize.setWidth( mIface->mapCanvas()->width() / ( nBottom + 1 ) );
+    initialSize.setHeight( nBottom > 0 ? bottomAreaHeight : mMasterCanvas->height() / 2 );
+    initialSize.setWidth( mMasterCanvas->width() / ( nBottom + 1 ) );
   }
 
   // Set initial layers
@@ -109,26 +95,26 @@ void QgsVBSMultiMapManager::addMapWidget()
   mapWidget->setInitialLayers( initialLayers, true );
 
   mapWidget->setFixedSize( initialSize );
-  mIface->addDockWidget( addArea, mapWidget );
+  mMainWindow->addDockWidget( addArea, mapWidget );
   mapWidget->resize( initialSize );
-  mMapWidgets.append( QPointer<QgsVBSMapWidget>( mapWidget ) );
+  mMapWidgets.append( QPointer<QgsMapWidget>( mapWidget ) );
 }
 
-void QgsVBSMultiMapManager::clearMapWidgets()
+void QgsMultiMapManager::clearMapWidgets()
 {
-  foreach ( const QPointer<QgsVBSMapWidget>& mapWidget, mMapWidgets )
+  foreach ( const QPointer<QgsMapWidget>& mapWidget, mMapWidgets )
   {
     delete mapWidget.data();
   }
   mMapWidgets.clear();
 }
 
-void QgsVBSMultiMapManager::mapWidgetDestroyed( QObject */*mapWidget*/ )
+void QgsMultiMapManager::mapWidgetDestroyed( QObject */*mapWidget*/ )
 {
-  mMapWidgets.removeAll( QPointer<QgsVBSMapWidget>( 0 ) );
+  mMapWidgets.removeAll( QPointer<QgsMapWidget>( 0 ) );
 }
 
-void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
+void QgsMultiMapManager::writeProjectSettings( QDomDocument& doc )
 {
   QDomNodeList nl = doc.elementsByTagName( "qgis" );
   if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
@@ -136,10 +122,9 @@ void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
     return;
   }
   QDomElement qgisElem = nl.at( 0 ).toElement();
-  QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
 
   QDomElement mapViewsElem = doc.createElement( "MapViews" );
-  foreach ( QgsVBSMapWidget* mapWidget, mMapWidgets )
+  foreach ( QgsMapWidget* mapWidget, mMapWidgets )
   {
     QByteArray ba;
     QDataStream ds( &ba, QIODevice::WriteOnly );
@@ -149,7 +134,7 @@ void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
     mapWidgetItemElem.setAttribute( "height", mapWidget->height() );
     mapWidgetItemElem.setAttribute( "floating", mapWidget->isFloating() );
     mapWidgetItemElem.setAttribute( "islocked", mapWidget->getLocked() );
-    mapWidgetItemElem.setAttribute( "area", mainWindow->dockWidgetArea( mapWidget ) );
+    mapWidgetItemElem.setAttribute( "area", mMainWindow->dockWidgetArea( mapWidget ) );
     mapWidgetItemElem.setAttribute( "title", mapWidget->windowTitle() );
     mapWidgetItemElem.setAttribute( "number", mapWidget->getNumber() );
     ds << mapWidget->getLayers();
@@ -162,7 +147,7 @@ void QgsVBSMultiMapManager::writeProjectSettings( QDomDocument& doc )
   qgisElem.appendChild( mapViewsElem );
 }
 
-void QgsVBSMultiMapManager::readProjectSettings( const QDomDocument& doc )
+void QgsMultiMapManager::readProjectSettings( const QDomDocument& doc )
 {
   clearMapWidgets();
 
@@ -182,10 +167,10 @@ void QgsVBSMultiMapManager::readProjectSettings( const QDomDocument& doc )
       QDomNamedNodeMap attributes = mapWidgetItemElem.attributes();
       QByteArray ba;
       QDataStream ds( &ba, QIODevice::ReadOnly );
-      QgsVBSMapWidget* mapWidget = new QgsVBSMapWidget(
+      QgsMapWidget* mapWidget = new QgsMapWidget(
         attributes.namedItem( "number" ).nodeValue().toInt(),
         attributes.namedItem( "title" ).nodeValue(),
-        mIface );
+        mMasterCanvas );
       mapWidget->setAttribute( Qt::WA_DeleteOnClose );
       ba = QByteArray::fromBase64( attributes.namedItem( "layers" ).nodeValue().toAscii() );
       QStringList layersList;
@@ -202,7 +187,7 @@ void QgsVBSMultiMapManager::readProjectSettings( const QDomDocument& doc )
       QRectF extent;
       ds >> extent;
       mapWidget->setMapExtent( QgsRectangle( extent ) );
-      mIface->addDockWidget( static_cast<Qt::DockWidgetArea>( attributes.namedItem( "area" ).nodeValue().toInt() ), mapWidget );
+      mMainWindow->addDockWidget( static_cast<Qt::DockWidgetArea>( attributes.namedItem( "area" ).nodeValue().toInt() ), mapWidget );
       mMapWidgets.append( mapWidget );
     }
   }

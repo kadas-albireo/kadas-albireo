@@ -23,7 +23,6 @@
 #include "qgsvbsfunctionality.h"
 #include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
-#include "multimap/qgsvbsmultimapmanager.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "vbsfunctionality_plugin.h"
 #include <QAction>
@@ -36,7 +35,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mSearchToolbar( 0 )
     , mReprojMsgItem( 0 )
     , mCrashHandler( 0 )
-    , mMultiMapManager( 0 )
     , mActionOvlImport( 0 )
     , mActionSlope( 0 )
     , mActionViewshed( 0 )
@@ -59,8 +57,6 @@ void QgsVBSFunctionality::initGui()
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
 
   mCrashHandler = new QgsVBSCrashHandler();
-
-  mMultiMapManager = new QgsVBSMultiMapManager( mQGisIface, this );
 
   mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
@@ -99,8 +95,6 @@ void QgsVBSFunctionality::unload()
   mSearchToolbar = 0;
   delete mCrashHandler;
   mCrashHandler = 0;
-  delete mMultiMapManager;
-  mMultiMapManager = 0;
   delete mActionOvlImport;
   mActionOvlImport = 0;
   delete mActionSlope;

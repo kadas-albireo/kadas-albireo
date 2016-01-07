@@ -20,6 +20,7 @@
 #include "qgscoordinatedisplayer.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
+#include "qgsmultimapmanager.h"
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
@@ -330,6 +331,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionZoomLast, mZoomLastButton );
   connect( mActionZoomNext, SIGNAL( triggered() ), this, SLOT( zoomToNext() ) );
   setActionToButton( mActionZoomNext, mZoomNextButton );
+  connect( mActionNewMapWindow, SIGNAL( triggered() ), mMultiMapManager, SLOT( addMapWidget() ) );
   setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
   setActionToButton( mAction3D, m3DButton );
   setActionToButton( mActionGrid, mGridButton );

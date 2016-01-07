@@ -60,6 +60,7 @@ class QgsMapTip;
 class QgsMapTool;
 class QgsMessageBar;
 class QgsMessageLogViewer;
+class QgsMultiMapManager;
 class QgsPluginManager;
 class QgsPythonUtils;
 class QgsRasterLayer;
@@ -1330,6 +1331,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsRedlining* mRedlining;
 
     QgsGPSRouteEditor* mGpsRouteEditor;
+
+    QgsMultiMapManager* mMultiMapManager;
 
     bool gestureEvent( QGestureEvent *event );
     void tapAndHoldTriggered( QTapAndHoldGesture *gesture );

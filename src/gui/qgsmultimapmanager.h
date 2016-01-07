@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsmultimapmanager.h                                                *
+ *  qgsmultimapmanager.h                                                *
  *  -------------------                                                    *
  *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,36 +15,40 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMULTIMAPMANAGER_H
-#define QGSVBSMULTIMAPMANAGER_H
+#ifndef QGSMULTIMAPMANAGER_H
+#define QGSMULTIMAPMANAGER_H
 
 #include <QObject>
 #include <QPointer>
 
 class QAction;
 class QDomDocument;
-class QgisInterface;
-class QgsVBSMapWidget;
+class QMainWindow;
+class QgsMapCanvas;
+class QgsMapWidget;
 
 
-class QgsVBSMultiMapManager : public QObject
+class GUI_EXPORT QgsMultiMapManager : public QObject
 {
     Q_OBJECT
   public:
-    QgsVBSMultiMapManager( QgisInterface* iface, QObject* parent = 0 );
-    ~QgsVBSMultiMapManager();
+    QgsMultiMapManager(QgsMapCanvas* masterCanvas, QMainWindow *parent = 0 );
+    ~QgsMultiMapManager();
+
+  public slots:
+    void addMapWidget();
+    void clearMapWidgets();
 
   private:
-    QgisInterface* mIface;
-    QList<QPointer<QgsVBSMapWidget> > mMapWidgets;
+    QMainWindow* mMainWindow;
+    QgsMapCanvas* mMasterCanvas;
+    QList<QPointer<QgsMapWidget> > mMapWidgets;
     QAction* mActionAddMapWidget;
 
   private slots:
-    void addMapWidget();
-    void clearMapWidgets();
     void mapWidgetDestroyed( QObject* mapWidget );
     void writeProjectSettings( QDomDocument& doc );
     void readProjectSettings( const QDomDocument& doc );
 };
 
-#endif // QGSVBSMULTIMAPMANAGER_H
+#endif // QGSMULTIMAPMANAGER_H

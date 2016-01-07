@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsmapwidget.h                                                      *
+ *  qgsmapwidget.h                                                      *
  *  -------------------                                                    *
  *  begin                : Sep 16, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,12 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMAPWIDGET_H
-#define QGSVBSMAPWIDGET_H
+#ifndef QGSMAPWIDGET_H
+#define QGSMAPWIDGET_H
 
 #include <QDockWidget>
 
-class QgisInterface;
 class QgsMapCanvas;
 class QgsRectangle;
 class QToolButton;
@@ -30,11 +29,11 @@ class QLabel;
 class QStackedWidget;
 
 
-class QgsVBSMapWidget : public QDockWidget
+class GUI_EXPORT QgsMapWidget : public QDockWidget
 {
     Q_OBJECT
   public:
-    QgsVBSMapWidget( int number, const QString& title, QgisInterface* iface, QWidget* parent = 0 );
+    QgsMapWidget( int number, const QString& title, QgsMapCanvas* masterCanvas, QWidget* parent = 0 );
     void setInitialLayers( const QStringList& initialLayers, bool updateMenu = false );
     int getNumber() const { return mNumber; }
     QStringList getLayers() const;
@@ -47,8 +46,8 @@ class QgsVBSMapWidget : public QDockWidget
 
 
   private:
-    QgisInterface* mIface;
     int mNumber;
+    QgsMapCanvas* mMasterCanvas;
     QToolButton* mLayerSelectionButton;
     QMenu* mLayerSelectionMenu;
     QToolButton* mLockViewButton;
@@ -72,4 +71,4 @@ class QgsVBSMapWidget : public QDockWidget
 
 };
 
-#endif // QGSVBSMAPWIDGET_H
+#endif // QGSMAPWIDGET_H
