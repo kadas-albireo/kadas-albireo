@@ -108,9 +108,9 @@ QWidget* QgsFormAnnotationItem::createDesignerWidget( const QString& filePath )
   return widget;
 }
 
-void QgsFormAnnotationItem::setMapPosition( const QgsPoint& pos )
+void QgsFormAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs )
 {
-  QgsAnnotationItem::setMapPosition( pos );
+  QgsAnnotationItem::setMapPosition( pos, crs );
   setFeatureForMapPosition();
 }
 

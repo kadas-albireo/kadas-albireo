@@ -55,9 +55,9 @@ void QgsPinAnnotationItem::updateToolTip()
   setToolTip( toolTipText );
 }
 
-void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos )
+void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs )
 {
-  QgsSvgAnnotationItem::setMapPosition( pos );
+  QgsSvgAnnotationItem::setMapPosition( pos, crs );
   updateToolTip();
 }
 

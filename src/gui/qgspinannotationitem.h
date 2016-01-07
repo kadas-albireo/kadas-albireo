@@ -30,7 +30,7 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
 
-    void setMapPosition( const QgsPoint& pos ) override;
+    void setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void showContextMenu( const QPoint& screenPos );
 
     void writeXML( QDomDocument& doc ) const override;
