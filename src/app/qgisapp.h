@@ -1177,11 +1177,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Configure layer tree view according to the user options from QSettings
     void setupLayerTreeViewFromSettings();
 
-    /// QgisApp aren't copyable
-    QgisApp( QgisApp const & );
-    /// QgisApp aren't copyable
-    QgisApp & operator=( QgisApp const & );
-
     void readSettings();
     void writeSettings();
     void setupConnections();
@@ -1338,6 +1333,12 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     bool gestureEvent( QGestureEvent *event );
     void tapAndHoldTriggered( QTapAndHoldGesture *gesture );
+
+  private:
+    /// QgisApp aren't copyable
+    QgisApp( QgisApp const & );
+    /// QgisApp aren't copyable
+    QgisApp & operator=( QgisApp const & );
 };
 
 #ifdef ANDROID
