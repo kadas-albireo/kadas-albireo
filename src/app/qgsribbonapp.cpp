@@ -114,6 +114,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
+  connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -502,4 +503,14 @@ void QgsRibbonApp::addCameraPicture()
       mInfoBar->pushCritical( tr( "Could not add picture" ), errMsg );
     }
   }
+}
+
+void QgsRibbonApp::userScale()
+{
+  mMapCanvas->zoomScale( 1.0 / mScaleComboBox->scale() );
+}
+
+void QgsRibbonApp::showScale( double scale )
+{
+  mScaleComboBox->setScale( 1.0 / scale );
 }
