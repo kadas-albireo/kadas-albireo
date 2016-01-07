@@ -21,7 +21,6 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgsvbsfunctionality.h"
-#include "qgsvbscrashhandler.h"
 #include "qgisinterface.h"
 #include "ovl/qgsvbsovlimporter.h"
 #include "vbsfunctionality_plugin.h"
@@ -34,7 +33,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mActionPinAnnotation( 0 )
     , mSearchToolbar( 0 )
     , mReprojMsgItem( 0 )
-    , mCrashHandler( 0 )
     , mActionOvlImport( 0 )
     , mActionSlope( 0 )
     , mActionViewshed( 0 )
@@ -55,8 +53,6 @@ void QgsVBSFunctionality::initGui()
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
-
-  mCrashHandler = new QgsVBSCrashHandler();
 
   mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
   connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
@@ -93,8 +89,6 @@ void QgsVBSFunctionality::unload()
   disconnect( mQGisIface->mapCanvas(), SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( onMapToolSet( QgsMapTool* ) ) );
   delete mSearchToolbar;
   mSearchToolbar = 0;
-  delete mCrashHandler;
-  mCrashHandler = 0;
   delete mActionOvlImport;
   mActionOvlImport = 0;
   delete mActionSlope;

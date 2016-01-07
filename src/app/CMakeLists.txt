@@ -18,6 +18,7 @@ SET(QGIS_APP_SRCS
   qgsadvanceddigitizingcanvasitem.cpp
   qgsclipboard.cpp
   qgsconfigureshortcutsdialog.cpp
+  qgscrashrpt.cpp
   qgscustomization.cpp
   qgscustomprojectiondialog.cpp
   qgsdecorationitem.cpp

@@ -10,7 +10,6 @@ ENDIF(MSVC)
 
 SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
-  qgsvbscrashhandler.cpp
   ovl/qgsvbsovlimporter.cpp
 )
 
@@ -21,7 +20,6 @@ SET (vbsfunctionality_HDRS
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
-  qgsvbscrashhandler.h
 )
 
 SET (vbsfunctionality_UIS

@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbscrashhandler.cpp                                                 *
- *  -------------------                                                    *
+ *  qgscrashrpt.cpp                                                        *
+ *  ---------------                                                        *
  *  begin                : Sep 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbscrashhandler.h"
+#include "qgscrashrpt.h"
 #include "qgis.h"
 #include "qgsproject.h"
 #include "qgslogger.h"
@@ -37,16 +37,34 @@ int CALLBACK CrashCallback( CR_CRASH_CALLBACK_INFO* pInfo )
 #endif
 
 
-QgsVBSCrashHandler::QgsVBSCrashHandler()
+QgsCrashRpt::QgsCrashRpt()
     : mHandlerInstalled( false )
 {
+}
+
+QgsCrashRpt::~QgsCrashRpt()
+{
 #ifdef _MSC_VER
+  if ( mHandlerInstalled )
+    crUninstall();
+#endif
+}
+
+bool QgsCrashRpt::install()
+{
+#ifdef _MSC_VER
+  QString submitUrl = QSettings().value( "/qgis/crashrpt_url" ).toString();
+  if(submitUrl.isEmpty())
+  {
+    QgsDebugMsg( "Failed to install crash reporter: submit url is empty" );
+    return false;
+  }
   CR_INSTALL_INFO info;
   memset( &info, 0, sizeof( CR_INSTALL_INFO ) );
   info.cb = sizeof( CR_INSTALL_INFO );
   info.pszAppName = _strdup( QString( "QGIS %1" ).arg( QGis::QGIS_RELEASE_NAME ).toLocal8Bit().data() );
   info.pszAppVersion = _strdup( QString( "%1 (%2)" ).arg( QGis::QGIS_VERSION ).arg( QGis::QGIS_DEV_VERSION ).toLocal8Bit().data() );
-  info.pszUrl = _strdup( QSettings().value( "/vbsfunctionality/crashrpt_url", "http://npe.lt.admin.ch/MgdiServices/CrashReport.svc/Send" ).toString().toLocal8Bit().data() );
+  info.pszUrl = _strdup( submitUrl.toLocal8Bit().data() );
   info.dwFlags = 0;
   info.dwFlags |= CR_INST_ALL_POSSIBLE_HANDLERS; // Install all available exception handlers.
   info.dwFlags |= CR_INST_APP_RESTART; // Restart on crash
@@ -65,22 +83,14 @@ QgsVBSCrashHandler::QgsVBSCrashHandler()
     TCHAR buff[512];
     crGetLastErrorMsg( buff, sizeof( buff ) );
     QgsDebugMsg( QString( "Failed to install crash reporter: %1" ).arg( QString::fromLocal8Bit( buff, sizeof( buff ) ) ) );
-    return;
+    return false;
   }
   else
   {
     QgsDebugMsg( "Crash reporter installed" );
     crSetCrashCallback( CrashCallback, 0 );
     mHandlerInstalled = true;
+    return true;
   }
 #endif
 }
-
-QgsVBSCrashHandler::~QgsVBSCrashHandler()
-{
-#ifdef _MSC_VER
-  if ( mHandlerInstalled )
-    crUninstall();
-#endif
-}
-

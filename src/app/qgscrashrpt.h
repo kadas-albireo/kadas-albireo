@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbscrashhandler.h                                                   *
+ *  qgscrashrpt.h                                                          *
  *  -------------------                                                    *
  *  begin                : Sep 15, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,15 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSCRASHHANDLER_H
-#define QGSVBSCRASHHANDLER_H
+#ifndef QGSCRASHRPT_H
+#define QGSCRASHRPT_H
 
-class QgsVBSCrashHandler {
+class QgsCrashRpt {
 public:
-	QgsVBSCrashHandler();
-	~QgsVBSCrashHandler();
+  QgsCrashRpt();
+  ~QgsCrashRpt();
+  bool install();
 private:
-	bool mHandlerInstalled;
+  bool mHandlerInstalled;
 };
 
-#endif // QGSVBSCRASHHANDLER_H
+#endif // QGSCRASHRPT_H

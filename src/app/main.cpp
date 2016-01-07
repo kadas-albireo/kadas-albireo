@@ -43,6 +43,7 @@
 #include "qgspluginregistry.h"
 #include "qgsmessagelog.h"
 #include "qgspythonrunner.h"
+#include "qgscrashrpt.h"
 
 #include <cstdio>
 #include <stdio.h>
@@ -440,7 +441,9 @@ int main( int argc, char *argv[] )
 #endif
 
 #ifdef __MSC_VER
-  SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
+  QgsCrashRpt crashReporter;
+  if ( !crashReporter.install() )
+    SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
 #endif
 
   // initialize random number seed
