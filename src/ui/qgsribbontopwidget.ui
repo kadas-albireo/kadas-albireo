@@ -1354,7 +1354,7 @@ Line of Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/flaeche.png</normaloff>:/images/ribbon/flaeche.png</iconset>
+     <normaloff>:/images/ribbon/analyse_flaechen.png</normaloff>:/images/ribbon/analyse_flaechen.png</iconset>
    </property>
    <property name="text">
     <string>Area</string>
@@ -1435,7 +1435,7 @@ Line of Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/kreismessung.png</normaloff>:/images/ribbon/kreismessung.png</iconset>
    </property>
    <property name="text">
     <string>Circle</string>
