@@ -83,9 +83,9 @@ void QgsHtmlAnnotationItem::setHTMLPage( const QString& htmlFile )
   setFeatureForMapPosition();
 }
 
-void QgsHtmlAnnotationItem::setMapPosition( const QgsPoint& pos )
+void QgsHtmlAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs )
 {
-  QgsAnnotationItem::setMapPosition( pos );
+  QgsAnnotationItem::setMapPosition( pos, crs );
   setFeatureForMapPosition();
 }
 

@@ -78,7 +78,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     void setMapPositionFixed( bool fixed );
     bool mapPositionFixed() const { return mMapPositionFixed; }
 
-    virtual void setMapPosition( const QgsPoint& pos );
+    virtual void setMapPosition( const QgsPoint& pos , const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() );
     QgsPoint mapPosition() const { return mMapPosition; }
 
     void setOffsetFromReferencePoint( const QPointF& offset );

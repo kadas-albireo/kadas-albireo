@@ -42,7 +42,7 @@ class GUI_EXPORT QgsHtmlAnnotationItem: public QgsAnnotationItem
     QSizeF minimumFrameSize() const override;
 
     /**Reimplemented from QgsAnnotationItem*/
-    void setMapPosition( const QgsPoint& pos ) override;
+    void setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
 
     void setHTMLPage( const QString& htmlFile );
     QString htmlPage() const { return mHtmlFile; }

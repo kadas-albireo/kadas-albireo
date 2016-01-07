@@ -18,6 +18,7 @@
 #include "qgsribbonapp.h"
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
+#include "qgsgeoimageannotationitem.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
 #include "qgslegendinterface.h"
@@ -29,6 +30,8 @@
 #include "qgsproject.h"
 #include "qgsundowidget.h"
 
+#include <QFileDialog>
+#include <QImageReader>
 #include <QMenu>
 #include <QMouseEvent>
 
@@ -359,6 +362,9 @@ void QgsRibbonApp::configureButtons()
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   setActionToButton( mActionPin, mPinButton, mMapTools.mPinAnnotation );
 
+  connect( mActionAddCameraPicture, SIGNAL( triggered( bool ) ), this, SLOT( addCameraPicture() ) );
+  setActionToButton( mActionAddCameraPicture, mAddPictureButton );
+
   //analysis tab
 
   connect( mActionDistance, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
@@ -467,5 +473,25 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers
     mReprojMsgItem = mInfoBar->createMessage( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ) );
     mReprojMsgItem->setDuration( 10 );
     mInfoBar->pushItem( mReprojMsgItem.data() );
+  }
+}
+
+void QgsRibbonApp::addCameraPicture()
+{
+  QString lastUsedDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
+  QSet<QString> formats;
+  foreach ( const QByteArray& format, QImageReader::supportedImageFormats() )
+  {
+    formats.insert( QString( "*.%1" ).arg( QString( format ).toLower() ) );
+  }
+  QString filter = QString( "Camera pcitures (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Select Camera Picture" ), lastUsedDir, filter );
+  if ( !filename.isEmpty() )
+  {
+    QString errMsg;
+    if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, &errMsg ) )
+    {
+      mInfoBar->pushCritical( tr( "Could not add picture" ), errMsg );
+    }
   }
 }

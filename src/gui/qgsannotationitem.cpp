@@ -54,9 +54,17 @@ void QgsAnnotationItem::setMarkerSymbol( QgsMarkerSymbolV2* symbol )
   updateBoundingRect();
 }
 
-void QgsAnnotationItem::setMapPosition( const QgsPoint& pos )
+void QgsAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem& crs )
 {
   mMapPosition = mGeoPos = pos;
+  if ( crs.isValid() && crs != mMapCanvas->mapSettings().destinationCrs() )
+  {
+    mMapPosition = mGeoPos = pos;
+  }
+  else
+  {
+    mMapPosition = mGeoPos = QgsCoordinateTransform( crs, mMapCanvas->mapSettings().destinationCrs() ).transform( pos );
+  }
   mGeoPosCrs = mMapCanvas->mapSettings().destinationCrs();
   setPos( toCanvasCoordinates( mMapPosition ) );
 }

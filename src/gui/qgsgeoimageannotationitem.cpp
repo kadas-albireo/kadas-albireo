@@ -25,21 +25,20 @@
 #include <exiv2/exiv2.hpp>
 
 
-QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath )
+QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, QString* errMsg )
 {
   QgsPoint wgs84Pos;
-  if ( !readGeoPos( filePath, wgs84Pos ) )
+  if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
   {
     return 0;
   }
   QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( canvas );
   item->setFilePath( filePath );
-  QgsPoint pos = QgsCoordinateTransform( QgsCoordinateReferenceSystem( "EPSG:4326" ), canvas->mapSettings().destinationCrs() ).transform( wgs84Pos );
-  item->setMapPosition( pos );
+  item->setMapPosition( wgs84Pos, QgsCoordinateReferenceSystem( "EPSG:4326" ) );
   return item;
 }
 
-bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &wgs84Pos )
+bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &wgs84Pos, QString* errMsg )
 {
   // Read EXIF position
   Exiv2::Image::AutoPtr image;
@@ -49,11 +48,13 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
   }
   catch ( const Exiv2::Error& )
   {
+    if ( errMsg ) *errMsg = tr( "Could not read image" );
     return false;
   }
 
   if ( image.get() == 0 )
   {
+    if ( errMsg ) *errMsg = tr( "Could not read image" );
     return false;
   }
 
@@ -61,6 +62,7 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
   Exiv2::ExifData &exifData = image->exifData();
   if ( exifData.empty() )
   {
+    if ( errMsg ) *errMsg = tr( "Failed to read EXIF tags" );
     return false;
   }
 
@@ -72,6 +74,7 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
   if ( itLatRef == exifData.end() || itLatVal == exifData.end() ||
        itLonRef == exifData.end() || itLonVal == exifData.end() )
   {
+    if ( errMsg ) *errMsg = tr( "Failed to read position EXIF tags" );
     return false;
   }
   QString latRef = QString::fromStdString( itLatRef->value().toString() );
@@ -172,8 +175,7 @@ void QgsGeoImageAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
     _readXML( doc, annotationElem );
   }
 
-  QgsPoint pos = QgsCoordinateTransform( QgsCoordinateReferenceSystem( "EPSG:4326" ), mMapCanvas->mapSettings().destinationCrs() ).transform( wgs84Pos );
-  setMapPosition( pos );
+  setMapPosition( wgs84Pos, QgsCoordinateReferenceSystem( "EPSG:4326" ) );
 }
 
 void QgsGeoImageAnnotationItem::paint( QPainter* painter )

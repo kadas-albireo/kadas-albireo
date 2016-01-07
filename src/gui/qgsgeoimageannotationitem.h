@@ -24,7 +24,7 @@
 class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 {
   public:
-    static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath );
+    static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath , QString *errMsg = 0 );
 
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas );
     void setFilePath( const QString& filePath );
@@ -39,7 +39,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     QString mFilePath;
     QImage mImage;
 
-    static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos );
+    static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos , QString *errMsg = 0 );
 
     void _showItemEditor() override;
 };

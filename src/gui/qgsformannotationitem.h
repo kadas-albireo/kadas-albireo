@@ -42,7 +42,7 @@ class GUI_EXPORT QgsFormAnnotationItem: public QgsAnnotationItem
     QSizeF preferredFrameSize() const;
 
     /**Reimplemented from QgsAnnotationItem*/
-    void setMapPosition( const QgsPoint& pos ) override;
+    void setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
 
     void setDesignerForm( const QString& uiFile );
     QString designerForm() const { return mDesignerForm; }
