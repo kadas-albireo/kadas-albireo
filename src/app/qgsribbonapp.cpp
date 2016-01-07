@@ -321,27 +321,26 @@ void QgsRibbonApp::configureButtons()
 {
   //My maps tab
 
-  //mActionNew
   connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
   setActionToButton( mActionNew, mNewButton );
-  //mActionOpen
+
   connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
   setActionToButton( mActionOpen, mOpenButton );
-  //mActionSave
+
   connect( mActionSave, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
   setActionToButton( mActionSave, mSaveButton );
-  //mActionCopy
+
+  connect( mActionCopy, SIGNAL( triggered() ), this, SLOT( saveMapToClipboard() ) );
   setActionToButton( mActionCopy, mCopyButton );
-  //mActionCopyToClipboard
-  //setActionToButton( mActionCopyToClipboard, mCopyToClipboardButton );
-  //mActionPrint
+
   setActionToButton( mActionPrint, mPrintButton );
-  //mActionSaveMapExtent
+
   connect( mActionSaveMapExtent, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
   setActionToButton( mActionSaveMapExtent, mSaveMapExtentButton );
-  //mActionExportKML
+
   connect( mActionExportKML, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
   setActionToButton( mActionExportKML, mExportKMLButton );
+
   //mActionImportOVL
   //setActionToButton( mActionImportOVL, mImportOVLButton );
 
