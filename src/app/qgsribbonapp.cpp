@@ -20,6 +20,9 @@
 #include "qgscoordinatedisplayer.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
+#include "qgslegendinterface.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsmessagebaritem.h"
 #include "qgsmultimapmanager.h"
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
@@ -101,6 +104,9 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   redliningUi.comboOutlineStyle = mComboBoxRedliningBorderStyle;
   redliningUi.spinBoxSize = mSpinBoxRedliningSize;
   mRedlining = new QgsRedlining( this, redliningUi );
+
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
+  connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -420,5 +426,30 @@ void QgsRibbonApp::on_mZoomOutButton_clicked()
   if ( mMapCanvas )
   {
     mMapCanvas->zoomOut();
+  }
+}
+
+void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )
+{
+  if ( !mReprojMsgItem.isNull() )
+  {
+    mInfoBar->popWidget( mReprojMsgItem.data() );
+  }
+  QString destAuthId = mMapCanvas->mapSettings().destinationCrs().authid();
+  QStringList reprojLayers;
+  // Look at legend interface instead of maplayerregistry, to only check layers
+  // the user can actually see
+  foreach ( QgsMapLayer* layer, legendInterface()->layers() + newLayers )
+  {
+    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->crs().authid() != destAuthId )
+    {
+      reprojLayers.append( layer->name() );
+    }
+  }
+  if ( !reprojLayers.isEmpty() )
+  {
+    mReprojMsgItem = mInfoBar->createMessage( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ) );
+    mReprojMsgItem->setDuration( 10 );
+    mInfoBar->pushItem( mReprojMsgItem.data() );
   }
 }
