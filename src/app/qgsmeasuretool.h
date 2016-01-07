@@ -66,7 +66,7 @@ class APP_EXPORT QgsMeasureTool : public QgsMapTool
     void updateLabels();
 
     //! Sets the geometry to be measured
-    virtual void setGeometry( QgsGeometry* geometry, QgsVectorLayer *layer );
+    virtual void addGeometry( QgsGeometry* geometry, QgsVectorLayer *layer );
 
   public slots:
     //! updates the projections we're using

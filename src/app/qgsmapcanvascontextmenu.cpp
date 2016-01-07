@@ -27,6 +27,8 @@
 #include "qgsfeaturepicker.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
+#include "qgsmeasuretool.h"
+#include "qgsmeasureheightprofiletool.h"
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
 #include "qgsvectorlayer.h"
@@ -39,7 +41,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   QPair<QgsFeature, QgsVectorLayer*> pick = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
   if ( pick.first.isValid() )
   {
-    mSelectedFeature = pick.first.id();
+    mSelectedFeature = pick.first;
     mSelectedLayer = pick.second;
     QgsCoordinateTransform ct( pick.second->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
     mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pick.first.geometry()->type() );
@@ -101,7 +103,7 @@ void QgsMapCanvasContextMenu::cutFeature()
   if ( mSelectedLayer )
   {
     QgsFeatureIds prevSelection = mSelectedLayer->selectedFeaturesIds();
-    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature );
+    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature.id() );
     mSelectedLayer->startEditing();
     QgisApp::instance()->editCut( mSelectedLayer );
     mSelectedLayer->commitChanges();
@@ -114,7 +116,7 @@ void QgsMapCanvasContextMenu::copyFeature()
   if ( mSelectedLayer )
   {
     QgsFeatureIds prevSelection = mSelectedLayer->selectedFeaturesIds();
-    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature );
+    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature.id() );
     QgisApp::instance()->editCopy( mSelectedLayer );
     mSelectedLayer->setSelectedFeatures( prevSelection );
   }
@@ -173,16 +175,28 @@ void QgsMapCanvasContextMenu::drawText()
 void QgsMapCanvasContextMenu::measureLine()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureDist );
+  if ( mSelectedLayer )
+  {
+    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureDist )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+  }
 }
 
 void QgsMapCanvasContextMenu::measurePolygon()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureArea );
+  if ( mSelectedLayer )
+  {
+    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureArea )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+  }
 }
 
 void QgsMapCanvasContextMenu::measureCircle()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureCircle );
+  if ( mSelectedLayer )
+  {
+    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureCircle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+  }
 }
 
 void QgsMapCanvasContextMenu::measureAngle()
@@ -193,6 +207,10 @@ void QgsMapCanvasContextMenu::measureAngle()
 void QgsMapCanvasContextMenu::measureHeightProfile()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
+  if ( mSelectedLayer )
+  {
+    static_cast<QgsMeasureHeightProfileTool*>( QgisApp::instance()->mapTools()->mMeasureHeightProfile )->setGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+  }
 }
 
 void QgsMapCanvasContextMenu::terrainSlope()
@@ -244,7 +262,7 @@ void QgsMapCanvasContextMenu::copyMap()
 
 void QgsMapCanvasContextMenu::print()
 {
-#pragma warning("TODO")
+#pragma message("warning: TODO")
   /*QToolButton* button = QgisApp::instance()->pluginToolBar()->findChild<QToolButton*>( "vbsprintaction" );
   if ( button && !button->isChecked() )
   {
