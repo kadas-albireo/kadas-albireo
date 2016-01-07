@@ -70,6 +70,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
 
+  mMapCanvas->installEventFilter( this );
+
   initLayerTreeView();
 
   // Base class init
@@ -141,27 +143,26 @@ void QgsRibbonApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat&
   mCoordinateDisplayer->getCoordinateDisplayFormat( format, epsg );
 }
 
-void QgsRibbonApp::resizeEvent( QResizeEvent* event )
+bool QgsRibbonApp::eventFilter( QObject *obj, QEvent *ev )
 {
-  QWidget::resizeEvent( event );
-  updateWidgetPositions();
+  if ( obj == mMapCanvas && ev->type() == QEvent::Resize )
+  {
+    updateWidgetPositions();
+  }
+  return false;
 }
 
 void QgsRibbonApp::updateWidgetPositions()
 {
   QRect mapCanvasGeometry = mMapCanvas->geometry();
 
-  //make sure +/- buttons have constant distance to upper right corner of map canvas
-  QWidget* zoomLayoutWidget = dynamic_cast<QWidget*>( mZoomInOutLayout->parent() );
-  if ( zoomLayoutWidget )
-  {
-    QRect zoomLayoutGeometry = zoomLayoutWidget->geometry();
-    int distanceToRightBorder = 9;
-    int distanceToTop = 20;
-    zoomLayoutWidget->move( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(), distanceToTop );
-  }
+  // Make sure +/- buttons have constant distance to upper right corner of map canvas
+  QRect zoomLayoutGeometry = mZoomInOutFrame->geometry();
+  int distanceToRightBorder = 9;
+  int distanceToTop = 20;
+  mZoomInOutFrame->move( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(), distanceToTop );
 
-  //resize mLayerTreeView and mLayerTreeViewButton
+  // Resize mLayerTreeView and mLayerTreeViewButton
   int distanceToTopBottom = 40;
   int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
   mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
