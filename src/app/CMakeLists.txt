@@ -594,6 +594,7 @@ TARGET_LINK_LIBRARIES(${QGIS_APP_NAME}
   qgis_gui
   qgis_analysis
   qgis_splash
+  ${CRASHRPT_LIBRARY}
 )
 
 IF (ANDROID)
