@@ -1217,7 +1217,7 @@ Line of Sight</string>
             <item row="1" column="0">
              <widget class="QLabel" name="mLabelRedliningSize">
               <property name="text">
-               <string>Si&amp;ze:</string>
+               <string>Size:</string>
               </property>
              </widget>
             </item>
