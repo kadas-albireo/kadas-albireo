@@ -70,8 +70,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
-  mInfoBar = new QgsMessageBar( mMapCanvas );
-  mInfoBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed );
+  mInfoBar = new QgsMessageBar( this );
+  mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 
   mMapCanvas->installEventFilter( this );
 
@@ -199,6 +199,16 @@ void QgsRibbonApp::initLayerTreeView()
 
   bool otfTransformAutoEnable = QSettings().value( "/Projections/otfTransformAutoEnable", true ).toBool();
   mLayerTreeCanvasBridge->setAutoEnableCrsTransform( otfTransformAutoEnable );
+}
+
+void QgsRibbonApp::resizeEvent( QResizeEvent *event )
+{
+  QMainWindow::resizeEvent( event );
+  double barwidth = 0.5 * geometry().width();
+  double x = 0.5 * geometry().width() - 0.5 * barwidth;
+  double y = centralWidget()->geometry().y();
+  mInfoBar->move( x, y );
+  mInfoBar->setFixedWidth( barwidth );
 }
 
 void QgsRibbonApp::mousePressEvent( QMouseEvent* event )
