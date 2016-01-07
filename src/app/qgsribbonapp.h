@@ -74,6 +74,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void on_mLayerTreeViewButton_clicked();
     void on_mZoomInButton_clicked();
     void on_mZoomOutButton_clicked();
+    void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers );
 
   private:
     QMenu* mProjectMenu;
@@ -100,6 +101,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
 
     QPoint mDragStartPos;
     QString mDragStartActionName;
+    QPointer<QgsMessageBarItem> mReprojMsgItem;
 
     bool eventFilter( QObject *obj, QEvent *ev ) override;
     void mousePressEvent( QMouseEvent* event ) override;
