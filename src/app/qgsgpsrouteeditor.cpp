@@ -32,62 +32,27 @@
 
 #include <QDomDocument>
 #include <QFileDialog>
-#include <QMessageBox>
 #include <QMenu>
 #include <QSettings>
 
 
 int QgsGPSRouteEditor::sFeatureSize = 2;
 
-QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app )
-    : QObject( app ), mApp( app ), mLayer( 0 ), mLayerRefCount( 0 )
+QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoints, QAction *actionCreateRoutes )
+    : QObject( app )
+    , mApp( app )
+    , mActionCreateWaypoints( actionCreateWaypoints )
+    , mActionCreateRoutes( actionCreateRoutes )
+    , mLayer( 0 )
+    , mLayerRefCount( 0 )
 {
+  mActionEdit = new QAction( this );
 
-//  QToolBar* gpseditorToolbar = mApp->addToolBar( tr( "GPS Route Editor" ) );
-
-  QAction* actionNewPoint = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Waypoint" ), this );
-  actionNewPoint->setCheckable( true );
-  connect( actionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint() ) );
-
-  QAction* actionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Route" ), this );
-  actionNewLine->setCheckable( true );
-  connect( actionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( newLine() ) );
-
-  mBtnNewObject = new QToolButton();
-  mBtnNewObject->setToolTip( tr( "New Object" ) );
-  QMenu* menuNewObject = new QMenu();
-  menuNewObject->addAction( actionNewPoint );
-  menuNewObject->addAction( actionNewLine );
-  mBtnNewObject->setMenu( menuNewObject );
-  mBtnNewObject->setPopupMode( QToolButton::MenuButtonPopup );
-  mBtnNewObject->setDefaultAction( actionNewPoint );
-  connect( menuNewObject, SIGNAL( triggered( QAction* ) ), mBtnNewObject, SLOT( setDefaultAction( QAction* ) ) );
-#pragma message( "warning: TODO" )
-//  gpseditorToolbar->addWidget( mBtnNewObject );
-
-  mActionEditObject = new QAction( QIcon( ":/images/themes/default/mActionNodeTool.png" ), QString(), this );
-  mActionEditObject->setToolTip( tr( "Edit Object" ) );
-  mActionEditObject->setCheckable( true );
-#pragma message( "warning: TODO" )
-//  gpseditorToolbar->addAction( mActionEditObject );
-  connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
-
-  connect( mApp, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
+  connect( actionCreateWaypoints, SIGNAL( triggered( bool ) ), this, SLOT( createWaypoints( bool ) ) );
+  connect( actionCreateRoutes, SIGNAL( triggered( bool ) ), this, SLOT( createRoutes( bool ) ) );
+  connect( app, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
-
-  mActionImportGpx = new QAction( tr( "Import from GPX" ), this );
-  connect( mActionImportGpx, SIGNAL( triggered( bool ) ), this, SLOT( importGpx() ) );
-  mActionExportGpx = new QAction( tr( "Export to GPX" ), this );
-  connect( mActionExportGpx, SIGNAL( triggered( bool ) ), this, SLOT( exportGpx() ) );
-//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionImportGpx, "", "gpxImport", QgsMapLayer::RedliningLayer, false );
-//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerAction( mActionExportGpx, "", "gpxExport", QgsMapLayer::RedliningLayer, false );
-}
-
-QgsGPSRouteEditor::~QgsGPSRouteEditor()
-{
-//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionImportGpx );
-//  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerAction( mActionExportGpx );
 }
 
 QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
@@ -104,19 +69,22 @@ QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
   connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearLayer() ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWillBeRemoved( QString ) ), this, SLOT( removeLegendActions( QString ) ) );
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerActionForLayer( mActionImportGpx, mLayer );
-  dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->addLegendLayerActionForLayer( mActionExportGpx, mLayer );
 
   return mLayer;
 }
 
-void QgsGPSRouteEditor::removeLegendActions( const QString& layerId )
+QgsRedliningLayer* QgsGPSRouteEditor::getLayer() const
 {
-  if ( mLayer && layerId == mLayer->id() )
-  {
-    dynamic_cast<QgsAppLayerTreeViewMenuProvider*>( mApp->layerTreeView()->menuProvider() )->removeLegendLayerActionsForLayer( mLayer );
-  }
+  return mLayer.data();
+}
+
+void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
+{
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), feature );
+  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  setTool( tool, mActionEdit );
 }
 
 void QgsGPSRouteEditor::clearLayer()
@@ -132,31 +100,38 @@ void QgsGPSRouteEditor::editObject()
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
-  activateTool( tool, qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( tool, mActionEdit );
 }
 
-void QgsGPSRouteEditor::newPoint()
+void QgsGPSRouteEditor::createWaypoints( bool active )
 {
-  activateTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), mActionCreateWaypoints, active );
 }
 
-void QgsGPSRouteEditor::newLine()
+void QgsGPSRouteEditor::createRoutes( bool active )
 {
-  activateTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), qobject_cast<QAction*>( QObject::sender() ) );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), mActionCreateRoutes, active );
 }
 
-void QgsGPSRouteEditor::activateTool( QgsMapTool *tool, QAction* action )
+void QgsGPSRouteEditor::setTool( QgsMapTool *tool, QAction* action , bool active )
 {
-  tool->setAction( action );
-  connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
-  if ( mLayerRefCount == 0 )
+  if ( active && ( mApp->mapCanvas()->mapTool() == 0 || mApp->mapCanvas()->mapTool()->action() != action ) )
   {
-    mApp->mapCanvas()->setCurrentLayer( getOrCreateLayer() );
-    mLayer->startEditing();
+    tool->setAction( action );
+    connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
+    if ( mLayerRefCount == 0 )
+    {
+      mApp->mapCanvas()->setCurrentLayer( getOrCreateLayer() );
+      mLayer->startEditing();
+    }
+    ++mLayerRefCount;
+    mApp->mapCanvas()->setMapTool( tool );
+    mRedliningTool = tool;
   }
-  ++mLayerRefCount;
-  mApp->mapCanvas()->setMapTool( tool );
-  mRedliningTool = tool;
+  else if ( !active && mApp->mapCanvas()->mapTool() && mApp->mapCanvas()->mapTool()->action() == action )
+  {
+    mApp->mapCanvas()->unsetMapTool( mApp->mapCanvas()->mapTool() );
+  }
 }
 
 void QgsGPSRouteEditor::deactivateTool()
@@ -242,7 +217,7 @@ void QgsGPSRouteEditor::importGpx()
   QFile file( filename );
   if ( !file.open( QIODevice::ReadOnly ) )
   {
-    QMessageBox::critical( mApp, tr( "Error" ), tr( "Cannot open file for reading: %1" ).arg( filename ) );
+    mApp->messageBar()->pushCritical( tr( "GPX import failed" ), tr( "Cannot read file" ) );
     return;
   }
 
@@ -303,7 +278,7 @@ void QgsGPSRouteEditor::importGpx()
   }
   mApp->mapCanvas()->clearCache( mLayer->id() );
   mApp->mapCanvas()->refresh();
-  QMessageBox::information( mApp, tr( "GPX Import" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
+  mApp->messageBar()->pushInfo( tr( "GPX import complete" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
 }
 
 void QgsGPSRouteEditor::exportGpx()
@@ -322,7 +297,7 @@ void QgsGPSRouteEditor::exportGpx()
   QFile file( filename );
   if ( !file.open( QIODevice::WriteOnly ) )
   {
-    QMessageBox::critical( mApp, tr( "Error" ), tr( "Cannot open file for writing: %1" ).arg( filename ) );
+    mApp->messageBar()->pushCritical( tr( "GPX export failed" ), tr( "Cannot write to file" ) );
     return;
   }
 

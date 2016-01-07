@@ -19,6 +19,7 @@
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
 #include "qgsgeoimageannotationitem.h"
+#include "qgsgpsrouteeditor.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
 #include "qgslegendinterface.h"
@@ -78,16 +79,29 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   mMapCanvas->installEventFilter( this );
 
-  initLayerTreeView();
-
-  // Base class init
-  init( restorePlugins );
-
   mCoordinateDisplayer = new QgsCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
   connect( mCoordinateDisplayer, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ), this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat&, QString& ) ) );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
+
+  initLayerTreeView();
+
+  // Base class init
+  init( restorePlugins );
+
+  // Redlining
+  QgsRedlining::RedliningUi redliningUi;
+  redliningUi.buttonNewObject = mToolButtonRedliningNewObject;
+  redliningUi.colorButtonFillColor = mToolButtonRedliningFillColor;
+  redliningUi.colorButtonOutlineColor = mToolButtonRedliningBorderColor;
+  redliningUi.comboFillStyle = mComboBoxRedliningFillStyle;
+  redliningUi.comboOutlineStyle = mComboBoxRedliningBorderStyle;
+  redliningUi.spinBoxSize = mSpinBoxRedliningSize;
+  mRedlining = new QgsRedlining( this, redliningUi );
+
+  // Route editor
+  mGpsRouteEditor = new QgsGPSRouteEditor( this, mActionDrawWaypoint, mActionDrawRoute );
 
   configureButtons();
 
@@ -97,16 +111,6 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   restoreFavoriteButton( mFavoriteButton2 );
   restoreFavoriteButton( mFavoriteButton3 );
   restoreFavoriteButton( mFavoriteButton4 );
-
-  //Redlining
-  QgsRedlining::RedliningUi redliningUi;
-  redliningUi.buttonNewObject = mToolButtonRedliningNewObject;
-  redliningUi.colorButtonFillColor = mToolButtonRedliningFillColor;
-  redliningUi.colorButtonOutlineColor = mToolButtonRedliningBorderColor;
-  redliningUi.comboFillStyle = mComboBoxRedliningFillStyle;
-  redliningUi.comboOutlineStyle = mComboBoxRedliningBorderStyle;
-  redliningUi.spinBoxSize = mSpinBoxRedliningSize;
-  mRedlining = new QgsRedlining( this, redliningUi );
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
@@ -398,7 +402,11 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionDrawRoute, mDrawRouteButton );
   setActionToButton( mActionEnableGPS, mEnableGPSButton );
   setActionToButton( mActionMoveWithGPS, mMoveWithGPSButton );
+
+  connect( mActionImportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( importGpx() ) );
   setActionToButton( mActionImportGPX, mGpxImportButton );
+
+  connect( mActionExportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( exportGpx() ) );
   setActionToButton( mActionExportGPX, mGpxExportButton );
 }
 

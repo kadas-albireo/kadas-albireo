@@ -487,6 +487,8 @@ QgisApp::QgisApp( QSplashScreen *splash, QWidget * parent, Qt::WindowFlags fl )
     , mpTileScaleWidget( 0 )
     , mpGpsWidget( 0 )
     , mSnappingUtils( 0 )
+    , mRedlining( 0 )
+    , mGpsRouteEditor( 0 )
 {
   if ( smInstance )
   {
@@ -571,9 +573,6 @@ void QgisApp::init( bool restorePlugins )
   updateRecentProjectPaths();
   updateProjectFromTemplates();
   mSaveRollbackInProgress = false;
-
-  //GPS route editor
-  mGpsRouteEditor = new QgsGPSRouteEditor( this );
 
   // Multi map manager
   mMultiMapManager = new QgsMultiMapManager( mapCanvas(), this );
@@ -5911,15 +5910,19 @@ void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
 
 void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *layer )
 {
-  if ( mRedlining->getLayer() && layer == mRedlining->getLayer() )
+  if ( mRedlining && mRedlining->getLayer() && layer == mRedlining->getLayer() )
   {
     mRedlining->editFeature( feature );
+  }
+  else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && layer == mGpsRouteEditor->getLayer() )
+  {
+    mGpsRouteEditor->editFeature( feature );
   }
 }
 
 void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
 {
-  if ( mRedlining->getLayer() && mRedlining->getLayer()->id() == labelPos.layerID )
+  if ( mRedlining && mRedlining->getLayer() && mRedlining->getLayer()->id() == labelPos.layerID )
   {
     mRedlining->editLabel( labelPos );
   }

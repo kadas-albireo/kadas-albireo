@@ -32,40 +32,40 @@ class QgsGPSRouteEditor : public QObject
 {
     Q_OBJECT
   public:
-    QgsGPSRouteEditor( QgisApp* app );
-    ~QgsGPSRouteEditor();
+    QgsGPSRouteEditor( QgisApp *app, QAction* actionCreateWaypoints, QAction* actionCreateRoutes );
     QgsRedliningLayer *getOrCreateLayer();
+    QgsRedliningLayer *getLayer() const;
+    void editFeature( const QgsFeature &feature );
+
+  public slots:
+    void importGpx();
+    void exportGpx();
 
   signals:
     void featureStyleChanged();
 
   private:
     static int sFeatureSize;
-
     QgisApp* mApp;
-    QToolButton* mBtnNewObject;
-    QAction* mActionEditObject;
-    QAction* mActionImportGpx;
-    QAction* mActionExportGpx;
+    QAction* mActionCreateWaypoints;
+    QAction* mActionCreateRoutes;
+    QAction* mActionEdit;
 
     QPointer<QgsRedliningLayer> mLayer;
     QPointer<QgsMapTool> mRedliningTool;
     int mLayerRefCount;
 
-    void activateTool( QgsMapTool* tool, QAction *action );
+    void setTool( QgsMapTool* tool, QAction *action, bool active = true );
 
   private slots:
-    void removeLegendActions( const QString& layerId );
+    void createWaypoints( bool active );
+    void createRoutes( bool active );
     void clearLayer();
     void deactivateTool();
     void editObject();
-    void newPoint();
-    void newLine();
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
-    void importGpx();
-    void exportGpx();
 };
 
 #endif // QGSREDLINING_H
