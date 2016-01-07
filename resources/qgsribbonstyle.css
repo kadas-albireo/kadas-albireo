@@ -189,9 +189,9 @@ QDialog QPushButton[text="Abbrechen"], QPushButton[text="Schließen"], QPushButt
   background-color: #313B44;
   color: #FFFFFF;
 }
-
+/*
 QDialog QComboBox, QDialog QLineEdit {
-  background-color: #FFFFFF;
-  frame: 1px solid #9a9a9a;
+  border: 1px solid #9a9a9a;
   border-radius: 5px;
 }
+*/
