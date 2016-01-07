@@ -62,7 +62,7 @@ class QgsMapCanvasContextMenu : public QMenu
   private:
     QgsPoint mMapPos;
     QgsVectorLayer* mSelectedLayer;
-    QgsFeatureId mSelectedFeature;
+    QgsFeature mSelectedFeature;
     QgsGeometryRubberBand* mRubberBand;
 };
 

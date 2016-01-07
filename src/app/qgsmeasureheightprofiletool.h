@@ -19,8 +19,10 @@
 
 #include "qgsmaptool.h"
 
+class QgsGeometry;
 class QgsMeasureHeightProfileDialog;
 class QgsRubberBand;
+class QgsVectorLayer;
 
 class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
 {
@@ -35,6 +37,8 @@ class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void activate() override;
     void deactivate() override;
+
+    void setGeometry( QgsGeometry* geometry, QgsVectorLayer *layer );
 
   public slots:
     void pickLine();

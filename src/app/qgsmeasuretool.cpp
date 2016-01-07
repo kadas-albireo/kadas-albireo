@@ -147,8 +147,10 @@ void QgsMeasureTool::pickGeometry()
   setCursor( QCursor( Qt::ArrowCursor ) );
 }
 
-void QgsMeasureTool::setGeometry( QgsGeometry *geometry, QgsVectorLayer* layer )
+void QgsMeasureTool::addGeometry( QgsGeometry *geometry, QgsVectorLayer* layer )
 {
+  if ( mCurrentPart == -1 )
+    mCurrentPart = 0;
   mRubberBand->addGeometry( geometry, layer );
   mRubberBandPoints->addGeometry( geometry, layer );
   int idx = mCurrentPart;
@@ -187,7 +189,7 @@ void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
     QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
     if ( pickResult.first.isValid() )
     {
-      setGeometry( pickResult.first.geometry(), pickResult.second );
+      addGeometry( pickResult.first.geometry(), pickResult.second );
     }
     mPickFeature = false;
     setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );

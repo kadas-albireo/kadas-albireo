@@ -75,6 +75,17 @@ void QgsMeasureHeightProfileTool::deactivate()
   QgsMapTool::deactivate();
 }
 
+void QgsMeasureHeightProfileTool::setGeometry( QgsGeometry* geometry, QgsVectorLayer *layer )
+{
+  mRubberBand->addGeometry( geometry, layer );
+  mRubberBandPoints->addGeometry( geometry, layer );
+  mDialog->setPoints(
+    mRubberBandPoints->getPoints().front(),
+    mCanvas->mapSettings().destinationCrs()
+  );
+  mRubberBandPoints->addPoint( *mRubberBandPoints->getPoint( 0, 0 ) );
+}
+
 void QgsMeasureHeightProfileTool::pickLine()
 {
   restart();
@@ -126,13 +137,7 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
     QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, p, QGis::Line );
     if ( pickResult.first.isValid() && pickResult.first.geometry()->geometry()->vertexCount() > 1 )
     {
-      mRubberBand->addGeometry( pickResult.first.geometry(), pickResult.second );
-      mRubberBandPoints->addGeometry( pickResult.first.geometry(), pickResult.second );
-      mDialog->setPoints(
-        mRubberBandPoints->getPoints().front(),
-        mCanvas->mapSettings().destinationCrs()
-      );
-      mRubberBandPoints->addPoint( *mRubberBandPoints->getPoint( 0, 0 ) );
+      setGeometry( pickResult.first.geometry(), pickResult.second );
     }
     mPicking = false;
     setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
