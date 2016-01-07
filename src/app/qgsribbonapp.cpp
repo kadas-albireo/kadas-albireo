@@ -360,7 +360,7 @@ void QgsRibbonApp::configureButtons()
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   setActionToButton( mActionPin, mPinButton, mMapTools.mPinAnnotation );
 
-  //Analysis tab
+  //analysis tab
 
   connect( mActionDistance, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
   setActionToButton( mActionDistance, mDistanceButton, mMapTools.mMeasureDist );
@@ -386,8 +386,15 @@ void QgsRibbonApp::configureButtons()
   connect( mActionViewshed, SIGNAL( triggered( bool ) ), this, SLOT( viewshed( bool ) ) );
   setActionToButton( mActionViewshed, mViewshedButton, mMapTools.mViewshed );
 
-  //mActionWPS
   setActionToButton( mActionWPS, mWPSButton );
+
+  //gps tab
+  setActionToButton( mActionDrawWaypoint, mDrawWaypointButton );
+  setActionToButton( mActionDrawRoute, mDrawRouteButton );
+  setActionToButton( mActionEnableGPS, mEnableGPSButton );
+  setActionToButton( mActionMoveWithGPS, mMoveWithGPSButton );
+  setActionToButton( mActionImportGPX, mGpxImportButton );
+  setActionToButton( mActionExportGPX, mGpxExportButton );
 }
 
 void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )
