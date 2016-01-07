@@ -1,10 +1,5 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
-IF(MSVC)
-SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
-SET(CRASHRPT_LIBRARY "CrashRpt1403.lib" CACHE FILEPATH "Path to CrashRpt library")
-ENDIF(MSVC)
-
 ########################################################
 # Files
 
@@ -52,7 +47,6 @@ INCLUDE_DIRECTORIES(
      ../../core/geometry
      ../../gui
      ../
-     ${CRASHRPT_INCLUDE_DIR}
 )
 
 TARGET_LINK_LIBRARIES(vbsfunctionality
@@ -62,7 +56,6 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
   ${qjson_LIBRARIES}
   ${QJSON_LIBRARIES}
   ${QUAZIP_LIBRARIES}
-  ${CRASHRPT_LIBRARY}
 )
 
 ########################################################

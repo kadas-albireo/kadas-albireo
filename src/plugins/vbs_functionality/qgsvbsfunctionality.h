@@ -20,13 +20,9 @@
 
 #include "qgisplugin.h"
 
-#include <QObject>
 #include <QPointer>
-
 class QAction;
-class QToolBar;
-class QgsVBSSearchBox;
-class QgsMapTool;
+
 class QgsMapLayer;
 class QgsMessageBarItem;
 
@@ -41,25 +37,10 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
 
   private:
     QgisInterface* mQGisIface;
-    QAction* mActionPinAnnotation;
-    QToolBar* mSearchToolbar;
-    QgsVBSSearchBox* mSearchBox;
-    QPointer<QgsMessageBarItem> mReprojMsgItem;
     QAction* mActionOvlImport;
-    QAction* mActionSlope;
-    QAction* mActionViewshed;
-    QAction* mActionViewshedSector;
-    QAction* mActionHillshade;
-    /*QgsVBSSlopeTool* mSlopeTool;
-    QgsVBSViewshedTool* mViewshedTool;
-    QgsVBSHillshadeTool* mHillshadeTool;*/
 
   private slots:
-    void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
     void importOVL();
-    /*void computeSlope( bool checked );
-    void computeViewshed( bool checked );
-    void computeHillshade( bool checked );*/
 };
 
 #endif // QGSVBSFUNCTIONALITY_H
