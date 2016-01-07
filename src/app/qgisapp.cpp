@@ -1500,10 +1500,10 @@ void QgisApp::saveWindowState()
   // store window and toolbar positions
   QSettings settings;
   // store the toolbar/dock widget settings using Qt4 settings API
-  settings.setValue( "/UI/state", saveState() );
+  settings.setValue( "/UI/state" + mWindowStateSuffix, saveState() );
 
   // store window geometry
-  settings.setValue( "/UI/geometry", saveGeometry() );
+  settings.setValue( "/UI/geometry" + mWindowStateSuffix, saveGeometry() );
 }
 
 #include "ui_defaults.h"
@@ -1513,13 +1513,13 @@ void QgisApp::restoreWindowState()
   // restore the toolbar and dock widgets positions using Qt4 settings API
   QSettings settings;
 
-  if ( !restoreState( settings.value( "/UI/state", QByteArray::fromRawData(( char * )defaultUIstate, sizeof defaultUIstate ) ).toByteArray() ) )
+  if ( !restoreState( settings.value( "/UI/state" + mWindowStateSuffix, QByteArray::fromRawData(( char * )defaultUIstate, sizeof defaultUIstate ) ).toByteArray() ) )
   {
     QgsDebugMsg( "restore of UI state failed" );
   }
 
   // restore window geometry
-  if ( !restoreGeometry( settings.value( "/UI/geometry", QByteArray::fromRawData(( char * )defaultUIgeometry, sizeof defaultUIgeometry ) ).toByteArray() ) )
+  if ( !restoreGeometry( settings.value( "/UI/geometry" + mWindowStateSuffix, QByteArray::fromRawData(( char * )defaultUIgeometry, sizeof defaultUIgeometry ) ).toByteArray() ) )
   {
     QgsDebugMsg( "restore of UI geometry failed" );
   }

@@ -32,6 +32,8 @@
 QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget* parent, Qt::WindowFlags fl )
     : QgisApp( splash, parent, fl )
 {
+  mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
+
 #pragma message( "warning: TODO" )
   mProjectMenu = new QMenu( this );
   mEditMenu = new QMenu( this );
@@ -97,13 +99,13 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   redliningUi.comboOutlineStyle = mComboBoxRedliningBorderStyle;
   redliningUi.spinBoxSize = mSpinBoxRedliningSize;
   mRedlining = new QgsRedlining( this, redliningUi );
-
-  updateWidgetPositions();
 }
 
 QgsRibbonApp::QgsRibbonApp()
     : QgisApp()
 {
+  mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
+
   QgsRibbonWindowBase::setupUi( this );
   QWidget* topWidget = new QWidget();
   QgsRibbonTopWidget::setupUi( topWidget );
