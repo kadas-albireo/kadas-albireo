@@ -1,3 +1,8 @@
+IF(MSVC)
+SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
+SET(CRASHRPT_LIBRARY "CrashRpt1403.lib" CACHE FILEPATH "Path to CrashRpt library")
+ENDIF(MSVC)
+
 SET(QGIS_APP_SRCS
   qgisapp.cpp
   qgsclassicapp.cpp
@@ -515,6 +520,7 @@ INCLUDE_DIRECTORIES(
   ${GEOS_INCLUDE_DIR}
   ${GDAL_INCLUDE_DIR}
   ${QWTPOLAR_INCLUDE_DIR}
+  ${CRASHRPT_INCLUDE_DIR}
   )
 
 IF(ENABLE_MODELTEST)
@@ -564,6 +570,7 @@ TARGET_LINK_LIBRARIES(qgis_app
   qgis_gui
   qgis_analysis
   qgis_splash
+  ${CRASHRPT_LIBRARY}
 )
 
 IF (APPLE)
