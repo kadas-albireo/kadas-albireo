@@ -105,6 +105,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   // Route editor
   mGpsRouteEditor = new QgsGPSRouteEditor( this, mActionDrawWaypoint, mActionDrawRoute );
 
+  mCanvasGPSDisplay.setMapCanvas( mMapCanvas );
+
   configureButtons();
 
   mSearchWidget->init( mMapCanvas );
@@ -537,7 +539,7 @@ void QgsRibbonApp::gpsDetected( QgsGPSConnection* conn )
 {
   messageBar()->pushMessage( tr( "GPS device successfully connected" ), QgsMessageBar::INFO, messageTimeout() );
   mGPSConnection = conn;
-  //todo: connect data signal
+  connect( conn, SIGNAL( stateChanged( const QgsGPSInformation& ) ), &mCanvasGPSDisplay, SLOT( updateGPSInformation( const QgsGPSInformation& ) ) );
 }
 
 void QgsRibbonApp::gpsDetectionFailed()

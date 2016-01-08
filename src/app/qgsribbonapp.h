@@ -22,6 +22,7 @@
 #include "ui_qgsribbonwindowbase.h"
 #include "ui_qgsribbontopwidget.h"
 #include "ui_qgsribbonstatuswidget.h"
+#include "qgsmapcanvasgpsdisplay.h"
 
 class QgsCoordinateDisplayer;
 class QgsGPSConnection;
@@ -114,6 +115,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
 
     //GPS
     QgsGPSConnection* mGPSConnection;
+    QgsMapCanvasGPSDisplay mCanvasGPSDisplay;
 
     bool eventFilter( QObject *obj, QEvent *ev ) override;
     void resizeEvent( QResizeEvent *event ) override;
