@@ -89,6 +89,8 @@ class CORE_EXPORT QgsGPSConnection : public QObject
     /**Returns the current gps information (lat, lon, etc.)*/
     QgsGPSInformation currentGPSInformation() const { return mLastGPSInformation; }
 
+    static bool gpsInfoValid( const QgsGPSInformation& info );
+
   signals:
     void stateChanged( const QgsGPSInformation& info );
     void nmeaSentenceReceived( const QString& substring ); // added to capture 'raw' data

@@ -1,4 +1,6 @@
 #include "qgsmapcanvasgpsdisplay.h"
+#include "qgscoordinatetransform.h"
+#include "qgsmapcanvas.h"
 #include "qgsgpsconnection.h"
 #include "qgsgpsmarker.h"
 #include <QSettings>
@@ -6,40 +8,81 @@
 QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas ): QObject( 0 ), mCanvas( canvas ), mCenterMap( false ), mShowMarker( true ),
     mMarker( 0 )
 {
-    mMarkerSize = defaultMarkerSize();
+  init();
 }
 
 QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mCenterMap( false ), mShowMarker( true ), mMarker( 0 )
 {
-    mMarkerSize = defaultMarkerSize();
+  init();
 }
 
 QgsMapCanvasGPSDisplay::~QgsMapCanvasGPSDisplay()
 {
-    delete mMarker;
+  delete mMarker;
+}
+
+void QgsMapCanvasGPSDisplay::init()
+{
+  mMarkerSize = defaultMarkerSize();
+  mSpinMapExtentMultiplier = defaultSpinMapExtentMultiplier();
+  mWgs84CRS.createFromOgcWmsCrs( "EPSG:4326" );
 }
 
 void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info )
 {
-    if( !mCanvas )
-    {
-        return;
-    }
+  if ( !mCanvas || !QgsGPSConnection::gpsInfoValid( info ) )
+  {
+    return;
+  }
 
-    QgsPoint position( info.longitude, info.latitude );
-    if( mShowMarker )
+  QgsPoint position( info.longitude, info.latitude );
+  if ( mCenterMap && mLastGPSPosition != position )
+  {
+    //recenter map
+    QgsCoordinateReferenceSystem destCRS = mCanvas->mapSettings().destinationCrs();
+    QgsCoordinateTransform myTransform( mWgs84CRS, destCRS ); // use existing WGS84 CRS
+
+    QgsPoint centerPoint = myTransform.transform( position );
+    QgsRectangle myRect( centerPoint, centerPoint );
+
+    // testing if position is outside some proportion of the map extent
+    // this is a user setting - useful range: 5% to 100% (0.05 to 1.0)
+    QgsRectangle extentLimit( mCanvas->extent() );
+    extentLimit.scale( mSpinMapExtentMultiplier * 0.01 );
+
+    if ( !extentLimit.contains( centerPoint ) )
     {
-        if ( ! mMarker )
-        {
-          mMarker = new QgsGpsMarker( mCanvas );
-        }
-        mMarker->setSize( mMarkerSize );
-        mMarker->setCenter( position );
+      mCanvas->setExtent( myRect );
+      mCanvas->refresh();
     }
+  }
+
+  if ( mShowMarker )
+  {
+    if ( ! mMarker )
+    {
+      mMarker = new QgsGpsMarker( mCanvas );
+    }
+    mMarker->setSize( mMarkerSize );
+    mMarker->setCenter( position );
+  }
+  mLastGPSPosition = position;
 }
 
 int QgsMapCanvasGPSDisplay::defaultMarkerSize()
 {
-    QSettings s;
-    return s.value( "/gps/markerSize", "12" ).toInt();
+  QSettings s;
+  return s.value( "/gps/markerSize", "12" ).toInt();
+}
+
+int QgsMapCanvasGPSDisplay::defaultSpinMapExtentMultiplier()
+{
+  QSettings s;
+  return s.value( "/gps/mapExtentMultiplier", "50" ).toInt();
+}
+
+void QgsMapCanvasGPSDisplay::removeMarker()
+{
+  delete mMarker;
+  mMarker = 0;
 }
