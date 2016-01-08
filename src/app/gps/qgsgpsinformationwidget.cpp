@@ -684,6 +684,8 @@ void QgsGPSInformationWidget::displayGPSInformation( const QgsGPSInformation& in
     mTxtStatus->setText( info.status == 'A' ? tr( "Valid" ) : info.status == 'V' ? tr( "Invalid" ) : "" );
   } //position
 
+  //todo: replace canvas marker and recenter with QgsMapCanvasGPSDisplay
+
   // Avoid refreshing / panning if we havent moved
   if ( mLastGpsPosition != myNewCenter )
   {

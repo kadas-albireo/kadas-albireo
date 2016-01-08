@@ -29,6 +29,8 @@
 #include "qgsnmeaconnection.h"
 #include "qgslogger.h"
 
+#include "info.h"
+
 QgsGPSConnection::QgsGPSConnection( QIODevice* dev ): QObject( 0 ), mSource( dev ), mStatus( NotConnected )
 {
   clearLastGPSInformation();
@@ -105,4 +107,23 @@ void QgsGPSConnection::clearLastGPSInformation()
   mLastGPSInformation.satPrn.clear();
   mLastGPSInformation.utcDateTime.setTime( QTime() );
   mLastGPSInformation.satInfoComplete = false;
+}
+
+bool QgsGPSConnection::gpsInfoValid( const QgsGPSInformation& info )
+{
+  bool valid = false;
+  if ( info.status == 'V' || info.fixType == NMEA_FIX_BAD || info.quality == 0 ) // some sources say that 'V' indicates position fix, but is below acceptable quality
+  {
+    return false;
+  }
+  else if ( info.fixType == NMEA_FIX_2D )
+  {
+    valid = true;
+  }
+  else if ( info.status == 'A' || info.fixType == NMEA_FIX_3D || info.quality > 0 ) // good
+  {
+    valid = true;
+  }
+
+  return valid;
 }

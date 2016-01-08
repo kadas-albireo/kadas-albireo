@@ -1,6 +1,8 @@
 #ifndef QGSMAPCANVASGPSDISPLAY_H
 #define QGSMAPCANVASGPSDISPLAY_H
 
+#include "qgspoint.h"
+#include "qgscoordinatereferencesystem.h"
 #include <QObject>
 
 class QgsGPSInformation;
@@ -11,34 +13,45 @@ class QgsMapCanvas;
 class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
 {
     Q_OBJECT
-    public:
-        QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas );
-        QgsMapCanvasGPSDisplay();
+  public:
+    QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas );
+    QgsMapCanvasGPSDisplay();
 
-        ~QgsMapCanvasGPSDisplay();
+    ~QgsMapCanvasGPSDisplay();
 
-        void setMapCanvas( QgsMapCanvas* canvas ){ mCanvas = canvas; }
+    void setMapCanvas( QgsMapCanvas* canvas ) { mCanvas = canvas; }
 
-        bool centerMap() const { return mCenterMap; }
-        void setCenterMap( bool center ){ mCenterMap = center; }
+    bool centerMap() const { return mCenterMap; }
+    void setCenterMap( bool center ) { mCenterMap = center; }
 
-        bool showMarker() const { return mShowMarker; }
-        void setShowMarker( bool showMarker ){ mShowMarker = showMarker; }
+    bool showMarker() const { return mShowMarker; }
+    void setShowMarker( bool showMarker ) { mShowMarker = showMarker; }
 
-        int markerSize() const { return mMarkerSize; }
-        void setMarkerSize( int size ){ mMarkerSize = size; }
+    int markerSize() const { return mMarkerSize; }
+    void setMarkerSize( int size ) { mMarkerSize = size; }
 
-    public slots:
-        void updateGPSInformation( const QgsGPSInformation& info );
+    double spinMapExtentMultiplier() const { return mSpinMapExtentMultiplier; }
+    void setSpinMapExtentMultiplier( double value ) { mSpinMapExtentMultiplier = value; }
 
-    private:
-        QgsMapCanvas* mCanvas;
-        bool mCenterMap;
-        bool mShowMarker;
-        QgsGpsMarker* mMarker;
-        int mMarkerSize;
+    void removeMarker();
 
-        static int defaultMarkerSize();
+  public slots:
+    void updateGPSInformation( const QgsGPSInformation& info );
+
+  private:
+    QgsMapCanvas* mCanvas;
+    bool mCenterMap;
+    bool mShowMarker;
+    QgsGpsMarker* mMarker;
+    int mMarkerSize;
+    int mSpinMapExtentMultiplier;
+    QgsPoint mLastGPSPosition;
+    QgsCoordinateReferenceSystem mWgs84CRS;
+
+    void init();
+
+    static int defaultMarkerSize();
+    static int defaultSpinMapExtentMultiplier();
 };
 
 #endif // QGSMAPCANVASGPSDISPLAY_H

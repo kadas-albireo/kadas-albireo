@@ -72,10 +72,12 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
     void timedout();
 
   private:
+
     enum FixStatus  //GPS status
     {
       NoData, NoFix, Fix2D, Fix3D
     };
+
     void addVertex();
     void connectGps();
     void connectGpsSlot();

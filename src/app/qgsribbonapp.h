@@ -83,6 +83,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );
+    void moveWithGPS( bool enabled );
     void gpsDetected( QgsGPSConnection* conn );
     void gpsDetectionFailed();
 

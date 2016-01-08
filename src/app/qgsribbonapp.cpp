@@ -410,6 +410,7 @@ void QgsRibbonApp::configureButtons()
   connect( mActionEnableGPS, SIGNAL( triggered( bool ) ), this, SLOT( enableGPS( bool ) ) );
   setActionToButton( mActionEnableGPS, mEnableGPSButton );
 
+  connect( mActionMoveWithGPS, SIGNAL( triggered( bool ) ), this, SLOT( moveWithGPS( bool ) ) );
   setActionToButton( mActionMoveWithGPS, mMoveWithGPSButton );
 
   connect( mActionImportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( importGpx() ) );
@@ -554,5 +555,12 @@ void QgsRibbonApp::closeGPSConnection()
     mGPSConnection->close();
     delete mGPSConnection;
     mGPSConnection = 0;
+    mCanvasGPSDisplay.removeMarker();
+    messageBar()->pushMessage( tr( "GPS device disconnected" ), QgsMessageBar::INFO, messageTimeout() );
   }
+}
+
+void QgsRibbonApp::moveWithGPS( bool enabled )
+{
+  mCanvasGPSDisplay.setCenterMap( enabled );
 }
