@@ -19,6 +19,8 @@
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
 #include "qgsgeoimageannotationitem.h"
+#include "qgsgpsconnection.h"
+#include "qgsgpsdetector.h"
 #include "qgsgpsrouteeditor.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
@@ -37,7 +39,7 @@
 #include <QMouseEvent>
 
 QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget* parent, Qt::WindowFlags fl )
-    : QgisApp( splash, parent, fl )
+    : QgisApp( splash, parent, fl ), mGPSConnection( 0 )
 {
   mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
 
@@ -118,7 +120,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 }
 
 QgsRibbonApp::QgsRibbonApp()
-    : QgisApp()
+    : QgisApp(), mGPSConnection( 0 )
 {
   mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
 
@@ -137,6 +139,7 @@ QgsRibbonApp::QgsRibbonApp()
 
 QgsRibbonApp::~QgsRibbonApp()
 {
+  closeGPSConnection();
   destroy();
 }
 
@@ -401,7 +404,10 @@ void QgsRibbonApp::configureButtons()
   //gps tab
   setActionToButton( mActionDrawWaypoint, mDrawWaypointButton );
   setActionToButton( mActionDrawRoute, mDrawRouteButton );
+
+  connect( mActionEnableGPS, SIGNAL( triggered( bool ) ), this, SLOT( enableGPS( bool ) ) );
   setActionToButton( mActionEnableGPS, mEnableGPSButton );
+
   setActionToButton( mActionMoveWithGPS, mMoveWithGPSButton );
 
   connect( mActionImportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( importGpx() ) );
@@ -513,4 +519,38 @@ void QgsRibbonApp::userScale()
 void QgsRibbonApp::showScale( double scale )
 {
   mScaleComboBox->setScale( 1.0 / scale );
+}
+
+void QgsRibbonApp::enableGPS( bool enabled )
+{
+  closeGPSConnection();
+  if ( enabled )
+  {
+    QgsGPSDetector* gpsDetector = new QgsGPSDetector( QString() );
+    connect( gpsDetector, SIGNAL( detected( QgsGPSConnection* ) ), this, SLOT( gpsDetected( QgsGPSConnection* ) ) );
+    connect( gpsDetector, SIGNAL( detectionFailed() ), this, SLOT( gpsDetectionFailed() ) );
+    gpsDetector->advance();
+  }
+}
+
+void QgsRibbonApp::gpsDetected( QgsGPSConnection* conn )
+{
+  messageBar()->pushMessage( tr( "GPS device successfully connected" ), QgsMessageBar::INFO, messageTimeout() );
+  mGPSConnection = conn;
+  //todo: connect data signal
+}
+
+void QgsRibbonApp::gpsDetectionFailed()
+{
+  messageBar()->pushMessage( tr( "Connection to GPS device failed" ), QgsMessageBar::CRITICAL, messageTimeout() );
+}
+
+void QgsRibbonApp::closeGPSConnection()
+{
+  if ( mGPSConnection )
+  {
+    mGPSConnection->close();
+    delete mGPSConnection;
+    mGPSConnection = 0;
+  }
 }
