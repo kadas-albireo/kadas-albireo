@@ -167,7 +167,6 @@ SET(QGIS_APP_SRCS
   ogr/qgsvectorlayersaveasdialog.cpp
 
   gps/qgsgpsinformationwidget.cpp
-  gps/qgsgpsmarker.cpp
 
   openstreetmap/qgsosmdownloaddialog.cpp
   openstreetmap/qgsosmimportdialog.cpp

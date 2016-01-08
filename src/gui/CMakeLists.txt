@@ -177,6 +177,7 @@ qgsformannotationitem.cpp
 qgsformannotationdialog.cpp
 qgsgenericprojectionselector.cpp
 qgsgeometryrubberband.cpp
+qgsgpsmarker.cpp
 qgshighlight.cpp
 qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
@@ -187,6 +188,7 @@ qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
 qgsmapcanvas.cpp
+qgsmapcanvasgpsdisplay.cpp
 qgsmapcanvasitem.cpp
 qgsmapcanvasmap.cpp
 qgsmapcanvassnapper.cpp
@@ -304,6 +306,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsludialog.h
   qgsmanageconnectionsdialog.h
   qgsmapcanvas.h
+  qgsmapcanvasgpsdisplay.h
   qgsmapcanvassnappingutils.h
   qgsmaplayeractionregistry.h
   qgsmaplayercombobox.h
@@ -551,6 +554,7 @@ INCLUDE_DIRECTORIES(
   ../core
   ../core/composer
   ../core/geometry
+  ../core/gps
   ../core/layertree
   ../core/raster
   ../core/symbology-ng
