@@ -24,6 +24,7 @@
 #include "ui_qgsribbonstatuswidget.h"
 
 class QgsCoordinateDisplayer;
+class QgsGPSConnection;
 
 class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui::QgsRibbonTopWidget, private Ui::QgsRibbonStatusWidget
 {
@@ -79,6 +80,11 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void userScale();
     void showScale( double scale );
 
+    //! Enables / disables GPS tracking
+    void enableGPS( bool enabled );
+    void gpsDetected( QgsGPSConnection* conn );
+    void gpsDetectionFailed();
+
   private:
     QMenu* mProjectMenu;
     QMenu* mEditMenu;
@@ -106,6 +112,9 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QString mDragStartActionName;
     QPointer<QgsMessageBarItem> mReprojMsgItem;
 
+    //GPS
+    QgsGPSConnection* mGPSConnection;
+
     bool eventFilter( QObject *obj, QEvent *ev ) override;
     void resizeEvent( QResizeEvent *event ) override;
     void mousePressEvent( QMouseEvent* event ) override;
@@ -118,6 +127,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void setActionToButton( QAction* action, QToolButton* button , QgsMapTool *tool = 0 );
     void updateWidgetPositions();
     void initLayerTreeView();
+    void closeGPSConnection();
 };
 
 #endif // QGSRIBBONAPP_H
