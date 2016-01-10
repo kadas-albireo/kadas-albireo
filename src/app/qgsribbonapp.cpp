@@ -20,7 +20,6 @@
 #include "qgscoordinatedisplayer.h"
 #include "qgsgeoimageannotationitem.h"
 #include "qgsgpsconnection.h"
-#include "qgsgpsdetector.h"
 #include "qgsgpsrouteeditor.h"
 #include "qgslayertreemodel.h"
 #include "qgslayertreemapcanvasbridge.h"
@@ -39,7 +38,7 @@
 #include <QMouseEvent>
 
 QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget* parent, Qt::WindowFlags fl )
-    : QgisApp( splash, parent, fl ), mGPSConnection( 0 )
+    : QgisApp( splash, parent, fl )
 {
   mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
 
@@ -105,7 +104,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   // Route editor
   mGpsRouteEditor = new QgsGPSRouteEditor( this, mActionDrawWaypoint, mActionDrawRoute );
 
-  mCanvasGPSDisplay.setMapCanvas( mMapCanvas );
+  initGPSDisplay();
 
   configureButtons();
 
@@ -122,7 +121,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 }
 
 QgsRibbonApp::QgsRibbonApp()
-    : QgisApp(), mGPSConnection( 0 )
+    : QgisApp()
 {
   mWindowStateSuffix = "_ribbon"; // See QgisApp::saveWindowState, QgisApp::restoreWindowState
 
@@ -137,11 +136,11 @@ QgsRibbonApp::QgsRibbonApp()
   mInfoBar = new QgsMessageBar( centralWidget() );
   mUndoWidget = new QgsUndoWidget( NULL, mMapCanvas );
   mMapCanvas->freeze();
+  initGPSDisplay();
 }
 
 QgsRibbonApp::~QgsRibbonApp()
 {
-  closeGPSConnection();
   destroy();
 }
 
@@ -526,41 +525,40 @@ void QgsRibbonApp::showScale( double scale )
 
 void QgsRibbonApp::enableGPS( bool enabled )
 {
-  closeGPSConnection();
   if ( enabled )
   {
-    QgsGPSDetector* gpsDetector = new QgsGPSDetector( QString() );
-    connect( gpsDetector, SIGNAL( detected( QgsGPSConnection* ) ), this, SLOT( gpsDetected( QgsGPSConnection* ) ) );
-    connect( gpsDetector, SIGNAL( detectionFailed() ), this, SLOT( gpsDetectionFailed() ) );
-    gpsDetector->advance();
+    mCanvasGPSDisplay.connectGPS();
+  }
+  else
+  {
+    mCanvasGPSDisplay.disconnectGPS();
   }
 }
 
-void QgsRibbonApp::gpsDetected( QgsGPSConnection* conn )
+void QgsRibbonApp::gpsDetected()
 {
   messageBar()->pushMessage( tr( "GPS device successfully connected" ), QgsMessageBar::INFO, messageTimeout() );
-  mGPSConnection = conn;
-  connect( conn, SIGNAL( stateChanged( const QgsGPSInformation& ) ), &mCanvasGPSDisplay, SLOT( updateGPSInformation( const QgsGPSInformation& ) ) );
 }
 
-void QgsRibbonApp::gpsDetectionFailed()
+void QgsRibbonApp::gpsDisconnected()
+{
+  messageBar()->pushMessage( tr( "GPS device disconnected" ), QgsMessageBar::INFO, messageTimeout() );
+}
+
+void QgsRibbonApp::gpsConnectionFailed()
 {
   messageBar()->pushMessage( tr( "Connection to GPS device failed" ), QgsMessageBar::CRITICAL, messageTimeout() );
-}
-
-void QgsRibbonApp::closeGPSConnection()
-{
-  if ( mGPSConnection )
-  {
-    mGPSConnection->close();
-    delete mGPSConnection;
-    mGPSConnection = 0;
-    mCanvasGPSDisplay.removeMarker();
-    messageBar()->pushMessage( tr( "GPS device disconnected" ), QgsMessageBar::INFO, messageTimeout() );
-  }
 }
 
 void QgsRibbonApp::moveWithGPS( bool enabled )
 {
   mCanvasGPSDisplay.setCenterMap( enabled );
+}
+
+void QgsRibbonApp::initGPSDisplay()
+{
+  mCanvasGPSDisplay.setMapCanvas( mMapCanvas );
+  connect( &mCanvasGPSDisplay, SIGNAL( gpsConnected() ), this, SLOT( gpsDetected() ) );
+  connect( &mCanvasGPSDisplay, SIGNAL( gpsDisconnected() ), this, SLOT( gpsDisconnected() ) );
+  connect( &mCanvasGPSDisplay, SIGNAL( gpsConnectionFailed() ), this, SLOT( gpsConnectionFailed() ) );
 }

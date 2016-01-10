@@ -22,6 +22,7 @@
 #include "qgscoordinatereferencesystem.h"
 #include <QObject>
 
+class QgsGPSConnection;
 class QgsGPSInformation;
 class QgsGpsMarker;
 class QgsMapCanvas;
@@ -35,6 +36,9 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     QgsMapCanvasGPSDisplay();
 
     ~QgsMapCanvasGPSDisplay();
+
+    void connectGPS();
+    void disconnectGPS();
 
     void setMapCanvas( QgsMapCanvas* canvas ) { mCanvas = canvas; }
 
@@ -50,10 +54,20 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     double spinMapExtentMultiplier() const { return mSpinMapExtentMultiplier; }
     void setSpinMapExtentMultiplier( double value ) { mSpinMapExtentMultiplier = value; }
 
-    void removeMarker();
+    QString port() const { return mPort; }
+    /**Sets the port for the GPS connection. Empty string (default) means autodetect. For gpsd connections, use '<host>:<port>:<device>'.
+    To use an integrated gps (e.g. on tablet or mobile), set 'internalGPS'*/
+    void setPort( const QString& port ) { mPort = port; }
 
-  public slots:
+  private slots:
+    void gpsDetected( QgsGPSConnection* conn );
+    void gpsDetectionFailed();
     void updateGPSInformation( const QgsGPSInformation& info );
+
+  signals:
+    void gpsConnected();
+    void gpsDisconnected();
+    void gpsConnectionFailed();
 
   private:
     QgsMapCanvas* mCanvas;
@@ -65,7 +79,14 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     QgsPoint mLastGPSPosition;
     QgsCoordinateReferenceSystem mWgs84CRS;
 
+    /**Port for the GPS connectio*/
+    QString mPort;
+    QgsGPSConnection* mConnection;
+
     void init();
+    void closeGPSConnection();
+
+    void removeMarker();
 
     static int defaultMarkerSize();
     static int defaultSpinMapExtentMultiplier();

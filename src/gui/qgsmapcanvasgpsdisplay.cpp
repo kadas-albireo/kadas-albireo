@@ -19,23 +19,38 @@
 #include "qgscoordinatetransform.h"
 #include "qgsmapcanvas.h"
 #include "qgsgpsconnection.h"
+#include "qgsgpsdetector.h"
 #include "qgsgpsmarker.h"
 #include <QSettings>
 
 QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas ): QObject( 0 ), mCanvas( canvas ), mCenterMap( false ), mShowMarker( true ),
-    mMarker( 0 )
+    mMarker( 0 ), mConnection( 0 )
 {
   init();
 }
 
-QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mCenterMap( false ), mShowMarker( true ), mMarker( 0 )
+QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mCenterMap( false ), mShowMarker( true ), mMarker( 0 ), mConnection( 0 )
 {
   init();
 }
 
 QgsMapCanvasGPSDisplay::~QgsMapCanvasGPSDisplay()
 {
-  delete mMarker;
+  closeGPSConnection();
+}
+
+void QgsMapCanvasGPSDisplay::connectGPS()
+{
+  closeGPSConnection();
+  QgsGPSDetector* gpsDetector = new QgsGPSDetector( mPort );
+  connect( gpsDetector, SIGNAL( detected( QgsGPSConnection* ) ), this, SLOT( gpsDetected( QgsGPSConnection* ) ) );
+  connect( gpsDetector, SIGNAL( detectionFailed() ), this, SLOT( gpsDetectionFailed() ) );
+  gpsDetector->advance();
+}
+
+void QgsMapCanvasGPSDisplay::disconnectGPS()
+{
+  closeGPSConnection();
 }
 
 void QgsMapCanvasGPSDisplay::init()
@@ -45,8 +60,33 @@ void QgsMapCanvasGPSDisplay::init()
   mWgs84CRS.createFromOgcWmsCrs( "EPSG:4326" );
 }
 
+void QgsMapCanvasGPSDisplay::closeGPSConnection()
+{
+  if ( mConnection )
+  {
+    mConnection->close();
+    delete mConnection;
+    mConnection = 0;
+    emit gpsDisconnected();
+  }
+  removeMarker();
+}
+
+void QgsMapCanvasGPSDisplay::gpsDetected( QgsGPSConnection* conn )
+{
+  mConnection = conn;
+  connect( conn, SIGNAL( stateChanged( const QgsGPSInformation& ) ), this, SLOT( updateGPSInformation( const QgsGPSInformation& ) ) );
+  emit gpsConnected();
+}
+
+void QgsMapCanvasGPSDisplay::gpsDetectionFailed()
+{
+  emit gpsConnectionFailed();
+}
+
 void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info )
 {
+  //todo: send signal for service who want to do further actions (e.g. satellite position display, digitising, ...)
   if ( !mCanvas || !QgsGPSConnection::gpsInfoValid( info ) )
   {
     return;
@@ -72,6 +112,7 @@ void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info
       mCanvas->setExtent( myRect );
       mCanvas->refresh();
     }
+    mLastGPSPosition = position;
   }
 
   if ( mShowMarker )
@@ -83,13 +124,12 @@ void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info
     mMarker->setSize( mMarkerSize );
     mMarker->setCenter( position );
   }
-  mLastGPSPosition = position;
 }
 
 int QgsMapCanvasGPSDisplay::defaultMarkerSize()
 {
   QSettings s;
-  return s.value( "/gps/markerSize", "12" ).toInt();
+  return s.value( "/gps/markerSize", "24" ).toInt();
 }
 
 int QgsMapCanvasGPSDisplay::defaultSpinMapExtentMultiplier()

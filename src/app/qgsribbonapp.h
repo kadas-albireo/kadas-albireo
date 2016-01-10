@@ -84,8 +84,9 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );
     void moveWithGPS( bool enabled );
-    void gpsDetected( QgsGPSConnection* conn );
-    void gpsDetectionFailed();
+    void gpsDetected();
+    void gpsDisconnected();
+    void gpsConnectionFailed();
 
   private:
     QMenu* mProjectMenu;
@@ -115,7 +116,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QPointer<QgsMessageBarItem> mReprojMsgItem;
 
     //GPS
-    QgsGPSConnection* mGPSConnection;
     QgsMapCanvasGPSDisplay mCanvasGPSDisplay;
 
     bool eventFilter( QObject *obj, QEvent *ev ) override;
@@ -130,7 +130,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void setActionToButton( QAction* action, QToolButton* button , QgsMapTool *tool = 0 );
     void updateWidgetPositions();
     void initLayerTreeView();
-    void closeGPSConnection();
+    void initGPSDisplay();
 };
 
 #endif // QGSRIBBONAPP_H
