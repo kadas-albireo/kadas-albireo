@@ -20,6 +20,7 @@
 #include "ui_qgsgpsinformationwidgetbase.h"
 
 #include <qgsmapcanvas.h>
+#include "qgsmapcanvasgpsdisplay.h"
 #include <qgsgpsmarker.h>
 #include <qgsmaptoolcapture.h>
 #include <qwt_plot_curve.h>
@@ -68,7 +69,14 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
 // not needed    void on_mCbxAutoAddVertices_toggled( bool theFlag );
     void on_mBtnLogFile_clicked();
 
-    void connected( QgsGPSConnection * );
+    void on_mSliderMarkerSize_valueChanged( int value );
+    void on_mGroupShowMarker_toggled( bool show );
+
+    void on_radRecenterMap_toggled( bool t );
+    void on_radRecenterWhenNeeded_toggled( bool t );
+    void on_radNeverRecenter_toggled( bool t );
+
+    void connected();
     void timedout();
 
   private:
@@ -85,9 +93,8 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
     void populateDevices();
     void setStatusIndicator( const FixStatus statusValue );
     void showStatusBarMessage( const QString& msg );
-    QgsGPSConnection* mNmea;
+    QgsMapCanvasGPSDisplay mGPSDisplay;
     QgsMapCanvas * mpCanvas;
-    QgsGpsMarker * mpMapMarker;
     QwtPlot * mpPlot;
     QwtPlotCurve * mpCurve;
 #if (WITH_QWTPOLAR)

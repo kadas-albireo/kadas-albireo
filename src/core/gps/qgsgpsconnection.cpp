@@ -87,26 +87,7 @@ void QgsGPSConnection::setSource( QIODevice* source )
 
 void QgsGPSConnection::clearLastGPSInformation()
 {
-  mLastGPSInformation.direction = 0;
-  mLastGPSInformation.elevation = 0;
-  mLastGPSInformation.hdop = 0;
-  mLastGPSInformation.latitude = 0;
-  mLastGPSInformation.longitude = 0;
-  mLastGPSInformation.pdop = 0;
-  mLastGPSInformation.satellitesInView.clear();
-  mLastGPSInformation.speed = 0;
-  mLastGPSInformation.vdop = 0;
-  mLastGPSInformation.hacc = -1;
-  mLastGPSInformation.vacc = -1;
-  mLastGPSInformation.quality = -1;  // valid values: 0,1,2, maybe others
-  mLastGPSInformation.satellitesUsed = 0;
-  mLastGPSInformation.fixMode = ' ';
-  mLastGPSInformation.fixType = 0; // valid values: 1,2,3
-  mLastGPSInformation.status = ' '; // valid values: A,V
-  mLastGPSInformation.utcDateTime.setDate( QDate() );
-  mLastGPSInformation.satPrn.clear();
-  mLastGPSInformation.utcDateTime.setTime( QTime() );
-  mLastGPSInformation.satInfoComplete = false;
+  mLastGPSInformation = emptyGPSInformation();
 }
 
 bool QgsGPSConnection::gpsInfoValid( const QgsGPSInformation& info )
@@ -126,4 +107,30 @@ bool QgsGPSConnection::gpsInfoValid( const QgsGPSInformation& info )
   }
 
   return valid;
+}
+
+QgsGPSInformation QgsGPSConnection::emptyGPSInformation()
+{
+  QgsGPSInformation gpsInfo;
+  gpsInfo.direction = 0;
+  gpsInfo.elevation = 0;
+  gpsInfo.hdop = 0;
+  gpsInfo.latitude = 0;
+  gpsInfo.longitude = 0;
+  gpsInfo.pdop = 0;
+  gpsInfo.satellitesInView.clear();
+  gpsInfo.speed = 0;
+  gpsInfo.vdop = 0;
+  gpsInfo.hacc = -1;
+  gpsInfo.vacc = -1;
+  gpsInfo.quality = -1;  // valid values: 0,1,2, maybe others
+  gpsInfo.satellitesUsed = 0;
+  gpsInfo.fixMode = ' ';
+  gpsInfo.fixType = 0; // valid values: 1,2,3
+  gpsInfo.status = ' '; // valid values: A,V
+  gpsInfo.utcDateTime.setDate( QDate() );
+  gpsInfo.satPrn.clear();
+  gpsInfo.utcDateTime.setTime( QTime() );
+  gpsInfo.satInfoComplete = false;
+  return gpsInfo;
 }

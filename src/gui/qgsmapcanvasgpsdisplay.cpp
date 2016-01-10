@@ -19,17 +19,18 @@
 #include "qgscoordinatetransform.h"
 #include "qgsmapcanvas.h"
 #include "qgsgpsconnection.h"
+#include "qgsgpsconnectionregistry.h"
 #include "qgsgpsdetector.h"
 #include "qgsgpsmarker.h"
 #include <QSettings>
 
-QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas ): QObject( 0 ), mCanvas( canvas ), mCenterMap( false ), mShowMarker( true ),
-    mMarker( 0 ), mConnection( 0 )
+QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas ): QObject( 0 ), mCanvas( canvas ), mShowMarker( true ),
+    mMarker( 0 ), mConnection( 0 ), mRecenterMap( Never )
 {
   init();
 }
 
-QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mCenterMap( false ), mShowMarker( true ), mMarker( 0 ), mConnection( 0 )
+QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mShowMarker( true ), mMarker( 0 ), mConnection( 0 ), mRecenterMap( Never )
 {
   init();
 }
@@ -37,6 +38,20 @@ QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mC
 QgsMapCanvasGPSDisplay::~QgsMapCanvasGPSDisplay()
 {
   closeGPSConnection();
+
+  QSettings s;
+  s.setValue( "/gps/markerSize", mMarkerSize );
+  s.setValue( "/gps/mapExtentMultiplier", mSpinMapExtentMultiplier );
+  QString panModeString = "none";
+  if ( mRecenterMap == QgsMapCanvasGPSDisplay::Always )
+  {
+    panModeString = "recenterAlways";
+  }
+  else if ( mRecenterMap == QgsMapCanvasGPSDisplay::WhenNeeded )
+  {
+    panModeString = "recenterWhenNeeded";
+  }
+  s.setValue( "/gps/panMode", panModeString );
 }
 
 void QgsMapCanvasGPSDisplay::connectGPS()
@@ -57,6 +72,7 @@ void QgsMapCanvasGPSDisplay::init()
 {
   mMarkerSize = defaultMarkerSize();
   mSpinMapExtentMultiplier = defaultSpinMapExtentMultiplier();
+  mRecenterMap = defaultRecenterMode();
   mWgs84CRS.createFromOgcWmsCrs( "EPSG:4326" );
 }
 
@@ -64,6 +80,7 @@ void QgsMapCanvasGPSDisplay::closeGPSConnection()
 {
   if ( mConnection )
   {
+    QgsGPSConnectionRegistry::instance()->unregisterConnection( mConnection );
     mConnection->close();
     delete mConnection;
     mConnection = 0;
@@ -75,7 +92,9 @@ void QgsMapCanvasGPSDisplay::closeGPSConnection()
 void QgsMapCanvasGPSDisplay::gpsDetected( QgsGPSConnection* conn )
 {
   mConnection = conn;
+  QgsGPSConnectionRegistry::instance()->registerConnection( mConnection );
   connect( conn, SIGNAL( stateChanged( const QgsGPSInformation& ) ), this, SLOT( updateGPSInformation( const QgsGPSInformation& ) ) );
+  connect( conn, SIGNAL( nmeaSentenceReceived( const QString& ) ), this, SIGNAL( nmeaSentenceReceived( QString ) ) );
   emit gpsConnected();
 }
 
@@ -86,14 +105,15 @@ void QgsMapCanvasGPSDisplay::gpsDetectionFailed()
 
 void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info )
 {
-  //todo: send signal for service who want to do further actions (e.g. satellite position display, digitising, ...)
+  emit gpsInformationReceived( info ); //send signal for service who want to do further actions (e.g. satellite position display, digitising, ...)
+
   if ( !mCanvas || !QgsGPSConnection::gpsInfoValid( info ) )
   {
     return;
   }
 
   QgsPoint position( info.longitude, info.latitude );
-  if ( mCenterMap && mLastGPSPosition != position )
+  if ( mRecenterMap != Never && mLastGPSPosition != position )
   {
     //recenter map
     QgsCoordinateReferenceSystem destCRS = mCanvas->mapSettings().destinationCrs();
@@ -107,7 +127,7 @@ void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info
     QgsRectangle extentLimit( mCanvas->extent() );
     extentLimit.scale( mSpinMapExtentMultiplier * 0.01 );
 
-    if ( !extentLimit.contains( centerPoint ) )
+    if ( mRecenterMap == Always || !extentLimit.contains( centerPoint ) )
     {
       mCanvas->setExtent( myRect );
       mCanvas->refresh();
@@ -142,4 +162,32 @@ void QgsMapCanvasGPSDisplay::removeMarker()
 {
   delete mMarker;
   mMarker = 0;
+}
+
+QgsGPSInformation QgsMapCanvasGPSDisplay::currentGPSInformation() const
+{
+  if ( mConnection )
+  {
+    return mConnection->currentGPSInformation();
+  }
+
+  return QgsGPSConnection::emptyGPSInformation();
+}
+
+QgsMapCanvasGPSDisplay::RecenterMode QgsMapCanvasGPSDisplay::defaultRecenterMode()
+{
+  QSettings s;
+  QString panMode = s.value( "/gps/panMode", "none" ).toString();
+  if ( panMode == "recenterAlways" )
+  {
+    return QgsMapCanvasGPSDisplay::Always;
+  }
+  else if ( panMode == "none" )
+  {
+    return QgsMapCanvasGPSDisplay::Never;
+  }
+  else //recenterWhenNeeded
+  {
+    return QgsMapCanvasGPSDisplay::WhenNeeded;
+  }
 }

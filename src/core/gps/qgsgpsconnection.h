@@ -90,6 +90,7 @@ class CORE_EXPORT QgsGPSConnection : public QObject
     QgsGPSInformation currentGPSInformation() const { return mLastGPSInformation; }
 
     static bool gpsInfoValid( const QgsGPSInformation& info );
+    static QgsGPSInformation emptyGPSInformation();
 
   signals:
     void stateChanged( const QgsGPSInformation& info );

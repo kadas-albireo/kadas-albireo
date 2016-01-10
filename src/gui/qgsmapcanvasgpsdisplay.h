@@ -32,6 +32,14 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
 {
     Q_OBJECT
   public:
+
+    enum RecenterMode
+    {
+      Never,
+      Always,
+      WhenNeeded
+    };
+
     QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas );
     QgsMapCanvasGPSDisplay();
 
@@ -42,11 +50,11 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
 
     void setMapCanvas( QgsMapCanvas* canvas ) { mCanvas = canvas; }
 
-    bool centerMap() const { return mCenterMap; }
-    void setCenterMap( bool center ) { mCenterMap = center; }
+    RecenterMode recenterMap() const { return mRecenterMap; }
+    void setRecenterMap( RecenterMode m ) { mRecenterMap = m; }
 
     bool showMarker() const { return mShowMarker; }
-    void setShowMarker( bool showMarker ) { mShowMarker = showMarker; }
+    void setShowMarker( bool showMarker ) { mShowMarker = showMarker; removeMarker(); }
 
     int markerSize() const { return mMarkerSize; }
     void setMarkerSize( int size ) { mMarkerSize = size; }
@@ -59,6 +67,8 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     To use an integrated gps (e.g. on tablet or mobile), set 'internalGPS'*/
     void setPort( const QString& port ) { mPort = port; }
 
+    QgsGPSInformation currentGPSInformation() const;
+
   private slots:
     void gpsDetected( QgsGPSConnection* conn );
     void gpsDetectionFailed();
@@ -69,9 +79,11 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     void gpsDisconnected();
     void gpsConnectionFailed();
 
+    void gpsInformationReceived( const QgsGPSInformation& info );
+    void nmeaSentenceReceived( const QString& substring );
+
   private:
     QgsMapCanvas* mCanvas;
-    bool mCenterMap;
     bool mShowMarker;
     QgsGpsMarker* mMarker;
     int mMarkerSize;
@@ -82,14 +94,17 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     /**Port for the GPS connectio*/
     QString mPort;
     QgsGPSConnection* mConnection;
+    RecenterMode mRecenterMap;
 
     void init();
     void closeGPSConnection();
 
     void removeMarker();
 
+    //read default settings
     static int defaultMarkerSize();
     static int defaultSpinMapExtentMultiplier();
+    static QgsMapCanvasGPSDisplay::RecenterMode defaultRecenterMode();
 };
 
 #endif // QGSMAPCANVASGPSDISPLAY_H
