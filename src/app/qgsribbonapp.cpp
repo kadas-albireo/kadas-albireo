@@ -552,7 +552,7 @@ void QgsRibbonApp::gpsConnectionFailed()
 
 void QgsRibbonApp::moveWithGPS( bool enabled )
 {
-  mCanvasGPSDisplay.setCenterMap( enabled );
+  mCanvasGPSDisplay.setRecenterMap( enabled ? QgsMapCanvasGPSDisplay::WhenNeeded : QgsMapCanvasGPSDisplay::Never );
 }
 
 void QgsRibbonApp::initGPSDisplay()

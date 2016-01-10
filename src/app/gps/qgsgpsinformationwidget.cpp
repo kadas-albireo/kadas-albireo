@@ -67,7 +67,6 @@
 
 QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWidget * parent, Qt::WindowFlags f )
     : QWidget( parent, f )
-    , mNmea( 0 )
     , mpCanvas( thepCanvas )
 {
   setupUi( this );
@@ -75,8 +74,6 @@ QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWi
   mpLastLayer = 0;
 
   mLastGpsPosition = QgsPoint( 0.0, 0.0 );
-
-  mpMapMarker = 0;
   mpRubberBand = 0;
   populateDevices();
   QWidget * mpHistogramWidget = mStackedWidget->widget( 1 );
@@ -175,12 +172,12 @@ QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWi
   // Restore state
   QSettings mySettings;
   mGroupShowMarker->setChecked( mySettings.value( "/gps/showMarker", "true" ).toBool() );
-  mSliderMarkerSize->setValue( mySettings.value( "/gps/markerSize", "12" ).toInt() );
+  mSliderMarkerSize->setValue( mGPSDisplay.markerSize() );
   mSpinTrackWidth->setValue( mySettings.value( "/gps/trackWidth", "2" ).toInt() );
   mTrackColor = mySettings.value( "/gps/trackColor", QColor( Qt::red ) ).value<QColor>();
   QString myPortMode = mySettings.value( "/gps/portMode", "scanPorts" ).toString();
 
-  mSpinMapExtentMultiplier->setValue( mySettings.value( "/gps/mapExtentMultiplier", "50" ).toInt() );
+  mSpinMapExtentMultiplier->setValue( mGPSDisplay.spinMapExtentMultiplier() );
   mDateTimeFormat = mySettings.value( "/gps/dateTimeFormat", "" ).toString(); // zero-length string signifies default format
 
   mGpsdHost->setText( mySettings.value( "/gps/gpsdHost", "localhost" ).toString() );
@@ -216,12 +213,12 @@ QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWi
   mCbxAutoCommit->setChecked( mySettings.value( "/gps/autoCommit", "false" ).toBool() );
 
   //pan mode
-  QString myPanMode = mySettings.value( "/gps/panMode", "recenterWhenNeeded" ).toString();
-  if ( myPanMode == "none" )
+  QgsMapCanvasGPSDisplay::RecenterMode myPanMode = mGPSDisplay.recenterMap();
+  if ( myPanMode == QgsMapCanvasGPSDisplay::Never )
   {
     radNeverRecenter->setChecked( true );
   }
-  else if ( myPanMode == "recenterAlways" )
+  else if ( myPanMode == QgsMapCanvasGPSDisplay::Always )
   {
     radRecenterMap->setChecked( true );
   }
@@ -245,16 +242,18 @@ QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWi
 
   mStackedWidget->setCurrentIndex( 3 ); // force to Options
   mBtnPosition->setFocus( Qt::TabFocusReason );
+
+  mGPSDisplay.setMapCanvas( thepCanvas );
+  mGPSDisplay.setMarkerSize( mSliderMarkerSize->value() );
+  mGPSDisplay.setShowMarker( mGroupShowMarker->isChecked() );
+  //todo: set map center behaviour
+  connectGpsSlot();
+  connect( &mGPSDisplay, SIGNAL( gpsConnected() ), this, SLOT( connected() ) );
+  connect( &mGPSDisplay, SIGNAL( gpsConnectionFailed() ), this, SLOT( timedout() ) );
 }
 
 QgsGPSInformationWidget::~QgsGPSInformationWidget()
 {
-  if ( mNmea )
-  {
-    disconnectGps();
-  }
-
-  delete mpMapMarker;
   delete mpRubberBand;
 
 #if (WITH_QWTPOLAR)
@@ -265,12 +264,11 @@ QgsGPSInformationWidget::~QgsGPSInformationWidget()
   mySettings.setValue( "/gps/lastPort", mCboDevices->itemData( mCboDevices->currentIndex() ).toString() );
   mySettings.setValue( "/gps/trackWidth", mSpinTrackWidth->value() );
   mySettings.setValue( "/gps/trackColor", mTrackColor );
-  mySettings.setValue( "/gps/markerSize", mSliderMarkerSize->value() );
   mySettings.setValue( "/gps/showMarker", mGroupShowMarker->isChecked() );
   mySettings.setValue( "/gps/autoAddVertices", mCbxAutoAddVertices->isChecked() );
   mySettings.setValue( "/gps/autoCommit", mCbxAutoCommit->isChecked() );
 
-  mySettings.setValue( "/gps/mapExtentMultiplier", mSpinMapExtentMultiplier->value() );
+  //mySettings.setValue( "/gps/mapExtentMultiplier", mSpinMapExtentMultiplier->value() );
 
   // scan, explicit port or gpsd
   if ( mRadAutodetect->isChecked() )
@@ -293,21 +291,6 @@ QgsGPSInformationWidget::~QgsGPSInformationWidget()
   mySettings.setValue( "/gps/gpsdHost", mGpsdHost->text() );
   mySettings.setValue( "/gps/gpsdPort", mGpsdPort->text().toInt() );
   mySettings.setValue( "/gps/gpsdDevice", mGpsdDevice->text() );
-
-  // pan mode
-  if ( radRecenterMap->isChecked() )
-  {
-    mySettings.setValue( "/gps/panMode", "recenterAlways" );
-  }
-  else if ( radRecenterWhenNeeded->isChecked() )
-  {
-    mySettings.setValue( "/gps/panMode", "recenterWhenNeeded" );
-  }
-  else
-  {
-    mySettings.setValue( "/gps/panMode", "none" );
-  }
-
 }
 
 void QgsGPSInformationWidget::on_mSpinTrackWidth_valueChanged( int theValue )
@@ -334,22 +317,19 @@ void QgsGPSInformationWidget::on_mBtnTrackColor_clicked()
 void QgsGPSInformationWidget::on_mBtnPosition_clicked()
 {
   mStackedWidget->setCurrentIndex( 0 );
-  if ( mNmea )
-    displayGPSInformation( mNmea->currentGPSInformation() );
+  displayGPSInformation( mGPSDisplay.currentGPSInformation() );
 }
 
 void QgsGPSInformationWidget::on_mBtnSignal_clicked()
 {
   mStackedWidget->setCurrentIndex( 1 );
-  if ( mNmea )
-    displayGPSInformation( mNmea->currentGPSInformation() );
+  displayGPSInformation( mGPSDisplay.currentGPSInformation() );
 }
 
 void QgsGPSInformationWidget::on_mBtnSatellites_clicked()
 {
   mStackedWidget->setCurrentIndex( 2 );
-  if ( mNmea )
-    displayGPSInformation( mNmea->currentGPSInformation() );
+  displayGPSInformation( mGPSDisplay.currentGPSInformation() );
 }
 
 void QgsGPSInformationWidget::on_mBtnOptions_clicked()
@@ -421,29 +401,23 @@ void QgsGPSInformationWidget::connectGps()
   mGPSPlainTextEdit->appendPlainText( tr( "Connecting..." ) );
   showStatusBarMessage( tr( "Connecting to GPS device..." ) );
 
-  QgsGPSDetector *detector = new QgsGPSDetector( port );
-  connect( detector, SIGNAL( detected( QgsGPSConnection * ) ), this, SLOT( connected( QgsGPSConnection * ) ) );
-  connect( detector, SIGNAL( detectionFailed() ), this, SLOT( timedout() ) );
-  detector->advance();   // start the detection process
+  mGPSDisplay.setPort( port );
+  mGPSDisplay.connectGPS();
 }
 
 void QgsGPSInformationWidget::timedout()
 {
   mConnectButton->setChecked( false );
-  mNmea = NULL;
   mGPSPlainTextEdit->appendPlainText( tr( "Timed out!" ) );
   showStatusBarMessage( tr( "Failed to connect to GPS device." ) );
 }
 
-void QgsGPSInformationWidget::connected( QgsGPSConnection *conn )
+void QgsGPSInformationWidget::connected()
 {
-  mNmea = conn;
-  connect( mNmea, SIGNAL( stateChanged( const QgsGPSInformation& ) ),
-           this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
   mGPSPlainTextEdit->appendPlainText( tr( "Connected!" ) );
   mConnectButton->setText( tr( "Dis&connect" ) );
   //insert connection into registry such that it can also be used by other dialogs or plugins
-  QgsGPSConnectionRegistry::instance()->registerConnection( mNmea );
+  //QgsGPSConnectionRegistry::instance()->registerConnection( mNmea );
   showStatusBarMessage( tr( "Connected to GPS device." ) );
 
   if ( mLogFileGroupBox->isChecked() && ! mTxtLogFile->text().isEmpty() )
@@ -460,7 +434,7 @@ void QgsGPSInformationWidget::connected( QgsGPSConnection *conn )
       // crude way to separate chunks - use when manually editing file - NMEA parsers should discard
       mLogFileTextStream << "====" << "\r\n";
 
-      connect( mNmea, SIGNAL( nmeaSentenceReceived( const QString& ) ), this, SLOT( logNmeaSentence( const QString& ) ) ); // added to handle raw data
+      connect( &mGPSDisplay, SIGNAL( nmeaSentenceReceived( const QString& ) ), this, SLOT( logNmeaSentence( const QString& ) ) ); // added to handle raw data
     }
     else  // error opening file
     {
@@ -477,20 +451,14 @@ void QgsGPSInformationWidget::disconnectGps()
 {
   if ( mLogFile && mLogFile->isOpen() )
   {
-    disconnect( mNmea, SIGNAL( nmeaSentenceReceived( const QString& ) ), this, SLOT( logNmeaSentence( const QString& ) ) );
+    disconnect( &mGPSDisplay, SIGNAL( nmeaSentenceReceived( const QString& ) ), this, SLOT( logNmeaSentence( const QString& ) ) );
     mLogFile->close();
     delete mLogFile;
     mLogFile = 0;
   }
 
-  QgsGPSConnectionRegistry::instance()->unregisterConnection( mNmea );
-  delete mNmea;
-  mNmea = NULL;
-  if ( mpMapMarker )  // marker should not be shown on GPS disconnected - not current position
-  {
-    delete mpMapMarker;
-    mpMapMarker = NULL;
-  }
+  mGPSDisplay.disconnectGPS();
+
   mGPSPlainTextEdit->appendPlainText( tr( "Disconnected..." ) );
   mConnectButton->setChecked( false );
   mConnectButton->setText( tr( "&Connect" ) );
@@ -690,58 +658,11 @@ void QgsGPSInformationWidget::displayGPSInformation( const QgsGPSInformation& in
   if ( mLastGpsPosition != myNewCenter )
   {
     mLastGpsPosition = myNewCenter;
-
-    // Pan based on user specified behaviour
-    if ( radRecenterMap->isChecked() || radRecenterWhenNeeded->isChecked() )
-    {
-      QgsCoordinateReferenceSystem mypSRS = mpCanvas->mapSettings().destinationCrs();
-      QgsCoordinateTransform myTransform( mWgs84CRS, mypSRS ); // use existing WGS84 CRS
-
-      QgsPoint myPoint = myTransform.transform( myNewCenter );
-      //keep the extent the same just center the map canvas in the display so our feature is in the middle
-      QgsRectangle myRect( myPoint, myPoint );  // empty rect can be used to set new extent that is centered on the point used to construct the rect
-
-      // testing if position is outside some proportion of the map extent
-      // this is a user setting - useful range: 5% to 100% (0.05 to 1.0)
-      QgsRectangle myExtentLimit( mpCanvas->extent() );
-      myExtentLimit.scale( mSpinMapExtentMultiplier->value() * 0.01 );
-
-      // only change the extents if the point is beyond the current extents to minimise repaints
-      if ( radRecenterMap->isChecked() ||
-           ( radRecenterWhenNeeded->isChecked() && !myExtentLimit.contains( myPoint ) ) )
-      {
-        mpCanvas->setExtent( myRect );
-        mpCanvas->refresh();
-      }
-    } //otherwise never recenter automatically
-
     if ( mCbxAutoAddVertices->isChecked() )
     {
       addVertex();
     }
   } // mLastGpsPosition != myNewCenter
-
-  // new marker position after recentering
-  if ( mGroupShowMarker->isChecked() ) // show marker
-  {
-    if ( validFlag ) // update cursor position if valid position
-    {                // initially, cursor isn't drawn until first valid fix; remains visible until GPS disconnect
-      if ( ! mpMapMarker )
-      {
-        mpMapMarker = new QgsGpsMarker( mpCanvas );
-      }
-      mpMapMarker->setSize( mSliderMarkerSize->value() );
-      mpMapMarker->setCenter( myNewCenter );
-    }
-  }
-  else
-  {
-    if ( mpMapMarker )
-    {
-      delete mpMapMarker;
-      mpMapMarker = 0;
-    }
-  } // show marker
 }
 
 void QgsGPSInformationWidget::on_mBtnAddVertex_clicked()
@@ -781,10 +702,8 @@ void QgsGPSInformationWidget::addVertex()
 
 void QgsGPSInformationWidget::on_mBtnResetFeature_clicked()
 {
-  mNmea->disconnect( this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
   createRubberBand(); //deletes existing rubberband
   mCaptureList.clear();
-  connectGpsSlot();
 }
 
 void QgsGPSInformationWidget::on_mBtnCloseFeature_clicked()
@@ -862,7 +781,7 @@ void QgsGPSInformationWidget::on_mBtnCloseFeature_clicked()
   } // layerWKBType == QGis::WKBPoint
   else // Line or poly
   {
-    mNmea->disconnect( this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
+    mGPSDisplay.disconnect( this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
 
     //create QgsFeature with wkb representation
     QgsFeature* f = new QgsFeature( 0 );
@@ -1005,7 +924,7 @@ void QgsGPSInformationWidget::on_mBtnCloseFeature_clicked()
 
 void QgsGPSInformationWidget::connectGpsSlot()
 {
-  connect( mNmea, SIGNAL( stateChanged( const QgsGPSInformation& ) ),
+  connect( &mGPSDisplay, SIGNAL( gpsInformationReceived( const QgsGPSInformation& ) ),
            this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
 }
 
@@ -1187,4 +1106,29 @@ void QgsGPSInformationWidget::setStatusIndicator( const FixStatus statusValue )
 void QgsGPSInformationWidget::showStatusBarMessage( const QString& msg )
 {
   QgisApp::instance()->statusBar()->showMessage( msg );
+}
+
+void QgsGPSInformationWidget::on_mSliderMarkerSize_valueChanged( int value )
+{
+  mGPSDisplay.setMarkerSize( value );
+}
+
+void QgsGPSInformationWidget::on_mGroupShowMarker_toggled( bool show )
+{
+  mGPSDisplay.setShowMarker( show );
+}
+
+void QgsGPSInformationWidget::on_radRecenterMap_toggled( bool t )
+{
+  mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::Always );
+}
+
+void QgsGPSInformationWidget::on_radRecenterWhenNeeded_toggled( bool t )
+{
+  mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::WhenNeeded );
+}
+
+void QgsGPSInformationWidget::on_radNeverRecenter_toggled( bool t )
+{
+  mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::Never );
 }
