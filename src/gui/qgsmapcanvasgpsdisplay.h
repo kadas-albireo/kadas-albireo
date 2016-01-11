@@ -23,7 +23,7 @@
 #include <QObject>
 
 class QgsGPSConnection;
-class QgsGPSInformation;
+struct QgsGPSInformation;
 class QgsGpsMarker;
 class QgsMapCanvas;
 
