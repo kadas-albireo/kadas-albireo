@@ -149,6 +149,11 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   connect( mDrawTool, SIGNAL( geometryChanged() ), this, SLOT( updateTotal() ) );
 }
 
+void QgsMeasureToolV2::addGeometry( const QgsGeometry* geometry, const QgsVectorLayer* layer )
+{
+  mDrawTool->addGeometry( geometry->geometry(), layer->crs() );
+}
+
 void QgsMeasureToolV2::activate()
 {
   mPickFeature = false;

@@ -27,7 +27,7 @@
 #include "qgsfeaturepicker.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
-#include "qgsmeasuretool.h"
+#include "qgsmeasuretoolv2.h"
 #include "qgsmeasureheightprofiletool.h"
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
@@ -177,7 +177,7 @@ void QgsMapCanvasContextMenu::measureLine()
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureDist );
   if ( mSelectedLayer )
   {
-    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureDist )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureDist )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
   }
 }
 
@@ -186,7 +186,7 @@ void QgsMapCanvasContextMenu::measurePolygon()
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureArea );
   if ( mSelectedLayer )
   {
-    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureArea )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureArea )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
   }
 }
 
@@ -195,13 +195,17 @@ void QgsMapCanvasContextMenu::measureCircle()
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureCircle );
   if ( mSelectedLayer )
   {
-    static_cast<QgsMeasureTool*>( QgisApp::instance()->mapTools()->mMeasureCircle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureCircle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
   }
 }
 
 void QgsMapCanvasContextMenu::measureAngle()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureAngle );
+  if ( mSelectedLayer )
+  {
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureAngle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+  }
 }
 
 void QgsMapCanvasContextMenu::measureHeightProfile()
