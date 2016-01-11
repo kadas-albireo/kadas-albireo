@@ -21,7 +21,7 @@ QgsKMLExport::~QgsKMLExport()
 
 }
 
-int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings )
+int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly )
 {
   if ( !d )
   {
@@ -73,7 +73,12 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings )
       }
 
       bool labelLayer = labeling.prepareLayer( vl, attributes, labelingRc ) != 0;
-      writeVectorLayerFeatures( vl, outStream, labelLayer, labeling, rc );
+      QgsRectangle filterRect;
+      if ( visibleExtentOnly )
+      {
+        filterRect = QgsCoordinateTransform( settings.destinationCrs(), vl->crs() ).transform( settings.extent() );
+      }
+      writeVectorLayerFeatures( vl, outStream, filterRect, labelLayer, labeling, rc );
     }
   }
 
@@ -104,7 +109,7 @@ void QgsKMLExport::writeSchemas( QTextStream& outStream )
   }
 }
 
-bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc )
+bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, const QgsRectangle& filterExtent, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc )
 {
   if ( !vl )
   {
@@ -122,7 +127,7 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
   wgs84.createFromId( 4326 );
   QgsCoordinateTransform ct( vl->crs(), wgs84 );
 
-  QgsFeatureIterator it = vl->getFeatures();
+  QgsFeatureIterator it = vl->getFeatures( QgsFeatureRequest( filterExtent ) );
   QgsFeature f;
   while ( it.nextFeature( f ) )
   {

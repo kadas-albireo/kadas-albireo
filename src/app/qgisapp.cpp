@@ -3118,7 +3118,7 @@ void QgisApp::kmlExport()
     QFile kmlFile( fileName );
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( &kmlFile, mapCanvas()->mapSettings() ) == 0 )
+    if ( kmlExport.writeToDevice( &kmlFile, mapCanvas()->mapSettings(), d.visibleExtentOnly() ) == 0 )
     {
       messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
     }

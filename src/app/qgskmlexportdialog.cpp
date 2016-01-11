@@ -43,6 +43,11 @@ QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
   return layerList;
 }
 
+bool QgsKMLExportDialog::visibleExtentOnly() const
+{
+  return mMapExtentCheckBox->isChecked();
+}
+
 void QgsKMLExportDialog::insertAvailableLayers()
 {
   mLayerListWidget->clear();
