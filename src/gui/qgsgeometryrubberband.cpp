@@ -28,7 +28,7 @@
 #include <QPainter>
 
 QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType ): QgsMapCanvasItem( mapCanvas ),
-    mGeometry( 0 ), mIconSize( 5 ), mIconType( ICON_BOX ), mGeometryType( geomType ), mMeasurementMode( MEASURE_NONE )
+    mGeometry( 0 ), mIconSize( 5 ), mIconType( ICON_BOX ), mIconFill( Qt::transparent ), mGeometryType( geomType ), mMeasurementMode( MEASURE_NONE )
 {
   mTranslationOffset[0] = 0.;
   mTranslationOffset[1] = 0.;
@@ -92,6 +92,8 @@ void QgsGeometryRubberBand::paint( QPainter* painter )
 void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
 {
   qreal s = ( mIconSize - 1 ) / 2;
+  p->save();
+  p->setBrush( mIconFill );
 
   switch ( mIconType )
   {
@@ -123,12 +125,14 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
       p->drawEllipse( x - s, y - s, mIconSize, mIconSize );
       break;
   }
+  p->restore();
 }
 
 void QgsGeometryRubberBand::redrawMeasurements()
 {
   qDeleteAll( mMeasurementLabels );
   mMeasurementLabels.clear();
+  mPartMeasurements.clear();
   if ( mGeometry )
   {
     if ( mMeasurementMode != MEASURE_NONE )
@@ -155,9 +159,11 @@ void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom )
   mGeometry = geom;
   qDeleteAll( mMeasurementLabels );
   mMeasurementLabels.clear();
+  mPartMeasurements.clear();
 
   if ( !mGeometry )
   {
+    setRect( QgsRectangle() );
     return;
   }
 
@@ -224,10 +230,33 @@ void QgsGeometryRubberBand::setBrushStyle( Qt::BrushStyle brushStyle )
   mBrush.setStyle( brushStyle );
 }
 
-void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits )
+void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits , AngleUnit angleUnit )
 {
   mMeasurementMode = measurementMode;
   mDisplayUnits = displayUnits;
+  mAngleUnit = angleUnit;
+  redrawMeasurements();
+}
+
+QString QgsGeometryRubberBand::getTotalMeasurement() const
+{
+  if ( mMeasurementMode == MEASURE_ANGLES )
+  {
+    return ""; /* Does not make sense for angles */
+  }
+  double total = 0;
+  foreach ( double value, mPartMeasurements )
+  {
+    total += value;
+  }
+  if ( mMeasurementMode == MEASURE_LINE || mMeasurementMode == MEASURE_LINE_AND_SEGMENTS )
+  {
+    return formatMeasurement( total, false );
+  }
+  else
+  {
+    return formatMeasurement( total, true );
+  }
 }
 
 QgsRectangle QgsGeometryRubberBand::rubberBandRectangle() const
@@ -251,7 +280,9 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
     case MEASURE_LINE:
       if ( dynamic_cast<QgsCurveV2*>( geometry ) )
       {
-        measurements.append( formatMeasurement( mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) ), false ) );
+        double length = mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) );
+        mPartMeasurements.append( length );
+        measurements.append( formatMeasurement( length, false ) );
       }
       break;
     case MEASURE_LINE_AND_SEGMENTS:
@@ -268,21 +299,45 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
         }
         if ( !points.isEmpty() )
         {
-          QString totLength = QApplication::translate( "QgsGeometryRubberBand", "Tot.: %1" ).arg( formatMeasurement( mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) ), false ) );
+          double length = mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) );
+          mPartMeasurements.append( length );
+          QString totLength = QApplication::translate( "QgsGeometryRubberBand", "Tot.: %1" ).arg( formatMeasurement( length, false ) );
           addMeasurements( QStringList() << totLength, points.last() );
+        }
+      }
+      break;
+    case MEASURE_ANGLES:
+      if ( dynamic_cast<QgsCurveV2*>( geometry ) )
+      {
+        QList<QgsPointV2> points;
+        static_cast<QgsCurveV2*>( geometry )->points( points );
+        for ( int i = 0, n = points.size() - 2; i < n; ++i )
+        {
+          QgsPoint p1( points[i].x(), points[i].y() );
+          QgsPoint p2( points[i+1].x(), points[i+1].y() );
+          QgsPoint p3( points[i+2].x(), points[i+2].y() );
+
+          double angle = mDa.bearing( p3, p2 ) - mDa.bearing( p2, p1 );
+          mPartMeasurements.append( angle );
+          QString segmentLength = formatAngle( angle );
+          addMeasurements( QStringList() << segmentLength, QgsPointV2( p2.x(), p2.y() ) );
         }
       }
       break;
     case MEASURE_POLYGON:
       if ( dynamic_cast<QgsCurvePolygonV2*>( geometry ) )
       {
-        measurements.append( formatMeasurement( mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() ), true ) );
+        double area = mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() );
+        mPartMeasurements.append( area );
+        measurements.append( formatMeasurement( area, true ) );
       }
       break;
     case MEASURE_RECTANGLE:
       if ( dynamic_cast<QgsPolygonV2*>( geometry ) )
       {
-        measurements.append( formatMeasurement( mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() ), true ) );
+        double area = mDa.measurePolygon( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() );
+        mPartMeasurements.append( area );
+        measurements.append( formatMeasurement( area, true ) );
         QgsCurveV2* ring = static_cast<QgsPolygonV2*>( geometry )->exteriorRing();
         if ( ring->vertexCount() >= 4 )
         {
@@ -301,7 +356,9 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
       {
         QgsCurveV2* ring = static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing();
         QgsLineStringV2* polyline = ring->curveToLine();
-        measurements.append( formatMeasurement( mDa.measurePolygon( polyline ), true ) );
+        double area = mDa.measurePolygon( polyline );
+        mPartMeasurements.append( area );
+        measurements.append( formatMeasurement( area, true ) );
         delete polyline;
         QgsPointV2 p1 = ring->vertexAt( QgsVertexId( 0, 0, 0 ) );
         QgsPointV2 p2 = ring->vertexAt( QgsVertexId( 0, 0, 1 ) );
@@ -311,14 +368,35 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
     case MEASURE_NONE:
       break;
   }
-  addMeasurements( measurements, geometry->centroid() );
+  if ( !measurements.isEmpty() )
+  {
+    addMeasurements( measurements, geometry->centroid() );
+  }
 }
 
 QString QgsGeometryRubberBand::formatMeasurement( double value, bool isArea ) const
 {
+  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "3" ).toInt();
   QGis::UnitType measureUnits = mMapCanvas->mapSettings().mapUnits();
   mDa.convertMeasurement( value, measureUnits, mDisplayUnits, isArea );
-  return mDa.textUnit( value, 3, mDisplayUnits, isArea );
+  return mDa.textUnit( value, decimals, mDisplayUnits, isArea );
+}
+
+QString QgsGeometryRubberBand::formatAngle( double value ) const
+{
+  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  switch ( mAngleUnit )
+  {
+    case ANGLE_DEGREES:
+      return QString( "%1 deg" ).arg( QLocale::system().toString( value * 180. / M_PI, 'f', decimals ) );
+    case ANGLE_RADIANS:
+      return QString( "%1 rad" ).arg( QLocale::system().toString( value, 'f', decimals ) );
+    case ANGLE_GRADIANS:
+      return QString( "%1 gon" ).arg( QLocale::system().toString( value * 200. / M_PI, 'f', decimals ) );
+    case ANGLE_MIL:
+      return QString( "%1 mil" ).arg( QLocale::system().toString( value * 3200. / M_PI, 'f', decimals ) );
+  }
+  return "";
 }
 
 void QgsGeometryRubberBand::addMeasurements( const QStringList& measurements, const QgsPointV2& mapPos )

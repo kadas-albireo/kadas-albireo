@@ -268,6 +268,7 @@
 #include "qgsmaptoolzoom.h"
 #include "qgsmaptoolsimplify.h"
 #include "qgsmeasuretool.h"
+#include "qgsmeasuretoolv2.h"
 #include "qgsmeasurecircletool.h"
 #include "qgsmeasureheightprofiletool.h"
 #include "qgsmaptoolpinlabels.h"
@@ -1190,11 +1191,11 @@ void QgisApp::createCanvasTools()
   connect( mMapTools.mIdentify, SIGNAL( copyToClipboard( QgsFeatureStore & ) ),
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
   mMapTools.mFeatureAction = new QgsMapToolFeatureAction( mapCanvas() );
-  mMapTools.mMeasureDist = new QgsMeasureTool( mapCanvas(), false );
-  mMapTools.mMeasureArea = new QgsMeasureTool( mapCanvas(), true );
-  mMapTools.mMeasureCircle = new QgsMeasureCircleTool( mapCanvas() );
+  mMapTools.mMeasureDist = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureLine );
+  mMapTools.mMeasureArea = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasurePolygon );
+  mMapTools.mMeasureCircle = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureCircle );
   mMapTools.mMeasureHeightProfile = new QgsMeasureHeightProfileTool( mapCanvas() );
-  mMapTools.mMeasureAngle = new QgsMapToolMeasureAngle( mapCanvas() );
+  mMapTools.mMeasureAngle = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureAngle );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mapCanvas() );
   mMapTools.mPinAnnotation = new QgsMapToolPinAnnotation( mapCanvas() );
   mMapTools.mFormAnnotation = new QgsMapToolFormAnnotation( mapCanvas() );

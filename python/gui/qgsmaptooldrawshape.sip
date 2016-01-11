@@ -15,6 +15,7 @@ class QgsMapToolDrawShape : public QgsMapTool
     void canvasReleaseEvent( QMouseEvent* e );
     virtual int getPartCount() const = 0;
     virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const = 0;
+    void addGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs );
     void update();
     void reset();
     enum State { StateReady, StateDrawing, StateFinished };
@@ -27,6 +28,7 @@ class QgsMapToolDrawShape : public QgsMapTool
     virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
     virtual void moveEvent( const QgsPoint& pos ) = 0;
     virtual void clear() = 0;
+    virtual void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +44,7 @@ class QgsMapToolDrawPoint : public QgsMapToolDrawShape
     void getPart(int part, QgsPoint& p) const;
     void setPart(int part, const QgsPoint& p);
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const;
+    void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t );
 
   protected:
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button );
@@ -62,6 +65,7 @@ class QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
     void getPart(int part, QList<QgsPoint>& p) const;
     void setPart(int part, const QList<QgsPoint>& p);
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const;
+    void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t );
 
   protected:
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button );
@@ -82,6 +86,7 @@ class QgsMapToolDrawRectangle : public QgsMapToolDrawShape
     void getPart(int part, QgsPoint& p1, QgsPoint& p2) const;
     void setPart(int part, const QgsPoint& p1, const QgsPoint& p2);
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const;
+    void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t );
 
   protected:
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button );
@@ -102,6 +107,7 @@ class QgsMapToolDrawCircle : public QgsMapToolDrawShape
     void getPart(int part, QgsPoint& center, double& radius) const;
     void setPart(int part, const QgsPoint& center, double radius);
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const;
+    void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t );
 
   protected:
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button );
@@ -122,6 +128,7 @@ class QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
     void getPart(int part, QgsPoint& center, double& radius, double& startAngle, double& stopAngle) const;
     void setPart(int part, const QgsPoint& center, double radius, double startAngle, double stopAngle);
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const;
+    void doAddGeometry(const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t );
 
   protected:
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button );

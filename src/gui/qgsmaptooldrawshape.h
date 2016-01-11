@@ -19,17 +19,22 @@
 #include "qgsmaptool.h"
 #include "qgsgeometryrubberband.h"
 
-class QgsDistanceArea;
 class QGraphicsTextItem;
+class QgsDistanceArea;
+class QgsRubberBand;
 
 class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 {
     Q_OBJECT
   public:
+    enum State { StateReady, StateDrawing, StateFinished };
+
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea );
     ~QgsMapToolDrawShape();
+    void setShowNodes( bool showNodes );
     void setAllowMultipart( bool multipart ) { mMultipart = multipart; }
-    void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits );
+    void setSnapPoints( bool snapPoints ) { mSnapPoints = snapPoints; }
+    void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
 
     void canvasPressEvent( QMouseEvent* e ) override;
@@ -37,23 +42,30 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void canvasReleaseEvent( QMouseEvent* e ) override;
     virtual int getPartCount() const = 0;
     virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const = 0;
+    void addGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs );
     void update();
-    void reset();
 
-    enum State { StateReady, StateDrawing, StateFinished } mState;
+  public slots:
+    void reset();
 
   signals:
     void finished();
+    void geometryChanged();
 
   protected:
-
+    State mState;
     bool mIsArea;
     bool mMultipart;
+    bool mSnapPoints;
     QgsGeometryRubberBand* mRubberBand;
 
     virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
     virtual void moveEvent( const QgsPoint& pos ) = 0;
     virtual void clear() = 0;
+    virtual void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) = 0;
+
+  private:
+    QgsPoint transformPoint( const QPoint& p );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,6 +78,7 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
     void getPart( int part, QgsPoint& p ) const { p = mPoints[part].front(); }
     void setPart( int part, const QgsPoint& p ) { mPoints[part].front() = p; }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
     QList< QList<QgsPoint> > mPoints;
@@ -85,6 +98,7 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
     void getPart( int part, QList<QgsPoint>& p ) const { p = mPoints[part]; }
     void setPart( int part, const QList<QgsPoint>& p ) { mPoints[part] = p; }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
     QList< QList<QgsPoint> > mPoints;
@@ -104,6 +118,7 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
     void getPart( int part, QgsPoint& p1, QgsPoint& p2 ) const { p1 = mP1[part]; p2 = mP2[part]; }
     void setPart( int part, const QgsPoint& p1, const QgsPoint& p2 ) { mP1[part] = p1; mP2[part] = p2; }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
     QList<QgsPoint> mP1, mP2;
@@ -123,6 +138,7 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
     void getPart( int part, QgsPoint& center, double& radius ) const { center = mCenters[part]; radius = mRadii[part]; }
     void setPart( int part, const QgsPoint& center, double radius ) { mCenters[part] = center; mRadii[part] = radius; }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
     QList<QgsPoint> mCenters;
@@ -149,6 +165,7 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
       mCenters[part] = center; mRadii[part] = radius; mStartAngles[part] = startAngle; mStopAngles[part] = stopAngle;
     }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
     enum Stage { HaveNothing, HaveCenter, HaveArc } mSectorStage;
