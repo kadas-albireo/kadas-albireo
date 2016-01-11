@@ -14,6 +14,7 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
 
     QString saveFile() const;
     QList<QgsMapLayer*> selectedLayers() const;
+    bool visibleExtentOnly() const;
 
   private slots:
     void on_mFileSelectionButton_clicked();

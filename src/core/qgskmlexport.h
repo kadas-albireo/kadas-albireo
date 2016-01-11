@@ -22,7 +22,7 @@ class CORE_EXPORT QgsKMLExport
     ~QgsKMLExport();
 
     void setLayers( const QList<QgsMapLayer*>& layers ) { mLayers = layers; }
-    int writeToDevice( QIODevice *d, const QgsMapSettings& settings );
+    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly );
 
     static QString convertColor( const QColor& c );
 
@@ -30,7 +30,7 @@ class CORE_EXPORT QgsKMLExport
     QList<QgsMapLayer*> mLayers;
 
     void writeSchemas( QTextStream& outStream );
-    bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
+    bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, const QgsRectangle &filterExtent, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
     void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
     /**Return WGS84 bbox from layer set*/
     QgsRectangle bboxFromLayers();
