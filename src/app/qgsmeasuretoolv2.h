@@ -37,6 +37,7 @@ class APP_EXPORT QgsMeasureWidget : public QFrame
 
   signals:
     void clearRequested();
+    void closeRequested();
     void pickRequested();
     void unitsChanged();
 
@@ -70,6 +71,7 @@ class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
     QgsMapToolDrawShape* mDrawTool;
 
   private slots:
+    void close();
     void setUnits();
     void updateTotal();
     void requestPick();

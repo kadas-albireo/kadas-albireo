@@ -76,6 +76,12 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, bool measureAngle )
   connect( clearButton, SIGNAL( clicked( bool ) ), this, SIGNAL( clearRequested() ) );
   layout()->addWidget( clearButton );
 
+  QToolButton* closeButton = new QToolButton();
+  closeButton->setIcon( QIcon( ":/images/themes/default/mIconClose.png" ) );
+  closeButton->setToolTip( tr( "Close" ) );
+  connect( closeButton, SIGNAL( clicked( bool ) ), this, SIGNAL( closeRequested() ) );
+  layout()->addWidget( closeButton );
+
   mCanvas->installEventFilter( this );
 
   setStyleSheet( QString( "QFrame { background-color: orange; }" ) );
@@ -161,6 +167,7 @@ void QgsMeasureToolV2::activate()
   setUnits();
   connect( mMeasureWidget, SIGNAL( unitsChanged() ), this, SLOT( setUnits() ) );
   connect( mMeasureWidget, SIGNAL( clearRequested() ), mDrawTool, SLOT( reset() ) );
+  connect( mMeasureWidget, SIGNAL( closeRequested() ), this, SLOT( close() ) );
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
   setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
   QgsMapTool::activate();
@@ -172,6 +179,11 @@ void QgsMeasureToolV2::deactivate()
   mMeasureWidget = 0;
   mDrawTool->reset();
   QgsMapTool::deactivate();
+}
+
+void QgsMeasureToolV2::close()
+{
+  canvas()->unsetMapTool( this );
 }
 
 void QgsMeasureToolV2::setUnits()
