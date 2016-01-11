@@ -66,9 +66,18 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       MEASURE_NONE,
       MEASURE_LINE,
       MEASURE_LINE_AND_SEGMENTS,
+      MEASURE_ANGLES,
       MEASURE_POLYGON,
       MEASURE_RECTANGLE,
       MEASURE_CIRCLE
+    };
+
+    enum AngleUnit
+    {
+      ANGLE_DEGREES,
+      ANGLE_RADIANS,
+      ANGLE_GRADIANS,
+      ANGLE_MIL
     };
 
     QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType = QGis::Line );
@@ -90,7 +99,10 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void setLineStyle( Qt::PenStyle penStyle );
     void setBrushStyle( Qt::BrushStyle brushStyle );
     void setIconType( IconType iconType ) { mIconType = iconType; }
-    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits );
+    void setIconSize( int iconSize ) { mIconSize = iconSize; }
+    void setIconFillColor( const QColor& c ) { mIconFill = c; }
+    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
+    QString getTotalMeasurement() const;
 
   protected:
     virtual void paint( QPainter* painter );
@@ -102,16 +114,20 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     QPen mPen;
     int mIconSize;
     IconType mIconType;
+    QColor mIconFill;
     QGis::GeometryType mGeometryType;
     QgsDistanceArea mDa;
     MeasurementMode mMeasurementMode;
     QGis::UnitType mDisplayUnits;
+    AngleUnit mAngleUnit;
+    QList<double> mPartMeasurements;
     QList<QGraphicsTextItem*> mMeasurementLabels;
 
     void drawVertex( QPainter* p, double x, double y );
     QgsRectangle rubberBandRectangle() const;
     void measureGeometry( QgsAbstractGeometryV2* geometry );
     QString formatMeasurement( double value, bool isArea ) const;
+    QString formatAngle( double value ) const;
     void addMeasurements( const QStringList& measurements, const QgsPointV2 &mapPos );
 
   private slots:

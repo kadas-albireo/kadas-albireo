@@ -180,7 +180,11 @@ QgsPointV2 QgsAbstractGeometryV2::centroid() const
   QgsPointV2 c;
 
   int n = geom->vertexCount( 0, 0 );
-  if ( n == 1 )
+  if ( n == 0 )
+  {
+    return QgsPointV2( 0, 0 );
+  }
+  else if ( n == 1 )
   {
     c = geom->vertexAt( QgsVertexId( 0, 0, 0 ) );
   }

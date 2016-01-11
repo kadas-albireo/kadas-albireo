@@ -114,6 +114,7 @@ SET(QGIS_APP_SRCS
   qgsmeasuredialog.cpp
   qgsmeasureheightprofiledialog.cpp
   qgsmeasuretool.cpp
+  qgsmeasuretoolv2.cpp
   qgsmeasurecircletool.cpp
   qgsmeasureheightprofiletool.cpp
   qgsmergeattributesdialog.cpp
@@ -282,6 +283,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmeasuredialog.h
   qgsmeasureheightprofiledialog.h
   qgsmeasuretool.h
+  qgsmeasuretoolv2.h
   qgsmeasurecircletool.h
   qgsmeasureheightprofiletool.h
   qgsmergeattributesdialog.h

@@ -21,19 +21,29 @@
 #include "qgsmultipolygonv2.h"
 #include "qgsmultipointv2.h"
 #include "qgspolygonv2.h"
+#include "qgsrubberband.h"
 #include "qgsdistancearea.h"
 #include "qgsmapcanvas.h"
 #include "qgsproject.h"
+#include "qgssnappingutils.h"
 
 #include <QMouseEvent>
 #include <qmath.h>
 
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
-    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false )
+    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false )
 {
+  QSettings settings;
+  int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
+  int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();
+  int blue = settings.value( "/qgis/default_measure_color_blue", 0 ).toInt();
+
   mRubberBand = new QgsGeometryRubberBand( canvas, isArea ? QGis::Polygon : QGis::Line );
-  mRubberBand->setFillColor( QColor( 255, 0, 0, 63 ) );
-  mRubberBand->setOutlineColor( QColor( 255, 0, 0, 100 ) );
+  mRubberBand->setFillColor( QColor( red, green, blue, 63 ) );
+  mRubberBand->setOutlineColor( QColor( red, green, blue, 255 ) );
+  mRubberBand->setOutlineWidth( 3 );
+
+  setShowNodes( false );
 }
 
 QgsMapToolDrawShape::~QgsMapToolDrawShape()
@@ -41,14 +51,26 @@ QgsMapToolDrawShape::~QgsMapToolDrawShape()
   delete mRubberBand;
 }
 
-void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits )
+void QgsMapToolDrawShape::setShowNodes( bool showNodes )
 {
-  mRubberBand->setMeasurementMode( measurementMode, displayUnits );
+  if ( showNodes )
+  {
+    mRubberBand->setIconType( showNodes ? QgsGeometryRubberBand::ICON_CIRCLE : QgsGeometryRubberBand::ICON_NONE );
+    mRubberBand->setIconSize( 10 );
+    mRubberBand->setIconFillColor( Qt::white );
+  }
+}
+
+void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits , QgsGeometryRubberBand::AngleUnit angleUnits )
+{
+  mRubberBand->setMeasurementMode( measurementMode, displayUnits, angleUnits );
+  emit geometryChanged();
 }
 
 void QgsMapToolDrawShape::update()
 {
   mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+  emit geometryChanged();
 }
 
 void QgsMapToolDrawShape::reset()
@@ -56,18 +78,20 @@ void QgsMapToolDrawShape::reset()
   clear();
   mRubberBand->setGeometry( 0 );
   mState = StateReady;
+  emit geometryChanged();
 }
 
 void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
 {
-  if ( mState != StateFinished )
+  if ( mState == StateFinished )
   {
-    mState = buttonEvent( toMapCoordinates( e->pos() ), true, e->button() );
-    update();
-    if ( mState == StateFinished )
-    {
-      emit finished();
-    }
+    reset();
+  }
+  mState = buttonEvent( transformPoint( e->pos() ), true, e->button() );
+  update();
+  if ( mState == StateFinished )
+  {
+    emit finished();
   }
 }
 
@@ -75,7 +99,7 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
 {
   if ( mState == StateDrawing )
   {
-    moveEvent( toMapCoordinates( e->pos() ) );
+    moveEvent( transformPoint( e->pos() ) );
     update();
   }
 }
@@ -84,13 +108,34 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
 {
   if ( mState != StateFinished )
   {
-    mState = buttonEvent( toMapCoordinates( e->pos() ), false, e->button() );
+    mState = buttonEvent( transformPoint( e->pos() ), false, e->button() );
     update();
     if ( mState == StateFinished )
     {
       emit finished();
     }
   }
+}
+
+QgsPoint QgsMapToolDrawShape::transformPoint( const QPoint& p )
+{
+  if ( !mSnapPoints )
+  {
+    return toMapCoordinates( p );
+  }
+  QgsPointLocator::Match m = mCanvas->snappingUtils()->snapToMap( p );
+  return m.isValid() ? m.point() : toMapCoordinates( p );
+}
+
+void QgsMapToolDrawShape::addGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs )
+{
+  if ( !mMultipart )
+  {
+    reset();
+  }
+  doAddGeometry( geometry, QgsCoordinateTransform( sourceCrs, canvas()->mapSettings().destinationCrs() ) );
+  mState = mMultipart ? StateReady : StateFinished;
+  update();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,6 +189,24 @@ void QgsMapToolDrawPoint::clear()
   mPoints.clear();
 }
 
+void QgsMapToolDrawPoint::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
+{
+  for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
+  {
+    if ( !mPoints.back().isEmpty() )
+    {
+      mPoints.append( QList<QgsPoint>() );
+    }
+    for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
+    {
+      for ( int iVtx = 0, nVtx = geometry->vertexCount( iPart, iRing ); iVtx < nVtx; ++iVtx )
+      {
+        QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, iVtx ) );
+        mPoints.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+      }
+    }
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -219,6 +282,26 @@ QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordina
   }
 }
 
+void QgsMapToolDrawPolyLine::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
+{
+  for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
+  {
+    if ( !mPoints.back().isEmpty() )
+    {
+      mPoints.append( QList<QgsPoint>() );
+    }
+    for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
+    {
+      for ( int iVtx = 0, nVtx = geometry->vertexCount( iPart, iRing ); iVtx < nVtx; ++iVtx )
+      {
+        QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, iVtx ) );
+        mPoints.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+      }
+    }
+  }
+  mPoints.append( QList<QgsPoint>() );
+}
+
 void QgsMapToolDrawPolyLine::clear()
 {
   mPoints.clear();
@@ -278,6 +361,23 @@ QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordin
   }
 }
 
+void QgsMapToolDrawRectangle::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
+{
+  for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
+  {
+    for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
+    {
+      if ( geometry->vertexCount( iPart, iRing ) == 5 )
+      {
+        QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, 0 ) );
+        mP1.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+        vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, 2 ) );
+        mP2.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+      }
+    }
+  }
+}
+
 void QgsMapToolDrawRectangle::clear()
 {
   mP1.clear();
@@ -333,6 +433,30 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinate
     QgsAbstractGeometryV2* geom = multiGeom->takeGeometry( 0 );
     delete multiGeom;
     return geom;
+  }
+}
+
+void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
+{
+  if ( dynamic_cast<const QgsGeometryCollectionV2*>( geometry ) )
+  {
+    const QgsGeometryCollectionV2* geomCollection = static_cast<const QgsGeometryCollectionV2*>( geometry );
+    for ( int i = 0, n = geomCollection->numGeometries(); i < n; ++i )
+    {
+      QgsRectangle bb = geomCollection->geometryN( i )->boundingBox();
+      QgsPoint c = t.transform( bb.center() );
+      QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
+      mCenters.append( c );
+      mRadii.append( qSqrt( c.sqrDist( r ) ) );
+    }
+  }
+  else
+  {
+    QgsRectangle bb = geometry->boundingBox();
+    QgsPoint c = t.transform( bb.center() );
+    QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
+    mCenters.append( c );
+    mRadii.append( qSqrt( c.sqrDist( r ) ) );
   }
 }
 
@@ -430,6 +554,11 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
   }
 }
 
+void QgsMapToolDrawCircularSector::doAddGeometry( const QgsAbstractGeometryV2* /*geometry*/, const QgsCoordinateTransform& /*t*/ )
+{
+  // Not yet implemented
+}
+
 void QgsMapToolDrawCircularSector::clear()
 {
   mCenters.clear();
@@ -437,4 +566,3 @@ void QgsMapToolDrawCircularSector::clear()
   mStartAngles.clear();
   mStopAngles.clear();
 }
-
