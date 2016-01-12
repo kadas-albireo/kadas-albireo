@@ -1339,7 +1339,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     QString mWindowStateSuffix;
 
     bool gestureEvent( QGestureEvent *event );
-    void tapAndHoldTriggered( QTapAndHoldGesture *gesture );
 
   private:
     /// QgisApp aren't copyable
