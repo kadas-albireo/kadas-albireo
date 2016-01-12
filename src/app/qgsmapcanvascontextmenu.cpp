@@ -266,10 +266,9 @@ void QgsMapCanvasContextMenu::copyMap()
 
 void QgsMapCanvasContextMenu::print()
 {
-#pragma message("warning: TODO")
-  /*QToolButton* button = QgisApp::instance()->pluginToolBar()->findChild<QToolButton*>( "vbsprintaction" );
-  if ( button && !button->isChecked() )
+  QAction* printAction = QgisApp::instance()->findAction( "mActionPrint" );
+  if ( printAction && !printAction->isChecked() )
   {
-    button->toggle();
-  }*/
+    printAction->trigger();
+  }
 }
