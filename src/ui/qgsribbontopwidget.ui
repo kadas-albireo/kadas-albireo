@@ -1708,7 +1708,7 @@ Sight</string>
      <normaloff>:/images/ribbon/hoehenprofil.png</normaloff>:/images/ribbon/hoehenprofil.png</iconset>
    </property>
    <property name="text">
-    <string>Profile &amp; Line of Sight</string>
+    <string>Profile &amp; Sight</string>
    </property>
    <property name="toolTip">
     <string>Profile and Line of Sight</string>
