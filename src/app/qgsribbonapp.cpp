@@ -75,12 +75,12 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
-  mInfoBar = new QgsMessageBar( this );
+  mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 
   mMapCanvas->installEventFilter( this );
 
-  mCoordinateDisplayer = new QgsCoordinateDisplayer( mCRSComboBox, mCoordinateLineEdit, mMapCanvas, this );
+  mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mMapCanvas, this );
   connect( mCoordinateDisplayer, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ), this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ) );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
