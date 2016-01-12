@@ -33,6 +33,7 @@ class QgsMapCanvasContextMenu : public QMenu
     ~QgsMapCanvasContextMenu();
 
   private slots:
+    void featureAttributes();
     void cutFeature();
     void copyFeature();
     void pasteFeature();

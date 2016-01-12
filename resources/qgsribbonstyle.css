@@ -213,3 +213,9 @@ QDialog QComboBox, QDialog QLineEdit {
   border-radius: 5px;
 }
 */
+
+/** Case-by-case styling **/
+QgsAttributeForm QScrollArea > QWidget > QWidget
+{
+  background-color: #FFFFFF;
+}

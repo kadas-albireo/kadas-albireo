@@ -19,6 +19,7 @@
 #include <QClipboard>
 #include <QToolButton>
 #include "qgisapp.h"
+#include "qgsattributedialog.h"
 #include "qgscoordinateutils.h"
 #include "qgsgeometry.h"
 #include "qgsgeometryrubberband.h"
@@ -39,6 +40,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   mRubberBand = 0;
 
   QPair<QgsFeature, QgsVectorLayer*> pick = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
+  // A feature was picked
   if ( pick.first.isValid() )
   {
     mSelectedFeature = pick.first;
@@ -46,10 +48,13 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     QgsCoordinateTransform ct( pick.second->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
     mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pick.first.geometry()->type() );
     mRubberBand->setGeometry( pick.first.geometry()->geometry()->transformed( ct ) );
-    // A feature was picked
     if ( pick.second->type() == QgsMapLayer::RedliningLayer )
     {
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
+    }
+    else
+    {
+      addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Attributes" ), this, SLOT( featureAttributes() ) );
     }
     addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
   }
@@ -96,6 +101,15 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
 QgsMapCanvasContextMenu::~QgsMapCanvasContextMenu()
 {
   delete mRubberBand;
+}
+
+void QgsMapCanvasContextMenu::featureAttributes()
+{
+  if ( mSelectedLayer )
+  {
+    QgsAttributeDialog *dialog = new QgsAttributeDialog( mSelectedLayer, &mSelectedFeature, false, QgisApp::instance() );
+    dialog->show( true );
+  }
 }
 
 void QgsMapCanvasContextMenu::cutFeature()
