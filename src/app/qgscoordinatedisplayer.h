@@ -22,9 +22,9 @@
 #include <qgspoint.h>
 #include "qgscoordinateutils.h"
 
-class QComboBox;
 class QLabel;
 class QLineEdit;
+class QToolButton;
 class QgsCoordinateReferenceSystem;
 class QgsMapCanvas;
 
@@ -32,20 +32,23 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
-    void getCoordinateDisplayFormat(QgsCoordinateUtils::TargetFormat& format, QString& epsg);
+    QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
+    void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg );
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
     double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
 
   private:
     enum TargetFormat { LV03, LV95, DMS, DM, DD, UTM, MGRS };
     QgsMapCanvas* mMapCanvas;
-    QComboBox* mCRSSelectionCombo;
+    QToolButton* mCRSSelectionButton;
     QLabel* mIconLabel;
     QLineEdit* mCoordinateLineEdit;
+    QAction* mActionDisplayLV03;
+    QAction* mActionDisplayLV95;
+    QAction* mActionDisplayDMS;
 
   signals:
-    void coordinateDisplayFormatChanged(QgsCoordinateUtils::TargetFormat format, QString epsg);
+    void coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat format, QString epsg );
 
   private slots:
     void displayCoordinates( const QgsPoint& p );

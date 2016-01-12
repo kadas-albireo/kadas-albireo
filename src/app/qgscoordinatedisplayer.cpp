@@ -21,27 +21,34 @@
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
 
-#include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
+#include <QToolButton>
 
-QgsCoordinateDisplayer::QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
+QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
     QWidget *parent ) : QWidget( parent ), mMapCanvas( mapCanvas ),
-    mCRSSelectionCombo( crsComboBox ), mCoordinateLineEdit( coordLineEdit )
+    mCRSSelectionButton( crsButton ), mCoordinateLineEdit( coordLineEdit )
 {
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   mIconLabel = new QLabel( this );
 
-  mCRSSelectionCombo->addItem( "LV03", static_cast<int>( LV03 ) );
-  mCRSSelectionCombo->addItem( "LV95", static_cast<int>( LV95 ) );
-  mCRSSelectionCombo->addItem( "DMS", static_cast<int>( DMS ) );
-  mCRSSelectionCombo->addItem( "DM", static_cast<int>( DM ) );
-  mCRSSelectionCombo->addItem( "DD", static_cast<int>( DD ) );
-  mCRSSelectionCombo->addItem( "UTM", static_cast<int>( UTM ) );
-  mCRSSelectionCombo->addItem( "MGRS", static_cast<int>( MGRS ) );
-  mCRSSelectionCombo->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
-  mCRSSelectionCombo->setCurrentIndex( 0 );
+
+  QMenu* crsSelectionMenu = new QMenu();
+  mCRSSelectionButton->setMenu( crsSelectionMenu );
+
+  mActionDisplayLV03 = crsSelectionMenu->addAction( "LV03" );
+  mActionDisplayLV03->setData( static_cast<int>( LV03 ) );
+  mActionDisplayLV95 = crsSelectionMenu->addAction( "LV95" );
+  mActionDisplayLV95->setData( static_cast<int>( LV95 ) );
+  mActionDisplayDMS = crsSelectionMenu->addAction( "DMS" );
+  mActionDisplayDMS->setData( static_cast<int>( DMS ) );
+  crsSelectionMenu->addAction( "DM" )->setData( static_cast<int>( DM ) );
+  crsSelectionMenu->addAction( "DD" )->setData( static_cast<int>( DD ) );
+  crsSelectionMenu->addAction( "UTM" )->setData( static_cast<int>( UTM ) );
+  crsSelectionMenu->addAction( "MGRS" )->setData( static_cast<int>( MGRS ) );
+  mCRSSelectionButton->setDefaultAction( crsSelectionMenu->actions().front() );
 
   QFont font = mCoordinateLineEdit->font();
   font.setPointSize( 9 );
@@ -49,19 +56,19 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QComboBox* crsComboBox, QLineEdi
   mCoordinateLineEdit->setReadOnly( true );
   mCoordinateLineEdit->setAlignment( Qt::AlignCenter );
   mCoordinateLineEdit->setFixedWidth( 200 );
-  mCoordinateLineEdit->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
-  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), mCoordinateLineEdit, SLOT( clear() ) );
-  connect( mCRSSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( displayFormatChanged() ) );
+  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), mCoordinateLineEdit, SLOT( clear() ) );
+  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( displayFormatChanged() ) );
+  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), mCRSSelectionButton, SLOT( setDefaultAction( QAction* ) ) );
 
   syncProjectCrs();
 }
 
 void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
 {
-  QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
+  QVariant v = mCRSSelectionButton->defaultAction()->data();
   TargetFormat targetFormat = static_cast<TargetFormat>( v.toInt() );
   switch ( targetFormat )
   {
@@ -93,7 +100,7 @@ void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateUtils::Tar
 
 QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs )
 {
-  QVariant v = mCRSSelectionCombo->itemData( mCRSSelectionCombo->currentIndex() );
+  QVariant v = mCRSSelectionButton->defaultAction()->data();
   TargetFormat format = static_cast<TargetFormat>( v.toInt() );
   switch ( format )
   {
@@ -125,15 +132,15 @@ void QgsCoordinateDisplayer::syncProjectCrs()
   const QgsCoordinateReferenceSystem& crs = mMapCanvas->mapSettings().destinationCrs();
   if ( crs.srsid() == 4326 )
   {
-    mCRSSelectionCombo->setCurrentIndex( mCRSSelectionCombo->findText( "DMS" ) );
+    mCRSSelectionButton->setDefaultAction( mActionDisplayDMS );
   }
   else if ( crs.srsid() == 21781 )
   {
-    mCRSSelectionCombo->setCurrentIndex( mCRSSelectionCombo->findText( "LV03" ) );
+    mCRSSelectionButton->setDefaultAction( mActionDisplayLV03 );
   }
   else if ( crs.srsid() == 2056 )
   {
-    mCRSSelectionCombo->setCurrentIndex( mCRSSelectionCombo->findText( "LV95" ) );
+    mCRSSelectionButton->setDefaultAction( mActionDisplayLV95 );
   }
 }
 
