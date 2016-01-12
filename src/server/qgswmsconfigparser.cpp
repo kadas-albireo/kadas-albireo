@@ -272,6 +272,7 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     }
 
     currentLabel->setText( title );
+    currentLabel->adjustSizeToText();
   }
 
   //replace urls in composer pictures
