@@ -333,13 +333,25 @@ void QgsComposerLabel::setMarginY( const double margin )
 
 void QgsComposerLabel::adjustSizeToText()
 {
-  double textWidth = QgsComposerUtils::textWidthMM( mFont, displayText() );
+  QString text = displayText();
+  double maxTextWidth = 0;
+
+  QStringList multiLineSplit = text.split( "\n" );
+  QStringList::const_iterator mlSplitIt = multiLineSplit.constBegin();
+  for ( ; mlSplitIt != multiLineSplit.constEnd(); ++mlSplitIt )
+  {
+    double currentTextWidth = textWidthMillimeters( mFont, *mlSplitIt );
+    if ( currentTextWidth > maxTextWidth )
+    {
+      maxTextWidth = currentTextWidth;
+    }
+  }
   double fontHeight = QgsComposerUtils::fontHeightMM( mFont );
 
   double penWidth = hasFrame() ? ( pen().widthF() / 2.0 ) : 0;
 
-  double width = textWidth + 2 * mMarginX + 2 * penWidth + 1;
-  double height = fontHeight + 2 * mMarginY + 2 * penWidth;
+  double width = maxTextWidth + 2 * mMarginX + 2 * penWidth + 1;
+  double height = multiLineSplit.size() * ( fontHeight + 2 * mMarginY + 2 * penWidth );
 
   //keep alignment point constant
   double xShift = 0;
