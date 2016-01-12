@@ -185,6 +185,13 @@ void QgsRibbonApp::updateWidgetPositions()
   int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
   mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
   mLayerTreeView->setGeometry( mLayerTreeView->pos().x(), distanceToTopBottom, mLayerTreeView->geometry().width(), layerTreeHeight );
+
+  // Resize info bar
+  double barwidth = 0.5 * mMapCanvas->geometry().width();
+  double x = 0.5 * mMapCanvas->geometry().width() - 0.5 * barwidth;
+  double y = mMapCanvas->geometry().y();
+  mInfoBar->move( x, y );
+  mInfoBar->setFixedWidth( barwidth );
 }
 
 void QgsRibbonApp::initLayerTreeView()
@@ -211,16 +218,6 @@ void QgsRibbonApp::initLayerTreeView()
 
   bool otfTransformAutoEnable = QSettings().value( "/Projections/otfTransformAutoEnable", true ).toBool();
   mLayerTreeCanvasBridge->setAutoEnableCrsTransform( otfTransformAutoEnable );
-}
-
-void QgsRibbonApp::resizeEvent( QResizeEvent *event )
-{
-  QMainWindow::resizeEvent( event );
-  double barwidth = 0.5 * geometry().width();
-  double x = 0.5 * geometry().width() - 0.5 * barwidth;
-  double y = centralWidget()->geometry().y();
-  mInfoBar->move( x, y );
-  mInfoBar->setFixedWidth( barwidth );
 }
 
 void QgsRibbonApp::mousePressEvent( QMouseEvent* event )
