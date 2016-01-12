@@ -12,6 +12,10 @@ QDockWidget #mapWidgetTitleWidget {
     background: #BEDCF6;
 }
 
+QDockWidget {
+    color: white;
+}
+
 QTreeView::indicator {
     width: 13px;
     height: 13px;
@@ -32,6 +36,20 @@ QTreeView::indicator::unchecked {
     image: url(:/images/checkbox_unchecked.png);
 }*/
 
+QMenu, QComboBox QAbstractItemView  {
+    background-color: white;
+    border: 1px solid #959697;
+}
+
+QMenu::item, QAbstractItemView::item {
+    background-color: transparent;
+    color: #31363b
+}
+
+QMenu::item:selected, QAbstractItemView::item::selected {
+    background-color: #3daee9;
+    color: white;
+}
 
 /** Layer tree view */
 QTreeView#mLayerTreeView {
@@ -126,8 +144,7 @@ QAbstractButton#mFavoriteButton4 {
 }
 
 #mStatusWidget #mCoordinateLineEdit,
-#mStatusWidget #mCRSComboBox,
-#mStatusWidget #mCRSComboBox,
+#mStatusWidget #mDisplayCRSButton,
 #mStatusWidget #mScaleComboBox,
 #mStatusWidget #mCRSSelectionButton
 {
@@ -180,12 +197,13 @@ QDialog QPushButton:pressed {
     border-style: inset;
 }
 
-QDialog QPushButton[text="OK"], QPushButton[text="&Open"]{
+QDialog QPushButton[text="OK"], QDialog QPushButton[text="&Open"]{
   background-color: #106BBC;
   color: #FFFFFF;
 }
 
-QDialog QPushButton[text="Abbrechen"], QPushButton[text="Schließen"], QPushButton[text="Cancel"]{
+QDialog QPushButton[text="&Cancel"],    QDialog QPushButton[text="Close"]
+QDialog QPushButton[text="Abbrechen"], QDialog QPushButton[text="Schließen"] {
   background-color: #313B44;
   color: #FFFFFF;
 }
