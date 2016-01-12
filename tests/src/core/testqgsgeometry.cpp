@@ -145,7 +145,7 @@ void TestQgsGeometry::init()
   mPointY = QgsPoint( 240.0, 240.0 );
   mPointZ = QgsPoint( 200.0, 240.0 );
 
-  mWktLine = QString( "LINESTRING(117.623198 35.198654, 117.581274 35.198654, 117.078178 35.324427, 116.868555 35.534051, 116.617007 35.869448, 116.491233 35.953297, 116.155836 36.288694, 116.071987 36.372544, 115.443117 36.749865, 114.814247 37.043338, 114.311152 37.169112, 113.388810 37.378735, 113.095337 37.378735, 112.592241 37.378735, 111.753748 37.294886, 111.502201 37.252961, 111.082954 37.127187, 110.747557 37.127187, 110.160612 36.917564, 110.034838 36.833715, 109.741366 36.749865, 109.573667 36.666016, 109.238270 36.498317, 109.070571 36.414468, 108.819023 36.288694, 108.693250 36.246770, 108.483626 36.162920, 107.645134 35.911372, 106.597017 35.869448, 106.051997 35.701749, 105.800449 35.617900, 105.590826 35.575975, 105.297354 35.575975, 104.961956 35.575975, 104.710409 35.534051, 104.458861 35.492126, 103.871916 35.492126, 103.788066 35.492126, 103.326895 35.408277, 102.949574 35.408277, 102.488402 35.450201, 102.069156 35.450201, 101.482211 35.450201, 100.937191 35.659825, 100.308321 35.869448, 100.056773 36.037146, 99.050582 36.079071, 97.667069 35.743674, 97.163973 35.617900, 96.115857 35.534051, 95.612761 35.534051, 94.396947 35.911372, 93.684228 36.288694, 92.929584 36.833715, 92.258790 37.169112, 91.629920 37.504509, 90.414105 37.881831, 90.414105 37.881831, 90.246407 37.923755, 89.491763 37.839906, 89.156366 37.672207, 88.485572 37.504509, 87.814778 37.252961, 87.563230 37.169112, 87.143983 37.043338, 85.970093 36.875639, 85.802395 36.875639, 84.083484 36.959489, 84.041560 37.043338, 82.951519 37.546433, 82.699971 37.630283)" );
+  mWktLine = QString( "LineString (117.623198 35.198654, 117.581274 35.198654, 117.078178 35.324427, 116.868555 35.534051, 116.617007 35.869448, 116.491233 35.953297, 116.155836 36.288694, 116.071987 36.372544, 115.443117 36.749865, 114.814247 37.043338, 114.311152 37.169112, 113.388810 37.378735, 113.095337 37.378735, 112.592241 37.378735, 111.753748 37.294886, 111.502201 37.252961, 111.082954 37.127187, 110.747557 37.127187, 110.160612 36.917564, 110.034838 36.833715, 109.741366 36.749865, 109.573667 36.666016, 109.238270 36.498317, 109.070571 36.414468, 108.819023 36.288694, 108.693250 36.246770, 108.483626 36.162920, 107.645134 35.911372, 106.597017 35.869448, 106.051997 35.701749, 105.800449 35.617900, 105.590826 35.575975, 105.297354 35.575975, 104.961956 35.575975, 104.710409 35.534051, 104.458861 35.492126, 103.871916 35.492126, 103.788066 35.492126, 103.326895 35.408277, 102.949574 35.408277, 102.488402 35.450201, 102.069156 35.450201, 101.482211 35.450201, 100.937191 35.659825, 100.308321 35.869448, 100.056773 36.037146, 99.050582 36.079071, 97.667069 35.743674, 97.163973 35.617900, 96.115857 35.534051, 95.612761 35.534051, 94.396947 35.911372, 93.684228 36.288694, 92.929584 36.833715, 92.258790 37.169112, 91.629920 37.504509, 90.414105 37.881831, 90.414105 37.881831, 90.246407 37.923755, 89.491763 37.839906, 89.156366 37.672207, 88.485572 37.504509, 87.814778 37.252961, 87.563230 37.169112, 87.143983 37.043338, 85.970093 36.875639, 85.802395 36.875639, 84.083484 36.959489, 84.041560 37.043338, 82.951519 37.546433, 82.699971 37.630283)" );
 
   mPolygonA.clear();
   mPolygonB.clear();
@@ -421,31 +421,31 @@ void TestQgsGeometry::intersectionCheck2()
 
 void TestQgsGeometry::translateCheck1()
 {
-  QString wkt = "LINESTRING(0 0, 10 0, 10 10)";
+  QString wkt = "LineString (0 0, 10 0, 10 10)";
   QScopedPointer<QgsGeometry> geom( QgsGeometry::fromWkt( wkt ) );
   geom->translate( 10, -5 );
   QString obtained = geom->exportToWkt();
-  QString expected = "LINESTRING(10 -5, 20 -5, 20 5)";
+  QString expected = "LineString (10 -5, 20 -5, 20 5)";
   QCOMPARE( obtained, expected );
   geom->translate( -10, 5 );
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, wkt );
 
-  wkt = "POLYGON((-2 4,-2 -10,2 3,-2 4),(1 1,-1 1,-1 -1,1 1))";
+  wkt = "Polygon ((-2 4, -2 -10, 2 3, -2 4),(1 1, -1 1, -1 -1, 1 1))";
   geom.reset( QgsGeometry::fromWkt( wkt ) );
   geom->translate( -2, 10 );
   obtained = geom->exportToWkt();
-  expected = "POLYGON((-4 14,-4 0,0 13,-4 14),(-1 11,-3 11,-3 9,-1 11))";
+  expected = "Polygon ((-4 14, -4 0, 0 13, -4 14),(-1 11, -3 11, -3 9, -1 11))";
   QCOMPARE( obtained, expected );
   geom->translate( 2, -10 );
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, wkt );
 
-  wkt = "POINT(40 50)";
+  wkt = "Point (40 50)";
   geom.reset( QgsGeometry::fromWkt( wkt ) );
   geom->translate( -2, 10 );
   obtained = geom->exportToWkt();
-  expected = "POINT(38 60)";
+  expected = "Point (38 60)";
   QCOMPARE( obtained, expected );
   geom->translate( 2, -10 );
   obtained = geom->exportToWkt();
@@ -455,37 +455,37 @@ void TestQgsGeometry::translateCheck1()
 
 void TestQgsGeometry::rotateCheck1()
 {
-  QString wkt = "LINESTRING(0 0, 10 0, 10 10)";
+  QString wkt = "LineString (0 0, 10 0, 10 10)";
   QScopedPointer<QgsGeometry> geom( QgsGeometry::fromWkt( wkt ) );
   geom->rotate( 90, QgsPoint( 0, 0 ) );
   QString obtained = geom->exportToWkt();
-  QString expected = "LINESTRING(0 0, 0 -10, 10 -10)";
+  QString expected = "LineString (0 0, 0 -10, 10 -10)";
   QCOMPARE( obtained, expected );
   geom->rotate( -90, QgsPoint( 0, 0 ) );
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, wkt );
 
-  wkt = "POLYGON((-2 4,-2 -10,2 3,-2 4),(1 1,-1 1,-1 -1,1 1))";
+  wkt = "Polygon ((-2 4, -2 -10, 2 3, -2 4),(1 1, -1 1, -1 -1, 1 1))";
   geom.reset( QgsGeometry::fromWkt( wkt ) );
   geom->rotate( 90, QgsPoint( 0, 0 ) );
   obtained = geom->exportToWkt();
-  expected = "POLYGON((4 2,-10 2,3 -2,4 2),(1 -1,1 1,-1 1,1 -1))";
+  expected = "Polygon ((4 2, -10 2, 3 -2, 4 2),(1 -1, 1 1, -1 1, 1 -1))";
   QCOMPARE( obtained, expected );
   geom->rotate( -90, QgsPoint( 0, 0 ) );
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, wkt );
 
-  wkt = "POINT(40 50)";
+  wkt = "Point (40 50)";
   geom.reset( QgsGeometry::fromWkt( wkt ) );
   geom->rotate( 90, QgsPoint( 0, 0 ) );
   obtained = geom->exportToWkt();
-  expected = "POINT(50 -40)";
+  expected = "Point (50 -40)";
   QCOMPARE( obtained, expected );
   geom->rotate( -90, QgsPoint( 0, 0 ) );
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, wkt );
   geom->rotate( 180, QgsPoint( 40, 0 ) );
-  expected = "POINT(40 -50)";
+  expected = "Point (40 -50)";
   obtained = geom->exportToWkt();
   QCOMPARE( obtained, expected );
   geom->rotate( 180, QgsPoint( 40, 0 ) ); // round-trip
