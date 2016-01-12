@@ -8110,18 +8110,10 @@ void QgisApp::osmExportDialog()
 
 bool QgisApp::gestureEvent( QGestureEvent *event )
 {
-  if ( QGesture *tapAndHold = event->gesture( Qt::TapAndHoldGesture ) )
+  QTapAndHoldGesture *tapAndHold = static_cast<QTapAndHoldGesture *>( event->gesture( Qt::TapAndHoldGesture ) );
+  if ( tapAndHold && tapAndHold->state() == Qt::GestureFinished )
   {
-    tapAndHoldTriggered( static_cast<QTapAndHoldGesture *>( tapAndHold ) );
-  }
-  return true;
-}
-
-void QgisApp::tapAndHoldTriggered( QTapAndHoldGesture *gesture )
-{
-  if ( gesture->state() == Qt::GestureFinished )
-  {
-    QPoint pos = gesture->position().toPoint();
+    QPoint pos = tapAndHold->position().toPoint();
     QWidget * receiver = QApplication::widgetAt( pos );
     qDebug() << "tapAndHoldTriggered: LONG CLICK gesture happened at " << pos;
     qDebug() << "widget under point of click: " << receiver;
@@ -8129,6 +8121,7 @@ void QgisApp::tapAndHoldTriggered( QTapAndHoldGesture *gesture )
     QApplication::postEvent( receiver, new QMouseEvent( QEvent::MouseButtonPress, receiver->mapFromGlobal( pos ), Qt::RightButton, Qt::RightButton, Qt::NoModifier ) );
     QApplication::postEvent( receiver, new QMouseEvent( QEvent::MouseButtonRelease, receiver->mapFromGlobal( pos ), Qt::RightButton, Qt::RightButton, Qt::NoModifier ) );
   }
+  return true;
 }
 
 #ifdef __MSC_VER

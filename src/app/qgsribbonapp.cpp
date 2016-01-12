@@ -469,10 +469,7 @@ void QgsRibbonApp::on_mZoomOutButton_clicked()
 
 void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )
 {
-  if ( !mReprojMsgItem.isNull() )
-  {
-    mInfoBar->popWidget( mReprojMsgItem.data() );
-  }
+  mInfoBar->popWidget( mReprojMsgItem.data() );
   QString destAuthId = mMapCanvas->mapSettings().destinationCrs().authid();
   QStringList reprojLayers;
   // Look at legend interface instead of maplayerregistry, to only check layers
@@ -486,8 +483,7 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers
   }
   if ( !reprojLayers.isEmpty() )
   {
-    mReprojMsgItem = mInfoBar->createMessage( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ) );
-    mReprojMsgItem->setDuration( 10 );
+    mReprojMsgItem = new QgsMessageBarItem( tr( "On the fly projection enabled" ), tr( "The following layers are being reprojected to the selected CRS: %1. Performance may suffer." ).arg( reprojLayers.join( ", " ) ), QgsMessageBar::INFO, 10, this );
     mInfoBar->pushItem( mReprojMsgItem.data() );
   }
 }
