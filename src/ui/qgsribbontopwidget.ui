@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>943</width>
+    <width>1081</width>
     <height>152</height>
    </rect>
   </property>
@@ -943,7 +943,7 @@
             </property>
             <property name="text">
              <string>Profile
-Line of Sight</string>
+Sight</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1708,7 +1708,10 @@ Line of Sight</string>
      <normaloff>:/images/ribbon/hoehenprofil.png</normaloff>:/images/ribbon/hoehenprofil.png</iconset>
    </property>
    <property name="text">
-    <string>Profile</string>
+    <string>Profile &amp; Line of Sight</string>
+   </property>
+   <property name="toolTip">
+    <string>Profile and Line of Sight</string>
    </property>
   </action>
   <action name="mActionAzimuth">
