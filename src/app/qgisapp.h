@@ -302,6 +302,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     virtual QMenu *panelMenu() const = 0;
     virtual QMenu *featureActionMenu() const = 0;
 
+    QAction* findAction( const QString& name ) const;
+
     void setIconSizes( int size );
 
     //! Get stylesheet builder object for app and print composers

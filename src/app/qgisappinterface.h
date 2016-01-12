@@ -313,6 +313,9 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     virtual QToolBar *databaseToolBar() override;
     virtual QToolBar *webToolBar() override;
 
+    //! Generic action finder
+    virtual QAction* findAction( const QString& name ) override;
+
     //! Project menu actions
     virtual QAction *actionNewProject() override;
     virtual QAction *actionOpenProject() override;

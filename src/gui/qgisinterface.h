@@ -367,6 +367,9 @@ class GUI_EXPORT QgisInterface : public QObject
     virtual QToolBar *databaseToolBar() = 0;
     virtual QToolBar *webToolBar() = 0;
 
+    // Generic action finder
+    virtual QAction* findAction( const QString& name ) = 0;
+
     // Project menu actions
     virtual QAction *actionNewProject() = 0;
     virtual QAction *actionOpenProject() = 0;

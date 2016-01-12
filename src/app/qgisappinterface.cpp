@@ -487,6 +487,9 @@ QToolBar *QgisAppInterface::vectorToolBar() { return qgisc ? qgisc->vectorToolBa
 QToolBar *QgisAppInterface::databaseToolBar() { return qgisc ? qgisc->databaseToolBar() : 0; }
 QToolBar *QgisAppInterface::webToolBar() { return qgisc ? qgisc->webToolBar() : 0; }
 
+//! Generic action finder
+QAction *QgisAppInterface::findAction( const QString& name ) { return qgis->findAction( name ); }
+
 //! Project menu actions
 QAction *QgisAppInterface::actionNewProject() { return qgisc ? qgisc->actionNewProject() : 0; }
 QAction *QgisAppInterface::actionOpenProject() { return qgisc ? qgisc->actionOpenProject() : 0; }
