@@ -119,7 +119,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QgsMapCanvasGPSDisplay mCanvasGPSDisplay;
 
     bool eventFilter( QObject *obj, QEvent *ev ) override;
-    void resizeEvent( QResizeEvent *event ) override;
     void mousePressEvent( QMouseEvent* event ) override;
     void mouseMoveEvent( QMouseEvent* event ) override;
     void dropEvent( QDropEvent* event ) override;
