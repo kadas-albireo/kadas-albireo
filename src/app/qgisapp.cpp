@@ -1076,6 +1076,11 @@ int QgisApp::messageTimeout()
   return settings.value( "/qgis/messageTimeout", 5 ).toInt();
 }
 
+QAction* QgisApp::findAction( const QString& name ) const
+{
+  return findChild<QAction*>( name );
+}
+
 void QgisApp::setIconSizes( int size )
 {
   //Set the icon size of for all the toolbars created in the future.
