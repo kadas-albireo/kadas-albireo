@@ -76,7 +76,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void on_mLayerTreeViewButton_clicked();
     void on_mZoomInButton_clicked();
     void on_mZoomOutButton_clicked();
-    void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers );
+    void checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers = QList<QgsMapLayer*>() );
     void addCameraPicture();
     void userScale();
     void showScale( double scale );
