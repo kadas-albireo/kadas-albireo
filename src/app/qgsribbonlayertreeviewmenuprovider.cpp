@@ -43,15 +43,10 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
-      QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
+      menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
 
       if ( layer->type() != QgsMapLayer::RedliningLayer )
       {
-        if ( vlayer )
-        {
-          menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
-                           mMainWidget, SLOT( attributeTable() ) );
-        }
         if ( rlayer )
         {
           menu->addAction( actions->actionUseAsHightMap( mMainWidget->mapCanvas() ) );
