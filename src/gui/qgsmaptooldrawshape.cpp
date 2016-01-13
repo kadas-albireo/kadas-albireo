@@ -33,6 +33,8 @@
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
     : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false )
 {
+  setCursor( Qt::ArrowCursor );
+
   QSettings settings;
   int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
   int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();

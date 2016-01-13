@@ -17,7 +17,6 @@
 #include "qgsmeasureheightprofiletool.h"
 #include "qgsmeasureheightprofiledialog.h"
 #include "qgsmapcanvas.h"
-#include "qgscursors.h"
 #include "qgsrubberband.h"
 #include "qgsgeometryutils.h"
 
@@ -26,7 +25,7 @@
 QgsMeasureHeightProfileTool::QgsMeasureHeightProfileTool( QgsMapCanvas *canvas )
     : QgsMapTool( canvas )
 {
-  setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+  setCursor( Qt::ArrowCursor );
 
   mRubberBand = new QgsRubberBand( canvas, QGis::Line );
   mRubberBandPoints = new QgsRubberBand( canvas, QGis::Point );
@@ -50,9 +49,9 @@ void QgsMeasureHeightProfileTool::restart()
   mRubberBandPoints->reset( QGis::Point );
 
   QSettings settings;
-  int red = settings.value( "/qgis/default_measure_color_red", 222 ).toInt();
-  int green = settings.value( "/qgis/default_measure_color_green", 155 ).toInt();
-  int blue = settings.value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
+  int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();
+  int blue = settings.value( "/qgis/default_measure_color_blue", 0 ).toInt();
   mRubberBand->setColor( QColor( red, green, blue ) );
   mRubberBand->setWidth( 3 );
   mRubberBandPoints->setIcon( QgsRubberBand::ICON_CIRCLE );
@@ -140,7 +139,7 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
       setGeometry( pickResult.first.geometry(), pickResult.second );
     }
     mPicking = false;
-    setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+    setCursor( Qt::ArrowCursor );
   }
   else if ( !mMoving )
   {
