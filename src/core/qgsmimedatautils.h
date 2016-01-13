@@ -28,7 +28,7 @@ class CORE_EXPORT QgsMimeDataUtils
     {
       Uri() {}
       Uri( QgsLayerItem* layer );
-      Uri( QString& encData );
+      Uri( const QString& encData );
 
       QString data() const;
 

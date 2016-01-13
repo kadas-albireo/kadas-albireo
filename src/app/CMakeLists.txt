@@ -101,7 +101,6 @@ SET(QGIS_APP_SRCS
   qgsmaptoolsvgannotation.cpp
   qgsmaptooltextannotation.cpp
   qgsmaptoolsredlining.cpp
-
   qgsmaptoolhillshade.cpp
   qgsmaptoolslope.cpp
   qgsmaptoolviewshed.cpp
@@ -140,6 +139,11 @@ SET(QGIS_APP_SRCS
   qgsmaptooladdcircularstring.cpp
   qgsmaptoolcircularstringcurvepoint.cpp
   qgsmaptoolcircularstringradius.cpp
+
+  catalog/qgscatalogbrowser.cpp
+  catalog/qgscatalogprovider.cpp
+  catalog/qgsgeoadminrestcatalogprovider.cpp
+  catalog/qgsarcgisrestcatalogprovider.cpp
 
   composer/qgsattributeselectiondialog.cpp
   composer/qgscomposer.cpp
@@ -302,6 +306,11 @@ SET (QGIS_APP_MOC_HDRS
   qgsvectorlayerproperties.h
   qgsvisibilitypresets.h
   qgshandlebadlayers.h
+
+  catalog/qgscatalogbrowser.h
+  catalog/qgscatalogprovider.h
+  catalog/qgsgeoadminrestcatalogprovider.h
+  catalog/qgsarcgisrestcatalogprovider.h
 
   composer/qgsattributeselectiondialog.h
   composer/qgscomposer.h
@@ -522,6 +531,7 @@ INCLUDE_DIRECTORIES(
   ${GDAL_INCLUDE_DIR}
   ${QWTPOLAR_INCLUDE_DIR}
   ${CRASHRPT_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   )
 
 IF(ENABLE_MODELTEST)
@@ -572,6 +582,8 @@ TARGET_LINK_LIBRARIES(qgis_app
   qgis_analysis
   qgis_splash
   ${CRASHRPT_LIBRARY}
+  ${QJSON_LIBRARIES}
+
 )
 
 IF (APPLE)

@@ -44,7 +44,7 @@ QgsMimeDataUtils::Uri::Uri( QgsLayerItem* layerItem )
   }
 }
 
-QgsMimeDataUtils::Uri::Uri( QString& encData )
+QgsMimeDataUtils::Uri::Uri( const QString& encData )
 {
   QgsDebugMsg( "encData: " + encData );
   QStringList decoded = decode( encData );
