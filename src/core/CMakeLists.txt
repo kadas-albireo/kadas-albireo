@@ -41,7 +41,6 @@ SET(QGIS_CORE_SRCS
   symbology-ng/qgspointdisplacementrenderer.cpp
   symbology-ng/qgsvectorfieldsymbollayer.cpp
   symbology-ng/qgscolorbrewerpalette.cpp
-  symbology-ng/qgsredliningrendererv2.cpp
 
   diagram/qgsdiagram.cpp
   diagram/qgspiediagram.cpp
@@ -72,7 +71,6 @@ SET(QGIS_CORE_SRCS
   qgscontexthelp_texts.cpp
   qgscoordinatereferencesystem.cpp
   qgscoordinatetransform.cpp
-  qgscoordinateutils.cpp
   qgscredentials.cpp
   qgsdartmeasurement.cpp
   qgscrscache.cpp
@@ -98,13 +96,10 @@ SET(QGIS_CORE_SRCS
   qgsgeometryvalidator.cpp
   qgsgml.cpp
   qgsgmlschema.cpp
-  qgskmlexport.cpp
-  qgskmlpallabeling.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
   qgslabelsearchtree.cpp
-  qgslatlontoutm.cpp
   qgslegacyhelpers.cpp
   qgslegendrenderer.cpp
   qgslegendsettings.cpp
@@ -149,7 +144,6 @@ SET(QGIS_CORE_SRCS
   qgsprovidermetadata.cpp
   qgsproviderregistry.cpp
   qgspythonrunner.cpp
-  qgsredlininglayer.cpp
   qgsrelation.cpp
   qgsrelationmanager.cpp
   qgsrenderchecker.cpp
@@ -162,7 +156,6 @@ SET(QGIS_CORE_SRCS
   qgssnapper.cpp
   qgssnappingutils.cpp
   qgsspatialindex.cpp
-  qgstemporaryfile.cpp
   qgstransaction.cpp
   qgstolerance.cpp
   qgsvectordataprovider.cpp
@@ -284,7 +277,7 @@ SET(QGIS_CORE_SRCS
   raster/qgssinglebandpseudocolorrenderer.cpp
   raster/qgsbrightnesscontrastfilter.cpp
   raster/qgshuesaturationfilter.cpp
-
+  
   geometry/qgsabstractgeometryv2.cpp
   geometry/qgscircularstringv2.cpp
   geometry/qgscompoundcurvev2.cpp
@@ -394,7 +387,6 @@ SET(QGIS_CORE_MOC_HDRS
   qgspluginlayer.h
   qgspointlocator.h
   qgsproject.h
-  qgsredlininglayer.h
   qgsrendercontext.h
   qgsrunprocess.h
   qgsrelationmanager.h
@@ -491,6 +483,7 @@ ENDIF(MSVC)
 SET(QGIS_CORE_HDRS
   ${CMAKE_BINARY_DIR}/qgsconfig.h
   ../plugins/qgisplugin.h
+
   qgis.h
   qgsattributeaction.h
   qgscachedfeatureiterator.h
@@ -502,7 +495,6 @@ SET(QGIS_CORE_HDRS
   qgsconnectionpool.h
   qgscontexthelp.h
   qgscoordinatereferencesystem.h
-  qgscoordinateutils.h
   qgscrscache.h
   qgscsexception.h
   qgsdartmeasurement.h
@@ -528,7 +520,6 @@ SET(QGIS_CORE_HDRS
   qgslabel.h
   qgslabelattributes.h
   qgslabelsearchtree.h
-  qgslatlontoutm.h
   qgslegacyhelpers.h
   qgslegendrenderer.h
   qgslegendsettings.h
@@ -571,7 +562,6 @@ SET(QGIS_CORE_HDRS
   qgssnapper.h
   qgssnappingutils.h
   qgsspatialindex.h
-  qgstemporaryfile.h
   qgstolerance.h
   qgstransaction.h
   qgsvectordataprovider.h
@@ -670,11 +660,10 @@ SET(QGIS_CORE_HDRS
   symbology-ng/qgssymbolv2.h
   symbology-ng/qgsvectorcolorrampv2.h
   symbology-ng/qgsvectorfieldsymbollayer.h
-  symbology-ng/qgsredliningrendererv2.h
 
   layertree/qgslayertree.h
   layertree/qgslayertreeutils.h
-
+  
   geometry/qgsgeometry.h
   geometry/qgsabstractgeometryv2.h
   geometry/qgswkbtypes.h
@@ -798,6 +787,9 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
 )
+
+
+SET_TARGET_PROPERTIES(qgis_core PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}_core)
 
 # install
 

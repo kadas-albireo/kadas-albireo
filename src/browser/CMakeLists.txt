@@ -92,6 +92,7 @@ IF(APPLE)
   )
 ENDIF(APPLE)
 
+SET_TARGET_PROPERTIES(qbrowser PROPERTIES OUTPUT_NAME ${QBROWSER_APP_NAME})
 ########################################################
 # Install
 

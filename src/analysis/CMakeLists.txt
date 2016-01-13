@@ -1,5 +1,4 @@
 SUBDIRS(network)
-FIND_PACKAGE(OpenMP)
 
 #############################################################
 # sources
@@ -35,7 +34,6 @@ SET(QGIS_ANALYSIS_SRCS
   raster/qgsrastercalcnode.cpp
   raster/qgsrastercalculator.cpp
   raster/qgsrastermatrix.cpp
-  raster/qgsviewshed.cpp
   vector/mersenne-twister.cpp
   vector/qgsgeometryanalyzer.cpp
   vector/qgspointsample.cpp
@@ -98,7 +96,6 @@ SET(QGIS_ANALYSIS_HDRS
   raster/qgsrastermatrix.h
   raster/qgsrastercalcnode.h
   raster/qgstotalcurvaturefilter.h
-  raster/qgsviewshed.h
 
   vector/qgsgeometryanalyzer.h
   vector/qgszonalstatistics.h
@@ -154,7 +151,6 @@ ENDIF (WIN32)
 # qgis_analysis library
 
 ADD_LIBRARY(qgis_analysis SHARED ${QGIS_ANALYSIS_SRCS} ${QGIS_ANALYSIS_MOC_SRCS} ${QGIS_ANALYSIS_HDRS})
-SET_TARGET_PROPERTIES(qgis_analysis PROPERTIES COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
 
 IF(NOT APPLE)
   INSTALL(FILES ${QGIS_ANALYSIS_HDRS} DESTINATION ${QGIS_INCLUDE_DIR})
@@ -181,11 +177,9 @@ IF (NOT ANDROID)
     )
 ENDIF (NOT ANDROID)
 
-IF(CMAKE_COMPILER_IS_GNUCC AND OPENMP_FOUND)
-    SET(OpenMP_LD_FLAGS "-lgomp")
-ENDIF(CMAKE_COMPILER_IS_GNUCC AND OPENMP_FOUND)
-TARGET_LINK_LIBRARIES(qgis_analysis qgis_core ${OpenMP_LD_FLAGS})
+TARGET_LINK_LIBRARIES(qgis_analysis qgis_core)
 
+SET_TARGET_PROPERTIES(qgis_analysis PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}_analysis)
 
 # install
 
