@@ -37,7 +37,7 @@ QStringList QgsServerPlugins::mServerPlugins;
 bool QgsServerPlugins::initPlugins( QgsServerInterface *interface )
 {
 
-  QString pythonlibName( "qgispython" );
+  QString pythonlibName( "qgisenterprisepython" );
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
   pythonlibName.prepend( QgsApplication::libraryPath() );
 #endif

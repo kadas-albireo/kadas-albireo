@@ -179,6 +179,7 @@ ENDIF (NOT ANDROID)
 
 TARGET_LINK_LIBRARIES(qgis_analysis qgis_core)
 
+SET_TARGET_PROPERTIES(qgis_analysis PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}_analysis)
 
 # install
 

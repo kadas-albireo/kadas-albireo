@@ -73,6 +73,8 @@ ADD_DEPENDENCIES(qgis_networkanalysis qgis_core)
 
 TARGET_LINK_LIBRARIES(qgis_networkanalysis qgis_core)
 
+SET_TARGET_PROPERTIES(qgis_networkanalysis PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}_networkanalysis)
+
 # install
 
 INSTALL(TARGETS qgis_networkanalysis
