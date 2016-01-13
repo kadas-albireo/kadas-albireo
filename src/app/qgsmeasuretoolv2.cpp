@@ -13,7 +13,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgscursors.h"
 #include "qgsfeaturepicker.h"
 #include "qgsgeometry.h"
 #include "qgsmapcanvas.h"
@@ -169,7 +168,7 @@ void QgsMeasureToolV2::activate()
   connect( mMeasureWidget, SIGNAL( clearRequested() ), mDrawTool, SLOT( reset() ) );
   connect( mMeasureWidget, SIGNAL( closeRequested() ), this, SLOT( close() ) );
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
-  setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+  setCursor( Qt::ArrowCursor );
   QgsMapTool::activate();
 }
 
@@ -245,6 +244,6 @@ void QgsMeasureToolV2::canvasReleaseEvent( QMouseEvent *e )
       mDrawTool->addGeometry( pickResult.first.geometry()->geometry(), pickResult.second->crs() );
     }
     mPickFeature = false;
-    setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );
+    setCursor( Qt::ArrowCursor );
   }
 }
