@@ -1,6 +1,6 @@
 #include "qgskmlexportdialog.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsmaplayer.h"
+#include "qgsvectorlayer.h"
 #include <QFileDialog>
 
 QgsKMLExportDialog::QgsKMLExportDialog( const QStringList layerIds, QWidget * parent, Qt::WindowFlags f ): QDialog( parent, f ), mLayerIds( layerIds )
@@ -55,7 +55,7 @@ void QgsKMLExportDialog::insertAvailableLayers()
   for ( ; it != mLayerIds.constEnd(); ++it )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
-    if ( !layer )
+    if ( !layer || !dynamic_cast<QgsVectorLayer*>( layer ) )
     {
       continue;
     }
