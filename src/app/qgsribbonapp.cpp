@@ -31,6 +31,8 @@
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
 #include "qgsundowidget.h"
+#include "catalog/qgsarcgisrestcatalogprovider.h"
+#include "catalog/qgsgeoadminrestcatalogprovider.h"
 
 #include <QFileDialog>
 #include <QImageReader>
@@ -70,8 +72,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   QgsRibbonStatusWidget::setupUi( statusWidget );
   setMenuWidget( topWidget );
   statusBar()->addPermanentWidget( statusWidget, 1 );
-  mLayerTreeView->setVisible( false );
-  mLayerTreeView->setCursor( Qt::ArrowCursor );
+  mLayersWidget->setVisible( false );
+  mLayersWidget->setCursor( Qt::ArrowCursor );
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
@@ -109,6 +111,11 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   configureButtons();
 
   mSearchWidget->init( mMapCanvas );
+
+#pragma message("Warning: this should not be hardcoded (and search providers also should not be hardcoded...)")
+  mCatalogBrowser->addProvider( new QgsGeoAdminRestCatalogProvider( "http://wmts.geo.admin.ch/1.0.0/WMTSCapabilities.xml", mCatalogBrowser ) );
+  mCatalogBrowser->addProvider( new QgsArcGisRestCatalogProvider( "http://services.arcgisonline.com/arcgis", mCatalogBrowser ) );
+  mCatalogBrowser->load();
 
   restoreFavoriteButton( mFavoriteButton1 );
   restoreFavoriteButton( mFavoriteButton2 );
@@ -180,11 +187,11 @@ void QgsRibbonApp::updateWidgetPositions()
   int distanceToTop = 20;
   mZoomInOutFrame->move( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(), distanceToTop );
 
-  // Resize mLayerTreeView and mLayerTreeViewButton
+  // Resize mLayersWidget and mLayerTreeViewButton
   int distanceToTopBottom = 40;
   int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
   mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
-  mLayerTreeView->setGeometry( mLayerTreeView->pos().x(), distanceToTopBottom, mLayerTreeView->geometry().width(), layerTreeHeight );
+  mLayersWidget->setGeometry( mLayersWidget->pos().x(), distanceToTopBottom, mLayersWidget->geometry().width(), layerTreeHeight );
 
   // Resize info bar
   double barwidth = 0.5 * mMapCanvas->geometry().width();
@@ -418,7 +425,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionExportGPX, mGpxExportButton );
 
   //settings tab
-  connect(mActionSettings, SIGNAL(triggered()), this, SLOT(options()));
+  connect( mActionSettings, SIGNAL( triggered() ), this, SLOT( options() ) );
   setActionToButton( mActionSettings, mSettingsButton );
 }
 
@@ -435,40 +442,29 @@ void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsM
 
 void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
 {
-  if ( !mLayerTreeView )
-  {
-    return;
-  }
-
-  bool visible = mLayerTreeView->isVisible();
-  mLayerTreeView->setVisible( !visible );
+  bool visible = mLayersWidget->isVisible();
+  mLayersWidget->setVisible( !visible );
 
   if ( !visible )
   {
     mLayerTreeViewButton->setIcon( QIcon( ":/images/ribbon/layerbaum_unfolded.png" ) );
-    mLayerTreeViewButton->move( mLayerTreeView->size().width() - 5, mLayerTreeViewButton->y() );
+    mLayerTreeViewButton->move( mLayersWidget->size().width(), mLayerTreeViewButton->y() );
   }
   else
   {
     mLayerTreeViewButton->setIcon( QIcon( ":/images/ribbon/layerbaum_folded.png" ) );
-    mLayerTreeViewButton->move( -2, mLayerTreeViewButton->y() );
+    mLayerTreeViewButton->move( 0, mLayerTreeViewButton->y() );
   }
 }
 
 void QgsRibbonApp::on_mZoomInButton_clicked()
 {
-  if ( mMapCanvas )
-  {
-    mMapCanvas->zoomIn();
-  }
+  mMapCanvas->zoomIn();
 }
 
 void QgsRibbonApp::on_mZoomOutButton_clicked()
 {
-  if ( mMapCanvas )
-  {
-    mMapCanvas->zoomOut();
-  }
+  mMapCanvas->zoomOut();
 }
 
 void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )

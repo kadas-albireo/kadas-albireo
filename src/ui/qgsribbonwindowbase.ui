@@ -44,44 +44,10 @@
       <property name="lineWidth">
        <number>0</number>
       </property>
-      <widget class="QgsLayerTreeView" name="mLayerTreeView">
-       <property name="geometry">
-        <rect>
-         <x>-2</x>
-         <y>60</y>
-         <width>200</width>
-         <height>192</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAsNeeded</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAsNeeded</enum>
-       </property>
-       <property name="indentation">
-        <number>20</number>
-       </property>
-       <property name="animated">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QPushButton" name="mLayerTreeViewButton">
        <property name="geometry">
         <rect>
-         <x>-2</x>
+         <x>0</x>
          <y>60</y>
          <width>35</width>
          <height>192</height>
@@ -279,6 +245,104 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="mLayersWidget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>60</y>
+         <width>200</width>
+         <height>453</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QgsLayerTreeView" name="mLayerTreeView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="indentation">
+           <number>20</number>
+          </property>
+          <property name="animated">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsCollapsibleGroupBox" name="mGeodataBox">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Geodata</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QgsCatalogBrowser" name="mCatalogBrowser" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <zorder>mLayerTreeViewButton</zorder>
+      <zorder>mZoomInOutFrame</zorder>
+      <zorder>mLayersWidget</zorder>
+      <zorder>mLayerTreeView</zorder>
      </widget>
     </item>
    </layout>
@@ -286,6 +350,12 @@
   <widget class="QStatusBar" name="mStatusWidget"/>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QgsCollapsibleGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>qgscollapsiblegroupbox.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>QgsLayerTreeView</class>
    <extends>QTreeView</extends>
@@ -295,6 +365,12 @@
    <class>QgsMapCanvas</class>
    <extends>QGraphicsView</extends>
    <header>qgsmapcanvas.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QgsCatalogBrowser</class>
+   <extends>QWidget</extends>
+   <header>catalog/qgscatalogbrowser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
