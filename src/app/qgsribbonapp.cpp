@@ -416,6 +416,10 @@ void QgsRibbonApp::configureButtons()
 
   connect( mActionExportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( exportGpx() ) );
   setActionToButton( mActionExportGPX, mGpxExportButton );
+
+  //settings tab
+  connect(mActionSettings, SIGNAL(triggered()), this, SLOT(options()));
+  setActionToButton( mActionSettings, mSettingsButton );
 }
 
 void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )
