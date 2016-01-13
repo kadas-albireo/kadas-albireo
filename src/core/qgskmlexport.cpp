@@ -54,7 +54,7 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
   QgsMapLayer* ml = 0;
   for ( ; layerIt != mLayers.end(); ++layerIt )
   {
-    qWarning( "Exporting maplayer to KML" );
+
     ml = *layerIt;
     if ( !ml )
     {
@@ -127,7 +127,12 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
   wgs84.createFromId( 4326 );
   QgsCoordinateTransform ct( vl->crs(), wgs84 );
 
-  QgsFeatureIterator it = vl->getFeatures( QgsFeatureRequest( filterExtent ) );
+  QgsFeatureRequest req;
+  if ( !filterExtent.isNull() )
+  {
+    req.setFilterRect( filterExtent );
+  }
+  QgsFeatureIterator it = vl->getFeatures( req );
   QgsFeature f;
   while ( it.nextFeature( f ) )
   {
