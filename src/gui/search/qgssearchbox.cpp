@@ -166,7 +166,7 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   QSize msz = mSearchBox->minimumSizeHint();
   mSearchBox->setMinimumSize( std::max( msz.width(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ),
                               std::max( msz.height(), mSearchButton->sizeHint().height() + frameWidth * 2 + 2 ) );
-  mSearchBox->setPlaceholderText( tr( "Search" ) );
+  mSearchBox->setPlaceholderText( tr( "Search for Places, Coordinates, Adresses, ..." ) );
 
   qRegisterMetaType<QgsSearchProvider::SearchResult>( "QgsSearchProvider::SearchResult" );
   addSearchProvider( new QgsCoordinateSearchProvider( mMapCanvas ) );
