@@ -90,7 +90,7 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   mActionEditObject->setCheckable( true );
   connect( mActionEditObject, SIGNAL( triggered( bool ) ), this, SLOT( editObject() ) );
 
-  mUi.spinBoxSize->setRange( 1, 20 );
+  mUi.spinBoxSize->setRange( 1, 100 );
   mUi.spinBoxSize->setValue( QSettings().value( "/Redlining/size", 1 ).toInt() );
   connect( mUi.spinBoxSize, SIGNAL( valueChanged( int ) ), this, SLOT( saveOutlineWidth() ) );
 
