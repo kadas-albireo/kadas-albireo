@@ -80,6 +80,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void addCameraPicture();
     void userScale();
     void showScale( double scale );
+    void switchToTabForTool( QgsMapTool* tool );
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );
