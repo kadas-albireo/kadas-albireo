@@ -27,6 +27,7 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgsmultimapmanager.h"
+#include "qgsprojecttemplateselectiondialog.h"
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
@@ -324,7 +325,7 @@ void QgsRibbonApp::configureButtons()
 {
   //My maps tab
 
-  connect( mActionNew, SIGNAL( triggered() ), this, SLOT( fileNew() ) );
+  connect( mActionNew, SIGNAL( triggered() ), this, SLOT( showProjectSelectionWidget() ) );
   setActionToButton( mActionNew, mNewButton );
 
   connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
@@ -545,6 +546,16 @@ void QgsRibbonApp::switchToTabForTool( QgsMapTool *tool )
 void QgsRibbonApp::toggleLayersSpacer()
 {
   mLayersSpacer->setVisible( mLayersBox->isCollapsed() && mGeodataBox->isCollapsed() );
+}
+
+
+void QgsRibbonApp::showProjectSelectionWidget()
+{
+  QString filename = QgsProjectTemplateSelectionDialog( this ).run();
+  if ( !filename.isEmpty() )
+  {
+    openProject( filename );
+  }
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )
