@@ -766,7 +766,8 @@ void QgisApp::init( bool restorePlugins )
   }*/
 
   //add reacting to long click in touch
-  grabGesture( Qt::TapAndHoldGesture );
+#pragma message("WARNING: disabled because it interferes with drag and drop as well as context menu right click")
+//  grabGesture( Qt::TapAndHoldGesture );
 
   // supposedly all actions have been added, now register them to the shortcut manager
   QgsShortcutsManager::instance()->registerAllChildrenActions( this );
