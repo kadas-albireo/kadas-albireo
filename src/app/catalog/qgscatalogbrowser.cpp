@@ -178,9 +178,10 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   layout()->setContentsMargins( 0, 0, 0, 0 );
   layout()->setSpacing( 0 );
 
-  mFilterLineEdit = new QgsFilterLineEdit( this, tr( "Filter catalog..." ) );
+  mFilterLineEdit = new QgsFilterLineEdit( this );
+  mFilterLineEdit->setPlaceholderText( tr( "Filter catalog..." ) );
   mFilterLineEdit->setObjectName( "mCatalogBrowserLineEdit" );
-  mFilterLineEdit->setStyleSheet( "QLineEdit { border-style: solid; border-color: #e4e4e4; border-width: 0px 0px 1px 0px; }" );
+  mFilterLineEdit->setStyleSheet( "QLineEdit { border-style: solid; border-color: #e4e4e4; border-width: 1px 0px 1px 0px; }" );
   layout()->addWidget( mFilterLineEdit );
   connect( mFilterLineEdit, SIGNAL( textChanged( QString ) ), this, SLOT( filterChanged( QString ) ) );
 
@@ -192,18 +193,19 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   connect( mTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( itemDoubleClicked( QModelIndex ) ) );
   mCatalogModel = new CatalogModel( this );
   mTreeView->setHeaderHidden( true );
-  mTreeView->setModel( mCatalogModel );
 
   mFilterProxyModel = new TreeFilterProxyModel( this );
 
-  mLoadingItem = new QStandardItem( tr( "Loading..." ) );
-  mLoadingItem->setEnabled( false );
+  mLoadingModel = new QStandardItemModel( this );
+  QStandardItem* loadingItem = new QStandardItem( tr( "Loading..." ) );
+  loadingItem->setEnabled( false );
+  mLoadingModel->appendRow( loadingItem );
 }
 
-void QgsCatalogBrowser::load()
+void QgsCatalogBrowser::reload()
 {
-  mCatalogModel->clear();
-  mCatalogModel->invisibleRootItem()->appendRow( mLoadingItem );
+  mCatalogModel->setRowCount( 0 );
+  mTreeView->setModel( mLoadingModel );
 
   mFinishedProviders = 0;
   foreach ( QgsCatalogProvider* provider, mProviders )
@@ -215,7 +217,6 @@ void QgsCatalogBrowser::load()
 
 void QgsCatalogBrowser::providerFinished()
 {
-  mCatalogModel->invisibleRootItem()->removeRow( 0 ); // Remove mLoadingItem
   mFinishedProviders += 1;
   if ( mFinishedProviders == mProviders.size() )
   {
