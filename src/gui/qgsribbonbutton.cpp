@@ -1,4 +1,5 @@
 #include "qgsribbonbutton.h"
+#include <QBitmap>
 #include <QDragEnterEvent>
 #include <QPainter>
 
@@ -10,12 +11,10 @@ QgsRibbonButton::~QgsRibbonButton()
 {
 }
 
-void QgsRibbonButton::paintEvent( QPaintEvent* e )
+void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
 {
   QPainter p( this );
   p.setRenderHint( QPainter::Antialiasing );
-
-  QPalette plt;
 
   //background
   p.setBrush( QBrush( palette().color( QPalette::Window ) ) );
@@ -26,7 +25,7 @@ void QgsRibbonButton::paintEvent( QPaintEvent* e )
     checkedPen.setWidth( 3 );
     p.setPen( checkedPen );
   }
-  else if ( underMouse() )
+  else if ( underMouse() && isEnabled() )
   {
     QPen underMousePen( palette().color( QPalette::Highlight ) );
     underMousePen.setWidth( 2 );
@@ -66,7 +65,18 @@ void QgsRibbonButton::paintEvent( QPaintEvent* e )
     QPixmap pixmap = buttonIcon.pixmap( iSize, QIcon::Normal, QIcon::On );
     int pixmapY = iconBottomY - iSize.height();
     int pixmapX = width() / 2.0 - iSize.width() / 2.0;
-    p.drawPixmap( pixmapX, pixmapY, pixmap );
+    if ( isEnabled() )
+    {
+      p.drawPixmap( pixmapX, pixmapY, pixmap );
+    }
+    else
+    {
+      QBitmap mask = pixmap.createMaskFromColor( QColor( 0, 0, 0, 0 ), Qt::MaskInColor );
+      p.save();
+      p.setPen( QColor( 38, 59, 78 ) );
+      p.drawPixmap( QPoint( pixmapX, pixmapY ), mask );
+      p.restore();
+    }
   }
 
   //text

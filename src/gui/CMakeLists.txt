@@ -106,6 +106,13 @@ editorwidgets/qgswebviewconfigdlg.cpp
 editorwidgets/qgswebviewwidgetwrapper.cpp
 editorwidgets/qgswebviewwidgetfactory.cpp
 
+qgspinannotationitem.cpp
+search/qgssearchbox.cpp
+search/qgscoordinatesearchprovider.cpp
+search/qgslocationsearchprovider.cpp
+search/qgslocaldatasearchprovider.cpp
+search/qgsremotedatasearchprovider.cpp
+search/qgsworldlocationsearchprovider.cpp
 
 layertree/qgscustomlayerorderwidget.cpp
 layertree/qgslayertreemapcanvasbridge.cpp
@@ -157,6 +164,7 @@ qgsexpressionbuilderwidget.cpp
 qgsexpressionhighlighter.cpp
 qgsexpressionselectiondialog.cpp
 qgsextentgroupbox.cpp
+qgsfeaturepicker.cpp
 qgsfeatureselectiondlg.cpp
 qgsfieldcombobox.cpp
 qgsfieldexpressionwidget.cpp
@@ -166,15 +174,21 @@ qgsfieldproxymodel.cpp
 qgsfiledropedit.cpp
 qgsfilterlineedit.cpp
 qgsformannotationitem.cpp
+qgsformannotationdialog.cpp
 qgsgenericprojectionselector.cpp
 qgsgeometryrubberband.cpp
+qgsgpsmarker.cpp
 qgshighlight.cpp
 qgsidentifymenu.cpp
 qgshtmlannotationitem.cpp
+qgshtmlannotationdialog.cpp
+qgsgeoimageannotationitem.cpp
+qgsribbonbutton.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
 qgsmapcanvas.cpp
+qgsmapcanvasgpsdisplay.cpp
 qgsmapcanvasitem.cpp
 qgsmapcanvasmap.cpp
 qgsmapcanvassnapper.cpp
@@ -186,11 +200,15 @@ qgsmaplayerproxymodel.cpp
 qgsmapoverviewcanvas.cpp
 qgsmaptip.cpp
 qgsmaptool.cpp
+qgsmaptoolannotation.cpp
 qgsmaptoolemitpoint.cpp
 qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
 qgsmaptoolpan.cpp
+qgsmaptooldrawshape.cpp
 qgsmaptoolzoom.cpp
+qgsmapwidget.cpp
+qgsmultimapmanager.cpp
 qgsmessagebar.cpp
 qgsmessagebaritem.cpp
 qgsmessagelogviewer.cpp
@@ -219,23 +237,22 @@ qgsscalevisibilitydialog.cpp
 qgsscalewidget.cpp
 qgssearchquerybuilder.cpp
 qgsslider.cpp
+qgssourceselectdialog.cpp
 qgssublayersdialog.cpp
 qgssvgannotationitem.cpp
+qgsimageannotationitem.cpp
+qgssvgannotationdialog.cpp
 qgstextannotationitem.cpp
+qgstextannotationdialog.cpp
 qgsvertexmarker.cpp
 qgsunitselectionwidget.cpp
 )
 
-IF (WITH_TOUCH)
-  SET(QGIS_GUI_SRCS
-      ${QGIS_GUI_SRCS}
-      qgsmaptooltouch.cpp
-  )
-ENDIF (WITH_TOUCH)
-
 SET(QGIS_GUI_MOC_HDRS
   qgisinterface.h
   qgsactionmenu.h
+  qgsannotationitem.h
+  qgsannotationwidget.h
   qgsattributedialog.h
   qgsattributeeditor.h
   qgsattributeform.h
@@ -280,13 +297,16 @@ SET(QGIS_GUI_MOC_HDRS
   qgsfilterlineedit.h
   qgsformannotationitem.h
   qgsgenericprojectionselector.h
+  qgsgeometryrubberband.h
   qgshtmlannotationitem.h
+  qgsgeoimageannotationitem.h
   qgsidentifymenu.h
   qgslegendinterface.h
   qgslonglongvalidator.h
   qgsludialog.h
   qgsmanageconnectionsdialog.h
   qgsmapcanvas.h
+  qgsmapcanvasgpsdisplay.h
   qgsmapcanvassnappingutils.h
   qgsmaplayeractionregistry.h
   qgsmaplayercombobox.h
@@ -294,9 +314,13 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptooldrawshape.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
+  qgsmaptoolpan.h
+  qgsmapwidget.h
+  qgsmultimapmanager.h
   qgsmessagebar.h
   qgsmessagebaritem.h
   qgsmessagelogviewer.h
@@ -318,14 +342,30 @@ SET(QGIS_GUI_MOC_HDRS
   qgsrelationadddlg.h
   qgsrelationeditorwidget.h
   qgsrelationmanagerdialog.h
+  qgsribbonbutton.h
   qgsscalecombobox.h
   qgsscalerangewidget.h
   qgsscalevisibilitydialog.h
   qgsscalewidget.h
   qgssearchquerybuilder.h
   qgsslider.h
+  qgssourceselectdialog.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
+
+  qgsformannotationdialog.h
+  qgshtmlannotationdialog.h
+  qgssvgannotationdialog.h
+  qgstextannotationdialog.h
+  qgspinannotationitem.h
+
+  search/qgssearchbox.h
+  search/qgssearchprovider.h
+  search/qgscoordinatesearchprovider.h
+  search/qgslocationsearchprovider.h
+  search/qgslocaldatasearchprovider.h
+  search/qgsremotedatasearchprovider.h
+  search/qgsworldlocationsearchprovider.h
 
   raster/qgsrasterminmaxwidget.h
   raster/qgspalettedrendererwidget.h
@@ -434,13 +474,13 @@ ENDIF(MSVC)
 
 SET(QGIS_GUI_HDRS
   qgisgui.h
-  qgsannotationitem.h
   qgsattributeeditorcontext.h
   qgsattributeforminterface.h
   qgsattributeformlegacyinterface.h
   qgscursors.h
   qgsdetaileditemdata.h
   qgsexpressionbuilderdialog.h
+  qgsfeaturepicker.h
   qgsfiledropedit.h
   qgshighlight.h
   qgsmapcanvasitem.h
@@ -448,11 +488,13 @@ SET(QGIS_GUI_HDRS
   qgsmapcanvassnapper.h
   qgsmapcanvassnappingutils.h
   qgsmaptip.h
-  qgsmaptoolpan.h
+  qgsmaptoolannotation.h
   qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
   qgsrubberband.h
+  qgsannotationwidget.cpp
   qgssvgannotationitem.h
+  qgsimageannotationitem.h
   qgstextannotationitem.h
   qgsvectorlayertools.h
   qgsvertexmarker.h
@@ -481,13 +523,6 @@ SET(QGIS_GUI_HDRS
   raster/qgsrasterrendererwidget.h
 )
 
-IF (WITH_TOUCH)
-  SET(QGIS_GUI_HDRS
-      ${QGIS_GUI_HDRS}
-      qgsmaptooltouch.h
-  )
-ENDIF (WITH_TOUCH)
-
 SET(QGIS_GUI_UI_HDRS
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsdetaileditemwidgetbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsgenericprojectionselectorbase.h
@@ -501,6 +536,8 @@ ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilder.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionbuilderdialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsexpressionselectiondialogbase.h
 ${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgssublayersdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgsformannotationdialogbase.h
+${CMAKE_CURRENT_BINARY_DIR}/../ui/ui_qgstextannotationdialogbase.h
 )
 
 IF(ENABLE_MODELTEST)
@@ -518,18 +555,23 @@ INCLUDE_DIRECTORIES(
   ../core
   ../core/composer
   ../core/geometry
+  ../core/gps
   ../core/layertree
   ../core/raster
   ../core/symbology-ng
+  ../analysis
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../ui
   ${QWT_INCLUDE_DIR}
   ${SQLITE3_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
+  ${QEXTSERIALPORT_INCLUDE_DIR}
 )
 
 INCLUDE_DIRECTORIES(${QSCINTILLA_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${GEOS_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${GDAL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${EXIV2_INCLUDE_DIR})
 
 IF (WIN32)
   IF (MSVC)
@@ -590,17 +632,19 @@ ADD_DEPENDENCIES(qgis_gui ui)
 
 TARGET_LINK_LIBRARIES(qgis_gui
   qgis_core
+  qgis_analysis
   ${QT_QTUITOOLS_LIBRARY}
   ${QWT_LIBRARY}
   ${QSCINTILLA_LIBRARY}
+  ${EXIV2_LIBRARY}
+  ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES}
 )
 
 IF(WIN32)
   ADD_DEFINITIONS(-DQWT_DLL)
   ADD_DEFINITIONS(-DQSCINTILLA_DLL)
 ENDIF(WIN32)
-
-SET_TARGET_PROPERTIES(qgis_gui PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}_gui)
 
 # install
 
