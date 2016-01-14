@@ -120,7 +120,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 #pragma message("Warning: this should not be hardcoded (and search providers also should not be hardcoded...)")
   mCatalogBrowser->addProvider( new QgsGeoAdminRestCatalogProvider( "http://wmts.geo.admin.ch/1.0.0/WMTSCapabilities.xml", mCatalogBrowser ) );
   mCatalogBrowser->addProvider( new QgsArcGisRestCatalogProvider( "http://services.arcgisonline.com/arcgis", mCatalogBrowser ) );
-  mCatalogBrowser->load();
+  mCatalogBrowser->reload();
+  connect( mRefreshCatalogButton, SIGNAL( clicked( bool ) ), mCatalogBrowser, SLOT( reload() ) );
 
   restoreFavoriteButton( mFavoriteButton1 );
   restoreFavoriteButton( mFavoriteButton2 );

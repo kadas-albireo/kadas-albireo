@@ -32,8 +32,10 @@ class APP_EXPORT QgsCatalogBrowser : public QWidget
   public:
     QgsCatalogBrowser( QWidget* parent = 0 );
     void addProvider( QgsCatalogProvider* provider ) { mProviders.append( provider ); }
-    void load();
     QStandardItem* addItem( QStandardItem* parent, QString text, bool isLeaf = false, QMimeData* mimeData = 0 );
+
+  public slots:
+    void reload();
 
   private:
     class CatalogModel;
@@ -42,9 +44,9 @@ class APP_EXPORT QgsCatalogBrowser : public QWidget
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     CatalogModel* mCatalogModel;
+    QStandardItemModel* mLoadingModel;
     TreeFilterProxyModel* mFilterProxyModel;
     QList<QgsCatalogProvider*> mProviders;
-    QStandardItem* mLoadingItem;
     int mFinishedProviders;
 
   private slots:
