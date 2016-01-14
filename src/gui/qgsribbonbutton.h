@@ -6,6 +6,7 @@
 /**A button which draws icon / text. The icon is above the text at (height - 10) / 2.0 y-position*/
 class GUI_EXPORT QgsRibbonButton: public QToolButton
 {
+    Q_OBJECT
   public:
     QgsRibbonButton( QWidget* parent = 0 );
     virtual ~QgsRibbonButton();

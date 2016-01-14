@@ -342,6 +342,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsrelationadddlg.h
   qgsrelationeditorwidget.h
   qgsrelationmanagerdialog.h
+  qgsribbonbutton.h
   qgsscalecombobox.h
   qgsscalerangewidget.h
   qgsscalevisibilitydialog.h
