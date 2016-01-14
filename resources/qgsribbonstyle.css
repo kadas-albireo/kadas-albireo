@@ -51,6 +51,16 @@ QMenu::item:selected, QAbstractItemView::item::selected {
     color: white;
 }
 
+QgsRibbonButton {
+  color: #FFFFFF;
+  background-color: #5D7081;
+}
+
+QgsRibbonButton::disabled {
+  color: #263B4E;
+}
+
+
 /** Layer tree view */
 QTreeView#mLayerTreeView {
   background-color: rgba(255,255,255, 220);
@@ -66,16 +76,6 @@ QPushButton#mLayerTreeViewButton {
 
 #mGeodataBox {
   background-color: rgba(255,255,255, 220);
-}
-
-
-/** Favorite buttons */
-QAbstractButton#mFavoriteButton1,
-QAbstractButton#mFavoriteButton2,
-QAbstractButton#mFavoriteButton3,
-QAbstractButton#mFavoriteButton4 {
-  background-color: #5D7081;
-  color: #263B4E;
 }
 
 

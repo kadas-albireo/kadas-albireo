@@ -79,6 +79,9 @@
          </property>
          <item>
           <widget class="QgsRibbonButton" name="mFavoriteButton1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -120,6 +123,9 @@
          </item>
          <item>
           <widget class="QgsRibbonButton" name="mFavoriteButton2">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -158,6 +164,9 @@
          </item>
          <item>
           <widget class="QgsRibbonButton" name="mFavoriteButton3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -196,6 +205,9 @@
          </item>
          <item>
           <widget class="QgsRibbonButton" name="mFavoriteButton4">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
