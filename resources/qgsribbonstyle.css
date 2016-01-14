@@ -61,7 +61,7 @@ QgsRibbonButton::disabled {
 }
 
 
-/** Layer tree view */
+/** Layer tree view, catalog */
 QTreeView#mLayerTreeView {
   background-color: rgba(255,255,255, 220);
 }
@@ -74,10 +74,14 @@ QPushButton#mLayerTreeViewButton {
   border-bottom-left-radius: 0px;
 }
 
-#mGeodataBox {
+#mLayersWidget {
   background-color: rgba(255,255,255, 220);
+  border: 1px solid #263B4E;
 }
 
+#mGeodataToolbar QToolButton {
+  background-color: #263B4E;
+}
 
 /** Search **/
 #mSearchWidget {
