@@ -111,9 +111,8 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QMenu* mFeatureActionMenu;
     QgsCoordinateDisplayer* mCoordinateDisplayer;
     QgsMessageBar* mInfoBar;
-
     QPoint mDragStartPos;
-    QString mDragStartActionName;
+
     QPointer<QgsMessageBarItem> mReprojMsgItem;
 
     //GPS
@@ -124,7 +123,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void mouseMoveEvent( QMouseEvent* event ) override;
     void dropEvent( QDropEvent* event ) override;
     void dragEnterEvent( QDragEnterEvent* event ) override;
-    void performDrag( const QIcon* icon );
     void restoreFavoriteButton( QToolButton* button );
     void configureButtons();
     void setActionToButton( QAction* action, QToolButton* button , QgsMapTool *tool = 0 );

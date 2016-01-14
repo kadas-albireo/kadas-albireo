@@ -75,6 +75,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersWidget->setVisible( false );
   mLayersWidget->setCursor( Qt::ArrowCursor );
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
+  mGeodataBox->setCollapsed( true );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
@@ -231,108 +232,82 @@ void QgsRibbonApp::initLayerTreeView()
 
 void QgsRibbonApp::mousePressEvent( QMouseEvent* event )
 {
-  if ( event->button() == Qt::LeftButton )
+  if ( event->buttons() == Qt::LeftButton )
   {
-    mDragStartPos = event->pos();
-    QWidget* dragStart = childAt( event->pos() );
-    if ( dragStart )
+    QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
+    if ( button && !button->objectName().startsWith( "mFavoriteButton" ) )
     {
-      mDragStartActionName = dragStart->property( "actionName" ).toString();
+      mDragStartPos = event->pos();
     }
   }
-  QWidget::mousePressEvent( event );
+  QgisApp::mousePressEvent( event );
 }
 
 void QgsRibbonApp::mouseMoveEvent( QMouseEvent* event )
 {
-  if ( event->buttons() & Qt::LeftButton )
+  if ( event->buttons() == Qt::LeftButton && !mDragStartPos.isNull() && ( mDragStartPos - event->pos() ).manhattanLength() >= QApplication::startDragDistance() )
   {
     QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
-    if ( button )
+    if ( button && !button->objectName().startsWith( "mFavoriteButton" ) )
     {
-      int distance = ( event->pos() - mDragStartPos ).manhattanLength();
-      if ( distance >= QApplication::startDragDistance() )
-      {
-        QIcon dragIcon = button->icon();
-        performDrag( &dragIcon );
-      }
+      QMimeData* mimeData = new QMimeData();
+      mimeData->setData( "application/qgis-ribbon-button", button->defaultAction()->objectName().toLocal8Bit() );
+      QDrag* drag = new QDrag( this );
+      drag->setMimeData( mimeData );
+      drag->setPixmap( button->icon().pixmap( 32, 32 ) );
+      drag->setHotSpot( QPoint( 16, 16 ) );
+      drag->exec( Qt::CopyAction );
+      mDragStartPos = QPoint();
     }
   }
-  QWidget::mouseMoveEvent( event );
-}
-
-void QgsRibbonApp::dropEvent( QDropEvent* event )
-{
-  if ( !event || mDragStartActionName.isEmpty() )
-  {
-    return;
-  }
-
-  //get button under mouse
-  QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
-  if ( !button )
-  {
-    return;
-  }
-
-
-  QAction* action = findChild<QAction*>( mDragStartActionName );
-  if ( !action )
-  {
-    return;
-  }
-
-  setActionToButton( action, button );
-
-  //save in settings for next restart
-  QSettings s;
-  s.setValue( "/UI/FavoriteAction/" + button->objectName(), mDragStartActionName );
-  mDragStartActionName.clear();
+  QgisApp::mouseMoveEvent( event );
 }
 
 void QgsRibbonApp::dragEnterEvent( QDragEnterEvent* event )
 {
-  QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
-  if ( button && button->acceptDrops() )
+  if ( event->mimeData()->hasFormat( "application/qgis-ribbon-button" ) )
   {
     event->acceptProposedAction();
   }
+  else
+  {
+    QgisApp::dragEnterEvent( event );
+  }
 }
 
-void QgsRibbonApp::performDrag( const QIcon* icon )
+void QgsRibbonApp::dropEvent( QDropEvent* event )
 {
-  QMimeData *mimeData = new QMimeData();
-
-  QDrag *drag = new QDrag( this );
-  drag->setMimeData( mimeData );
-  if ( icon )
+  if ( event->mimeData()->hasFormat( "application/qgis-ribbon-button" ) )
   {
-    drag->setPixmap( icon->pixmap( 32, 32 ) );
+    QString actionName = QString::fromLocal8Bit( event->mimeData()->data( "application/qgis-ribbon-button" ).data() );
+    QAction* action = findChild<QAction*>( actionName );
+    QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
+    if ( action && button )
+    {
+      button->setEnabled( true );
+      setActionToButton( action, button );
+      QSettings().setValue( "/UI/FavoriteAction/" + button->objectName(), actionName );
+    }
   }
-  drag->exec( Qt::CopyAction );
+  else
+  {
+    QgisApp::dropEvent( event );
+  }
 }
 
 void QgsRibbonApp::restoreFavoriteButton( QToolButton* button )
 {
-  if ( !button )
-  {
-    return;
-  }
-
-  QSettings s;
-  QString actionName = s.value( "/UI/FavoriteAction/" + button->objectName() ).toString();
+  QString actionName = QSettings().value( "/UI/FavoriteAction/" + button->objectName() ).toString();
   if ( actionName.isEmpty() )
   {
     return;
   }
 
   QAction* action = findChild<QAction*>( actionName );
-  if ( !action )
+  if ( action )
   {
-    return;
+    setActionToButton( action, button );
   }
-
-  setActionToButton( action, button );
 }
 
 void QgsRibbonApp::configureButtons()
@@ -434,7 +409,7 @@ void QgsRibbonApp::configureButtons()
 void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )
 {
   button->setDefaultAction( action );
-  button->setProperty( "actionName", action->objectName() );
+  button->setIconSize( QSize( 32, 32 ) );
   if ( tool )
   {
     tool->setAction( action );
