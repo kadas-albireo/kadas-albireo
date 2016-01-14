@@ -44,8 +44,9 @@
 
 const int QgsSearchBox::sEntryTypeRole = Qt::UserRole;
 const int QgsSearchBox::sCatNameRole = Qt::UserRole + 1;
-const int QgsSearchBox::sCatCountRole = Qt::UserRole + 2;
-const int QgsSearchBox::sResultDataRole = Qt::UserRole + 3;
+const int QgsSearchBox::sCatPrecedenceRole = Qt::UserRole + 2;
+const int QgsSearchBox::sCatCountRole = Qt::UserRole + 3;
+const int QgsSearchBox::sResultDataRole = Qt::UserRole + 4;
 
 // Overridden to make event() public
 class QgsSearchBox::LineEdit : public QLineEdit
@@ -348,7 +349,7 @@ void QgsSearchBox::searchResultFound( QgsSearchProvider::SearchResult result )
     int pos = 0;
     for ( int i = 0, n = root->childCount(); i < n; ++i )
     {
-      if ( result.category.compare( root->child( i )->data( 0, sCatNameRole ).toString() ) < 0 )
+      if ( result.categoryPrecedence < root->child( i )->data( 0, sCatPrecedenceRole ).toInt() )
       {
         break;
       }
@@ -357,6 +358,7 @@ void QgsSearchBox::searchResultFound( QgsSearchProvider::SearchResult result )
     categoryItem = new QTreeWidgetItem();
     categoryItem->setData( 0, sEntryTypeRole, EntryTypeCategory );
     categoryItem->setData( 0, sCatNameRole, result.category );
+    categoryItem->setData( 0, sCatPrecedenceRole, result.categoryPrecedence );
     categoryItem->setData( 0, sCatCountRole, 0 );
     categoryItem->setFlags( Qt::ItemIsEnabled );
     QFont font = categoryItem->font( 0 );

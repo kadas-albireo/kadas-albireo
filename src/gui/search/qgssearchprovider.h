@@ -33,6 +33,21 @@ class GUI_EXPORT QgsSearchProvider : public QObject
     struct SearchResult
     {
       QString category;
+      /**
+       * Lower number means higher precedence.
+       * 1: coordinate
+       * 10: local features
+       * 11: remote features
+       * 20: addresses
+       * 21: places
+       * 22: plz codes
+       * 23: municipalities
+       * 24: districts
+       * 25: cantons
+       * 30: world locations
+       * 100: unknown
+       */
+      int categoryPrecedence;
       QString text;
       QgsPoint pos;
       QgsRectangle bbox;
