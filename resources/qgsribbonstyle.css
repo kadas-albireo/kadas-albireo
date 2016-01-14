@@ -209,12 +209,14 @@ QDialog QPushButton:pressed {
     border-style: inset;
 }
 
-QDialog QPushButton[text="OK"], QDialog QPushButton[text="&Open"]{
+QDialog QPushButton[text="&OK"], QDialog QPushButton[text="&Open"],
+QDialog QPushButton[text="OK"], QDialog QPushButton[text="Open"] {
   background-color: #106BBC;
   color: #FFFFFF;
 }
 
-QDialog QPushButton[text="&Cancel"],    QDialog QPushButton[text="Close"]
+QDialog QPushButton[text="&Cancel"],    QDialog QPushButton[text="&Close"],
+QDialog QPushButton[text="Cancel"],    QDialog QPushButton[text="Close"],
 QDialog QPushButton[text="Abbrechen"], QDialog QPushButton[text="Schließen"] {
   background-color: #313B44;
   color: #FFFFFF;
