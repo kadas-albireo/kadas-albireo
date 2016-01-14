@@ -19,6 +19,7 @@
 #include "qgsgeoadminrestcatalogprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include <QDomDocument>
+#include <QDomElement>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
