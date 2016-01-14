@@ -74,14 +74,10 @@ QgsMessageBar::QgsMessageBar( QWidget *parent )
   mCloseBtn = new QToolButton( this );
   mCloseMenu->setObjectName( "mCloseMenu" );
   mCloseBtn->setToolTip( tr( "Close" ) );
-  mCloseBtn->setMinimumWidth( 40 );
-  mCloseBtn->setStyleSheet(
-    "QToolButton { background-color: rgba(0, 0, 0, 0); }"
-    "QToolButton::menu-button { background-color: rgba(0, 0, 0, 0); }" );
   mCloseBtn->setCursor( Qt::PointingHandCursor );
   mCloseBtn->setIcon( QgsApplication::getThemeIcon( "/mIconClose.png" ) );
   mCloseBtn->setIconSize( QSize( 18, 18 ) );
-  mCloseBtn->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
+  mCloseBtn->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
   mCloseBtn->setMenu( mCloseMenu );
   mCloseBtn->setPopupMode( QToolButton::MenuButtonPopup );
   connect( mCloseBtn, SIGNAL( clicked() ), this, SLOT( popWidget() ) );
