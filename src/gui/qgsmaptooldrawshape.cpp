@@ -46,6 +46,9 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
   mRubberBand->setOutlineWidth( 3 );
 
   setShowNodes( false );
+
+  // Shapes typically won't survive projection changes without distortion (circle, square, etc)
+  connect( canvas, SIGNAL( destinationCrsChanged() ), this, SLOT( reset() ) );
 }
 
 QgsMapToolDrawShape::~QgsMapToolDrawShape()
