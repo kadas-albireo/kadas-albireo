@@ -3412,6 +3412,7 @@ void QgisApp::saveMapToClipboard()
   QPainter painter( &image );
   mapCanvas()->render( &painter );
   QApplication::clipboard()->setImage( image );
+  messageBar()->pushMessage( tr( "Map saved to clipboard" ), QString(), QgsMessageBar::INFO, 5 );
 }
 
 //reimplements method from base (gui) class
