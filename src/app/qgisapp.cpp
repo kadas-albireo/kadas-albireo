@@ -6601,10 +6601,6 @@ void QgisApp::showOptionsDialog( QWidget *parent, QString currentPage )
       emit projectScalesChanged( QStringList() );
     }
 
-    qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureDist )->updateSettings();
-    qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureArea )->updateSettings();
-    qobject_cast<QgsMapToolMeasureAngle*>( mMapTools.mMeasureAngle )->updateSettings();
-
     bool otfTransformAutoEnable = mySettings.value( "/Projections/otfTransformAutoEnable", true ).toBool();
     mLayerTreeCanvasBridge->setAutoEnableCrsTransform( otfTransformAutoEnable );
   }
@@ -7340,10 +7336,6 @@ void QgisApp::projectProperties()
   int  myAlphaInt = QgsProject::instance()->readNumEntry( "Gui", "/CanvasColorAlphaPart", 0 );
   QColor myColor = QColor( myRedInt, myGreenInt, myBlueInt, myAlphaInt );
   mapCanvas()->setCanvasColor( myColor ); // this is fill color before rendering onto canvas
-
-  qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureDist )->updateSettings();
-  qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureArea )->updateSettings();
-  qobject_cast<QgsMapToolMeasureAngle*>( mMapTools.mMeasureAngle )->updateSettings();
 
   // Set the window title.
   setTitleBarText_( *this );
