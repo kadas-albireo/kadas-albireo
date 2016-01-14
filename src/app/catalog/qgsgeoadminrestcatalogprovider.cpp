@@ -47,7 +47,7 @@ void QgsGeoAdminRestCatalogProvider::parseTheme( QStandardItem *parent, const QD
     layerParentMap.insert( layerRef.toElement().text(), parent );
   }
 
-  foreach ( const QDomNode& theme, childrenByTagName( theme, "Theme" ) )
+  foreach ( const QDomNode& theme, childrenByTagName( theme.toElement(), "Theme" ) )
   {
     parseTheme( parent, theme.toElement(), layerParentMap );
   }
