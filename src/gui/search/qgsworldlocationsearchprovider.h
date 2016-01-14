@@ -41,7 +41,7 @@ class GUI_EXPORT QgsWorldLocationSearchProvider : public QgsSearchProvider
     static const QByteArray sGeoAdminUrl;
 
     QNetworkReply* mNetReply;
-    QMap<QString, QString> mCategoryMap;
+    QMap<QString, QPair<QString, int> > mCategoryMap;
     QRegExp mPatBox;
     QTimer mTimeoutTimer;
 

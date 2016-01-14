@@ -58,6 +58,7 @@ class GUI_EXPORT QgsSearchBox : public QWidget
     enum EntryType { EntryTypeCategory, EntryTypeResult };
     static const int sEntryTypeRole;
     static const int sCatNameRole;
+    static const int sCatPrecedenceRole;
     static const int sCatCountRole;
     static const int sResultDataRole;
 

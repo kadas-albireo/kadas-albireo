@@ -34,7 +34,7 @@ QgsWorldLocationSearchProvider::QgsWorldLocationSearchProvider( QgsMapCanvas* ma
 {
   mNetReply = 0;
 
-  mCategoryMap.insert( "geonames", tr( "World Places" ) );
+  mCategoryMap.insert( "geonames", qMakePair( tr( "World Places" ), 30 ) );
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
@@ -100,7 +100,8 @@ void QgsWorldLocationSearchProvider::replyFinished()
     searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
     searchResult.zoomScale = 1000;
 
-    searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin] : origin;
+    searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin].first : origin;
+    searchResult.categoryPrecedence = mCategoryMap.contains( origin ) ? mCategoryMap[origin].second : 100;
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:4326" );

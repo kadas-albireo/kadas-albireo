@@ -152,7 +152,8 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
 {
   QgsSearchProvider::SearchResult result;
   result.pos = feature.geometry()->boundingBox().center();
-  result.category = tr( "Local data" );
+  result.category = tr( "Local Data Features" );
+  result.categoryPrecedence = 10;
   result.crs = layer->crs();
   result.zoomScale = 1000;
   QgsGeometry* pt = feature.geometry()->pointOnSurface();

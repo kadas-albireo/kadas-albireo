@@ -168,7 +168,8 @@ void QgsRemoteDataSearchProvider::replyFinished()
 
     searchResult.zoomScale = 1000;
 
-    searchResult.category = tr( "Feature" );
+    searchResult.category = tr( "Remote Data Features" );
+    searchResult.categoryPrecedence = 11;
     searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );

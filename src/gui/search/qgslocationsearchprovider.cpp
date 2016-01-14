@@ -34,12 +34,12 @@ QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
 {
   mNetReply = 0;
 
-  mCategoryMap.insert( "sn25", tr( "Places" ) );
-  mCategoryMap.insert( "gg25", tr( "Municipalities" ) );
-  mCategoryMap.insert( "kantone", tr( "Cantons" ) );
-  mCategoryMap.insert( "district", tr( "Districts" ) );
-  mCategoryMap.insert( "address", tr( "Address" ) );
-  mCategoryMap.insert( "zipcode", tr( "Zip Codes" ) );
+  mCategoryMap.insert( "address", qMakePair( tr( "Address" ), 20 ) );
+  mCategoryMap.insert( "sn25", qMakePair( tr( "Places" ), 21 ) );
+  mCategoryMap.insert( "zipcode", qMakePair( tr( "Zip Codes" ), 22 ) );
+  mCategoryMap.insert( "gg25", qMakePair( tr( "Municipalities" ), 23 ) );
+  mCategoryMap.insert( "district", qMakePair( tr( "Districts" ), 24 ) );
+  mCategoryMap.insert( "kantone", qMakePair( tr( "Cantons" ), 25 ) );
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
@@ -110,7 +110,8 @@ void QgsLocationSearchProvider::replyFinished()
     searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
     searchResult.zoomScale = 1000;
 
-    searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin] : origin;
+    searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin].first : origin;
+    searchResult.categoryPrecedence = mCategoryMap.contains( origin ) ? mCategoryMap[origin].second : 100;
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );
