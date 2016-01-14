@@ -551,10 +551,12 @@ void QgsRibbonApp::enableGPS( bool enabled )
 {
   if ( enabled )
   {
+    messageBar()->pushMessage( tr( "Connecting to GPS device..." ), QString(), QgsMessageBar::INFO, 5 );
     mCanvasGPSDisplay.connectGPS();
   }
   else
   {
+    messageBar()->pushMessage( tr( "GPS connection closed" ), QString(), QgsMessageBar::INFO, 5 );
     mCanvasGPSDisplay.disconnectGPS();
   }
 }
