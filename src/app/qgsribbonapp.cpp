@@ -125,6 +125,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
+  connect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( switchToTabForTool( QgsMapTool* ) ) );
+  connect( mRibbonWidget, SIGNAL( currentChanged( int ) ), this, SLOT( pan() ) ); // Change to pan tool when changing active ribbon tab
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -516,6 +518,43 @@ void QgsRibbonApp::userScale()
 void QgsRibbonApp::showScale( double scale )
 {
   mScaleComboBox->setScale( 1.0 / scale );
+}
+
+void QgsRibbonApp::switchToTabForTool( QgsMapTool *tool )
+{
+  if ( tool && tool->action() )
+  {
+    foreach ( QWidget* widget, tool->action()->associatedWidgets() )
+    {
+      if ( dynamic_cast<QgsRibbonButton*>( widget ) )
+      {
+        for ( int i = 0, n = mRibbonWidget->count(); i < n; ++i )
+        {
+          if ( mRibbonWidget->widget( i )->findChild<QWidget*>( widget->objectName() ) )
+          {
+            mRibbonWidget->blockSignals( true );
+            mRibbonWidget->setCurrentIndex( i );
+            mRibbonWidget->blockSignals( false );
+            break;
+          }
+        }
+      }
+    }
+    // If action is not associated to a ribbon button, try with redlining and gpx route editor
+    if ( tool->action()->parent() == mRedlining )
+    {
+      mRibbonWidget->blockSignals( true );
+      mRibbonWidget->setCurrentWidget( mDrawTab );
+      mRibbonWidget->blockSignals( false );
+    }
+    else if ( tool->action()->parent() == mGpsRouteEditor )
+    {
+      mRibbonWidget->blockSignals( true );
+      mRibbonWidget->setCurrentWidget( mGpsTab );
+      mRibbonWidget->blockSignals( false );
+    }
+  }
+  // Nothing found, do nothing
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )
