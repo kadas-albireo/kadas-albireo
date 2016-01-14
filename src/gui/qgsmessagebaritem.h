@@ -22,8 +22,10 @@
 
 #include <QWidget>
 #include <QIcon>
-#include <QTextEdit>
-#include <QHBoxLayout>
+
+class QHBoxLayout;
+class QLabel;
+class QScrollArea;
 
 
 class GUI_EXPORT QgsMessageBarItem : public QWidget
@@ -82,7 +84,8 @@ class GUI_EXPORT QgsMessageBarItem : public QWidget
     QHBoxLayout *mLayout;
     QLabel *mLblIcon;
     QString mStyleSheet;
-    QTextEdit *mTextEdit;
+    QScrollArea* mLabelScrollArea;
+    QLabel *mLabel;
 };
 
 #endif // qgsmessagebaritem_H

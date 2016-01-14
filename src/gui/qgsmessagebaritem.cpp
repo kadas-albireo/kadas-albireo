@@ -21,7 +21,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QTextEdit>
+#include <QScrollArea>
 
 QgsMessageBarItem::QgsMessageBarItem( const QString &text, QgsMessageBar::MessageLevel level, int duration, QWidget *parent )
     : QWidget( parent )
@@ -85,7 +85,8 @@ void QgsMessageBarItem::writeContent()
   {
     mLayout = new QHBoxLayout( this );
     mLayout->setContentsMargins( 0, 0, 0, 0 );
-    mTextEdit = 0;
+    mLabelScrollArea = 0;
+    mLabel = 0;
     mLblIcon = 0;
   }
 
@@ -124,28 +125,26 @@ void QgsMessageBarItem::writeContent()
   // TITLE AND TEXT
   if ( mTitle.isEmpty() && mText.isEmpty() )
   {
-    if ( mTextEdit != 0 )
-    {
-      delete mTextEdit;
-      mTextEdit = 0;
-    }
+    delete mLabelScrollArea;
+    mLabelScrollArea = 0;
   }
   else
   {
-    if ( mTextEdit == 0 )
+    if ( mLabelScrollArea == 0 )
     {
-      mTextEdit = new QTextEdit( this );
-      mTextEdit->setObjectName( "textEdit" );
-      mTextEdit->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Maximum );
-      mTextEdit->setReadOnly( true );
-      mTextEdit->setFrameShape( QFrame::NoFrame );
-      // stylesheet set here so Qt-style substitued scrollbar arrows can show within limited height
-      // adjusts to height of font set in app options
-      mTextEdit->setStyleSheet( "QTextEdit { background-color: rgba(0,0,0,0); margin-top: 0.25em; max-height: 1.75em; min-height: 1.75em; } "
-                                "QScrollBar { background-color: rgba(0,0,0,0); } "
-                                "QScrollBar::add-page,QScrollBar::sub-page,QScrollBar::handle { background-color: rgba(0,0,0,0); color: rgba(0,0,0,0); } "
-                                "QScrollBar::up-arrow,QScrollBar::down-arrow { color: rgb(0,0,0); } " );
-      mLayout->addWidget( mTextEdit );
+      mLabel = new QLabel( this );
+      QFontMetrics fm = mLabel->fontMetrics();
+      mLabel->setMinimumHeight( 2 * fm.lineSpacing() );
+      mLabel->setWordWrap( true );
+
+      mLabelScrollArea = new QScrollArea( this );
+      mLabelScrollArea->setMaximumHeight( 2 * fm.lineSpacing() );
+      mLabelScrollArea->setFrameShape( QFrame::NoFrame );
+      mLabelScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+      mLabelScrollArea->setWidgetResizable( true );
+      mLabelScrollArea->setWidget( mLabel );
+      mLabelScrollArea->setStyleSheet( "QScrollArea, QScrollArea * { background-color: rgba(0,0,0,0); }" );
+      mLayout->addWidget( mLabelScrollArea );
     }
     QString content = mText;
     if ( !mTitle.isEmpty() )
@@ -156,7 +155,7 @@ void QgsMessageBarItem::writeContent()
         t += ": ";
       content.prepend( QString( "<b>" ) + t + " </b>" );
     }
-    mTextEdit->setText( content );
+    mLabel->setText( content );
   }
 
   // WIDGET
