@@ -56,6 +56,7 @@ SET(QGIS_APP_SRCS
   qgsloadstylefromdbdialog.cpp
   qgsmaplayerstyleguiutils.cpp
   qgsmapmouseevent.cpp
+  qgsprojecttemplateselectiondialog.cpp
   qgssavestyletodbdialog.cpp
   qgsguivectorlayertools.cpp
   qgsselectgrouplayerdialog.cpp
@@ -225,6 +226,7 @@ SET (QGIS_APP_MOC_HDRS
   qgscoordinatedisplayer.h
   qgscrsselection.h
   qgsmapcanvascontextmenu.h
+  qgsprojecttemplateselectiondialog.h
 
   qgsidentifyresultsdialog.h
   qgsribbonlayertreeviewmenuprovider.h
