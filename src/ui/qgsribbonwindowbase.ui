@@ -385,6 +385,9 @@
                  <iconset resource="../../images/images.qrc">
                   <normaloff>:/images/ribbon/oeffnen.png</normaloff>:/images/ribbon/oeffnen.png</iconset>
                 </property>
+                <property name="popupMode">
+                 <enum>QToolButton::InstantPopup</enum>
+                </property>
                </widget>
               </item>
               <item>

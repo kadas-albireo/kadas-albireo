@@ -83,6 +83,11 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 
+  QMenu* openLayerMenu = new QMenu( this );
+  openLayerMenu->addAction( tr( "Add vector layer" ), this, SLOT( addVectorLayer() ) );
+  openLayerMenu->addAction( tr( "Add raster layer" ), this, SLOT( addRasterLayer() ) );
+  mOpenLayerButton->setMenu( openLayerMenu );
+
   mMapCanvas->installEventFilter( this );
 
   mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mMapCanvas, this );
