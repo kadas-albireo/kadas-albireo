@@ -44,7 +44,7 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   mActionNewPoint->setCheckable( true );
   connect( mActionNewPoint, SIGNAL( triggered( bool ) ), this, SLOT( newPoint( bool ) ) );
 
-  QAction* mActionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
+  mActionNewSquare = new QAction( QIcon( ":/images/themes/default/redlining_square.svg" ), tr( "Square" ), this );
   mActionNewSquare->setCheckable( true );
   connect( mActionNewSquare, SIGNAL( triggered( bool ) ), this, SLOT( newSquare( bool ) ) );
 
