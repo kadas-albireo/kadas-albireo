@@ -24,9 +24,9 @@ QgsAnnotationItem* QgsMapToolPinAnnotation::createItem( const QPoint &pos )
 {
   QgsCoordinateUtils::TargetFormat format;
   QString epsg;
-  QgisApp::instance()->getCoordinateDisplayFormat(format, epsg);
+  QgisApp::instance()->getCoordinateDisplayFormat( format, epsg );
   QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas, format, epsg );
-  connect(QgisApp::instance(), SIGNAL(coordinateDisplayFormatChanged(QgsCoordinateUtils::TargetFormat&,QString&)), pinItem, SLOT(changeCoordinateFormatter(QgsCoordinateUtils::TargetFormat,QString)));
+  connect( QgisApp::instance(), SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ), pinItem, SLOT( changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat, QString ) ) );
   pinItem->setMapPosition( toMapCoordinates( pos ) );
   pinItem->setSelected( true );
   return pinItem;
