@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsarcgisrestutils.h"
+#include "qgscrscache.h"
 #include "qgsfield.h"
 #include "qgslogger.h"
 #include "qgsnetworkaccessmanager.h"
@@ -296,7 +297,7 @@ QgsAbstractGeometryV2* QgsArcGisRestUtils::parseEsriGeoJSON( const QVariantMap& 
   QgsWKBTypes::Type pointType = QgsWKBTypes::zmType( QgsWKBTypes::Point, readZ, readM );
   if ( crs )
   {
-    *crs = QgsCoordinateReferenceSystem( geometryData["wkid"].toInt() );
+    *crs = QgsCRSCache::instance()->crsByEpsgId( geometryData["wkid"].toInt() );
   }
 
   // http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Geometry_Objects/02r3000000n1000000/

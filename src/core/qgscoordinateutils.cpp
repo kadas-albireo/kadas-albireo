@@ -18,6 +18,7 @@
 #include "qgscoordinateutils.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
+#include "qgscrscache.h"
 #include "qgslatlontoutm.h"
 #include "qgsmaplayerregistry.h"
 #include "qgspoint.h"
@@ -76,7 +77,7 @@ double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinat
   }
 
   // Transform geo position to raster CRS
-  QgsPoint pRaster = QgsCoordinateTransform( crs, rasterCrs ).transform( p );
+  QgsPoint pRaster = QgsCoordinateTransformCache::instance()->transform( crs.authid(), rasterCrs.authid() )->transform( p );
   QgsDebugMsg( QString( "Transform %1 from %2 to %3 gives %4" ).arg( p.toString() )
                .arg( crs.authid() ).arg( rasterCrs.authid() ).arg( pRaster.toString() ) );
 
@@ -111,40 +112,34 @@ double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinat
 
 QString QgsCoordinateUtils::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, TargetFormat targetFormat, const QString& targetEpsg )
 {
-  QgsCoordinateReferenceSystem targetCrs( targetFormat == EPSG ? targetEpsg : "EPSG:4326" );
+  QgsPoint pTrans = QgsCoordinateTransformCache::instance()->transform( sSrs.authid(), targetEpsg )->transform( p );
   switch ( targetFormat )
   {
-    case EPSG:
+    case Default:
     {
-      QgsPoint pOut = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      return QString( "%1, %2" ).arg( pOut.x(), 0, 'f', 0 ).arg( pOut.y(), 0, 'f', 0 );
+      return QString( "%1, %2" ).arg( pTrans.x(), 0, 'f', 0 ).arg( pTrans.y(), 0, 'f', 0 );
     }
     case DegMinSec:
     {
-      QgsPoint pOut = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      return pOut.toDegreesMinutesSeconds( 1 );
+      return pTrans.toDegreesMinutesSeconds( 1 );
     }
     case DegMin:
     {
-      QgsPoint pOut = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      return pOut.toDegreesMinutes( 3 );
+      return pTrans.toDegreesMinutes( 3 );
     }
     case DecDeg:
     {
-      QgsPoint pOut = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      return QString( "%1%2,%3%4" ).arg( pOut.x(), 0, 'f', 5 ).arg( QChar( 176 ) )
-             .arg( pOut.y(), 0, 'f', 5 ).arg( QChar( 176 ) );
+      return QString( "%1%2,%3%4" ).arg( pTrans.x(), 0, 'f', 5 ).arg( QChar( 176 ) )
+             .arg( pTrans.y(), 0, 'f', 5 ).arg( QChar( 176 ) );
     }
     case UTM:
     {
-      QgsPoint pLatLong = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      QgsLatLonToUTM::UTMCoo coo = QgsLatLonToUTM::LL2UTM( pLatLong );
+      QgsLatLonToUTM::UTMCoo coo = QgsLatLonToUTM::LL2UTM( pTrans );
       return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
     }
     case MGRS:
     {
-      QgsPoint pLatLong = QgsCoordinateTransform( sSrs, targetCrs ).transform( p );
-      QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( pLatLong );
+      QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( pTrans );
       QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
       if ( mgrs.letter100kID.isEmpty() )
         return QString();

@@ -70,14 +70,15 @@ void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateUtils::Tar
 {
   QVariant v = mCRSSelectionButton->defaultAction()->data();
   TargetFormat targetFormat = static_cast<TargetFormat>( v.toInt() );
+  epsg = "EPSG:4326";
   switch ( targetFormat )
   {
     case LV03:
-      format = QgsCoordinateUtils::EPSG;
+      format = QgsCoordinateUtils::Default;
       epsg = "EPSG:21781";
       return;
     case LV95:
-      format = QgsCoordinateUtils::EPSG;
+      format = QgsCoordinateUtils::Default;
       epsg = "EPSG:2056";
       return;
     case DMS:
@@ -105,9 +106,9 @@ QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCo
   switch ( format )
   {
     case LV03:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::EPSG, "EPSG:21781" );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::Default, "EPSG:21781" );
     case LV95:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::EPSG, "EPSG:2056" );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::Default, "EPSG:2056" );
     case DMS:
       return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMinSec );
     case DM:

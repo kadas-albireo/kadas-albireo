@@ -54,17 +54,17 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
     if (( lon >= -180. && lon <= 180. ) && ( lat >= -90. && lat <= 90. ) )
     {
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
-      searchResult.crs.createFromString( "EPSG:4326" );
+      searchResult.crs = "EPSG:4326";
     }
     else if ( !haveDeg && (( lon >= 470000. && lon <= 850000. ) && ( lat >= 60000. && lat <= 310000. ) ) )
     {
       searchResult.text = searchResult.pos.toString() + " (LV03)";
-      searchResult.crs.createFromString( "EPSG:21781" );
+      searchResult.crs = "EPSG:21781";
     }
     else if ( !haveDeg && ( lon >= 2450000. && lon <= 2850000. ) && ( lat >= 1050000. && lat <= 1300000. ) )
     {
       searchResult.text = searchResult.pos.toString() + " (LV95)";
-      searchResult.crs.createFromString( "EPSG:2056" );
+      searchResult.crs = "EPSG:2056";
     }
     else
     {
@@ -81,7 +81,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       if (( NS.indexOf( mPatDM.cap( 3 ) ) != -1 ) )
         qSwap( lat, lon );
 
-      searchResult.crs.createFromString( "EPSG:4326" );
+      searchResult.crs = "EPSG:4326";
       searchResult.pos = QgsPoint( lon, lat );
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
     }
@@ -96,7 +96,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       if (( NS.indexOf( mPatDMS.cap( 4 ) ) != -1 ) )
         qSwap( lat, lon );
 
-      searchResult.crs.createFromString( "EPSG:4326" );
+      searchResult.crs = "EPSG:4326";
       searchResult.pos = QgsPoint( lon, lat );
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
     }
@@ -114,7 +114,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
     {
       valid = false;
     }
-    searchResult.crs.createFromString( "EPSG:4326" );
+    searchResult.crs = "EPSG:4326";
     searchResult.text = QString( "%1, %2 (%3 %4%5)" )
                         .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
   }
@@ -131,7 +131,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
     {
       valid = false;
     }
-    searchResult.crs.createFromString( "EPSG:4326" );
+    searchResult.crs = "EPSG:4326";
     searchResult.text = QString( "%1, %2 (%3 %4%5)" )
                         .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
   }
@@ -158,7 +158,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       }
       else
       {
-        searchResult.crs.createFromString( "EPSG:4326" );
+        searchResult.crs = "EPSG:4326";
         searchResult.text = QString( "%1%2%3 %4 %5" )
                             .arg( mgrs.zoneNumber ).arg( mgrs.zoneLetter ).arg( mgrs.letter100kID ).arg( mgrs.easting ).arg( mgrs.northing );
       }

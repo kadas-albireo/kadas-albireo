@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscrscache.h"
 #include "qgsworldlocationsearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
@@ -104,7 +105,7 @@ void QgsWorldLocationSearchProvider::replyFinished()
     searchResult.categoryPrecedence = mCategoryMap.contains( origin ) ? mCategoryMap[origin].second : 100;
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
-    searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:4326" );
+    searchResult.crs = "EPSG:4326";
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

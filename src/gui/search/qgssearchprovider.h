@@ -51,13 +51,13 @@ class GUI_EXPORT QgsSearchProvider : public QObject
       QString text;
       QgsPoint pos;
       QgsRectangle bbox;
-      QgsCoordinateReferenceSystem crs;
+      QString crs;
       double zoomScale;
     };
     struct SearchRegion
     {
       QgsPolyline polygon;
-      QgsCoordinateReferenceSystem crs;
+      QString crs;
     };
 
     QgsSearchProvider( QgsMapCanvas* mapCanvas ) : mMapCanvas( mapCanvas ) { }

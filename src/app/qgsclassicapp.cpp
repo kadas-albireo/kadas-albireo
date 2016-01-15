@@ -387,7 +387,7 @@ void QgsClassicApp::setTheme( QString theThemeName )
 
 void QgsClassicApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
 {
-  format = QgsCoordinateUtils::EPSG;
+  format = QgsCoordinateUtils::Default;
   epsg = mapCanvas()->mapSettings().destinationCrs().authid();
 }
 
@@ -2152,7 +2152,7 @@ void QgsClassicApp::updateCRSStatusBar()
       tr( "Current CRS: %1 (OTFR disabled)" ).arg( mapCanvas()->mapSettings().destinationCrs().description() ) );
     mOnTheFlyProjectionStatusButton->setIcon( QgsApplication::getThemeIcon( "mIconProjectionDisabled.png" ) );
   }
-  emit coordinateDisplayFormatChanged( QgsCoordinateUtils::EPSG, mapCanvas()->mapSettings().destinationCrs().authid() );
+  emit coordinateDisplayFormatChanged( QgsCoordinateUtils::Default, mapCanvas()->mapSettings().destinationCrs().authid() );
 }
 
 void QgsClassicApp::updateUndoActions()

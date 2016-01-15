@@ -15,6 +15,7 @@
 
 #include "qgsmaptoolsredlining.h"
 #include "qgscircularstringv2.h"
+#include "qgscrscache.h"
 #include "qgscurvepolygonv2.h"
 #include "qgsgeometryutils.h"
 #include "qgslinestringv2.h"
@@ -296,22 +297,22 @@ void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
       mCurrentFeature->geometry()->moveVertex( layerPos, mCurrentVertex );
       if ( mIsRectangle )
       {
-        QgsCoordinateTransform t( mCurrentFeature->vlayer()->crs(), QgsCoordinateReferenceSystem( mRectangleCRS ) );
+        const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mCurrentFeature->vlayer()->crs().authid(), mRectangleCRS );
         int n = mCurrentFeature->vertexMap().size() - 1;
         int iPrev = ( mCurrentVertex - 1 + n ) % n;
         int iNext = ( mCurrentVertex + 1 + n ) % n;
-        QgsPoint pPrev = t.transform( mCurrentFeature->vertexMap()[iPrev]->pointV1() );
-        QgsPoint pNext = t.transform( mCurrentFeature->vertexMap()[iNext]->pointV1() );
-        QgsPoint pCurr = t.transform( layerPos );
+        QgsPoint pPrev = t->transform( mCurrentFeature->vertexMap()[iPrev]->pointV1() );
+        QgsPoint pNext = t->transform( mCurrentFeature->vertexMap()[iNext]->pointV1() );
+        QgsPoint pCurr = t->transform( layerPos );
         if (( mCurrentVertex % 2 ) == 0 )
         {
-          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pCurr.x(), pPrev.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
-          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pNext.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
+          mCurrentFeature->geometry()->moveVertex( t->transform( QgsPoint( pCurr.x(), pPrev.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
+          mCurrentFeature->geometry()->moveVertex( t->transform( QgsPoint( pNext.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
         }
         else
         {
-          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pPrev.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
-          mCurrentFeature->geometry()->moveVertex( t.transform( QgsPoint( pCurr.x(), pNext.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
+          mCurrentFeature->geometry()->moveVertex( t->transform( QgsPoint( pPrev.x(), pCurr.y() ), QgsCoordinateTransform::ReverseTransform ), iPrev );
+          mCurrentFeature->geometry()->moveVertex( t->transform( QgsPoint( pCurr.x(), pNext.y() ), QgsCoordinateTransform::ReverseTransform ), iNext );
         }
       }
     }
@@ -320,8 +321,8 @@ void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
       mCurrentFeature->geometry()->translate( layerPos.x() - prevLayerPos.x(), layerPos.y() - prevLayerPos.y() );
     }
     mCurrentFeature->updateVertexMarkersPosition();
-    QgsCoordinateTransform ct( mLayer->crs(), mCanvas->mapSettings().destinationCrs() );
-    mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( ct ) );
+    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+    mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
   }
   else if ( mMode == TextSelected )
   {
@@ -407,8 +408,8 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
       {
         QgsPoint layerCoord = toLayerCoordinates( mLayer, results.first().snappedVertex );
         mLayer->insertVertex( layerCoord.x(), layerCoord.y(), mCurrentFeature->featureId(), result.afterVertexNr );
-        QgsCoordinateTransform ct( mLayer->crs(), mCanvas->mapSettings().destinationCrs() );
-        mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( ct ) );
+        const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+        mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
         mCanvas->clearCache( mLayer->id() );
         mCanvas->refresh();
         break;
@@ -435,8 +436,8 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
         {
           mCurrentFeature->deleteSelectedVertexes();
           mCurrentVertex = -1;
-          QgsCoordinateTransform ct( mLayer->crs(), mCanvas->mapSettings().destinationCrs() );
-          mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( ct ) );
+          const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+          mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
           mCanvas->clearCache( mLayer->id() );
           mCanvas->refresh();
         }

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscrscache.h"
 #include "qgsremotedatasearchprovider.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgscoordinatetransform.h"
@@ -74,10 +75,10 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
     QgsRectangle rect;
     rect.setMinimal();
     QgsLineStringV2* exterior = new QgsLineStringV2();
-    QgsCoordinateTransform ct( searchRegion.crs, QgsCoordinateReferenceSystem( "EPSG:21781" ) );
+    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( searchRegion.crs, "EPSG:21781" );
     foreach ( const QgsPoint& p, searchRegion.polygon )
     {
-      QgsPoint pt = ct.transform( p );
+      QgsPoint pt = ct->transform( p );
       rect.include( pt );
       exterior->addVertex( QgsPointV2( pt ) );
     }
@@ -156,7 +157,7 @@ void QgsRemoteDataSearchProvider::replyFinished()
                                       mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
     // When bbox is empty, fallback to pos + zoomScale is used
     searchResult.pos = QgsPoint( itemAttrsMap["lon"].toDouble(), itemAttrsMap["lat"].toDouble() );
-    searchResult.pos = QgsCoordinateTransform( QgsCoordinateReferenceSystem( "EPSG:4326" ), QgsCoordinateReferenceSystem( "EPSG:21781" ) ).transform( searchResult.pos );
+    searchResult.pos = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:21781" )->transform( searchResult.pos );
     if ( !bbox.isEmpty() && !bbox.contains( searchResult.pos ) )
     {
       continue;
@@ -172,7 +173,7 @@ void QgsRemoteDataSearchProvider::replyFinished()
     searchResult.categoryPrecedence = 11;
     searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
-    searchResult.crs = QgsCoordinateReferenceSystem( "EPSG:21781" );
+    searchResult.crs = "EPSG:21781";
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

@@ -29,7 +29,7 @@ class CORE_EXPORT QgsCoordinateUtils : public QObject
   public:
     enum TargetFormat
     {
-      EPSG,
+      Default,
       DegMinSec,
       DegMin,
       DecDeg,
