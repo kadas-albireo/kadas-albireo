@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscrscache.h"
 #include "qgsgeoimageannotationitem.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
@@ -34,7 +35,7 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   }
   QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( canvas );
   item->setFilePath( filePath );
-  item->setMapPosition( wgs84Pos, QgsCoordinateReferenceSystem( "EPSG:4326" ) );
+  item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
   return item;
 }
 
@@ -175,7 +176,7 @@ void QgsGeoImageAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
     _readXML( doc, annotationElem );
   }
 
-  setMapPosition( wgs84Pos, QgsCoordinateReferenceSystem( "EPSG:4326" ) );
+  setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
 }
 
 void QgsGeoImageAnnotationItem::paint( QPainter* painter )

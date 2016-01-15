@@ -344,7 +344,7 @@ const QgsCoordinateTransform* QgsMapSettings::layerTransform( QgsMapLayer *layer
 
 QgsRectangle QgsMapSettings::computeExtentForScale( const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs ) const
 {
-  QgsPoint center = QgsCoordinateTransform( sourceCrs, destinationCrs() ).transform( point );
+  QgsPoint center = QgsCoordinateTransformCache::instance()->transform( sourceCrs.authid(), destinationCrs().authid() )->transform( point );
 
   // Output width in inches
   double outWIn = outputSize().width() / double( outputDpi() );

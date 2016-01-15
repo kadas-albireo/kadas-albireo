@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsannotationitem.h"
+#include "qgscrscache.h"
 #include "qgsmapcanvas.h"
 #include "qgsrendercontext.h"
 #include "qgssymbollayerv2utils.h"
@@ -596,12 +597,12 @@ void QgsAnnotationItem::syncGeoPos()
 {
   if ( mMapPositionFixed )
   {
-    mMapPosition = QgsCoordinateTransform( mGeoPosCrs, mMapCanvas->mapSettings().destinationCrs() ).transform( mGeoPos );
+    mMapPosition = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), mMapCanvas->mapSettings().destinationCrs().authid() )->transform( mGeoPos );
     updatePosition();
   }
   else
   {
     updatePosition();
-    mGeoPos = QgsCoordinateTransform( mMapCanvas->mapSettings().destinationCrs(), mGeoPosCrs ).transform( mMapPosition );
+    mGeoPos = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() )->transform( mMapPosition );
   }
 }

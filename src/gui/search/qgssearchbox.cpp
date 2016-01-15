@@ -18,6 +18,7 @@
 #include "qgsapplication.h"
 #include "qgssearchbox.h"
 #include "qgscoordinatetransform.h"
+#include "qgscrscache.h"
 #include "qgsgeometryrubberband.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaptooldrawshape.h"
@@ -305,7 +306,7 @@ void QgsSearchBox::startSearch()
     if ( !poly.isEmpty() )
     {
       searchRegion.polygon = poly.front();
-      searchRegion.crs = mMapCanvas->mapSettings().destinationCrs();
+      searchRegion.crs = mMapCanvas->mapSettings().destinationCrs().authid();
     }
   }
 
@@ -392,8 +393,8 @@ void QgsSearchBox::resultSelected()
     QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
     if ( !mRubberBand )
       createRubberBand();
-    QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
-    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
+    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
+    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
     mSearchBox->blockSignals( true );
     mSearchBox->setText( result.text );
     mSearchBox->blockSignals( false );
@@ -414,16 +415,16 @@ void QgsSearchBox::resultActivated()
     QgsRectangle zoomExtent;
     if ( result.bbox.isEmpty() )
     {
-      zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, result.crs );
+      zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
       if ( !mRubberBand )
         createRubberBand();
-      QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
-      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t.transform( result.pos ) ), 0 );
+      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
+      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
     }
     else
     {
-      QgsCoordinateTransform t( result.crs, mMapCanvas->mapSettings().destinationCrs() );
-      zoomExtent = t.transform( result.bbox );
+      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
+      zoomExtent = t->transform( result.bbox );
     }
     mMapCanvas->setExtent( zoomExtent );
     mMapCanvas->refresh();

@@ -18,6 +18,7 @@
 
 #include "qgsamsprovider.h"
 #include "qgsarcgisrestutils.h"
+#include "qgscrscache.h"
 #include "qgsdatasourceuri.h"
 #include "qgslogger.h"
 #include "qgsrasteridentifyresult.h"
@@ -110,7 +111,7 @@ QgsAmsProvider::QgsAmsProvider( const QString & uri )
   mExtent.setYMinimum( extentData["ymin"].toDouble() );
   mExtent.setXMaximum( extentData["xmax"].toDouble() );
   mExtent.setYMaximum( extentData["ymax"].toDouble() );
-  mCrs = QgsCoordinateReferenceSystem( extentData["spatialReference"].toMap()["latestWkid"].toInt() );
+  mCrs = QgsCRSCache::instance()->crsByEpsgId( extentData["spatialReference"].toMap()["latestWkid"].toInt() );
   foreach ( const QVariant& sublayer, mLayerInfo["subLayers"].toList() )
   {
     mSubLayers.append( sublayer.toMap()["id"].toString() );

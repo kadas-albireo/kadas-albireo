@@ -18,6 +18,7 @@
 #include "qgsafsprovider.h"
 #include "qgsarcgisrestutils.h"
 #include "qgsafsfeatureiterator.h"
+#include "qgscrscache.h"
 #include "qgsdatasourceuri.h"
 #include "qgslogger.h"
 #include "geometry/qgsgeometry.h"
@@ -37,7 +38,7 @@ QgsAfsProvider::QgsAfsProvider( const QString& uri )
   mDataSource = QgsDataSourceURI( uri );
 
   // Set CRS
-  mSourceCRS = QgsCoordinateReferenceSystem( mDataSource.param( "crs" ) );
+  mSourceCRS = QgsCRSCache::instance()->crsByAuthId( mDataSource.param( "crs" ) );
 
   // Get layer info
   QString errorTitle, errorMessage;
@@ -74,8 +75,7 @@ QgsAfsProvider::QgsAfsProvider( const QString& uri )
     QString wkid = layerExtentMap["spatialReference"].toMap()["wkid"].toString();
     if ( !xminOk || !yminOk || !xmaxOk || !ymaxOk || wkid.isEmpty() )
       return;
-    QgsCoordinateReferenceSystem extentCRS = QgsCoordinateReferenceSystem( QString( "epsg:%1" ).arg( wkid ) );
-    mExtent = QgsCoordinateTransform( extentCRS, mSourceCRS ).transformBoundingBox( mExtent );
+    mExtent = QgsCoordinateTransformCache::instance()->transform( QString( "epsg:%1" ).arg( wkid ), mSourceCRS.authid() )->transformBoundingBox( mExtent );
   }
 
   // Read fields

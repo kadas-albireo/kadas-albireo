@@ -16,6 +16,7 @@
 #include "qgsmaptooldrawshape.h"
 #include "qgscircularstringv2.h"
 #include "qgscompoundcurvev2.h"
+#include "qgscrscache.h"
 #include "qgslinestringv2.h"
 #include "qgsmultilinestringv2.h"
 #include "qgsmultipolygonv2.h"
@@ -138,7 +139,7 @@ void QgsMapToolDrawShape::addGeometry( const QgsAbstractGeometryV2* geometry, co
   {
     reset();
   }
-  doAddGeometry( geometry, QgsCoordinateTransform( sourceCrs, canvas()->mapSettings().destinationCrs() ) );
+  doAddGeometry( geometry, *QgsCoordinateTransformCache::instance()->transform( sourceCrs.authid(), canvas()->mapSettings().destinationCrs().authid() ) );
   mState = mMultipart ? StateReady : StateFinished;
   update();
 }
@@ -167,13 +168,13 @@ void QgsMapToolDrawPoint::moveEvent( const QgsPoint& /*pos*/ )
 
 QgsAbstractGeometryV2* QgsMapToolDrawPoint::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPointV2();
   foreach ( const QList<QgsPoint>& part, mPoints )
   {
     if ( part.size() > 0 )
     {
-      QgsPoint p = t.transform( part.front() );
+      QgsPoint p = t->transform( part.front() );
       multiGeom->addGeometry( new QgsPointV2( p.x(), p.y() ) );
     }
   }
@@ -254,18 +255,18 @@ void QgsMapToolDrawPolyLine::moveEvent( const QgsPoint& pos )
 
 QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = mIsArea ? static_cast<QgsGeometryCollectionV2*>( new QgsMultiPolygonV2() ) : static_cast<QgsGeometryCollectionV2*>( new QgsMultiLineStringV2() );
   foreach ( const QList<QgsPoint>& part, mPoints )
   {
     QgsLineStringV2* ring = new QgsLineStringV2();
     foreach ( const QgsPoint& point, part )
     {
-      ring->addVertex( QgsPointV2( t.transform( point ) ) );
+      ring->addVertex( QgsPointV2( t->transform( point ) ) );
     }
     if ( mIsArea )
     {
-      if ( !part.isEmpty() ) ring->addVertex( QgsPointV2( t.transform( part.front() ) ) );
+      if ( !part.isEmpty() ) ring->addVertex( QgsPointV2( t->transform( part.front() ) ) );
       QgsPolygonV2* poly = new QgsPolygonV2;
       poly->setExteriorRing( ring );
       multiGeom->addGeometry( poly );
@@ -340,16 +341,16 @@ void QgsMapToolDrawRectangle::moveEvent( const QgsPoint &pos )
 
 QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
   for ( int i = 0, n = mP1.size(); i < n; ++i )
   {
     QgsLineStringV2* ring = new QgsLineStringV2;
-    ring->addVertex( QgsPointV2( t.transform( mP1[i] ) ) );
-    ring->addVertex( QgsPointV2( t.transform( mP2[i].x(), mP1[i].y() ) ) );
-    ring->addVertex( QgsPointV2( t.transform( mP2[i] ) ) );
-    ring->addVertex( QgsPointV2( t.transform( mP1[i].x(), mP2[i].y() ) ) );
-    ring->addVertex( QgsPointV2( t.transform( mP1[i] ) ) );
+    ring->addVertex( QgsPointV2( t->transform( mP1[i] ) ) );
+    ring->addVertex( QgsPointV2( t->transform( mP2[i].x(), mP1[i].y() ) ) );
+    ring->addVertex( QgsPointV2( t->transform( mP2[i] ) ) );
+    ring->addVertex( QgsPointV2( t->transform( mP1[i].x(), mP2[i].y() ) ) );
+    ring->addVertex( QgsPointV2( t->transform( mP1[i] ) ) );
     QgsPolygonV2* poly = new QgsPolygonV2;
     poly->setExteriorRing( ring );
     multiGeom->addGeometry( poly );
@@ -416,15 +417,15 @@ void QgsMapToolDrawCircle::moveEvent( const QgsPoint &pos )
 
 QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2();
   for ( int i = 0, n = mCenters.size(); i < n; ++i )
   {
     QgsCircularStringV2* ring = new QgsCircularStringV2;
     ring->setPoints( QList<QgsPointV2>()
-                     << QgsPointV2( t.transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) )
-                     << QgsPointV2( t.transform( mCenters[i].x(), mCenters[i].y() ) )
-                     << QgsPointV2( t.transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) ) );
+                     << QgsPointV2( t->transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) )
+                     << QgsPointV2( t->transform( mCenters[i].x(), mCenters[i].y() ) )
+                     << QgsPointV2( t->transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) ) );
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
     poly->setExteriorRing( ring );
     multiGeom->addGeometry( poly );
@@ -522,7 +523,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
 
 QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  QgsCoordinateTransform t( canvas()->mapSettings().destinationCrs(), targetCrs );
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
   for ( int i = 0, n = mCenters.size(); i < n; ++i )
   {
@@ -537,11 +538,11 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
     if ( mStartAngles[i] != mStopAngles[i] )
     {
       QgsCircularStringV2* arc = new QgsCircularStringV2();
-      arc->setPoints( QList<QgsPointV2>() << t.transform( pStart ) << t.transform( pMid ) << t.transform( pEnd ) );
+      arc->setPoints( QList<QgsPointV2>() << t->transform( pStart ) << t->transform( pMid ) << t->transform( pEnd ) );
       exterior->addCurve( arc );
     }
     QgsLineStringV2* line = new QgsLineStringV2();
-    line->setPoints( QList<QgsPointV2>() << t.transform( pEnd ) << t.transform( mCenters[i] ) << t.transform( pStart ) );
+    line->setPoints( QList<QgsPointV2>() << t->transform( pEnd ) << t->transform( mCenters[i] ) << t->transform( pStart ) );
     exterior->addCurve( line );
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2;
     poly->setExteriorRing( exterior );

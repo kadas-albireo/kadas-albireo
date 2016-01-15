@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgslocaldatasearchprovider.h"
+#include "qgscrscache.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayer.h"
 #include "qgslinestringv2.h"
@@ -95,10 +96,10 @@ void QgsLocalDataSearchCrawler::run()
     if ( !mSearchRegion.polygon.isEmpty() )
     {
       QgsLineStringV2* exterior = new QgsLineStringV2();
-      QgsCoordinateTransform ct( mSearchRegion.crs, layer->crs() );
+      const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mSearchRegion.crs, layer->crs().authid() );
       foreach ( const QgsPoint& p, mSearchRegion.polygon )
       {
-        exterior->addVertex( QgsPointV2( ct.transform( p ) ) );
+        exterior->addVertex( QgsPointV2( ct->transform( p ) ) );
       }
       QgsPolygonV2* poly = new QgsPolygonV2();
       poly->setExteriorRing( exterior );
@@ -154,7 +155,7 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
   result.pos = feature.geometry()->boundingBox().center();
   result.category = tr( "Local Data Features" );
   result.categoryPrecedence = 10;
-  result.crs = layer->crs();
+  result.crs = layer->crs().authid();
   result.zoomScale = 1000;
   QgsGeometry* pt = feature.geometry()->pointOnSurface();
   if ( pt )
