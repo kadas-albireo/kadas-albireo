@@ -35,6 +35,7 @@
 #include <QTranslator>
 #include <QImageReader>
 #include <QMessageBox>
+#include <QNetworkReply>
 
 #include "qgscustomization.h"
 #include "qgsfontutils.h"
@@ -91,6 +92,7 @@ typedef SInt32 SRefCon;
 #include "qgsproject.h"
 #include "qgsrectangle.h"
 #include "qgslogger.h"
+#include "qgsnetworkaccessmanager.h"
 
 #if ((defined(linux) || defined(__linux__)) && !defined(ANDROID)) || defined(__FreeBSD__)
 #include <unistd.h>
@@ -951,7 +953,39 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
   );
 
-#if 0 //disable command line options for now
+  //open default online/offline project if no project on command line and online test url is set
+  if ( myProjectFileName.isEmpty() )
+  {
+    //check if online / offline and load the corresponding project
+    QString testUrl = mySettings.value( "/qgis/onlineTestUrl" ).toString();
+    if ( !testUrl.isEmpty() )
+    {
+      QString templateDirPath = mySettings.value( "/qgis/projectTemplateDir", QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString();
+      QString offlineProject = mySettings.value( "/qgis/offlineDefaultProject" ).toString();
+      QString onlineProject = mySettings.value( "/qgis/onlineDefaultProject" ).toString();
+
+      QEventLoop eventLoop;
+      QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( QNetworkRequest( testUrl ) );
+      QObject::connect( reply, SIGNAL( finished() ), &eventLoop, SLOT( quit() ) );
+      eventLoop.exec();
+
+      if ( reply->error() == QNetworkReply::NoError )
+      {
+        if ( !onlineProject.isEmpty() )
+        {
+          myProjectFileName = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
+        }
+      }
+      else
+      {
+        if ( !offlineProject.isEmpty() )
+        {
+          myProjectFileName = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
+        }
+      }
+    }
+  }
+
   /////////////////////////////////////////////////////////////////////
   // Load a project file if one was specified
   /////////////////////////////////////////////////////////////////////
@@ -979,7 +1013,7 @@ int main( int argc, char *argv[] )
   /////////////////////////////////////////////////////////////////////
   // Set initial extent if requested
   /////////////////////////////////////////////////////////////////////
-  if ( ! myInitialExtent.isEmpty() )
+  if ( ! myInitialExtent.isEmpty() && myProjectFileName.isEmpty() )
   {
     double coords[4];
     int pos, posOld = 0;
@@ -1062,7 +1096,6 @@ int main( int argc, char *argv[] )
 
     return 1;
   }
-#endif //0
 
   /////////////////////////////////////////////////////////////////////
   // Continue on to interactive gui...

@@ -200,6 +200,9 @@ class APP_EXPORT QgsOptions : public QgsOptionsDialogBase, private Ui::QgsOption
 
     void on_mSSOCheckBox_toggled( bool state );
 
+    void on_mSelectOnlineProjectButton_clicked();
+    void on_mSelectOfflineProjectButton_clicked();
+
   private:
     QStringList i18nList();
     void initContrastEnhancement( QComboBox *cbox, QString name, QString defaultVal );
