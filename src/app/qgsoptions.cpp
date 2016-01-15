@@ -879,6 +879,10 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   // load gdal driver list only when gdal tab is first opened
   mLoadedGdalDriverList = false;
 
+  mOnlineTestUrlLineEdit->setText( settings.value( "/qgis/onlineTestUrl" ).toString() );
+  mOnlineProjectLineEdit->setText( settings.value( "/qgis/onlineDefaultProject" ).toString() );
+  mOfflineProjectLineEdit->setText( settings.value( "/qgis/offlineDefaultProject" ).toString() );
+
   // restore window and widget geometry/state
   restoreOptionsBaseUi();
 }
@@ -1407,6 +1411,10 @@ void QgsOptions::saveOptions()
   {
     mStyleSheetBuilder->saveToSettings( mStyleSheetNewOpts );
   }
+
+  settings.setValue( "/qgis/onlineTestUrl", mOnlineTestUrlLineEdit->text() );
+  settings.setValue( "/qgis/onlineDefaultProject", mOnlineProjectLineEdit->text() );
+  settings.setValue( "/qgis/offlineDefaultProject", mOfflineProjectLineEdit->text() );
 
   saveDefaultDatumTransformations();
 }
@@ -2143,4 +2151,28 @@ void QgsOptions::on_mButtonExportColors_clicked()
 void QgsOptions::on_mSSOCheckBox_toggled( bool state )
 {
   QSettings().setValue( "/qgis/networkAndProxy/attemptSSO", state );
+}
+
+void QgsOptions::on_mSelectOnlineProjectButton_clicked()
+{
+  QString projPath = QFileDialog::getOpenFileName( this,
+                     tr( "Choose default online project file" ),
+                     QString(),
+                     tr( "QGIS files" ) + " (*.qgs *.QGS)" );
+  if ( !projPath.isEmpty() )
+  {
+    mOnlineProjectLineEdit->setText( projPath );
+  }
+}
+
+void QgsOptions::on_mSelectOfflineProjectButton_clicked()
+{
+  QString projPath = QFileDialog::getOpenFileName( this,
+                     tr( "Choose default offline project file" ),
+                     QString(),
+                     tr( "QGIS files" ) + " (*.qgs *.QGS)" );
+  if ( !projPath.isEmpty() )
+  {
+    mOfflineProjectLineEdit->setText( projPath );
+  }
 }
