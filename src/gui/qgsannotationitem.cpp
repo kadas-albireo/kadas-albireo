@@ -59,13 +59,12 @@ void QgsAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinate
   mMapPosition = mGeoPos = pos;
   if ( crs.isValid() && crs != mMapCanvas->mapSettings().destinationCrs() )
   {
-    mMapPosition = mGeoPos = pos;
+    mGeoPosCrs = crs;
   }
   else
   {
-    mMapPosition = mGeoPos = QgsCoordinateTransform( crs, mMapCanvas->mapSettings().destinationCrs() ).transform( pos );
+    mGeoPosCrs = mMapCanvas->mapSettings().destinationCrs();
   }
-  mGeoPosCrs = mMapCanvas->mapSettings().destinationCrs();
   setPos( toCanvasCoordinates( mMapPosition ) );
 }
 
