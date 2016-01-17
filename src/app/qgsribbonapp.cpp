@@ -447,12 +447,36 @@ void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
 
 void QgsRibbonApp::on_mZoomInButton_clicked()
 {
-  mMapCanvas->zoomIn();
+  QList<double> resolutions = wmtsResolutions();
+  if ( resolutions.isEmpty() )
+  {
+    mMapCanvas->zoomIn(); //no wmts layers
+  }
+  else
+  {
+    int zoomLevel = nextWMTSZoomLevel( resolutions, true );
+    if ( zoomLevel != -1 )
+    {
+      mMapCanvas->zoomByFactor( resolutions.at( zoomLevel ) / mMapCanvas->mapUnitsPerPixel() );
+    }
+  }
 }
 
 void QgsRibbonApp::on_mZoomOutButton_clicked()
 {
-  mMapCanvas->zoomOut();
+  QList<double> resolutions = wmtsResolutions();
+  if ( resolutions.isEmpty() )
+  {
+    mMapCanvas->zoomOut();
+  }
+  else
+  {
+    int zoomLevel = nextWMTSZoomLevel( resolutions, false );
+    if ( zoomLevel != -1 )
+    {
+      mMapCanvas->zoomByFactor( resolutions.at( zoomLevel ) / mMapCanvas->mapUnitsPerPixel() );
+    }
+  }
 }
 
 void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )

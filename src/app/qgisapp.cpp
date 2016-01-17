@@ -8118,6 +8118,85 @@ bool QgisApp::gestureEvent( QGestureEvent *event )
   return true;
 }
 
+QList<double> QgisApp::wmtsResolutions() const
+{
+  QList<double> resolutionList;
+
+  QgsRasterLayer* currentLayer = 0;
+  const QgsRasterDataProvider* currentProvider = 0;
+  QList<QgsMapLayer*> layerList = mapCanvas()->layers();
+  for ( int i = 0; i < layerList.size(); ++i )
+  {
+    currentLayer = dynamic_cast<QgsRasterLayer*>( layerList.at( i ) );
+    if ( !currentLayer )
+    {
+      continue;
+    }
+
+    currentProvider = currentLayer->dataProvider();
+    if ( !currentProvider || currentProvider->name().compare( "wms", Qt::CaseInsensitive ) != 0 )
+    {
+      continue;
+    }
+
+    //property 'resolutions' for wmts layers
+    QVariant resolutionVariant = currentProvider->property( "resolutions" );
+    if ( !resolutionVariant.isValid() )
+    {
+      continue;
+    }
+
+    QList<QVariant> resolutions = resolutionVariant.toList();
+    QList<QVariant>::const_iterator resIt = resolutions.constBegin();
+    for ( ; resIt != resolutions.constEnd(); ++resIt )
+    {
+      resolutionList.append( resIt->toDouble() );
+    }
+
+    if ( resolutions.size() > 0 )
+    {
+      break;
+    }
+  }
+
+  return resolutionList;
+}
+
+int QgisApp::nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn ) const
+{
+  if ( !mapCanvas() || resolutions.size() < 1 )
+  {
+    return -1;
+  }
+
+  int resolutionLevel = 0;
+  double currentResolution = mapCanvas()->mapUnitsPerPixel();
+
+  for ( int i = 0; i < resolutions.size(); ++i )
+  {
+    if ( qgsDoubleNear( resolutions.at( i ), currentResolution, 0.0001 ) )
+    {
+      resolutionLevel = zoomIn ? ( i - 1 ) : ( i + 1 );
+      break;
+    }
+    else if ( currentResolution <= resolutions.at( i ) )
+    {
+      resolutionLevel = zoomIn ? ( i - 1 ) : i;
+      break;
+    }
+  }
+
+  if ( resolutionLevel < 0 )
+  {
+    resolutionLevel = 0;
+  }
+  else if ( resolutionLevel >= resolutions.size() )
+  {
+    resolutionLevel = ( resolutions.size() - 1 );
+  }
+  return resolutionLevel;
+}
+
 #ifdef __MSC_VER
 LONG WINAPI QgisApp::qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo )
 {
