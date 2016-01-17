@@ -1340,6 +1340,10 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     bool gestureEvent( QGestureEvent *event );
 
+    /**Returns wmts resolution list of the topmost wmts layer in the map. Returns empty list if no wmts layer*/
+    QList<double> wmtsResolutions() const;
+    int nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn = true ) const;
+
   private:
     /// QgisApp aren't copyable
     QgisApp( QgisApp const & );
