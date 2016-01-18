@@ -7962,7 +7962,7 @@ void QgisApp::showLayerProperties( QgsMapLayer *ml )
       // handled by rendererChanged() connect( vlp, SIGNAL( refreshLegend( QString ) ), mLayerTreeView, SLOT( refreshLayerSymbology( QString ) ) );
     }
 #else
-    QgsVectorLayerProperties *vlp = new QgsVectorLayerProperties( vlayer, 0, this );
+    QgsVectorLayerProperties *vlp = new QgsVectorLayerProperties( vlayer, this );
 #endif
 
     if ( vlp->exec() )

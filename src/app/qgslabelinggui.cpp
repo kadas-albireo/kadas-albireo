@@ -39,7 +39,7 @@
 #include <QSettings>
 
 
-QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent, QgsRibbonApp* mainWidget )
+QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, QWidget* parent )
     : QWidget( parent )
     , mLayer( layer )
     , mMapCanvas( mapCanvas )
@@ -53,7 +53,6 @@ QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, 
     , mPreviewSize( 24 )
     , mMinPixelLimit( 0 )
     , mLoadSvgParams( false )
-    , mMainWidget( mainWidget )
 {
   if ( !layer )
     return;
@@ -152,10 +151,7 @@ QgsLabelingGui::QgsLabelingGui( QgsVectorLayer* layer, QgsMapCanvas* mapCanvas, 
   mFieldExpressionWidget->setLayer( mLayer );
   QgsDistanceArea myDa;
   myDa.setSourceCrs( mLayer->crs().srsid() );
-  if ( mMainWidget )
-  {
-    myDa.setEllipsoidalMode( mMainWidget->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
-  }
+  myDa.setEllipsoidalMode( QgisApp::instance()->mapCanvas()->mapSettings().hasCrsTransformEnabled() );
   myDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
   mFieldExpressionWidget->setGeomCalculator( myDa );
 
@@ -555,10 +551,8 @@ void QgsLabelingGui::apply()
 {
   writeSettingsToLayer();
   mFontMissingLabel->setVisible( false );
-  if ( mMainWidget )
-  {
-    mMainWidget->markDirty();
-  }
+  QgisApp::instance()->markDirty();
+
   // trigger refresh
   if ( mMapCanvas )
   {
