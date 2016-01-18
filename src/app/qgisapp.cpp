@@ -8121,9 +8121,13 @@ bool QgisApp::gestureEvent( QGestureEvent *event )
 QList<double> QgisApp::wmtsResolutions() const
 {
   QList<double> resolutionList;
+  if ( !mapCanvas() )
+  {
+    return resolutionList;
+  }
 
   QgsRasterLayer* currentLayer = 0;
-  const QgsRasterDataProvider* currentProvider = 0;
+  QgsRasterDataProvider* currentProvider = 0;
   QList<QgsMapLayer*> layerList = mapCanvas()->layers();
   for ( int i = 0; i < layerList.size(); ++i )
   {
@@ -8135,6 +8139,12 @@ QList<double> QgisApp::wmtsResolutions() const
 
     currentProvider = currentLayer->dataProvider();
     if ( !currentProvider || currentProvider->name().compare( "wms", Qt::CaseInsensitive ) != 0 )
+    {
+      continue;
+    }
+
+    //wmts must not be reprojected
+    if ( currentProvider->crs() != mapCanvas()->mapSettings().destinationCrs() )
     {
       continue;
     }
