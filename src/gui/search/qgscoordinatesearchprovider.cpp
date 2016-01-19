@@ -26,7 +26,7 @@ QgsCoordinateSearchProvider::QgsCoordinateSearchProvider( QgsMapCanvas* mapCanva
 {
   QString degChar = QString( "%1" ).arg( QChar( 0x00B0 ) );
   QString minChars = QString( "'%1%2%3" ).arg( QChar( 0x2032 ) ).arg( QChar( 0x02BC ) ).arg( QChar( 0x2019 ) );
-  QString secChars = QString( "\"%1" ).arg( QChar( 0x2019 ) );
+  QString secChars = QString( "\"%1%2" ).arg( QChar( 0x2019 ) ).arg( QChar( 0x2033 ) );
 
   mPatLVDD = QRegExp( QString( "^(\\d+\\.?\\d*)(%1)?[,\\s]\\s*(\\d+\\.?\\d*)(%1)?$" ).arg( degChar ) );
   mPatDM = QRegExp( QString( "^(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw]),?[\\s]*(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ) );
