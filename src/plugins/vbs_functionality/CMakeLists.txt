@@ -1,20 +1,34 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
+IF(MSVC)
+ADD_SUBDIRECTORY(milix/Server)
+ENDIF(MSVC)
+
 ########################################################
 # Files
 
 SET (vbsfunctionality_SRCS
   qgsvbsfunctionality.cpp
+  milix/qgsvbsmaptoolmilix.cpp
+  milix/qgsvbsmilixannotationitem.cpp
+  milix/qgsvbsmilixlibrary.cpp
+  milix/qgsvbsmilixmanager.cpp
+  milix/Client/VBSMilixClient.cpp
   ovl/qgsvbsovlimporter.cpp
 )
 
 SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
+  milix/qgsvbsmaptoolmilix.h
+  milix/qgsvbsmilixannotationitem.h
   ovl/qgsvbsovlimporter.h
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
+  milix/qgsvbsmilixlibrary.h
+  milix/qgsvbsmilixmanager.h
+  milix/Client/VBSMilixClient.hpp
 )
 
 SET (vbsfunctionality_UIS
