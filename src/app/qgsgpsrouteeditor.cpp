@@ -220,6 +220,7 @@ void QgsGPSRouteEditor::importGpx()
     mApp->messageBar()->pushCritical( tr( "GPX import failed" ), tr( "Cannot read file" ) );
     return;
   }
+  getOrCreateLayer();
 
   int nWpts = 0;
   int nRtes = 0;
@@ -283,6 +284,10 @@ void QgsGPSRouteEditor::importGpx()
 
 void QgsGPSRouteEditor::exportGpx()
 {
+  if ( !mLayer )
+  {
+    return;
+  }
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
   QString filename = QFileDialog::getSaveFileName( mApp, tr( "Export to GPX" ), lastProjectDir, tr( "GPX Files (*.gpx)" ) );
   if ( filename.isEmpty() )
