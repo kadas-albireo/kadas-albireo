@@ -126,20 +126,6 @@ QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLaye
   connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
 }
 
-QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas *canvas, QgsVectorLayer *layer, const QgsFeature &feature )
-    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( true )
-{
-  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
-  selectFeature( feature );
-}
-
-QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas *canvas, QgsVectorLayer *layer, const QgsLabelPosition &labelPos )
-    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( true )
-{
-  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
-  selectLabel( labelPos );
-}
-
 QgsRedliningEditTool::~QgsRedliningEditTool()
 {
   delete mRubberBand;
@@ -230,7 +216,7 @@ void QgsRedliningEditTool::selectLabel( const QgsLabelPosition &labelPos )
 void QgsRedliningEditTool::selectFeature( const QgsFeature &feature )
 {
   mMode = FeatureSelected;
-  emit featureSelected( feature.id() );
+  emit featureSelected( feature );
   mRubberBand = new QgsGeometryRubberBand( mCanvas, feature.geometry()->type() );
   mRubberBand->setOutlineColor( QColor( 0, 255, 0, 170 ) );
   mRubberBand->setFillColor( QColor( 0, 255, 0, 15 ) );
@@ -460,7 +446,6 @@ void QgsRedliningEditTool::deactivate()
 
 void QgsRedliningEditTool::onStyleChanged()
 {
-  QTextStream( stdout ) << "onStyleChanged" << endl;
   if ( mMode == TextSelected )
   {
     emit updateFeatureStyle( mCurrentLabel.featureId );

@@ -157,19 +157,23 @@ QgsRedliningLayer* QgsRedlining::getLayer() const
 
 void QgsRedlining::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), feature );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
-  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  tool->selectFeature( feature );
+  tool->setUnsetOnMiss( true );
   setTool( tool, mActionEditObject );
 }
 
 void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), labelPos );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
-  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  tool->selectLabel( labelPos );
+  tool->setUnsetOnMiss( true );
   setTool( tool, mActionEditObject );
 }
 
@@ -184,7 +188,7 @@ void QgsRedlining::editObject()
 {
   QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
-  connect( tool, SIGNAL( featureSelected( QgsFeatureId ) ), this, SLOT( syncStyleWidgets( QgsFeatureId ) ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
   setTool( tool, qobject_cast<QAction*>( QObject::sender() ) );
 }
@@ -278,32 +282,22 @@ void QgsRedlining::deactivateTool()
   }
 }
 
-void QgsRedlining::syncStyleWidgets( const QgsFeatureId& fid )
+void QgsRedlining::syncStyleWidgets( const QgsFeature& feature )
 {
-  QTextStream( stdout ) << "syncStyleWidgets" << endl;
-  if ( !mLayer )
-  {
-    return;
-  }
-  QgsFeature f;
-  if ( !mLayer->getFeatures( QgsFeatureRequest( fid ) ).nextFeature( f ) )
-  {
-    return;
-  }
   mUi.spinBoxSize->blockSignals( true );
-  mUi.spinBoxSize->setValue( f.attribute( "size" ).toInt() );
+  mUi.spinBoxSize->setValue( feature.attribute( "size" ).toInt() );
   mUi.spinBoxSize->blockSignals( false );
   mUi.colorButtonOutlineColor->blockSignals( true );
-  mUi.colorButtonOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "outline" ).toString() ) );
+  mUi.colorButtonOutlineColor->setColor( QgsSymbolLayerV2Utils::decodeColor( feature.attribute( "outline" ).toString() ) );
   mUi.colorButtonOutlineColor->blockSignals( false );
   mUi.colorButtonFillColor->blockSignals( true );
-  mUi.colorButtonFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( f.attribute( "fill" ).toString() ) );
+  mUi.colorButtonFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( feature.attribute( "fill" ).toString() ) );
   mUi.colorButtonFillColor->blockSignals( false );
   mUi.comboOutlineStyle->blockSignals( true );
-  mUi.comboOutlineStyle->setCurrentIndex( mUi.comboOutlineStyle->findData( QgsSymbolLayerV2Utils::decodePenStyle( f.attribute( "outline_style" ).toString() ) ) );
+  mUi.comboOutlineStyle->setCurrentIndex( mUi.comboOutlineStyle->findData( QgsSymbolLayerV2Utils::decodePenStyle( feature.attribute( "outline_style" ).toString() ) ) );
   mUi.comboOutlineStyle->blockSignals( false );
   mUi.comboFillStyle->blockSignals( true );
-  mUi.comboFillStyle->setCurrentIndex( mUi.comboFillStyle->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( f.attribute( "fill_style" ).toString() ) ) );
+  mUi.comboFillStyle->setCurrentIndex( mUi.comboFillStyle->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( feature.attribute( "fill_style" ).toString() ) ) );
   mUi.comboFillStyle->blockSignals( false );
 }
 
