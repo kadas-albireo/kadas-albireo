@@ -65,7 +65,7 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 2, 0, 1, 1 );
 
   QDoubleSpinBox* spinRadius = new QDoubleSpinBox();
-  spinRadius->setRange( 0, 100000 );
+  spinRadius->setRange( 1, 100000 );
   spinRadius->setDecimals( 0 );
   spinRadius->setValue( radius );
   spinRadius->setSuffix( " m" );
