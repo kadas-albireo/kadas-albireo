@@ -87,6 +87,11 @@ void QgsMapToolHillshade::drawFinished()
   getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
   rect.normalize();
+  if ( rect.isEmpty() )
+  {
+    reset();
+    return;
+  }
   QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
 
   QString outputFileName = QString( "hillshade_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
