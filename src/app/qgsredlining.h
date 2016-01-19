@@ -90,7 +90,7 @@ class QgsRedlining : public QObject
     void saveColor();
     void saveOutlineWidth();
     void saveStyle();
-    void syncStyleWidgets( const QgsFeatureId& fid );
+    void syncStyleWidgets( const QgsFeature &feature );
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
