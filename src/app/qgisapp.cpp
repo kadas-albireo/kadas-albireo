@@ -113,6 +113,7 @@
 #include "qgsfeature.h"
 #include "qgsfieldcalculator.h"
 #include "qgsgenericprojectionselector.h"
+#include "qgsgeoimageannotationitem.h"
 #include "qgsgpsinformationwidget.h"
 #include "qgsgpsrouteeditor.h"
 #include "qgsguivectorlayertools.h"

@@ -25,7 +25,7 @@
 #include <QPainter>
 #include <QPen>
 
-QList< QPair<QString,QgsAnnotationItem::AnnotationItemFactory_t> > QgsAnnotationItem::sRegisteredAnnotations;
+QList< QPair<QString, QgsAnnotationItem::AnnotationItemFactory_t> > QgsAnnotationItem::sRegisteredAnnotations;
 
 QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
     : QObject( 0 ), QgsMapCanvasItem( mapCanvas )
@@ -60,14 +60,7 @@ void QgsAnnotationItem::setMarkerSymbol( QgsMarkerSymbolV2* symbol )
 void QgsAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem& crs )
 {
   mMapPosition = mGeoPos = pos;
-  if ( crs.isValid() && crs != mMapCanvas->mapSettings().destinationCrs() )
-  {
-    mGeoPosCrs = crs;
-  }
-  else
-  {
-    mGeoPosCrs = mMapCanvas->mapSettings().destinationCrs();
-  }
+  mGeoPosCrs = crs.isValid() ? crs : mMapCanvas->mapSettings().destinationCrs();
   setPos( toCanvasCoordinates( mMapPosition ) );
 }
 
