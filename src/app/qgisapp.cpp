@@ -127,6 +127,7 @@
 #include "qgslayertreeregistrybridge.h"
 #include "qgslayertreeutils.h"
 #include "qgslayertreeview.h"
+#include "qgsgeoimageannotationitem.h"
 #include "qgslayertreeviewdefaultactions.h"
 #include "qgslegendgroupproperties.h"
 #include "qgslogger.h"
@@ -184,6 +185,7 @@
 #include "qgssnappingdialog.h"
 #include "qgssourceselectdialog.h"
 #include "qgssponsors.h"
+#include "qgstemporaryfile.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
 #include "qgsvectordataprovider.h"
@@ -4685,7 +4687,7 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
     QDomNodeList itemList = doc.elementsByTagName( item.first );
     for ( int i = 0; i < itemList.size(); ++i )
     {
-      QgsAnnotationItem* newItem = item.second( mMapCanvas );
+      QgsAnnotationItem* newItem = item.second( mapCanvas() );
       newItem->readXML( doc, itemList.at( i ).toElement() );
     }
   }
