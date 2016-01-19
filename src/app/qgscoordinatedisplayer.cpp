@@ -110,15 +110,15 @@ QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCo
     case LV95:
       return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::Default, "EPSG:2056" );
     case DMS:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMinSec );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMinSec, "EPSG:4326" );
     case DM:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMin );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMin, "EPSG:4326" );
     case DD:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DecDeg );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DecDeg, "EPSG:4326" );
     case UTM:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::UTM );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::UTM, "EPSG:4326" );
     case MGRS:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::MGRS );
+      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::MGRS, "EPSG:4326" );
   }
   return QString();
 }
