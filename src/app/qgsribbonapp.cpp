@@ -32,8 +32,6 @@
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
 #include "qgsundowidget.h"
-#include "catalog/qgsarcgisrestcatalogprovider.h"
-#include "catalog/qgsgeoadminrestcatalogprovider.h"
 
 #include <QFileDialog>
 #include <QImageReader>
@@ -123,9 +121,6 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   mSearchWidget->init( mMapCanvas );
 
-#pragma message("Warning: this should not be hardcoded (and search providers also should not be hardcoded...)")
-  mCatalogBrowser->addProvider( new QgsGeoAdminRestCatalogProvider( "http://wmts.geo.admin.ch/1.0.0/WMTSCapabilities.xml", mCatalogBrowser ) );
-  mCatalogBrowser->addProvider( new QgsArcGisRestCatalogProvider( "http://services.arcgisonline.com/arcgis", mCatalogBrowser ) );
   mCatalogBrowser->reload();
   connect( mRefreshCatalogButton, SIGNAL( clicked( bool ) ), mCatalogBrowser, SLOT( reload() ) );
 

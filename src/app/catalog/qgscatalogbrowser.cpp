@@ -18,13 +18,17 @@
 #include "qgisapp.h"
 #include "qgscatalogbrowser.h"
 #include "qgscatalogprovider.h"
+#include "qgsarcgisrestcatalogprovider.h"
+#include "qgsgeoadminrestcatalogprovider.h"
 #include "qgsfilterlineedit.h"
 #include "qgsmimedatautils.h"
-#include <QTreeView>
+#include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStandardItem>
+#include <QTreeView>
 #include <QVBoxLayout>
 #include <QTextStream>
+#include <QUrl>
 
 class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
 {
@@ -200,6 +204,18 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   QStandardItem* loadingItem = new QStandardItem( tr( "Loading..." ) );
   loadingItem->setEnabled( false );
   mLoadingModel->appendRow( loadingItem );
+
+  QStringList catalogUris = QSettings().value("/qgis/geodatacatalogs" ).toString().split(";;");
+  foreach(const QString& catalogUri, catalogUris) {
+    QUrl u = QUrl::fromEncoded("?" + catalogUri.toLocal8Bit());
+    QString type = u.queryItemValue("type");
+    QString url = u.queryItemValue("url");
+    if(type == "geoadmin") {
+      addProvider( new QgsGeoAdminRestCatalogProvider( url, this ) );
+    } else if(type == "arcgisrest") {
+      addProvider( new QgsArcGisRestCatalogProvider( url, this ) );
+    }
+  }
 }
 
 void QgsCatalogBrowser::reload()
