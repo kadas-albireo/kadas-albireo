@@ -114,62 +114,33 @@ class QgsCatalogBrowser::TreeFilterProxyModel : public QSortFilterProxyModel
 
     bool filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const override
     {
-      if ( acceptsRow( source_row, source_parent ) )
+      if ( QSortFilterProxyModel::filterAcceptsRow( source_row, source_parent ) )
       {
         return true;
       }
       QModelIndex parent = source_parent;
       while ( parent.isValid() )
       {
-        if ( acceptsRow( parent.row(), parent.parent() ) )
+        if ( QSortFilterProxyModel::filterAcceptsRow( parent.row(), parent.parent() ) )
         {
           return true;
         }
         parent = parent.parent();
       }
-      if ( acceptsAnyChildren( source_row, source_parent ) )
-      {
-        return true;
-      }
-      return false;
+      return acceptsAnyChildren( source_row, source_parent );
     }
 
   private:
-    // Accept if row data is accepted
-    bool acceptsRowData( int source_row, const QModelIndex &source_parent ) const
-    {
-      QModelIndex index = sourceModel()->index( source_row, 0, source_parent );
-//        return self._dataFilterCallback(idx, self.filterRegExp())
-      return false;
-    }
-
-    // Accept if row itself is accepted
-    bool acceptsRow( int source_row, const QModelIndex &source_parent ) const
-    {
-      if ( acceptsRowData( source_row, source_parent ) )
-      {
-        return true;
-      }
-      return QSortFilterProxyModel::filterAcceptsRow( source_row, source_parent );
-    }
-
-    // Accepts if any child is accepted
     bool acceptsAnyChildren( int source_row, const QModelIndex &source_parent ) const
     {
       QModelIndex item = sourceModel()->index( source_row, 0, source_parent );
-      if ( !item.isValid() )
-        return false;
-
-      int num_children = item.model()->rowCount( item );
-      if ( num_children == 0 )
-        return false;
-
-      for ( int i = 0; i < num_children; ++i )
+      if ( item.isValid() )
       {
-        if ( acceptsRow( i, item ) )
-          return true;
-        if ( acceptsAnyChildren( i, item ) )
-          return true;
+        for ( int i = 0, n = item.model()->rowCount( item ); i < n; ++i )
+        {
+          if ( QSortFilterProxyModel::filterAcceptsRow( i, item ) || acceptsAnyChildren( i, item ) )
+            return true;
+        }
       }
       return false;
     }
@@ -205,14 +176,18 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   loadingItem->setEnabled( false );
   mLoadingModel->appendRow( loadingItem );
 
-  QStringList catalogUris = QSettings().value("/qgis/geodatacatalogs" ).toString().split(";;");
-  foreach(const QString& catalogUri, catalogUris) {
-    QUrl u = QUrl::fromEncoded("?" + catalogUri.toLocal8Bit());
-    QString type = u.queryItemValue("type");
-    QString url = u.queryItemValue("url");
-    if(type == "geoadmin") {
+  QStringList catalogUris = QSettings().value( "/qgis/geodatacatalogs" ).toString().split( ";;" );
+  foreach ( const QString& catalogUri, catalogUris )
+  {
+    QUrl u = QUrl::fromEncoded( "?" + catalogUri.toLocal8Bit() );
+    QString type = u.queryItemValue( "type" );
+    QString url = u.queryItemValue( "url" );
+    if ( type == "geoadmin" )
+    {
       addProvider( new QgsGeoAdminRestCatalogProvider( url, this ) );
-    } else if(type == "arcgisrest") {
+    }
+    else if ( type == "arcgisrest" )
+    {
       addProvider( new QgsArcGisRestCatalogProvider( url, this ) );
     }
   }
