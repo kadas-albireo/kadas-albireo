@@ -27,7 +27,6 @@ class APP_EXPORT QgsCrsSelection : public QToolButton
     Q_OBJECT
   public:
     QgsCrsSelection( QWidget* parent = 0 );
-    ~QgsCrsSelection();
 
     void setMapCanvas( QgsMapCanvas* canvas );
 
