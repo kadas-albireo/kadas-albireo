@@ -469,7 +469,7 @@ QPolygonF QgsComposerMapGrid::scalePolygon( const QPolygonF &polygon, const doub
   return t.map( polygon );
 }
 
-void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &context, double dotsPerMM, QList<QPair<double, QLineF> > &horizontalLines, QList<QPair<double, QLineF> > &verticalLines )
+void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &context, double dotsPerMM )
 {
   if ( !mComposerMap || !mEnabled )
   {
@@ -496,13 +496,15 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   QList<QPolygonF> gridLines;
   typedef QPair<QPointF, QString> LabelEntry;
   QList<QgsLatLonToUTM::GridLabel> zoneLabels;
-  QList<QgsLatLonToUTM::GridLabel> subZoneLabels;
+  QList<QgsLatLonToUTM::GridLabel> zoneSubLabels;
   QList<QgsLatLonToUTM::GridLabel> gridLabels;
-  QgsLatLonToUTM::computeGrid( crsBoundingRect, mComposerMap->scale(), zoneLines, subZoneLines, gridLines, zoneLabels, subZoneLabels, gridLabels );
+  QgsLatLonToUTM::computeGrid( crsBoundingRect, mComposerMap->scale(), zoneLines, subZoneLines, gridLines, zoneLabels, zoneSubLabels, gridLabels );
 
+  QColor origColor = mGridLineSymbol->color();
   double origWidth = mGridLineSymbol->width();
 
-  mGridLineSymbol->setWidth( 5 * origWidth );
+  mGridLineSymbol->setColor( QColor( 102, 153, 255 ) );
+  mGridLineSymbol->setWidth( 1 );
   foreach ( const QPolygonF& zoneLine, zoneLines )
   {
     QPolygonF itemLine;
@@ -513,7 +515,7 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
 
     drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
   }
-  mGridLineSymbol->setWidth( 2.5 * origWidth );
+  mGridLineSymbol->setWidth( 0.5 );
   foreach ( const QPolygonF& subZoneLine, subZoneLines )
   {
     QPolygonF itemLine;
@@ -524,7 +526,7 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
 
     drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
   }
-  mGridLineSymbol->setWidth( origWidth );
+  mGridLineSymbol->setWidth( 0.2 );
   foreach ( const QPolygonF& gridLine, gridLines )
   {
     QPolygonF itemLine;
@@ -535,21 +537,67 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
 
     drawGridLine( scalePolygon( itemLine, dotsPerMM ), context );
   }
+  mGridLineSymbol->setWidth( origWidth );
+  mGridLineSymbol->setColor( origColor );
 
   //draw labels
   painter->restore();
+  painter->save();
+  painter->setClipRect( QRectF( 0, 0, mComposerMap->rect().width(), mComposerMap->rect().height() ) );
+  painter->setRenderHint( QPainter::Antialiasing );
+  painter->setBrush( QColor( 102, 153, 255 ) );
+  painter->setPen( QPen( QColor( 255, 255, 255, 127 ), 0.2 ) );
 
   QFont annotationFontBak = mGridAnnotationFont;
+  QColor annotationFontColorBak = mGridAnnotationFontColor;
+  bool annotationFontBoldBak = mGridAnnotationFont.bold();
 
-  mGridAnnotationFont.setPointSizeF( 2 * annotationFontBak.pointSizeF() );
+  mGridAnnotationFont.setPointSizeF( 20 );
+  mGridAnnotationFont.setBold( true );
+  mGridAnnotationFontColor = QColor( 102, 153, 255 );
   foreach ( const LabelEntry& zoneLabel, zoneLabels )
   {
     const QPointF& pos = zoneLabel.first;
     QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
-    drawAnnotation( painter, QPointF( labelPos.x() + 0.5, labelPos.y() - 0.5 ), 0, zoneLabel.second );
+    painter->save();
+    painter->translate( labelPos.x() + 1, labelPos.y() - 1 );;
+    QPainterPath path;
+    QFont font = painter->font();
+    font.setPointSizeF( 8 );
+    path.addText( 0, 0, font, zoneLabel.second );
+    painter->drawPath( path );
+    painter->restore();
+//    drawAnnotation( painter, QPointF( labelPos.x() + 1, labelPos.y() - 1 ), 0, zoneLabel.second );
+  }
+  mGridAnnotationFont.setPointSizeF( 15 );
+  mGridAnnotationFont.setBold( false );
+  foreach ( const LabelEntry& subZoneLabel, zoneSubLabels )
+  {
+    const QPointF& pos = subZoneLabel.first;
+    QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
+    painter->save();
+    painter->translate( labelPos.x() + 1, labelPos.y() - 1 );;
+    QPainterPath path;
+    QFont font = painter->font();
+    font.setPointSizeF( 4 );
+    path.addText( 0, 0, font, subZoneLabel.second );
+    painter->drawPath( path );
+    painter->restore();
+//    drawAnnotation( painter, QPointF( labelPos.x() + 1, labelPos.y() - 1 ), 0, subZoneLabel.second );
+  }
+  mGridAnnotationFont.setPointSizeF( 10 );
+  mGridAnnotationFont.setBold( false );
+  foreach ( const LabelEntry& gridLabel, gridLabels )
+  {
+    const QPointF& pos = gridLabel.first;
+    QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
+    drawAnnotation( painter, QPointF( labelPos.x() + 1, labelPos.y() - 1 ), 0, gridLabel.second );
   }
 
   mGridAnnotationFont = annotationFontBak;
+  mGridAnnotationFontColor = annotationFontColorBak;
+  mGridAnnotationFont.setBold( annotationFontBoldBak );
+  painter->restore();
 }
 
 void QgsComposerMapGrid::drawGridCRSTransform( QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
@@ -754,7 +802,7 @@ void QgsComposerMapGrid::draw( QPainter* p )
   //is grid in a different crs than map?
   if ( mGridCrs == CrsMGRS || mGridCrs == CrsUTM )
   {
-    drawGridUTM( p, context, dotsPerMM, horizontalLines, verticalLines );
+    drawGridUTM( p, context, dotsPerMM );
     return;
   }
   else if ( mGridUnit == MapUnit && mCRS.isValid() && mCRS != ms.destinationCrs() )
