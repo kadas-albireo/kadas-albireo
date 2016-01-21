@@ -59,7 +59,7 @@ void QgsCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
     setText( crs.description() );
 
     connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
-    connect( QgisApp::instance(), SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
+    connect( QgisApp::instance(), SIGNAL( newProject() ), this, SLOT( syncCrsButton() ) );
   }
 }
 
