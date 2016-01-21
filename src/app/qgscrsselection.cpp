@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgisapp.h"
 #include "qgscrsselection.h"
 #include "qgsprojectionselectionwidget.h"
 #include "qgsgenericprojectionselector.h"
@@ -45,51 +46,6 @@ QgsCrsSelection::QgsCrsSelection( QWidget *parent )
   setToolButtonStyle( Qt::ToolButtonTextBesideIcon );
   setMenu( crsSelectionMenu );
   setPopupMode( QToolButton::InstantPopup );
-
-#if 0
-  QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
-  Q_ASSERT( mainWindow );
-  QStatusBar* statusBar = mainWindow->statusBar();
-  // Looks like a compiler bug, below does not work
-  //  QWidget* otfProjButton = statusBar->findChild<QWidget*>( "mOnTheFlyProjectionStatusButton" );
-  QToolButton* otfProjButton = 0;
-  foreach ( QObject* child, statusBar->children() )
-  {
-    if ( child->objectName() == "mOntheFlyProjectionStatusButton" )
-    {
-      otfProjButton = qobject_cast<QToolButton*>( child );
-      break;
-    }
-  }
-
-  statusBar->insertPermanentWidget( statusBar->children().indexOf( otfProjButton ), this, 0 );
-
-  if ( otfProjButton )
-    otfProjButton->setVisible( false );
-
-  QgsCoordinateReferenceSystem crs( "EPSG:21781" );
-  mIface->mapCanvas()->setDestinationCrs( crs );
-  mIface->mapCanvas()->setMapUnits( crs.mapUnits() );
-  setText( crs.description() );
-
-  connect( mIface->mapCanvas(), SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
-  connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
-#endif //0
-}
-
-QgsCrsSelection::~QgsCrsSelection()
-{
-#if 0
-  QMainWindow* mainWindow = qobject_cast<QMainWindow*>( mIface->mainWindow() );
-  Q_ASSERT( mainWindow );
-  QStatusBar* statusBar = mainWindow->statusBar();
-
-  statusBar->removeWidget( this );
-
-  QToolButton* otfProjButton = statusBar->findChild<QToolButton*>( "mOnTheFlyProjectionStatusButton" );
-  if ( otfProjButton )
-    otfProjButton->setVisible( true );
-#endif //0
 }
 
 void QgsCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
@@ -103,9 +59,7 @@ void QgsCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
     setText( crs.description() );
 
     connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
-
-    //todo: needs to be connected from main widget (e.g. RibbonMainWidget)
-    //connect( mIface, SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
+    connect( QgisApp::instance(), SIGNAL( newProjectCreated() ), this, SLOT( syncCrsButton() ) );
   }
 }
 
@@ -114,7 +68,7 @@ void QgsCrsSelection::syncCrsButton()
   if ( mMapCanvas )
   {
     QString authid = mMapCanvas->mapSettings().destinationCrs().authid();
-    setText( authid );
+    setText( QgsCRSCache::instance()->crsByAuthId( authid ).description() );
   }
 }
 
