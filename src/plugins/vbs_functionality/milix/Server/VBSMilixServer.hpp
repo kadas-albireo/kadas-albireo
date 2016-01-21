@@ -37,6 +37,7 @@ private:
 	MssComServer::IMssNPointDrawingTargetGSPtr mMssNPointDrawingTarget;
 
     QByteArray processCommand(QByteArray& request);
+    bool getSymbolInfo(const QString& symbolXml, QString& name, QString& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg);
     bool renderSymbol(const QRect& visibleExtent, const QString& symbolXml, const QList<QPoint>& points, QByteArray& svgXml, QPoint& offset, QString& errorMsg);
 };
 

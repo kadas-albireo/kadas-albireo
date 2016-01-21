@@ -16,6 +16,14 @@ class VBSMilixClient : public QObject
 {
   Q_OBJECT
 public:
+  struct SymbolDesc {
+    QString symbolId;
+    QString name;
+    QPixmap icon;
+    bool hasVariablePoints;
+    bool minNumPoints;
+  };
+
   struct NPointSymbol {
     QString xml;
     QList<QPoint> points;
@@ -25,7 +33,7 @@ public:
     QPoint offset;
   };
 
-  static bool getSymbols(QStringList& symbols);
+  static bool getSymbols(const QStringList& symbolIds, QList<SymbolDesc>& result);
   static bool getSymbol(const QString& xml, QPixmap &pixmap, QString &name, bool &hasVariablePoints, int &minNumPoints);
   static bool getNPointSymbol(const QString& xml, const QList<QPoint>& points, const QRect &visibleExtent, QPixmap& pixmap, QPoint& offset);
   static bool getNPointSymbols(const QList<NPointSymbol>& symbols, const QRect& visibleExtent, QList< NPointSymbolPixmap >& result );

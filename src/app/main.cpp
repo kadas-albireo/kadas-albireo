@@ -861,6 +861,7 @@ int main( int argc, char *argv[] )
   QTranslator qttor( 0 );
   if ( myTranslationCode != "C" )
   {
+    mySettings.setValue( "locale/currentLang", myTranslationCode );
     if ( qgistor.load( QString( "qgis_" ) + myTranslationCode, i18nPath ) )
     {
       myApp.installTranslator( &qgistor );
@@ -883,6 +884,10 @@ int main( int argc, char *argv[] )
     {
       qWarning( "loading of qt translation failed [%s]", QString( "%1/qt_%2" ).arg( QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ).arg( myTranslationCode ).toLocal8Bit().constData() );
     }
+  }
+  else
+  {
+    mySettings.setValue( "locale/currentLang", "en" );
   }
 
   // For non static builds on mac and win (static builds are not supported)

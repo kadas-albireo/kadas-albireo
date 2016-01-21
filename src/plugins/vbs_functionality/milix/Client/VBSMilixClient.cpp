@@ -229,11 +229,12 @@ void VBSMilixClient::handleSocketError()
   }
 }
 
-bool VBSMilixClient::getSymbols( QStringList& symbols )
+bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << VBS_MILIX_REQUEST_GET_SYMBOLS;
+  istream << symbolIds;
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOLS ) )
   {
@@ -242,9 +243,22 @@ bool VBSMilixClient::getSymbols( QStringList& symbols )
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  symbols.clear();
   Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_SYMBOLS );
-  ostream >> symbols;
+  int nResults;
+  ostream >> nResults;
+  if ( nResults != symbolIds.size() )
+  {
+    return false;
+  }
+  for ( int i = 0; i < nResults; ++i )
+  {
+    QByteArray symbolXml;
+    SymbolDesc desc;
+    desc.symbolId = symbolIds[i];
+    ostream >> desc.name >> symbolXml >> desc.hasVariablePoints >> desc.minNumPoints;
+    desc.icon = renderSvg( symbolXml );
+    result.append( desc );
+  }
   return true;
 }
 
@@ -263,9 +277,8 @@ bool VBSMilixClient::getSymbol( const QString& xml, QPixmap& pixmap, QString& na
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_SYMBOL );
-  // ostream >> pixmap >> name >> hasVariablePoints >> minNumPoints;
   QByteArray svgxml;
-  ostream >> svgxml >> name >> hasVariablePoints >> minNumPoints;
+  ostream >> name >> svgxml >> hasVariablePoints >> minNumPoints;
   pixmap = renderSvg( svgxml );
   return true;
 }

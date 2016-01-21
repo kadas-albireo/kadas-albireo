@@ -200,20 +200,6 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_INIT_OK;
     return reply;
   }
-  else if ( req == VBS_MILIX_REQUEST_GET_SYMBOLS )
-  {
-    QStringList symbols = QStringList()
-                          << "<Symbol ID=\"SFGPUSMM---C---\"/>"
-                          << "<Symbol ID=\"SFGPUCIZ---E---\"/>"
-                          << "<Symbol ID=\"SFGPUCECT--D---\"/>"
-                          << "<Symbol ID=\"SFGPUCAT---F--G\"/>"
-                          << "<Symbol ID=\"SHGPUCI----C---\"/>"
-                          << "<Symbol ID=\"GFTPK----------\"/>"
-                          << "<Symbol ID=\"GFTPB----------\"/>"
-                          << "<Symbol ID=\"GFGPGLB----I---\"/>";
-    ostream << VBS_MILIX_REPLY_GET_SYMBOLS << symbols;
-    return reply;
-  }
   else if ( req == VBS_MILIX_REQUEST_GET_SYMBOL )
   {
     if ( mMssService == nullptr )
@@ -226,52 +212,53 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     QString symbolXml;
     istream >> symbolXml;
 
-    MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( symbolXml.toLocal8Bit().data() );
-    MssComServer::IMssSymbolGraphicGSPtr mssSymbolGraphic = mMssSymbolProvider->CreateSymbolGraphic( mssStringObj, mMssSymbolFormat );
-    MssComServer::IMssNPointGraphicTemplateGSPtr mssNPointGraphic = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mMssSymbolFormat );
-    if ( !mssSymbolGraphic->IsValid || !mssNPointGraphic->IsValid )
+    QString name;
+    QString svgXml;
+    bool hasVariablePoints;
+    int minPointCount;
+    QString errorMsg;
+
+    if ( !getSymbolInfo( symbolXml, name, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
     {
-      LOG( "Error: CreateSymbolGraphic or CreateNPointGraphic failed" );
-      ostream << VBS_MILIX_REPLY_ERROR << QString( "CreateSymbolGraphic or CreateNPointGraphic failed" );
+      LOG( QString( "Error: %1" ).arg( errorMsg ) );
+      ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
+      return reply;
+    }
+    ostream << VBS_MILIX_REPLY_GET_SYMBOL << name << svgXml << hasVariablePoints << minPointCount;
+    return reply;
+  }
+  else if ( req == VBS_MILIX_REQUEST_GET_SYMBOLS )
+  {
+    if ( mMssService == nullptr )
+    {
+      LOG( "Error: MSS not initialized" );
+      ostream << VBS_MILIX_REPLY_ERROR << QString( "MSS not initialized" );
       return reply;
     }
 
-    QPixmap symbol;
+    QStringList symbolXmls;
+    istream >> symbolXmls;
 
-    QByteArray xml = mssSymbolGraphic->CreateXaml();
-    /*QSvgRenderer sr( xml );
-    if ( sr.isValid() )
+    ostream << VBS_MILIX_REPLY_GET_SYMBOL << symbolXmls.size();
+
+    foreach ( const QString& symbolXml, symbolXmls )
     {
-      symbol = QPixmap( sr.defaultSize() );
-      symbol.fill( Qt::transparent );
-      QPainter p( &symbol );
-      sr.render( &p );
+      QString name;
+      QString svgXml;
+      bool hasVariablePoints;
+      int minPointCount;
+      QString errorMsg;
+
+      if ( !getSymbolInfo( symbolXml, name, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
+      {
+        LOG( QString( "Error: %1" ).arg( errorMsg ) );
+        QByteArray errreply;
+        QDataStream errostream( &errreply, QIODevice::WriteOnly );
+        errostream << VBS_MILIX_REPLY_ERROR << errorMsg;
+        return errreply;
+      }
+      ostream << name << svgXml << hasVariablePoints << minPointCount;
     }
-    else
-    {
-      HBITMAP bitmap = reinterpret_cast<HBITMAP>( mssSymbolGraphic->CreateBitmap( 0xFFFFFF ) );
-      if ( !bitmap )
-      {
-        LOG( "Error: CreateBitmap failed" );
-        ostream << VBS_MILIX_REPLY_ERROR << QString( "CreateBitmap failed" );
-        return reply;
-      }
-      symbol = QPixmap::fromWinHBITMAP( bitmap );
-      if ( symbol.isNull() )
-      {
-        LOG( "Error: Pixmap is null" );
-        ostream << VBS_MILIX_REPLY_ERROR << QString( "Pixmap is null" );
-        return reply;
-      }
-    }*/
-
-    QString name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeInternationalGS, MssComServer::mssLanguageEnglishGS, MssComServer::mssNameFormatNodeNameGS );
-    bool hasVariablePoints = mssNPointGraphic->Schema->HasVariablePoints;
-    int minPointCount = mssNPointGraphic->Schema->MinPointCount;
-    LOG( QString( "Symbol %1 (HasVariablePoints = %2, MinPointCount = %3)" ).arg( name ).arg( hasVariablePoints ).arg( mssNPointGraphic->Schema->MinPointCount ) );
-
-    //ostream << VBS_MILIX_REPLY_GET_SYMBOL << symbol << name << hasVariablePoints << minPointCount;
-    ostream << VBS_MILIX_REPLY_GET_SYMBOL << xml << name << hasVariablePoints << minPointCount;
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_GET_NPOINT_SYMBOL )
@@ -312,31 +299,27 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     QRect extent;
     int nSymbols;
     istream >> extent >> nSymbols;
-    QList<QByteArray> svgXmls;
-    QList<QPoint> offsets;
+
+    ostream << VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS << nSymbols;
 
     for ( int i = 0; i < nSymbols; ++i )
     {
       QString symbolXml;
+      QList<QPoint> points;
       istream >> symbolXml >> points;
 
-      QList<QPoint> points;
       QByteArray svgXml;
       QPoint offset;
       QString errorMsg;
       if ( !renderSymbol( extent, symbolXml, points, svgXml, offset, errorMsg ) )
       {
         LOG( QString( "Error: %1" ).arg( errorMsg ) );
-        ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
-        return reply;
+        QByteArray errreply;
+        QDataStream errostream( &errreply, QIODevice::WriteOnly );
+        errostream << VBS_MILIX_REPLY_ERROR << errorMsg;
+        return errreply;
       }
-      svgXmls.append( svgXml );
-      offsets.append( offset );
-    }
-    ostream << VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS << nSymbols;
-    for ( int i = 0; i < nSymbols; ++i )
-    {
-      ostream << svgXmls[i] << offsets[i];
+      ostream << svgXml << offset;
     }
     return reply;
   }
@@ -366,6 +349,52 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_ERROR << QString( "Unrecognized command" );
   }
   return reply;
+}
+
+bool VBSMilixServer::getSymbolInfo( const QString& symbolXml, QString& name, QString& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg )
+{
+  MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( symbolXml.toLocal8Bit().data() );
+  MssComServer::IMssSymbolGraphicGSPtr mssSymbolGraphic = mMssSymbolProvider->CreateSymbolGraphic( mssStringObj, mMssSymbolFormat );
+  MssComServer::IMssNPointGraphicTemplateGSPtr mssNPointGraphic = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mMssSymbolFormat );
+  if ( !mssSymbolGraphic->IsValid || !mssNPointGraphic->IsValid )
+  {
+    errorMsg = "CreateSymbolGraphic or CreateNPointGraphic failed";
+    return false;
+  }
+
+  QPixmap symbol;
+
+  QByteArray xml = mssSymbolGraphic->CreateXaml();
+  /*QSvgRenderer sr( xml );
+  if ( sr.isValid() )
+  {
+    symbol = QPixmap( sr.defaultSize() );
+    symbol.fill( Qt::transparent );
+    QPainter p( &symbol );
+    sr.render( &p );
+  }
+  else
+  {
+    HBITMAP bitmap = reinterpret_cast<HBITMAP>( mssSymbolGraphic->CreateBitmap( 0xFFFFFF ) );
+    if ( !bitmap )
+    {
+      LOG( "Error: CreateBitmap failed" );
+      ostream << VBS_MILIX_REPLY_ERROR << QString( "CreateBitmap failed" );
+      return reply;
+    }
+    symbol = QPixmap::fromWinHBITMAP( bitmap );
+    if ( symbol.isNull() )
+    {
+      LOG( "Error: Pixmap is null" );
+      ostream << VBS_MILIX_REPLY_ERROR << QString( "Pixmap is null" );
+      return reply;
+    }
+  }*/
+
+  QString name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeInternationalGS, MssComServer::mssLanguageEnglishGS, MssComServer::mssNameFormatNodeNameGS );
+  hasVariablePoints = mssNPointGraphic->Schema->HasVariablePoints;
+  minPointCount = mssNPointGraphic->Schema->MinPointCount;
+  return true;
 }
 
 bool VBSMilixServer::renderSymbol( const QRect& visibleExtent, const QString& symbolXml, const QList<QPoint>& points, QByteArray& svgXml, QPoint& offset, QString& errorMsg )

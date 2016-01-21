@@ -19,13 +19,20 @@
 #define QGSVBSMILIXLIBRARY_H
 
 #include <QDialog>
+#include <QIcon>
+#include <QModelIndex>
 #include <QPointer>
 
 class QgisInterface;
 class QListWidget;
 class QListWidgetItem;
+class QModelIndex;
+class QStandardItem;
+class QStandardItemModel;
+class QTreeView;
 class QgsVBSMapToolMilix;
 class QgsVBSMilixManager;
+class QgsFilterLineEdit;
 
 class QgsVBSMilixLibrary : public QDialog
 {
@@ -34,15 +41,26 @@ class QgsVBSMilixLibrary : public QDialog
     QgsVBSMilixLibrary( QgisInterface *iface, QgsVBSMilixManager *manager, QWidget* parent = 0 );
 
   private:
+    class TreeFilterProxyModel;
+
+    static const int SymbolXmlRole;
+    static const int SymbolPointCountRole;
+
     QgisInterface* mIface;
     QPointer<QgsVBSMapToolMilix> mCurTool;
     QgsVBSMilixManager* mManager;
+    QgsFilterLineEdit* mFilterLineEdit;
+    QTreeView* mTreeView;
+    QStandardItemModel* mGalleryModel;
+    TreeFilterProxyModel* mFilterProxyModel;
 
-    void populateSymbols( QListWidget *listViewSymbols );
+    void populateLibrary();
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QIcon &icon = QIcon(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0 );
 
   private slots:
-    void createMapTool( QListWidgetItem*item );
     void unsetMilixTool();
+    void filterChanged( const QString& text );
+    void itemDoubleClicked( QModelIndex index );
 };
 
 #endif // QGSVBSMILIXLIBRARY_H

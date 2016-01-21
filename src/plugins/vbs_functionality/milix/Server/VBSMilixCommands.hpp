@@ -17,10 +17,10 @@ typedef quint8 VBSMilixServerReply;
 
 VBSMilixServerReply VBS_MILIX_REPLY_ERROR = 99; // {VBS_MILIX_REPLY_ERROR, Message:QString}
 VBSMilixServerReply VBS_MILIX_REPLY_INIT_OK = 101; // {VBS_MILIX_REPLY_INIT_OK}
-VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOLS = 102; // {VBS_MILIX_REPLY_GET_SYMBOLS, SymbolList:QStringList}
-VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOL = 103; // {VBS_MILIX_REPLY_GET_SYMBOL, Pixmap:QPixmap, Name:QString, HasVariablePoints:bool, MinPointCount:int}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOLS = 102; // {VBS_MILIX_REPLY_GET_SYMBOLS, ResultCount:int, Name1:QString, SvgXml1:QByteArray, HasVariablePoints1:bool, MinPointCount1:int, Name2:QString, SvgXml2:QByteArray, HasVariablePoints2:bool, MinPointCount2:int, ...}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOL = 103; // {VBS_MILIX_REPLY_GET_SYMBOL, Name:QString, SvgXML:QByteArray, HasVariablePoints:bool, MinPointCount:int}
 VBSMilixServerReply VBS_MILIX_REPLY_GET_NPOINT_SYMBOL = 104; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOL, SvgString:QByteArray, Offset:QPoint}
-VBSMilixServerReply VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS = 105; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS, nSymbols:int, SvgString1:QByteArray, Offset1:QPoint, SvgString2:QByteArray, Offset2:QPoint, ...}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS = 105; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS, nSymbols:int, SvgXml1:QByteArray, Offset1:QPoint, SvgXml2:QByteArray, Offset2:QPoint, ...}
 VBSMilixServerReply VBS_MILIX_REPLY_EDIT_SYMBOL = 106; // {VBS_MILIX_REPLY_EDIT_SYMBOL, SymbolXml:QString}
 
 #endif // VBS_MILIX_SERVER_COMMANDS_HPP
