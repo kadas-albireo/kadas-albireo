@@ -532,7 +532,7 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
               layer = mProjectParser->createLayerFromElement( layerElemIt.value(), true );
             }
           }
-          QgsMapLayerRegistry::instance()->addMapLayer( layer );
+          QgsMapLayerRegistry::instance()->addMapLayer( layer, true, false );
         }
         legend->updateLegend();
       }
