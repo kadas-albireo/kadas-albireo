@@ -8159,7 +8159,7 @@ int QgisApp::nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn ) 
   return resolutionLevel;
 }
 
-#ifdef __MSC_VER
+#ifdef _MSC_VER
 LONG WINAPI QgisApp::qgisCrashDump( struct _EXCEPTION_POINTERS *ExceptionInfo )
 {
   QString dumpName = QDir::toNativeSeparators(
