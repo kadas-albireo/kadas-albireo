@@ -442,7 +442,7 @@ int main( int argc, char *argv[] )
   signal( SIGXFSZ, qgisCrash );
 #endif
 
-#ifdef __MSC_VER
+#ifdef _MSC_VER
   QgsCrashRpt crashReporter;
   if ( !crashReporter.install() )
     SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
