@@ -133,6 +133,15 @@ class QgsComposerMapGrid : QgsComposerMapItem
       CM /*< grid units in centimetres */
     };
 
+    /** CRS for grid
+     */
+    enum GridCRS
+    {
+      CrsUserSelected = 0, /*< user selected */
+      CrsUTM, /*< UTM */
+      CrsMGRS /*< MGRS */
+    };
+
     /** Grid drawing style
      */
     enum GridStyle
@@ -185,8 +194,6 @@ class QgsComposerMapGrid : QgsComposerMapItem
       DegreeMinutePadded, /*< degree/minutes, with minutes using leading zeros were required */
       DegreeMinuteSecondNoSuffix, /*< degree/minutes/seconds, use - for S/W coordinates */
       DegreeMinuteSecondPadded, /*< degree/minutes/seconds, with minutes using leading zeros were required */
-      UTM, /*< Universal Transverse Mercator format */
-      MGRS /*< Military Grid Reference System */
     };
 
     /** Border sides for annotations
@@ -268,6 +275,16 @@ class QgsComposerMapGrid : QgsComposerMapItem
      * @see setCrs
     */
     QgsCoordinateReferenceSystem crs() const;
+
+    /**Sets the grid CRS type.
+     * @gridCrs The grid crs, either CrsUserSelected, CrsUTM or CrsMGRS.
+     */
+    void setGridCrsType( GridCRS gridCrsType );
+
+    /**Returns the grid CRS type.
+     * @return The grid crs type.
+     */
+    GridCRS gridCrsType() const;
 
     /**Sets the blending mode used for drawing the grid.
      * @param mode blending mode for grid

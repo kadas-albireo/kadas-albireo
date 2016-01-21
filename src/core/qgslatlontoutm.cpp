@@ -19,7 +19,6 @@
 #include "qgspoint.h"
 #include "qgsdistancearea.h"
 #include <qmath.h>
-#include <QTextStream>
 
 
 const int QgsLatLonToUTM::NUM_100K_SETS = 6;
@@ -511,9 +510,52 @@ static inline QPolygonF polyGridLineY( double x1, double x2, double stepX, doubl
   return poly;
 }
 
+static inline void truncateGridLine( double& x1, double& x2, double& y1, double& y2, double xMin, double xMax, double yMin, double yMax )
+{
+  // Truncate at yMin
+  if ( y1 < yMin )
+  {
+    double lambda = ( yMin - y1 ) / ( y2 - y1 );
+    y1 = yMin;
+    x1 += lambda * ( x2 - x1 );
+  }
+  // Truncate at yMax
+  if ( y2 > yMax )
+  {
+    double lambda = ( yMax - y1 ) / ( y2 - y1 );
+    y2 = yMax;
+    x2 = x1 + lambda * ( x2 - x1 );
+  }
+  // Truncate at xMin/xMax
+  if ( x1 < xMin )
+  {
+    double lambda = ( xMin - x1 ) / ( x2 - x1 );
+    x1 = xMin;
+    y1 += lambda * ( y2 - y1 );
+  }
+  else if ( x1 > xMax )
+  {
+    double lambda = ( xMax - x1 ) / ( x2 - x1 );
+    x1 = xMax;
+    y1 += lambda * ( y2 - y1 );
+  }
+  if ( x2 < xMin )
+  {
+    double lambda = ( xMin - x1 ) / ( x2 - x1 );
+    x2 = xMin;
+    y2 = y1 + lambda * ( y2 - y1 );
+  }
+  else if ( x2 > xMax )
+  {
+    double lambda = ( xMax - x1 ) / ( x2 - x1 );
+    x2 = xMax;
+    y2 = y1 + lambda * ( y2 - y1 );
+  }
+}
+
 void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
                                   QList<QPolygonF> &zoneLines, QList<QPolygonF> &subZoneLines, QList<QPolygonF> &gridLines,
-                                  QList<GridLabel> &zoneLabels, QList<GridLabel> &subZoneLabels, QList<GridLabel> &gridLabels )
+                                  QList<GridLabel> &zoneLabels, QList<GridLabel> &subZoneLabels, QList<GridLabel> &gridLabels, GridMode gridMode )
 {
 
   QgsDistanceArea da;
@@ -586,7 +628,11 @@ void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
       zoneLines << polyGridLineX( xMin, yMin, yMax, 1 ) << polyGridLineX( xMax, yMin, yMax, 1. );
       zoneLines << polyGridLineY( xMin, xMax, 1., yMin ) << polyGridLineY( xMin, xMax, 1., yMax );
       int zoneNumber = QgsLatLonToUTM::getZoneNumber( x1, y1 );
-      zoneLabels.append( qMakePair( QPointF( xMin, yMin ), QString( "%1%2" ).arg( zoneNumber ).arg( QgsLatLonToUTM::getHemisphereLetter( y1 ) ) ) );
+      GridLabel label;
+      label.pos = QPointF( xMax, yMax );
+      label.maxPos = QPointF( xMin, yMin );
+      label.label = QString( "%1%2" ).arg( zoneNumber ).arg( QgsLatLonToUTM::getHemisphereLetter( y1 ) );
+      zoneLabels.append( label );
 
       // Sub-grid
       if ( mapScale > 5000000 )
@@ -596,10 +642,14 @@ void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
       double cellSize = 0;
       if ( mapScale > 500000 )
       {
-        computeSubGrid( 100000, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, subZoneLines, &subZoneLabels, mgrs100kIDLabelCallback );
-        continue;
+        if ( gridMode == GridMGRS )
+        {
+          computeSubGrid( 100000, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, subZoneLines, &subZoneLabels, mgrs100kIDLabelCallback );
+          continue;
+        }
+        cellSize = 100000;
       }
-      if ( mapScale > 50000 )
+      else if ( mapScale > 50000 )
       {
         cellSize = 10000;
       }
@@ -611,28 +661,35 @@ void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
       {
         cellSize = 100;
       }
-      computeSubGrid( 100000, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, subZoneLines, &subZoneLabels, mgrs100kIDLabelCallback );
-      computeSubGrid( cellSize, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, gridLines, &gridLabels, 0, mgrsGridLabelCallback );
+      if ( gridMode == GridMGRS )
+      {
+        computeSubGrid( 100000, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, subZoneLines, &subZoneLabels, mgrs100kIDLabelCallback );
+        computeSubGrid( cellSize, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, gridLines, &gridLabels, 0, mgrsGridLabelCallback );
+      }
+      else
+      {
+        computeSubGrid( cellSize, da, bbox, x1, x2, y1, y2, xMin, xMax, yMin, yMax, gridLines, &gridLabels, 0, utmGridLabelCallback );
+      }
     }
   }
 }
 
 void QgsLatLonToUTM::computeSubGrid( double cellSize, const QgsDistanceArea& da, const QgsRectangle& bbox,
-                                     double x1, double x2, double y1, double y2,
+                                     double zoneX1, double zoneX2, double zoneY1, double zoneY2,
                                      double xMin, double xMax, double yMin, double yMax,
                                      QList<QPolygonF> &gridLines, QList<GridLabel> *gridLabels, zoneLabelCallback_t *zoneLabelCallback, gridLabelCallback_t *lineLabelCallback )
 {
-  double xMid = 0.5 * ( x1 + x2 );
+  double xMid = 0.5 * ( zoneX1 + zoneX2 );
 
-  double ly = da.measureLine( QgsPoint( x1, y1 ), QgsPoint( x1, y2 ) );
-  double incy = ( y2 - y1 ) / ly * cellSize;
+  double ly = da.measureLine( QgsPoint( zoneX1, zoneY1 ), QgsPoint( zoneX1, zoneY2 ) );
+  double incy = ( zoneY2 - zoneY1 ) / ly * cellSize;
   QList<double> incx;
   QList<double> yvals;
   // Y lines (horizontal)
-  double y = y1 + qFloor(( yMin - y1 ) / incy ) * incy;
+  double y = zoneY1 + qFloor(( yMin - zoneY1 ) / incy ) * incy;
   yvals.append( y );
-  double lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
-  incx.append(( x2 - x1 ) / lx * cellSize );
+  double lx = da.measureLine( QgsPoint( zoneX1, yvals.back() ), QgsPoint( zoneX2, yvals.back() ) );
+  incx.append(( zoneX2 - zoneX1 ) / lx * cellSize );
   for ( ; y < yMax; y += incy )
   {
     if ( y < bbox.yMinimum() )
@@ -643,13 +700,13 @@ void QgsLatLonToUTM::computeSubGrid( double cellSize, const QgsDistanceArea& da,
     if ( lineLabelCallback )
       gridLabels->append( lineLabelCallback( xMin, y, cellSize, true ) );
     yvals.append( y );
-    lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
-    incx.append(( x2 - x1 ) / lx * cellSize );
+    lx = da.measureLine( QgsPoint( zoneX1, yvals.back() ), QgsPoint( zoneX2, yvals.back() ) );
+    incx.append(( zoneX2 - zoneX1 ) / lx * cellSize );
   }
-  y = qMin( y2, y );
+  y = qMin( zoneY2, y );
   yvals.append( y );
-  lx = da.measureLine( QgsPoint( x1, yvals.back() ), QgsPoint( x2, yvals.back() ) );
-  incx.append(( x2 - x1 ) / lx * cellSize );
+  lx = da.measureLine( QgsPoint( zoneX1, yvals.back() ), QgsPoint( zoneX2, yvals.back() ) );
+  incx.append(( zoneX2 - zoneX1 ) / lx * cellSize );
 
   // X lines (vertical)
   if ( xMid >= xMin && xMid <= xMax )
@@ -660,66 +717,63 @@ void QgsLatLonToUTM::computeSubGrid( double cellSize, const QgsDistanceArea& da,
   }
   if ( zoneLabelCallback )
   {
-    for ( int j = 0; j < yvals.size(); ++j )
+    for ( int j = 0; j < yvals.size() - 1; ++j )
     {
       if ( xMid >= xMin - incx[j] && xMid <= xMax )
-        gridLabels->append( zoneLabelCallback( qMax( xMin, xMid ), qMax( yMin, yvals[j] ) ) );
+        gridLabels->append( zoneLabelCallback( xMid, yvals[j], qMax( xMin, xMid ), qMax( yMin, yvals[j] ), qMin( xMax, xMid + incx[j] ), qMin( yMax, yvals[j + 1] ) ) );
     }
   }
-  int nXLines = qCeil( qMax(( xMid - x1 ) / incx.front(), ( xMid - x1 ) / incx.last() ) );
+  int nXLines = qCeil( qMax(( xMid - zoneX1 ) / incx.front(), ( xMid - zoneX1 ) / incx.last() ) );
   for ( int i = 1; i <= nXLines; ++i )
   {
     QPolygonF lineLeft, lineRight;
-    for ( int j = 0; j < yvals.size(); ++j )
+    for ( int j = 0; j < yvals.size() - 1; ++j )
     {
-      double y = yvals[j];
-
-      double x = xMid - i * incx[j];
-      if ( x >= xMin )
+      double x1 = xMid - i * incx[j];
+      double x2 = xMid - i * incx[j+1];
+      double y1 = yvals[j];
+      double y2 = yvals[j+1];
+      if ( y1 < yMax && y2 > yMin )
       {
-        lineLeft.append( QPointF( x, y ) );
-        if ( zoneLabelCallback )
+        if ( x1 > xMin || x2 > xMin )
         {
-          gridLabels->append( zoneLabelCallback( x, qMax( yMin, y ) ) );
+          truncateGridLine( x1, x2, y1, y2, xMin, xMax, yMin, yMax );
+          lineLeft.append( QPointF( x1, y1 ) );
+          lineLeft.append( QPointF( x2, y2 ) );
         }
-      }
-      if ( zoneLabelCallback && x < xMin  && x + incx[j] > xMin )
-      {
-        gridLabels->append( zoneLabelCallback( xMin, qMax( yMin, y ) ) );
+        if ( zoneLabelCallback && ( xMid - ( i - 1 ) * incx[j] ) > xMin )
+          gridLabels->append( zoneLabelCallback( xMid - i * incx[j], yvals[j], qMax( xMin, x1 ), qMax( yvals[j], yMin ), qMin( xMax, xMid - ( i - 1 ) * incx[j] ), qMin( yMax, yvals[j + 1] ) ) );
       }
 
-      x = xMid + i * incx[j];
-      if ( x <= xMax )
+      x1 = xMid + i * incx[j];
+      x2 = xMid + i * incx[j + 1];
+      y1 = yvals[j];
+      y2 = yvals[j+1];
+      if (( x1 < xMax || x2 < xMax ) && y1 < yMax && y2 > yMin )
       {
-        lineRight.append( QPointF( x, y ) );
+        truncateGridLine( x1, x2, y1, y2, xMin, xMax, yMin, yMax );
+        lineRight.append( QPointF( x1, y1 ) );
+        lineRight.append( QPointF( x2, y2 ) );
         if ( zoneLabelCallback )
-        {
-          gridLabels->append( zoneLabelCallback( x, qMax( yMin, y ) ) );
-        }
-      }
-      if ( zoneLabelCallback && x < xMin  && x + incx[j] > xMin )
-      {
-        gridLabels->append( zoneLabelCallback( xMin, qMax( yMin, y ) ) );
+          gridLabels->append( zoneLabelCallback( xMid + i * incx[j], yvals[j], x1, qMax( yvals[j], yMin ), qMin( xMax, xMid + ( i + 1 ) * incx[j] ), qMin( yMax, yvals[j + 1] ) ) );
       }
     }
     if ( !lineLeft.isEmpty() )
     {
       gridLines << lineLeft;
       if ( lineLabelCallback )
-      {
         gridLabels->append( lineLabelCallback( lineLeft.front().x(), lineLeft.front().y(), cellSize, false ) );
-      }
     }
     if ( !lineRight.isEmpty() )
     {
       gridLines << lineRight;
-      if ( lineLabelCallback /*&& lineRight.front().y() == yMin*/ )
+      if ( lineLabelCallback )
         gridLabels->append( lineLabelCallback( lineRight.front().x(), lineRight.front().y(), cellSize, false ) );
     }
   }
 }
 
-QgsLatLonToUTM::GridLabel QgsLatLonToUTM::mgrs100kIDLabelCallback( double lon, double lat )
+QgsLatLonToUTM::GridLabel QgsLatLonToUTM::mgrs100kIDLabelCallback( double lon, double lat , double posX, double posY, double maxLon, double maxLat )
 {
   UTMCoo utmcoo = LL2UTM( QgsPoint( lon + 0.01, lat + 0.01 ) );
   int setColumn = qFloor( utmcoo.easting / 100000 );
@@ -729,18 +783,41 @@ QgsLatLonToUTM::GridLabel QgsLatLonToUTM::mgrs100kIDLabelCallback( double lon, d
   {
     setParm = NUM_100K_SETS;
   }
-  return qMakePair( QPointF( lon, lat ), getLetter100kID( setColumn, setRow, setParm ) );
+  GridLabel label;
+  label.pos = QPointF( posX, posY );
+  label.label = getLetter100kID( setColumn, setRow, setParm );
+  label.maxPos = QPointF( maxLon, maxLat );
+  return label;
+}
+
+QgsLatLonToUTM::GridLabel QgsLatLonToUTM::utmGridLabelCallback( double lon, double lat, double cellSize, bool horiz )
+{
+  UTMCoo utmcoo = LL2UTM( QgsPoint( lon + 0.01, lat + 0.01 ) );
+  GridLabel label;
+  label.pos = QPointF( lon, lat );
+  if ( horiz )
+  {
+    label.label = QString::number( int( utmcoo.northing / cellSize ) );
+  }
+  else
+  {
+    label.label = QString::number( int( utmcoo.easting / cellSize ) );
+  }
+  return label;
 }
 
 QgsLatLonToUTM::GridLabel QgsLatLonToUTM::mgrsGridLabelCallback( double lon, double lat, double cellSize, bool horiz )
 {
   UTMCoo utmcoo = LL2UTM( QgsPoint( lon + 0.01, lat + 0.01 ) );
+  GridLabel label;
+  label.pos = QPointF( lon, lat );
   if ( horiz )
   {
-    return qMakePair( QPointF( lon, lat ), QString::number( int( utmcoo.northing / cellSize ) ) );
+    label.label = QString::number( int(( utmcoo.northing % 100000 ) / cellSize ) );
   }
   else
   {
-    return qMakePair( QPointF( lon, lat ), QString::number( int( utmcoo.easting / cellSize ) ) );
+    label.label = QString::number( int(( utmcoo.easting % 100000 ) / cellSize ) );
   }
+  return label;
 }

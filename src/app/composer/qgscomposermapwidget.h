@@ -226,6 +226,8 @@ class QgsComposerMapWidget: public QgsComposerItemBaseWidget, private Ui::QgsCom
     void loadOverviewEntries();
 
     void updateOverviewFrameSymbolMarker( const QgsComposerMapOverview* overview );
+
+    void toggleGridOptions( bool enabled );
 };
 
 #endif

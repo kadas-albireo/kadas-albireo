@@ -225,8 +225,6 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
       DegreeMinutePadded, /*< degree/minutes, with minutes using leading zeros were required */
       DegreeMinuteSecondNoSuffix, /*< degree/minutes/seconds, use - for S/W coordinates */
       DegreeMinuteSecondPadded, /*< degree/minutes/seconds, with minutes using leading zeros were required */
-      UTM, /*< Universal Transverse Mercator format */
-      MGRS /*< Military Grid Reference System */
     };
 
     /** Border sides for annotations
@@ -309,8 +307,15 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
     */
     const QgsCoordinateReferenceSystem& crs() const { return mCRS; }
 
-    void setGridCrs( GridCRS gridCrs );
-    GridCRS gridCrs() const { return mGridCrs; }
+    /**Sets the grid CRS type.
+     * @gridCrs The grid crs, either CrsUserSelected, CrsUTM or CrsMGRS.
+     */
+    void setGridCrsType( GridCRS gridCrs );
+
+    /**Returns the grid CRS type.
+     * @return The grid crs type.
+     */
+    GridCRS gridCrsType() const { return mGridCrsType; }
 
     /**Sets the blending mode used for drawing the grid.
      * @param mode blending mode for grid
@@ -875,7 +880,7 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
     QgsLineSymbolV2* mGridLineSymbol;
     QgsMarkerSymbolV2* mGridMarkerSymbol;
 
-    GridCRS mGridCrs;
+    GridCRS mGridCrsType;
     QgsCoordinateReferenceSystem mCRS;
 
     GridUnit mGridUnit;
