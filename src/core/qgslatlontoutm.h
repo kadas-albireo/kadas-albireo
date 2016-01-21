@@ -22,6 +22,7 @@
 #include <QPair>
 #include <QPolygonF>
 
+class QgsDistanceArea;
 class QgsPoint;
 class QgsRectangle;
 
@@ -65,6 +66,11 @@ class CORE_EXPORT QgsLatLonToUTM
 
     static QString getLetter100kID( int column, int row, int parm );
     static double getMinNorthing( int zoneLetter );
+    typedef GridLabel( zoneLabelCallback_t )( double, double );
+    typedef GridLabel( gridLabelCallback_t )( double, double, double, bool );
+    static void computeSubGrid( double cellSize, const QgsDistanceArea &da, const QgsRectangle &bbox, double x1, double x2, double y1, double y2, double xMin, double xMax, double yMin, double yMax, QList<QPolygonF>& gridLines, QList<GridLabel>* gridLabels = 0, zoneLabelCallback_t* zoneLabelCallback = 0, gridLabelCallback_t* lineLabelCallback = 0 );
+    static GridLabel mgrs100kIDLabelCallback( double lon, double lat );
+    static GridLabel mgrsGridLabelCallback( double lon, double lat, double cellSize, bool horiz );
 };
 
 #endif // QGSLATLONTOUTM_H

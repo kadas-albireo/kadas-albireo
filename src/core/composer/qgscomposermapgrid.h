@@ -953,8 +953,7 @@ class CORE_EXPORT QgsComposerMapGrid : public QgsComposerMapItem
 
     QPolygonF scalePolygon( const QPolygonF &polygon, const double scale ) const;
 
-    void drawGridUTM( QPainter *painter, QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
-                      QList< QPair< double, QLineF > > &verticalLines );
+    void drawGridUTM( QPainter *painter, QgsRenderContext &context, double dotsPerMM );
     /**Draws grid if CRS is different to map CRS*/
     void drawGridCRSTransform( QgsRenderContext &context, double dotsPerMM, QList< QPair< double, QLineF > > &horizontalLines,
                                QList< QPair< double, QLineF > > &verticalLines );
