@@ -89,8 +89,6 @@ QgsComposerMapWidget::QgsComposerMapWidget( QgsComposerMap* composerMap )
   mAnnotationFormatComboBox->insertItem( 5, tr( "Degree, minute, second" ) );
   mAnnotationFormatComboBox->insertItem( 6, tr( "Degree, minute, second with suffix" ) );
   mAnnotationFormatComboBox->insertItem( 7, tr( "Degree, minute, second aligned" ) );
-  mAnnotationFormatComboBox->insertItem( 8, tr( "UTM" ) );
-  mAnnotationFormatComboBox->insertItem( 9, tr( "MGRS" ) );
 
   mAnnotationFontColorButton->setColorDialogTitle( tr( "Select font color" ) );
   mAnnotationFontColorButton->setAllowAlpha( true );
@@ -1508,12 +1506,6 @@ void QgsComposerMapWidget::setGridItems( const QgsComposerMapGrid* grid )
     case QgsComposerMapGrid::DegreeMinuteSecondPadded:
       mAnnotationFormatComboBox->setCurrentIndex( 7 );
       break;
-    case QgsComposerMapGrid::UTM:
-      mAnnotationFormatComboBox->setCurrentIndex( 8 );
-      break;
-    case QgsComposerMapGrid::MGRS:
-      mAnnotationFormatComboBox->setCurrentIndex( 9 );
-      break;
   }
   mDistanceToMapFrameSpinBox->setValue( grid->annotationFrameDistance() );
   mCoordinatePrecisionSpinBox->setValue( grid->annotationPrecision() );
@@ -1534,16 +1526,19 @@ void QgsComposerMapWidget::setGridItems( const QgsComposerMapGrid* grid )
   }
 
   //CRS button
-  switch ( grid->gridCrs() )
+  switch ( grid->gridCrsType() )
   {
     case QgsComposerMapGrid::CrsUTM:
       mMapGridCRSButton->setText( "UTM" );
+      toggleGridOptions( false );
       break;
     case QgsComposerMapGrid::CrsMGRS:
       mMapGridCRSButton->setText( "MGRS" );
+      toggleGridOptions( false );
       break;
     case QgsComposerMapGrid::CrsUserSelected:
       mMapGridCRSButton->setText( grid->crs().isValid() ? grid->crs().authid() : tr( "change..." ) );
+      toggleGridOptions( true );
   }
 
   blockGridItemsSignals( false );
@@ -2005,6 +2000,8 @@ void QgsComposerMapWidget::selectMapGridCrs()
     QString selectedAuthId = crsDialog.selectedAuthId();
     grid->setCrs( QgsCoordinateReferenceSystem( selectedAuthId ) );
     mMapGridCRSButton->setText( selectedAuthId );
+    toggleGridOptions( true );
+    mComposerMap->update();
     mComposerMap->endCommand();
   }
 }
@@ -2017,8 +2014,10 @@ void QgsComposerMapWidget::setMapGridCrsUTM()
     return;
   }
   mComposerMap->beginCommand( tr( "Grid CRS changed" ) );
-  grid->setGridCrs( QgsComposerMapGrid::CrsUTM );
+  grid->setGridCrsType( QgsComposerMapGrid::CrsUTM );
   mMapGridCRSButton->setText( "UTM" );
+  toggleGridOptions( false );
+  mComposerMap->update();
   mComposerMap->endCommand();
 }
 
@@ -2030,8 +2029,10 @@ void QgsComposerMapWidget::setMapGridCrsMGRS()
     return;
   }
   mComposerMap->beginCommand( tr( "Grid CRS changed" ) );
-  grid->setGridCrs( QgsComposerMapGrid::CrsMGRS );
+  grid->setGridCrsType( QgsComposerMapGrid::CrsMGRS );
   mMapGridCRSButton->setText( "MGRS" );
+  toggleGridOptions( false );
+  mComposerMap->update();
   mComposerMap->endCommand();
 }
 
@@ -2194,12 +2195,6 @@ void QgsComposerMapWidget::on_mAnnotationFormatComboBox_currentIndexChanged( int
       break;
     case 7:
       grid->setAnnotationFormat( QgsComposerMapGrid::DegreeMinuteSecondPadded );
-      break;
-    case 8:
-      grid->setAnnotationFormat( QgsComposerMapGrid::UTM );
-      break;
-    case 9:
-      grid->setAnnotationFormat( QgsComposerMapGrid::MGRS );
       break;
   }
 
@@ -2476,6 +2471,23 @@ void QgsComposerMapWidget::updateOverviewFrameSymbolMarker( const QgsComposerMap
     QIcon icon = QgsSymbolLayerV2Utils::symbolPreviewIcon( nonConstSymbol, mOverviewFrameStyleButton->iconSize() );
     mOverviewFrameStyleButton->setIcon( icon );
   }
+}
+
+void QgsComposerMapWidget::toggleGridOptions( bool enabled )
+{
+  mGridTypeLabel_2->setEnabled( enabled );
+  mGridTypeComboBox->setCurrentIndex( 0 );
+  mGridTypeComboBox->setEnabled( enabled );
+  mMapGridUnitLabel->setEnabled( enabled );
+  mMapGridUnitComboBox->setEnabled( enabled );
+  mIntervalXLabel_2->setEnabled( enabled );
+  mIntervalXSpinBox->setEnabled( enabled );
+  mIntervalYSpinBox->setEnabled( enabled );
+  mOffsetXLabel_2->setEnabled( enabled );
+  mOffsetXSpinBox->setEnabled( enabled );
+  mOffsetYSpinBox->setEnabled( enabled );
+  mGridFrameGroupBox->setEnabled( enabled );
+  mDrawAnnotationGroupBox->setEnabled( enabled );
 }
 
 QListWidgetItem* QgsComposerMapWidget::addOverviewListItem( const QString& id, const QString& name )
