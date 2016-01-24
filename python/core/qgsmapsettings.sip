@@ -88,6 +88,7 @@ class QgsMapSettings
       DrawLabeling,               //!< Enable drawing of labels on top of the map
       UseRenderingOptimization,        //!< Enable vector simplification and other rendering optimizations
       DrawSelection,              //!< Whether vector selections should be shown in the rendered map
+      RenderMapTile,    //!< Draw map such that there are no problems between adjacent tiles
       // TODO: ignore scale-based visibility (overview)
     };
     typedef QFlags<QgsMapSettings::Flag> Flags;
