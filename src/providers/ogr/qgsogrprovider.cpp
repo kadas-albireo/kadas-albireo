@@ -2470,6 +2470,8 @@ QByteArray QgsOgrUtils::quotedIdentifier( QByteArray field, const QString& ogrDr
 
 bool QgsOgrProvider::syncToDisc()
 {
+  QgsOgrConnPool::instance()->unref( mFilePath );
+
   //for shapefiles, remove spatial index files and create a new index
   bool shapeIndex = false;
   if ( ogrDriverName == "ESRI Shapefile" )
@@ -2497,7 +2499,7 @@ bool QgsOgrProvider::syncToDisc()
   }
 
   mDataModified = true;
-
+  QgsOgrConnPool::instance()->ref( mFilePath );
   if ( shapeIndex )
   {
     return createSpatialIndex();
