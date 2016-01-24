@@ -63,7 +63,7 @@ const unsigned char* QgsFeatureRendererV2::_getPoint( QPointF& pt, QgsRenderCont
 
 const unsigned char* QgsFeatureRendererV2::_getLineString( QPolygonF& pts, QgsRenderContext& context, const unsigned char* wkb )
 {
-  QgsConstWkbPtr wkbPtr( wkb );
+  QgsConstWkbPtr wkbPtr( wkb + 1 );
   unsigned int wkbType, nPoints;
   wkbPtr >> wkbType >> nPoints;
 
@@ -75,7 +75,7 @@ const unsigned char* QgsFeatureRendererV2::_getLineString( QPolygonF& pts, QgsRe
   const QgsMapToPixel& mtp = context.mapToPixel();
 
   //apply clipping for large lines to achieve a better rendering performance
-  if ( nPoints > 1 )
+  if ( nPoints > 1 && !context.renderMapTile() )
   {
     const QgsRectangle& e = context.extent();
     double cw = e.width() / 10; double ch = e.height() / 10;
@@ -161,7 +161,7 @@ const unsigned char* QgsFeatureRendererV2::_getPolygon( QPolygonF& pts, QList<QP
 
     //clip close to view extent, if needed
     QRectF ptsRect = poly.boundingRect();
-    if ( !context.extent().contains( ptsRect ) ) QgsClipper::trimPolygon( poly, clipRect );
+    if ( !context.extent().contains( ptsRect ) && !context.renderMapTile() ) QgsClipper::trimPolygon( poly, clipRect );
 
     //transform the QPolygonF to screen coordinates
     if ( ct )
@@ -210,8 +210,7 @@ QgsFeatureRendererV2::QgsFeatureRendererV2( QString type )
 
 QgsFeatureRendererV2* QgsFeatureRendererV2::defaultRenderer( QGis::GeometryType geomType )
 {
-  QgsSymbolV2* symbol = QgsSymbolV2::defaultSymbol( geomType );
-  return symbol ? new QgsSingleSymbolRendererV2( symbol ) : 0;
+  return new QgsSingleSymbolRendererV2( QgsSymbolV2::defaultSymbol( geomType ) );
 }
 
 void QgsFeatureRendererV2::startRender( QgsRenderContext& context, const QgsVectorLayer* vlayer )
@@ -610,7 +609,7 @@ void QgsFeatureRendererV2::setVertexMarkerAppearance( int type, int size )
   mCurrentVertexMarkerSize = size;
 }
 
-void QgsFeatureRendererV2::renderVertexMarker( const QPointF& pt, QgsRenderContext& context )
+void QgsFeatureRendererV2::renderVertexMarker( QPointF& pt, QgsRenderContext& context )
 {
   QgsVectorLayer::drawVertexMarker( pt.x(), pt.y(), *context.painter(),
                                     ( QgsVectorLayer::VertexMarkerType ) mCurrentVertexMarkerType,

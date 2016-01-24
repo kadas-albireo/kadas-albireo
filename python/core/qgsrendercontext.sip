@@ -82,6 +82,9 @@ class QgsRenderContext
     bool useRenderingOptimization() const;
     void setUseRenderingOptimization( bool enabled );
 
+    bool renderMapTile() const;
+    void setRenderMapTile( bool enabled );
+
     //! Added in QGIS v2.4
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const;
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod );

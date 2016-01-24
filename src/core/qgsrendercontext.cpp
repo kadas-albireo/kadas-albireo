@@ -33,6 +33,7 @@ QgsRenderContext::QgsRenderContext()
     , mLabelingEngine( NULL )
     , mShowSelection( true )
     , mUseRenderingOptimization( true )
+    , mRenderMapTile( false )
     , mGeometry( 0 )
 {
   mVectorSimplifyMethod.setSimplifyHints( QgsVectorSimplifyMethod::NoSimplification );
@@ -64,6 +65,7 @@ QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
   mGeometry = ct.mGeometry;
   mShowSelection = ct.mShowSelection;
   mSelectionColor = ct.mSelectionColor;
+  mRenderMapTile = ct.mRenderMapTile;
   return *this;
 }
 
@@ -83,6 +85,7 @@ QgsRenderContext QgsRenderContext::fromMapSettings( const QgsMapSettings& mapSet
   ctx.setScaleFactor( mapSettings.outputDpi() / 25.4 ); // = pixels per mm
   ctx.setRendererScale( mapSettings.scale() );
   ctx.setSelectionColor( mapSettings.selectionColor() );
+  ctx.setRenderMapTile( mapSettings.testFlag( QgsMapSettings::RenderMapTile ) );
 
   //this flag is only for stopping during the current rendering progress,
   //so must be false at every new render operation

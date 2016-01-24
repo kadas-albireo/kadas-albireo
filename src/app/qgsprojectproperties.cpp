@@ -108,6 +108,8 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   QgsDebugMsg( "Read project CRSID: " + QString::number( mProjectSrsId ) );
   projectionSelector->setSelectedCrsId( mProjectSrsId );
 
+  mMapTileRenderingCheckBox->setChecked( mMapCanvas->mapSettings().testFlag( QgsMapSettings::RenderMapTile ) );
+
   // see end of constructor for updating of projection selector
 
   ///////////////////////////////////////////////////////////
@@ -619,6 +621,8 @@ void QgsProjectProperties::apply()
 
   mMapCanvas->setMapUnits( mapUnit );
   mMapCanvas->setCrsTransformEnabled( cbxProjectionEnabled->isChecked() );
+
+  mMapCanvas->enableMapTileRendering( mMapTileRenderingCheckBox->isChecked() );
 
   // Only change the projection if there is a node in the tree
   // selected that has an srid. This prevents error if the user

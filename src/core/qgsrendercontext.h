@@ -120,6 +120,9 @@ class CORE_EXPORT QgsRenderContext: public QObject
     bool useRenderingOptimization() const { return mUseRenderingOptimization; }
     void setUseRenderingOptimization( bool enabled ) { mUseRenderingOptimization = enabled; }
 
+    bool renderMapTile() const { return mRenderMapTile; }
+    void setRenderMapTile( bool enabled ) { mRenderMapTile = enabled; }
+
     //! Added in QGIS v2.4
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const { return mVectorSimplifyMethod; }
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod ) { mVectorSimplifyMethod = simplifyMethod; }
@@ -176,6 +179,8 @@ class CORE_EXPORT QgsRenderContext: public QObject
 
     /**True if the rendering optimization (geometry simplification) can be executed*/
     bool mUseRenderingOptimization;
+
+    bool mRenderMapTile;
 
     /**Simplification object which holds the information about how to simplify the features for fast rendering */
     QgsVectorSimplifyMethod mVectorSimplifyMethod;
