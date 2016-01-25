@@ -605,6 +605,7 @@ void QgsRibbonApp::enableGPS( bool enabled )
 void QgsRibbonApp::gpsDetected()
 {
   messageBar()->pushMessage( tr( "GPS device successfully connected" ), QgsMessageBar::INFO, messageTimeout() );
+  setGPSIcon( Qt::white );
 }
 
 void QgsRibbonApp::gpsDisconnected()
