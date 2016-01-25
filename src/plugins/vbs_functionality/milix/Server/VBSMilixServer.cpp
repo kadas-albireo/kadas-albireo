@@ -391,7 +391,7 @@ bool VBSMilixServer::getSymbolInfo( const QString& symbolXml, QString& name, QSt
     }
   }*/
 
-  QString name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeInternationalGS, MssComServer::mssLanguageEnglishGS, MssComServer::mssNameFormatNodeNameGS );
+  name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeInternationalGS, MssComServer::mssLanguageEnglishGS, MssComServer::mssNameFormatNodeNameGS );
   hasVariablePoints = mssNPointGraphic->Schema->HasVariablePoints;
   minPointCount = mssNPointGraphic->Schema->MinPointCount;
   return true;

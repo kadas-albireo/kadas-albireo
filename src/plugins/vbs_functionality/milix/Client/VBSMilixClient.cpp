@@ -34,7 +34,7 @@ bool VBSMilixClient::init()
   // Start process
 #ifdef Q_OS_WIN
   int port;
-  QHostAddress addr( QHostAddress::LocalHost ).toString();
+  QHostAddress addr(QHostAddress::LocalHost);
   mProcess = new QProcess( this );
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {

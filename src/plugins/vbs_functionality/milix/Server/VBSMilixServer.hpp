@@ -4,6 +4,7 @@
 #define _AFXDLL
 
 #include <QObject>
+#include <QPoint>
 #include <SDKDDKVer.h>
 #include <afxwin.h>
 #include <iostream>
@@ -11,6 +12,7 @@
 #import "C:\Program Files\gs-soft\MSS\MssComServerV5\TLB\Win64\MssComServerV5.tlb" rename("LoadLibrary", "MssLoadLibrary")
 
 class QNetworkSession;
+class QRect;
 class QTcpServer;
 
 class VBSMilixServer : public QObject
