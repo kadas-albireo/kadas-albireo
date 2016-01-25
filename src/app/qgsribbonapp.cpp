@@ -18,6 +18,7 @@
 #include "qgsribbonapp.h"
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
+#include "qgsdecorationgrid.h"
 #include "qgsgeoimageannotationitem.h"
 #include "qgsgpsconnection.h"
 #include "qgsgpsrouteeditor.h"
@@ -116,7 +117,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mGpsRouteEditor = new QgsGPSRouteEditor( this, mActionDrawWaypoint, mActionDrawRoute );
 
   initGPSDisplay();
-  connect( mGpsToolButton, SIGNAL(toggled(bool)), this, SLOT(enableGPS(bool)));
+  connect( mGpsToolButton, SIGNAL( toggled( bool ) ), this, SLOT( enableGPS( bool ) ) );
 
   configureButtons();
 
@@ -355,6 +356,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
   setActionToButton( mAction3D, m3DButton );
   setActionToButton( mActionGrid, mGridButton );
+  connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
 
   //draw tab
 
@@ -580,21 +582,21 @@ void QgsRibbonApp::showProjectSelectionWidget()
 
 void QgsRibbonApp::enableGPS( bool enabled )
 {
-  mGpsToolButton->blockSignals(true);
-  mActionEnableGPS->blockSignals(true);
-  mGpsToolButton->setChecked(enabled);
-  mActionEnableGPS->setChecked(enabled);
-  mGpsToolButton->blockSignals(false);
-  mActionEnableGPS->blockSignals(false);
+  mGpsToolButton->blockSignals( true );
+  mActionEnableGPS->blockSignals( true );
+  mGpsToolButton->setChecked( enabled );
+  mActionEnableGPS->setChecked( enabled );
+  mGpsToolButton->blockSignals( false );
+  mActionEnableGPS->blockSignals( false );
   if ( enabled )
   {
-    setGPSIcon(Qt::blue);
+    setGPSIcon( Qt::blue );
     messageBar()->pushMessage( tr( "Connecting to GPS device..." ), QString(), QgsMessageBar::INFO, 5 );
     mCanvasGPSDisplay.connectGPS();
   }
   else
   {
-    setGPSIcon(Qt::black);
+    setGPSIcon( Qt::black );
     messageBar()->pushMessage( tr( "GPS connection closed" ), QString(), QgsMessageBar::INFO, 5 );
     mCanvasGPSDisplay.disconnectGPS();
   }
@@ -607,32 +609,33 @@ void QgsRibbonApp::gpsDetected()
 
 void QgsRibbonApp::gpsDisconnected()
 {
-  enableGPS(false);
+  enableGPS( false );
 }
 
 void QgsRibbonApp::gpsConnectionFailed()
 {
   messageBar()->pushMessage( tr( "Connection to GPS device failed" ), QgsMessageBar::CRITICAL, messageTimeout() );
-  mGpsToolButton->blockSignals(true);
-  mActionEnableGPS->blockSignals(true);
-  mGpsToolButton->setChecked(false);
-  mActionEnableGPS->setChecked(false);
-  mGpsToolButton->blockSignals(false);
-  mActionEnableGPS->blockSignals(false);
-  setGPSIcon(Qt::black);
+  mGpsToolButton->blockSignals( true );
+  mActionEnableGPS->blockSignals( true );
+  mGpsToolButton->setChecked( false );
+  mActionEnableGPS->setChecked( false );
+  mGpsToolButton->blockSignals( false );
+  mActionEnableGPS->blockSignals( false );
+  setGPSIcon( Qt::black );
 }
 
-void QgsRibbonApp::gpsFixChanged(QgsMapCanvasGPSDisplay::FixStatus fixStatus)
+void QgsRibbonApp::gpsFixChanged( QgsMapCanvasGPSDisplay::FixStatus fixStatus )
 {
-  switch(fixStatus) {
-  case QgsMapCanvasGPSDisplay::NoData:
-    setGPSIcon(Qt::white); break;
-  case QgsMapCanvasGPSDisplay::NoFix:
-    setGPSIcon(Qt::red); break;
-  case QgsMapCanvasGPSDisplay::Fix2D:
-    setGPSIcon(Qt::yellow); break;
-  case QgsMapCanvasGPSDisplay::Fix3D:
-    setGPSIcon(Qt::green); break;
+  switch ( fixStatus )
+  {
+    case QgsMapCanvasGPSDisplay::NoData:
+      setGPSIcon( Qt::white ); break;
+    case QgsMapCanvasGPSDisplay::NoFix:
+      setGPSIcon( Qt::red ); break;
+    case QgsMapCanvasGPSDisplay::Fix2D:
+      setGPSIcon( Qt::yellow ); break;
+    case QgsMapCanvasGPSDisplay::Fix3D:
+      setGPSIcon( Qt::green ); break;
   }
 }
 
@@ -647,13 +650,13 @@ void QgsRibbonApp::initGPSDisplay()
   connect( &mCanvasGPSDisplay, SIGNAL( gpsConnected() ), this, SLOT( gpsDetected() ) );
   connect( &mCanvasGPSDisplay, SIGNAL( gpsDisconnected() ), this, SLOT( gpsDisconnected() ) );
   connect( &mCanvasGPSDisplay, SIGNAL( gpsConnectionFailed() ), this, SLOT( gpsConnectionFailed() ) );
-  connect( &mCanvasGPSDisplay, SIGNAL(gpsFixStatusChanged(QgsMapCanvasGPSDisplay::FixStatus)), this, SLOT(gpsFixChanged(QgsMapCanvasGPSDisplay::FixStatus)));
-  setGPSIcon(Qt::black);
+  connect( &mCanvasGPSDisplay, SIGNAL( gpsFixStatusChanged( QgsMapCanvasGPSDisplay::FixStatus ) ), this, SLOT( gpsFixChanged( QgsMapCanvasGPSDisplay::FixStatus ) ) );
+  setGPSIcon( Qt::black );
 }
 
-void QgsRibbonApp::setGPSIcon(const QColor &color)
+void QgsRibbonApp::setGPSIcon( const QColor &color )
 {
-  QPixmap pixmap(mGpsToolButton->size());
-  pixmap.fill(color);
-  mGpsToolButton->setIcon(QIcon(pixmap));
+  QPixmap pixmap( mGpsToolButton->size() );
+  pixmap.fill( color );
+  mGpsToolButton->setIcon( QIcon( pixmap ) );
 }
