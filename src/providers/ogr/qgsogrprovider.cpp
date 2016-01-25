@@ -286,6 +286,7 @@ void QgsOgrProvider::close()
     OGR_DS_ReleaseResultSet( ogrDataSource, ogrLayer );
   }
 
+  QgsOgrConnPool::instance()->unref( mFilePath );
   repack();
 
   if ( ogrDataSource )
@@ -299,8 +300,6 @@ void QgsOgrProvider::close()
     free( extent_ );
     extent_ = 0;
   }
-
-  QgsOgrConnPool::instance()->unref( mFilePath );
 }
 
 
