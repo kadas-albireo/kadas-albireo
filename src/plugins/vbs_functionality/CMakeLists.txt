@@ -1,8 +1,11 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
-#IF(MSVC)
-#ADD_SUBDIRECTORY(milix/Server)
-#ENDIF(MSVC)
+IF(MSVC)
+ADD_SUBDIRECTORY(milix/Server)
+ENDIF(MSVC)
+
+SET(RSVGRENDERER_INCLUDE_DIR "" CACHE PATH "Path to rsvgrenderer header")
+SET(RSVGRENDERER_LIBRARY "rsvgrenderer" CACHE FILEPATH "Path to rsvgrenderer library")
 
 ########################################################
 # Files
@@ -13,6 +16,7 @@ SET (vbsfunctionality_SRCS
   milix/qgsvbsmilixannotationitem.cpp
   milix/qgsvbsmilixlibrary.cpp
   milix/qgsvbsmilixmanager.cpp
+  milix/qgsvbsmilixio.cpp
   milix/Client/VBSMilixClient.cpp
   ovl/qgsvbsovlimporter.cpp
 )
@@ -21,6 +25,7 @@ SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
   milix/qgsvbsmaptoolmilix.h
   milix/qgsvbsmilixannotationitem.h
+  milix/qgsvbsmilixio.h
   ovl/qgsvbsovlimporter.h
 )
 
@@ -55,6 +60,7 @@ INCLUDE_DIRECTORIES(
      ${QJSON_INCLUDE_DIR}
      ${QUAZIP_INCLUDE_DIR}
      ${GDAL_INCLUDE_DIR}
+	 ${RSVGRENDERER_INCLUDE_DIR}
      ../../analysis
      ../../core
      ../../core/raster
@@ -70,6 +76,7 @@ TARGET_LINK_LIBRARIES(vbsfunctionality
   ${qjson_LIBRARIES}
   ${QJSON_LIBRARIES}
   ${QUAZIP_LIBRARIES}
+  ${RSVGRENDERER_LIBRARY}
 )
 
 ########################################################

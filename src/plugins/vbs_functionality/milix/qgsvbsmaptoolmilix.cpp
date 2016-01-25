@@ -21,10 +21,10 @@
 #include "qgsmapcanvas.h"
 #include <QMouseEvent>
 
-QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, int nPoints, const QPixmap& preview )
-    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mNPoints( nPoints ), mNPressedPoints( 0 ), mPreview( preview ), mItem( 0 ), mManager( manager )
+QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
+    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mManager( manager )
 {
-  setCursor( QCursor( preview, 0, 0 ) );
+  setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
 }
 
 QgsVBSMapToolMilix::~QgsVBSMapToolMilix()
@@ -47,41 +47,55 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
       }
 
       mItem = new QgsVBSMilixAnnotationItem( mCanvas );
-      mItem->setSymbolXml( mSymbolXml );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
+      mItem->setSymbolXml( mSymbolXml, mHasVariablePoints, mMinNPoints != 1 );
       mItem->setSelected( true );
-      mNPressedPoints = 0;
       setCursor( Qt::CrossCursor );
+      mNPressedPoints = 1;
+      // Only actually add the point if more than the minimum number have been specified
+      // The server automatically adds points up to the minimum number
+      if ( mNPressedPoints >= mMinNPoints && mHasVariablePoints )
+      {
+        mItem->appendPoint( e->pos() );
+      }
     }
-    if ( mNPressedPoints < mNPoints || mNPoints == -1 )
+    else if ( mNPressedPoints < mMinNPoints || mHasVariablePoints )
     {
       ++mNPressedPoints;
-      mItem->addPoint( toMapCoordinates( e->pos() ) );
+      // Only actually add the point if more than the minimum number have been specified
+      // The server automatically adds points up to the minimum number
+      if ( mNPressedPoints >= mMinNPoints && mHasVariablePoints )
+      {
+        mItem->appendPoint( e->pos() );
+      }
     }
 
-    if ( mNPressedPoints >= mNPoints && mNPoints != -1 )
+    if ( mNPressedPoints >= mMinNPoints && !mHasVariablePoints )
     {
       // Max points reached, stop
+      mItem->finalize();
       mManager->addItem( mItem );
       mItem = 0;
-      setCursor( QCursor( mPreview, 0, 0 ) );
+      mNPressedPoints = 0;
+      mCanvas->unsetMapTool( this );
     }
   }
   else if ( e->button() == Qt::RightButton && mItem != 0 )
   {
-    if ( mNPoints == -1 )
+    if ( mNPressedPoints + 1 >= mMinNPoints )
     {
       // Done with N point symbol, stop
+      mItem->finalize();
       mManager->addItem( mItem );
       mItem = 0;
-      setCursor( QCursor( mPreview, 0, 0 ) );
+      mCanvas->unsetMapTool( this );
     }
-    else if ( mNPressedPoints < mNPoints )
+    else if ( mNPressedPoints + 1 < mMinNPoints )
     {
       // premature stop
       delete mItem;
       mItem = 0;
-      setCursor( QCursor( mPreview, 0, 0 ) );
+      mCanvas->unsetMapTool( this );
     }
   }
 }
@@ -90,6 +104,6 @@ void QgsVBSMapToolMilix::canvasMoveEvent( QMouseEvent * e )
 {
   if ( mItem != 0 && e->buttons() == Qt::NoButton )
   {
-    mItem->modifyPoint( mNPressedPoints - 1, toMapCoordinates( e->pos() ) );
+    mItem->movePoint( mItem->absolutePointIdx( mNPressedPoints ), e->pos() );
   }
 }

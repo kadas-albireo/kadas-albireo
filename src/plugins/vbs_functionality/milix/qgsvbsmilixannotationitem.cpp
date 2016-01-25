@@ -22,21 +22,30 @@
 #include "qgscoordinatetransform.h"
 
 #include <QPainter>
+#include <QMenu>
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem )
 
 QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
-    : QgsAnnotationItem( canvas )
+    : QgsAnnotationItem( canvas ), mHasVariablePointCount( false ), mFinalized( false )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
                 QgsAnnotationItem::ItemHasNoFrame |
                 QgsAnnotationItem::ItemHasNoMarker );
 }
 
-void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml )
+void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool hasVariablePointCount , bool isMultiPoint )
 {
+  mHasVariablePointCount = hasVariablePointCount;
   mSymbolXml = symbolXml;
-  renderPixmap();
+  if ( !isMultiPoint )
+  {
+    setOffsetFromReferencePoint( QPointF( -0.5 * mGraphic.width(), -0.5 * mGraphic.height() ) );
+  }
+  else
+  {
+    setOffsetFromReferencePoint( QPointF( 0, 0 ) );
+  }
 }
 
 void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
@@ -49,7 +58,8 @@ void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
 
   QDomElement milixAnnotationElem = doc.createElement( "MilixAnnotationItem" );
   milixAnnotationElem.setAttribute( "symbolXml", mSymbolXml );
-  foreach ( const QgsPoint& p, mGeoPoints )
+  milixAnnotationElem.setAttribute( "hasVariablePointCount", mHasVariablePointCount );
+  foreach ( const QgsPoint& p, mAdditionalPoints )
   {
     QDomElement pointElem = doc.createElement( "Point" );
     pointElem.setAttribute( "x", p.x() );
@@ -63,12 +73,13 @@ void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
 void QgsVBSMilixAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& itemElem )
 {
   mSymbolXml = itemElem.attribute( "symbolXml" );
+  mHasVariablePointCount = itemElem.attribute( "hasVariablePointCount" ).toInt();
   QDomNodeList pointElems = itemElem.elementsByTagName( "Point" );
-  mGeoPoints.clear();
+  mAdditionalPoints.clear();
   for ( int i = 0, n = pointElems.count(); i < n; ++i )
   {
     QDomElement pointElem = pointElems.at( i ).toElement();
-    mGeoPoints.append( QgsPoint( pointElem.attribute( "x" ).toDouble(), pointElem.attribute( "y" ).toDouble() ) );
+    mAdditionalPoints.append( QgsPoint( pointElem.attribute( "x" ).toDouble(), pointElem.attribute( "y" ).toDouble() ) );
   }
 
   QDomElement annotationElem = itemElem.firstChildElement( "AnnotationItem" );
@@ -76,7 +87,7 @@ void QgsVBSMilixAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
   {
     _readXML( doc, annotationElem );
   }
-  renderPixmap();
+  updateSymbol();
 }
 
 void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
@@ -86,72 +97,133 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
     return;
   }
 
+  if ( mGraphic.isNull() )
+  {
+    updateSymbol();
+  }
+
   drawFrame( painter );
 
-  painter->drawPixmap( mOffsetFromReferencePoint.x() + 2, mOffsetFromReferencePoint.y() + 2, mPixmap );
+  painter->drawPixmap( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mGraphic );
 
   if ( isSelected() )
   {
     drawSelectionBoxes( painter );
+
+    if ( !mAdditionalPoints.isEmpty() )
+    {
+      painter->save();
+      painter->setPen( QPen( Qt::black, 1 ) );
+      QList<QPoint> pts = points();
+      for ( int i = 0, n = pts.size(); i < n; ++i )
+      {
+        painter->setBrush( mControlPoints.contains( i ) ? Qt::red : Qt::yellow );
+        painter->drawEllipse( pts[i] - pos(), 4, 4 );
+      }
+      painter->restore();
+    }
   }
+}
+
+int QgsVBSMilixAnnotationItem::moveActionForPosition( const QPointF& pos ) const
+{
+  QList<QPoint> pts = points();
+  // Priority to control points
+  for ( int i = 0, n = pts.size(); i < n; ++i )
+  {
+    if ( mControlPoints.contains( i ) && qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+    {
+      return NumMouseMoveActions + i;
+    }
+  }
+  for ( int i = 0, n = pts.size(); i < n; ++i )
+  {
+    if ( qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+    {
+      return NumMouseMoveActions + i;
+    }
+  }
+  return QgsAnnotationItem::moveActionForPosition( pos );
+}
+
+void QgsVBSMilixAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos )
+{
+  if ( moveAction >= NumMouseMoveActions )
+  {
+    int idx = moveAction - NumMouseMoveActions;
+    if ( idx < 1 + mAdditionalPoints.size() )
+    {
+      movePoint( idx, newPos.toPoint() );
+    }
+  }
+  else
+  {
+    QgsAnnotationItem::handleMoveAction( moveAction, newPos, oldPos );
+  }
+}
+
+Qt::CursorShape QgsVBSMilixAnnotationItem::cursorShapeForAction( int moveAction ) const
+{
+  if ( moveAction >= NumMouseMoveActions )
+  {
+    return Qt::ArrowCursor;
+  }
+  return QgsAnnotationItem::cursorShapeForAction( moveAction );
 }
 
 void QgsVBSMilixAnnotationItem::_showItemEditor()
 {
   QString outXml;
-  if ( VBSMilixClient::editSymbol( mSymbolXml, outXml ) )
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbolGraphic result;
+  if ( VBSMilixClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, outXml, result ) )
   {
     mSymbolXml = outXml;
-    renderPixmap();
+    setGraphic( result, true );
   }
 }
 
 void QgsVBSMilixAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs )
 {
-  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), crs.authid() );
-  QgsPoint pOldCrs = t->transform( pos, QgsCoordinateTransform::ReverseTransform );
-  QgsPoint delta( pOldCrs.x() - mGeoPos.x(), pOldCrs.y() - mGeoPos.y() );
-  QgsAnnotationItem::setMapPosition( pos, crs );
-
-  for ( int i = 0, n = mGeoPoints.size(); i < n; ++i )
+  if ( mGeoPosCrs.isValid() )
   {
-    mGeoPoints[i] = t->transform( QgsPoint( mGeoPoints[i].x() + delta.x(), mGeoPoints[i].y() + delta.y() ) );
-  }
-}
+    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), crs.authid() );
+    QgsPoint pOldCrs = t->transform( pos, QgsCoordinateTransform::ReverseTransform );
+    QgsPoint delta( pOldCrs.x() - mGeoPos.x(), pOldCrs.y() - mGeoPos.y() );
+    QgsAnnotationItem::setMapPosition( pos, crs );
 
-void QgsVBSMilixAnnotationItem::addPoint( const QgsPoint& p )
-{
-  if ( mMapCanvas->mapSettings().destinationCrs().authid() != mGeoPosCrs.authid() )
-  {
-    mGeoPoints.append( QgsCoordinateTransform( mMapCanvas->mapSettings().destinationCrs(), mGeoPosCrs ).transform( p ) );
+    for ( int i = 0, n = mAdditionalPoints.size(); i < n; ++i )
+    {
+      mAdditionalPoints[i] = t->transform( QgsPoint( mAdditionalPoints[i].x() + delta.x(), mAdditionalPoints[i].y() + delta.y() ) );
+    }
   }
   else
   {
-    mGeoPoints.append( p );
+    QgsAnnotationItem::setMapPosition( pos, crs );
   }
-  renderPixmap();
+  if ( isNPoint() )
+  {
+    updateSymbol();
+  }
 }
 
-void QgsVBSMilixAnnotationItem::modifyPoint( int index, const QgsPoint& p )
+void QgsVBSMilixAnnotationItem::appendPoint( const QPoint& newPoint )
 {
-  if ( mMapCanvas->mapSettings().destinationCrs().authid() != mGeoPosCrs.authid() )
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbolGraphic result;
+  if ( VBSMilixClient::appendPoint( mMapCanvas->sceneRect().toRect(), symbol, newPoint, result ) )
   {
-    mGeoPoints[index] = QgsCoordinateTransform( mMapCanvas->mapSettings().destinationCrs(), mGeoPosCrs ).transform( p );
+    setGraphic( result, true );
   }
-  else
-  {
-    mGeoPoints[index] = p;
-  }
-  renderPixmap();
 }
 
-void QgsVBSMilixAnnotationItem::renderPixmap()
+void QgsVBSMilixAnnotationItem::movePoint( int index, const QPoint& newPos )
 {
-  QPixmap pixmap;
-  QPoint offset;
-  if ( VBSMilixClient::getNPointSymbol( mSymbolXml, points(), mMapCanvas->sceneRect().toRect(), pixmap, offset ) )
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbolGraphic result;
+  if ( VBSMilixClient::movePoint( mMapCanvas->sceneRect().toRect(), symbol, index, newPos, result ) )
   {
-    updatePixmap( pixmap, offset );
+    setGraphic( result, true );
   }
 }
 
@@ -160,17 +232,119 @@ QList<QPoint> QgsVBSMilixAnnotationItem::points() const
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), mMapCanvas->mapSettings().destinationCrs().authid() );
   QList<QPoint> points;
   points.append( toCanvasCoordinates( t->transform( mGeoPos ) ).toPoint() );
-  foreach ( const QgsPoint& geoPoint, mGeoPoints )
+  foreach ( const QgsPoint& geoPoint, mAdditionalPoints )
   {
     points.append( toCanvasCoordinates( t->transform( geoPoint ) ).toPoint() );
   }
   return points;
 }
 
-void QgsVBSMilixAnnotationItem::updatePixmap( const QPixmap& pixmap, const QPoint &offset )
+int QgsVBSMilixAnnotationItem::absolutePointIdx( int regularIdx ) const
 {
-  mPixmap = pixmap;
-  setFrameSize( mPixmap.size() );
-  setOffsetFromReferencePoint( offset );
+  int counter = 0;
+  for ( int i = 0, n = 1 + mAdditionalPoints.size(); i < n; ++i )
+  {
+    counter += !mControlPoints.contains( i );
+    if ( counter == regularIdx + 1 )
+    {
+      return i;
+    }
+  }
+  return 0; // Should not happen
+}
+
+void QgsVBSMilixAnnotationItem::setGraphic( VBSMilixClient::NPointSymbolGraphic &result, bool updatePoints )
+{
+  mGraphic = QPixmap::fromImage( result.graphic );
+  setFrameSize( mGraphic.size() );
+  setOffsetFromReferencePoint( result.offset );
+  if ( updatePoints )
+  {
+    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() );
+    mGeoPos = t->transform( toMapCoordinates( result.adjustedPoints[0] ) );
+    setPos( result.adjustedPoints[0] );
+    mAdditionalPoints.clear();
+    for ( int i = 1, n = result.adjustedPoints.size(); i < n; ++i )
+    {
+      mAdditionalPoints.append( t->transform( toMapCoordinates( result.adjustedPoints[i] ) ) );
+    }
+    mControlPoints = result.controlPoints;
+  }
   update();
+}
+
+void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
+{
+  QPoint canvasPos = mMapCanvas->mapFromGlobal( screenPos );
+  QMenu menu;
+  QList<QPoint> pts = points();
+  QAction* actionAddPoint = 0;
+  QAction* actionRemovePoint = 0;
+  if ( mHasVariablePointCount )
+  {
+    for ( int i = 0, n = pts.size(); i < n; ++i )
+    {
+      if ( qAbs( canvasPos.x() - pts[i].x() ) < 7 && qAbs( canvasPos.y() - pts[i].y() ) < 7 )
+      {
+        actionRemovePoint = menu.addAction( tr( "Remove node" ) );
+        actionRemovePoint->setData( i );
+        VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+        bool canDelete = false;
+        if ( !VBSMilixClient::canDeletePoint( symbol, i, canDelete ) || !canDelete )
+        {
+          actionRemovePoint->setEnabled( false );
+        }
+        break;
+      }
+    }
+    if ( !actionRemovePoint )
+    {
+      actionAddPoint = menu.addAction( tr( "Add node" ) );
+    }
+    menu.addSeparator();
+  }
+  QAction* actionEdit = menu.addAction( "Edit symbol" );
+  QAction* actionRemove = menu.addAction( "Remove symbol" );
+  QAction* clickedAction = menu.exec( screenPos );
+  if ( !clickedAction )
+  {
+    return;
+  }
+  if ( clickedAction == actionAddPoint )
+  {
+    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+    VBSMilixClient::NPointSymbolGraphic result;
+    if ( VBSMilixClient::insertPoint( mMapCanvas->sceneRect().toRect(), symbol, canvasPos, result ) )
+    {
+      setGraphic( result, true );
+    }
+  }
+  else if ( clickedAction == actionRemovePoint )
+  {
+    int index = actionRemovePoint->data().toInt();
+    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+    VBSMilixClient::NPointSymbolGraphic result;
+    if ( VBSMilixClient::deletePoint( mMapCanvas->sceneRect().toRect(), symbol, index, result ) )
+    {
+      setGraphic( result, true );
+    }
+  }
+  else if ( clickedAction == actionEdit )
+  {
+    _showItemEditor();
+  }
+  else if ( clickedAction == actionRemove )
+  {
+    deleteLater();
+  }
+}
+
+void QgsVBSMilixAnnotationItem::updateSymbol()
+{
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbolGraphic result;
+  if ( VBSMilixClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result ) )
+  {
+    setGraphic( result, false );
+  }
 }

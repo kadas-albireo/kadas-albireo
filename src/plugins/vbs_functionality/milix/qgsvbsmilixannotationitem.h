@@ -19,6 +19,7 @@
 #define QGSVBSMILIXANNOTATIONITEM_H
 
 #include "qgsannotationitem.h"
+#include "Client/VBSMilixClient.hpp"
 
 class QgsVBSCoordinateDisplayer;
 
@@ -28,25 +29,38 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
   public:
 
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    void setSymbolXml( const QString& symbolXml );
+    void setSymbolXml( const QString& symbolXml , bool hasVariablePointCount, bool isMultiPoint );
     const QString& symbolXml() const { return mSymbolXml; }
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
-    void addPoint( const QgsPoint& p );
-    void modifyPoint( int index, const QgsPoint& p );
+    void appendPoint( const QPoint &newPoint );
+    void movePoint( int index, const QPoint &newPos );
     QList<QPoint> points() const;
-    void updatePixmap( const QPixmap& pixmap, const QPoint &offset );
+    const QList<int>& controlPoints() const { return mControlPoints; }
+    int absolutePointIdx( int regularIdx ) const;
+    bool isNPoint() const { return !mAdditionalPoints.isEmpty(); }
+    void setGraphic( VBSMilixClient::NPointSymbolGraphic& result, bool updatePoints );
+    void finalize() { mFinalized = true; }
 
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
     void paint( QPainter* painter ) override;
 
+    int moveActionForPosition( const QPointF& pos ) const override;
+    void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
+    Qt::CursorShape cursorShapeForAction( int moveAction ) const override;
+
+    void showContextMenu( const QPoint &screenPos );
+
   private:
     QString mSymbolXml;
-    QPixmap mPixmap;
-    QList<QgsPoint> mGeoPoints;
+    QPixmap mGraphic;
+    QList<QgsPoint> mAdditionalPoints;
+    QList<int> mControlPoints;
+    bool mHasVariablePointCount;
+    bool mFinalized;
 
-    void renderPixmap();
     void _showItemEditor() override;
+    void updateSymbol();
 };
 
 #endif // QGSVBSMILIXANNOTATIONITEM_H

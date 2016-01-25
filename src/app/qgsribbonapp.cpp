@@ -410,6 +410,12 @@ void QgsRibbonApp::configureButtons()
   connect( mActionExportGPX, SIGNAL( triggered() ), mGpsRouteEditor, SLOT( exportGpx() ) );
   setActionToButton( mActionExportGPX, mGpxExportButton );
 
+  //mss tab
+
+  setActionToButton( mActionMilx, mMilxButton );
+  setActionToButton( mActionSaveMilx, mSaveMilxButton );
+  setActionToButton( mActionLoadMilx, mLoadMilxButton );
+
   //settings tab
   connect( mActionSettings, SIGNAL( triggered() ), this, SLOT( options() ) );
   setActionToButton( mActionSettings, mSettingsButton );

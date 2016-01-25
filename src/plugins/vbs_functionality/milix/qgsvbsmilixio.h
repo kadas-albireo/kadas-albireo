@@ -1,8 +1,8 @@
 /***************************************************************************
- *  qgsvbsmaptoolmilix.h                                                   *
+ *  qgsvbsmilixio.h                                                        *
  *  -------------------                                                    *
- *  begin                : Oct 01, 2015                                    *
- *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
+ *  begin                : February 2016                                   *
+ *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
 
@@ -15,31 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMAPTOOLMILIX_H
-#define QGSVBSMAPTOOLMILIX_H
+#ifndef QGSVBSMILIXIO_H
+#define QGSVBSMILIXIO_H
 
-#include "qgsmaptoolannotation.h"
+#include <QObject>
 
-class QgsVBSMilixAnnotationItem;
 class QgsVBSMilixManager;
 
-class QgsVBSMapToolMilix : public QgsMapTool
+class QgsVBSMilixIO : public QObject
 {
   public:
-    QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
-    ~QgsVBSMapToolMilix();
-    void canvasPressEvent( QMouseEvent * e ) override;
-    void canvasMoveEvent( QMouseEvent * e ) override;
-
-  private:
-    QString mSymbolXml;
-    int mMinNPoints;
-    int mNPressedPoints;
-    bool mHasVariablePoints;
-    QPixmap mPreview;
-    QgsVBSMilixAnnotationItem* mItem;
-    QgsVBSMilixManager* mManager;
+    static bool save( QgsVBSMilixManager* manager );
+    static bool load( QgsVBSMilixManager* manager );
 };
 
-#endif // QGSVBSMAPTOOLMILIX_H
-
+#endif // QGSVBSMILIXIO_H

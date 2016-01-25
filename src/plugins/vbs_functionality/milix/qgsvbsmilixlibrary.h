@@ -21,7 +21,7 @@
 #include <QDialog>
 #include <QIcon>
 #include <QModelIndex>
-#include <QPointer>
+#include <QThread>
 
 class QgisInterface;
 class QListWidget;
@@ -30,7 +30,6 @@ class QModelIndex;
 class QStandardItem;
 class QStandardItemModel;
 class QTreeView;
-class QgsVBSMapToolMilix;
 class QgsVBSMilixManager;
 class QgsFilterLineEdit;
 
@@ -42,25 +41,41 @@ class QgsVBSMilixLibrary : public QDialog
 
   private:
     class TreeFilterProxyModel;
+    friend class QgsVBSMilixLibraryLoader;
 
     static const int SymbolXmlRole;
     static const int SymbolPointCountRole;
+    static const int SymbolVariablePointsRole;
 
     QgisInterface* mIface;
-    QPointer<QgsVBSMapToolMilix> mCurTool;
     QgsVBSMilixManager* mManager;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     QStandardItemModel* mGalleryModel;
+    QStandardItemModel* mLoadingModel;
     TreeFilterProxyModel* mFilterProxyModel;
 
     void populateLibrary();
-    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QIcon &icon = QIcon(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0 );
 
   private slots:
-    void unsetMilixTool();
     void filterChanged( const QString& text );
     void itemDoubleClicked( QModelIndex index );
+    void loaderFinished();
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
+};
+
+
+class QgsVBSMilixLibraryLoader : public QThread
+{
+    Q_OBJECT
+  public:
+    QgsVBSMilixLibraryLoader( QgsVBSMilixLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ) {}
+
+  private:
+    QgsVBSMilixLibrary* mLibrary;
+
+    void run() override;
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0 );
 };
 
 #endif // QGSVBSMILIXLIBRARY_H

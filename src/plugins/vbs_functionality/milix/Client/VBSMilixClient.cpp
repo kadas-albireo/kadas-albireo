@@ -6,35 +6,38 @@
 #include <QHostAddress>
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
-#include <QPixmap>
+#include <QImage>
 #include <QProcess>
 #include <QSettings>
 #include <QTcpSocket>
 #include <QTimer>
 #include <QWidget>
-#include <QPainter>
-#include <QWebView>
-#include <QDomDocument>
+#include <rsvgrenderer.h>
 
 void VBSMilixClient::cleanup()
 {
   delete mProcess;
   mProcess = 0;
-  delete mTcpSocket;
+  mTcpSocket->deleteLater();
   mTcpSocket = 0;
   delete mNetworkSession;
   mNetworkSession = 0;
 }
 
-bool VBSMilixClient::init()
+bool VBSMilixClient::initialize()
 {
+  if ( mTcpSocket )
+  {
+    return true;
+  }
+
   cleanup();
   mLastError = QString();
 
   // Start process
 #ifdef Q_OS_WIN
   int port;
-  QHostAddress addr(QHostAddress::LocalHost);
+  QHostAddress addr( QHostAddress::LocalHost );
   mProcess = new QProcess( this );
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {
@@ -71,7 +74,7 @@ bool VBSMilixClient::init()
   }
 #else
   int port = 31415;
-  QString addr = "192.168.178.124";
+  QHostAddress addr = QHostAddress( "192.168.178.124" );
 #endif
 
   // Initialize network
@@ -112,6 +115,8 @@ bool VBSMilixClient::init()
 
   // Connect to server
   mTcpSocket = new QTcpSocket( this );
+  QTimer timeoutTimer;
+  timeoutTimer.setSingleShot( true );
   connect( mTcpSocket, SIGNAL( disconnected() ), this, SLOT( cleanup() ) );
   connect( mTcpSocket, SIGNAL( error( QAbstractSocket::SocketError ) ), this, SLOT( handleSocketError() ) );
   {
@@ -119,12 +124,15 @@ bool VBSMilixClient::init()
     connect( mTcpSocket, SIGNAL( error( QAbstractSocket::SocketError ) ), &evLoop, SLOT( quit() ) );
     connect( mTcpSocket, SIGNAL( disconnected() ), &evLoop, SLOT( quit() ) );
     connect( mTcpSocket, SIGNAL( connected() ), &evLoop, SLOT( quit() ) );
+    connect( &timeoutTimer, SIGNAL( timeout() ), &evLoop, SLOT( quit() ) );
     mTcpSocket->connectToHost( addr, port );
+    timeoutTimer.start( 1000 );
     evLoop.exec( QEventLoop::ExcludeUserInputEvents );
   }
 
-  if ( !mTcpSocket->isOpen() )
+  if ( mTcpSocket->state() != QTcpSocket::ConnectedState )
   {
+    mTcpSocket->abort();
     cleanup();
     return false;
   }
@@ -162,7 +170,7 @@ bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& resp
 {
   mLastError = QString();
 
-  if ( !mTcpSocket && !init() )
+  if ( !mTcpSocket && !initialize() )
   {
     mLastError = tr( "Connection failed" );
     return false;
@@ -171,6 +179,8 @@ bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& resp
   int requiredSize = 0;
   response.clear();
 
+  qint32 len = request.size();
+  mTcpSocket->write( reinterpret_cast<char*>( &len ), sizeof( quint32 ) );
   mTcpSocket->write( request );
 
   do
@@ -189,6 +199,7 @@ bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& resp
     }
   }
   while ( response.size() < requiredSize );
+  Q_ASSERT( mTcpSocket->bytesAvailable() == 0 );
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
@@ -229,45 +240,12 @@ void VBSMilixClient::handleSocketError()
   }
 }
 
-bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
-{
-  QByteArray request;
-  QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_SYMBOLS;
-  istream << symbolIds;
-  QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOLS ) )
-  {
-    return false;
-  }
-
-  QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_SYMBOLS );
-  int nResults;
-  ostream >> nResults;
-  if ( nResults != symbolIds.size() )
-  {
-    return false;
-  }
-  for ( int i = 0; i < nResults; ++i )
-  {
-    QByteArray symbolXml;
-    SymbolDesc desc;
-    desc.symbolId = symbolIds[i];
-    ostream >> desc.name >> symbolXml >> desc.hasVariablePoints >> desc.minNumPoints;
-    desc.icon = renderSvg( symbolXml );
-    result.append( desc );
-  }
-  return true;
-}
-
-bool VBSMilixClient::getSymbol( const QString& xml, QPixmap& pixmap, QString& name, bool& hasVariablePoints, int& minNumPoints )
+bool VBSMilixClient::getSymbol( const QString& symbolId, SymbolDesc &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << VBS_MILIX_REQUEST_GET_SYMBOL;
-  istream << xml;
+  istream << symbolId;
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOL ) )
   {
@@ -276,81 +254,157 @@ bool VBSMilixClient::getSymbol( const QString& xml, QPixmap& pixmap, QString& na
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_SYMBOL );
   QByteArray svgxml;
-  ostream >> name >> svgxml >> hasVariablePoints >> minNumPoints;
-  pixmap = renderSvg( svgxml );
+  ostream >> result.name >> svgxml >> result.hasVariablePoints >> result.minNumPoints;
+  result.icon = renderSvg( svgxml );
   return true;
 }
 
-bool VBSMilixClient::getNPointSymbol( const QString& xml, const QList<QPoint>& points, const QRect& visibleExtent, QPixmap& pixmap, QPoint& offset )
+bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_NPOINT_SYMBOL;
-  istream << visibleExtent;
-  istream << xml;
-  istream << points;
+  istream << VBS_MILIX_REQUEST_GET_SYMBOLS;
+  istream << symbolIds;
+
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_NPOINT_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOLS ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_NPOINT_SYMBOL );
-  //ostream >> pixmap >> offset;
-  QByteArray svgxml;
-  ostream >> svgxml >> offset;
-  pixmap = renderSvg( svgxml );
-  return true;
-}
-
-bool VBSMilixClient::getNPointSymbols( const QList<NPointSymbol> &symbols, const QRect &visibleExtent, QList<NPointSymbolPixmap> &result )
-{
-  int nSymbols = symbols.length();
-  QByteArray request;
-  QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_NPOINT_SYMBOLS;
-  istream << visibleExtent;
-  istream << nSymbols;
-  foreach ( const NPointSymbol& symbol, symbols )
-  {
-    istream << symbol.xml << symbol.points;
-  }
-  QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS ) )
+  int nResults;
+  ostream >> nResults;
+  if ( nResults != symbolIds.size() )
   {
     return false;
   }
-
-  QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  Q_ASSERT( replycmd == VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS );
-  int nOutSymbols;
-  ostream >> nOutSymbols;
-  if ( nOutSymbols != nSymbols )
-  {
-    return false;
-  }
-  for ( int i = 0; i < nOutSymbols; ++i )
+  for ( int i = 0; i < nResults; ++i )
   {
     QByteArray svgxml;
-    NPointSymbolPixmap symbolPixmap;
-    ostream >> svgxml >> symbolPixmap.offset;
-    symbolPixmap.pixmap = renderSvg( svgxml );
-    result.append( symbolPixmap );
+    SymbolDesc desc;
+    desc.symbolId = symbolIds[i];
+    ostream >> desc.name >> svgxml >> desc.hasVariablePoints >> desc.minNumPoints;
+    desc.icon = renderSvg( svgxml );
+    result.append( desc );
   }
   return true;
 }
 
-bool VBSMilixClient::editSymbol( const QString& xml, QString& outXml )
+bool VBSMilixClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_EDIT_SYMBOL;
-  istream << xml;
+  istream << VBS_MILIX_REQUEST_APPEND_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_APPEND_POINT ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml; ostream >> svgxml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  ostream >> result.adjustedPoints;
+  ostream >> result.controlPoints;
+  return true;
+}
+
+bool VBSMilixClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_INSERT_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_INSERT_POINT ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml; ostream >> svgxml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  ostream >> result.adjustedPoints;
+  ostream >> result.controlPoints;
+  return true;
+}
+
+bool VBSMilixClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_MOVE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index << newPos;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_MOVE_POINT ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml; ostream >> svgxml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  ostream >> result.adjustedPoints;
+  ostream >> result.controlPoints;
+  return true;
+}
+
+bool VBSMilixClient::canDeletePoint( const NPointSymbol& symbol, int index, bool& canDelete )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_CAN_DELETE_POINT;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index;
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_CAN_DELETE_POINT ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> canDelete;
+  return true;
+}
+
+bool VBSMilixClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_DELETE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_DELETE_POINT ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml; ostream >> svgxml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  ostream >> result.adjustedPoints;
+  ostream >> result.controlPoints;
+  return true;
+}
+
+bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, NPointSymbolGraphic& result )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_EDIT_SYMBOL << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
+
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_EDIT_SYMBOL ) )
   {
@@ -359,31 +413,88 @@ bool VBSMilixClient::editSymbol( const QString& xml, QString& outXml )
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  Q_ASSERT( replycmd == VBS_MILIX_REPLY_EDIT_SYMBOL );
-  ostream >> outXml;
+  QByteArray svgxml; ostream >> svgxml;
+  ostream >> newSymbolXml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  ostream >> result.adjustedPoints;
+  ostream >> result.controlPoints;
   return true;
 }
 
-QPixmap VBSMilixClient::renderSvg( const QByteArray& xml )
+bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result )
 {
-  // TODO: Can't find a way to get the svg size from the webview
-  QDomDocument doc;
-  doc.setContent( xml );
-  QDomElement svgEl = doc.firstChildElement( "svg" );
-  int width = svgEl.attribute( "width" ).toDouble();
-  int height = svgEl.attribute( "height" ).toDouble();
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_UPDATE_SYMBOL;
+  istream << visibleExtent;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
 
-  QWebView web;
-  web.setRenderHint( QPainter::SmoothPixmapTransform );
-  web.setRenderHint( QPainter::Antialiasing );
-  web.setRenderHint( QPainter::TextAntialiasing );
-  web.setContent( xml, "image/svg+xml" );
-  web.setStyleSheet( "background:transparent;" );
-  web.setAttribute( Qt::WA_TranslucentBackground );
-  web.resize( width, height );
-  QPixmap pixmap( QSize( width, height ) );
-  pixmap.fill( Qt::transparent );
-  QPainter p( &pixmap );
-  web.render( &p );
-  return pixmap;
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_UPDATE_SYMBOL ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml; ostream >> svgxml;
+  result.graphic = renderSvg( svgxml );
+  ostream >> result.offset;
+  return true;
+}
+
+bool VBSMilixClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result )
+{
+  int nSymbols = symbols.length();
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_UPDATE_SYMBOLS;
+  istream << visibleExtent;
+  istream << nSymbols;
+  foreach ( const NPointSymbol& symbol, symbols )
+  {
+    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
+  }
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_UPDATE_SYMBOLS ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  int nOutSymbols;
+  ostream >> nOutSymbols;
+  if ( nOutSymbols != nSymbols )
+  {
+    return false;
+  }
+  for ( int i = 0; i < nOutSymbols; ++i )
+  {
+    NPointSymbolGraphic symbolGraphic;
+    QByteArray svgxml; ostream >> svgxml;
+    symbolGraphic.graphic = renderSvg( svgxml );
+    ostream >> symbolGraphic.offset;
+    result.append( symbolGraphic );
+  }
+  return true;
+}
+
+QImage VBSMilixClient::renderSvg( const QByteArray& xml )
+{
+  if ( xml.isEmpty() )
+  {
+    return QImage();
+  }
+  RSvgRendererHandle* handle = rsvgrenderer_read_data( reinterpret_cast<const unsigned char*>( xml.constData() ), xml.length() );
+  if ( !handle )
+  {
+    return QImage();
+  }
+  QImage image( handle->width, handle->height, QImage::Format_ARGB32 );
+  image.fill( Qt::transparent );
+  rsvgrenderer_write_pixmap( handle, image.bits(), image.width(), image.height(), image.bytesPerLine() );
+  rsvgrenderer_destroy( handle );
+  return image;
 }

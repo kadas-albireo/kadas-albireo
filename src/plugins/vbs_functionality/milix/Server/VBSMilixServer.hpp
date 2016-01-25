@@ -3,6 +3,7 @@
 
 #define _AFXDLL
 
+#include <QMap>
 #include <QObject>
 #include <QPoint>
 #include <SDKDDKVer.h>
@@ -21,7 +22,6 @@ class VBSMilixServer : public QObject
 
 public:
     VBSMilixServer(const QString& addr, int port, QWidget* parent = 0);
-    ~VBSMilixServer();
 
 private slots:
     void sessionOpened();
@@ -30,19 +30,41 @@ private slots:
     void onSocketDisconnected();
 
 private:
-	QString mAddr;
-	int mPort;
+    struct SymbolInput {
+      QString symbolXml;
+      QList<QPoint> points;
+      QList<int> controlPoints;
+      bool finalized;
+    };
+
+    struct SymbolOutput {
+      QByteArray svgXml;
+      QPoint offset;
+      QList<QPoint> adjustedPoints;
+      QList<int> controlPoints;
+    };
+
+    QString mAddr;
+    int mPort;
     QTcpServer* mTcpServer;
     QNetworkSession* mNetworkSession;
+    QByteArray mRequestBuffer;
+    int mRequestSize;
     MssComServer::IMssSymbolProviderServiceGSPtr mMssService;
     MssComServer::IMssSymbolProviderGSPtr mMssSymbolProvider;
-    MssComServer::IMssSymbolFormatGSPtr mMssSymbolFormat;
-    MssComServer::IMssSymbolEditorGSPtr mMssSymbolEditor;
-	MssComServer::IMssNPointDrawingTargetGSPtr mMssNPointDrawingTarget;
+    MssComServer::IMssNPointDrawingTargetGSPtr mMssNPointDrawingTarget;
 
     QByteArray processCommand(QByteArray& request);
-    bool getSymbolInfo(const QString& symbolXml, QString& name, QString& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg);
-    bool renderSymbol(const QRect& visibleExtent, const QString& symbolXml, const QList<QPoint>& points, QByteArray& svgXml, QPoint& offset, QString& errorMsg);
+    bool getSymbolInfo(const QString& symbolXml, QString& name, QByteArray& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg);
+    bool renderSymbol(const QRect& visibleExtent, const SymbolInput& input, SymbolOutput& output, QString& errorMsg);
+    bool insertPoint(const QRect& visibleExtent, const SymbolInput& input, const QPoint& newPoint, SymbolOutput& output, QString& errorMsg);
+    bool movePoint(const QRect& visibleExtent, const SymbolInput& input, int moveIndex, const QPoint& newPos, SymbolOutput& output, QString& errorMsg);
+    bool canDeletePoint(const SymbolInput& input, int index, bool& canDelete, QString& errorMsg);
+    bool deletePoint(const QRect& visibleExtent, const SymbolInput& input, int deleteIndex, SymbolOutput& output, QString& errorMsg);
+    bool editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, SymbolOutput& output, QString& errorMsg);
+
+    bool createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem);
+    bool renderItem(MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem, const QRect& visibleExtent, SymbolOutput& output, QString& errorMsg);
 };
 
 #endif // VBSMILIXSERVER_HPP

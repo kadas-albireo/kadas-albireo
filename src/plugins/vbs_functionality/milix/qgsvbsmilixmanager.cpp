@@ -41,24 +41,26 @@ void QgsVBSMilixManager::removeItem( QObject *item )
 void QgsVBSMilixManager::updateItems()
 {
   QList<VBSMilixClient::NPointSymbol> symbols;
-  foreach ( QgsVBSMilixAnnotationItem* item, mItems )
+  QList<int> updateMap;
+  for ( int i = 0, n = mItems.size(); i < n; ++i )
   {
-    VBSMilixClient::NPointSymbol symbol;
-    symbol.xml = item->symbolXml();
-    symbol.points = item->points();
-    symbols.append( symbol );
+    if ( mItems[i]->isNPoint() )
+    {
+      symbols.append( VBSMilixClient::NPointSymbol( mItems[i]->symbolXml(), mItems[i]->points(), mItems[i]->controlPoints(), true ) );
+      updateMap.append( i );
+    }
   }
   if ( symbols.isEmpty() )
   {
     return;
   }
-  QList<VBSMilixClient::NPointSymbolPixmap> result;
-  if ( !VBSMilixClient::getNPointSymbols( symbols, mMapCanvas->sceneRect().toRect(), result ) )
+  QList<VBSMilixClient::NPointSymbolGraphic> result;
+  if ( !VBSMilixClient::updateSymbols( mMapCanvas->sceneRect().toRect(), symbols, result ) )
   {
     return;
   }
   for ( int i = 0, n = result.size(); i < n; ++i )
   {
-    mItems[i]->updatePixmap( result[i].pixmap, result[i].offset );
+    mItems[updateMap[i]]->setGraphic( result[i], false );
   }
 }

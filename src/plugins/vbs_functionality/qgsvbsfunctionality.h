@@ -25,6 +25,8 @@ class QAction;
 
 class QgsMapLayer;
 class QgsMessageBarItem;
+class QgsVBSMilixLibrary;
+class QgsVBSMilixManager;
 
 class QgsVBSFunctionality: public QObject, public QgisPlugin
 {
@@ -38,9 +40,17 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
   private:
     QgisInterface* mQGisIface;
     QAction* mActionOvlImport;
+    QAction* mActionMilx;
+    QAction* mActionSaveMilx;
+    QAction* mActionLoadMilx;
+    QgsVBSMilixLibrary* mMilXLibrary;
+    QgsVBSMilixManager* mMilXManager;
 
   private slots:
     void importOVL();
+    void toggleMilXLibrary();
+    void saveMilx();
+    void loadMilx();
 };
 
 #endif // QGSVBSFUNCTIONALITY_H
