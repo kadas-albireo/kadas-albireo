@@ -1,8 +1,8 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
-IF(MSVC)
-ADD_SUBDIRECTORY(milix/Server)
-ENDIF(MSVC)
+#IF(MSVC)
+#ADD_SUBDIRECTORY(milix/Server)
+#ENDIF(MSVC)
 
 ########################################################
 # Files
