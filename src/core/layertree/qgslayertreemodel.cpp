@@ -183,7 +183,7 @@ QVariant QgsLayerTreeModel::data( const QModelIndex &index, int role ) const
       QgsLayerTreeLayer *nodeLayer = QgsLayerTree::toLayer( node );
 
       QgsMapLayer *layer = nodeLayer->layer();
-      if ( !layer )
+      if ( !layer || !QSettings().value( "/qgis/showlegendicons", true ).toBool() )
         return QVariant();
 
       // icons possibly overriding default icon
