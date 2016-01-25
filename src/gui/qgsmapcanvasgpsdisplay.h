@@ -40,6 +40,14 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
       WhenNeeded
     };
 
+    enum FixStatus
+    {
+      NoData,
+      NoFix,
+      Fix2D,
+      Fix3D
+    };
+
     QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas );
     QgsMapCanvasGPSDisplay();
 
@@ -68,6 +76,7 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     void setPort( const QString& port ) { mPort = port; }
 
     QgsGPSInformation currentGPSInformation() const;
+    FixStatus currentFixStatus() const { return mCurFixStatus; }
 
   private slots:
     void gpsDetected( QgsGPSConnection* conn );
@@ -78,6 +87,7 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     void gpsConnected();
     void gpsDisconnected();
     void gpsConnectionFailed();
+    void gpsFixStatusChanged( FixStatus status );
 
     void gpsInformationReceived( const QgsGPSInformation& info );
     void nmeaSentenceReceived( const QString& substring );
@@ -90,6 +100,7 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     int mSpinMapExtentMultiplier;
     QgsPoint mLastGPSPosition;
     QgsCoordinateReferenceSystem mWgs84CRS;
+    FixStatus mCurFixStatus;
 
     /**Port for the GPS connectio*/
     QString mPort;

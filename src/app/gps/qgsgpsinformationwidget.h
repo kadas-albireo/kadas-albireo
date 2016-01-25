@@ -51,6 +51,7 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
   private slots:
     void on_mConnectButton_toggled( bool theFlag );
     void displayGPSInformation( const QgsGPSInformation& info );
+    void setStatusIndicator( QgsMapCanvasGPSDisplay::FixStatus fixStatus );
     void logNmeaSentence( const QString& nmeaString ); // added to handle 'raw' data
     void updateCloseFeatureButton( QgsMapLayer * lyr );
     void layerEditStateChanged();
@@ -80,18 +81,11 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
     void timedout();
 
   private:
-
-    enum FixStatus  //GPS status
-    {
-      NoData, NoFix, Fix2D, Fix3D
-    };
-
     void addVertex();
     void connectGps();
     void connectGpsSlot();
     void disconnectGps();
     void populateDevices();
-    void setStatusIndicator( const FixStatus statusValue );
     void showStatusBarMessage( const QString& msg );
     QgsMapCanvasGPSDisplay mGPSDisplay;
     QgsMapCanvas * mpCanvas;
@@ -108,7 +102,6 @@ class QgsGPSInformationWidget: public QWidget, private Ui::QgsGPSInformationWidg
     QgsRubberBand * mpRubberBand;
     QgsPoint mLastGpsPosition;
     QList<QgsPoint> mCaptureList;
-    FixStatus mLastFixStatus;
     QString mDateTimeFormat; // user specified format string in registry (no UI presented)
     QgsVectorLayer * mpLastLayer;
     QFile * mLogFile;

@@ -232,7 +232,7 @@ QgsGPSInformationWidget::QgsGPSInformationWidget( QgsMapCanvas * thepCanvas, QWi
   mBtnDebug->setVisible( mySettings.value( "/gps/showDebug", "false" ).toBool() );  // use a registry setting to control - power users/devs could set it
 
   // status = unknown
-  setStatusIndicator( NoData );
+  setStatusIndicator( QgsMapCanvasGPSDisplay::NoData );
 
   //SLM - added functionality
   mLogFile = 0;
@@ -464,7 +464,7 @@ void QgsGPSInformationWidget::disconnectGps()
   mConnectButton->setText( tr( "&Connect" ) );
   showStatusBarMessage( tr( "Disconnected from GPS device." ) );
 
-  setStatusIndicator( NoData );
+  setStatusIndicator( QgsMapCanvasGPSDisplay::NoData );
 }
 
 void QgsGPSInformationWidget::displayGPSInformation( const QgsGPSInformation& info )
@@ -478,33 +478,7 @@ void QgsGPSInformationWidget::displayGPSInformation( const QgsGPSInformation& in
 
   // set validity flag and status from GPS data
   // based on GGA, GSA and RMC sentences - the logic does not require all
-  bool validFlag = false; // true if GPS indicates position fix
-  FixStatus fixStatus = NoData;
-
-  // no fix if any of the three report bad; default values are invalid values and won't be changed if the corresponding NMEA msg is not received
-  if ( info.status == 'V' || info.fixType == NMEA_FIX_BAD || info.quality == 0 ) // some sources say that 'V' indicates position fix, but is below acceptable quality
-  {
-    fixStatus = NoFix;
-  }
-  else if ( info.fixType == NMEA_FIX_2D ) // 2D indication (from GGA)
-  {
-    fixStatus = Fix2D;
-    validFlag = true;
-  }
-  else if ( info.status == 'A' || info.fixType == NMEA_FIX_3D || info.quality > 0 ) // good
-  {
-    fixStatus = Fix3D;
-    validFlag = true;
-  }
-  else  // unknown status (not likely)
-  {
-  }
-
-  // set visual status indicator -- do only on change of state
-  if ( fixStatus != mLastFixStatus )
-  {
-    setStatusIndicator( fixStatus );
-  }
+  bool validFlag = mGPSDisplay.currentFixStatus() >= QgsMapCanvasGPSDisplay::Fix2D; // true if GPS indicates position fix
 
   if ( mStackedWidget->currentIndex() == 1 && info.satInfoComplete ) //signal
   {
@@ -926,6 +900,8 @@ void QgsGPSInformationWidget::connectGpsSlot()
 {
   connect( &mGPSDisplay, SIGNAL( gpsInformationReceived( const QgsGPSInformation& ) ),
            this, SLOT( displayGPSInformation( const QgsGPSInformation& ) ) );
+  connect( &mGPSDisplay, SIGNAL( gpsFixStatusChanged( QgsMapCanvasGPSDisplay::FixStatus ) ),
+           this, SLOT( setStatusIndicator( QgsMapCanvasGPSDisplay::FixStatus ) ) );
 }
 
 void QgsGPSInformationWidget::on_mBtnRefreshDevices_clicked()
@@ -1080,23 +1056,22 @@ void QgsGPSInformationWidget::layerEditStateChanged()
   updateCloseFeatureButton( mpLastLayer );
 }
 
-void QgsGPSInformationWidget::setStatusIndicator( const FixStatus statusValue )
+void QgsGPSInformationWidget::setStatusIndicator( const QgsMapCanvasGPSDisplay::FixStatus statusValue )
 {
-  mLastFixStatus = statusValue;
   // the pixmap will be expanded to the size of the label
   QPixmap status( 4, 4 );
   switch ( statusValue )
   {
-    case NoFix:
+    case QgsMapCanvasGPSDisplay::NoFix:
       status.fill( Qt::red );
       break;
-    case Fix2D:
+    case QgsMapCanvasGPSDisplay::Fix2D:
       status.fill( Qt::yellow );
       break;
-    case Fix3D:
+    case QgsMapCanvasGPSDisplay::Fix3D:
       status.fill( Qt::green );
       break;
-    case NoData:
+    case QgsMapCanvasGPSDisplay::NoData:
     default: // anything else - shouldn't happen
       status.fill( Qt::darkGray );
   }

@@ -90,6 +90,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void gpsDetected();
     void gpsDisconnected();
     void gpsConnectionFailed();
+    void gpsFixChanged( QgsMapCanvasGPSDisplay::FixStatus fixStatus );
 
   private:
     QMenu* mProjectMenu;
@@ -131,6 +132,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void updateWidgetPositions();
     void initLayerTreeView();
     void initGPSDisplay();
+    void setGPSIcon( const QColor& color );
 };
 
 #endif // QGSRIBBONAPP_H
