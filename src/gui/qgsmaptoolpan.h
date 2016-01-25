@@ -17,12 +17,12 @@
 #define QGSMAPTOOLPAN_H
 
 #include "qgsmaptool.h"
-#include "qgsannotationitem.h"
 
 class QgsFeature;
 class QgsLabelPosition;
 class QgsMapCanvas;
 class QgsRubberBand;
+class QgsVectorLayer;
 class QPinchGesture;
 
 
@@ -84,7 +84,7 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     bool mPickClick;
 
     //! Current annotation move action
-    QgsAnnotationItem::MouseMoveAction mAnnotationMoveAction;
+    int mAnnotationMoveAction;
 
     //! Previous mouse position during move
     QPointF mMouseMoveLastXY;

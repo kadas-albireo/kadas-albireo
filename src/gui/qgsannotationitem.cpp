@@ -296,7 +296,7 @@ QPointF QgsAnnotationItem::pointOnLineWithDistance( const QPointF& startPoint, c
   return QPointF( startPoint.x() + dx * scaleFactor, startPoint.y() + dy * scaleFactor );
 }
 
-QgsAnnotationItem::MouseMoveAction QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
+int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
   QPointF itemPos = mapFromScene( pos );
 
@@ -375,7 +375,7 @@ QgsAnnotationItem::MouseMoveAction QgsAnnotationItem::moveActionForPosition( con
   return NoAction;
 }
 
-void QgsAnnotationItem::handleMoveAction( MouseMoveAction moveAction, const QPointF &newPos, const QPointF &oldPos )
+void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos )
 {
   if ( moveAction == QgsAnnotationItem::MoveMapPosition )
   {
@@ -447,7 +447,7 @@ void QgsAnnotationItem::handleMoveAction( MouseMoveAction moveAction, const QPoi
   }
 }
 
-Qt::CursorShape QgsAnnotationItem::cursorShapeForAction( MouseMoveAction moveAction ) const
+Qt::CursorShape QgsAnnotationItem::cursorShapeForAction( int moveAction ) const
 {
   switch ( moveAction )
   {

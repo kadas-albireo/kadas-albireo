@@ -62,7 +62,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ResizeFrameLeftUp,
       ResizeFrameRightUp,
       ResizeFrameLeftDown,
-      ResizeFrameRightDown
+      ResizeFrameRightDown,
+      NumMouseMoveActions
     };
 
     typedef QgsAnnotationItem*( *AnnotationItemFactory_t )( QgsMapCanvas* );
@@ -80,11 +81,11 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     /**Returns the mouse move behaviour for a given position
       @param pos the position in scene coordinates*/
-    MouseMoveAction moveActionForPosition( const QPointF& pos ) const;
+    virtual int moveActionForPosition( const QPointF& pos ) const;
     /**Handles the mouse move action*/
-    void handleMoveAction( MouseMoveAction moveAction, const QPointF &newPos, const QPointF &oldPos );
+    virtual void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos );
     /**Returns suitable cursor shape for mouse move action*/
-    Qt::CursorShape cursorShapeForAction( MouseMoveAction moveAction ) const;
+    virtual Qt::CursorShape cursorShapeForAction( int moveAction ) const;
 
     //setters and getters
     void setMapPositionFixed( bool fixed );

@@ -134,7 +134,7 @@ void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 
   if ( selAnnotationItem )
   {
-    QgsAnnotationItem::MouseMoveAction moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
+    int moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
     if ( moveAction != QgsAnnotationItem::NoAction )
       setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
     else
@@ -180,7 +180,7 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
       if ( annotationItem )
       {
         annotationItem->setSelected( true );
-        QgsAnnotationItem::MouseMoveAction moveAction = annotationItem->moveActionForPosition( e -> pos() );
+        int moveAction = annotationItem->moveActionForPosition( e -> pos() );
         if ( moveAction != QgsAnnotationItem::NoAction )
           setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
       }

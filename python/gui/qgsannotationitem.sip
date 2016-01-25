@@ -33,9 +33,9 @@ class QgsAnnotationItem: QgsMapCanvasItem
 
     /**Returns the mouse move behaviour for a given position
       @param pos the position in scene coordinates*/
-    QgsAnnotationItem::MouseMoveAction moveActionForPosition( const QPointF& pos ) const;
+    int moveActionForPosition( const QPointF& pos ) const;
     /**Returns suitable cursor shape for mouse move action*/
-    Qt::CursorShape cursorShapeForAction( MouseMoveAction moveAction ) const;
+    Qt::CursorShape cursorShapeForAction( int moveAction ) const;
 
     //setters and getters
     void setMapPositionFixed( bool fixed );
