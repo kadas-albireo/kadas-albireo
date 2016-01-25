@@ -20,7 +20,7 @@ class VBSMilixServer : public QObject
     Q_OBJECT
 
 public:
-    VBSMilixServer(QWidget* parent = 0);
+    VBSMilixServer(const QString& addr, int port, QWidget* parent = 0);
     ~VBSMilixServer();
 
 private slots:
@@ -30,6 +30,8 @@ private slots:
     void onSocketDisconnected();
 
 private:
+	QString mAddr;
+	int mPort;
     QTcpServer* mTcpServer;
     QNetworkSession* mNetworkSession;
     MssComServer::IMssSymbolProviderServiceGSPtr mMssService;

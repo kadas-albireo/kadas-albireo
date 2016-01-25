@@ -24,7 +24,7 @@ static QPlainTextEdit* gTextEdit = 0;
 #define LOG(msg)
 #endif
 
-VBSMilixServer::VBSMilixServer( QWidget* parent ) : QObject( parent ), mTcpServer( 0 ), mNetworkSession( 0 )
+VBSMilixServer::VBSMilixServer( const QString& addr, int port, QWidget* parent ) : QObject( parent ), mAddr( addr ), mPort( port ), mTcpServer( 0 ), mNetworkSession( 0 )
 {
   QNetworkConfigurationManager manager;
   if ( manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired )
@@ -82,8 +82,14 @@ void VBSMilixServer::sessionOpened()
   mTcpServer = new QTcpServer( this );
   connect( mTcpServer, SIGNAL( newConnection() ), this, SLOT( onNewConnection() ) );
 
-  QHostAddress address( QHostAddress::LocalHost );
-  if ( !mTcpServer->listen( address, 0 ) )
+  QHostAddress address;
+  if(mAddr.isEmpty()) {
+	  address = QHostAddress( QHostAddress::LocalHost );
+	  mAddr = address.toString();
+  } else {
+	  address = QHostAddress( mAddr );
+  }
+  if ( !mTcpServer->listen( address, mPort ) )
   {
     LOG( QString( "Unable to start server on %1: %2" )
          .arg( address.toString() )
@@ -91,7 +97,8 @@ void VBSMilixServer::sessionOpened()
   }
   else
   {
-    LOG( QString( "Running on %1:%2" ).arg( address.toString() ).arg( mTcpServer->serverPort() ) );
+	mPort = mTcpServer->serverPort();
+    LOG( QString( "Running on %1:%2" ).arg( address.toString() ).arg( mPort ) );
     QTextStream( stdout ) << mTcpServer->serverPort() << endl;
   }
 }
@@ -482,6 +489,12 @@ int main( int argc, char* argv[] )
   gTextEdit = new QPlainTextEdit();
   gTextEdit->show();
 #endif
-  VBSMilixServer s;
+  int port = 0;
+  QString addr;
+  if(argc > 2) {
+	  addr = argv[1];
+	  port = atoi(argv[2]);
+  }
+  VBSMilixServer s(addr, port);
   return app.exec();
 }
