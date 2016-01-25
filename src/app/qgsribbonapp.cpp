@@ -506,7 +506,7 @@ void QgsRibbonApp::addCameraPicture()
   {
     formats.insert( QString( "*.%1" ).arg( QString( format ).toLower() ) );
   }
-  QString filter = QString( "Camera pcitures (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
+  QString filter = QString( "Camera pictures (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
   QString filename = QFileDialog::getOpenFileName( this, tr( "Select Camera Picture" ), lastUsedDir, filter );
   if ( !filename.isEmpty() )
   {
