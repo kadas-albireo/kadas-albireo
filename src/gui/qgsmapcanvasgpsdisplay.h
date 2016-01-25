@@ -87,7 +87,7 @@ class GUI_EXPORT QgsMapCanvasGPSDisplay: public QObject
     void gpsConnected();
     void gpsDisconnected();
     void gpsConnectionFailed();
-    void gpsFixStatusChanged( FixStatus status );
+    void gpsFixStatusChanged( QgsMapCanvasGPSDisplay::FixStatus status );
 
     void gpsInformationReceived( const QgsGPSInformation& info );
     void nmeaSentenceReceived( const QString& substring );
