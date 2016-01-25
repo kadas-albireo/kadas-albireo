@@ -22,15 +22,16 @@
 #include "qgsgpsconnectionregistry.h"
 #include "qgsgpsdetector.h"
 #include "qgsgpsmarker.h"
+#include "gps/info.h"
 #include <QSettings>
 
 QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay( QgsMapCanvas* canvas ): QObject( 0 ), mCanvas( canvas ), mShowMarker( true ),
-    mMarker( 0 ), mConnection( 0 ), mRecenterMap( Never )
+    mMarker( 0 ), mCurFixStatus( NoFix ), mConnection( 0 ), mRecenterMap( Never )
 {
   init();
 }
 
-QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mShowMarker( true ), mMarker( 0 ), mConnection( 0 ), mRecenterMap( Never )
+QgsMapCanvasGPSDisplay::QgsMapCanvasGPSDisplay(): QObject( 0 ), mCanvas( 0 ), mShowMarker( true ), mMarker( 0 ), mCurFixStatus( NoFix ), mConnection( 0 ), mRecenterMap( Never )
 {
   init();
 }
@@ -66,6 +67,7 @@ void QgsMapCanvasGPSDisplay::connectGPS()
 void QgsMapCanvasGPSDisplay::disconnectGPS()
 {
   closeGPSConnection();
+  mCurFixStatus = NoFix;
 }
 
 void QgsMapCanvasGPSDisplay::init()
@@ -105,6 +107,27 @@ void QgsMapCanvasGPSDisplay::gpsDetectionFailed()
 
 void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info )
 {
+  FixStatus fixStatus = NoData;
+
+  // no fix if any of the three report bad; default values are invalid values and won't be changed if the corresponding NMEA msg is not received
+  if ( info.status == 'V' || info.fixType == NMEA_FIX_BAD || info.quality == 0 ) // some sources say that 'V' indicates position fix, but is below acceptable quality
+  {
+    fixStatus = NoFix;
+  }
+  else if ( info.fixType == NMEA_FIX_2D ) // 2D indication (from GGA)
+  {
+    fixStatus = Fix2D;
+  }
+  else if ( info.status == 'A' || info.fixType == NMEA_FIX_3D || info.quality > 0 ) // good
+  {
+    fixStatus = Fix3D;
+  }
+  if ( fixStatus != mCurFixStatus )
+  {
+    emit gpsFixStatusChanged( fixStatus );
+  }
+  mCurFixStatus = fixStatus;
+
   emit gpsInformationReceived( info ); //send signal for service who want to do further actions (e.g. satellite position display, digitising, ...)
 
   if ( !mCanvas || !QgsGPSConnection::gpsInfoValid( info ) )
