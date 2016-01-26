@@ -195,14 +195,17 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
 
 void QgsCatalogBrowser::reload()
 {
-  mCatalogModel->setRowCount( 0 );
-  mTreeView->setModel( mLoadingModel );
-
-  mFinishedProviders = 0;
-  foreach ( QgsCatalogProvider* provider, mProviders )
+  if ( mProviders.size() > 0 )
   {
-    connect( provider, SIGNAL( finished() ), this, SLOT( providerFinished() ) );
-    provider->load();
+    mCatalogModel->setRowCount( 0 );
+    mTreeView->setModel( mLoadingModel );
+
+    mFinishedProviders = 0;
+    foreach ( QgsCatalogProvider* provider, mProviders )
+    {
+      connect( provider, SIGNAL( finished() ), this, SLOT( providerFinished() ) );
+      provider->load();
+    }
   }
 }
 
