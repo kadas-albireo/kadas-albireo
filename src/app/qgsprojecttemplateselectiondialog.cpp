@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsprojecttemplateselectiondialog.h"
+#include "qgsapplication.h"
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QFileSystemModel>
@@ -34,7 +35,7 @@ QgsProjectTemplateSelectionDialog::QgsProjectTemplateSelectionDialog( QWidget *p
 
   mTreeView = new QTreeView( this );
   mTreeView->setModel( mModel );
-  mTreeView->setRootIndex( mModel->setRootPath( QSettings().value( "/qgis/projectTemplateDir", QDir::homePath() ).toString() ) );
+  mTreeView->setRootIndex( mModel->setRootPath( QSettings().value( "/qgis/projectTemplateDir", QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString() ) );
   for ( int i = 1, n = mModel->columnCount(); i < n; ++i )
   {
     mTreeView->setColumnHidden( i, true );
