@@ -580,6 +580,9 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Save the map image to clipboard
     void saveMapToClipboard();
 
+    //! Create a new file from a template project
+    bool fileNewFromTemplate( QString fileName );
+
   protected:
 
     //! Handle state changes (WindowTitleChange)
@@ -717,8 +720,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     void fileOpenAfterLaunch();
     /** After project read, set any auto-opened project as successful */
     void fileOpenedOKAfterLaunch();
-    //! Create a new file from a template project
-    bool fileNewFromTemplate( QString fileName );
     void fileNewFromTemplateAction( QAction * qAction );
     void fileNewFromDefaultTemplate();
     //! Calculate new rasters from existing ones

@@ -959,6 +959,7 @@ int main( int argc, char *argv[] )
   );
 
   //open default online/offline project if no project on command line and online test url is set
+  QString templatePath;
   if ( myProjectFileName.isEmpty() )
   {
     //check if online / offline and load the corresponding project
@@ -978,14 +979,14 @@ int main( int argc, char *argv[] )
       {
         if ( !onlineProject.isEmpty() )
         {
-          myProjectFileName = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
+          templatePath = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
         }
       }
       else
       {
         if ( !offlineProject.isEmpty() )
         {
-          myProjectFileName = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
+          templatePath = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
         }
       }
     }
@@ -997,6 +998,10 @@ int main( int argc, char *argv[] )
   if ( ! myProjectFileName.isEmpty() )
   {
     qgis->openProject( myProjectFileName );
+  }
+  else if ( !templatePath.isEmpty() )
+  {
+    qgis->fileNewFromTemplate( templatePath );
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -1018,7 +1023,7 @@ int main( int argc, char *argv[] )
   /////////////////////////////////////////////////////////////////////
   // Set initial extent if requested
   /////////////////////////////////////////////////////////////////////
-  if ( ! myInitialExtent.isEmpty() && myProjectFileName.isEmpty() )
+  if ( ! myInitialExtent.isEmpty() && myProjectFileName.isEmpty() && templatePath.isEmpty() )
   {
     double coords[4];
     int pos, posOld = 0;
