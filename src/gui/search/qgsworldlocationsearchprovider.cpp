@@ -98,7 +98,7 @@ void QgsWorldLocationSearchProvider::replyFinished()
 
 
     SearchResult searchResult;
-    searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
+    searchResult.pos = QgsPoint( itemAttrsMap["x"].toDouble(), itemAttrsMap["y"].toDouble() );
     searchResult.zoomScale = 1000;
 
     searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin].first : origin;
