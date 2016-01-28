@@ -212,12 +212,22 @@ void QgsMSLayerCache::freeEntryRessources( QgsMSLayerCacheEntry& entry )
 
 void QgsMSLayerCache::logCacheContents() const
 {
-  QgsMessageLog::logMessage( "Layer cache contents:" , "Server", QgsMessageLog::INFO );
+  QgsMessageLog::logMessage( "***********************Layer cache contents:***************" , "Server", QgsMessageLog::INFO );
+
+  //mEntries
   QHash<QPair<QString, QString>, QgsMSLayerCacheEntry>::const_iterator it = mEntries.constBegin();
   for ( ; it != mEntries.constEnd(); ++it )
   {
     QgsMessageLog::logMessage( "Url: " + it.value().url + " Layer name: " + it.value().layerPointer->name() + " Project: " + it.value().configFile, "Server", QgsMessageLog::INFO );
   }
+
+  //mConfigFiles
+  QHash< QString, int >::const_iterator cIt = mConfigFiles.constBegin();
+  for(; cIt != mConfigFiles.constEnd(); ++cIt )
+  {
+      QgsMessageLog::logMessage( "Config file: " + cIt.key() + " References: " + QString::number( cIt.value() ), "Server", QgsMessageLog::INFO );
+  }
+
 }
 
 void QgsMSLayerCache::removeAllEntries()
