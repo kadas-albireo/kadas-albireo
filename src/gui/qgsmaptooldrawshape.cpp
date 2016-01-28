@@ -514,9 +514,20 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
   else if ( mSectorStage == HaveArc )
   {
     mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
-    if ( mStopAngles.back() < mStartAngles.back() )
+    if ( mStopAngles.back() <= mStartAngles.back() )
     {
       mStopAngles.back() += 2 * M_PI;
+    }
+
+    // Snap to full circle if within 5px
+    QgsPoint pStart( mCenters.back().x() + mRadii.back() * qCos( mStartAngles.back() ),
+                     mCenters.back().y() + mRadii.back() * qSin( mStartAngles.back() ) );
+    QgsPoint pEnd( mCenters.back().x() + mRadii.back() * qCos( mStopAngles.back() ),
+                   mCenters.back().y() + mRadii.back() * qSin( mStopAngles.back() ) );
+    QPoint diff = toCanvasCoordinates( pEnd ) - toCanvasCoordinates( pStart );
+    if (( diff.x() * diff.x() + diff.y() * diff.y() ) < 25 )
+    {
+      mStopAngles.back() = mStartAngles.back() + 2 * M_PI;
     }
   }
 }
@@ -527,13 +538,23 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
   for ( int i = 0, n = mCenters.size(); i < n; ++i )
   {
-    double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] );
-    QgsPoint pStart( mCenters[i].x() + mRadii[i] * qCos( mStartAngles[i] ),
-                     mCenters[i].y() + mRadii[i] * qSin( mStartAngles[i] ) );
-    QgsPoint pMid( mCenters[i].x() + mRadii[i] * qCos( alphaMid ),
-                   mCenters[i].y() + mRadii[i] * qSin( alphaMid ) );
-    QgsPoint pEnd( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
-                   mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
+    QgsPoint pStart, pMid, pEnd;
+    if ( mStopAngles[i] == mStartAngles[i] + 2 * M_PI )
+    {
+      pStart = pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
+                                mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
+      pMid = mCenters[i];
+    }
+    else
+    {
+      double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] );
+      pStart = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStartAngles[i] ),
+                         mCenters[i].y() + mRadii[i] * qSin( mStartAngles[i] ) );
+      pMid = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( alphaMid ),
+                       mCenters[i].y() + mRadii[i] * qSin( alphaMid ) );
+      pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
+                       mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
+    }
     QgsCompoundCurveV2* exterior = new QgsCompoundCurveV2();
     if ( mStartAngles[i] != mStopAngles[i] )
     {
@@ -541,9 +562,12 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
       arc->setPoints( QList<QgsPointV2>() << t->transform( pStart ) << t->transform( pMid ) << t->transform( pEnd ) );
       exterior->addCurve( arc );
     }
-    QgsLineStringV2* line = new QgsLineStringV2();
-    line->setPoints( QList<QgsPointV2>() << t->transform( pEnd ) << t->transform( mCenters[i] ) << t->transform( pStart ) );
-    exterior->addCurve( line );
+    if ( mStopAngles[i] != mStartAngles[i] + 2 * M_PI )
+    {
+      QgsLineStringV2* line = new QgsLineStringV2();
+      line->setPoints( QList<QgsPointV2>() << t->transform( pEnd ) << t->transform( mCenters[i] ) << t->transform( pStart ) );
+      exterior->addCurve( line );
+    }
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2;
     poly->setExteriorRing( exterior );
     multiGeom->addGeometry( poly );

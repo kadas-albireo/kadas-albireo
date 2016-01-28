@@ -95,83 +95,12 @@ double QgsViewshedDialog::getTargetHeight() const
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolViewshed::QgsMapToolViewshed( QgsMapCanvas* mapCanvas )
-    : QgsMapToolDrawCircle( mapCanvas )
-{
-  connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
-}
-
-void QgsMapToolViewshed::drawFinished()
-{
-  QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
-  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
-  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
-  {
-    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
-    reset();
-    return;
-  }
-
-  QgsCoordinateReferenceSystem canvasCrs = canvas()->mapSettings().destinationCrs();
-  double curRadius;
-  QgsPoint center;
-  getPart( 0, center, curRadius );
-  QGis::UnitType measureUnit = canvasCrs.mapUnits();
-  QgsDistanceArea().convertMeasurement( curRadius, measureUnit, QGis::Meters, false );
-
-  QgsViewshedDialog viewshedDialog( curRadius );
-  connect( &viewshedDialog, SIGNAL( radiusChanged( double ) ), this, SLOT( adjustRadius( double ) ) );
-  if ( viewshedDialog.exec() == QDialog::Rejected )
-  {
-    reset();
-    return;
-  }
-
-  QString outputFileName = QString( "viewshed_%1,%2.tif" ).arg( center.x() ).arg( center.y() );
-  QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
-
-  QVector<QgsPoint> filterRegion;
-  getPart( 0, center, curRadius );
-
-  QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
-  p.setWindowModality( Qt::WindowModal );
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight(), viewshedDialog.getTargetHeight(), curRadius, QGis::Meters, filterRegion, &p );
-  if ( success )
-  {
-    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
-    QgsColorRampShader* rampShader = new QgsColorRampShader();
-    QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
-        << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
-    rampShader->setColorRampItemList( colorRampItems );
-    QgsRasterShader* shader = new QgsRasterShader();
-    shader->setRasterShaderFunction( rampShader );
-    QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
-    layer->setRenderer( renderer );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-  }
-  reset();
-}
-
-void QgsMapToolViewshed::adjustRadius( double newRadius )
-{
-  QGis::UnitType measureUnit = QGis::Meters;
-  QGis::UnitType targetUnit = canvas()->mapSettings().destinationCrs().mapUnits();
-  QgsDistanceArea().convertMeasurement( newRadius, measureUnit, targetUnit, false );
-  double radius;
-  QgsPoint center;
-  getPart( 0, center, radius );
-  setPart( 0, center, newRadius );
-  update();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QgsViewshedSectorTool::QgsViewshedSectorTool( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawCircularSector( mapCanvas )
 {
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 
-void QgsViewshedSectorTool::drawFinished()
+void QgsMapToolViewshed::drawFinished()
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
@@ -230,7 +159,7 @@ void QgsViewshedSectorTool::drawFinished()
   reset();
 }
 
-void QgsViewshedSectorTool::adjustRadius( double newRadius )
+void QgsMapToolViewshed::adjustRadius( double newRadius )
 {
   QGis::UnitType measureUnit = QGis::Meters;
   QGis::UnitType targetUnit = canvas()->mapSettings().destinationCrs().mapUnits();
