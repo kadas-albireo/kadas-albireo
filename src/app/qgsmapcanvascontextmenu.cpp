@@ -90,7 +90,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
   analysisMenu->addAction( QIcon( ":/images/themes/default/hillshade.svg" ), tr( "Hillshade" ), this, SLOT( terrainHillshade() ) );
   analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
-  analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed_sector.svg" ), tr( "Viewshed in sector" ), this, SLOT( terrainViewshedSector() ) );
   analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
 
   addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
@@ -244,11 +243,6 @@ void QgsMapCanvasContextMenu::terrainHillshade()
 void QgsMapCanvasContextMenu::terrainViewshed()
 {
   QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mViewshed );
-}
-
-void QgsMapCanvasContextMenu::terrainViewshedSector()
-{
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mViewshedSector );
 }
 
 void QgsMapCanvasContextMenu::terrainLineOfSight()

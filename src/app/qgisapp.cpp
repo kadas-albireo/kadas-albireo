@@ -881,7 +881,6 @@ void QgisApp::destroy()
   delete mMapTools.mSlope;
   delete mMapTools.mHillshade;
   delete mMapTools.mViewshed;
-  delete mMapTools.mViewshedSector;
 
   delete mpMaptip;
 
@@ -1236,7 +1235,6 @@ void QgisApp::createCanvasTools()
   mMapTools.mSlope = new QgsMapToolSlope( mapCanvas() );
   mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
   mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
-  mMapTools.mViewshedSector = new QgsViewshedSectorTool( mapCanvas() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
@@ -3762,11 +3760,6 @@ void QgisApp::hillshade( bool active )
 void QgisApp::viewshed( bool active )
 {
   toggleTool( mMapTools.mViewshed, active );
-}
-
-void QgisApp::viewshedSector( bool active )
-{
-  toggleTool( mMapTools.mViewshedSector, active );
 }
 
 void QgisApp::addFormAnnotation( bool active )

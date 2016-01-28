@@ -26,36 +26,25 @@ class QDoubleSpinBox;
 
 class APP_EXPORT QgsViewshedDialog : public QDialog
 {
-  Q_OBJECT
-public:
-  QgsViewshedDialog(double radius, QWidget* parent = 0);
-  double getObserverHeight() const;
-  double getTargetHeight() const;
+    Q_OBJECT
+  public:
+    QgsViewshedDialog( double radius, QWidget* parent = 0 );
+    double getObserverHeight() const;
+    double getTargetHeight() const;
 
-signals:
-  void radiusChanged(double radius);
+  signals:
+    void radiusChanged( double radius );
 
-private:
-  QDoubleSpinBox* mSpinBoxObserverHeight;
-  QDoubleSpinBox* mSpinBoxTargetHeight;
+  private:
+    QDoubleSpinBox* mSpinBoxObserverHeight;
+    QDoubleSpinBox* mSpinBoxTargetHeight;
 };
 
-class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircle
+class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircularSector
 {
     Q_OBJECT
   public:
     QgsMapToolViewshed( QgsMapCanvas* mapCanvas );
-
-  private slots:
-    void drawFinished();
-    void adjustRadius( double newRadius );
-};
-
-class APP_EXPORT QgsViewshedSectorTool : public QgsMapToolDrawCircularSector
-{
-    Q_OBJECT
-  public:
-    QgsViewshedSectorTool( QgsMapCanvas* mapCanvas );
 
   private slots:
     void drawFinished();
