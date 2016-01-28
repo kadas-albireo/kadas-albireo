@@ -922,9 +922,6 @@ QgsGeometry* QgsGeometry::convertToType( QGis::GeometryType destType, bool destM
     case QGis::Polygon:
       return convertToPolygon( destMultipart );
 
-    case QGis::AnyGeometry:
-      return new QgsGeometry( *this );
-
     default:
       return 0;
   }
@@ -1588,6 +1585,11 @@ QgsGeometry *QgsGeometry::unaryUnion( const QList<QgsGeometry*> &geometryList, Q
   }
 
   QgsAbstractGeometryV2* geom = geos.combine( geomV2List, errorMsg );
+  if ( !geom )
+  {
+    return 0;
+  }
+
   return new QgsGeometry( geom );
 }
 
