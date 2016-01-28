@@ -48,6 +48,8 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     void addToCanvas();
 
   private:
+    class ScaleDraw;
+
     QgsMeasureHeightProfileTool* mTool;
     QwtPlot* mPlot;
     QwtPlotCurve* mPlotCurve;

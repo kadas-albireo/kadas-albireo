@@ -35,12 +35,28 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QSettings>
+#include <qwt_scale_draw.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 #include <qmath.h>
+
+
+class QgsMeasureHeightProfileDialog::ScaleDraw : public QwtScaleDraw
+{
+  public:
+    ScaleDraw( double maxVal, int nSamples ) : mFactor( maxVal / nSamples )
+    {
+    }
+    QwtText label( double value ) const override
+    {
+      return QLocale::system().toString( value * mFactor );
+    }
+  private:
+    double mFactor;
+};
 
 
 QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool *tool, QWidget *parent, Qt::WindowFlags f )
@@ -56,8 +72,9 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mPlot = new QwtPlot( this );
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
-  mPlot->enableAxis( QwtPlot::xBottom, false );
+  mPlot->enableAxis( QwtPlot::xBottom );
   mPlot->setAxisTitle( QwtPlot::yLeft, tr( "Height [m]" ) );
+  mPlot->setAxisTitle( QwtPlot::xBottom, tr( "Distance [m]" ) );
   vboxLayout->addWidget( mPlot );
 
   QwtPlotGrid* grid = new QwtPlotGrid();
@@ -287,6 +304,10 @@ void QgsMeasureHeightProfileDialog::replot()
   static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->setSamples( samples );
 #endif
   mPlotMarker->setValue( 0, 0 );
+  mPlot->setAxisScaleDraw( QwtPlot::xBottom, new ScaleDraw( mTotLength, xSamples.size() ) );
+  double step = qPow( 10, qFloor( log10( mTotLength ) ) ) / ( mTotLength ) * xSamples.size();
+  while ( xSamples.size() / step < 10 ) step /= 2.;
+  mPlot->setAxisScale( QwtPlot::xBottom, 0, xSamples.size(), step );
 
   GDALClose( raster );
 
