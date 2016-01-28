@@ -550,33 +550,34 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   double zoneFontSize;
   double subZoneFontSize;
   double gridLabelSize = 6;
-  if ( mapScale > 50000000 )
+  if ( mapScale > 20000000 )
   {
-    zoneFontSize = 6;
+    zoneFontSize = 4;
   }
   else if ( mapScale > 10000000 )
   {
-    zoneFontSize = 8;
+    zoneFontSize = 6;
   }
   else if ( mapScale > 5000000 )   // Zones only, see QgsLatLonToUTM::computeGrid
   {
-    zoneFontSize = 10;
+    zoneFontSize = 8;
   }
   else if ( mapScale > 500000 )   // Zones and subzones only, see QgsLatLonToUTM::computeGrid
   {
-    zoneFontSize = 12.5;
-    subZoneFontSize = 7.5;
+    zoneFontSize = 10.5;
+    subZoneFontSize = 5.5;
   }
   else
   {
-    zoneFontSize = 15;
-    subZoneFontSize = 10;
+    zoneFontSize = 12;
+    subZoneFontSize = 8;
   }
 
   painter->save();
   QFont font = painter->font();
   font.setPointSizeF( zoneFontSize );
   QFontMetrics fm( font );
+  painter->setFont( font );
   foreach ( const QgsLatLonToUTM::GridLabel& zoneLabel, zoneLabels )
   {
     const QPointF& pos = zoneLabel.pos;
@@ -584,9 +585,9 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
     QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
     QPointF maxLabelPos = mComposerMap->mapToItemCoords( inverseTr.transform( maxPos.x(), maxPos.y() ).toQPointF() );
     QPainterPath path;
-    path.addText( labelPos.x() - 1, labelPos.y() - 1, font, zoneLabel.label );
     labelPos.rx() -= fm.width( zoneLabel.label );
     labelPos.ry() += fm.height();
+    path.addText( labelPos.x() - 1, labelPos.y() - 1, font, zoneLabel.label );
     if ( labelPos.x() > maxLabelPos.x() && labelPos.y() < maxLabelPos.y() )
     {
       painter->drawPath( path );
@@ -598,6 +599,7 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   font = painter->font();
   font.setPointSizeF( subZoneFontSize );
   fm = QFontMetrics( font );
+  painter->setFont( font );
   foreach ( const QgsLatLonToUTM::GridLabel& subZoneLabel, zoneSubLabels )
   {
     const QPointF& pos = subZoneLabel.pos;
