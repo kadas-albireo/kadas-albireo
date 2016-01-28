@@ -84,6 +84,9 @@ void QgsMSLayerCache::insertLayer( const QString& url, const QString& layerName,
       mConfigFiles[configFile] = configIt.value() + 1; //increment reference counter
     }
   }
+
+  QgsMessageLog::logMessage( "*********QgsMSLayerCache::insertLayer. Cache contents after insertion:", "Server", QgsMessageLog::INFO );
+  logCacheContents();
 }
 
 QgsMapLayer* QgsMSLayerCache::searchLayer( const QString& url, const QString& layerName, const QString& configFile )
@@ -176,6 +179,7 @@ void QgsMSLayerCache::removeLeastUsedEntry()
   QgsMessageLog::logMessage( "Removing last accessed layer '" + lowest_it.value().layerPointer->name() + "' project file " + lowest_it.value().configFile + " from cache" , "Server", QgsMessageLog::INFO );
   freeEntryRessources( *lowest_it );
   mEntries.erase( lowest_it );
+  QgsMessageLog::logMessage( "*********QgsMSLayerCache::removeLeastUsedEntry. Cache contents after removing entry:", "Server", QgsMessageLog::INFO );
 }
 
 void QgsMSLayerCache::freeEntryRessources( QgsMSLayerCacheEntry& entry )
@@ -223,9 +227,9 @@ void QgsMSLayerCache::logCacheContents() const
 
   //mConfigFiles
   QHash< QString, int >::const_iterator cIt = mConfigFiles.constBegin();
-  for(; cIt != mConfigFiles.constEnd(); ++cIt )
+  for ( ; cIt != mConfigFiles.constEnd(); ++cIt )
   {
-      QgsMessageLog::logMessage( "Config file: " + cIt.key() + " References: " + QString::number( cIt.value() ), "Server", QgsMessageLog::INFO );
+    QgsMessageLog::logMessage( "Config file: " + cIt.key() + " References: " + QString::number( cIt.value() ), "Server", QgsMessageLog::INFO );
   }
 
 }
