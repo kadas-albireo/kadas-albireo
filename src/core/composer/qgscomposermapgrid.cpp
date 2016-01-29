@@ -469,6 +469,35 @@ QPolygonF QgsComposerMapGrid::scalePolygon( const QPolygonF &polygon, const doub
   return t.map( polygon );
 }
 
+static void adjustZoneLabelPos( QPointF& labelPos, const QPointF& maxLabelPos, const QRectF& visibleExtent )
+{
+  if ( !visibleExtent.contains( labelPos ) )
+  {
+    double x1 = visibleExtent.x();
+    double x2 = visibleExtent.x() + visibleExtent.width();
+    double y1 = visibleExtent.y();
+    double y2 = visibleExtent.y() + visibleExtent.height();
+    // Adjust left/right
+    if ( labelPos.x() < maxLabelPos.x() && labelPos.x() < x1 && maxLabelPos.x() > x1 )
+    {
+      labelPos.setX( x1 );
+    }
+    else if ( labelPos.x() > maxLabelPos.x() && labelPos.x() > x2 && maxLabelPos.x() < x2 )
+    {
+      labelPos.setX( x2 );
+    }
+    // Adjust top/bottom
+    if ( labelPos.y() < maxLabelPos.y() && labelPos.y() < y1 && maxLabelPos.y() > y1 )
+    {
+      labelPos.setY( y1 );
+    }
+    else if ( labelPos.y() > maxLabelPos.y() && labelPos.y() > y2 && maxLabelPos.y() < y2 )
+    {
+      labelPos.setY( y2 );
+    }
+  }
+}
+
 void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &context, double dotsPerMM )
 {
   if ( !mComposerMap || !mEnabled )
@@ -495,8 +524,8 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   QList<QPolygonF> zoneLines;
   QList<QPolygonF> subZoneLines;
   QList<QPolygonF> gridLines;
-  QList<QgsLatLonToUTM::GridLabel> zoneLabels;
-  QList<QgsLatLonToUTM::GridLabel> zoneSubLabels;
+  QList<QgsLatLonToUTM::ZoneLabel> zoneLabels;
+  QList<QgsLatLonToUTM::ZoneLabel> zoneSubLabels;
   QList<QgsLatLonToUTM::GridLabel> gridLabels;
   QgsLatLonToUTM::computeGrid( crsBoundingRect, mapScale, zoneLines, subZoneLines, gridLines, zoneLabels, zoneSubLabels, gridLabels, mGridCrsType == CrsMGRS ? QgsLatLonToUTM::GridMGRS : QgsLatLonToUTM::GridUTM );
 
@@ -578,18 +607,19 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   font.setPointSizeF( zoneFontSize );
   QFontMetrics fm( font );
   painter->setFont( font );
-  foreach ( const QgsLatLonToUTM::GridLabel& zoneLabel, zoneLabels )
+  foreach ( const QgsLatLonToUTM::ZoneLabel& zoneLabel, zoneLabels )
   {
     const QPointF& pos = zoneLabel.pos;
     const QPointF& maxPos = zoneLabel.maxPos;
     QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
     QPointF maxLabelPos = mComposerMap->mapToItemCoords( inverseTr.transform( maxPos.x(), maxPos.y() ).toQPointF() );
-    QPainterPath path;
+    adjustZoneLabelPos( labelPos, maxLabelPos, mComposerMap->rect() );
     labelPos.rx() -= fm.width( zoneLabel.label );
     labelPos.ry() += fm.height();
-    path.addText( labelPos.x() - 1, labelPos.y() - 1, font, zoneLabel.label );
     if ( labelPos.x() > maxLabelPos.x() && labelPos.y() < maxLabelPos.y() )
     {
+      QPainterPath path;
+      path.addText( labelPos.x() - 1, labelPos.y() - 1, font, zoneLabel.label );
       painter->drawPath( path );
     }
   }
@@ -600,12 +630,13 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   font.setPointSizeF( subZoneFontSize );
   fm = QFontMetrics( font );
   painter->setFont( font );
-  foreach ( const QgsLatLonToUTM::GridLabel& subZoneLabel, zoneSubLabels )
+  foreach ( const QgsLatLonToUTM::ZoneLabel& subZoneLabel, zoneSubLabels )
   {
     const QPointF& pos = subZoneLabel.pos;
     const QPointF& maxPos = subZoneLabel.maxPos;
     QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
     QPointF maxLabelPos = mComposerMap->mapToItemCoords( inverseTr.transform( maxPos.x(), maxPos.y() ).toQPointF() );
+    adjustZoneLabelPos( labelPos, maxLabelPos, mComposerMap->rect() );
     if ( labelPos.x() + fm.width( subZoneLabel.label ) < maxLabelPos.x() && labelPos.y() - fm.height() > maxLabelPos.y() )
     {
       QPainterPath path;
@@ -622,9 +653,41 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   painter->setPen( QColor( 102, 153, 255 ) );
   foreach ( const QgsLatLonToUTM::GridLabel& gridLabel, gridLabels )
   {
-    const QPointF& pos = gridLabel.pos;
-    QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( pos.x(), pos.y() ).toQPointF() );
-    painter->drawText( labelPos.x() + 1, labelPos.y() - 1, gridLabel.label );
+    const QPolygonF& gridLine = gridLines[gridLabel.lineIdx];
+    QPointF labelPos = mComposerMap->mapToItemCoords( inverseTr.transform( gridLine.front().x(), gridLine.front().y() ).toQPointF() );
+    const QRectF& visibleRect = mComposerMap->rect();
+    int i = 1, n = gridLine.size();
+    QPointF pp = labelPos;
+    if ( gridLabel.horiz && labelPos.x() < visibleRect.x() )
+    {
+      for ( ; i < n; ++i )
+      {
+        QPointF pn = mComposerMap->mapToItemCoords( inverseTr.transform( gridLine[i].x(), gridLine[i].y() ).toQPointF() );
+        if ( pn.x() > visibleRect.x() )
+        {
+          double lambda = ( visibleRect.x() - pp.x() ) / ( pn.x() - pp.x() );
+          labelPos = QPointF( pp.x() + lambda * ( pn.x() - pp.x() ), pp.y() + lambda * ( pn.y() - pp.y() ) );
+          break;
+        }
+        pp = pn;
+      }
+    }
+    else if ( !gridLabel.horiz && labelPos.y() > visibleRect.y() + visibleRect.height() )
+    {
+      for ( ; i < n; ++i )
+      {
+        QPointF pn = mComposerMap->mapToItemCoords( inverseTr.transform( gridLine[i].x(), gridLine[i].y() ).toQPointF() );
+        if ( pn.y() < visibleRect.y() + visibleRect.height() )
+        {
+          double lambda = ( visibleRect.y() + visibleRect.height() - pp.y() ) / ( pn.y() - pp.y() );
+          labelPos = QPointF( pp.x() + lambda * ( pn.x() - pp.x() ), pp.y() + lambda * ( pn.y() - pp.y() ) );
+          break;
+        }
+        pp = pn;
+      }
+    }
+    if ( i < n )
+      painter->drawText( labelPos.x() + 1, labelPos.y() - 1, gridLabel.label );
   }
   painter->restore();
 
