@@ -46,11 +46,18 @@ class CORE_EXPORT QgsLatLonToUTM
       QString letter100kID;
     };
 
-    struct GridLabel
+    struct ZoneLabel
     {
       QPointF pos;
       QString label;
       QPointF maxPos;
+    };
+
+    struct GridLabel
+    {
+      QString label;
+      int lineIdx;
+      bool horiz;
     };
 
     static QgsPoint UTM2LL( const UTMCoo& utm, bool &ok );
@@ -64,7 +71,7 @@ class CORE_EXPORT QgsLatLonToUTM
     enum GridMode { GridUTM, GridMGRS };
     static void computeGrid( const QgsRectangle& bbox, double mapScale,
                              QList<QPolygonF>& zoneLines, QList<QPolygonF>& subZoneLines, QList<QPolygonF>& gridLines,
-                             QList<GridLabel>& zoneLabels, QList<GridLabel>& subZoneLabels, QList<GridLabel>& gridLabels, GridMode gridMode );
+                             QList<ZoneLabel>& zoneLabels, QList<ZoneLabel>& subZoneLabels, QList<GridLabel>& gridLabels, GridMode gridMode );
 
   private:
     static const int NUM_100K_SETS;
@@ -73,12 +80,12 @@ class CORE_EXPORT QgsLatLonToUTM
 
     static QString getLetter100kID( int column, int row, int parm );
     static double getMinNorthing( int zoneLetter );
-    typedef GridLabel( zoneLabelCallback_t )( double, double, double, double, double, double );
-    typedef GridLabel( gridLabelCallback_t )( double, double, double, bool );
-    static void computeSubGrid( double cellSize, const QgsDistanceArea &da, const QgsRectangle &bbox, double zoneX1, double zoneX2, double zoneY1, double zoneY2, double xMin, double xMax, double yMin, double yMax, QList<QPolygonF>& gridLines, QList<GridLabel>* gridLabels = 0, zoneLabelCallback_t* zoneLabelCallback = 0, gridLabelCallback_t* lineLabelCallback = 0 );
-    static GridLabel mgrs100kIDLabelCallback( double lon, double lat, double posX, double posY, double maxLon, double maxLat );
-    static GridLabel utmGridLabelCallback( double lon, double lat, double cellSize, bool horiz );
-    static GridLabel mgrsGridLabelCallback( double lon, double lat, double cellSize, bool horiz );
+    typedef ZoneLabel( zoneLabelCallback_t )( double, double, double, double, double, double );
+    typedef GridLabel( gridLabelCallback_t )( double, double, double, bool, int );
+    static void computeSubGrid( double cellSize, const QgsDistanceArea &da, const QgsRectangle &bbox, double zoneX1, double zoneX2, double zoneY1, double zoneY2, double xMin, double xMax, double yMin, double yMax, QList<QPolygonF>& gridLines, QList<ZoneLabel>* zoneLabels = 0, QList<GridLabel>* gridLabels = 0, zoneLabelCallback_t* zoneLabelCallback = 0, gridLabelCallback_t* lineLabelCallback = 0 );
+    static ZoneLabel mgrs100kIDLabelCallback( double lon, double lat, double posX, double posY, double maxLon, double maxLat );
+    static GridLabel utmGridLabelCallback( double lon, double lat, double cellSize, bool horiz, int lineIdx );
+    static GridLabel mgrsGridLabelCallback( double lon, double lat, double cellSize, bool horiz, int lineIdx );
 };
 
 #endif // QGSLATLONTOUTM_H
