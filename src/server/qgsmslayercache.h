@@ -70,9 +70,6 @@ class QgsMSLayerCache: public QObject
 
     void setProjectMaxLayers( int n ) { mProjectMaxLayers = n; }
 
-    //for debugging
-    void logCacheContents() const;
-
     void removeAllEntries();
 
   protected:
@@ -86,6 +83,9 @@ class QgsMSLayerCache: public QObject
     void removeLeastUsedEntry();
     /** Frees memory and removes temporary files of an entry*/
     void freeEntryRessources( QgsMSLayerCacheEntry& entry );
+
+    //for debugging
+    void logCacheContents() const;
 
   private:
     /** Cash entries with pair url/layer name as a key. The layer name is necessary for cases where the same
