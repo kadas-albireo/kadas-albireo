@@ -42,7 +42,6 @@ class CORE_EXPORT QgsWKBTypes
       MultiCurve = 11,
       MultiSurface = 12,
       NoGeometry = 100, //attributes only
-      MixedGeometry = 101,
       PointZ = 1001,
       LineStringZ = 1002,
       PolygonZ = 1003,
@@ -93,8 +92,7 @@ class CORE_EXPORT QgsWKBTypes
       LineGeometry,
       PolygonGeometry,
       UnknownGeometry,
-      NullGeometry,
-      AnyGeometry
+      NullGeometry
     };
 
     struct wkbEntry
@@ -116,7 +114,6 @@ class CORE_EXPORT QgsWKBTypes
     static Type singleType( Type type );
     static Type multiType( Type type );
     static Type flatType( Type type );
-    static Type zmType( Type type, bool hasZ, bool hasM );
     static Type parseType( const QString& wktStr );
     static bool isSingleType( Type type );
     static bool isMultiType( Type type );
@@ -153,6 +150,11 @@ class CORE_EXPORT QgsWKBTypes
      * @see hasM()
      */
     static Type addM( Type type );
+
+    /** Returns true if the WKB type is a curved type or can contain curved geometries.
+         * @note added in QGIS 2.14
+         */
+    static bool isCurvedType( Type type );
 
   private:
     static QMap<Type, wkbEntry> registerTypes();

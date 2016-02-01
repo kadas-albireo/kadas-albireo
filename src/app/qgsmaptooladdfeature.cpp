@@ -20,6 +20,8 @@
 #include "qgscurvepolygonv2.h"
 #include "qgsfield.h"
 #include "qgsgeometry.h"
+#include "qgsgeometrycollectionv2.h"
+#include "qgsgeometryfactory.h"
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
@@ -208,34 +210,11 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
 
       //create QgsFeature with wkb representation
       QgsFeature* f = new QgsFeature( vlayer->pendingFields(), 0 );
+      QgsAbstractGeometryV2* geomToAdd = outputGeometry( captureCurve(), vlayer );
+      f->setGeometry( new QgsGeometry( geomToAdd ) );
 
-      //does compoundcurve contain circular strings?
-      //does provider support circular strings?
-      bool hasCurvedSegments = captureCurve()->hasCurvedSegments();
-      bool providerSupportsCurvedSegments = vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::CircularGeometries;
-
-      if ( mode() == CaptureLine )
+      if ( mode() == CapturePolygon )
       {
-        QgsCurveV2* curveToAdd = convertCurve( captureCurve(), hasCurvedSegments, providerSupportsCurvedSegments );
-        f->setGeometry( new QgsGeometry( curveToAdd ) );
-      }
-      else
-      {
-        QgsCurvePolygonV2* poly = outputPolygon( captureCurve(), hasCurvedSegments, providerSupportsCurvedSegments );
-        /*if ( hasCurvedSegments && providerSupportsCurvedSegments )
-        {
-          poly = new QgsCurvePolygonV2();
-        }
-        else
-        {
-          poly = new QgsPolygonV2();
-        }
-        poly->setExteriorRing( curveToAdd );*/
-        if ( poly )
-        {
-          f->setGeometry( poly );
-        }
-
         int avoidIntersectionsReturn = f->geometry()->avoidIntersections();
         if ( avoidIntersectionsReturn == 1 )
         {
@@ -308,75 +287,61 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
   }
 }
 
-QgsCurveV2* QgsMapToolAddFeature::convertCurve( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const
+QgsAbstractGeometryV2* QgsMapToolAddFeature::outputGeometry( const QgsCurveV2* c, const QgsVectorLayer* v ) const
 {
-  if ( !c )
+  if ( !c || !v )
   {
     return 0;
   }
 
-  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
+  QgsAbstractGeometryV2* outputGeometry = 0;
 
-  QgsCurveV2* curve = 0;
-  if ( geomHasCurves && providerSupportsCurves )
+  bool providerSupportsCurves = v->dataProvider()->capabilities() & QgsVectorDataProvider::CircularGeometries;
+  QgsWKBTypes::Type providerGeomType = ( QgsWKBTypes::Type )( v->dataProvider()->geometryType() );
+
+  //convert to straight line if necessary
+  bool convertToStraightLine = ( !providerSupportsCurves || !QgsWKBTypes::isCurvedType( providerGeomType ) );
+  if ( convertToStraightLine )
   {
-    curve = dynamic_cast<QgsCurveV2*>( c->clone() );
+    outputGeometry = c->segmentize();
   }
   else
   {
-    curve = c->curveToLine();
+    outputGeometry = c->clone();
   }
 
-  QgsWKBTypes::Type type = ( QgsWKBTypes::Type )( vlayer->dataProvider()->geometryType() );
-  if ( QgsWKBTypes::hasZ( type ) )
+  //polygon
+  if ( QgsWKBTypes::geometryType( providerGeomType ) == QgsWKBTypes::PolygonGeometry )
   {
-    curve->addZValue();
-  }
-  if ( QgsWKBTypes::hasM( type ) )
-  {
-    curve->addMValue();
-  }
-
-  return curve;
-}
-
-QgsCurvePolygonV2* QgsMapToolAddFeature::outputPolygon( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const
-{
-  QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCanvas->currentLayer() );
-  QgsWKBTypes::Type type = ( QgsWKBTypes::Type )( vlayer->dataProvider()->geometryType() );
-
-  bool convertToPolygon = QgsWKBTypes::flatType( type ) == QgsWKBTypes::Polygon;
-
-  //output type is polygon or provider does not support curves
-  QgsCurveV2* exteriorRing = 0;
-  if ( !providerSupportsCurves || convertToPolygon )
-  {
-    exteriorRing = c->curveToLine();
-  }
-  else
-  {
-    exteriorRing = static_cast<QgsCurveV2*>( c->clone() );
+    QgsCurvePolygonV2* polygon = convertToStraightLine ? new QgsPolygonV2() : new QgsCurvePolygonV2();
+    if ( polygon )
+    {
+      polygon->setExteriorRing( dynamic_cast<QgsCurveV2*>( outputGeometry ) );
+      outputGeometry = polygon;
+    }
   }
 
-  //set z/m types if necessary
-  if ( QgsWKBTypes::hasZ( type ) )
+  //set z/m types
+  if ( QgsWKBTypes::hasZ( providerGeomType ) )
   {
-    exteriorRing->addZValue();
+    outputGeometry->addZValue();
   }
-  if ( QgsWKBTypes::hasM( type ) )
+  if ( QgsWKBTypes::hasM( providerGeomType ) )
   {
-    exteriorRing->addMValue();
+    outputGeometry->addMValue();
   }
 
-  QgsCurvePolygonV2* poly = 0;
-  if ( convertToPolygon )
+  //convert to multitype if necessary
+  if ( QgsWKBTypes::isMultiType( providerGeomType ) )
   {
-    poly = new QgsPolygonV2();
+    QgsGeometryCollectionV2* multiGeom = dynamic_cast<QgsGeometryCollectionV2*>
+                                         ( QgsGeometryFactory::geomFromWkbType( providerGeomType ) );
+    if ( multiGeom )
+    {
+      multiGeom->addGeometry( outputGeometry );
+      outputGeometry = multiGeom;
+    }
   }
-  else
-  {
-    poly = new QgsCurvePolygonV2();
-  }
-  poly->setExteriorRing( exteriorRing );
-  return poly;
+
+  return outputGeometry;
 }
