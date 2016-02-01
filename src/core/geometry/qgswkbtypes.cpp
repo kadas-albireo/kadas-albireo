@@ -251,3 +251,19 @@ QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
   entries.insert( GeometryCollectionZM, wkbEntry( "GeometryCollectionZM", true, GeometryCollectionZM, Unknown, GeometryCollection, UnknownGeometry, true, true ) );
   return entries;
 }
+
+bool QgsWKBTypes::isCurvedType( Type type )
+{
+  switch ( flatType( type ) )
+  {
+    case CircularString:
+    case CompoundCurve:
+    case CurvePolygon:
+    case MultiCurve:
+    case MultiSurface:
+      return true;
+
+    default:
+      return false;
+  }
+}

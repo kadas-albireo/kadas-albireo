@@ -32,6 +32,5 @@ class APP_EXPORT QgsMapToolAddFeature : public QgsMapToolCapture
 
   private:
     /**Converts curve to compoundcurve / linestring and adds z/m depending on layer type*/
-    QgsCurveV2* convertCurve( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
-    QgsCurvePolygonV2* outputPolygon( const QgsCurveV2* c, bool geomHasCurves, bool providerSupportsCurves ) const;
+    QgsAbstractGeometryV2* outputGeometry( const QgsCurveV2* c, const QgsVectorLayer* v ) const;
 };
