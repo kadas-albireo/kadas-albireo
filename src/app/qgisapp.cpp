@@ -7551,7 +7551,7 @@ class QgsPythonRunnerImpl : public QgsPythonRunner
 
 void QgisApp::loadPythonSupport()
 {
-  QString pythonlibName( "qgisenterprisepython" );
+  QString pythonlibName( "qgispython" );
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
   pythonlibName.prepend( QgsApplication::libraryPath() );
 #endif

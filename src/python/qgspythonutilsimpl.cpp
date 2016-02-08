@@ -65,9 +65,6 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
   runString( "import sys" ); // import sys module (for display / exception hooks)
   runString( "import os" ); // import os module (for user paths)
 
-  // Name override for qgisenterprise -> qgis
-  runString( "sys.modules['qgis'] = __import__('qgisenterprise')");
-
   // support for PYTHONSTARTUP-like environment variable: PYQGIS_STARTUP
   // (unlike PYTHONHOME and PYTHONPATH, PYTHONSTARTUP is not supported for embedded interpreter by default)
   // this is different than user's 'startup.py' (below), since it is loaded just after Py_Initialize
