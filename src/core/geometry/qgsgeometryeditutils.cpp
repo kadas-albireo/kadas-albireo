@@ -107,6 +107,17 @@ int QgsGeometryEditUtils::addPart( QgsAbstractGeometryV2* geom, QgsAbstractGeome
     return 1;
   }
 
+  //add z/m
+  QgsWKBTypes::Type geomType = geom->wkbType();
+  if ( QgsWKBTypes::hasZ( geomType ) )
+  {
+    part->addZValue();
+  }
+  if ( QgsWKBTypes::hasM( geomType ) )
+  {
+    part->addMValue();
+  }
+
   bool added = false;
   if ( geom->geometryType() == "MultiSurface" || geom->geometryType() == "MultiPolygon" )
   {

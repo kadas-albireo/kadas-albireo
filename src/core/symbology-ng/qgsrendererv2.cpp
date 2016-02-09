@@ -46,8 +46,14 @@ const unsigned char* QgsFeatureRendererV2::_getPoint( QPointF& pt, QgsRenderCont
   double x, y;
   wkbPtr >> x >> y;
 
-  if ( wkbType == QGis::WKBPoint25D )
+  if ( QgsWKBTypes::hasZ(( QgsWKBTypes::Type )wkbType ) )
+  {
     wkbPtr += sizeof( double );
+  }
+  if ( QgsWKBTypes::hasM(( QgsWKBTypes::Type )wkbType ) )
+  {
+    wkbPtr += sizeof( double );
+  }
 
   if ( context.coordinateTransform() )
   {
