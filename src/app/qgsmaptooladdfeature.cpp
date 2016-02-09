@@ -26,6 +26,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmapmouseevent.h"
+#include "qgsmultipointv2.h"
 #include "qgspolygonv2.h"
 #include "qgsproject.h"
 #include "qgsvectordataprovider.h"
@@ -80,7 +81,7 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
     return;
   }
 
-  QGis::WkbType layerWKBType = vlayer->wkbType();
+  QgsWKBTypes::Type layerWKBType = ( QgsWKBTypes::Type )vlayer->wkbType();
 
   QgsVectorDataProvider* provider = vlayer->dataProvider();
 
@@ -129,19 +130,33 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
     //grass provider has its own mechanism of feature addition
     if ( provider->capabilities() & QgsVectorDataProvider::AddFeatures )
     {
+      QgsAbstractGeometryV2* addGeom = 0;
+      QgsPointV2* savePointV2 = new QgsPointV2( savePoint.x(), savePoint.y() );
+
       QgsFeature f( vlayer->pendingFields(), 0 );
 
-      QgsGeometry *g = 0;
-      if ( layerWKBType == QGis::WKBPoint || layerWKBType == QGis::WKBPoint25D )
+      //add z/m if necessary
+      if ( QgsWKBTypes::hasZ( layerWKBType ) )
       {
-        g = QgsGeometry::fromPoint( savePoint );
+        savePointV2->addZValue();
       }
-      else if ( layerWKBType == QGis::WKBMultiPoint || layerWKBType == QGis::WKBMultiPoint25D )
+      if ( QgsWKBTypes::hasM( layerWKBType ) )
       {
-        g = QgsGeometry::fromMultiPoint( QgsMultiPoint() << savePoint );
+        savePointV2->addMValue();
       }
 
-      f.setGeometry( g );
+      if ( QgsWKBTypes::flatType( layerWKBType ) == QgsWKBTypes::Point )
+      {
+        addGeom = savePointV2;
+      }
+      else if ( QgsWKBTypes::flatType( layerWKBType ) == QgsWKBTypes::MultiPoint )
+      {
+        QgsMultiPointV2* multiPoint = new QgsMultiPointV2();
+        multiPoint->addGeometry( savePointV2 );
+        addGeom = multiPoint;
+      }
+
+      f.setGeometry( new QgsGeometry( addGeom ) );
 
       addFeature( vlayer, &f, false );
 
