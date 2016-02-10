@@ -1717,7 +1717,7 @@ Sight</string>
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QToolButton" name="mLoadMilxButton">
+           <widget class="QgsRibbonButton" name="mLoadMilxButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -2193,6 +2193,10 @@ Sight</string>
    </property>
   </action>
   <action name="mActionSaveMilx">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
    <property name="text">
     <string>Save as MILXLY</string>
    </property>
@@ -2201,6 +2205,10 @@ Sight</string>
    </property>
   </action>
   <action name="mActionLoadMilx">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+   </property>
    <property name="text">
     <string>Load MILXLY</string>
    </property>
