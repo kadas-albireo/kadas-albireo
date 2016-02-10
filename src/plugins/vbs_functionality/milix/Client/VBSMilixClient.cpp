@@ -413,8 +413,8 @@ bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol&
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  QByteArray svgxml; ostream >> svgxml;
   ostream >> newSymbolXml;
+  QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
