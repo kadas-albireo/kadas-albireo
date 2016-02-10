@@ -59,7 +59,7 @@ class QgsVBSMilixLibrary : public QDialog
 
   private slots:
     void filterChanged( const QString& text );
-    void itemDoubleClicked( QModelIndex index );
+    void itemClicked( QModelIndex index );
     void loaderFinished();
     QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
 };

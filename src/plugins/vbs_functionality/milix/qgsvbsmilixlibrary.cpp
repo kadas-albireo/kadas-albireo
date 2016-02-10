@@ -94,11 +94,10 @@ QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QgsVBSMilixManager
   mTreeView = new QTreeView( this );
   mTreeView->setFrameShape( QTreeView::NoFrame );
   mTreeView->setEditTriggers( QTreeView::NoEditTriggers );
-  mTreeView->setDragEnabled( true );
   mTreeView->setHeaderHidden( true );
   mTreeView->setIconSize( QSize( 32, 32 ) );
   layout()->addWidget( mTreeView );
-  connect( mTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( itemDoubleClicked( QModelIndex ) ) );
+  connect( mTreeView, SIGNAL( clicked( QModelIndex ) ), this, SLOT( itemClicked( QModelIndex ) ) );
 
   mGalleryModel = new QStandardItemModel( this );
   mFilterProxyModel = new TreeFilterProxyModel( this );
@@ -216,7 +215,7 @@ void QgsVBSMilixLibrary::filterChanged( const QString &text )
   }
 }
 
-void QgsVBSMilixLibrary::itemDoubleClicked( QModelIndex index )
+void QgsVBSMilixLibrary::itemClicked( QModelIndex index )
 {
   index = mFilterProxyModel->mapToSource( index );
   QList<QModelIndex> indexStack;
