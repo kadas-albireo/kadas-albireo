@@ -359,15 +359,15 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     QRect visibleExtent;
     SymbolInput input;
     istream >> visibleExtent >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized;
-    QString outpuSymbolXml;
+    QString outputSymbolXml;
     SymbolOutput output;
     QString errorMsg;
-    if(!editSymbol(visibleExtent, input, outpuSymbolXml, output, errorMsg)) {
+    if(!editSymbol(visibleExtent, input, outputSymbolXml, output, errorMsg)) {
       LOG( QString( "Error: %1" ).arg( errorMsg ) );
       ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
       return reply;
     }
-    ostream << VBS_MILIX_REPLY_EDIT_SYMBOL << outpuSymbolXml << output.svgXml << output.offset << output.adjustedPoints << output.controlPoints;
+    ostream << VBS_MILIX_REPLY_EDIT_SYMBOL << outputSymbolXml << output.svgXml << output.offset << output.adjustedPoints << output.controlPoints;
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_UPDATE_SYMBOL )
@@ -537,6 +537,7 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
   SymbolInput newInput = input;
   newInput.symbolXml = QString::fromWCharArray(( wchar_t* )(mssStringObj->XmlString));
   outputSymbolXml = newInput.symbolXml;
+  LOG(QString("New symbol XML: %1").arg(outputSymbolXml));
   return renderSymbol(visibleExtent, newInput, output, errorMsg);
 }
 
@@ -612,6 +613,8 @@ bool VBSMilixServer::renderItem(MssComServer::IMssNPointGraphicTemplateGSPtr& ms
     output.svgXml = QString::fromWCharArray(( wchar_t* )mssSymbolGraphic->CreateSvg() ).toUtf8();
     output.offset.rx() = -mssSymbolGraphic->GetInsertPointOffsetX();
     output.offset.ry() = -mssSymbolGraphic->GetInsertPointOffsetY();
+  } else {
+	  LOG("Symbol outside viewing extent");
   }
 
   LOG(QString("Creation item has %1 points (min: %2)").arg(mssCreationItem->PointCount).arg(mssCreationItem->EnoughPointCount));
