@@ -170,7 +170,7 @@ void VBSMilixServer::onSocketDisconnected()
   tcpSocket->deleteLater();
   mRequestBuffer.clear();
   mRequestSize = 0;
-  // QApplication::quit();
+  QApplication::quit();
 }
 
 QByteArray VBSMilixServer::processCommand( QByteArray &request )
