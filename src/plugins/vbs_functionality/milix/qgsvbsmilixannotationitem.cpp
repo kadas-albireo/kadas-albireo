@@ -270,6 +270,7 @@ void QgsVBSMilixAnnotationItem::setGraphic( VBSMilixClient::NPointSymbolGraphic 
     }
     mControlPoints = result.controlPoints;
   }
+  updateBoundingRect();
   update();
 }
 
