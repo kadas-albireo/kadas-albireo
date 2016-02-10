@@ -7,7 +7,7 @@ QT4_WRAP_CPP(milixserver_MOC_SRCS  ${milixserver_MOC_HDRS})
 
 
 add_executable(milixserver ${milixserver_SRC} ${milixserver_HDR} ${milixserver_MOC_HDRS} ${milixserver_MOC_SRCS})
-set_target_properties(milixserver PROPERTIES COMPILE_FLAGS "/Zc:wchar_t-")
+set_target_properties(milixserver PROPERTIES COMPILE_FLAGS "/Zc:wchar_t- /MD")
 
 install(TARGETS milixserver
   BUNDLE DESTINATION ${QGIS_BIN_DIR}
