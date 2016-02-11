@@ -29,7 +29,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
   public:
 
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    void setSymbolXml( const QString& symbolXml , bool hasVariablePointCount, bool isMultiPoint );
+    void setSymbolXml( const QString& symbolXml , bool hasVariablePointCount );
     const QString& symbolXml() const { return mSymbolXml; }
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
@@ -55,6 +55,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     QString mSymbolXml;
     QPixmap mGraphic;
     QList<QgsPoint> mAdditionalPoints;
+    QPoint mOffset;
     QList<int> mControlPoints;
     bool mHasVariablePointCount;
     bool mFinalized;

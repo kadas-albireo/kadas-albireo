@@ -355,7 +355,7 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
     }
   }
 
-  if (( mFlags & ItemHasNoFrame ) == 0 )
+  if (( mFlags & ItemHasNoMarker ) == 0 )
   {
     //finally test if pos is in the frame area
     if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&

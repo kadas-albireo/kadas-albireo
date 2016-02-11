@@ -29,22 +29,21 @@ REGISTER_QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem )
 QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
     : QgsAnnotationItem( canvas ), mHasVariablePointCount( false ), mFinalized( false )
 {
-  setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
-                QgsAnnotationItem::ItemHasNoFrame |
-                QgsAnnotationItem::ItemHasNoMarker );
+  mOffsetFromReferencePoint = QPoint( 0, 0 );
 }
 
-void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool hasVariablePointCount , bool isMultiPoint )
+void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool hasVariablePointCount )
 {
   mHasVariablePointCount = hasVariablePointCount;
   mSymbolXml = symbolXml;
-  if ( !isMultiPoint )
+
+  if ( mHasVariablePointCount )
   {
-    setOffsetFromReferencePoint( QPointF( -0.5 * mGraphic.width(), -0.5 * mGraphic.height() ) );
+    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemHasNoFrame );
   }
   else
   {
-    setOffsetFromReferencePoint( QPointF( 0, 0 ) );
+    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoFrame );
   }
 }
 
@@ -102,12 +101,18 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
     updateSymbol();
   }
 
-  drawFrame( painter );
+  // Draw line from visual reference point to actual refrence point
+  painter->setPen( Qt::black );
+  if ( !mHasVariablePointCount )
+  {
+    painter->drawLine( QPoint( 0, 0 ), mOffsetFromReferencePoint + QPoint( 0.5 * mGraphic.width(), 0.5 * mGraphic.height() ) );
+  }
 
   painter->drawPixmap( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mGraphic );
 
   if ( isSelected() )
   {
+    drawMarkerSymbol( painter );
     drawSelectionBoxes( painter );
 
     if ( !mAdditionalPoints.isEmpty() )
@@ -127,20 +132,23 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
 
 int QgsVBSMilixAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
-  QList<QPoint> pts = points();
-  // Priority to control points
-  for ( int i = 0, n = pts.size(); i < n; ++i )
+  if ( mHasVariablePointCount )
   {
-    if ( mControlPoints.contains( i ) && qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+    QList<QPoint> pts = points();
+    // Priority to control points
+    for ( int i = 0, n = pts.size(); i < n; ++i )
     {
-      return NumMouseMoveActions + i;
+      if ( mControlPoints.contains( i ) && qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+      {
+        return NumMouseMoveActions + i;
+      }
     }
-  }
-  for ( int i = 0, n = pts.size(); i < n; ++i )
-  {
-    if ( qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+    for ( int i = 0, n = pts.size(); i < n; ++i )
     {
-      return NumMouseMoveActions + i;
+      if ( qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
+      {
+        return NumMouseMoveActions + i;
+      }
     }
   }
   return QgsAnnotationItem::moveActionForPosition( pos );
@@ -257,7 +265,8 @@ void QgsVBSMilixAnnotationItem::setGraphic( VBSMilixClient::NPointSymbolGraphic 
 {
   mGraphic = QPixmap::fromImage( result.graphic );
   setFrameSize( mGraphic.size() );
-  setOffsetFromReferencePoint( result.offset );
+  mOffsetFromReferencePoint += result.offset - mOffset;
+  mOffset = result.offset;
   if ( updatePoints )
   {
     const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() );
