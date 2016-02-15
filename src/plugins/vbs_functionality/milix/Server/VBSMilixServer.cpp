@@ -528,8 +528,19 @@ bool VBSMilixServer::deletePoint(const QRect &visibleExtent, const SymbolInput& 
 bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, SymbolOutput& output, QString& errorMsg)
 {
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );
+
+  MssComServer::IMssSymbolFormatGSPtr mssSymbolFormat = mMssService->CreateFormatObj();
+  mssSymbolFormat->SymbolSize = 60;
+  mssSymbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
+
+  MssComServer::IMssNPointGraphicTemplateGSPtr mssGraphicTemplate = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mssSymbolFormat );
+
+  MssComServer::IMssSymbolHierarchyGSPtr hierarchy = mMssSymbolProvider->CreateHierarchy(false);
+  hierarchy->AddSchema( mssGraphicTemplate->Schema->SchemaType );
+
   MssComServer::IMssSymbolEditorGSPtr mssSymbolEditor = mMssSymbolProvider->CreateEditor();
   mssSymbolEditor->SymbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
+  mssSymbolEditor->CustomHierarchy = hierarchy;
   if ( !mssSymbolEditor->EditSymbol( mssStringObj ) )
   {
     LOG( "Error: Editing failed" );
