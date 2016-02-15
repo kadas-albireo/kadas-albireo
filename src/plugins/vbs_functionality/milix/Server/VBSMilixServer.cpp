@@ -170,7 +170,9 @@ void VBSMilixServer::onSocketDisconnected()
   tcpSocket->deleteLater();
   mRequestBuffer.clear();
   mRequestSize = 0;
-  QApplication::quit();
+  if(mAddr == QHostAddress( QHostAddress::LocalHost ).toString()) {
+    QApplication::quit();
+  }
 }
 
 QByteArray VBSMilixServer::processCommand( QByteArray &request )
