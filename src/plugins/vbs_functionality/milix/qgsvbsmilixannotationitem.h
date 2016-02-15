@@ -29,7 +29,8 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
   public:
 
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    void setSymbolXml( const QString& symbolXml , bool hasVariablePointCount );
+    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
+    void setSymbolXml( const QString& symbolXml, bool isMultiPoint );
     const QString& symbolXml() const { return mSymbolXml; }
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
@@ -51,13 +52,16 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 
     void showContextMenu( const QPoint &screenPos );
 
+  protected:
+    QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
+
   private:
     QString mSymbolXml;
     QPixmap mGraphic;
     QList<QgsPoint> mAdditionalPoints;
-    QPoint mOffset;
+    QPoint mRenderOffset;
     QList<int> mControlPoints;
-    bool mHasVariablePointCount;
+    bool mIsMultiPoint;
     bool mFinalized;
 
     void _showItemEditor() override;

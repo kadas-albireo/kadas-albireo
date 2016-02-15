@@ -29,6 +29,9 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath , QString *errMsg = 0 );
 
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas );
+
+    QgsGeoImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsGeoImageAnnotationItem( canvas ); }
+
     void setFilePath( const QString& filePath );
 
 
@@ -36,6 +39,9 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
+
+  protected:
+    QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
 
   private:
     QString mFilePath;

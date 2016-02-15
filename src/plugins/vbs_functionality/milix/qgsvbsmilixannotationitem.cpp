@@ -27,17 +27,29 @@
 REGISTER_QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem )
 
 QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
-    : QgsAnnotationItem( canvas ), mHasVariablePointCount( false ), mFinalized( false )
+    : QgsAnnotationItem( canvas ), mIsMultiPoint( false ), mFinalized( false )
 {
   mOffsetFromReferencePoint = QPoint( 0, 0 );
 }
 
-void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool hasVariablePointCount )
+QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
 {
-  mHasVariablePointCount = hasVariablePointCount;
+  mSymbolXml = source->mSymbolXml;
+  mGraphic = source->mGraphic;
+  mAdditionalPoints = source->mAdditionalPoints;
+  mRenderOffset = source->mRenderOffset;
+  mControlPoints = source->mControlPoints;
+  mIsMultiPoint = source->mIsMultiPoint;
+  mFinalized = source->mFinalized;
+}
+
+void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool isMultiPoint )
+{
+  mIsMultiPoint = isMultiPoint;
   mSymbolXml = symbolXml;
 
-  if ( mHasVariablePointCount )
+  if ( mIsMultiPoint )
   {
     setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemHasNoFrame );
   }
@@ -57,7 +69,7 @@ void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
 
   QDomElement milixAnnotationElem = doc.createElement( "MilixAnnotationItem" );
   milixAnnotationElem.setAttribute( "symbolXml", mSymbolXml );
-  milixAnnotationElem.setAttribute( "hasVariablePointCount", mHasVariablePointCount );
+  milixAnnotationElem.setAttribute( "isMultiPoint", mIsMultiPoint );
   foreach ( const QgsPoint& p, mAdditionalPoints )
   {
     QDomElement pointElem = doc.createElement( "Point" );
@@ -72,7 +84,7 @@ void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
 void QgsVBSMilixAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& itemElem )
 {
   mSymbolXml = itemElem.attribute( "symbolXml" );
-  mHasVariablePointCount = itemElem.attribute( "hasVariablePointCount" ).toInt();
+  mIsMultiPoint = itemElem.attribute( "isMultiPoint" ).toInt();
   QDomNodeList pointElems = itemElem.elementsByTagName( "Point" );
   mAdditionalPoints.clear();
   for ( int i = 0, n = pointElems.count(); i < n; ++i )
@@ -103,7 +115,7 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
 
   // Draw line from visual reference point to actual refrence point
   painter->setPen( Qt::black );
-  if ( !mHasVariablePointCount )
+  if ( !mIsMultiPoint )
   {
     painter->drawLine( QPoint( 0, 0 ), mOffsetFromReferencePoint + QPoint( 0.5 * mGraphic.width(), 0.5 * mGraphic.height() ) );
   }
@@ -132,7 +144,7 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
 
 int QgsVBSMilixAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
-  if ( mHasVariablePointCount )
+  if ( mIsMultiPoint )
   {
     QList<QPoint> pts = points();
     // Priority to control points
@@ -265,8 +277,8 @@ void QgsVBSMilixAnnotationItem::setGraphic( VBSMilixClient::NPointSymbolGraphic 
 {
   mGraphic = QPixmap::fromImage( result.graphic );
   setFrameSize( mGraphic.size() );
-  mOffsetFromReferencePoint += result.offset - mOffset;
-  mOffset = result.offset;
+  mOffsetFromReferencePoint += result.offset - mRenderOffset;
+  mRenderOffset = result.offset;
   if ( updatePoints )
   {
     const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() );
@@ -290,7 +302,7 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
   QList<QPoint> pts = points();
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
-  if ( mHasVariablePointCount )
+  if ( mIsMultiPoint )
   {
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {

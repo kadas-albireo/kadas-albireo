@@ -28,6 +28,12 @@ QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotatio
 
 }
 
+QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  setFilePath( source->mFilePath );
+}
+
 QgsSvgAnnotationItem::~QgsSvgAnnotationItem()
 {
 

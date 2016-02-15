@@ -29,6 +29,8 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
     QgsSvgAnnotationItem( QgsMapCanvas* canvas );
     ~QgsSvgAnnotationItem();
 
+    QgsSvgAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsSvgAnnotationItem( canvas, this ); }
+
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
@@ -38,6 +40,8 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
     QString filePath() const { return mFilePath; }
 
   protected:
+    QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotationItem* source );
+
     QSvgRenderer mSvgRenderer;
     QString mFilePath;
 

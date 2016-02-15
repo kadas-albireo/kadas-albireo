@@ -29,6 +29,8 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
     QgsTextAnnotationItem( QgsMapCanvas* canvas );
     ~QgsTextAnnotationItem();
 
+    QgsTextAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsTextAnnotationItem( canvas, this ); }
+
     /**Returns document (caller takes ownership)*/
     QTextDocument* document() const;
     /**Sets document (does not take ownership)*/
@@ -38,6 +40,9 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
+
+  protected:
+    QgsTextAnnotationItem( QgsMapCanvas* canvas, QgsTextAnnotationItem* source );
 
   private:
     QTextDocument* mDocument;

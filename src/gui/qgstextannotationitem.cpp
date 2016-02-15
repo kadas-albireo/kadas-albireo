@@ -27,6 +27,13 @@ QgsTextAnnotationItem::QgsTextAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotat
   mDocument->setUseDesignMetrics( true );
 }
 
+QgsTextAnnotationItem::QgsTextAnnotationItem( QgsMapCanvas* canvas, QgsTextAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  mDocument = new QTextDocument( source->document()->toPlainText() );
+  mDocument->setUseDesignMetrics( true );
+}
+
 QgsTextAnnotationItem::~QgsTextAnnotationItem()
 {
   delete mDocument;

@@ -29,6 +29,12 @@ QgsImageAnnotationItem::QgsImageAnnotationItem( QgsMapCanvas* canvas ): QgsAnnot
   setItemFlags( ItemHasNoMarker | ItemHasNoFrame );
 }
 
+QgsImageAnnotationItem::QgsImageAnnotationItem( QgsMapCanvas* canvas, QgsImageAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  mImage = source->mImage;
+}
+
 void QgsImageAnnotationItem::writeXML( QDomDocument& doc ) const
 {
   QDomElement documentElem = doc.documentElement();

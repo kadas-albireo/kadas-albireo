@@ -35,6 +35,8 @@ class GUI_EXPORT QgsHtmlAnnotationItem: public QgsAnnotationItem
     QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsVectorLayer* vlayer = 0, bool hasFeature = false, int feature = 0 );
     ~QgsHtmlAnnotationItem();
 
+    virtual QgsHtmlAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsHtmlAnnotationItem( canvas, this ); }
+
     void paint( QPainter * painter ) override;
 
     //! paint function called by map canvas
@@ -52,6 +54,9 @@ class GUI_EXPORT QgsHtmlAnnotationItem: public QgsAnnotationItem
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     QgsVectorLayer* vectorLayer() const { return mVectorLayer; }
+
+  protected:
+    QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsHtmlAnnotationItem* source );
 
   private slots:
     /**Sets a feature for the current map position and updates the dialog*/

@@ -26,12 +26,19 @@ class GUI_EXPORT QgsImageAnnotationItem: public QgsAnnotationItem
   public:
 
     QgsImageAnnotationItem( QgsMapCanvas* canvas );
+
+    QgsImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsImageAnnotationItem( canvas, this ); }
+
     void setImage( const QImage& image );
 
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
+
+  protected:
+    QgsImageAnnotationItem( QgsMapCanvas* canvas, QgsImageAnnotationItem* source );
+
   private:
     QImage mImage;
 

@@ -20,6 +20,7 @@
 
 #include <QDockWidget>
 
+class QgsAnnotationItem;
 class QgsMapCanvas;
 class QgsRectangle;
 class QToolButton;
@@ -44,7 +45,6 @@ class GUI_EXPORT QgsMapWidget : public QDockWidget
     bool getLocked() const;
     void setLocked( bool locked );
 
-
   private:
     int mNumber;
     QgsMapCanvas* mMasterCanvas;
@@ -68,7 +68,7 @@ class GUI_EXPORT QgsMapWidget : public QDockWidget
     void updateLayerSelectionMenu();
     void updateLayerSet();
     void updateMapProjection();
-
+    void addAnnotationItem( QgsAnnotationItem* item );
 };
 
 #endif // QGSMAPWIDGET_H

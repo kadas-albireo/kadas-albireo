@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QPen>
 
+
 QList< QPair<QString, QgsAnnotationItem::AnnotationItemFactory_t> > QgsAnnotationItem::sRegisteredAnnotations;
 
 QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
@@ -39,6 +40,32 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
   mFrameBorderWidth = 1.0;
   mFrameColor = QColor( 0, 0, 0 );
   mFrameBackgroundColor = QColor( 255, 255, 255 );
+  setData( 0, "AnnotationItem" );
+
+  connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncGeoPos() ) );
+  connect( mMapCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( syncGeoPos() ) );
+}
+
+QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* source )
+    : QgsMapCanvasItem( canvas )
+{
+  mFlags = source->mFlags;
+  mMapPositionFixed = source->mMapPositionFixed;
+  mMapPosition = source->mMapPosition;
+  mGeoPos = source->mGeoPos;
+  mGeoPosCrs = source->mGeoPosCrs;
+  mOffsetFromReferencePoint = source->mOffsetFromReferencePoint;
+  mBoundingRect = source->mBoundingRect;
+  mMarkerSymbol = static_cast<QgsMarkerSymbolV2*>( source->mMarkerSymbol->clone() );
+  mFrameSize = source->mFrameSize;
+  mFrameBorderWidth = source->mFrameBorderWidth;
+  mFrameColor = source->mFrameColor;
+  mFrameBackgroundColor = source->mFrameBackgroundColor;
+  mBalloonSegment = source->mBalloonSegment;
+  mBalloonSegmentPoint1 = source->mBalloonSegmentPoint1;
+  mBalloonSegmentPoint2 = source->mBalloonSegmentPoint2;
+
+  setFlag( QGraphicsItem::ItemIsSelectable, true );
   setData( 0, "AnnotationItem" );
 
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncGeoPos() ) );
@@ -62,6 +89,7 @@ void QgsAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinate
   mMapPosition = mGeoPos = pos;
   mGeoPosCrs = crs.isValid() ? crs : mMapCanvas->mapSettings().destinationCrs();
   setPos( toCanvasCoordinates( mMapPosition ) );
+  notifyItemUpdated();
 }
 
 void QgsAnnotationItem::setOffsetFromReferencePoint( const QPointF& offset )
@@ -100,6 +128,7 @@ void QgsAnnotationItem::updatePosition()
   {
     mMapPosition = toMapCoordinates( pos().toPoint() );
   }
+  notifyItemUpdated();
 }
 
 QRectF QgsAnnotationItem::boundingRect() const
@@ -126,6 +155,7 @@ void QgsAnnotationItem::updateBoundingRect()
   double yMinPos = qMin( -halfSymbolSize, mOffsetFromReferencePoint.y() - mFrameBorderWidth );
   double yMaxPos = qMax( halfSymbolSize, mOffsetFromReferencePoint.y() + mFrameSize.height() + mFrameBorderWidth );
   mBoundingRect = QRectF( xMinPos, yMinPos, xMaxPos - xMinPos, yMaxPos - yMinPos );
+  notifyItemUpdated();
 }
 
 void QgsAnnotationItem::updateBalloon()
@@ -600,4 +630,10 @@ void QgsAnnotationItem::syncGeoPos()
     updatePosition();
     mGeoPos = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() )->transform( mMapPosition );
   }
+}
+
+void QgsAnnotationItem::notifyItemUpdated()
+{
+  emit itemUpdated( this );
+  mMapCanvas->notifyAnnotationItemChanged( this );
 }
