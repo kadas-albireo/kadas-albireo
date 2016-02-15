@@ -53,6 +53,23 @@ QgsFormAnnotationItem::QgsFormAnnotationItem( QgsMapCanvas* canvas, QgsVectorLay
   setFeatureForMapPosition();
 }
 
+QgsFormAnnotationItem::QgsFormAnnotationItem( QgsMapCanvas *canvas, QgsFormAnnotationItem *source )
+    : QgsAnnotationItem( canvas, source ), mWidgetContainer( 0 ), mDesignerWidget( 0 )
+{
+  mWidgetContainer = new QGraphicsProxyWidget( this );
+  mWidgetContainer->setData( 0, "AnnotationItem" ); //mark embedded widget as belonging to an annotation item (composer knows it needs to be printed)
+  mVectorLayer = source->mVectorLayer;
+  mHasAssociatedFeature = source->mHasAssociatedFeature;
+  mFeature = source->mFeature;
+  mDesignerForm = source->mDesignerForm;
+  if ( mVectorLayer && mMapCanvas )
+  {
+    connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+  }
+}
+
 QgsFormAnnotationItem::~QgsFormAnnotationItem()
 {
   delete mDesignerWidget;

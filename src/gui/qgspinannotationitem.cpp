@@ -35,6 +35,13 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinate
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
 }
 
+QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source )
+    : QgsSvgAnnotationItem( canvas, source )
+{
+  mTargetFormat = source->mTargetFormat;
+  mTargetEPSG = source->mTargetEPSG;
+}
+
 void QgsPinAnnotationItem::changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat targetFormat, const QString &targetEPSG )
 {
   mTargetFormat = targetFormat;

@@ -30,6 +30,8 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
 
+    QgsPinAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsPinAnnotationItem( canvas, this ); }
+
     void setMapPosition( const QgsPoint& pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void showContextMenu( const QPoint& screenPos );
 
@@ -37,6 +39,9 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 
   public slots:
     void changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
+
+  protected:
+    QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source );
 
   private:
     QgsCoordinateUtils::TargetFormat mTargetFormat;

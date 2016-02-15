@@ -73,6 +73,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     QgsAnnotationItem( QgsMapCanvas* mapCanvas );
     virtual ~QgsAnnotationItem();
 
+    virtual QgsAnnotationItem* clone( QgsMapCanvas* /*canvas*/ ) = 0;
+
     void updatePosition() override;
 
     QRectF boundingRect() const override;
@@ -125,7 +127,12 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     void showItemEditor();
     virtual void showContextMenu( const QPoint& screenPos );
 
+  signals:
+    void itemUpdated( QgsAnnotationItem* item );
+
   protected:
+    QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* source );
+
     static QList< QPair<QString, AnnotationItemFactory_t> > sRegisteredAnnotations;
 
     struct AnnotationItemRegisterer
@@ -191,6 +198,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
   private:
     virtual void _showItemEditor() = 0;
+    void notifyItemUpdated();
 
   private slots:
     void syncGeoPos();

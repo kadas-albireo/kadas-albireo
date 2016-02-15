@@ -460,6 +460,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! @note added in 2.8
     static void enableRotation( bool enabled );
 
+    /** Triggers an emission of the annotationItemChanged signal. */
+    void notifyAnnotationItemChanged( QgsAnnotationItem* item ) { emit annotationItemChanged( item ); }
+
   private slots:
     //! called when current maptool is destroyed
     void mapToolDestroyed();
@@ -553,6 +556,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! Emitted when the current layer is changed
     //! @note added in 2.8
     void currentLayerChanged( QgsMapLayer* layer );
+
+    //! Emitted when an annotation item is added to the canvas scene
+    void annotationItemChanged( QgsAnnotationItem* item );
 
   protected:
     //! Overridden standard event to be gestures aware

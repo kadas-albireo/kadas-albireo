@@ -120,6 +120,13 @@ QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas *canvas )
   setItemFlags( ItemIsNotResizeable | ItemHasNoMarker );
 }
 
+QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  mFilePath = source->mFilePath;
+  mImage = source->mImage;
+}
+
 void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
 {
   mFilePath = filePath;

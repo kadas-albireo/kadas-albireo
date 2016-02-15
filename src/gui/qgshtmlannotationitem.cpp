@@ -60,6 +60,32 @@ QgsHtmlAnnotationItem::QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsVectorLay
   setFeatureForMapPosition();
 }
 
+QgsHtmlAnnotationItem::QgsHtmlAnnotationItem( QgsMapCanvas* canvas, QgsHtmlAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  mWebView = new QWebView();
+  mWebView->page()->setNetworkAccessManager( QgsNetworkAccessManager::instance() );
+
+  mWidgetContainer = new QGraphicsProxyWidget( this );
+  mWidgetContainer->setWidget( mWebView );
+
+  connect( mWebView->page()->mainFrame(), SIGNAL( javaScriptWindowObjectCleared() ), this, SLOT( javascript() ) );
+
+  mVectorLayer = source->mVectorLayer;
+  mHasAssociatedFeature = source->mHasAssociatedFeature;
+  mFeatureId = source->mFeatureId;
+  mFeature = source->mFeature;
+  mHtmlFile = source->mHtmlFile;
+  mHtmlSource = source->mHtmlSource;
+
+  if ( mVectorLayer )
+  {
+    connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
+    connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+  }
+}
+
 QgsHtmlAnnotationItem::~QgsHtmlAnnotationItem()
 {
   delete mWebView;

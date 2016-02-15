@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsannotationitem.h"
 #include "qgsmapwidget.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
@@ -109,6 +110,15 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   updateMapProjection();
   mMapCanvas->setExtent( mMasterCanvas->extent() );
   mMapCanvas->setRenderFlag( true );
+
+  connect( mMasterCanvas, SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( addAnnotationItem( QgsAnnotationItem* ) ) );
+  foreach ( QGraphicsItem* item, mMasterCanvas->items() )
+  {
+    if ( dynamic_cast<QgsAnnotationItem*>( item ) )
+    {
+      addAnnotationItem( static_cast<QgsAnnotationItem*>( item ) );
+    }
+  }
 }
 
 void QgsMapWidget::setInitialLayers( const QStringList &initialLayers, bool updateMenu )
@@ -247,4 +257,12 @@ bool QgsMapWidget::eventFilter( QObject *obj, QEvent *ev )
   {
     return QObject::eventFilter( obj, ev );
   }
+}
+
+void QgsMapWidget::addAnnotationItem( QgsAnnotationItem *item )
+{
+  QgsAnnotationItem* clonedItem = item->clone( mMapCanvas );
+  clonedItem->updatePosition();
+  connect( item, SIGNAL( destroyed( QObject* ) ), clonedItem, SLOT( deleteLater() ) );
+  connect( item, SIGNAL( itemUpdated( QgsAnnotationItem* ) ), clonedItem, SLOT( deleteLater() ) );
 }
