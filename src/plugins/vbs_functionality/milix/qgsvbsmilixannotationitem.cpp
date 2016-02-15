@@ -198,7 +198,7 @@ void QgsVBSMilixAnnotationItem::_showItemEditor()
   VBSMilixClient::NPointSymbolGraphic result;
   if ( VBSMilixClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, outXml, result ) )
   {
-    mSymbolXml = outXml;
+    setSymbolXml( outXml, result.adjustedPoints.size() > 1 );
     setGraphic( result, true );
   }
 }

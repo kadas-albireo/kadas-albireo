@@ -48,7 +48,7 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
 
       mItem = new QgsVBSMilixAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
-      mItem->setSymbolXml( mSymbolXml, mHasVariablePoints );
+      mItem->setSymbolXml( mSymbolXml, mMinNPoints > 1 );
       mItem->setSelected( true );
       setCursor( Qt::CrossCursor );
       mNPressedPoints = 1;
