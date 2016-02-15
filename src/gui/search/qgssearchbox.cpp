@@ -160,7 +160,6 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   connect( mTreeWidget, SIGNAL( itemSelectionChanged() ), this, SLOT( resultSelected() ) );
   connect( mTreeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
   connect( mTreeWidget, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), this, SLOT( resultActivated() ) );
-#pragma message( "warning: TODO -> app?" )
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( clearSearch() ) );
 
   int frameWidth = mSearchBox->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
