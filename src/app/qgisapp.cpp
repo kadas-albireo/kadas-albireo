@@ -325,35 +325,7 @@ class QTreeWidgetItem;
   */
 static void setTitleBarText_( QWidget & qgisApp )
 {
-  QString caption = QgisApp::tr( "QGIS Enterprise " );
-
-  if ( QString( QGis::QGIS_VERSION ).endsWith( "Dev" ) )
-  {
-    caption += QString( "%1" ).arg( QGis::QGIS_DEV_VERSION );
-  }
-  else
-  {
-    caption += QGis::QGIS_VERSION;
-  }
-
-  if ( QgsProject::instance()->title().isEmpty() )
-  {
-    if ( QgsProject::instance()->fileName().isEmpty() )
-    {
-      // no project title nor file name, so just leave caption with
-      // application name and version
-    }
-    else
-    {
-      QFileInfo projectFileInfo( QgsProject::instance()->fileName() );
-      caption += " - " + projectFileInfo.completeBaseName();
-    }
-  }
-  else
-  {
-    caption += " - " + QgsProject::instance()->title();
-  }
-
+  QString caption = QgisApp::tr( "KADAS Albireo" );
   qgisApp.setWindowTitle( caption );
 } // setTitleBarText_( QWidget * qgisApp )
 
