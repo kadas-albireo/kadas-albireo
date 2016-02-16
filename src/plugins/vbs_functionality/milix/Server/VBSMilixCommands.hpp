@@ -5,7 +5,7 @@
 
 typedef quint8 VBSMilixServerRequest;
 
-VBSMilixServerRequest VBS_MILIX_REQUEST_INIT = 1; // {VBS_MILIX_REQUEST_INIT, WId}
+VBSMilixServerRequest VBS_MILIX_REQUEST_INIT = 1; // {VBS_MILIX_REQUEST_INIT, WId, Lang:QString, SymbolSize:int}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_SYMBOL = 2; // {VBS_MILIX_REQUEST_GET_SYMBOL, SymbolXml:QString}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_SYMBOLS = 3; // {VBS_MILIX_REQUEST_GET_SYMBOLS, SymbolXmls:QStringList}
 
@@ -24,9 +24,9 @@ VBSMilixServerRequest VBS_MILIX_REQUEST_UPDATE_SYMBOLS = 11; // {VBS_MILIX_REQUE
 typedef quint8 VBSMilixServerReply;
 
 VBSMilixServerReply VBS_MILIX_REPLY_ERROR = 99; // {VBS_MILIX_REPLY_ERROR, Message:QString}
-VBSMilixServerReply VBS_MILIX_REPLY_INIT_OK = 101; // {VBS_MILIX_REPLY_INIT_OK}
-VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOL = 102; // {VBS_MILIX_REPLY_GET_SYMBOL, Name:QString, SvgXML:QByteArray, HasVariablePoints:bool, MinPointCount:int}
-VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOLS = 103; // {VBS_MILIX_REPLY_GET_SYMBOLS, count:int, Name1:QString, SvgXML1:QByteArray, HasVariablePoints1:bool, MinPointCount1:int, Name2:QString, SvgXML2:QByteArray, HasVariablePoints2:bool, MinPointCount2:int, ...}
+VBSMilixServerReply VBS_MILIX_REPLY_INIT_OK = 101; // {VBS_MILIX_REPLY_INIT_OK, Version:QString}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOL = 102; // {VBS_MILIX_REPLY_GET_SYMBOL, Name:QString, MilitaryName:QString, SvgXML:QByteArray, HasVariablePoints:bool, MinPointCount:int}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_SYMBOLS = 103; // {VBS_MILIX_REPLY_GET_SYMBOLS, count:int, Name1:QString, MilitaryName1:QString, SvgXML1:QByteArray, HasVariablePoints1:bool, MinPointCount1:int, Name2:QString, MilitaryName2:QString, SvgXML2:QByteArray, HasVariablePoints2:bool, MinPointCount2:int, ...}
 
 VBSMilixServerReply VBS_MILIX_REPLY_APPEND_POINT = 104; // {VBS_MILIX_REPLY_APPEND_POINT, SvgString:QByteArray, Offset:QPoint, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>}
 VBSMilixServerReply VBS_MILIX_REPLY_INSERT_POINT = 105; // {VBS_MILIX_REPLY_INSERT_POINT, SvgString:QByteArray, Offset:QPoint, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>}
@@ -34,7 +34,7 @@ VBSMilixServerReply VBS_MILIX_REPLY_MOVE_POINT = 106; // {VBS_MILIX_REPLY_MOVE_P
 VBSMilixServerReply VBS_MILIX_REPLY_CAN_DELETE_POINT = 107; // {VBS_MILIX_REPLY_CAN_DELETE_POINT, canDelete:bool}
 VBSMilixServerReply VBS_MILIX_REPLY_DELETE_POINT = 108; // {VBS_MILIX_REPLY_DELETE_POINT, SvgString:QByteArray, Offset:QPoint, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>}
 
-VBSMilixServerReply VBS_MILIX_REPLY_EDIT_SYMBOL = 109; // {VBS_MILIX_REPLY_EDIT_SYMBOL, SymbolXml:QString, SvgString:QByteArray, Offset:QPoint, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>}
+VBSMilixServerReply VBS_MILIX_REPLY_EDIT_SYMBOL = 109; // {VBS_MILIX_REPLY_EDIT_SYMBOL, SymbolXml:QString, MilitaryName:QString, SvgString:QByteArray, Offset:QPoint, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>}
 
 VBSMilixServerReply VBS_MILIX_REPLY_UPDATE_SYMBOL = 110; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOL, SvgXml:QByteArray, Offset:QPoint}
 VBSMilixServerReply VBS_MILIX_REPLY_UPDATE_SYMBOLS = 111; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS, nSymbols:int, SvgXml1:QByteArray, Offset1:QPoint, SvgXml2:QByteArray, Offset2:QPoint, ...}

@@ -196,12 +196,25 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   if ( req == VBS_MILIX_REQUEST_INIT )
   {
     OLE_HANDLE wid;
+    QString language;
     istream >> wid;
+    istream >> language;
+    istream >> mSymbolSize;
+
+    if(language.startsWith("de", Qt::CaseInsensitive)) {
+      mLanguage = MssComServer::mssLanguageGermanGS;
+    } else if(language.startsWith("fr", Qt::CaseInsensitive)) {
+      mLanguage = MssComServer::mssLanguageFrenchGS;
+    } else if(language.startsWith("it", Qt::CaseInsensitive)) {
+      mLanguage = MssComServer::mssLanguageItalianGS;
+    } else {
+      mLanguage = MssComServer::mssLanguageEnglishGS;
+    }
 
     if ( mMssService != nullptr )
     {
       LOG( "Already initialized" );
-      ostream << VBS_MILIX_REPLY_INIT_OK;
+      ostream << VBS_MILIX_REPLY_INIT_OK << bstr2qstring(mMssSymbolProvider->LibraryVersionTag);
       return reply;
     }
     mMssService = MssComServer::IMssSymbolProviderServiceGSPtr( __uuidof( MssComServer::MssSymbolProviderServiceGS ) );
@@ -222,8 +235,8 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
 
     mMssNPointDrawingTarget = MssComServer::IMssNPointDrawingTargetGSPtr( __uuidof( MssComServer::MssNPointDrawingTargetGS ) );
 
-    LOG( QString( "Initialized MSS version %1" ).arg(( char* )mMssService->MssVersion ) );
-    ostream << VBS_MILIX_REPLY_INIT_OK;
+    LOG( QString( "Initialized MSS version %1" ).arg( bstr2qstring(mMssSymbolProvider->LibraryVersionTag) ) );
+    ostream << VBS_MILIX_REPLY_INIT_OK << bstr2qstring(mMssSymbolProvider->LibraryVersionTag);
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_GET_SYMBOL )
@@ -232,18 +245,19 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     istream >> symbolXml;
 
     QString name;
+    QString militaryName;
     QByteArray svgXml;
     bool hasVariablePoints;
     int minPointCount;
     QString errorMsg;
 
-    if ( !getSymbolInfo( symbolXml, name, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
+    if ( !getSymbolInfo( symbolXml, name, militaryName, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
     {
       LOG( QString( "Error: %1" ).arg( errorMsg ) );
       ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
       return reply;
     }
-    ostream << VBS_MILIX_REPLY_GET_SYMBOL << name << svgXml << hasVariablePoints << minPointCount;
+    ostream << VBS_MILIX_REPLY_GET_SYMBOL << name << militaryName << svgXml << hasVariablePoints << minPointCount;
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_GET_SYMBOLS )
@@ -256,12 +270,13 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     foreach ( const QString& symbolXml, symbolXmls )
     {
       QString name;
+      QString militaryName;
       QByteArray svgXml;
       bool hasVariablePoints;
       int minPointCount;
       QString errorMsg;
 
-      if ( !getSymbolInfo( symbolXml, name, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
+      if ( !getSymbolInfo( symbolXml, name, militaryName, svgXml, hasVariablePoints, minPointCount, errorMsg ) )
       {
         LOG( QString( "Error: %1" ).arg( errorMsg ) );
         QByteArray errreply;
@@ -269,7 +284,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
         errostream << VBS_MILIX_REPLY_ERROR << errorMsg;
         return errreply;
       }
-      ostream << name << svgXml << hasVariablePoints << minPointCount;
+      ostream << name << militaryName << svgXml << hasVariablePoints << minPointCount;
     }
     return reply;
   }
@@ -362,14 +377,15 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     SymbolInput input;
     istream >> visibleExtent >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized;
     QString outputSymbolXml;
+    QString outputMilitaryName;
     SymbolOutput output;
     QString errorMsg;
-    if(!editSymbol(visibleExtent, input, outputSymbolXml, output, errorMsg)) {
+    if(!editSymbol(visibleExtent, input, outputSymbolXml, outputMilitaryName, output, errorMsg)) {
       LOG( QString( "Error: %1" ).arg( errorMsg ) );
       ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
       return reply;
     }
-    ostream << VBS_MILIX_REPLY_EDIT_SYMBOL << outputSymbolXml << output.svgXml << output.offset << output.adjustedPoints << output.controlPoints;
+    ostream << VBS_MILIX_REPLY_EDIT_SYMBOL << outputSymbolXml << outputMilitaryName << output.svgXml << output.offset << output.adjustedPoints << output.controlPoints;
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_UPDATE_SYMBOL )
@@ -423,7 +439,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   return reply;
 }
 
-bool VBSMilixServer::getSymbolInfo( const QString& symbolXml, QString& name, QByteArray& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg )
+bool VBSMilixServer::getSymbolInfo(const QString& symbolXml, QString& name, QString& militaryName, QByteArray& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg )
 {
   MssComServer::IMssSymbolFormatGSPtr mssSymbolFormat = mMssService->CreateFormatObj();
   mssSymbolFormat->SymbolSize = 30; // Render previews smaller
@@ -438,8 +454,9 @@ bool VBSMilixServer::getSymbolInfo( const QString& symbolXml, QString& name, QBy
     return false;
   }
 
-  svgXml = QString::fromWCharArray(( wchar_t* )mssSymbolGraphic->CreateSvg() ).toUtf8();
-  name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeInternationalGS, MssComServer::mssLanguageEnglishGS, MssComServer::mssNameFormatNodeNameGS );
+  svgXml = bstr2qstring(mssSymbolGraphic->CreateSvg() ).toUtf8();
+  name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatNodeNameGS );
+  militaryName = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS );
   MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = mMssNPointDrawingTarget->CreateNewNPointGraphic( mssNPointGraphic, false );
   hasVariablePoints = mssCreationItem->HasVariablePoints;
   minPointCount = mssCreationItem->EnoughPointCount;
@@ -525,12 +542,12 @@ bool VBSMilixServer::deletePoint(const QRect &visibleExtent, const SymbolInput& 
   return renderItem(mssNPointGraphic, mssCreationItem, mssDrawingItem, visibleExtent, output, errorMsg);
 }
 
-bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, SymbolOutput& output, QString& errorMsg)
+bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, QString& outputMilitaryName, SymbolOutput& output, QString& errorMsg)
 {
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );
 
   MssComServer::IMssSymbolFormatGSPtr mssSymbolFormat = mMssService->CreateFormatObj();
-  mssSymbolFormat->SymbolSize = 60;
+  mssSymbolFormat->SymbolSize = mSymbolSize;
   mssSymbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
 
   MssComServer::IMssNPointGraphicTemplateGSPtr mssGraphicTemplate = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mssSymbolFormat );
@@ -548,8 +565,9 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
     return false;
   }
   SymbolInput newInput = input;
-  newInput.symbolXml = QString::fromWCharArray(( wchar_t* )(mssStringObj->XmlString));
+  newInput.symbolXml = bstr2qstring(mssStringObj->XmlString);
   outputSymbolXml = newInput.symbolXml;
+  outputMilitaryName = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS );
   LOG(QString("New symbol XML: %1").arg(outputSymbolXml));
   return renderSymbol(visibleExtent, newInput, output, errorMsg);
 }
@@ -557,7 +575,7 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
 bool VBSMilixServer::createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr &mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem)
 {
   MssComServer::IMssSymbolFormatGSPtr symbolFormat = mMssService->CreateFormatObj();
-  symbolFormat->SymbolSize = 60;
+  symbolFormat->SymbolSize = mSymbolSize;
   symbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
 
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );
@@ -623,7 +641,7 @@ bool VBSMilixServer::renderItem(MssComServer::IMssNPointGraphicTemplateGSPtr& ms
   // The symbol graphic is invalid if it is completely outside the view extent
   if ( mssSymbolGraphic->IsValid )
   {
-    output.svgXml = QString::fromWCharArray(( wchar_t* )mssSymbolGraphic->CreateSvg() ).toUtf8();
+    output.svgXml = bstr2qstring(mssSymbolGraphic->CreateSvg()).toUtf8();
     output.offset.rx() = -mssSymbolGraphic->GetInsertPointOffsetX();
     output.offset.ry() = -mssSymbolGraphic->GetInsertPointOffsetY();
   } else {
@@ -648,8 +666,8 @@ int main( int argc, char* argv[] )
   gTextEdit = new QPlainTextEdit();
   gTextEdit->show();
 #endif
-  int port = 0;
-  QString addr;
+  int port = 31415;
+  QString addr = "192.168.178.124";
   if ( argc > 2 )
   {
     addr = argv[1];

@@ -50,21 +50,26 @@ private:
     QNetworkSession* mNetworkSession;
     QByteArray mRequestBuffer;
     int mRequestSize;
+    int mSymbolSize;
+    MssComServer::TMssLanguageTypeGS mLanguage;
+
     MssComServer::IMssSymbolProviderServiceGSPtr mMssService;
     MssComServer::IMssSymbolProviderGSPtr mMssSymbolProvider;
     MssComServer::IMssNPointDrawingTargetGSPtr mMssNPointDrawingTarget;
 
     QByteArray processCommand(QByteArray& request);
-    bool getSymbolInfo(const QString& symbolXml, QString& name, QByteArray& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg);
+    bool getSymbolInfo(const QString& symbolXml, QString& name, QString &militaryName, QByteArray& svgXml, bool& hasVariablePoints, int& minPointCount, QString& errorMsg);
     bool renderSymbol(const QRect& visibleExtent, const SymbolInput& input, SymbolOutput& output, QString& errorMsg);
     bool insertPoint(const QRect& visibleExtent, const SymbolInput& input, const QPoint& newPoint, SymbolOutput& output, QString& errorMsg);
     bool movePoint(const QRect& visibleExtent, const SymbolInput& input, int moveIndex, const QPoint& newPos, SymbolOutput& output, QString& errorMsg);
     bool canDeletePoint(const SymbolInput& input, int index, bool& canDelete, QString& errorMsg);
     bool deletePoint(const QRect& visibleExtent, const SymbolInput& input, int deleteIndex, SymbolOutput& output, QString& errorMsg);
-    bool editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, SymbolOutput& output, QString& errorMsg);
+    bool editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, QString &outputMilitaryName, SymbolOutput& output, QString& errorMsg);
 
     bool createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem);
     bool renderItem(MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem, const QRect& visibleExtent, SymbolOutput& output, QString& errorMsg);
+
+	QString bstr2qstring(_bstr_t bstr){ return QString::fromWCharArray(( wchar_t* )bstr ); }
 };
 
 #endif // VBSMILIXSERVER_HPP
