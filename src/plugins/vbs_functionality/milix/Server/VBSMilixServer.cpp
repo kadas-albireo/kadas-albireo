@@ -438,11 +438,31 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   else if( req == VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML)
   {
     QString symbolXml;
-    istream >> symbolXml;
+    QString mssVersion;
+    istream >> symbolXml >> mssVersion;
+
+    QString curVer = bstr2qstring(mMssSymbolProvider->LibraryVersionTag);
+
     MssComServer::IMssStringObjGSPtr mssString;
     BSTR messages;
-    mMssSymbolProvider->VerifyMssString(symbolXml.toLocal8Bit().data(), &mssString, &messages);
-    ostream << (mssString != 0) << bstr2qstring(messages);
+    MssComServer::TMssVerificationResultGS result;
+
+    // Upgrade if older, validate if equal
+    if(mssVersion < curVer) {
+      MssComServer::IMssSymbolConverterGSPtr converter = mMssSymbolProvider->CreateConverter(mssVersion.toLocal8Bit().data());
+      result = converter->UpgradeMssString(symbolXml.toLocal8Bit().data(), &mssString, &messages);
+    } else if(mssVersion == curVer) {
+      result = mMssSymbolProvider->VerifyMssString(symbolXml.toLocal8Bit().data(), &mssString, &messages);
+    } else {
+      // Newer versions not supported
+      result = MssComServer::mssVrErrorGS;
+      messages = L"Version too new";
+    }
+    QString outSymbolXml = mssString != 0 ? bstr2qstring(mssString->XmlString) : symbolXml;
+    bool valid = result != MssComServer::mssVrErrorGS;
+    QString outMessages = bstr2qstring(messages);
+    LOG(QString("Validate %1 - valid: %2, messages: %3, adjusted: %4").arg(symbolXml).arg(valid).arg(outMessages).arg(outSymbolXml));
+    ostream << VBS_MILIX_REPLY_VALIDATE_SYMBOLXML << outSymbolXml << valid << outMessages;
     return reply;
   }
   else
