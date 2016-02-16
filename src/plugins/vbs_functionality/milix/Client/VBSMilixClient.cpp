@@ -14,6 +14,8 @@
 #include <QWidget>
 #include <rsvgrenderer.h>
 
+const int VBSMilixClient::SymbolSize = 60;
+
 void VBSMilixClient::cleanup()
 {
   delete mProcess;
@@ -139,6 +141,7 @@ bool VBSMilixClient::initialize()
 
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
+  QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   istream << VBS_MILIX_REQUEST_INIT;
 #ifdef Q_OS_WIN
   WId wid = 0;
@@ -155,12 +158,16 @@ bool VBSMilixClient::initialize()
 #else
   istream << 0;
 #endif
+  istream << lang << SymbolSize;
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )
   {
     cleanup();
     return false;
   }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> mLibraryVersionTag;
 
   // TODO: If disconnected attempt to recover
   return true;
@@ -255,7 +262,7 @@ bool VBSMilixClient::getSymbol( const QString& symbolId, SymbolDesc &result )
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml;
-  ostream >> result.name >> svgxml >> result.hasVariablePoints >> result.minNumPoints;
+  ostream >> result.name >> result.militaryName >> svgxml >> result.hasVariablePoints >> result.minNumPoints;
   result.icon = renderSvg( svgxml );
   return true;
 }
@@ -286,7 +293,7 @@ bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc>
     QByteArray svgxml;
     SymbolDesc desc;
     desc.symbolId = symbolIds[i];
-    ostream >> desc.name >> svgxml >> desc.hasVariablePoints >> desc.minNumPoints;
+    ostream >> desc.name >> desc.militaryName >> svgxml >> desc.hasVariablePoints >> desc.minNumPoints;
     desc.icon = renderSvg( svgxml );
     result.append( desc );
   }
@@ -399,7 +406,7 @@ bool VBSMilixClient::deletePoint( const QRect &visibleExtent, const NPointSymbol
   return true;
 }
 
-bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, NPointSymbolGraphic& result )
+bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
@@ -414,6 +421,7 @@ bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol&
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   ostream >> newSymbolXml;
+  ostream >> newSymbolMilitaryName;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;

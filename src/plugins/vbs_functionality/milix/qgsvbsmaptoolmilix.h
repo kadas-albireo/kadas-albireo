@@ -26,13 +26,14 @@ class QgsVBSMilixManager;
 class QgsVBSMapToolMilix : public QgsMapTool
 {
   public:
-    QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
+    QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
     ~QgsVBSMapToolMilix();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
 
   private:
     QString mSymbolXml;
+    QString mSymbolMilitaryName;
     int mMinNPoints;
     int mNPressedPoints;
     bool mHasVariablePoints;

@@ -90,10 +90,10 @@ void QgsVBSFunctionality::toggleMilXLibrary( )
 
 void QgsVBSFunctionality::saveMilx()
 {
-  QgsVBSMilixIO::save( mMilXManager );
+  QgsVBSMilixIO::save( mMilXManager, mQGisIface->messageBar() );
 }
 
 void QgsVBSFunctionality::loadMilx()
 {
-  QgsVBSMilixIO::load( mMilXManager );
+  QgsVBSMilixIO::load( mMilXManager, mQGisIface->messageBar() );
 }

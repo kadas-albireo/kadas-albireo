@@ -26,11 +26,11 @@ class QgsVBSCoordinateDisplayer;
 class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 {
     QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem, "MilixAnnotationItem" )
-  public:
 
+  public:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
     QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
-    void setSymbolXml( const QString& symbolXml, bool isMultiPoint );
+    void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
     const QString& symbolXml() const { return mSymbolXml; }
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
@@ -52,11 +52,14 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 
     void showContextMenu( const QPoint &screenPos );
 
+    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
+
   protected:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
 
   private:
     QString mSymbolXml;
+    QString mSymbolMilitaryName;
     QPixmap mGraphic;
     QList<QgsPoint> mAdditionalPoints;
     QPoint mRenderOffset;

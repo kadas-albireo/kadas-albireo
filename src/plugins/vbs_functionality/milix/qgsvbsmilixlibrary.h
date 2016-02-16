@@ -44,6 +44,7 @@ class QgsVBSMilixLibrary : public QDialog
     friend class QgsVBSMilixLibraryLoader;
 
     static const int SymbolXmlRole;
+    static const int SymbolMilitaryNameRole;
     static const int SymbolPointCountRole;
     static const int SymbolVariablePointsRole;
 
@@ -61,7 +62,7 @@ class QgsVBSMilixLibrary : public QDialog
     void filterChanged( const QString& text );
     void itemClicked( QModelIndex index );
     void loaderFinished();
-    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
 };
 
 
@@ -75,7 +76,7 @@ class QgsVBSMilixLibraryLoader : public QThread
     QgsVBSMilixLibrary* mLibrary;
 
     void run() override;
-    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), int symbolPointCount = 0 );
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0 );
 };
 
 #endif // QGSVBSMILIXLIBRARY_H

@@ -44,10 +44,11 @@ QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsV
   mFinalized = source->mFinalized;
 }
 
-void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, bool isMultiPoint )
+void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, const QString& symbolMilitaryName, bool isMultiPoint )
 {
   mIsMultiPoint = isMultiPoint;
   mSymbolXml = symbolXml;
+  mSymbolMilitaryName = symbolMilitaryName;
 
   if ( mIsMultiPoint )
   {
@@ -193,12 +194,13 @@ Qt::CursorShape QgsVBSMilixAnnotationItem::cursorShapeForAction( int moveAction 
 
 void QgsVBSMilixAnnotationItem::_showItemEditor()
 {
-  QString outXml;
+  QString symbolId;
+  QString symbolMilitaryName;
   VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
-  if ( VBSMilixClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, outXml, result ) )
+  if ( VBSMilixClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, symbolId, symbolMilitaryName, result ) )
   {
-    setSymbolXml( outXml, result.adjustedPoints.size() > 1 );
+    setSymbolXml( symbolId, symbolMilitaryName, result.adjustedPoints.size() > 1 );
     setGraphic( result, true );
   }
 }
@@ -369,4 +371,60 @@ void QgsVBSMilixAnnotationItem::updateSymbol()
   {
     setGraphic( result, false );
   }
+}
+
+void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const
+{
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
+
+  QDomElement graphicEl = doc.createElement( "MilXGraphic" );
+  graphicListEl.appendChild( graphicEl );
+
+  QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
+  stringXmlEl.appendChild( doc.createTextNode( mSymbolXml ) );
+  graphicEl.appendChild( stringXmlEl );
+
+  QDomElement nameEl = doc.createElement( "Name" );
+  nameEl.appendChild( doc.createTextNode( mSymbolMilitaryName ) );
+  graphicEl.appendChild( nameEl );
+
+  QDomElement pointListEl = doc.createElement( "PointList" );
+  graphicEl.appendChild( pointListEl );
+
+  QDomElement p0El = doc.createElement( "Point" );
+  pointListEl.appendChild( p0El );
+
+  QgsPoint p0WGS = t->transform( mGeoPos );
+  QDomElement p0XEl = doc.createElement( "X" );
+  p0XEl.appendChild( doc.createTextNode( QString::number( p0WGS.x(), 'f', 6 ) ) );
+  p0El.appendChild( p0XEl );
+  QDomElement p0YEl = doc.createElement( "Y" );
+  p0YEl.appendChild( doc.createTextNode( QString::number( p0WGS.y(), 'f', 6 ) ) );
+  p0El.appendChild( p0YEl );
+
+  foreach ( const QgsPoint& p, mAdditionalPoints )
+  {
+    QDomElement pEl = doc.createElement( "Point" );
+    pointListEl.appendChild( pEl );
+
+    QgsPoint pWGS = t->transform( p );
+    QDomElement pXEl = doc.createElement( "X" );
+    pXEl.appendChild( doc.createTextNode( QString::number( pWGS.x(), 'f', 6 ) ) );
+    pEl.appendChild( pXEl );
+    QDomElement pYEl = doc.createElement( "Y" );
+    p0El.appendChild( doc.createTextNode( QString::number( pWGS.y(), 'f', 6 ) ) );
+    pEl.appendChild( pYEl );
+  }
+
+  QDomElement offsetEl = doc.createElement( "Offset" );
+  graphicEl.appendChild( offsetEl );
+
+  QPointF rawOffset = mOffsetFromReferencePoint - mRenderOffset;
+  QDomElement factorXEl = doc.createElement( "FactorX" );
+  factorXEl.appendChild( doc.createTextNode( QString::number( rawOffset.x() / VBSMilixClient::SymbolSize ) ) );
+  offsetEl.appendChild( factorXEl );
+
+  QDomElement factorYEl = doc.createElement( "FactorY" );
+  factorYEl.appendChild( doc.createTextNode( QString::number( rawOffset.y() / VBSMilixClient::SymbolSize ) ) );
+  offsetEl.appendChild( factorYEl );
 }

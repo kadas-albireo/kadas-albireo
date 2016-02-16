@@ -20,13 +20,14 @@
 
 #include <QObject>
 
+class QgsMessageBar;
 class QgsVBSMilixManager;
 
 class QgsVBSMilixIO : public QObject
 {
   public:
-    static bool save( QgsVBSMilixManager* manager );
-    static bool load( QgsVBSMilixManager* manager );
+    static bool save( QgsVBSMilixManager* manager, QgsMessageBar *messageBar );
+    static bool load( QgsVBSMilixManager* manager, QgsMessageBar *messageBar );
 };
 
 #endif // QGSVBSMILIXIO_H

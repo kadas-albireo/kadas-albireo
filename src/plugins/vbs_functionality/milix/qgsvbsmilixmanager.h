@@ -29,6 +29,8 @@ class QgsVBSMilixManager : public QObject
   public:
     QgsVBSMilixManager( QgsMapCanvas* mapCanvas, QObject* parent = 0 );
     void addItem( QgsVBSMilixAnnotationItem* item );
+    const QList<QgsVBSMilixAnnotationItem*>& getItems() const { return mItems; }
+
   private slots:
     void updateItems();
     void removeItem( QObject* item );

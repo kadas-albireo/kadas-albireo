@@ -21,8 +21,8 @@
 #include "qgsmapcanvas.h"
 #include <QMouseEvent>
 
-QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
-    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mManager( manager )
+QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
+    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mManager( manager )
 {
   setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
 }
@@ -48,7 +48,7 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
 
       mItem = new QgsVBSMilixAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
-      mItem->setSymbolXml( mSymbolXml, mMinNPoints > 1 );
+      mItem->setSymbolXml( mSymbolXml, mSymbolMilitaryName, mMinNPoints > 1 );
       mItem->setSelected( true );
       setCursor( Qt::CrossCursor );
       mNPressedPoints = 1;
