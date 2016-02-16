@@ -435,6 +435,16 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     }
     return reply;
   }
+  else if( req == VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML)
+  {
+    QString symbolXml;
+    istream >> symbolXml;
+    MssComServer::IMssStringObjGSPtr mssString;
+    BSTR messages;
+    mMssSymbolProvider->VerifyMssString(symbolXml.toLocal8Bit().data(), &mssString, &messages);
+    ostream << (mssString != 0) << bstr2qstring(messages);
+    return reply;
+  }
   else
   {
     LOG( "Error: Unrecognized command" );

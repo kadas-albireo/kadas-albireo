@@ -20,6 +20,8 @@ VBSMilixServerRequest VBS_MILIX_REQUEST_EDIT_SYMBOL = 9; // {VBS_MILIX_REQUEST_E
 VBSMilixServerRequest VBS_MILIX_REQUEST_UPDATE_SYMBOL = 10; // {VBS_MILIX_REQUEST_GET_NPOINT_SYMBOL, VisibleExtent:QRect, SymbolXml:QString, Points:QList<QPoint>, ControlPoints:QList<int>, finalized:bool, returnPoints:bool}
 VBSMilixServerRequest VBS_MILIX_REQUEST_UPDATE_SYMBOLS = 11; // {VBS_MILIX_REQUEST_GET_NPOINT_SYMBOLS, VisibleExtent:QRect, nSymbols:int, SymbolXml1:QString, Points1:QList<QPoint>, ControlPoints1:QList<int>, finalized1:bool, SymbolXml2:QString, Points2:QList<QPoint>, ControlPoints2:QList<int>, finalized2:bool, ...}
 
+VBSMilixServerRequest VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML = 12; // {VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML, SymbolXml:QString}
+
 
 typedef quint8 VBSMilixServerReply;
 
@@ -38,5 +40,7 @@ VBSMilixServerReply VBS_MILIX_REPLY_EDIT_SYMBOL = 109; // {VBS_MILIX_REPLY_EDIT_
 
 VBSMilixServerReply VBS_MILIX_REPLY_UPDATE_SYMBOL = 110; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOL, SvgXml:QByteArray, Offset:QPoint[, AdjustedPoints:QList<QPoint>, ControlPoints:QList<int>]} // Last two depending on whether returnPoints is true in the request
 VBSMilixServerReply VBS_MILIX_REPLY_UPDATE_SYMBOLS = 111; // {VBS_MILIX_REPLY_GET_NPOINT_SYMBOLS, nSymbols:int, SvgXml1:QByteArray, Offset1:QPoint, SvgXml2:QByteArray, Offset2:QPoint, ...}
+
+VBSMilixServerReply VBS_MILIX_REPLY_VALIDATE_SYMBOLXML = 112; // {VBS_MILIX_REPLY_VALIDATE_SYMBOLXML, valid:bool, messages:QString}
 
 #endif // VBS_MILIX_SERVER_COMMANDS_HPP
