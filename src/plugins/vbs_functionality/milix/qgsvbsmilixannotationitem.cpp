@@ -429,9 +429,8 @@ void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graph
   offsetEl.appendChild( factorYEl );
 }
 
-void QgsVBSMilixAnnotationItem::readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize )
+void QgsVBSMilixAnnotationItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
 {
-  QString symbolId = graphicEl.firstChildElement( "MssStringXML" ).text();
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
 
   QList<QgsPoint> points;
@@ -451,6 +450,6 @@ void QgsVBSMilixAnnotationItem::readMilx( const QDomElement& graphicEl, const Qg
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
   mOffsetFromReferencePoint = QPointF( offsetX, offsetY );
-  setSymbolXml( symbolId, militaryName, points.size() > 1 );
+  setSymbolXml( symbolXml, militaryName, points.size() > 1 );
   updateSymbol( true );
 }

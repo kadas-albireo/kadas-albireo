@@ -23,6 +23,7 @@
 #include "qgsvbsmilixmanager.h"
 #include <QDomDocument>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QSettings>
 #include <quazip/quazipfile.h>
 
@@ -119,16 +120,15 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
 bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, QgsMessageBar *messageBar )
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QStringList filters = QStringList() << tr( "Compressed MilX Layer (*.milxlyz)" ) << tr( "MilX Layer (*.milxly)" );
-  QString selectedFilter;
-  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastProjectDir, filters.join( ";;" ), &selectedFilter );
+  QString filter = tr( "MilX Layer Files (*.milxly *.milxlyz)" );
+  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastProjectDir, filter );
   if ( filename.isEmpty() )
   {
     return false;
   }
 
   QIODevice* dev = 0;
-  if ( selectedFilter == filters[0] )
+  if ( filename.endsWith( ".milxlyz", Qt::CaseInsensitive ) )
   {
     dev = new QuaZipFile( filename, "Layer.milxly" );
   }
@@ -149,11 +149,12 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
 
   QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
   QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
+  QString fileMssVer = milxVersionEl.text();
 
-  if ( milxVersionEl.text() != VBSMilixClient::libraryVersionTag() )
+  if ( fileMssVer > VBSMilixClient::libraryVersionTag() )
   {
-    // Upgrade / Downgrade as necessary
-
+    messageBar->pushMessage( tr( "Import Failed" ), tr( "The file was created by a newer MSS library version." ), QgsMessageBar::CRITICAL, 5 );
+    return false;
   }
 
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
@@ -185,12 +186,35 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
     }
 
     QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
+
+    // Dry run to validate
+    QStringList validationErrors;
+    QStringList adjustedSymbolXmls;
     for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
     {
       QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-      // QString mssStringXml = graphicEl.firstChildElement("MssStringXML").text();  // TODO VALIDATE
+      QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
+      QString adjustedSymbolXml;
+      bool valid = false;
+      QString messages;
+      VBSMilixClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
+      adjustedSymbolXmls.append( adjustedSymbolXml );
+      if ( !valid )
+      {
+        validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
+      }
+    }
+    if ( !validationErrors.isEmpty() )
+    {
+      QMessageBox::critical( 0, tr( "Import Failed" ), tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) ) );
+      return false;
+    }
+    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
+    {
+      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
+
       QgsVBSMilixAnnotationItem* item = new QgsVBSMilixAnnotationItem( canvas );
-      item->readMilx( graphicEl, crst, symbolSize );
+      item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
       manager->addItem( item );
     }
   }

@@ -494,6 +494,25 @@ bool VBSMilixClient::updateSymbols( const QRect& visibleExtent, const QList<NPoi
   return true;
 }
 
+bool VBSMilixClient::validateSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML;
+  istream << symbolXml << mssVersion;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_VALIDATE_SYMBOLXML ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> adjustedSymbolXml >> valid >> messages;
+  return true;
+}
+
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )
 {
   if ( xml.isEmpty() )
