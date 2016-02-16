@@ -392,7 +392,8 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   {
     QRect visibleExtent;
     SymbolInput input;
-    istream >> visibleExtent >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized;
+    bool returnPoints;
+    istream >> visibleExtent >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized >> returnPoints;
     SymbolOutput output;
     QString errorMsg;
     if ( !renderSymbol( visibleExtent, input, output, errorMsg ) )
@@ -403,6 +404,9 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     }
 
     ostream << VBS_MILIX_REPLY_UPDATE_SYMBOL << output.svgXml << output.offset;
+    if(returnPoints) {
+      ostream << output.adjustedPoints << output.controlPoints;
+    }
     return reply;
   }
   else if ( req == VBS_MILIX_REQUEST_UPDATE_SYMBOLS )
