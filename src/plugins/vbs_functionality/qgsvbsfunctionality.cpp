@@ -95,5 +95,5 @@ void QgsVBSFunctionality::saveMilx()
 
 void QgsVBSFunctionality::loadMilx()
 {
-  QgsVBSMilixIO::load( mMilXManager, mQGisIface->messageBar() );
+  QgsVBSMilixIO::load( mMilXManager, mQGisIface->mapCanvas(), mQGisIface->messageBar() );
 }

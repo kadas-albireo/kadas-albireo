@@ -99,7 +99,7 @@ void QgsVBSMilixAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
   {
     _readXML( doc, annotationElem );
   }
-  updateSymbol();
+  updateSymbol( true );
 }
 
 void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
@@ -111,7 +111,7 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
 
   if ( mGraphic.isNull() )
   {
-    updateSymbol();
+    updateSymbol( false );
   }
 
   // Draw line from visual reference point to actual refrence point
@@ -223,9 +223,9 @@ void QgsVBSMilixAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCo
   {
     QgsAnnotationItem::setMapPosition( pos, crs );
   }
-  if ( isNPoint() )
+  if ( mIsMultiPoint )
   {
-    updateSymbol();
+    updateSymbol( false );
   }
 }
 
@@ -363,13 +363,13 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
 }
 
-void QgsVBSMilixAnnotationItem::updateSymbol()
+void QgsVBSMilixAnnotationItem::updateSymbol( bool updatePoints )
 {
   VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
-  if ( VBSMilixClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result ) )
+  if ( VBSMilixClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result, updatePoints ) )
   {
-    setGraphic( result, false );
+    setGraphic( result, updatePoints );
   }
 }
 
@@ -427,4 +427,30 @@ void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graph
   QDomElement factorYEl = doc.createElement( "FactorY" );
   factorYEl.appendChild( doc.createTextNode( QString::number( rawOffset.y() / VBSMilixClient::SymbolSize ) ) );
   offsetEl.appendChild( factorYEl );
+}
+
+void QgsVBSMilixAnnotationItem::readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize )
+{
+  QString symbolId = graphicEl.firstChildElement( "MssStringXML" ).text();
+  QString militaryName = graphicEl.firstChildElement( "Name" ).text();
+
+  QList<QgsPoint> points;
+  QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
+  for ( int iPoint = 0, nPoints = pointEls.count(); iPoint < nPoints; ++iPoint )
+  {
+    QDomElement pointEl = pointEls.at( iPoint ).toElement();
+    double x = pointEl.firstChildElement( "X" ).text().toDouble();
+    double y = pointEl.firstChildElement( "Y" ).text().toDouble();
+    points.append( crst->transform( QgsPoint( x, y ) ) );
+  }
+  mMapPosition = mGeoPos = points.front();
+  mGeoPosCrs = crst->destCRS();
+  points.removeFirst();
+  mAdditionalPoints = points;
+
+  double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
+  double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
+  mOffsetFromReferencePoint = QPointF( offsetX, offsetY );
+  setSymbolXml( symbolId, militaryName, points.size() > 1 );
+  updateSymbol( true );
 }

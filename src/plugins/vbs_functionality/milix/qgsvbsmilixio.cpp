@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgscrscache.h"
+#include "qgsmapcanvas.h"
 #include "qgsmessagebar.h"
 #include "qgsvbsmilixio.h"
 #include "qgsvbsmilixannotationitem.h"
@@ -114,14 +116,85 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
   return true;
 }
 
-bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMessageBar *messageBar )
+bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, QgsMessageBar *messageBar )
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QStringList filters = QStringList() << tr( "MilX Layer (*.milxly)" ) << tr( "Compressed MilX Layer (*.milxlyz)" );
-  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastProjectDir, filters.join( ";;" ) );
+  QStringList filters = QStringList() << tr( "Compressed MilX Layer (*.milxlyz)" ) << tr( "MilX Layer (*.milxly)" );
+  QString selectedFilter;
+  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastProjectDir, filters.join( ";;" ), &selectedFilter );
   if ( filename.isEmpty() )
   {
     return false;
   }
 
+  QIODevice* dev = 0;
+  if ( selectedFilter == filters[0] )
+  {
+    dev = new QuaZipFile( filename, "Layer.milxly" );
+  }
+  else
+  {
+    dev = new QFile( filename );
+  }
+  if ( !dev->open( QIODevice::ReadOnly ) )
+  {
+    delete dev;
+    messageBar->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
+    return false;
+  }
+  QDomDocument doc;
+  doc.setContent( dev );
+  dev->deleteLater();
+
+
+  QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
+  QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
+
+  if ( milxVersionEl.text() != VBSMilixClient::libraryVersionTag() )
+  {
+    // Upgrade / Downgrade as necessary
+
+  }
+
+  QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
+  for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
+  {
+    QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
+//    QString layerName = milxLayerEl.firstChildElement( "Name" ).text(); // TODO
+//    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
+    int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
+    QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
+    QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
+    const QgsCoordinateTransform* crst = 0;
+    if ( crs == "SwissLv03" )
+    {
+      crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:21781", canvas->mapSettings().destinationCrs().authid() );
+    }
+    else if ( crs == "WGS84" )
+    {
+      crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", canvas->mapSettings().destinationCrs().authid() );
+    }
+    else if ( crs == "UTM" )
+    {
+      QgsCoordinateReferenceSystem utmCrs;
+      QString zoneLetter = utmZone.right( 1 ).toUpper();
+      QString zoneNumber = utmZone.left( utmZone.length() - 1 );
+      QString projZone = zoneNumber + ( zoneLetter == "S" ? " +south" : "" );
+      utmCrs.createFromProj4( QString( "+proj=utm +zone=%1 +datum=WGS84 +units=m +no_defs" ).arg( projZone ) );
+      crst = QgsCoordinateTransformCache::instance()->transform( utmCrs.authid(), canvas->mapSettings().destinationCrs().authid() );
+    }
+
+    QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
+    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
+    {
+      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
+      // QString mssStringXml = graphicEl.firstChildElement("MssStringXML").text();  // TODO VALIDATE
+      QgsVBSMilixAnnotationItem* item = new QgsVBSMilixAnnotationItem( canvas );
+      item->readMilx( graphicEl, crst, symbolSize );
+      manager->addItem( item );
+    }
+  }
+
+  messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
+  return true;
 }

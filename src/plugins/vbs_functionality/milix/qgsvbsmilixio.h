@@ -27,7 +27,7 @@ class QgsVBSMilixIO : public QObject
 {
   public:
     static bool save( QgsVBSMilixManager* manager, QgsMessageBar *messageBar );
-    static bool load( QgsVBSMilixManager* manager, QgsMessageBar *messageBar );
+    static bool load( QgsVBSMilixManager* manager, QgsMapCanvas *canvas, QgsMessageBar *messageBar );
 };
 
 #endif // QGSVBSMILIXIO_H

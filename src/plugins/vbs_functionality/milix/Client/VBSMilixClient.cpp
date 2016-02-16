@@ -430,13 +430,13 @@ bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol&
   return true;
 }
 
-bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result )
+bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << VBS_MILIX_REQUEST_UPDATE_SYMBOL;
   istream << visibleExtent;
-  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << returnPoints;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_UPDATE_SYMBOL ) )
@@ -449,6 +449,11 @@ bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbo
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
+  if ( returnPoints )
+  {
+    ostream >> result.adjustedPoints;
+    ostream >> result.controlPoints;
+  }
   return true;
 }
 

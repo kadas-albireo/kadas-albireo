@@ -21,6 +21,7 @@
 #include "qgsannotationitem.h"
 #include "Client/VBSMilixClient.hpp"
 
+class QgsCoordinateTransform;
 class QgsVBSCoordinateDisplayer;
 
 class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
@@ -38,7 +39,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     QList<QPoint> points() const;
     const QList<int>& controlPoints() const { return mControlPoints; }
     int absolutePointIdx( int regularIdx ) const;
-    bool isNPoint() const { return !mAdditionalPoints.isEmpty(); }
+    bool isNPoint() const { return mIsMultiPoint; }
     void setGraphic( VBSMilixClient::NPointSymbolGraphic& result, bool updatePoints );
     void finalize() { mFinalized = true; }
 
@@ -53,6 +54,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     void showContextMenu( const QPoint &screenPos );
 
     void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
+    void readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize );
 
   protected:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
@@ -68,7 +70,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     bool mFinalized;
 
     void _showItemEditor() override;
-    void updateSymbol();
+    void updateSymbol( bool updatePoints );
 };
 
 #endif // QGSVBSMILIXANNOTATIONITEM_H
