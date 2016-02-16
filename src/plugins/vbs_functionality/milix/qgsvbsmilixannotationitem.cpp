@@ -284,7 +284,7 @@ void QgsVBSMilixAnnotationItem::setGraphic( VBSMilixClient::NPointSymbolGraphic 
   if ( updatePoints )
   {
     const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mMapCanvas->mapSettings().destinationCrs().authid(), mGeoPosCrs.authid() );
-    mGeoPos = t->transform( toMapCoordinates( result.adjustedPoints[0] ) );
+    mMapPosition = mGeoPos = t->transform( toMapCoordinates( result.adjustedPoints[0] ) );
     setPos( result.adjustedPoints[0] );
     mAdditionalPoints.clear();
     for ( int i = 1, n = result.adjustedPoints.size(); i < n; ++i )
