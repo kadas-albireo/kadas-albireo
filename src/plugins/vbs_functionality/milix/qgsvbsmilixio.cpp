@@ -65,51 +65,51 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
     return false;
   }
 
-  QDomDocument xml;
-  xml.appendChild( xml.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
-  QDomElement milxDocumentEl = xml.createElement( "MilXDocument_Layer" );
+  QDomDocument doc;
+  doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
+  QDomElement milxDocumentEl = doc.createElement( "MilXDocument_Layer" );
   milxDocumentEl.setAttribute( "xmlns", "http://gs-soft.com/MilX/V3.1" );
   milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
-  xml.appendChild( milxDocumentEl );
+  doc.appendChild( milxDocumentEl );
 
-  QDomElement milxVersionEl = xml.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( xml.createTextNode( VBSMilixClient::libraryVersionTag() ) );
+  QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
+  milxVersionEl.appendChild( doc.createTextNode( VBSMilixClient::libraryVersionTag() ) );
   milxDocumentEl.appendChild( milxVersionEl );
 
-  QDomElement milxLayerEl = xml.createElement( "MilXLayer" );
+  QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
   milxDocumentEl.appendChild( milxLayerEl );
 
-  QDomElement milxLayerNameEl = xml.createElement( "Name" );
-  milxLayerNameEl.appendChild( xml.createTextNode( "Default" ) ); // TODO
+  QDomElement milxLayerNameEl = doc.createElement( "Name" );
+  milxLayerNameEl.appendChild( doc.createTextNode( "Default" ) ); // TODO
   milxLayerEl.appendChild( milxLayerNameEl );
 
-  QDomElement milxLayerTypeEl = xml.createElement( "LayerType" );
-  milxLayerTypeEl.appendChild( xml.createTextNode( "Normal" ) );
+  QDomElement milxLayerTypeEl = doc.createElement( "LayerType" );
+  milxLayerTypeEl.appendChild( doc.createTextNode( "Normal" ) );
   milxLayerEl.appendChild( milxLayerTypeEl );
 
-  QDomElement graphicListEl = xml.createElement( "GraphicList" );
+  QDomElement graphicListEl = doc.createElement( "GraphicList" );
   milxLayerEl.appendChild( graphicListEl );
 
   foreach ( const QgsVBSMilixAnnotationItem* item, manager->getItems() )
   {
-    item->writeMilx( xml, graphicListEl );
+    item->writeMilx( doc, graphicListEl );
   }
 
-  QDomElement crsEl = xml.createElement( "CoordSystemType" );
-  crsEl.appendChild( xml.createTextNode( "WGS84" ) );
+  QDomElement crsEl = doc.createElement( "CoordSystemType" );
+  crsEl.appendChild( doc.createTextNode( "WGS84" ) );
   milxLayerEl.appendChild( crsEl );
 
-  QDomElement symbolSizeEl = xml.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( xml.createTextNode( QString::number( VBSMilixClient::SymbolSize ) ) );
+  QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
+  symbolSizeEl.appendChild( doc.createTextNode( QString::number( VBSMilixClient::SymbolSize ) ) );
   milxLayerEl.appendChild( symbolSizeEl );
 
-  QDomElement bwEl = xml.createElement( "DisplayBW" );
-  bwEl.appendChild( xml.createTextNode( "0" ) ); // TODO
+  QDomElement bwEl = doc.createElement( "DisplayBW" );
+  bwEl.appendChild( doc.createTextNode( "0" ) ); // TODO
   milxLayerEl.appendChild( bwEl );
 
-  dev->write( xml.toString().toUtf8() );
-  delete zip;
+  dev->write( doc.toString().toUtf8() );
   delete dev;
+  delete zip;
   messageBar->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
   return true;
 }

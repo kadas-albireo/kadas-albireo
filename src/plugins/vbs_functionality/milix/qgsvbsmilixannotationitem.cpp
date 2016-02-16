@@ -412,7 +412,7 @@ void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graph
     pXEl.appendChild( doc.createTextNode( QString::number( pWGS.x(), 'f', 6 ) ) );
     pEl.appendChild( pXEl );
     QDomElement pYEl = doc.createElement( "Y" );
-    p0El.appendChild( doc.createTextNode( QString::number( pWGS.y(), 'f', 6 ) ) );
+    pYEl.appendChild( doc.createTextNode( QString::number( pWGS.y(), 'f', 6 ) ) );
     pEl.appendChild( pYEl );
   }
 
