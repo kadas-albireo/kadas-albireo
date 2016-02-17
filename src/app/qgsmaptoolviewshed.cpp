@@ -32,6 +32,7 @@
 #include "qgstemporaryfile.h"
 #include "qgssinglebandpseudocolorrenderer.h"
 #include "qgsviewshed.h"
+#include "qgspinannotationitem.h"
 
 #include <QDialogButtonBox>
 #include <QDir>
@@ -155,6 +156,11 @@ void QgsMapToolViewshed::drawFinished()
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    QgsCoordinateUtils::TargetFormat format;
+    QString epsg;
+    QgisApp::instance()->getCoordinateDisplayFormat( format, epsg );
+    QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas(), format, epsg );
+    pin->setMapPosition( center, canvasCrs );
   }
   reset();
 }
