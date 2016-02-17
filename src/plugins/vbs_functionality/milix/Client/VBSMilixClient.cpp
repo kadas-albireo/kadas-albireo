@@ -76,7 +76,7 @@ bool VBSMilixClient::initialize()
   }
 #else
   int port = 31415;
-  QHostAddress addr = QHostAddress( "192.168.178.124" );
+  QHostAddress addr = QHostAddress( "192.168.0.197" );
 #endif
 
   // Initialize network
@@ -510,6 +510,25 @@ bool VBSMilixClient::validateSymbolXml( const QString& symbolXml, const QString&
   QDataStream ostream( &response, QIODevice::ReadOnly );
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   ostream >> adjustedSymbolXml >> valid >> messages;
+  return true;
+}
+
+bool VBSMilixClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_HIT_TEST;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << clickPos;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_HIT_TEST ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> hitTestResult;
   return true;
 }
 

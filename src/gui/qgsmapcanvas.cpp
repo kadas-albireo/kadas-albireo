@@ -39,6 +39,7 @@ email                : sherman at mrcc.com
 
 #include "qgis.h"
 #include "qgsapplication.h"
+#include "qgsannotationitem.h"
 #include "qgscrscache.h"
 #include "qgsdatumtransformdialog.h"
 #include "qgslogger.h"
@@ -70,7 +71,10 @@ class QgsMapCanvas::CanvasProperties
 {
   public:
 
-    CanvasProperties() : mouseButtonDown( false ), panSelectorDown( false ) { }
+    CanvasProperties()
+        : mouseButtonDown( false )
+        , panSelectorDown( false )
+    { }
 
     //!Flag to indicate status of mouse button
     bool mouseButtonDown;
@@ -312,11 +316,6 @@ void QgsMapCanvas::enableAntiAliasing( bool theFlag )
   if ( mMapOverview )
     mMapOverview->enableAntiAliasing( theFlag );
 } // anti aliasing
-
-void QgsMapCanvas::enableMapTileRendering( bool theFlag )
-{
-  mSettings.setFlag( QgsMapSettings::RenderMapTile, theFlag );
-}
 
 void QgsMapCanvas::useImageToRender( bool theFlag )
 {
@@ -588,6 +587,12 @@ void QgsMapCanvas::clearCache()
     mCache->clear();
 }
 
+void QgsMapCanvas::clearCache( const QString &layerId )
+{
+  if ( mCache )
+    mCache->clearCacheImage( layerId );
+}
+
 void QgsMapCanvas::setParallelRenderingEnabled( bool enabled )
 {
   mUseParallelRendering = enabled;
@@ -795,22 +800,19 @@ void QgsMapCanvas::saveAsImage( QString theFileName, QPixmap * theQPixmap, QStri
   //
   //check if the optional QPaintDevice was supplied
   //
+
   if ( theQPixmap != NULL )
   {
-    // render
-    QPainter painter;
-    painter.begin( theQPixmap );
-    QgsMapRendererCustomPainterJob job( mSettings, &painter );
-    job.start();
-    job.waitForFinished();
-    emit renderComplete( &painter );
-    painter.end();
-
+    QPainter painter( theQPixmap );
+    render( &painter );
     theQPixmap->save( theFileName, theFormat.toLocal8Bit().data() );
   }
   else //use the map view
   {
-    mMap->contentImage().save( theFileName, theFormat.toLocal8Bit().data() );
+    QPixmap pixmap( size() );
+    QPainter painter( &pixmap );
+    render( &painter );
+    pixmap.save( theFileName, theFormat.toLocal8Bit().data() );
   }
   //create a world file to go with the image...
   QgsRectangle myRect = mapSettings().visibleExtent();
@@ -1052,33 +1054,28 @@ void QgsMapCanvas::zoomToSelected( QgsVectorLayer* layer )
   }
 
   QgsRectangle rect = mapSettings().layerExtentToOutputExtent( layer, layer->boundingBoxOfSelected() );
-  zoomToFeatureExtent( rect );
+
+  // no selected features, only one selected point feature
+  //or two point features with the same x- or y-coordinates
+  if ( rect.isEmpty() )
+  {
+    // zoom in
+    QgsPoint c = rect.center();
+    rect = extent();
+    rect.scale( 1.0, &c );
+  }
+  //zoom to an area
+  else
+  {
+    // Expand rect to give a bit of space around the selected
+    // objects so as to keep them clear of the map boundaries
+    // The same 5% should apply to all margins.
+    rect.scale( 1.05 );
+  }
+
+  setExtent( rect );
+  refresh();
 } // zoomToSelected
-
-void QgsMapCanvas::zoomToFeatureId( QgsVectorLayer* layer, QgsFeatureId id )
-{
-  if ( !layer )
-  {
-    return;
-  }
-
-  QgsFeatureIterator it = layer->getFeatures( QgsFeatureRequest().setFilterFid( id ).setSubsetOfAttributes( QgsAttributeList() ) );
-
-  QgsFeature fet;
-  if ( !it.nextFeature( fet ) )
-  {
-    return;
-  }
-
-  QgsGeometry* geom = fet.geometry();
-  if ( !geom )
-  {
-    return;
-  }
-
-  QgsRectangle rect = mapSettings().layerExtentToOutputExtent( layer, geom->boundingBox() );
-  zoomToFeatureExtent( rect );
-}
 
 void QgsMapCanvas::panToSelected( QgsVectorLayer* layer )
 {
@@ -1264,7 +1261,6 @@ void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
   }
   else
   {
-
     // call handler of current map tool
     if ( mMapTool )
     {
@@ -1291,39 +1287,31 @@ void QgsMapCanvas::mouseReleaseEvent( QMouseEvent * e )
     mCanvasProperties->panSelectorDown = false;
     panActionEnd( mCanvasProperties->mouseLastXY );
   }
-  else
+  // call handler of current map tool
+  else if ( mMapTool )
   {
-    // call handler of current map tool
-    if ( mMapTool )
+    // right button was pressed in zoom tool? return to previous non zoom tool
+    if ( e->button() == Qt::RightButton && mMapTool->isTransient() )
     {
-      // right button was pressed in zoom tool? return to previous non zoom tool
-      if ( e->button() == Qt::RightButton && mMapTool->isTransient() )
+      QgsDebugMsg( "Right click in map tool zoom or pan, last tool is " +
+                   QString( mLastNonZoomMapTool ? "not null." : "null." ) );
+
+      QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCurrentLayer );
+
+      // change to older non-zoom tool
+      if ( mLastNonZoomMapTool
+           && ( !mLastNonZoomMapTool->isEditTool() || ( vlayer && vlayer->isEditable() ) ) )
       {
-        QgsDebugMsg( "Right click in map tool zoom or pan, last tool is " +
-                     QString( mLastNonZoomMapTool ? "not null." : "null." ) );
-
-        QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( mCurrentLayer );
-
-        // change to older non-zoom tool
-        if ( mLastNonZoomMapTool
-             && ( !mLastNonZoomMapTool->isEditTool() || ( vlayer && vlayer->isEditable() ) ) )
-        {
-          QgsMapTool* t = mLastNonZoomMapTool;
-          mLastNonZoomMapTool = NULL;
-          setMapTool( t );
-        }
-        return;
+        QgsMapTool* t = mLastNonZoomMapTool;
+        mLastNonZoomMapTool = NULL;
+        setMapTool( t );
       }
-      mMapTool->canvasReleaseEvent( e );
+      return;
     }
+    mMapTool->canvasReleaseEvent( e );
   }
 
-
   mCanvasProperties->mouseButtonDown = false;
-
-  if ( mCanvasProperties->panSelectorDown )
-    return;
-
 } // mouseReleaseEvent
 
 void QgsMapCanvas::resizeEvent( QResizeEvent * e )
@@ -1482,6 +1470,7 @@ void QgsMapCanvas::mouseMoveEvent( QMouseEvent * e )
   QPoint xy = e->pos();
   QgsPoint coord = getCoordinateTransform()->toMapCoordinates( xy );
   emit xyCoordinates( coord );
+
 } // mouseMoveEvent
 
 
@@ -1495,7 +1484,9 @@ void QgsMapCanvas::setMapTool( QgsMapTool* tool )
   if ( mMapTool )
   {
     disconnect( mMapTool, SIGNAL( destroyed() ), this, SLOT( mapToolDestroyed() ) );
-    mMapTool->deactivate();
+    QgsMapTool* oldTool = mMapTool;
+    mMapTool = 0;
+    oldTool->deactivate();
   }
 
   if ( tool->isTransient() && mMapTool && !mMapTool->isTransient() )
@@ -1528,10 +1519,11 @@ void QgsMapCanvas::unsetMapTool( QgsMapTool* tool )
 {
   if ( mMapTool && mMapTool == tool )
   {
-    mMapTool->deactivate();
+    disconnect( mMapTool, SIGNAL( destroyed() ), this, SLOT( mapToolDestroyed() ) );
     mMapTool = NULL;
+    tool->deactivate();
     emit mapToolSet( NULL );
-    emit mapToolSet( NULL, mMapTool );
+    emit mapToolSet( NULL, tool );
     setCursor( Qt::ArrowCursor );
   }
 
@@ -1739,30 +1731,6 @@ void QgsMapCanvas::moveCanvasContents( bool reset )
   setSceneRect( -pnt.x(), -pnt.y(), viewport()->size().width(), viewport()->size().height() );
 }
 
-void QgsMapCanvas::zoomToFeatureExtent( QgsRectangle& rect )
-{
-  // no selected features, only one selected point feature
-  //or two point features with the same x- or y-coordinates
-  if ( rect.isEmpty() )
-  {
-    // zoom in
-    QgsPoint c = rect.center();
-    rect = extent();
-    rect.scale( 1.0, &c );
-  }
-  //zoom to an area
-  else
-  {
-    // Expand rect to give a bit of space around the selected
-    // objects so as to keep them clear of the map boundaries
-    // The same 5% should apply to all margins.
-    rect.scale( 1.05 );
-  }
-
-  setExtent( rect );
-  refresh();
-}
-
 void QgsMapCanvas::showError( QgsMapLayer * mapLayer )
 {
   Q_UNUSED( mapLayer );
@@ -1829,6 +1797,32 @@ void QgsMapCanvas::setSnappingUtils( QgsSnappingUtils* utils )
   mSnappingUtils = utils;
 }
 
+QgsAnnotationItem* QgsMapCanvas::annotationItemAtPos( const QPoint &pos ) const
+{
+  foreach ( QGraphicsItem* item, items( pos ) )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem && annotationItem->hitTest( pos ) )
+    {
+      return annotationItem;
+    }
+  }
+  return 0;
+}
+
+QgsAnnotationItem* QgsMapCanvas::selectedAnnotationItem() const
+{
+  foreach ( QGraphicsItem* item, scene()->selectedItems() )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem )
+    {
+      return annotationItem;
+    }
+  }
+  return 0;
+}
+
 void QgsMapCanvas::readProject( const QDomDocument & doc )
 {
   QDomNodeList nodes = doc.elementsByTagName( "mapcanvas" );
@@ -1844,7 +1838,6 @@ void QgsMapCanvas::readProject( const QDomDocument & doc )
     setExtent( tmpSettings.extent() );
     setRotation( tmpSettings.rotation() );
     mSettings.datumTransformStore() = tmpSettings.datumTransformStore();
-    enableMapTileRendering( tmpSettings.testFlag( QgsMapSettings::RenderMapTile ) );
 
     clearExtentHistory(); // clear the extent history on project load
   }
@@ -1972,7 +1965,6 @@ void QgsMapCanvas::mapToolDestroyed()
   mMapTool = 0;
 }
 
-#ifdef HAVE_TOUCH
 bool QgsMapCanvas::event( QEvent * e )
 {
   bool done = false;
@@ -1991,7 +1983,6 @@ bool QgsMapCanvas::event( QEvent * e )
   }
   return done;
 }
-#endif
 
 bool QgsMapCanvas::rotationEnabled()
 {

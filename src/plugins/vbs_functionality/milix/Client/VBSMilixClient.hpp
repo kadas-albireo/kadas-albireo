@@ -57,6 +57,7 @@ public:
   static bool updateSymbol(const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
   static bool updateSymbols(const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
+  static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
   static const QString& lastError() { return instance()->mLastError; }
   static const QString& libraryVersionTag() {  instance()->initialize(); return instance()->mLibraryVersionTag; }
 

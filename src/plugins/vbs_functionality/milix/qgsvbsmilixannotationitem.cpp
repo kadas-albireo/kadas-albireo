@@ -363,6 +363,18 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
 }
 
+bool QgsVBSMilixAnnotationItem::hitTest( const QPoint& screenPos ) const
+{
+  if ( !mIsMultiPoint )
+  {
+    return true;
+  }
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  bool hitTestResult = false;
+  VBSMilixClient::hitTest( symbol, screenPos, hitTestResult );
+  return hitTestResult;
+}
+
 void QgsVBSMilixAnnotationItem::updateSymbol( bool updatePoints )
 {
   VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
