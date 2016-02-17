@@ -547,13 +547,13 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
     }
     else
     {
-      double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] );
+      double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] - 2 * M_PI );
       pStart = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStartAngles[i] ),
                          mCenters[i].y() + mRadii[i] * qSin( mStartAngles[i] ) );
       pMid = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( alphaMid ),
                        mCenters[i].y() + mRadii[i] * qSin( alphaMid ) );
-      pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
-                       mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
+      pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] - 2 * M_PI ),
+                       mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] - 2 * M_PI ) );
     }
     QgsCompoundCurveV2* exterior = new QgsCompoundCurveV2();
     if ( mStartAngles[i] != mStopAngles[i] )
