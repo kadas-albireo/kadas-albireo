@@ -482,6 +482,14 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_HIT_TEST << hitTestResult;
     return reply;
   }
+  else if(req == VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS)
+  {
+    QStringList libraryVersionTags;
+    QStringList libraryVersionNames;
+    getLibraryVersionTags(libraryVersionTags, libraryVersionNames);
+    ostream << VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS << libraryVersionTags << libraryVersionNames;
+	return reply;
+  }
   else
   {
     LOG( "Error: Unrecognized command" );
@@ -637,6 +645,15 @@ bool VBSMilixServer::hitTest(const SymbolInput& input, const QPoint& clickPos, b
   p.Y = clickPos.y();
   hitTestResult = mssDrawingItem->HitTest(p, 5);
   return true;
+}
+
+void VBSMilixServer::getLibraryVersionTags(QStringList &versionTags, QStringList& versionNames)
+{
+  for(int i = 0; i < mMssSymbolProvider->VersionLabelCount; ++i) {
+    MssComServer::IMssVersionLabelGSPtr label = mMssSymbolProvider->VersionLabel[i];
+    versionTags.append(bstr2qstring(label->LibVersionTag));
+    versionNames.append(bstr2qstring(label->LabelName));
+  }
 }
 
 bool VBSMilixServer::createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr &mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem)

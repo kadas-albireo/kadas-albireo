@@ -22,6 +22,7 @@ VBSMilixServerRequest VBS_MILIX_REQUEST_UPDATE_SYMBOLS = 11; // {VBS_MILIX_REQUE
 
 VBSMilixServerRequest VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML = 12; // {VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML, SymbolXml:QString, MssVersion:QString}
 VBSMilixServerRequest VBS_MILIX_REQUEST_HIT_TEST = 13; // {VBS_MILIX_REQUEST_HIT_TEST, SymbolXml:QString, Points:QList<QPoint>, ControlPoints:QList<int>, finalized:bool, clickPos:QPoint}
+VBSMilixServerRequest VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS = 14; // {VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS}
 
 
 typedef quint8 VBSMilixServerReply;
@@ -44,5 +45,6 @@ VBSMilixServerReply VBS_MILIX_REPLY_UPDATE_SYMBOLS = 111; // {VBS_MILIX_REPLY_GE
 
 VBSMilixServerReply VBS_MILIX_REPLY_VALIDATE_SYMBOLXML = 112; // {VBS_MILIX_REPLY_VALIDATE_SYMBOLXML, AdjustedSymbolXml:QString, valid:bool, messages:QString}
 VBSMilixServerReply VBS_MILIX_REPLY_HIT_TEST = 113; // {VBS_MILIX_REPLY_HIT_TEST, hitTestResult:bool}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS = 114; // {VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS, versionTags:QStringList, versionNames:QStringList}
 
 #endif // VBS_MILIX_SERVER_COMMANDS_HPP
