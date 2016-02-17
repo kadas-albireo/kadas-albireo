@@ -1802,7 +1802,7 @@ QgsAnnotationItem* QgsMapCanvas::annotationItemAtPos( const QPoint &pos ) const
   foreach ( QGraphicsItem* item, items( pos ) )
   {
     QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
-    if ( annotationItem )
+    if ( annotationItem && annotationItem->hitTest( pos ) )
     {
       return annotationItem;
     }
