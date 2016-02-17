@@ -65,11 +65,12 @@ private:
     bool canDeletePoint(const SymbolInput& input, int index, bool& canDelete, QString& errorMsg);
     bool deletePoint(const QRect& visibleExtent, const SymbolInput& input, int deleteIndex, SymbolOutput& output, QString& errorMsg);
     bool editSymbol(const QRect& visibleExtent, const SymbolInput& input, QString& outputSymbolXml, QString &outputMilitaryName, SymbolOutput& output, QString& errorMsg);
+    bool hitTest(const SymbolInput& input, const QPoint &clickPos, bool& hitTestResult, QString& errorMsg);
 
     bool createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem);
     bool renderItem(MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr& mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem, const QRect& visibleExtent, SymbolOutput& output, QString& errorMsg);
 
-	QString bstr2qstring(_bstr_t bstr){ return QString::fromWCharArray(( wchar_t* )bstr ); }
+    QString bstr2qstring(_bstr_t bstr){ return QString::fromWCharArray(( wchar_t* )bstr ); }
 };
 
 #endif // VBSMILIXSERVER_HPP

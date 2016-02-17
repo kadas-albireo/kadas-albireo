@@ -465,6 +465,23 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_VALIDATE_SYMBOLXML << outSymbolXml << valid << outMessages;
     return reply;
   }
+  else if(req == VBS_MILIX_REQUEST_HIT_TEST)
+  {
+    SymbolInput input;
+    QPoint clickPos;
+    istream >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized >> clickPos;
+    bool hitTestResult = false;
+    QString errorMsg;
+    if ( !hitTest( input, clickPos, hitTestResult, errorMsg ) )
+    {
+      LOG( QString( "Error: %1" ).arg( errorMsg ) );
+      ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
+      return reply;
+    }
+
+    ostream << VBS_MILIX_REPLY_HIT_TEST << hitTestResult;
+    return reply;
+  }
   else
   {
     LOG( "Error: Unrecognized command" );
@@ -604,6 +621,22 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
   outputMilitaryName = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS );
   LOG(QString("New symbol XML: %1").arg(outputSymbolXml));
   return renderSymbol(visibleExtent, newInput, output, errorMsg);
+}
+
+bool VBSMilixServer::hitTest(const SymbolInput& input, const QPoint& clickPos, bool& hitTestResult, QString& errorMsg)
+{
+  MssComServer::IMssNPointGraphicTemplateGSPtr mssNPointGraphic = 0;
+  MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = 0;
+  MssComServer::IMssNPointDrawingItemGSPtr mssDrawingItem = 0;
+
+  if(!createDrawingItem(input, errorMsg, mssNPointGraphic, mssCreationItem, mssDrawingItem)) {
+    return false;
+  }
+  MssComServer::TMssPointGS p;
+  p.X = clickPos.x();
+  p.Y = clickPos.y();
+  hitTestResult = mssDrawingItem->HitTest(p, 5);
+  return true;
 }
 
 bool VBSMilixServer::createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr &mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem)
