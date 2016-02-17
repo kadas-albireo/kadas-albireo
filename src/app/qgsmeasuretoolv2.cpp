@@ -46,7 +46,7 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, bool measureAngle )
   {
     mUnitComboBox->addItem( QGis::tr( QGis::Meters ), static_cast<int>( QGis::Meters ) );
     mUnitComboBox->addItem( QGis::tr( QGis::Feet ), static_cast<int>( QGis::Feet ) );
-    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
+//    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
     mUnitComboBox->addItem( QGis::tr( QGis::NauticalMiles ), static_cast<int>( QGis::NauticalMiles ) );
     QString units = QSettings().value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
     mUnitComboBox->setCurrentIndex( mUnitComboBox->findText( QGis::tr( QGis::fromLiteral( units ) ), Qt::MatchFixedString ) );
