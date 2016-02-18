@@ -9,12 +9,21 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
 {
     Q_OBJECT
   public:
+
+    enum ExportFormat
+    {
+      KML = 0,
+      KMZ
+    };
+
     QgsKMLExportDialog( const QStringList layerIds, QWidget * parent = 0, Qt::WindowFlags f = 0 );
     ~QgsKMLExportDialog();
 
     QString saveFile() const;
     QList<QgsMapLayer*> selectedLayers() const;
     bool visibleExtentOnly() const;
+
+    QgsKMLExportDialog::ExportFormat exportFormat() const;
 
   private slots:
     void on_mFileSelectionButton_clicked();
