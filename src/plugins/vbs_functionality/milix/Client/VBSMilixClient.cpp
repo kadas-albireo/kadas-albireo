@@ -532,6 +532,24 @@ bool VBSMilixClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos
   return true;
 }
 
+bool VBSMilixClient::getLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> versionTags >> versionNames;
+  return true;
+}
+
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )
 {
   if ( xml.isEmpty() )
