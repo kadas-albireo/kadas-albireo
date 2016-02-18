@@ -195,7 +195,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
 
   if ( req == VBS_MILIX_REQUEST_INIT )
   {
-    OLE_HANDLE wid;
+    intptr_t wid;
     QString language;
     istream >> wid;
     istream >> language;
