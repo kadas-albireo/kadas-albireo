@@ -75,8 +75,8 @@ bool VBSMilixClient::initialize()
     port = QString( out ).toInt();
   }
 #else
-  int port = 31415;
-  QHostAddress addr = QHostAddress( "192.168.0.197" );
+  int port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
+  QHostAddress addr = QHostAddress( QString( qgetenv( "MILIX_SERVER_ADDR" ) ) );
 #endif
 
   // Initialize network
