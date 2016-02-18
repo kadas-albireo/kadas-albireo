@@ -14,15 +14,13 @@
 #include <QWidget>
 #include <rsvgrenderer.h>
 
-const int VBSMilixClient::SymbolSize = 60;
+const int VBSMilixClient::SymbolSize = 48;
 
 void VBSMilixClient::cleanup()
 {
-  if(mProcess)
-	mProcess->deleteLater();
+  delete mProcess;
   mProcess = 0;
-  if(mTcpSocket)
-	mTcpSocket->deleteLater();
+  mTcpSocket->deleteLater();
   mTcpSocket = 0;
   delete mNetworkSession;
   mNetworkSession = 0;
@@ -45,10 +43,24 @@ bool VBSMilixClient::initialize()
   mProcess = new QProcess( this );
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {
+    QEventLoop evLoop;
+    QTimer timer;
+    timer.setSingleShot( true );
+    connect( mProcess, SIGNAL( error( QProcess::ProcessError ) ), &evLoop, SLOT( quit() ) );
+    connect( mProcess, SIGNAL( finished( int ) ), &evLoop, SLOT( quit() ) );
+    connect( mProcess, SIGNAL( readyReadStandardOutput() ), &evLoop, SLOT( quit() ) );
+    connect( &timer, SIGNAL( timeout() ), &evLoop, SLOT( quit() ) );
     mProcess->start( "milixserver" );
-    mProcess->waitForReadyRead(5000);
+    timer.start( 5000 );
+    evLoop.exec( QEventLoop::ExcludeUserInputEvents );
     QByteArray out = mProcess->readAllStandardOutput();
-    if ( !mProcess->isOpen() )
+    if ( !timer.isActive() )
+    {
+      cleanup();
+      mLastError = tr( "Timeout starting process" );
+      return false;
+    }
+    else if ( !mProcess->isOpen() )
     {
       cleanup();
       mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
@@ -133,19 +145,18 @@ bool VBSMilixClient::initialize()
   istream << VBS_MILIX_REQUEST_INIT;
 #ifdef Q_OS_WIN
   WId wid = 0;
-#pragma message("WARNING: TODO, server hands if a WID determined this way is passed");
-  /*foreach ( QWidget* widget, QApplication::topLevelWidgets() )
+  foreach ( QWidget* widget, QApplication::topLevelWidgets() )
   {
     if ( widget->inherits( "QMainWindow" ) )
     {
       wid = widget->effectiveWinId();
       break;
     }
-  }*/
+  }
 
-  istream << intptr_t(wid);
+  istream << wid;
 #else
-  istream << intptr_t(0);
+  istream << 0;
 #endif
   istream << lang << SymbolSize;
   QByteArray response;
