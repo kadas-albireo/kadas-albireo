@@ -18,11 +18,11 @@ const int VBSMilixClient::SymbolSize = 48;
 
 void VBSMilixClient::cleanup()
 {
-  if(mProcess)
-	mProcess->deleteLater();
+  if ( mProcess )
+    mProcess->deleteLater();
   mProcess = 0;
-  if(mTcpSocket)
-	mTcpSocket->deleteLater();
+  if ( mTcpSocket )
+    mTcpSocket->deleteLater();
   mTcpSocket = 0;
   delete mNetworkSession;
   mNetworkSession = 0;
@@ -46,7 +46,7 @@ bool VBSMilixClient::initialize()
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {
     mProcess->start( "milixserver" );
-    mProcess->waitForReadyRead(5000);
+    mProcess->waitForReadyRead( 5000 );
     QByteArray out = mProcess->readAllStandardOutput();
     if ( !mProcess->isOpen() )
     {
@@ -142,7 +142,6 @@ bool VBSMilixClient::initialize()
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   ostream >> mLibraryVersionTag;
 
-  // TODO: If disconnected attempt to recover
   return true;
 }
 
@@ -476,6 +475,25 @@ bool VBSMilixClient::validateSymbolXml( const QString& symbolXml, const QString&
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_VALIDATE_SYMBOLXML ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> adjustedSymbolXml >> valid >> messages;
+  return true;
+}
+
+bool VBSMilixClient::downgradeSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_DOWNGRADE_SYMBOLXML;
+  istream << symbolXml << mssVersion;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_DOWNGRADE_SYMBOLXML ) )
   {
     return false;
   }

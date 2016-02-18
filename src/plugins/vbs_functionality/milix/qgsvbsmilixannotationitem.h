@@ -54,7 +54,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
 
-    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
+    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl , const QString &versionTag, QString &messages ) const;
     void readMilx( const QDomElement& graphicEl, const QString &symbolXml, const QgsCoordinateTransform* crst, int symbolSize );
 
   protected:

@@ -32,9 +32,18 @@
 
 bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar )
 {
+  QStringList versionTags, versionNames;
+  VBSMilixClient::getLibraryVersionTags( versionTags, versionNames );
+  QStringList filters;
+  foreach ( const QString& versionName, versionNames )
+  {
+    filters.append( tr( "Compressed MilX Layer [%1] (*.milxlyz)" ).arg( versionName ) );
+    filters.append( tr( "MilX Layer [%1] (*.milxly)" ).arg( versionName ) );
+  }
+
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
   QString selectedFilter;
-  QStringList filters = QStringList() << tr( "Compressed MilX Layer (*.milxlyz)" ) << tr( "MilX Layer (*.milxly)" );
+
   QString filename = QFileDialog::getSaveFileName( 0, tr( "Select Output" ), lastProjectDir, filters.join( ";;" ), &selectedFilter );
   if ( filename.isEmpty() )
   {
@@ -48,6 +57,7 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
   {
     filename += ".milxly";
   }
+  QString versionTag = versionTags[static_cast< QList<QString> >( filters ).indexOf( selectedFilter ) / 2];
 
   QIODevice* dev = 0;
   QuaZip* zip = 0;
@@ -96,9 +106,15 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
   QDomElement graphicListEl = doc.createElement( "GraphicList" );
   milxLayerEl.appendChild( graphicListEl );
 
+  QStringList downgradeMessages;
   foreach ( const QgsVBSMilixAnnotationItem* item, manager->getItems() )
   {
-    item->writeMilx( doc, graphicListEl );
+    QString messages;
+    item->writeMilx( doc, graphicListEl, versionTag, messages );
+    if ( !messages.isEmpty() )
+    {
+      downgradeMessages.append( QString( "%1:\n%2\n" ).arg( item->symbolXml() ).arg( messages ) );
+    }
   }
 
   QDomElement crsEl = doc.createElement( "CoordSystemType" );
@@ -117,6 +133,10 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
   delete dev;
   delete zip;
   messageBar->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
+  if ( !downgradeMessages.isEmpty() )
+  {
+    showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), downgradeMessages.join( "\n" ) );
+  }
   return true;
 }
 
@@ -206,13 +226,15 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
       if ( !valid )
       {
         validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-      } else if(!messages.isEmpty()) {
+      }
+      else if ( !messages.isEmpty() )
+      {
         validationMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
       }
     }
     if ( !validationErrors.isEmpty() )
     {
-      showMessageDialog(tr( "Import Failed" ), tr( "The following validation errors occured:" ), validationErrors.join( "\n" ) );
+      showMessageDialog( tr( "Import Failed" ), tr( "The following validation errors occured:" ), validationErrors.join( "\n" ) );
       return false;
     }
     for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
@@ -226,20 +248,21 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
   }
 
   messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
-  if(!validationMessages.isEmpty()) {
-    showMessageDialog(tr("Import Messages"), tr("The following messages were emitted while importing:"), validationMessages.join("\n"));
+  if ( !validationMessages.isEmpty() )
+  {
+    showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), validationMessages.join( "\n" ) );
   }
   return true;
 }
 
-void QgsVBSMilixIO::showMessageDialog(const QString& title, const QString& body, const QString& messages)
+void QgsVBSMilixIO::showMessageDialog( const QString& title, const QString& body, const QString& messages )
 {
   QDialog dialog;
-  dialog.setWindowTitle(title);
-  dialog.setLayout(new QVBoxLayout);
-  dialog.layout()->addWidget(new QLabel(body));
-  QPlainTextEdit* textEdit = new QPlainTextEdit(messages);
-  textEdit->setReadOnly(true);
-  dialog.layout()->addWidget(textEdit);
+  dialog.setWindowTitle( title );
+  dialog.setLayout( new QVBoxLayout );
+  dialog.layout()->addWidget( new QLabel( body ) );
+  QPlainTextEdit* textEdit = new QPlainTextEdit( messages );
+  textEdit->setReadOnly( true );
+  dialog.layout()->addWidget( textEdit );
   dialog.exec();
 }

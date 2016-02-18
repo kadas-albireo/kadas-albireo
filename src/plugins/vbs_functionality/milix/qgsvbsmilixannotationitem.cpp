@@ -385,15 +385,23 @@ void QgsVBSMilixAnnotationItem::updateSymbol( bool updatePoints )
   }
 }
 
-void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const
+void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
 {
+  bool valid = false;
+  QString symbolXml;
+  VBSMilixClient::downgradeSymbolXml( mSymbolXml, versionTag, symbolXml, valid, messages );
+  if ( !valid )
+  {
+    return;
+  }
+
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
 
   QDomElement graphicEl = doc.createElement( "MilXGraphic" );
   graphicListEl.appendChild( graphicEl );
 
   QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
-  stringXmlEl.appendChild( doc.createTextNode( mSymbolXml ) );
+  stringXmlEl.appendChild( doc.createTextNode( symbolXml ) );
   graphicEl.appendChild( stringXmlEl );
 
   QDomElement nameEl = doc.createElement( "Name" );
