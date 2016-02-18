@@ -338,7 +338,7 @@ void QgsMapRendererJob::updateLayerGeometryCaches()
 
 bool QgsMapRendererJob::needTemporaryImage( QgsMapLayer* ml )
 {
-  if ( mSettings.testFlag( QgsMapSettings::UseAdvancedEffects ) && ml->type() == QgsMapLayer::VectorLayer )
+  if ( mSettings.testFlag( QgsMapSettings::UseAdvancedEffects ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
   {
     QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
     if ((( vl->blendMode() != QPainter::CompositionMode_SourceOver )

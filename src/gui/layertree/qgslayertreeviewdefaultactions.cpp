@@ -109,7 +109,7 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
     return 0;
 
   int curValue = 0;
-  if ( layer->type() == QgsMapLayer::VectorLayer )
+  if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
   {
     curValue = static_cast<QgsVectorLayer*>( layer )->layerTransparency();
   }
