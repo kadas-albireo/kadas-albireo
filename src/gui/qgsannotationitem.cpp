@@ -67,6 +67,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* s
 
   setFlag( QGraphicsItem::ItemIsSelectable, true );
   setData( 0, "AnnotationItem" );
+  setZValue( source->zValue() );
 
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncGeoPos() ) );
   connect( mMapCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( syncGeoPos() ) );
@@ -88,7 +89,7 @@ void QgsAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordinate
 {
   mMapPosition = mGeoPos = pos;
   mGeoPosCrs = crs.isValid() ? crs : mMapCanvas->mapSettings().destinationCrs();
-  setPos( toCanvasCoordinates( mMapPosition ) );
+  syncGeoPos();
   notifyItemUpdated();
 }
 
