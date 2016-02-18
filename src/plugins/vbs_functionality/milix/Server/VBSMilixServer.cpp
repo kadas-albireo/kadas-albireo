@@ -750,8 +750,8 @@ int main( int argc, char* argv[] )
   gTextEdit = new QPlainTextEdit();
   gTextEdit->show();
 #endif
-  int port = 31415;
-  QString addr = "192.168.178.124";
+  int port;
+  QString addr;
   if ( argc > 2 )
   {
     addr = argv[1];
