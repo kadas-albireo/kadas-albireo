@@ -207,6 +207,8 @@
 #include "qgsosmimportdialog.h"
 #include "qgsosmexportdialog.h"
 
+#include <quazip/quazipfile.h>
+
 #ifdef ENABLE_MODELTEST
 #include "modeltest.h"
 #endif
@@ -3098,17 +3100,45 @@ void QgisApp::kmlExport()
     kmlExport.setLayers( d.selectedLayers() );
 
     QString fileName = d.saveFile();
-    QFile kmlFile( fileName );
+    QFileInfo fi( fileName );
+
+    QIODevice* outputDevice = 0;
+    QuaZip* quaZip = 0;
+    if ( d.exportFormat() == QgsKMLExportDialog::KML )
+    {
+      outputDevice = new QFile( fileName );
+    }
+    else //KMZ
+    {
+      //needs to be opened with special methods
+      quaZip = new QuaZip( fileName );
+      if ( !quaZip->open( QuaZip::mdCreate ) )
+      {
+        delete quaZip;
+        return;
+      }
+      outputDevice = new QuaZipFile( quaZip );
+      if ( !dynamic_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) ) )
+      {
+        delete quaZip; delete outputDevice;
+        return;
+      }
+    }
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( &kmlFile, mapCanvas()->mapSettings(), d.visibleExtentOnly() ) == 0 )
+    if ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly() ) == 0 )
     {
       messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
     }
     else
     {
+      int errorNumber = dynamic_cast<QuaZipFile*>( outputDevice )->getZipError();
       messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
     }
+
+    outputDevice->close();
+    delete outputDevice;
+    delete quaZip;
     QApplication::restoreOverrideCursor();
   }
 }
