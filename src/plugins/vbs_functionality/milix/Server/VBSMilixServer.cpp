@@ -226,9 +226,12 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
 
     mMssService->OwnerHandle = wid;
 
+    mMssService->GuiLanguage = mLanguage;
+
     _bstr_t library = mMssService->GetDefaultLibrary( "" );
     LOG( QString( "Loading MSS library %1" ).arg(( char* )library ) );
     mMssSymbolProvider = mMssService->MssLoadLibrary( library, 0 );
+    mMssSymbolProvider->Language = mLanguage;
 
     mMssSymbolProvider->DefaultRenderingOptions->RenderingCanvasType = MssComServer::mssRenderingCanvasTypeGdiPlusGS;
     mMssSymbolProvider->DefaultRenderingOptions->AntiAliasingStyle = MssComServer::mssAntiAliasingStyleAllGS;
