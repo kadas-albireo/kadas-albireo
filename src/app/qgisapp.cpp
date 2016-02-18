@@ -3142,9 +3142,11 @@ void QgisApp::kmlExport()
 
     //write super overlays
     QList<QgsMapLayer*>::iterator overlayIt = superOverlayLayers.begin();
+    int drawingOrder = 0;
     for ( ; overlayIt != superOverlayLayers.end(); ++overlayIt )
     {
-      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath() );
+      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath(), drawingOrder );
+      ++drawingOrder;
     }
 
     messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), QgsMessageBar::INFO, 4 );
