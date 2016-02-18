@@ -18,9 +18,11 @@ const int VBSMilixClient::SymbolSize = 48;
 
 void VBSMilixClient::cleanup()
 {
-  delete mProcess;
+  if(mProcess)
+	mProcess->deleteLater();
   mProcess = 0;
-  mTcpSocket->deleteLater();
+  if(mTcpSocket)
+	mTcpSocket->deleteLater();
   mTcpSocket = 0;
   delete mNetworkSession;
   mNetworkSession = 0;
@@ -43,24 +45,10 @@ bool VBSMilixClient::initialize()
   mProcess = new QProcess( this );
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {
-    QEventLoop evLoop;
-    QTimer timer;
-    timer.setSingleShot( true );
-    connect( mProcess, SIGNAL( error( QProcess::ProcessError ) ), &evLoop, SLOT( quit() ) );
-    connect( mProcess, SIGNAL( finished( int ) ), &evLoop, SLOT( quit() ) );
-    connect( mProcess, SIGNAL( readyReadStandardOutput() ), &evLoop, SLOT( quit() ) );
-    connect( &timer, SIGNAL( timeout() ), &evLoop, SLOT( quit() ) );
     mProcess->start( "milixserver" );
-    timer.start( 5000 );
-    evLoop.exec( QEventLoop::ExcludeUserInputEvents );
+    mProcess->waitForReadyRead(5000);
     QByteArray out = mProcess->readAllStandardOutput();
-    if ( !timer.isActive() )
-    {
-      cleanup();
-      mLastError = tr( "Timeout starting process" );
-      return false;
-    }
-    else if ( !mProcess->isOpen() )
+    if ( !mProcess->isOpen() )
     {
       cleanup();
       mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
@@ -145,18 +133,19 @@ bool VBSMilixClient::initialize()
   istream << VBS_MILIX_REQUEST_INIT;
 #ifdef Q_OS_WIN
   WId wid = 0;
-  foreach ( QWidget* widget, QApplication::topLevelWidgets() )
+#pragma message("WARNING: TODO, server hands if a WID determined this way is passed");
+  /*foreach ( QWidget* widget, QApplication::topLevelWidgets() )
   {
     if ( widget->inherits( "QMainWindow" ) )
     {
       wid = widget->effectiveWinId();
       break;
     }
-  }
+  }*/
 
-  istream << wid;
+  istream << intptr_t(wid);
 #else
-  istream << 0;
+  istream << intptr_t(0);
 #endif
   istream << lang << SymbolSize;
   QByteArray response;
