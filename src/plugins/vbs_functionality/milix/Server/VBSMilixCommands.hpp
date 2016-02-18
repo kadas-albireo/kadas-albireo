@@ -5,7 +5,7 @@
 
 typedef quint8 VBSMilixServerRequest;
 
-VBSMilixServerRequest VBS_MILIX_REQUEST_INIT = 1; // {VBS_MILIX_REQUEST_INIT, WId, Lang:QString, SymbolSize:int}
+VBSMilixServerRequest VBS_MILIX_REQUEST_INIT = 1; // {VBS_MILIX_REQUEST_INIT, Lang:QString, SymbolSize:int}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_SYMBOL = 2; // {VBS_MILIX_REQUEST_GET_SYMBOL, SymbolXml:QString}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_SYMBOLS = 3; // {VBS_MILIX_REQUEST_GET_SYMBOLS, SymbolXmls:QStringList}
 

@@ -131,22 +131,6 @@ bool VBSMilixClient::initialize()
   QDataStream istream( &request, QIODevice::WriteOnly );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   istream << VBS_MILIX_REQUEST_INIT;
-#ifdef Q_OS_WIN
-  WId wid = 0;
-#pragma message("WARNING: TODO, server hands if a WID determined this way is passed");
-  /*foreach ( QWidget* widget, QApplication::topLevelWidgets() )
-  {
-    if ( widget->inherits( "QMainWindow" ) )
-    {
-      wid = widget->effectiveWinId();
-      break;
-    }
-  }*/
-
-  istream << intptr_t(wid);
-#else
-  istream << intptr_t(0);
-#endif
   istream << lang << SymbolSize;
   QByteArray response;
   if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )

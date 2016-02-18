@@ -195,9 +195,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
 
   if ( req == VBS_MILIX_REQUEST_INIT )
   {
-    intptr_t wid;
     QString language;
-    istream >> wid;
     istream >> language;
     istream >> mSymbolSize;
 
@@ -224,7 +222,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     LOG( "Initializing MSS license" );
     mMssService->InitLicense( "CH_GRUNDRE_GEOINFO_VBS_3F0A23AB7263B54E5A280E0AC53B94BD402F401F" );
 
-    mMssService->OwnerHandle = wid;
+    mMssService->OwnerHandle = 0;
 
     mMssService->GuiLanguage = mLanguage;
 
