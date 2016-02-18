@@ -23,8 +23,11 @@
 #include "qgsvbsmilixmanager.h"
 #include <QDomDocument>
 #include <QFileDialog>
+#include <QLabel>
 #include <QMessageBox>
+#include <QPlainTextEdit>
 #include <QSettings>
+#include <QVBoxLayout>
 #include <quazip/quazipfile.h>
 
 bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar )
@@ -157,6 +160,7 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
     return false;
   }
 
+  QStringList validationMessages;
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
   for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
   {
@@ -202,11 +206,13 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
       if ( !valid )
       {
         validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
+      } else if(!messages.isEmpty()) {
+        validationMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
       }
     }
     if ( !validationErrors.isEmpty() )
     {
-      QMessageBox::critical( 0, tr( "Import Failed" ), tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) ) );
+      showMessageDialog(tr( "Import Failed" ), tr( "The following validation errors occured:" ), validationErrors.join( "\n" ) );
       return false;
     }
     for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
@@ -220,5 +226,20 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
   }
 
   messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
+  if(!validationMessages.isEmpty()) {
+    showMessageDialog(tr("Import Messages"), tr("The following messages were emitted while importing:"), validationMessages.join("\n"));
+  }
   return true;
+}
+
+void QgsVBSMilixIO::showMessageDialog(const QString& title, const QString& body, const QString& messages)
+{
+  QDialog dialog;
+  dialog.setWindowTitle(title);
+  dialog.setLayout(new QVBoxLayout);
+  dialog.layout()->addWidget(new QLabel(body));
+  QPlainTextEdit* textEdit = new QPlainTextEdit(messages);
+  textEdit->setReadOnly(true);
+  dialog.layout()->addWidget(textEdit);
+  dialog.exec();
 }
