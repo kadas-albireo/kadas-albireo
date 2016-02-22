@@ -410,6 +410,12 @@ def closeProjectMacro():
     if hasattr(mod, 'closeProject'):
         mod.closeProject()
 
+def show_message_log(pop_error=True):
+    if pop_error:
+        iface.messageBar().popWidget()
+
+    iface.openMessageLog()
+
 
 #######################
 # SERVER PLUGINS
