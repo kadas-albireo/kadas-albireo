@@ -131,6 +131,18 @@ bool QgsGeometryCollectionV2::removeGeometry( int nr )
   return true;
 }
 
+QgsAbstractGeometryV2* QgsGeometryCollectionV2::takeGeometry( int nr )
+{
+  if ( nr >= mGeometries.size() || nr < 0 )
+  {
+    return 0;
+  }
+  QgsAbstractGeometryV2* geom = mGeometries[nr];
+  mGeometries.remove( nr );
+  return geom;
+}
+
+
 int QgsGeometryCollectionV2::dimension() const
 {
   int maxDim = 0;
@@ -307,6 +319,18 @@ QString QgsGeometryCollectionV2::asJSON( int precision ) const
   return json;
 }
 
+QString QgsGeometryCollectionV2::asKML( int precision ) const
+{
+  QString kml;
+  kml.append( "<MultiGeometry>" );
+  for ( int i = 0; i < mGeometries.size(); ++i )
+  {
+    kml.append( mGeometries.at( i )->asKML( precision ) );
+  }
+  kml.append( "</MultiGeometry>" );
+  return kml;
+}
+
 QgsRectangle QgsGeometryCollectionV2::calculateBoundingBox() const
 {
   if ( mGeometries.size() < 1 )
@@ -350,8 +374,7 @@ bool QgsGeometryCollectionV2::nextVertex( QgsVertexId& id, QgsPointV2& vertex ) 
   {
     id.part = 0; id.ring = -1; id.vertex = -1;
   }
-
-  if ( mGeometries.isEmpty() )
+  if ( id.part >= numGeometries() )
   {
     return false;
   }
