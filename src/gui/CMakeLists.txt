@@ -184,6 +184,8 @@ qgshtmlannotationitem.cpp
 qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
 qgsribbonbutton.cpp
+qgskmlexport.cpp
+qgskmlpallabeling.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp

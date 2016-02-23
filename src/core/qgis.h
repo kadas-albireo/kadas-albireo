@@ -28,6 +28,8 @@
 #include <cmath>
 #include <qnumeric.h>
 
+class QuaZip;
+
 /** \ingroup core
  * The QGis class provides global constants for use throughout the application.
  */
@@ -331,6 +333,8 @@ class CORE_EXPORT QGis
     /** Default highlight line/outline minimum width in mm.
      *  @note added in 2.3 */
     static double DEFAULT_HIGHLIGHT_MIN_WIDTH_MM;
+
+    static bool addFileToZip( QuaZip* zip, QString filePath, QString zipFileName );
 
   private:
     // String representation of unit types (set in qgis.cpp)

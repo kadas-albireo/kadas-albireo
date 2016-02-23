@@ -98,7 +98,6 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     const QgsPoint& mapGeoPos() const { return mGeoPos; }
     const QgsCoordinateReferenceSystem& mapGeoPosCrs() const { return mGeoPosCrs; }
 
-
     void setOffsetFromReferencePoint( const QPointF& offset );
     QPointF offsetFromReferencePoint() const { return mOffsetFromReferencePoint; }
 

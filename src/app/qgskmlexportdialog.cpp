@@ -25,7 +25,7 @@ QString QgsKMLExportDialog::saveFile() const
   {
     fileName.append( ".kml" );
   }
-  else if ( !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
+  else if ( exportFormat() == QgsKMLExportDialog::KMZ && !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
   {
     fileName.append( ".kmz" );
   }
