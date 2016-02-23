@@ -49,6 +49,16 @@ QTextDocument* QgsTextAnnotationItem::document() const
   return mDocument->clone();
 }
 
+QString QgsTextAnnotationItem::asHtml() const
+{
+  if ( !mDocument )
+  {
+    return QString();
+  }
+
+  return mDocument->toHtml();
+}
+
 void QgsTextAnnotationItem::setDocument( const QTextDocument* doc )
 {
   delete mDocument;

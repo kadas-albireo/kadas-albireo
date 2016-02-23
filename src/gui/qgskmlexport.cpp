@@ -1,5 +1,6 @@
 #include "qgskmlexport.h"
 #include "qgsabstractgeometryv2.h"
+#include "qgsannotationitem.h"
 #include "qgsgeometry.h"
 #include "qgskmlpallabeling.h"
 #include "qgsrendererv2.h"
@@ -7,6 +8,8 @@
 #include "qgssymbollayerv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsvectorlayer.h"
+#include "qgstextannotationitem.h"
+#include "qgsgeoimageannotationitem.h"
 #include <QIODevice>
 #include <QTextCodec>
 #include <QTextStream>
@@ -21,7 +24,7 @@ QgsKMLExport::~QgsKMLExport()
 
 }
 
-int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly )
+int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles )
 {
   if ( !d )
   {
@@ -83,6 +86,14 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
   }
 
   labeling.drawLabeling( labelingRc );
+
+  //write annotation items
+  QList<QgsAnnotationItem*>::iterator itemIt = mAnnotationItems.begin();
+  for(; itemIt != mAnnotationItems.end(); ++itemIt )
+  {
+      writeAnnotationItem( *itemIt, outStream, usedLocalFiles );
+  }
+
   outStream << "</Document>" << "\n";
   outStream << "</kml>";
   return 0;
@@ -187,6 +198,60 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
 
   renderer->stopRender( rc );
   return true;
+}
+
+bool QgsKMLExport::writeAnnotationItem( QgsAnnotationItem* item, QTextStream& outStream, QStringList& usedLocalFiles )
+{
+    if( !item )
+    {
+        return false;
+    }
+
+    //position in WGS84
+    QgsPoint pos = item->mapPosition();
+    QgsCoordinateReferenceSystem itemCrs = item->crs();
+    QgsCoordinateReferenceSystem wgs84;
+    wgs84.createFromId( 4326 );
+    QgsCoordinateTransform coordTransform( itemCrs, wgs84 );
+    QgsPoint wgs84Pos = coordTransform.transform( pos );
+    QgsPointV2 wgs84PosV2( wgs84Pos.x(), wgs84Pos.y() );
+
+    //todo: description depends on item type
+    QString description;
+
+    //switch on item type
+
+    //QgsTextAnnotationItem
+    QgsTextAnnotationItem* textItem = dynamic_cast<QgsTextAnnotationItem*>( item );
+    if( textItem )
+    {
+        //description = textItem->toHtml();
+        description.append( "<![CDATA[" );
+        description.append( textItem->asHtml() );
+        description.append( "]]>" );
+    }
+
+    //QgsGeoImageAnnotationItem
+    QgsGeoImageAnnotationItem* geoImageItem = dynamic_cast<QgsGeoImageAnnotationItem*>( item );
+    if( geoImageItem )
+    {
+        QFileInfo fi( geoImageItem->filePath() );
+        description.append( "<![CDATA[<img src=\"" );
+        description.append( fi.fileName() );
+        description.append( "\"/>]]>" );
+        usedLocalFiles.append( geoImageItem->filePath() );
+    }
+
+    outStream << "<Placemark>\n";
+    outStream << "<visibility>1</visibility>\n";
+    outStream << "<description>";
+    outStream << description;
+    outStream << "</description>\n";
+    outStream << wgs84PosV2.asKML( 6 );
+    outStream << "\n";
+    outStream << "</Placemark>\n";
+
+    return true;
 }
 
 void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc )

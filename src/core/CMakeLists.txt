@@ -98,8 +98,6 @@ SET(QGIS_CORE_SRCS
   qgsgeometryvalidator.cpp
   qgsgml.cpp
   qgsgmlschema.cpp
-  qgskmlexport.cpp
-  qgskmlpallabeling.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
@@ -707,6 +705,7 @@ INCLUDE_DIRECTORIES(
   ${EXPAT_INCLUDE_DIR}
   ${SQLITE3_INCLUDE_DIR}
   ${SPATIALITE_INCLUDE_DIR}
+  ${QUAZIP_INCLUDE_DIR}
 )
 
 
@@ -799,6 +798,7 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${EXPAT_LIBRARY}
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
+  ${QUAZIP_LIBRARIES}
 )
 
 # install

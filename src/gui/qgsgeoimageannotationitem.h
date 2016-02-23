@@ -39,6 +39,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
+    QString filePath() const { return mFilePath; }
 
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );

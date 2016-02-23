@@ -3098,6 +3098,7 @@ void QgisApp::kmlExport()
   {
     QgsKMLExport kmlExport;
     kmlExport.setLayers( d.selectedLayers() );
+    kmlExport.setAnnotationItems( annotationItems() );
 
     QString fileName = d.saveFile();
     QFileInfo fi( fileName );
@@ -3110,7 +3111,6 @@ void QgisApp::kmlExport()
     }
     else //KMZ
     {
-      //needs to be opened with special methods
       quaZip = new QuaZip( fileName );
       if ( !quaZip->open( QuaZip::mdCreate ) )
       {
@@ -3118,26 +3118,29 @@ void QgisApp::kmlExport()
         return;
       }
       outputDevice = new QuaZipFile( quaZip );
-      if ( !dynamic_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) ) )
+      //quazip files need to be opened with special methods
+      static_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) );
+    }
+
+    QStringList usedLocalFiles;
+
+    QApplication::setOverrideCursor( Qt::BusyCursor );
+    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly(), usedLocalFiles ) == 0 );
+    outputDevice->close();
+    delete outputDevice;
+
+    if ( success && d.exportFormat() == QgsKMLExportDialog::KMZ )
+    {
+      QStringList::const_iterator localFileIt = usedLocalFiles.constBegin();
+      for ( ; localFileIt != usedLocalFiles.constEnd(); ++localFileIt )
       {
-        delete quaZip; delete outputDevice;
-        return;
+        QFileInfo fi( *localFileIt );
+        QGis::addFileToZip( quaZip, *localFileIt, fi.fileName() );
       }
     }
 
-    QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly() ) == 0 )
-    {
-      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
-    }
-    else
-    {
-      int errorNumber = dynamic_cast<QuaZipFile*>( outputDevice )->getZipError();
-      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
-    }
+    messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), QgsMessageBar::INFO, 4 );
 
-    outputDevice->close();
-    delete outputDevice;
     delete quaZip;
     QApplication::restoreOverrideCursor();
   }
