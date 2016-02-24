@@ -52,6 +52,8 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     QgsLayerTreeView* layerTreeView() override;
 
+    QgsPluginInterface* pluginInterface( const QString& pluginName ) override;
+
     /* Exposed functions */
 
     //! Zoom map to full extent
@@ -275,6 +277,12 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     /** Unregister a previously registered action. (e.g. when plugin is going to be unloaded. */
     virtual bool unregisterMainWindowAction( QAction* action ) override;
+
+    /** Register a new tab in the layer properties dialog */
+    virtual void registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
+
+    /** Unregister a previously registered tab in the layer properties dialog */
+    virtual void unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
 
     /** Accessors for inserting items into menus and toolbars.
      * An item can be inserted before any existing action.

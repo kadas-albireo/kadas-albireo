@@ -104,6 +104,7 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   connect( mMasterCanvas, SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
+  connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), mMasterCanvas, SIGNAL( xyCoordinates( QgsPoint ) ) );
 
   updateLayerSelectionMenu();
   mMapCanvas->setRenderFlag( false );

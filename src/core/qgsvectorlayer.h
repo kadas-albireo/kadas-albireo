@@ -29,7 +29,7 @@
 #include "qgsfeatureiterator.h"
 #include "qgseditorwidgetconfig.h"
 #include "qgsfield.h"
-#include "qgspointv2.h"
+#include "geometry/qgspointv2.h"
 #include "qgssnapper.h"
 #include "qgsfield.h"
 #include "qgsrelation.h"

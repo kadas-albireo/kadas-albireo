@@ -35,6 +35,7 @@
 #include "qgslabel.h"
 #include "qgsgenericprojectionselector.h"
 #include "qgslogger.h"
+#include "qgsmaplayerpropertiesfactory.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayerstyleguiutils.h"
 #include "qgsmaplayerstylemanager.h"
@@ -570,6 +571,12 @@ void QgsVectorLayerProperties::apply()
 
   //apply diagram settings
   diagramPropertiesDialog->apply();
+
+  // apply all plugin dialogs
+  foreach ( QgsVectorLayerPropertiesPage* page, mLayerPropertiesPages )
+  {
+    page->apply();
+  }
 
   //layer title and abstract
   layer->setTitle( mLayerTitleLineEdit->text() );
@@ -1183,5 +1190,18 @@ void QgsVectorLayerProperties::on_mSimplifyDrawingGroupBox_toggled( bool checked
   else
   {
     mSimplifyDrawingAtProvider->setEnabled( checked );
+  }
+}
+
+void QgsVectorLayerProperties::addPropertiesPageFactory( QgsMapLayerPropertiesFactory* factory )
+{
+  QListWidgetItem* item = factory->createVectorLayerPropertiesItem( layer, mOptionsListWidget );
+  if ( item )
+  {
+    mOptionsListWidget->addItem( item );
+
+    QgsVectorLayerPropertiesPage* page = factory->createVectorLayerPropertiesPage( layer, this );
+    mLayerPropertiesPages << page;
+    mOptionsStackedWidget->addWidget( page );
   }
 }

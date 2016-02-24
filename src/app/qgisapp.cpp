@@ -1281,6 +1281,16 @@ QgsPluginManager *QgisApp::pluginManager()
   return mPluginManager;
 }
 
+QgsPluginInterface* QgisApp::pluginInterface( const QString& pluginName )
+{
+  QgisPlugin* plugin = QgsPluginRegistry::instance()->plugin( pluginName );
+  if ( plugin )
+  {
+    return plugin->pluginInterface();
+  }
+  return NULL;
+}
+
 void QgisApp::setupLayerTreeViewFromSettings()
 {
   QSettings s;
@@ -6719,6 +6729,16 @@ QgsRedliningLayer* QgisApp::redliningLayer() const
   return mRedlining->getOrCreateLayer();
 }
 
+void QgisApp::registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
+{
+  mMapLayerPropertiesFactories << factory;
+}
+
+void QgisApp::unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
+{
+  mMapLayerPropertiesFactories.removeAll( factory );
+}
+
 /** Get a pointer to the currently selected map layer */
 QgsMapLayer *QgisApp::activeLayer()
 {
@@ -7882,6 +7902,10 @@ void QgisApp::showLayerProperties( QgsMapLayer *ml )
 #else
     QgsVectorLayerProperties *vlp = new QgsVectorLayerProperties( vlayer, this );
 #endif
+    foreach ( QgsMapLayerPropertiesFactory* factory, mMapLayerPropertiesFactories )
+    {
+      vlp->addPropertiesPageFactory( factory );
+    }
 
     if ( vlp->exec() )
     {
