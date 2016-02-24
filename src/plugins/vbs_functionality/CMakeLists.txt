@@ -15,8 +15,8 @@ SET (vbsfunctionality_SRCS
   milix/qgsvbsmaptoolmilix.cpp
   milix/qgsvbsmilixannotationitem.cpp
   milix/qgsvbsmilixlibrary.cpp
-  milix/qgsvbsmilixmanager.cpp
   milix/qgsvbsmilixio.cpp
+  milix/qgsvbsmilixlayer.cpp
   milix/Client/VBSMilixClient.cpp
   ovl/qgsvbsovlimporter.cpp
 )
@@ -26,13 +26,13 @@ SET (vbsfunctionality_HDRS
   milix/qgsvbsmaptoolmilix.h
   milix/qgsvbsmilixannotationitem.h
   milix/qgsvbsmilixio.h
+  milix/qgsvbsmilixlayer.h
   ovl/qgsvbsovlimporter.h
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
   milix/qgsvbsmilixlibrary.h
-  milix/qgsvbsmilixmanager.h
   milix/Client/VBSMilixClient.hpp
 )
 
@@ -60,7 +60,7 @@ INCLUDE_DIRECTORIES(
      ${QJSON_INCLUDE_DIR}
      ${QUAZIP_INCLUDE_DIR}
      ${GDAL_INCLUDE_DIR}
-	 ${RSVGRENDERER_INCLUDE_DIR}
+     ${RSVGRENDERER_INCLUDE_DIR}
      ../../analysis
      ../../core
      ../../core/raster

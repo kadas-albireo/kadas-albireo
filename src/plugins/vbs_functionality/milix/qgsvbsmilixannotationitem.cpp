@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsvbsmilixannotationitem.h"
+#include "qgsvbsmilixlayer.h"
 #include "qgscrscache.h"
 #include "Client/VBSMilixClient.hpp"
 #include "qgsmapcanvas.h"
@@ -44,6 +45,20 @@ QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsV
   mFinalized = source->mFinalized;
 }
 
+QgsVBSMilixItem* QgsVBSMilixAnnotationItem::createMilixItem() const
+{
+  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
+  QList<QgsPoint> points;
+  points.append( crst->transform( mGeoPos ) );
+  foreach ( const QgsPoint& p, mAdditionalPoints )
+  {
+    points.append( crst->transform( p ) );
+  }
+  QgsVBSMilixItem* item = new QgsVBSMilixItem();
+  item->initialize( mSymbolXml, mSymbolMilitaryName, points, mControlPoints, mOffsetFromReferencePoint.toPoint() - mRenderOffset, mFinalized );
+  return item;
+}
+
 void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, const QString& symbolMilitaryName, bool isMultiPoint )
 {
   mIsMultiPoint = isMultiPoint;
@@ -58,48 +73,6 @@ void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, const QS
   {
     setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoFrame );
   }
-}
-
-void QgsVBSMilixAnnotationItem::writeXML( QDomDocument& doc ) const
-{
-  QDomElement documentElem = doc.documentElement();
-  if ( documentElem.isNull() )
-  {
-    return;
-  }
-
-  QDomElement milixAnnotationElem = doc.createElement( "MilixAnnotationItem" );
-  milixAnnotationElem.setAttribute( "symbolXml", mSymbolXml );
-  milixAnnotationElem.setAttribute( "isMultiPoint", mIsMultiPoint );
-  foreach ( const QgsPoint& p, mAdditionalPoints )
-  {
-    QDomElement pointElem = doc.createElement( "Point" );
-    pointElem.setAttribute( "x", p.x() );
-    pointElem.setAttribute( "y", p.y() );
-    milixAnnotationElem.appendChild( pointElem );
-  }
-  _writeXML( doc, milixAnnotationElem );
-  documentElem.appendChild( milixAnnotationElem );
-}
-
-void QgsVBSMilixAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& itemElem )
-{
-  mSymbolXml = itemElem.attribute( "symbolXml" );
-  mIsMultiPoint = itemElem.attribute( "isMultiPoint" ).toInt();
-  QDomNodeList pointElems = itemElem.elementsByTagName( "Point" );
-  mAdditionalPoints.clear();
-  for ( int i = 0, n = pointElems.count(); i < n; ++i )
-  {
-    QDomElement pointElem = pointElems.at( i ).toElement();
-    mAdditionalPoints.append( QgsPoint( pointElem.attribute( "x" ).toDouble(), pointElem.attribute( "y" ).toDouble() ) );
-  }
-
-  QDomElement annotationElem = itemElem.firstChildElement( "AnnotationItem" );
-  if ( !annotationElem.isNull() )
-  {
-    _readXML( doc, annotationElem );
-  }
-  updateSymbol( true );
 }
 
 void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
@@ -132,7 +105,7 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
     {
       painter->save();
       painter->setPen( QPen( Qt::black, 1 ) );
-      QList<QPoint> pts = points();
+      QList<QPoint> pts = screenPoints();
       for ( int i = 0, n = pts.size(); i < n; ++i )
       {
         painter->setBrush( mControlPoints.contains( i ) ? Qt::red : Qt::yellow );
@@ -147,7 +120,7 @@ int QgsVBSMilixAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
   if ( mIsMultiPoint )
   {
-    QList<QPoint> pts = points();
+    QList<QPoint> pts = screenPoints();
     // Priority to control points
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {
@@ -196,7 +169,7 @@ void QgsVBSMilixAnnotationItem::_showItemEditor()
 {
   QString symbolId;
   QString symbolMilitaryName;
-  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
   if ( VBSMilixClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, symbolId, symbolMilitaryName, result ) )
   {
@@ -231,7 +204,7 @@ void QgsVBSMilixAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCo
 
 void QgsVBSMilixAnnotationItem::appendPoint( const QPoint& newPoint )
 {
-  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
   if ( VBSMilixClient::appendPoint( mMapCanvas->sceneRect().toRect(), symbol, newPoint, result ) )
   {
@@ -241,7 +214,7 @@ void QgsVBSMilixAnnotationItem::appendPoint( const QPoint& newPoint )
 
 void QgsVBSMilixAnnotationItem::movePoint( int index, const QPoint& newPos )
 {
-  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
   if ( VBSMilixClient::movePoint( mMapCanvas->sceneRect().toRect(), symbol, index, newPos, result ) )
   {
@@ -249,7 +222,7 @@ void QgsVBSMilixAnnotationItem::movePoint( int index, const QPoint& newPos )
   }
 }
 
-QList<QPoint> QgsVBSMilixAnnotationItem::points() const
+QList<QPoint> QgsVBSMilixAnnotationItem::screenPoints() const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), mMapCanvas->mapSettings().destinationCrs().authid() );
   QList<QPoint> points;
@@ -301,7 +274,7 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
 {
   QPoint canvasPos = mMapCanvas->mapFromGlobal( screenPos );
   QMenu menu;
-  QList<QPoint> pts = points();
+  QList<QPoint> pts = screenPoints();
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
   if ( mIsMultiPoint )
@@ -312,7 +285,7 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
       {
         actionRemovePoint = menu.addAction( tr( "Remove node" ) );
         actionRemovePoint->setData( i );
-        VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+        VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
         bool canDelete = false;
         if ( !VBSMilixClient::canDeletePoint( symbol, i, canDelete ) || !canDelete )
         {
@@ -336,7 +309,7 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
   if ( clickedAction == actionAddPoint )
   {
-    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
     VBSMilixClient::NPointSymbolGraphic result;
     if ( VBSMilixClient::insertPoint( mMapCanvas->sceneRect().toRect(), symbol, canvasPos, result ) )
     {
@@ -346,7 +319,7 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
   else if ( clickedAction == actionRemovePoint )
   {
     int index = actionRemovePoint->data().toInt();
-    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, controlPoints(), mFinalized );
+    VBSMilixClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
     VBSMilixClient::NPointSymbolGraphic result;
     if ( VBSMilixClient::deletePoint( mMapCanvas->sceneRect().toRect(), symbol, index, result ) )
     {
@@ -369,7 +342,7 @@ bool QgsVBSMilixAnnotationItem::hitTest( const QPoint& screenPos ) const
   {
     return true;
   }
-  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
   bool hitTestResult = false;
   VBSMilixClient::hitTest( symbol, screenPos, hitTestResult );
   return hitTestResult;
@@ -377,99 +350,10 @@ bool QgsVBSMilixAnnotationItem::hitTest( const QPoint& screenPos ) const
 
 void QgsVBSMilixAnnotationItem::updateSymbol( bool updatePoints )
 {
-  VBSMilixClient::NPointSymbol symbol( mSymbolXml, points(), controlPoints(), mFinalized );
+  VBSMilixClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
   VBSMilixClient::NPointSymbolGraphic result;
   if ( VBSMilixClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result, updatePoints ) )
   {
     setGraphic( result, updatePoints );
   }
-}
-
-void QgsVBSMilixAnnotationItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
-{
-  bool valid = false;
-  QString symbolXml;
-  VBSMilixClient::downgradeSymbolXml( mSymbolXml, versionTag, symbolXml, valid, messages );
-  if ( !valid )
-  {
-    return;
-  }
-
-  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
-
-  QDomElement graphicEl = doc.createElement( "MilXGraphic" );
-  graphicListEl.appendChild( graphicEl );
-
-  QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
-  stringXmlEl.appendChild( doc.createTextNode( symbolXml ) );
-  graphicEl.appendChild( stringXmlEl );
-
-  QDomElement nameEl = doc.createElement( "Name" );
-  nameEl.appendChild( doc.createTextNode( mSymbolMilitaryName ) );
-  graphicEl.appendChild( nameEl );
-
-  QDomElement pointListEl = doc.createElement( "PointList" );
-  graphicEl.appendChild( pointListEl );
-
-  QDomElement p0El = doc.createElement( "Point" );
-  pointListEl.appendChild( p0El );
-
-  QgsPoint p0WGS = t->transform( mGeoPos );
-  QDomElement p0XEl = doc.createElement( "X" );
-  p0XEl.appendChild( doc.createTextNode( QString::number( p0WGS.x(), 'f', 6 ) ) );
-  p0El.appendChild( p0XEl );
-  QDomElement p0YEl = doc.createElement( "Y" );
-  p0YEl.appendChild( doc.createTextNode( QString::number( p0WGS.y(), 'f', 6 ) ) );
-  p0El.appendChild( p0YEl );
-
-  foreach ( const QgsPoint& p, mAdditionalPoints )
-  {
-    QDomElement pEl = doc.createElement( "Point" );
-    pointListEl.appendChild( pEl );
-
-    QgsPoint pWGS = t->transform( p );
-    QDomElement pXEl = doc.createElement( "X" );
-    pXEl.appendChild( doc.createTextNode( QString::number( pWGS.x(), 'f', 6 ) ) );
-    pEl.appendChild( pXEl );
-    QDomElement pYEl = doc.createElement( "Y" );
-    pYEl.appendChild( doc.createTextNode( QString::number( pWGS.y(), 'f', 6 ) ) );
-    pEl.appendChild( pYEl );
-  }
-
-  QDomElement offsetEl = doc.createElement( "Offset" );
-  graphicEl.appendChild( offsetEl );
-
-  QPointF rawOffset = mOffsetFromReferencePoint - mRenderOffset;
-  QDomElement factorXEl = doc.createElement( "FactorX" );
-  factorXEl.appendChild( doc.createTextNode( QString::number( rawOffset.x() / VBSMilixClient::SymbolSize ) ) );
-  offsetEl.appendChild( factorXEl );
-
-  QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( rawOffset.y() / VBSMilixClient::SymbolSize ) ) );
-  offsetEl.appendChild( factorYEl );
-}
-
-void QgsVBSMilixAnnotationItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
-{
-  QString militaryName = graphicEl.firstChildElement( "Name" ).text();
-
-  QList<QgsPoint> points;
-  QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
-  for ( int iPoint = 0, nPoints = pointEls.count(); iPoint < nPoints; ++iPoint )
-  {
-    QDomElement pointEl = pointEls.at( iPoint ).toElement();
-    double x = pointEl.firstChildElement( "X" ).text().toDouble();
-    double y = pointEl.firstChildElement( "Y" ).text().toDouble();
-    points.append( crst->transform( QgsPoint( x, y ) ) );
-  }
-  mMapPosition = mGeoPos = points.front();
-  mGeoPosCrs = crst->destCRS();
-  points.removeFirst();
-  mAdditionalPoints = points;
-
-  double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
-  double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  mOffsetFromReferencePoint = QPointF( offsetX, offsetY );
-  setSymbolXml( symbolXml, militaryName, points.size() > 1 );
-  updateSymbol( true );
 }

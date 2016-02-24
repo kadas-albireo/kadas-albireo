@@ -70,7 +70,7 @@ private:
   QString mLastError;
   QString mLibraryVersionTag;
 
-  VBSMilixClient() : mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 ) {}
+  VBSMilixClient();
   static VBSMilixClient* instance(){ static VBSMilixClient i; return &i; }
   bool initialize();
   bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
@@ -79,6 +79,9 @@ private:
 private slots:
   void handleSocketError();
   void cleanup();
+
+private slots:
+  bool processRequestSlot(const QByteArray& request, QByteArray& response, quint8 expectedReply);
 };
 
 #endif // VBSMILIXCLIENT_HPP

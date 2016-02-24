@@ -10,11 +10,17 @@
 #include <QProcess>
 #include <QSettings>
 #include <QTcpSocket>
+#include <QThread>
 #include <QTimer>
 #include <QWidget>
 #include <rsvgrenderer.h>
 
 const int VBSMilixClient::SymbolSize = 48;
+
+VBSMilixClient::VBSMilixClient()
+    : mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
+{
+}
 
 void VBSMilixClient::cleanup()
 {
@@ -146,6 +152,20 @@ bool VBSMilixClient::initialize()
 }
 
 bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& response, VBSMilixServerReply expectedReply )
+{
+  bool result;
+  if ( QThread::currentThread() != thread() )
+  {
+    QMetaObject::invokeMethod( this, "processRequestSlot", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
+  }
+  else
+  {
+    result = processRequestSlot( request, response, expectedReply );
+  }
+  return result;
+}
+
+bool VBSMilixClient::processRequestSlot( const QByteArray& request, QByteArray& response, quint8 expectedReply )
 {
   mLastError = QString();
 

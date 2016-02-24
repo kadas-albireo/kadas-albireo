@@ -25,8 +25,8 @@
 #include "ovl/qgsvbsovlimporter.h"
 #include "vbsfunctionality_plugin.h"
 #include "milix/qgsvbsmilixlibrary.h"
-#include "milix/qgsvbsmilixmanager.h"
 #include "milix/qgsvbsmilixio.h"
+#include "milix/qgsvbsmilixlayer.h"
 #include <QAction>
 #include <QMainWindow>
 #include <QToolBar>
@@ -36,7 +36,6 @@ QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     , mQGisIface( theQgisInterface )
     , mActionOvlImport( 0 )
     , mMilXLibrary( 0 )
-    , mMilXManager( 0 )
 {
 }
 
@@ -57,9 +56,6 @@ void QgsVBSFunctionality::initGui()
 
   mActionLoadMilx = mQGisIface->findAction( "mActionLoadMilx" );
   connect( mActionLoadMilx, SIGNAL( triggered( ) ), this, SLOT( loadMilx( ) ) );
-
-
-  mMilXManager = new QgsVBSMilixManager( mQGisIface->mapCanvas(), this );
 }
 
 void QgsVBSFunctionality::unload()
@@ -69,8 +65,6 @@ void QgsVBSFunctionality::unload()
   mActionMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
-  delete mMilXManager;
-  mMilXManager = 0;
 }
 
 void QgsVBSFunctionality::importOVL()
@@ -82,18 +76,20 @@ void QgsVBSFunctionality::toggleMilXLibrary( )
 {
   if ( !mMilXLibrary )
   {
-    mMilXLibrary = new QgsVBSMilixLibrary( mQGisIface, mMilXManager, mQGisIface->mapCanvas() );
+    mMilXLibrary = new QgsVBSMilixLibrary( mQGisIface, mQGisIface->mapCanvas() );
   }
+  mMilXLibrary->updateLayers();
+  mMilXLibrary->autocreateLayer();
   mMilXLibrary->show();
   mMilXLibrary->raise();
 }
 
 void QgsVBSFunctionality::saveMilx()
 {
-  QgsVBSMilixIO::save( mMilXManager, mQGisIface->messageBar() );
+//  QgsVBSMilixIO::save( mQGisIface->messageBar() );
 }
 
 void QgsVBSFunctionality::loadMilx()
 {
-  QgsVBSMilixIO::load( mMilXManager, mQGisIface->mapCanvas(), mQGisIface->messageBar() );
+  QgsVBSMilixIO::load( mQGisIface->messageBar() );
 }

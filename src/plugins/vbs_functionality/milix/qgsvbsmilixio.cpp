@@ -17,10 +17,12 @@
 
 #include "qgscrscache.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaplayer.h"
+#include "qgsmaplayerregistry.h"
 #include "qgsmessagebar.h"
 #include "qgsvbsmilixio.h"
 #include "qgsvbsmilixannotationitem.h"
-#include "qgsvbsmilixmanager.h"
+#include "qgsvbsmilixlayer.h"
 #include <QDomDocument>
 #include <QFileDialog>
 #include <QLabel>
@@ -30,7 +32,7 @@
 #include <QVBoxLayout>
 #include <quazip/quazipfile.h>
 
-bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar )
+bool QgsVBSMilixIO::save( QgsMessageBar* messageBar, QgsVBSMilixLayer* layer )
 {
   QStringList versionTags, versionNames;
   VBSMilixClient::getLibraryVersionTags( versionTags, versionNames );
@@ -81,66 +83,19 @@ bool QgsVBSMilixIO::save( QgsVBSMilixManager* manager, QgsMessageBar* messageBar
     return false;
   }
 
-  QDomDocument doc;
-  doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
-  QDomElement milxDocumentEl = doc.createElement( "MilXDocument_Layer" );
-  milxDocumentEl.setAttribute( "xmlns", "http://gs-soft.com/MilX/V3.1" );
-  milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
-  doc.appendChild( milxDocumentEl );
-
-  QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( doc.createTextNode( VBSMilixClient::libraryVersionTag() ) );
-  milxDocumentEl.appendChild( milxVersionEl );
-
-  QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
-  milxDocumentEl.appendChild( milxLayerEl );
-
-  QDomElement milxLayerNameEl = doc.createElement( "Name" );
-  milxLayerNameEl.appendChild( doc.createTextNode( "Default" ) ); // TODO
-  milxLayerEl.appendChild( milxLayerNameEl );
-
-  QDomElement milxLayerTypeEl = doc.createElement( "LayerType" );
-  milxLayerTypeEl.appendChild( doc.createTextNode( "Normal" ) );
-  milxLayerEl.appendChild( milxLayerTypeEl );
-
-  QDomElement graphicListEl = doc.createElement( "GraphicList" );
-  milxLayerEl.appendChild( graphicListEl );
-
-  QStringList downgradeMessages;
-  foreach ( const QgsVBSMilixAnnotationItem* item, manager->getItems() )
-  {
-    QString messages;
-    item->writeMilx( doc, graphicListEl, versionTag, messages );
-    if ( !messages.isEmpty() )
-    {
-      downgradeMessages.append( QString( "%1:\n%2\n" ).arg( item->symbolXml() ).arg( messages ) );
-    }
-  }
-
-  QDomElement crsEl = doc.createElement( "CoordSystemType" );
-  crsEl.appendChild( doc.createTextNode( "WGS84" ) );
-  milxLayerEl.appendChild( crsEl );
-
-  QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number( VBSMilixClient::SymbolSize ) ) );
-  milxLayerEl.appendChild( symbolSizeEl );
-
-  QDomElement bwEl = doc.createElement( "DisplayBW" );
-  bwEl.appendChild( doc.createTextNode( "0" ) ); // TODO
-  milxLayerEl.appendChild( bwEl );
-
-  dev->write( doc.toString().toUtf8() );
-  delete dev;
+  QStringList exportMessages;
+  layer->exportToMilxly( dev, versionTag, exportMessages );
   delete zip;
+  delete dev;
   messageBar->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
-  if ( !downgradeMessages.isEmpty() )
+  if ( !exportMessages.isEmpty() )
   {
-    showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), downgradeMessages.join( "\n" ) );
+    showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), exportMessages.join( "\n" ) );
   }
   return true;
 }
 
-bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, QgsMessageBar *messageBar )
+bool QgsVBSMilixIO::load( QgsMessageBar *messageBar )
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
   QString filter = tr( "MilX Layer Files (*.milxly *.milxlyz)" );
@@ -165,92 +120,26 @@ bool QgsVBSMilixIO::load( QgsVBSMilixManager* manager , QgsMapCanvas* canvas, Qg
     messageBar->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
-  QDomDocument doc;
-  doc.setContent( dev );
-  dev->deleteLater();
 
+  QgsVBSMilixLayer* layer = new QgsVBSMilixLayer();
+  QString errorMsg;
+  QStringList importMessages;
+  bool success = layer->importMilxly( dev, errorMsg, importMessages );
+  delete dev;
 
-  QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
-  QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
-  QString fileMssVer = milxVersionEl.text();
-
-  if ( fileMssVer > VBSMilixClient::libraryVersionTag() )
+  if ( success )
   {
-    messageBar->pushMessage( tr( "Import Failed" ), tr( "The file was created by a newer MSS library version." ), QgsMessageBar::CRITICAL, 5 );
-    return false;
-  }
-
-  QStringList validationMessages;
-  QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
-  for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
-  {
-    QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
-//    QString layerName = milxLayerEl.firstChildElement( "Name" ).text(); // TODO
-//    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
-    int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
-    QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
-    QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
-    const QgsCoordinateTransform* crst = 0;
-    if ( crs == "SwissLv03" )
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
+    if ( !importMessages.isEmpty() )
     {
-      crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:21781", canvas->mapSettings().destinationCrs().authid() );
-    }
-    else if ( crs == "WGS84" )
-    {
-      crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", canvas->mapSettings().destinationCrs().authid() );
-    }
-    else if ( crs == "UTM" )
-    {
-      QgsCoordinateReferenceSystem utmCrs;
-      QString zoneLetter = utmZone.right( 1 ).toUpper();
-      QString zoneNumber = utmZone.left( utmZone.length() - 1 );
-      QString projZone = zoneNumber + ( zoneLetter == "S" ? " +south" : "" );
-      utmCrs.createFromProj4( QString( "+proj=utm +zone=%1 +datum=WGS84 +units=m +no_defs" ).arg( projZone ) );
-      crst = QgsCoordinateTransformCache::instance()->transform( utmCrs.authid(), canvas->mapSettings().destinationCrs().authid() );
-    }
-
-    QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
-
-    // Dry run to validate
-    QStringList validationErrors;
-    QStringList adjustedSymbolXmls;
-    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-    {
-      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-      QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
-      QString adjustedSymbolXml;
-      bool valid = false;
-      QString messages;
-      VBSMilixClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
-      adjustedSymbolXmls.append( adjustedSymbolXml );
-      if ( !valid )
-      {
-        validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-      }
-      else if ( !messages.isEmpty() )
-      {
-        validationMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-      }
-    }
-    if ( !validationErrors.isEmpty() )
-    {
-      showMessageDialog( tr( "Import Failed" ), tr( "The following validation errors occured:" ), validationErrors.join( "\n" ) );
-      return false;
-    }
-    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-    {
-      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-
-      QgsVBSMilixAnnotationItem* item = new QgsVBSMilixAnnotationItem( canvas );
-      item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
-      manager->addItem( item );
+      showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), importMessages.join( "\n" ) );
     }
   }
-
-  messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
-  if ( !validationMessages.isEmpty() )
+  else
   {
-    showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), validationMessages.join( "\n" ) );
+    delete layer;
+    messageBar->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
   }
   return true;
 }

@@ -24,20 +24,25 @@
 #include <QThread>
 
 class QgisInterface;
+class QComboBox;
 class QListWidget;
 class QListWidgetItem;
+class QgsMapLayer;
 class QModelIndex;
 class QStandardItem;
 class QStandardItemModel;
 class QTreeView;
-class QgsVBSMilixManager;
 class QgsFilterLineEdit;
 
 class QgsVBSMilixLibrary : public QDialog
 {
     Q_OBJECT
   public:
-    QgsVBSMilixLibrary( QgisInterface *iface, QgsVBSMilixManager *manager, QWidget* parent = 0 );
+    QgsVBSMilixLibrary( QgisInterface *iface, QWidget* parent = 0 );
+    void autocreateLayer();
+
+  public slots:
+    void updateLayers();
 
   private:
     class TreeFilterProxyModel;
@@ -49,20 +54,21 @@ class QgsVBSMilixLibrary : public QDialog
     static const int SymbolVariablePointsRole;
 
     QgisInterface* mIface;
-    QgsVBSMilixManager* mManager;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     QStandardItemModel* mGalleryModel;
     QStandardItemModel* mLoadingModel;
     TreeFilterProxyModel* mFilterProxyModel;
-
-    void populateLibrary();
+    QComboBox* mLayersCombo;
 
   private slots:
     void filterChanged( const QString& text );
     void itemClicked( QModelIndex index );
     void loaderFinished();
     QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
+    void setCurrentLayer( int idx );
+    void setCurrentLayer( QgsMapLayer* layer );
+    void addMilXLayer();
 };
 
 

@@ -17,12 +17,12 @@
 
 #include "qgsvbsmaptoolmilix.h"
 #include "qgsvbsmilixannotationitem.h"
-#include "qgsvbsmilixmanager.h"
+#include "qgsvbsmilixlayer.h"
 #include "qgsmapcanvas.h"
 #include <QMouseEvent>
 
-QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
-    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mManager( manager )
+QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixLayer* layer, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
+    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mLayer( layer )
 {
   setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
 }
@@ -74,7 +74,9 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
     {
       // Max points reached, stop
       mItem->finalize();
-      mManager->addItem( mItem );
+      mLayer->addItem( mItem->createMilixItem() );
+      delete mItem;
+      mCanvas->refresh();
       mItem = 0;
       mNPressedPoints = 0;
       mCanvas->unsetMapTool( this );
@@ -86,7 +88,9 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
     {
       // Done with N point symbol, stop
       mItem->finalize();
-      mManager->addItem( mItem );
+      mLayer->addItem( mItem->createMilixItem() );
+      delete mItem;
+      mCanvas->refresh();
       mItem = 0;
       mCanvas->unsetMapTool( this );
     }

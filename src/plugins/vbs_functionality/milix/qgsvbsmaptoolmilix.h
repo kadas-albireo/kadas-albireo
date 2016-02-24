@@ -21,12 +21,12 @@
 #include "qgsmaptoolannotation.h"
 
 class QgsVBSMilixAnnotationItem;
-class QgsVBSMilixManager;
+class QgsVBSMilixLayer;
 
 class QgsVBSMapToolMilix : public QgsMapTool
 {
   public:
-    QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixManager* manager, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
+    QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixLayer *layer, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
     ~QgsVBSMapToolMilix();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
@@ -39,7 +39,7 @@ class QgsVBSMapToolMilix : public QgsMapTool
     bool mHasVariablePoints;
     QPixmap mPreview;
     QgsVBSMilixAnnotationItem* mItem;
-    QgsVBSMilixManager* mManager;
+    QgsVBSMilixLayer* mLayer;
 };
 
 #endif // QGSVBSMAPTOOLMILIX_H

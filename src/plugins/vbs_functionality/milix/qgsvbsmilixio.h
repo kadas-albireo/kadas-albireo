@@ -21,13 +21,13 @@
 #include <QObject>
 
 class QgsMessageBar;
-class QgsVBSMilixManager;
+class QgsVBSMilixLayer;
 
 class QgsVBSMilixIO : public QObject
 {
   public:
-    static bool save( QgsVBSMilixManager* manager, QgsMessageBar *messageBar );
-    static bool load( QgsVBSMilixManager* manager, QgsMapCanvas *canvas, QgsMessageBar *messageBar );
+    static bool save( QgsMessageBar *messageBar , QgsVBSMilixLayer *layer );
+    static bool load( QgsMessageBar *messageBar );
   private:
     static void showMessageDialog( const QString& title, const QString& body, const QString& messages );
 };

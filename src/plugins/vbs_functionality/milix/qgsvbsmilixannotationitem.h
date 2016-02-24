@@ -23,6 +23,7 @@
 
 class QgsCoordinateTransform;
 class QgsVBSCoordinateDisplayer;
+class QgsVBSMilixItem;
 
 class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 {
@@ -31,21 +32,19 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
   public:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
     QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
+    QgsVBSMilixItem* createMilixItem() const;
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
-    const QString& symbolXml() const { return mSymbolXml; }
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
     void movePoint( int index, const QPoint &newPos );
-    QList<QPoint> points() const;
-    const QList<int>& controlPoints() const { return mControlPoints; }
+    QList<QPoint> screenPoints() const;
     int absolutePointIdx( int regularIdx ) const;
-    bool isNPoint() const { return mIsMultiPoint; }
     void setGraphic( VBSMilixClient::NPointSymbolGraphic& result, bool updatePoints );
     void finalize() { mFinalized = true; }
 
-    void writeXML( QDomDocument& doc ) const override;
-    void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
     void paint( QPainter* painter ) override;
+    void writeXML( QDomDocument& /*doc*/ ) const override {}
+    void readXML( const QDomDocument& /*doc*/, const QDomElement& /*itemElem*/ ) override {}
 
     int moveActionForPosition( const QPointF& pos ) const override;
     void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
@@ -53,9 +52,6 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
-
-    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl , const QString &versionTag, QString &messages ) const;
-    void readMilx( const QDomElement& graphicEl, const QString &symbolXml, const QgsCoordinateTransform* crst, int symbolSize );
 
   protected:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );

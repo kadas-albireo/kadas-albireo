@@ -19,6 +19,7 @@
 #include "qgspoint.h"
 #include "qgsdistancearea.h"
 #include <qmath.h>
+#include <QTextStream>
 
 
 const int QgsLatLonToUTM::NUM_100K_SETS = 6;
@@ -787,6 +788,8 @@ QgsLatLonToUTM::ZoneLabel QgsLatLonToUTM::mgrs100kIDLabelCallback( double lon, d
   label.pos = QPointF( posX, posY );
   label.label = getLetter100kID( setColumn, setRow, setParm );
   label.maxPos = QPointF( maxLon, maxLat );
+  if ( label.label == "QG" )
+    QTextStream( stdout ) << lon << " " << lat << label.label << endl;
   return label;
 }
 
