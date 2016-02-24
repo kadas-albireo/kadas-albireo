@@ -671,3 +671,19 @@ int QgisAppInterface::messageTimeout()
 {
   return qgis->messageTimeout();
 }
+
+void QgisAppInterface::registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
+{
+  qgis->registerMapLayerPropertiesFactory( factory );
+}
+
+void QgisAppInterface::unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
+{
+  qgis->unregisterMapLayerPropertiesFactory( factory );
+}
+
+
+QgsPluginInterface* QgisAppInterface::pluginInterface( const QString& pluginName )
+{
+  return qgis->pluginInterface( pluginName );
+}

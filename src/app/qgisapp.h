@@ -56,11 +56,13 @@ class QgsLayerTreeView;
 class QgsLegendInterface;
 class QgsMapCanvas;
 class QgsMapLayer;
+class QgsMapLayerPropertiesFactory;
 class QgsMapTip;
 class QgsMapTool;
 class QgsMessageBar;
 class QgsMessageLogViewer;
 class QgsMultiMapManager;
+class QgsPluginInterface;
 class QgsPluginManager;
 class QgsPythonUtils;
 class QgsRasterLayer;
@@ -374,6 +376,9 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! returns pointer to plugin manager
     QgsPluginManager *pluginManager();
 
+    //! returns pointer to the plugin interface for the specified plugin
+    QgsPluginInterface* pluginInterface( const QString& pluginName );
+
     /** Return vector layers in edit mode
      * @param modified whether to return only layers that have been modified
      * @returns list of layers in legend order, or empty list */
@@ -409,6 +414,12 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsRedliningLayer* redliningLayer() const;
 
     virtual void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) = 0;
+
+    /** Register a new tab in the layer properties dialog */
+    void registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
+
+    /** Unregister a previously registered tab in the layer properties dialog */
+    void unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
 
   public slots:
     void layerTreeViewDoubleClicked( const QModelIndex& index );
@@ -1335,6 +1346,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsMultiMapManager* mMultiMapManager;
 
     QString mWindowStateSuffix;
+
+    QList<QgsMapLayerPropertiesFactory*> mMapLayerPropertiesFactories;
 
     bool gestureEvent( QGestureEvent *event );
 

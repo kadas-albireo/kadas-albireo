@@ -196,6 +196,7 @@ qgsmapcanvassnappingutils.cpp
 qgsmaplayeractionregistry.cpp
 qgsmaplayercombobox.cpp
 qgsmaplayermodel.cpp
+qgsmaplayerpropertiesfactory.cpp
 qgsmaplayerproxymodel.cpp
 qgsmapoverviewcanvas.cpp
 qgsmaptip.cpp
@@ -244,6 +245,7 @@ qgsimageannotationitem.cpp
 qgssvgannotationdialog.cpp
 qgstextannotationitem.cpp
 qgstextannotationdialog.cpp
+qgsvectorlayerpropertiespage.cpp
 qgsvertexmarker.cpp
 qgsunitselectionwidget.cpp
 )
@@ -352,6 +354,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgssourceselectdialog.h
   qgssublayersdialog.h
   qgsunitselectionwidget.h
+  qgsvectorlayerpropertiespage.h
 
   qgsformannotationdialog.h
   qgshtmlannotationdialog.h

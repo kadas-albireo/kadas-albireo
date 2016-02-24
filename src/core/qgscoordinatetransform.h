@@ -205,7 +205,7 @@ class CORE_EXPORT QgsCoordinateTransform : public QObject
     /*! See if the transform short circuits because src and dest are equivalent
      * @return bool True if it short circuits
      */
-    bool isShortCircuited() {return mShortCircuit;}
+    bool isShortCircuited() const {return mShortCircuit;}
 
     /*! Change the destination coordinate system by passing it a qgis srsid
     * A QGIS srsid is a unique key value to an entry on the tbl_srs in the

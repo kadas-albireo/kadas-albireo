@@ -77,6 +77,7 @@
 %Include qgspallabeling.sip
 %Include qgspluginlayer.sip
 %Include qgspluginlayerregistry.sip
+%Include qgsplugininterface.sip
 %Include qgspoint.sip
 %Include qgspointlocator.sip
 %Include qgsproject.sip

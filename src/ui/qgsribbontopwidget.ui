@@ -2055,6 +2055,9 @@ Sight</string>
    </property>
   </action>
   <action name="mAction3D">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>

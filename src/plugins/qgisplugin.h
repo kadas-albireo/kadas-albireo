@@ -38,6 +38,7 @@
 #include <QString>
 
 class QgisInterface;
+class QgsPluginInterface;
 
 //#include "qgisplugingui.h"
 
@@ -152,6 +153,8 @@ class QgisPlugin
 
     //! Unload the plugin and cleanup the GUI
     virtual void unload() = 0;
+
+    virtual QgsPluginInterface* pluginInterface() { return 0; }
 
   private:
 

@@ -59,7 +59,8 @@ void QgsMapRendererCustomPainterJob::start()
   prepareTime.start();
 
   // clear the background
-  mPainter->fillRect( 0, 0, mSettings.outputSize().width(), mSettings.outputSize().height(), mSettings.backgroundColor() );
+  if ( mSettings.backgroundColor() != QColor( Qt::transparent ) )
+    mPainter->fillRect( 0, 0, mSettings.outputSize().width(), mSettings.outputSize().height(), mSettings.backgroundColor() );
 
   mPainter->setRenderHint( QPainter::Antialiasing, mSettings.testFlag( QgsMapSettings::Antialiasing ) );
 
