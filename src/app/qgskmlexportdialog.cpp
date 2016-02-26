@@ -65,7 +65,7 @@ void QgsKMLExportDialog::insertAvailableLayers()
   for ( ; it != mLayerIds.constEnd(); ++it )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
-    if ( !layer || !dynamic_cast<QgsVectorLayer*>( layer ) )
+    if ( !layer /*|| !dynamic_cast<QgsVectorLayer*>( layer )*/ )
     {
       continue;
     }

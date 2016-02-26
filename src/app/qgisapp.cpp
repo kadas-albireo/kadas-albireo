@@ -3123,9 +3123,10 @@ void QgisApp::kmlExport()
     }
 
     QStringList usedLocalFiles;
+    QList<QgsMapLayer*> superOverlayLayers;
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly(), usedLocalFiles ) == 0 );
+    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly(), usedLocalFiles, superOverlayLayers ) == 0 );
     outputDevice->close();
     delete outputDevice;
 
@@ -3137,6 +3138,13 @@ void QgisApp::kmlExport()
         QFileInfo fi( *localFileIt );
         QGis::addFileToZip( quaZip, *localFileIt, fi.fileName() );
       }
+    }
+
+    //write super overlays
+    QList<QgsMapLayer*>::iterator overlayIt = superOverlayLayers.begin();
+    for ( ; overlayIt != superOverlayLayers.end(); ++overlayIt )
+    {
+      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath() );
     }
 
     messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), QgsMessageBar::INFO, 4 );
