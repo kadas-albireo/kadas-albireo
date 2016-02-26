@@ -23,13 +23,15 @@ class GUI_EXPORT QgsKMLExport
     ~QgsKMLExport();
 
     void setLayers( const QList<QgsMapLayer*>& layers ) { mLayers = layers; }
-    void setAnnotationItems( const QList<QgsAnnotationItem*>& items ){ mAnnotationItems = items; }
+    void setAnnotationItems( const QList<QgsAnnotationItem*>& items ) { mAnnotationItems = items; }
     /**Writes KML file to device
         @param d output device
         @param settings mapSettings
         @param visibleExtentOnly exports all data from mLayers if false
         @param usedLocalFiles out: files referenced in the KML document (e.g. photos). Needs to be added to the kmz*/
-    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles );
+    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles, QList<QgsMapLayer*>& superOverlayLayers );
+
+    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath );
 
     static QString convertColor( const QColor& c );
 
@@ -43,7 +45,18 @@ class GUI_EXPORT QgsKMLExport
     void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
     /**Return WGS84 bbox from layer set*/
     QgsRectangle bboxFromLayers();
+    /**Returns wgs84 bbox for layer*/
+    static QgsRectangle wgs84LayerExtent( QgsMapLayer* ml );
+    static QgsRectangle superOverlayStartExtent( const QgsRectangle& wgs84Extent );
     static QString convertToHexValue( int value );
+    static void writeLatLongBox( QTextStream& outStream, const QgsRectangle& rect );
+    static void writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link );
+    static int levelsToGo( double resolution, double minResolution );
+    static int offset( int nLevelsToGo );
+
+
+    void addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber );
+    QIODevice* openDeviceForNewFile( const QString& fileName, QuaZip* quaZip, const QString& filePath );
 };
 
 #endif // QGSKMLEXPORT_H
