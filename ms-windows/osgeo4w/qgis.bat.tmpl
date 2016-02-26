@@ -11,7 +11,8 @@ set VSI_CACHE_SIZE=1000000
 set QT_PLUGIN_PATH=%OSGEO4W_ROOT%\apps\@package@\qtplugins;%OSGEO4W_ROOT%\apps\qt4\plugins
 
 set CONFIGTEMPLATE="%OSGEO4W_ROOT%\config-template"
-set CONFIGPATH="%homeshare%\config\@package@"
+rem set CONFIGPATH="%homeshare%\config\@package@"
+set CONFIGPATH="%homeshare%\config\qgis-albireo"
 if not exist "%CONFIGPATH%" xcopy /e "%CONFIGTEMPLATE%" "%CONFIGPATH%\"
 
-start "QGIS" /B "%OSGEO4W_ROOT%"\bin\@package@-bin.exe --configpath "%CONFIGPATH%" %*
+start "QGIS" /B "%OSGEO4W_ROOT%"\bin\@package@-bin.exe --ribbongui true --configpath "%CONFIGPATH%" %*
