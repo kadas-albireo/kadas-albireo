@@ -275,7 +275,6 @@ GlobePlugin::GlobePlugin( QgisInterface* theQgisInterface )
     , mDockWidget( 0 )
     , mSettingsDialog( 0 )
     , mGlobeInterface( this )
-    , mIsGlobeRunning( false )
     , mSelectedLat( 0. )
     , mSelectedLon( 0. )
     , mSelectedElevation( 0. )
@@ -337,28 +336,22 @@ void GlobePlugin::run()
   {
     QSettings settings;
 
-#if 0
-    if ( !getenv( "OSGNOTIFYLEVEL" ) ) osgEarth::setNotifyLevel( osg::DEBUG_INFO );
-#endif
+//    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
 
     mOsgViewer = new osgViewer::Viewer();
-
+    mOsgViewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
     // Set camera manipulator with default home position
     osgEarth::Util::EarthManipulator* manip = new osgEarth::Util::EarthManipulator();
     mOsgViewer->setCameraManipulator( manip );
-#if OSGEARTH_VERSION_LESS_THAN(2, 7 ,0)
-    osgEarth::Util::Viewpoint viewpoint( osg::Vec3d( -90, 0, 0 ), 0., -90., 2e7 );
-#else
     osgEarth::Util::Viewpoint viewpoint;
     viewpoint.focalPoint() = osgEarth::GeoPoint( osgEarth::SpatialReference::get( "wgs84" ), -90., 0., 0. );
     viewpoint.heading() = 0.;
     viewpoint.pitch() = -90.;
     viewpoint.range() = 2e7;
-#endif
+
     manip->setHomeViewpoint( viewpoint, 1. );
     manip->home( 0 );
 
-    mIsGlobeRunning = true;
     setupProxy();
 
     if ( getenv( "GLOBE_MAPXML" ) )
@@ -377,7 +370,35 @@ void GlobePlugin::run()
     }
     else
     {
-      setupMap();
+      QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
+      osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
+      cacheOptions.rootPath() = cacheDirectory.toStdString();
+
+      osgEarth::MapOptions mapOptions;
+      mapOptions.cache() = cacheOptions;
+      osgEarth::Map *map = new osgEarth::Map( mapOptions );
+
+      // The MapNode will render the Map object in the scene graph.
+      mMapNode = new osgEarth::MapNode( map );
+
+      mRootNode = new osg::Group();
+      mRootNode->addChild( mMapNode );
+
+      osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
+      // Add draped layer
+      osgEarth::TileSourceOptions opts;
+      mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
+
+      osgEarth::ImageLayerOptions options( "QGIS" );
+      mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+      map->addImageLayer( mQgisMapLayer );
+
+      // Add layers to the map
+      updateLayers();
+
+      // Create the frustum highlight callback
+      mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
+        mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
     }
 
     mRootNode->addChild( osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer ) );
@@ -386,7 +407,6 @@ void GlobePlugin::run()
     mRootNode->addChild( mAnnotationsGroup );
 
     mOsgViewer->setSceneData( mRootNode );
-    mOsgViewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
 
     mOsgViewer->addEventHandler( new FlyToExtentHandler( this ) );
     mOsgViewer->addEventHandler( new QueryCoordinatesHandler( this ) );
@@ -394,12 +414,7 @@ void GlobePlugin::run()
     mOsgViewer->addEventHandler( new osgViewer::StatsHandler() );
     mOsgViewer->addEventHandler( new osgViewer::WindowSizeHandler() );
     mOsgViewer->addEventHandler( new osgGA::StateSetManipulator( mOsgViewer->getCamera()->getOrCreateStateSet() ) );
-#if OSGEARTH_VERSION_LESS_THAN( 2, 2, 0 )
-    // add a handler that will automatically calculate good clipping planes
-    mOsgViewer->addEventHandler( new osgEarth::Util::AutoClipPlaneHandler() );
-#else
     mOsgViewer->getCamera()->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback( mMapNode ) );
-#endif
 
     // osgEarth benefits from pre-compilation of GL objects in the pager. In newer versions of
     // OSG, this activates OSG's IncrementalCompileOpeartion in order to avoid frame breaks.
@@ -422,76 +437,14 @@ void GlobePlugin::run()
     mViewerWidget->setParent( mDockWidget );
     connect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
     mQGisIface->addDockWidget( Qt::BottomDockWidgetArea, mDockWidget );
-
     mFeatureQueryToolIdentifyCb = new QgsGlobeFeatureIdentifyCallback( mQGisIface->mapCanvas() );
-#if OSGEARTH_VERSION_LESS_THAN(2, 7, 0)
-    mFeatureQueryTool = new osgEarth::Util::FeatureQueryTool( mMapNode );
-    mFeatureQueryTool->addCallback( mFeatureQueryToolIdentifyCb.get() );
-    mFeatureQueryToolHighlightCb = new osgEarth::Util::FeatureHighlightCallback();
-    mFeatureQueryTool->addCallback( mFeatureQueryToolHighlightCb.get() );
-#else
     mFeatureQueryTool = new osgEarth::Util::FeatureQueryTool();
     mFeatureQueryTool->addChild( mMapNode );
     mFeatureQueryTool->setDefaultCallback( mFeatureQueryToolIdentifyCb.get() );
-#endif
 
     setupControls();
     applySettings();
   }
-}
-
-void GlobePlugin::setupMap()
-{
-  QSettings settings;
-  QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
-
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 2, 0 )
-  osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
-  cacheOptions.rootPath() = cacheDirectory.toStdString();
-#else
-  osgEarth::Drivers::TMSCacheOptions cacheOptions;
-  cacheOptions.setPath( cacheDirectory.toStdString() );
-#endif
-
-  osgEarth::MapOptions mapOptions;
-  mapOptions.cache() = cacheOptions;
-  osgEarth::Map *map = new osgEarth::Map( /*mapOptions*/ );
-
-  osgEarth::MapNodeOptions nodeOptions;
-  //nodeOptions.proxySettings() =
-  //LoadingPolicy loadingPolicy( LoadingPolicy::MODE_SEQUENTIAL );
-  osgEarth::TerrainOptions terrainOptions;
-  //terrainOptions.loadingPolicy() = loadingPolicy;
-#if OSGEARTH_VERSION_LESS_THAN(2, 6, 0)
-  terrainOptions.compositingTechnique() = osgEarth::TerrainOptions::COMPOSITING_MULTITEXTURE_FFP;
-#endif
-  //terrainOptions.lodFallOff() = 6.0;
-  nodeOptions.setTerrainOptions( terrainOptions );
-
-  // The MapNode will render the Map object in the scene graph.
-  mMapNode = new osgEarth::MapNode( map, nodeOptions );
-
-  mRootNode = new osg::Group();
-  mRootNode->addChild( mMapNode );
-
-#if OSGEARTH_VERSION_GREATER_THAN(2, 5, 0)
-  osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
-#endif
-
-  // Add draped layer
-  osgEarth::TileSourceOptions opts;
-  mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
-
-  osgEarth::ImageLayerOptions options( "QGIS" );
-  mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
-  map->addImageLayer( mQgisMapLayer );
-
-  // Add layers to the map
-  updateLayers();
-
-  // Create the frustum highlight callback
-  mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
-    mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
 }
 
 void GlobePlugin::showSettings()
@@ -507,7 +460,7 @@ void GlobePlugin::projectRead()
 
 void GlobePlugin::applySettings()
 {
-  if ( !mIsGlobeRunning )
+  if ( !mOsgViewer )
   {
     return;
   }
@@ -525,6 +478,7 @@ void GlobePlugin::applySettings()
     settings->bindScroll( osgEarth::Util::EarthManipulator::ACTION_ZOOM_OUT, osgGA::GUIEventAdapter::SCROLL_UP );
     settings->bindScroll( osgEarth::Util::EarthManipulator::ACTION_ZOOM_IN, osgGA::GUIEventAdapter::SCROLL_DOWN );
   }
+
   // Base map settings
   QString baseLayerUrl = mSettingsDialog->getBaseLayerUrl();
   if ( baseLayerUrl.isEmpty() || baseLayerUrl != mBaseLayerUrl )
@@ -560,11 +514,7 @@ void GlobePlugin::applySettings()
     // Create if not yet done
     if ( !mSkyNode.get() )
     {
-#if OSGEARTH_VERSION_LESS_THAN(2,6,0)
-      mSkyNode = new osgEarth::Util::SkyNode( mMapNode->getMap() );
-#else
       mSkyNode = osgEarth::Util::SkyNode::create( mMapNode );
-#endif
       mSkyNode->attach( mOsgViewer );
       mRootNode->addChild( mSkyNode );
       // Insert sky between root and map
@@ -572,26 +522,16 @@ void GlobePlugin::applySettings()
       mRootNode->removeChild( mMapNode );
     }
 
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 4, 0 ) and OSGEARTH_VERSION_LESS_THAN(2, 6, 0)
-    mSkyNode->setAutoAmbience( mSettingsDialog->getSkyAutoAmbience() );
-#elif OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 6, 0)
     mSkyNode->setLighting( mSettingsDialog->getSkyAutoAmbience() ? osg::StateAttribute::ON : osg::StateAttribute::OFF );
     double ambient = mSettingsDialog->getSkyMinAmbient();
     mSkyNode->getSunLight()->setAmbient( osg::Vec4( ambient, ambient, ambient, 1 ) );
-#endif
+
     QDateTime dateTime = mSettingsDialog->getSkyDateTime();
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 6, 0)
     mSkyNode->setDateTime( osgEarth::DateTime(
                              dateTime.date().year(),
                              dateTime.date().month(),
                              dateTime.date().day(),
                              dateTime.time().hour() + dateTime.time().minute() / 60.0 ) );
-#else
-    mSkyNode->setDateTime( dateTime.date().year(),
-                           dateTime.date().month(),
-                           dateTime.date().day(),
-                           dateTime.time().hour() + dateTime.time().minute() / 60.0 );
-#endif
   }
   else if ( mSkyNode != 0 )
   {
@@ -610,7 +550,7 @@ void GlobePlugin::applySettings()
 
 void GlobePlugin::applyProjectSettings()
 {
-  if ( mIsGlobeRunning && !getenv( "GLOBE_MAPXML" ) )
+  if ( mOsgViewer && !getenv( "GLOBE_MAPXML" ) )
   {
     QList<QgsGlobePluginDialog::ElevationDataSource> elevationDataSources = mSettingsDialog->getElevationDataSources();
     if ( elevationDataSources != mElevationSources )
@@ -927,7 +867,7 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
 
 void GlobePlugin::updateLayers()
 {
-  if ( mIsGlobeRunning )
+  if ( mOsgViewer )
   {
     QStringList drapedLayers;
 
@@ -1031,7 +971,6 @@ void GlobePlugin::reset()
   mViewerWidget = 0;
   mDockWidget = 0;
   mAnnotationsGroup = 0;
-  mIsGlobeRunning = false;
 }
 
 void GlobePlugin::unload()
