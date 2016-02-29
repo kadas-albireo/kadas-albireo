@@ -443,7 +443,13 @@ void GlobePlugin::run()
     mFeatureQueryTool->setDefaultCallback( mFeatureQueryToolIdentifyCb.get() );
 
     setupControls();
-    applySettings();
+    // FIXME: Workaround for OpenGL errors, in some manner related to the SkyNode,
+    // which appear when launching the globe a second time:
+    // Delay applySettings one event loop iteration, i.e. one update call of the GL canvas
+    QTimer* timer = new QTimer();
+    connect( timer, SIGNAL( timeout() ), timer, SLOT( deleteLater() ) );
+    connect( timer, SIGNAL( timeout() ), this, SLOT( applySettings() ) );
+    timer->start( 0 );
   }
 }
 
@@ -959,6 +965,7 @@ void GlobePlugin::reset()
   mRootNode = 0;
   mSkyNode = 0;
   mBaseLayer = 0;
+  mBaseLayerUrl.clear();
   mQgisMapLayer = 0;
   mTileSource = 0;
   mVerticalScale = 0;
