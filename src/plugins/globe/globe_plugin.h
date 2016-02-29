@@ -124,7 +124,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     QgsGlobePluginDialog* mSettingsDialog;
 
     QgsGlobeInterface mGlobeInterface;
-    bool mIsGlobeRunning;
     QString mBaseLayerUrl;
     QList<QgsGlobePluginDialog::ElevationDataSource> mElevationSources;
     double mSelectedLat, mSelectedLon, mSelectedElevation;
@@ -152,7 +151,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     QMap<QgsAnnotationItem*, QgsGlobeAnnotation*> mAnnotations;
 
     void setupProxy();
-    void setupMap();
     void addControl( osgEarth::Util::Controls::Control* control, int x, int y, int w, int h, osgEarth::Util::Controls::ControlEventHandler* handler );
     void addImageControl( const std::string &imgPath, int x, int y, osgEarth::Util::Controls::ControlEventHandler* handler = 0 );
     void addModelLayer( QgsVectorLayer* mapLayer , QgsGlobeVectorLayerConfig *layerConfig );
