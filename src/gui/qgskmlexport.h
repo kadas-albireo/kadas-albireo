@@ -51,6 +51,8 @@ class GUI_EXPORT QgsKMLExport
     static QString convertToHexValue( int value );
     static void writeLatLongBox( QTextStream& outStream, const QgsRectangle& rect );
     static void writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link );
+    static void writeWMSOverlay( QTextStream& outStream, const QgsRectangle& latLongBox, const QString& baseUrl, const QString& version, const QString& format, const QString& layers, const QString& styles );
+    static void writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox );
     static int levelsToGo( double resolution, double minResolution );
     static int offset( int nLevelsToGo );
 

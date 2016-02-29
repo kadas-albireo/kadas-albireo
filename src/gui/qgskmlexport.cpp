@@ -3,6 +3,7 @@
 #include "qgsannotationitem.h"
 #include "qgsgeometry.h"
 #include "qgskmlpallabeling.h"
+#include "qgsrasterlayer.h"
 #include "qgsrendercontext.h"
 #include "qgsrendererv2.h"
 #include "qgssymbolv2.h"
@@ -87,11 +88,32 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
     }
     else if ( ml->type() == QgsMapLayer::RasterLayer )
     {
-      //reference to start kml (start with quadratic extent 256x256)
-      QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
+      QgsRasterLayer* rl = static_cast<QgsRasterLayer*>( ml );
+      //wms layer?
+      if ( rl->providerType() == "wms" )
+      {
+        QString wmsString = rl->source();
+        QStringList wmsParamsList = wmsString.split( "&" );
+        QStringList::const_iterator paramIt = wmsParamsList.constBegin();
+        QMap<QString, QString> parameterMap;
+        for ( ; paramIt != wmsParamsList.constEnd(); ++paramIt )
+        {
+          QStringList eqSplit = paramIt->split( "=" );
+          if ( eqSplit.size() >= 2 )
+          {
+            parameterMap.insert( eqSplit.at( 0 ).toUpper(), eqSplit.at( 1 ) );
+          }
+        }
+        writeWMSOverlay( outStream, wgs84LayerExtent( ml ), parameterMap.value( "URL" ) , parameterMap.value( "VERSION" ), parameterMap.value( "FORMAT" ), parameterMap.value( "LAYERS" ), parameterMap.value( "STYLES" ) );
+      }
+      else //normal raster layer
+      {
+        //reference to start kml (start with quadratic extent 256x256)
+        QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
 
-      writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
-      superOverlayLayers.append( ml );
+        writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
+        superOverlayLayers.append( ml );
+      }
     }
   }
 
@@ -156,8 +178,6 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
     return;
   }
   img.save( imageOutDevice, "PNG" );
-  //debug
-  //img.save( "/tmp/debug.png", "PNG" );
   imageOutDevice->close();
   delete imageOutDevice;
 
@@ -201,10 +221,7 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
     writeNetworkLink( outStream, lowerRight,  mapLayer->id() + "_" + QString::number( currentTileNumber + 1 + 3 * tileNumberOffset ) + ".kml" );
   }
 
-  outStream << "<GroundOverlay>" << "\n";
-  outStream << "<Icon><href>" << fileBaseName + ".png" << "</href></Icon>" << "\n";
-  writeLatLongBox( outStream, extent );
-  outStream << "</GroundOverlay>" << "\n";
+  writeGroundOverlay( outStream, fileBaseName + ".png", extent );
 
   outStream << "</Document>" << "\n";
   outStream << "</kml>" << "\n";
@@ -540,6 +557,22 @@ void QgsKMLExport::writeNetworkLink( QTextStream& outStream, const QgsRectangle&
   outStream << "<viewRefreshMode>onRegion</viewRefreshMode>" << "\n";
   outStream << "</Link>" << "\n";
   outStream << "</NetworkLink>" << "\n";
+}
+
+void QgsKMLExport::writeWMSOverlay( QTextStream& outStream, const QgsRectangle& latLongBox, const QString& baseUrl, const QString& version, const QString& format, const QString& layers, const QString& styles )
+{
+  QString href = baseUrl + "SERVICE=WMS&amp;VERSION=1.1.1&amp;SRS=EPSG:4326&amp;REQUEST=GetMap&amp;TRANSPARENT=TRUE&amp;WIDTH=512&amp;HEIGHT=512&amp;FORMAT=" + format + "&amp;LAYERS=" + layers + "&amp;STYLES=" + styles;
+  writeGroundOverlay( outStream, href, latLongBox );
+}
+
+void QgsKMLExport::writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox )
+{
+  outStream << "<GroundOverlay>" << "\n";
+  outStream << "<Icon><href>" << href << "</href></Icon>" << "\n";
+  outStream << "<viewRefreshMode>onStop</viewRefreshMode>" << "\n";
+  outStream << "<viewBoundScale>0.75</viewBoundScale>" << "\n";
+  writeLatLongBox( outStream, latLongBox );
+  outStream << "</GroundOverlay>" << "\n";
 }
 
 int QgsKMLExport::levelsToGo( double resolution, double minResolution )
