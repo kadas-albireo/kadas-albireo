@@ -99,9 +99,9 @@ void QgsGlobePluginDialog::restoreSavedSettings()
 
   // Map settings
   mBaseLayerGroupBox->setChecked( settings.value( "/Plugin-Globe/baseLayerEnabled", true ).toBool() );
+  lineEditBaseLayerURL->setText( settings.value( "/Plugin-Globe/baseLayerURL", "http://readymap.org/readymap/tiles/1.0.0/7/" ).toString() );
   int idx = comboBoxBaseLayer->findData( lineEditBaseLayerURL->text() );
   comboBoxBaseLayer->setCurrentIndex( idx == -1 ? comboBoxBaseLayer->count() - 1 : idx );
-  lineEditBaseLayerURL->setText( settings.value( "/Plugin-Globe/baseLayerURL", "http://readymap.org/readymap/tiles/1.0.0/7/" ).toString() );
   groupBoxSky->setChecked( settings.value( "/Plugin-Globe/skyEnabled", false ).toBool() );
   dateTimeEditSky->setDateTime( settings.value( "/Plugin-Globe/skyDateTime", QDateTime::currentDateTime() ).toDateTime() );
   checkBoxSkyAutoAmbient->setChecked( settings.value( "/Plugin-Globe/skyAutoAmbient", false ).toBool() );
@@ -407,7 +407,6 @@ void QgsGlobePluginDialog::on_comboBoxBaseLayer_currentIndexChanged( int index )
   else
   {
     lineEditBaseLayerURL->setEnabled( true );
-    lineEditBaseLayerURL->setText( QgsApplication::pkgDataPath() + "/globe/world.tif" );
   }
 }
 
