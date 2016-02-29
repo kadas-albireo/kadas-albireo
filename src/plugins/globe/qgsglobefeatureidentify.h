@@ -41,6 +41,7 @@ public:
 #endif
 
 private:
+  QgsMapCanvas* mCanvas;
   QgsRubberBand* mRubberBand;
 };
 

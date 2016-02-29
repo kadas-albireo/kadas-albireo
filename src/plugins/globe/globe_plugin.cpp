@@ -1038,7 +1038,9 @@ void GlobePlugin::unload()
 {
   if ( mDockWidget )
   {
-    mDockWidget->close(); // triggers reset
+    disconnect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
+    delete mDockWidget;
+    reset();
   }
   mQGisIface->removePluginMenu( tr( "&Globe" ), mActionToggleGlobe );
   mQGisIface->removeToolBarIcon( mActionToggleGlobe );

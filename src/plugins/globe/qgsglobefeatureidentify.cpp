@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsglobefeatureidentify.h"
+#include "qgsmapcanvas.h"
 #include "featuresource/qgsglobefeaturesource.h"
 
 #include <qgsmaplayerregistry.h>
@@ -23,7 +24,7 @@
 #include <osgEarth/Registry>
 
 QgsGlobeFeatureIdentifyCallback::QgsGlobeFeatureIdentifyCallback( QgsMapCanvas* mapCanvas )
-    : mRubberBand( new QgsRubberBand( mapCanvas, QGis::Polygon ) )
+    : mCanvas( mapCanvas ), mRubberBand( new QgsRubberBand( mapCanvas, QGis::Polygon ) )
 {
   QColor color( Qt::green );
   color.setAlpha( 190 );
@@ -33,6 +34,7 @@ QgsGlobeFeatureIdentifyCallback::QgsGlobeFeatureIdentifyCallback( QgsMapCanvas* 
 
 QgsGlobeFeatureIdentifyCallback::~QgsGlobeFeatureIdentifyCallback()
 {
+  mCanvas->scene()->removeItem( mRubberBand );
   delete mRubberBand;
 }
 
