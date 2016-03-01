@@ -44,6 +44,8 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
 
+    QString filePath() const { return mFilePath; }
+
   private:
     QString mFilePath;
     QImage mImage;

@@ -45,6 +45,8 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
   protected:
     QgsTextAnnotationItem( QgsMapCanvas* canvas, QgsTextAnnotationItem* source );
 
+    QString asHtml() const;
+
   private:
     QTextDocument* mDocument;
 
