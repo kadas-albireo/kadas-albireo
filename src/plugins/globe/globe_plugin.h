@@ -37,6 +37,7 @@ class QgsGlobeInterface;
 class QgsGlobePluginDialog;
 class QgsMapLayer;
 class QgsPoint;
+class QgsRectangle;
 class QgsGlobeFrustumHighlightCallback;
 class QgsGlobeFeatureIdentifyCallback;
 class QgsGlobeTileSource;
@@ -52,6 +53,7 @@ namespace osgViewer { class Viewer; }
 namespace osgEarth
 {
   class GeoPoint;
+  class GeoExtent;
   class ImageLayer;
   class MapNode;
   namespace QtGui { class ViewerWidget; }
@@ -110,9 +112,12 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     //! Get OSG map node
     osgEarth::MapNode* mapNode() { return mMapNode; }
 
+    QgisInterface* qgisIface() const { return mQGisIface; }
+
   public slots:
     void run();
-    void refreshQGISMapLayer();
+    void refreshLayerExtent();
+    void refreshQGISMapLayer( const QgsRectangle& rect, const QString& authid );
     void showSettings();
 
   private:

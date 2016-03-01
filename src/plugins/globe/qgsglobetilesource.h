@@ -27,18 +27,19 @@ class QgsMapCanvas;
 class QgsMapRenderer;
 class QgsGlobeTileSource;
 
-class QgsGlobeTile : public osg::Image
+class QgsGlobeTileImage : public osg::Image
 {
   public:
-    QgsGlobeTile( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
-    ~QgsGlobeTile();
+    QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
+    ~QgsGlobeTileImage();
+
     bool requiresUpdateCall() const;
     void update( osg::NodeVisitor * );
 
   private:
     const QgsGlobeTileSource* mTileSource;
     QgsRectangle mTileExtent;
-    osgEarth::TimeStamp mLastUpdateTime;
+    mutable osgEarth::TimeStamp mLastUpdateTime;
     int mTileSize;
     unsigned char* mTileData;
 };
@@ -46,19 +47,20 @@ class QgsGlobeTile : public osg::Image
 
 class QgsGlobeTileSource : public osgEarth::TileSource
 {
-    friend class QgsGlobeTile;
+    friend class QgsGlobeTileImage;
 
   public:
     QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::TileSourceOptions& options = osgEarth::TileSourceOptions() );
     Status initialize( const osgDB::Options *dbOptions ) override;
     osg::Image* createImage( const osgEarth::TileKey& key, osgEarth::ProgressCallback* progress );
     osg::HeightField* createHeightField( const osgEarth::TileKey &/*key*/, osgEarth::ProgressCallback* /*progress*/ ) { return 0; }
-    bool hasDataInExtent( const osgEarth::GeoExtent &extent ) const;
+    bool hasDataInExtent( const osgEarth::GeoExtent &extent ) const override;
+    bool hasData( const osgEarth::TileKey& key ) const override;
 
     bool isDynamic() const { return true; }
     osgEarth::TimeStamp getLastModifiedTime() const { return mLastModifiedTime; }
 
-    void refresh();
+    void refresh( const QgsRectangle &extent );
     void setLayerSet( const QStringList& layerSet );
     const QStringList &layerSet() const;
 
@@ -66,6 +68,7 @@ class QgsGlobeTileSource : public osgEarth::TileSource
     QgsMapCanvas* mCanvas;
     osgEarth::TimeStamp mLastModifiedTime;
     QgsRectangle mViewExtent;
+    QgsRectangle mLastUpdateExtent;
     QStringList mLayerSet;
 };
 
