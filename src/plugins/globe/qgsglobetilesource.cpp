@@ -26,7 +26,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaprenderercustompainterjob.h"
 
-QgsGlobeTile::QgsGlobeTile( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize )
+QgsGlobeTileImage::QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize )
     : osg::Image()
     , mTileSource( tileSource )
     , mTileExtent( tileExtent )
@@ -36,17 +36,25 @@ QgsGlobeTile::QgsGlobeTile( const QgsGlobeTileSource* tileSource, const QgsRecta
   update( 0 );
 }
 
-QgsGlobeTile::~QgsGlobeTile()
+QgsGlobeTileImage::~QgsGlobeTileImage()
 {
   delete[] mTileData;
 }
 
-bool QgsGlobeTile::requiresUpdateCall() const
+bool QgsGlobeTileImage::requiresUpdateCall() const
 {
-  return mLastUpdateTime < mTileSource->getLastModifiedTime();
+  /*if(mLastUpdateTime < mTileSource->getLastModifiedTime()) {
+    if(mTileExtent.intersects(mTileSource->mLastUpdateExtent)) {
+      return true;
+    } else {
+      mLastUpdateTime = mTileSource->getLastModifiedTime();
+      return false;
+    }
+  }*/
+  return false;
 }
 
-void QgsGlobeTile::update( osg::NodeVisitor * )
+void QgsGlobeTileImage::update( osg::NodeVisitor * )
 {
   if ( !mTileSource->mViewExtent.intersects( mTileExtent ) )
   {
@@ -120,7 +128,7 @@ osg::Image* QgsGlobeTileSource::createImage( const osgEarth::TileKey& key, osgEa
   QgsRectangle tileExtent( xmin, ymin, xmax, ymax );
 
   QgsDebugMsg( QString( "Create earth tile image: %1" ).arg( tileExtent.toString( 5 ) ) );
-  return new QgsGlobeTile( this, tileExtent, getPixelsPerTile() );
+  return new QgsGlobeTileImage( this, tileExtent, getPixelsPerTile() );
 }
 
 bool QgsGlobeTileSource::hasDataInExtent( const osgEarth::GeoExtent &extent ) const
@@ -130,18 +138,20 @@ bool QgsGlobeTileSource::hasDataInExtent( const osgEarth::GeoExtent &extent ) co
   return requestExtent.intersects( mViewExtent );
 }
 
-void QgsGlobeTileSource::refresh()
+bool QgsGlobeTileSource::hasData( const osgEarth::TileKey& key ) const
+{
+  const osgEarth::GeoExtent& tileExtent = key.getExtent();
+  QgsRectangle rect( tileExtent.xMin(), tileExtent.yMin(), tileExtent.xMax(), tileExtent.yMax() );
+  return rect.intersects( mViewExtent );
+}
+
+void QgsGlobeTileSource::refresh( const QgsRectangle& extent )
 {
   osgEarth::TimeStamp old = mLastModifiedTime;
   mLastModifiedTime = osgEarth::DateTime().asTimeStamp();
+  mLastUpdateExtent = extent;
   QgsDebugMsg( QString( "Updated QGIS map layer modified time from %1 to %2" ).arg( old ).arg( mLastModifiedTime ) );
-
-  mViewExtent = mCanvas->fullExtent();
-  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), GEO_EPSG_CRS_AUTHID );
-  if ( !crst->isShortCircuited() )
-  {
-    mViewExtent = crst->transform( mViewExtent );
-  }
+  mViewExtent = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mCanvas->fullExtent() );
 }
 
 void QgsGlobeTileSource::setLayerSet( const QStringList &layerSet )
