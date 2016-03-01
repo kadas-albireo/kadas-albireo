@@ -158,9 +158,16 @@ QString QgsLineStringV2::asKML( int precision ) const
     kml.append( "<LineString>" );
   }
   bool z = is3D();
-  kml.append( "<altituteMode>" );
-  kml.append( "relativeToGround" );
-  kml.append( "</altituteMode>" );
+  kml.append( "<altitudeMode>" );
+  if ( z )
+  {
+    kml.append( "absolute" );
+  }
+  else
+  {
+    kml.append( "clampToGround" );
+  }
+  kml.append( "</altitudeMode>" );
   kml.append( "<coordinates>" );
 
   int nPoints = mCoords.size();
