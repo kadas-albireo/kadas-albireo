@@ -66,7 +66,7 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     void featurePicked( const QgsFeature& feature, QgsVectorLayer* layer );
     void labelPicked( const QgsLabelPosition& labelPos );
 
-  private:
+  protected:
 
     //! Flag to indicate a map canvas drag operation is taking place
     bool mDragging;
