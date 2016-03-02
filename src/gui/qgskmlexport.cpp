@@ -3,6 +3,7 @@
 #include "qgsannotationitem.h"
 #include "qgsgeometry.h"
 #include "qgskmlpallabeling.h"
+#include "qgsmaplayerrenderer.h"
 #include "qgsrasterlayer.h"
 #include "qgsrendercontext.h"
 #include "qgsrendererv2.h"
@@ -86,11 +87,11 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
       }
       writeVectorLayerFeatures( vl, outStream, filterRect, labelLayer, labeling, rc );
     }
-    else if ( ml->type() == QgsMapLayer::RasterLayer )
+    else if ( ml->type() == QgsMapLayer::RasterLayer || ml->type() == QgsMapLayer::PluginLayer )
     {
-      QgsRasterLayer* rl = static_cast<QgsRasterLayer*>( ml );
       //wms layer?
-      if ( rl->providerType() == "wms" )
+      QgsRasterLayer* rl = dynamic_cast<QgsRasterLayer*>( ml );
+      if ( rl && rl->providerType() == "wms" )
       {
         QString wmsString = rl->source();
         QStringList wmsParamsList = wmsString.split( "&" );
@@ -131,7 +132,7 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
   return 0;
 }
 
-bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath )
+bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder )
 {
   if ( !mapLayer )
   {
@@ -142,11 +143,11 @@ bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, 
 
   //start with quadratic extent 256 x 256, then recursively subdivide into four equal squares for the next level (until approximate resolution is reached)
   QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( mapLayer ) );
-  addOverlay( overlayStartExtent, mapLayer, quaZip, filePath, currentTileNumber );
+  addOverlay( overlayStartExtent, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
   return true;
 }
 
-void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber )
+void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber, int drawingOrder )
 {
   ++currentTileNumber;
   QString fileBaseName = mapLayer->id() + "_" + QString::number( currentTileNumber );
@@ -167,7 +168,8 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
   QgsMapToPixel mtp( extent.width() / 256.0, centerPoint.x(), centerPoint.y(), 256, 256, 0.0 );
   context.setMapToPixel( mtp );
   context.setExtent( ct.transformBoundingBox( extent, QgsCoordinateTransform::ReverseTransform ) );
-  if ( !mapLayer->draw( context ) )
+  QgsMapLayerRenderer* layerRenderer = mapLayer->createMapRenderer( context );
+  if ( !layerRenderer || !layerRenderer->render() )
   {
     return;
   }
@@ -221,7 +223,7 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
     writeNetworkLink( outStream, lowerRight,  mapLayer->id() + "_" + QString::number( currentTileNumber + 1 + 3 * tileNumberOffset ) + ".kml" );
   }
 
-  writeGroundOverlay( outStream, fileBaseName + ".png", extent );
+  writeGroundOverlay( outStream, fileBaseName + ".png", extent, drawingOrder );
 
   outStream << "</Document>" << "\n";
   outStream << "</kml>" << "\n";
@@ -232,10 +234,10 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
 
   if ( resolution > minResolution )
   {
-    addOverlay( upperLeft, mapLayer, quaZip, filePath, currentTileNumber );
-    addOverlay( lowerLeft, mapLayer, quaZip, filePath, currentTileNumber );
-    addOverlay( upperRight, mapLayer, quaZip, filePath, currentTileNumber );
-    addOverlay( lowerRight, mapLayer, quaZip, filePath, currentTileNumber );
+    addOverlay( upperLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
+    addOverlay( lowerLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
+    addOverlay( upperRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
+    addOverlay( lowerRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
   }
 }
 
@@ -562,15 +564,19 @@ void QgsKMLExport::writeNetworkLink( QTextStream& outStream, const QgsRectangle&
 void QgsKMLExport::writeWMSOverlay( QTextStream& outStream, const QgsRectangle& latLongBox, const QString& baseUrl, const QString& version, const QString& format, const QString& layers, const QString& styles )
 {
   QString href = baseUrl + "SERVICE=WMS&amp;VERSION=1.1.1&amp;SRS=EPSG:4326&amp;REQUEST=GetMap&amp;TRANSPARENT=TRUE&amp;WIDTH=512&amp;HEIGHT=512&amp;FORMAT=" + format + "&amp;LAYERS=" + layers + "&amp;STYLES=" + styles;
-  writeGroundOverlay( outStream, href, latLongBox );
+  writeGroundOverlay( outStream, href, latLongBox, -1 );
 }
 
-void QgsKMLExport::writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox )
+void QgsKMLExport::writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox, int drawingOrder )
 {
   outStream << "<GroundOverlay>" << "\n";
   outStream << "<Icon><href>" << href << "</href></Icon>" << "\n";
   outStream << "<viewRefreshMode>onStop</viewRefreshMode>" << "\n";
   outStream << "<viewBoundScale>0.75</viewBoundScale>" << "\n";
+  if ( drawingOrder >= 0 )
+  {
+    outStream << "<drawOrder>" << QString::number( drawingOrder ) << "</drawOrder>" << "\n";
+  }
   writeLatLongBox( outStream, latLongBox );
   outStream << "</GroundOverlay>" << "\n";
 }
