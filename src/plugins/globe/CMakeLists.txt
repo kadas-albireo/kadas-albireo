@@ -9,33 +9,33 @@ FIND_PACKAGE(Threads)
 # Files
 
 SET (GLOBE_PLUGIN_SRCS
-     globe_plugin.cpp
-     qgsglobetilesource.cpp
-     qgsglobeplugindialog.cpp
-     qgsglobeinterface.cpp
-     qgsglobevectorlayerproperties.cpp
-     qgsglobefeatureidentify.cpp
-     qgsglobefrustumhighlight.cpp
+    globe_plugin.cpp
+    qgsglobetilesource.cpp
+    qgsglobeplugindialog.cpp
+    qgsglobeinterface.cpp
+    qgsglobevectorlayerproperties.cpp
+    qgsglobefeatureidentify.cpp
+    qgsglobefrustumhighlight.cpp
 )
 
 SET (GLOBE_PLUGIN_UIS
-     qgsglobeplugindialog.ui
-     qgsglobevectorlayerpropertiespage.ui
+    qgsglobeplugindialog.ui
+    qgsglobevectorlayerpropertiespage.ui
 )
 
 SET (GLOBE_PLUGIN_MOC_HDRS
-     globe_plugin.h
-     qgsglobeplugindialog.h
-     qgsglobeinterface.h
-     qgsglobevectorlayerproperties.h
+    globe_plugin.h
+    qgsglobeplugindialog.h
+    qgsglobeinterface.h
+    qgsglobevectorlayerproperties.h
 )
 
 SET (GLOBE_PLUGIN_HDRS
-     qgsglobetilesource.h
-     qgsglobeinterface.h
-     qgsglobevectorlayerproperties.h
-     qgsglobefeatureidentify.h
-     qgsglobefrustumhighlight.h
+    qgsglobetilesource.h
+    qgsglobeinterface.h
+    qgsglobevectorlayerproperties.h
+    qgsglobefeatureidentify.h
+    qgsglobefrustumhighlight.h
 )
 
 SET (GLOBE_PLUGIN_RCCS  globe_plugin.qrc)
@@ -81,6 +81,7 @@ TARGET_LINK_LIBRARIES(globeplugin
   ${OSGQT_LIBRARY}
   ${OSGVIEWER_LIBRARY}
   ${OSGEARTH_LIBRARY}
+  ${OSGEARTHANNOTATION_LIBRARY}
   ${OSGEARTHFEATURES_LIBRARY}
   ${OSGEARTHUTIL_LIBRARY}
   ${OSGEARTHSYMBOLOGY_LIBRARY}

@@ -56,6 +56,7 @@ namespace osgEarth
   class GeoExtent;
   class ImageLayer;
   class MapNode;
+  namespace Annotation { class PlaceNode; }
   namespace QtGui { class ViewerWidget; }
   namespace Util
   {
@@ -139,8 +140,8 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::Util::SkyNode> mSkyNode;
     osg::ref_ptr<osgEarth::ImageLayer> mBaseLayer;
     osg::ref_ptr<osgEarth::ImageLayer> mQgisMapLayer;
-    osg::ref_ptr<osgEarth::Util::VerticalScale> mVerticalScale;
     osg::ref_ptr<QgsGlobeTileSource> mTileSource;
+    osg::ref_ptr<osgEarth::Util::VerticalScale> mVerticalScale;
 
     //! Creates additional pages in the layer properties for adjusting 3D properties
     QgsGlobeLayerPropertiesFactory* mLayerPropertiesFactory;
@@ -153,7 +154,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::Util::FeatureQueryTool> mFeatureQueryTool;
 
     osg::Group* mAnnotationsGroup;
-    QMap<QgsAnnotationItem*, QgsGlobeAnnotation*> mAnnotations;
+    QMap<QgsAnnotationItem*, osg::ref_ptr<osgEarth::Annotation::PlaceNode> > mAnnotations;
 
     void setupProxy();
     void addControl( osgEarth::Util::Controls::Control* control, int x, int y, int w, int h, osgEarth::Util::Controls::ControlEventHandler* handler );

@@ -44,6 +44,7 @@
 #include <symbology-ng/qgssymbolv2.h>
 #include <qgspallabeling.h>
 #include <qgssvgannotationitem.h>
+#include <qgsgeoimageannotationitem.h>
 
 #include <QAction>
 #include <QDir>
@@ -67,6 +68,7 @@
 #include <osgEarth/Registry>
 #include <osgEarth/TileSource>
 #include <osgEarth/Version>
+#include <osgEarthAnnotation/PlaceNode>
 #include <osgEarthDrivers/engine_mp/MPTerrainEngineOptions>
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
@@ -422,6 +424,13 @@ void GlobePlugin::run()
 
     mAnnotationsGroup = new osg::Group();
     mRootNode->addChild( mAnnotationsGroup );
+    foreach ( QGraphicsItem* item, mQGisIface->mapCanvas()->items() )
+    {
+      if ( dynamic_cast<QgsAnnotationItem*>( item ) )
+      {
+        updateAnnotationItem( static_cast<QgsAnnotationItem*>( item ) );
+      }
+    }
 
     mOsgViewer->setSceneData( mRootNode );
 
@@ -997,16 +1006,50 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
 
 void GlobePlugin::updateAnnotationItem( QgsAnnotationItem* item )
 {
-//  if(dynamic_cast<QgsSvgAnnotationItem*>(item)) {
-//    delete mAnnotations.take(item);
-//    connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeAnnotationItem(QObject*) ), Qt::UniqueConnection);
-//    mAnnotations[item] = new QgsGlobeAnnotation(item);
-//  }
+  if ( mOsgViewer )
+  {
+    QImage image;
+    if ( dynamic_cast<QgsSvgAnnotationItem*>( item ) )
+    {
+      image = static_cast<QgsSvgAnnotationItem*>( item )->getImage();
+    }
+    else if ( dynamic_cast<QgsGeoImageAnnotationItem*>( item ) )
+    {
+      image = static_cast<QgsGeoImageAnnotationItem*>( item )->getImage();
+    }
+    if ( !image.isNull() )
+    {
+      mAnnotationsGroup->removeChild( mAnnotations[item] );
+      mAnnotations.take( item ) = 0;
+      connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeAnnotationItem( QObject* ) ), Qt::UniqueConnection );
+      const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid(), GEO_EPSG_CRS_AUTHID );
+      QgsPoint p = crst->transform( item->mapPosition() );
+      osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
+
+      unsigned char* imgbuf = new unsigned char[image.bytesPerLine() * image.height()];
+      std::memcpy( imgbuf, image.bits(), image.bytesPerLine() * image.height() );
+      osg::Image* osgImage = new osg::Image;
+      osgImage->setImage( image.width(), image.height(), 1, 4, // width, height, depth, internal_format
+                          GL_BGRA, GL_UNSIGNED_BYTE, imgbuf, osg::Image::USE_NEW_DELETE );
+      osgImage->flipVertical();
+      osgEarth::Style pin;
+      pin.getOrCreateSymbol<osgEarth::IconSymbol>()->setImage( osgImage );
+
+      osg::ref_ptr<osgEarth::Annotation::PlaceNode> placeNode = new osgEarth::Annotation::PlaceNode( mMapNode, geop, "", pin );
+      placeNode->setOcclusionCulling( true );
+      mAnnotations[item] = placeNode;
+      mAnnotationsGroup->addChild( placeNode );
+    }
+  }
 }
 
 void GlobePlugin::removeAnnotationItem( QObject *item )
 {
-//  delete mAnnotations.take(item);
+  if ( mOsgViewer )
+  {
+    mAnnotationsGroup->removeChild( mAnnotations[reinterpret_cast<QgsAnnotationItem*>( item )] );
+    mAnnotations.take( reinterpret_cast<QgsAnnotationItem*>( item ) ) = 0;
+  }
 }
 
 void GlobePlugin::setGlobeEnabled( bool enabled )

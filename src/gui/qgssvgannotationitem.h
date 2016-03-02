@@ -39,6 +39,8 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
     void setFilePath( const QString& file );
     QString filePath() const { return mFilePath; }
 
+    QImage getImage();
+
   protected:
     QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotationItem* source );
 
