@@ -140,6 +140,17 @@ void QgsMapToolViewshed::drawFinished()
   }
   getPart( 0, center, curRadius, trash, trash );
 
+  if ( mCanvas->mapSettings().mapUnits() == QGis::Degrees )
+  {
+    // Need to compute radius in meters
+    QgsDistanceArea da;
+    da.setSourceCrs( mCanvas->mapSettings().destinationCrs() );
+    da.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
+    da.setEllipsoidalMode( mCanvas->mapSettings().hasCrsTransformEnabled() );
+    curRadius = da.measureLine( center, QgsPoint( center.x() + curRadius, center.y() ) );
+    QGis::UnitType measureUnits = mCanvas->mapSettings().mapUnits();
+    da.convertMeasurement( curRadius, measureUnits, QGis::Meters, false );
+  }
 
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
