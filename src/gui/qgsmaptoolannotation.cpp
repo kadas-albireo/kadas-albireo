@@ -28,10 +28,10 @@ QgsMapToolAnnotation::QgsMapToolAnnotation( QgsMapCanvas* canvas )
   mCursor = QCursor( Qt::ArrowCursor );
 }
 
-void QgsMapToolAnnotation::canvasPressEvent( QMouseEvent * e )
+void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent * e )
 {
   QgsAnnotationItem* itemAtPos = mCanvas->annotationItemAtPos( e->pos() );
-  if ( e->button() == Qt::LeftButton && !itemAtPos )
+  if ( !mDragging && e->button() == Qt::LeftButton && !itemAtPos )
   {
     QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
     if ( selectedItem )
@@ -40,6 +40,6 @@ void QgsMapToolAnnotation::canvasPressEvent( QMouseEvent * e )
   }
   else
   {
-    QgsMapToolPan::canvasPressEvent( e );
+    QgsMapToolPan::canvasReleaseEvent( e );
   }
 }
