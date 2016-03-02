@@ -115,3 +115,13 @@ void QgsSvgAnnotationItem::setFilePath( const QString& file )
   mFilePath = file;
   mSvgRenderer.load( mFilePath );
 }
+
+QImage QgsSvgAnnotationItem::getImage()
+{
+  QRect viewBox = mSvgRenderer.viewBox();
+  QImage image( viewBox.size(), QImage::Format_ARGB32 );
+  image.fill( Qt::transparent );
+  QPainter painter( &image );
+  mSvgRenderer.render( &painter );
+  return image;
+}
