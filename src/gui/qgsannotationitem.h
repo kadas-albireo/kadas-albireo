@@ -94,7 +94,10 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     bool mapPositionFixed() const { return mMapPositionFixed; }
 
     virtual void setMapPosition( const QgsPoint& pos , const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() );
-    QgsPoint mapPosition() const { return mMapPosition; }
+    const QgsPoint& mapPosition() const { return mMapPosition; }
+    const QgsPoint& mapGeoPos() const { return mGeoPos; }
+    const QgsCoordinateReferenceSystem& mapGeoPosCrs() const { return mGeoPosCrs; }
+
 
     void setOffsetFromReferencePoint( const QPointF& offset );
     QPointF offsetFromReferencePoint() const { return mOffsetFromReferencePoint; }

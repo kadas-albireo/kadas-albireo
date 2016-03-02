@@ -1022,8 +1022,8 @@ void GlobePlugin::updateAnnotationItem( QgsAnnotationItem* item )
       mAnnotationsGroup->removeChild( mAnnotations[item] );
       mAnnotations.take( item ) = 0;
       connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeAnnotationItem( QObject* ) ), Qt::UniqueConnection );
-      const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid(), GEO_EPSG_CRS_AUTHID );
-      QgsPoint p = crst->transform( item->mapPosition() );
+      const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( item->mapGeoPosCrs().authid(), GEO_EPSG_CRS_AUTHID );
+      QgsPoint p = crst->transform( item->mapGeoPos() );
       osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
 
       unsigned char* imgbuf = new unsigned char[image.bytesPerLine() * image.height()];

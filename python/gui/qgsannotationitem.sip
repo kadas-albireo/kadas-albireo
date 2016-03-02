@@ -42,7 +42,9 @@ class QgsAnnotationItem: QgsMapCanvasItem
     bool mapPositionFixed() const;
 
     virtual void setMapPosition( const QgsPoint& pos );
-    QgsPoint mapPosition() const;
+    const QgsPoint& mapPosition() const;
+    const QgsPoint& mapGeoPos() const;
+    const QgsCoordinateReferenceSystem& mapGeoPosCrs() const;
 
     void setFrameSize( const QSizeF& size );
     QSizeF frameSize() const;
