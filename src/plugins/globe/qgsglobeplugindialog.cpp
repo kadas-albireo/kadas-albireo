@@ -51,6 +51,8 @@ QgsGlobePluginDialog::QgsGlobePluginDialog( QWidget* parent, Qt::WFlags fl )
   comboBoxStereoMode->addItem( "HORIZONTAL_SPLIT", osg::DisplaySettings::HORIZONTAL_SPLIT );
   comboBoxStereoMode->addItem( "VERTICAL_SPLIT", osg::DisplaySettings::VERTICAL_SPLIT );
 
+  elevationDatasourcesWidget->setColumnHidden( 1, true ); // Hide cache column for the moment
+
 
   lineEditAASamples->setValidator( new QIntValidator( lineEditAASamples ) );
 
