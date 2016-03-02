@@ -115,6 +115,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QgsCoordinateDisplayer* mCoordinateDisplayer;
     QgsMessageBar* mInfoBar;
     QPoint mDragStartPos;
+    QTimer mLoadingTimer;
 
     QPointer<QgsMessageBarItem> mReprojMsgItem;
 
