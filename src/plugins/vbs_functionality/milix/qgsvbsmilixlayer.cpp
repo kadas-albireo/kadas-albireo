@@ -346,7 +346,14 @@ QgsRectangle QgsVBSMilixLayer::extent()
   {
     foreach ( const QgsPoint& point, item->points() )
     {
-      r.include( point );
+      if ( r.isNull() )
+      {
+        r.set( point.x(), point.y(), point.x(), point.y() );
+      }
+      else
+      {
+        r.include( point );
+      }
     }
   }
   return r;

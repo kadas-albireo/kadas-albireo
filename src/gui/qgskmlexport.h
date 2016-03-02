@@ -31,7 +31,7 @@ class GUI_EXPORT QgsKMLExport
         @param usedLocalFiles out: files referenced in the KML document (e.g. photos). Needs to be added to the kmz*/
     int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles, QList<QgsMapLayer*>& superOverlayLayers );
 
-    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath );
+    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder );
 
     static QString convertColor( const QColor& c );
 
@@ -52,12 +52,12 @@ class GUI_EXPORT QgsKMLExport
     static void writeLatLongBox( QTextStream& outStream, const QgsRectangle& rect );
     static void writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link );
     static void writeWMSOverlay( QTextStream& outStream, const QgsRectangle& latLongBox, const QString& baseUrl, const QString& version, const QString& format, const QString& layers, const QString& styles );
-    static void writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox );
+    static void writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox, int drawingOrder = -1 );
     static int levelsToGo( double resolution, double minResolution );
     static int offset( int nLevelsToGo );
 
 
-    void addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber );
+    void addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber, int drawingOrder );
     QIODevice* openDeviceForNewFile( const QString& fileName, QuaZip* quaZip, const QString& filePath );
 };
 

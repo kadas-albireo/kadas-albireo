@@ -46,7 +46,7 @@ QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
       QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( id );
       if ( layer )
       {
-        layerList.append( layer );
+        layerList.prepend( layer );
       }
     }
   }
