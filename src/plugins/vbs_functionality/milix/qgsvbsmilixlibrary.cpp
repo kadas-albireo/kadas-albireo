@@ -338,7 +338,7 @@ void QgsVBSMilixLibrary::addMilXLayer()
 
 void QgsVBSMilixLibraryLoader::run()
 {
-  QString galleryPath = QSettings().value( "/vbsfunctionality/milix_gallery_path", "/home/sandro/Documents/ownCloud/Shared/Realisierung/Mss-MilX/MssGallery_V1.0_2016.01.30/GalleryFiles/" ).toString();
+  QString galleryPath = QSettings().value( "/vbsfunctionality/milix_gallery_path", "/home/marco/ownCloud/Shared/VBS-Realisierung/Mss-MilX/MssGallery_V1.0_2016.01.30/GalleryFiles" ).toString();
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
 
   QDir galleryDir( galleryPath );

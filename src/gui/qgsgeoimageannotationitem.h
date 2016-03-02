@@ -41,10 +41,10 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void paint( QPainter* painter ) override;
     QString filePath() const { return mFilePath; }
 
+    QString filePath() const { return mFilePath; }
+
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
-
-    QString filePath() const { return mFilePath; }
 
   private:
     QString mFilePath;
