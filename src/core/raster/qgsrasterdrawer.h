@@ -26,6 +26,7 @@ class QImage;
 class QgsMapToPixel;
 struct QgsRasterViewPort;
 class QgsRasterIterator;
+class QgsRenderContext;
 
 /** \ingroup core
  * The drawing pipe for raster layers.
@@ -36,7 +37,7 @@ class CORE_EXPORT QgsRasterDrawer
     QgsRasterDrawer( QgsRasterIterator *iterator );
     ~QgsRasterDrawer();
 
-    void draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel );
+    void draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel , const QgsRenderContext *ctx = 0 );
 
   protected:
     /**Draws raster part

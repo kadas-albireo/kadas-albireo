@@ -217,7 +217,7 @@ bool QgsRasterLayerRenderer::render()
     QObject::connect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
   }
 
-  drawer.draw( mPainter, mRasterViewPort, mMapToPixel );
+  drawer.draw( mPainter, mRasterViewPort, mMapToPixel, mRenderContext );
 
   if ( provider )
   {

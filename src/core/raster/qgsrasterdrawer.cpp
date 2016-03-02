@@ -19,6 +19,7 @@
 #include "qgsrasterdrawer.h"
 #include "qgsrasteriterator.h"
 #include "qgsrasterviewport.h"
+#include "qgsrendercontext.h"
 #include "qgsmaptopixel.h"
 #include <QImage>
 #include <QPainter>
@@ -32,7 +33,7 @@ QgsRasterDrawer::~QgsRasterDrawer()
 {
 }
 
-void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel )
+void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel, const QgsRenderContext* ctx )
 {
   QgsDebugMsg( "Entered" );
   if ( !p || !mIterator || !viewPort || !theQgsMapToPixel )
@@ -93,6 +94,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
     QgsDebugMsg( "Block drawn" );
 
     delete block;
+    if ( ctx && ctx->renderingStopped() ) { break; }
   }
 }
 
