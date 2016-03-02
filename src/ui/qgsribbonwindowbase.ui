@@ -438,6 +438,28 @@
         </item>
        </layout>
       </widget>
+      <widget class="QLabel" name="mLoadingLabel">
+       <property name="geometry">
+        <rect>
+         <x>610</x>
+         <y>440</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel { color: white; background: rgba(0,0,0,127); border-radius: 5px; padding: 5px; }</string>
+       </property>
+       <property name="text">
+        <string>Loading...</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

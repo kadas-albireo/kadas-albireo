@@ -83,6 +83,11 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 
+  mLoadingLabel->adjustSize();
+  mLoadingLabel->hide();
+  mLoadingTimer.setSingleShot( true );
+  mLoadingTimer.setInterval( 500 );
+
   QMenu* openLayerMenu = new QMenu( this );
   openLayerMenu->addAction( tr( "Add vector layer" ), this, SLOT( addVectorLayer() ) );
   openLayerMenu->addAction( tr( "Add raster layer" ), this, SLOT( addRasterLayer() ) );
@@ -135,6 +140,10 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
   connect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( switchToTabForTool( QgsMapTool* ) ) );
+  connect( mMapCanvas, SIGNAL( renderStarting() ), &mLoadingTimer, SLOT( start() ) );
+  connect( &mLoadingTimer, SIGNAL( timeout() ), mLoadingLabel, SLOT( show() ) );
+  connect( mMapCanvas, SIGNAL( mapCanvasRefreshed() ), &mLoadingTimer, SLOT( stop() ) );
+  connect( mMapCanvas, SIGNAL( mapCanvasRefreshed() ), mLoadingLabel, SLOT( hide() ) );
   connect( mRibbonWidget, SIGNAL( currentChanged( int ) ), this, SLOT( pan() ) ); // Change to pan tool when changing active ribbon tab
 }
 
@@ -210,6 +219,9 @@ void QgsRibbonApp::updateWidgetPositions()
   double y = mMapCanvas->geometry().y();
   mInfoBar->move( x, y );
   mInfoBar->setFixedWidth( barwidth );
+
+  // Move loading label
+  mLoadingLabel->move( mMapCanvas->geometry().width() - 5 - mLoadingLabel->width(), mMapCanvas->geometry().height() - 5 - mLoadingLabel->height() );
 }
 
 void QgsRibbonApp::initLayerTreeView()
