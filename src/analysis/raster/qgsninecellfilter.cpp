@@ -17,6 +17,7 @@
 
 #include "qgsninecellfilter.h"
 #include "qgscoordinatetransform.h"
+#include "qgslogger.h"
 #include "cpl_string.h"
 #include <qmath.h>
 #include <QProgressDialog>
@@ -121,6 +122,43 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
   //try to set -9999 as nodata value
   GDALSetRasterNoDataValue( outputRasterBand, -9999 );
   mOutputNodataValue = GDALGetRasterNoDataValue( outputRasterBand, NULL );
+
+  // Autocompute the zFactor if it is -1
+  if ( mZFactor == -1 )
+  {
+    QString proj( GDALGetProjectionRef( inputDataset ) );
+    QgsCoordinateReferenceSystem rasterCrs( proj );
+    QGis::UnitType vertUnit = strcmp( GDALGetRasterUnitType( rasterBand ), "ft" ) == 0 ? QGis::Feet : QGis::Meters;
+    if ( rasterCrs.mapUnits() == QGis::Meters && vertUnit == QGis::Feet )
+    {
+      mZFactor = QGis::fromUnitToUnitFactor( QGis::Meters, QGis::Feet );
+    }
+    else if ( rasterCrs.mapUnits() == QGis::Feet && vertUnit == QGis::Meters )
+    {
+      mZFactor = QGis::fromUnitToUnitFactor( QGis::Feet, QGis::Meters );
+    }
+    else if ( rasterCrs.mapUnits() == QGis::Degrees && vertUnit == QGis::Meters )
+    {
+      // Take latitude in the middle of the window
+      double px = 0.5 * ( colStart + colEnd );
+      double py = 0.5 * ( rowStart + rowEnd );
+      double latitude = gtrans[3] + px * gtrans[4] + py * gtrans[5];
+      mZFactor = ( 111320 * std::cos( latitude * M_PI / 180. ) );
+    }
+    else if ( rasterCrs.mapUnits() == QGis::Degrees && vertUnit == QGis::Feet )
+    {
+      // Take latitude in the middle of the window
+      double px = 0.5 * ( colStart + colEnd );
+      double py = 0.5 * ( rowStart + rowEnd );
+      double latitude = gtrans[3] + px * gtrans[4] + py * gtrans[5];
+      mZFactor = (( 111320 * std::cos( latitude * M_PI / 180. ) ) ) * QGis::fromUnitToUnitFactor( QGis::Meters, QGis::Feet );
+    }
+    else
+    {
+      QgsDebugMsg( "Warning: Failed to automatically compute zFactor, defaulting to 1" );
+      mZFactor = 1;
+    }
+  }
 
   if ( ySize < 3 ) //we require at least three rows (should be true for most datasets)
   {
