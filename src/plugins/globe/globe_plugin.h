@@ -26,6 +26,7 @@
 
 #include "qgsglobeinterface.h"
 #include "qgsglobeplugindialog.h"
+#include "qgsrectangle.h"
 
 class QAction;
 class QDateTime;
@@ -117,8 +118,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
 
   public slots:
     void run();
-    void refreshLayerExtent();
-    void refreshQGISMapLayer( const QgsRectangle& rect, const QString& authid );
+    void updateLayers();
     void showSettings();
 
   private:
@@ -168,10 +168,10 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     void reset();
     void projectRead();
     void applySettings();
-    void updateLayers();
-    void layerChanged( QgsMapLayer* mapLayer );
+    void layerChanged( QgsMapLayer* mapLayer = 0 );
     void updateAnnotationItem( QgsAnnotationItem* item );
     void removeAnnotationItem( QObject* item );
+    void refreshQGISMapLayer( QgsRectangle rect = QgsRectangle() );
 
   signals:
     //! emits current mouse position
