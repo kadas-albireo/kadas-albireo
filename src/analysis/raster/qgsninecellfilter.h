@@ -46,6 +46,7 @@ class ANALYSIS_EXPORT QgsNineCellFilter
     void setCellSizeY( double size ) { mCellSizeY = size; }
 
     double zFactor() const { return mZFactor; }
+    /** Set to -1 to automatically compute */
     void setZFactor( double factor ) { mZFactor = factor; }
 
     double inputNodataValue() const { return mInputNodataValue; }
