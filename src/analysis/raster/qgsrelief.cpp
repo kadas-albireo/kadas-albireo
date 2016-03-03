@@ -41,7 +41,7 @@ QgsRelief::QgsRelief( const QString& inputFile, const QString& outputFile, const
     , mCellSizeY( 0.0 )
     , mInputNodataValue( -1 )
     , mOutputNodataValue( -1 )
-    , mZFactor( 1.0 )
+    , mZFactor( -1.0 )
 {
   mSlopeFilter = new QgsSlopeFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs );
   mAspectFilter = new QgsAspectFilter( inputFile, outputFile, outputFormat, filterRegion, filterRegionCrs );
