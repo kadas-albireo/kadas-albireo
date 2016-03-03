@@ -169,6 +169,7 @@ void QgsMeasureToolV2::activate()
   connect( mMeasureWidget, SIGNAL( closeRequested() ), this, SLOT( close() ) );
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
   setCursor( Qt::ArrowCursor );
+  mDrawTool->getRubberBand()->setVisible( true );
   QgsMapTool::activate();
 }
 
@@ -177,6 +178,7 @@ void QgsMeasureToolV2::deactivate()
   delete mMeasureWidget;
   mMeasureWidget = 0;
   mDrawTool->reset();
+  mDrawTool->getRubberBand()->setVisible( false );
   QgsMapTool::deactivate();
 }
 
