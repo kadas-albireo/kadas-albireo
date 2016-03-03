@@ -135,6 +135,7 @@ SET(QGIS_APP_SRCS
   qgstipgui.cpp
   qgstipfactory.cpp
   qgsvectorlayerproperties.cpp
+  qgsredlininglayerproperties.cpp
   qgsvisibilitypresets.cpp
   qgshandlebadlayers.cpp
   qgsmaptooladdcircularstring.cpp
@@ -306,6 +307,7 @@ SET (QGIS_APP_MOC_HDRS
   qgstipfactory.h
   qgsundowidget.h
   qgsvectorlayerproperties.h
+  qgsredlininglayerproperties.h
   qgsvisibilitypresets.h
   qgshandlebadlayers.h
 

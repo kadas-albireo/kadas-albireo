@@ -882,6 +882,7 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
 
   osgEarth::RenderSymbol* renderSymbol = style.getOrCreateSymbol<osgEarth::RenderSymbol>();
   renderSymbol->lighting() = layerConfig->lightingEnabled;
+  renderSymbol->backfaceCulling() = false;
   style.addSymbol( renderSymbol );
 
   osgEarth::Drivers::FeatureGeomModelOptions geomOpt;
@@ -919,7 +920,7 @@ void GlobePlugin::updateLayers()
     Q_FOREACH ( QgsMapLayer* mapLayer, mQGisIface->mapCanvas()->layers() )
     {
       QgsGlobeVectorLayerConfig* layerConfig = 0;
-      if ( mapLayer->type() == QgsMapLayer::VectorLayer )
+      if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
       {
         layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
       }
@@ -927,11 +928,11 @@ void GlobePlugin::updateLayers()
       if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
       {
         osgEarth::ModelLayer* modelLayer = mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() );
-        // Only add if not already added - changes are handled by layerChanged
-        if ( !modelLayer )
+        if ( modelLayer )
         {
-          addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
+          mMapNode->getMap()->removeModelLayer( modelLayer );
         }
+        addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
       }
       else
       {
@@ -983,24 +984,27 @@ void GlobePlugin::updateLayers()
 
 void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
 {
-  QgsGlobeVectorLayerConfig* layerConfig = 0;
-  if ( mapLayer->type() == QgsMapLayer::VectorLayer )
+  if ( mMapNode )
   {
-    layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
-  }
-
-  if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
-  {
-    osgEarth::ModelLayer* modelLayer = mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() );
-    if ( modelLayer )
+    QgsGlobeVectorLayerConfig* layerConfig = 0;
+    if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
     {
-      mMapNode->getMap()->removeModelLayer( modelLayer );
+      layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
     }
-    addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
-  }
-  else
-  {
-    refreshQGISMapLayer( mapLayer->extent(), mapLayer->crs().authid() );
+
+    if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
+    {
+      osgEarth::ModelLayer* modelLayer = mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() );
+      if ( modelLayer )
+      {
+        mMapNode->getMap()->removeModelLayer( modelLayer );
+      }
+      addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
+    }
+    else
+    {
+      refreshQGISMapLayer( mapLayer->extent(), mapLayer->crs().authid() );
+    }
   }
 }
 

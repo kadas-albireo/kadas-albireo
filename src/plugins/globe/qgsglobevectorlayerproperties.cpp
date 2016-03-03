@@ -182,7 +182,7 @@ QListWidgetItem* QgsGlobeLayerPropertiesFactory::createVectorLayerPropertiesItem
 
 void QgsGlobeLayerPropertiesFactory::readGlobeVectorLayerConfig( QgsMapLayer* mapLayer, const QDomElement& elem )
 {
-  if ( mapLayer->type() == QgsMapLayer::VectorLayer )
+  if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
   {
     QgsVectorLayer* vLayer = static_cast<QgsVectorLayer*>( mapLayer );
     QgsGlobeVectorLayerConfig* config = QgsGlobeVectorLayerConfig::getConfig( vLayer );
@@ -223,7 +223,7 @@ void QgsGlobeLayerPropertiesFactory::readGlobeVectorLayerConfig( QgsMapLayer* ma
 
 void QgsGlobeLayerPropertiesFactory::writeGlobeVectorLayerConfig( QgsMapLayer* mapLayer, QDomElement& elem, QDomDocument& doc )
 {
-  if ( mapLayer->type() == QgsMapLayer::VectorLayer )
+  if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
   {
     QgsVectorLayer* vLayer = static_cast<QgsVectorLayer*>( mapLayer );
     QgsGlobeVectorLayerConfig* config = QgsGlobeVectorLayerConfig::getConfig( vLayer );
