@@ -816,24 +816,35 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   featureOpt.setLayer( vLayer );
   osgEarth::Style style;
 
-  Q_FOREACH ( QgsSymbolV2* sym, vLayer->rendererV2()->symbols() )
+  if ( !vLayer->rendererV2()->symbols().isEmpty() )
   {
-    if ( sym->type() == QgsSymbolV2::Line )
+    Q_FOREACH ( QgsSymbolV2* sym, vLayer->rendererV2()->symbols() )
     {
-
-      osgEarth::LineSymbol* ls = style.getOrCreateSymbol<osgEarth::LineSymbol>();
-      QColor color = sym->color();
-      ls->stroke()->color() = osg::Vec4f( color.redF(), color.greenF(), color.blueF(), color.alphaF() );
-      ls->stroke()->width() = 1.0f;
+      if ( sym->type() == QgsSymbolV2::Line )
+      {
+        osgEarth::LineSymbol* ls = style.getOrCreateSymbol<osgEarth::LineSymbol>();
+        QColor color = sym->color();
+        ls->stroke()->color() = osg::Vec4f( color.redF(), color.greenF(), color.blueF(), color.alphaF() * ( 255.f - vLayer->layerTransparency() ) / 255.f );
+        ls->stroke()->width() = 1.0f;
+      }
+      else if ( sym->type() == QgsSymbolV2::Fill )
+      {
+        // TODO access border color, etc.
+        osgEarth::PolygonSymbol* poly = style.getOrCreateSymbol<osgEarth::PolygonSymbol>();
+        QColor color = sym->color();
+        poly->fill()->color() = osg::Vec4f( color.redF(), color.greenF(), color.blueF(), color.alphaF() * ( 255.f - vLayer->layerTransparency() ) / 255.f );
+        style.addSymbol( poly );
+      }
     }
-    else if ( sym->type() == QgsSymbolV2::Fill )
-    {
-      // TODO access border color, etc.
-      osgEarth::PolygonSymbol* poly = style.getOrCreateSymbol<osgEarth::PolygonSymbol>();
-      QColor color = sym->color();
-      poly->fill()->color() = osg::Vec4f( color.redF(), color.greenF(), color.blueF(), color.alphaF() );
-      style.addSymbol( poly );
-    }
+  }
+  else
+  {
+    osgEarth::PolygonSymbol* poly = style.getOrCreateSymbol<osgEarth::PolygonSymbol>();
+    poly->fill()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 255.f );
+    style.addSymbol( poly );
+    osgEarth::LineSymbol* ls = style.getOrCreateSymbol<osgEarth::LineSymbol>();
+    ls->stroke()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 255.f );
+    ls->stroke()->width() = 1.0f;
   }
 
   osgEarth::AltitudeSymbol* altitudeSymbol = style.getOrCreateSymbol<osgEarth::AltitudeSymbol>();
