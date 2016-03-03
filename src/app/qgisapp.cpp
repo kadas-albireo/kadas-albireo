@@ -178,6 +178,7 @@
 #include "qgsrasterlayersaveasdialog.h"
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
+#include "qgsredlininglayerproperties.h"
 #include "qgsrectangle.h"
 #include "qgsscalecombobox.h"
 #include "qgsscalevisibilitydialog.h"
@@ -7929,6 +7930,17 @@ void QgisApp::showLayerProperties( QgsMapLayer *ml )
                                  tr( "This layer doesn't have a properties dialog." ),
                                  QgsMessageBar::INFO, messageTimeout() );
     }
+  }
+  else if ( ml->type() == QgsMapLayer::RedliningLayer )
+  {
+    QgsRedliningLayer* rllayer = qobject_cast<QgsRedliningLayer *>( ml );
+    QgsRedliningLayerProperties *rllp = new QgsRedliningLayerProperties( rllayer, this );
+    foreach ( QgsMapLayerPropertiesFactory* factory, mMapLayerPropertiesFactories )
+    {
+      rllp->addPropertiesPageFactory( factory );
+    }
+    rllp->exec();
+    delete rllp; // delete since dialog cannot be reused without updating code
   }
 }
 
