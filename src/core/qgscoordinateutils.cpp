@@ -76,6 +76,9 @@ double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinat
     return 0;
   }
 
+  // Get vertical unit
+  QGis::UnitType vertUnit = strcmp( GDALGetRasterUnitType( band ), "ft" ) == 0 ? QGis::Feet : QGis::Meters;
+
   // Transform geo position to raster CRS
   QgsPoint pRaster = QgsCoordinateTransformCache::instance()->transform( crs.authid(), rasterCrs.authid() )->transform( p );
   QgsDebugMsg( QString( "Transform %1 from %2 to %3 gives %4" ).arg( p.toString() )
@@ -105,7 +108,7 @@ double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinat
                  + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
   if ( rasterCrs.mapUnits() != unit )
   {
-    value *= QGis::fromUnitToUnitFactor( rasterCrs.mapUnits(), unit );
+    value *= QGis::fromUnitToUnitFactor( vertUnit, unit );
   }
   return value;
 }
