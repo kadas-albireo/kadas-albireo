@@ -39,7 +39,7 @@ QgsNineCellFilter::QgsNineCellFilter( const QString& inputFile, const QString& o
     , mCellSizeY( -1.0 )
     , mInputNodataValue( -1.0 )
     , mOutputNodataValue( -1.0 )
-    , mZFactor( 1.0 )
+    , mZFactor( -1 )
 {
 
 }
@@ -49,7 +49,7 @@ QgsNineCellFilter::QgsNineCellFilter()
     , mCellSizeY( -1.0 )
     , mInputNodataValue( -1.0 )
     , mOutputNodataValue( -1.0 )
-    , mZFactor( 1.0 )
+    , mZFactor( -1 )
 {
 }
 

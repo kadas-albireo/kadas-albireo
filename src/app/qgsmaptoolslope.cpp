@@ -63,7 +63,6 @@ void QgsMapToolSlope::drawFinished()
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
 
   QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", rect, rectCrs );
-  slope.setZFactor( 1 );
   QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   slope.processRaster( &p );
