@@ -258,6 +258,7 @@ void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
   }
   else if ( !active && mMapCanvas->mapTool() && mMapCanvas->mapTool()->action() == action )
   {
+    delete tool;
     mMapCanvas->unsetMapTool( mMapCanvas->mapTool() );
   }
 }
@@ -278,7 +279,7 @@ void QgsRedlining::deactivateTool()
         }
       }
     }
-    mRedliningTool->deleteLater();
+    mRedliningTool.data()->deleteLater();
   }
 }
 
