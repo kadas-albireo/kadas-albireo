@@ -17,7 +17,6 @@
 
 #include <osgEarth/Registry>
 #include <osgEarth/ImageUtils>
-#include <unistd.h>
 
 #include "qgscrscache.h"
 #include "qgsglobetilesource.h"
