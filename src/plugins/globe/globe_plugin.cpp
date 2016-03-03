@@ -141,7 +141,7 @@ struct RefreshControlHandler : public NavigationControlHandler
   RefreshControlHandler( GlobePlugin* globe ) : mGlobe( globe ) { }
   virtual void onClick( const osgGA::GUIEventAdapter& /*ea*/, osgGA::GUIActionAdapter& /*aa*/ ) override
   {
-    mGlobe->refreshQGISMapLayer( mGlobe->qgisIface()->mapCanvas()->fullExtent(), mGlobe->qgisIface()->mapCanvas()->mapSettings().destinationCrs().authid() );
+    mGlobe->updateLayers( );
   }
 private:
   GlobePlugin* mGlobe;
@@ -325,12 +325,9 @@ void GlobePlugin::initGui()
   connect( mActionToggleGlobe, SIGNAL( triggered( bool ) ), this, SLOT( setGlobeEnabled( bool ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
-  connect( mLayerPropertiesFactory, SIGNAL( layerSettingsChanged( QgsMapLayer* ) ),
-           this, SLOT( layerChanged( QgsMapLayer* ) ) );
-  connect( this, SIGNAL( xyCoordinates( const QgsPoint & ) ),
-           mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( const QgsPoint & ) ) );
-  connect( mQGisIface->mainWindow(), SIGNAL( projectRead() ),
-           this, SLOT( projectRead() ) );
+  connect( mLayerPropertiesFactory, SIGNAL( layerSettingsChanged( QgsMapLayer* ) ), this, SLOT( layerChanged( QgsMapLayer* ) ) );
+  connect( this, SIGNAL( xyCoordinates( const QgsPoint & ) ), mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( const QgsPoint & ) ) );
+  connect( mQGisIface->mainWindow(), SIGNAL( projectRead() ), this, SLOT( projectRead() ) );
 }
 
 void GlobePlugin::run()
@@ -339,10 +336,11 @@ void GlobePlugin::run()
   {
     QSettings settings;
 
-    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
+//    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
 
     mOsgViewer = new osgViewer::Viewer();
     mOsgViewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
+    mOsgViewer->setRunFrameScheme( osgViewer::Viewer::ON_DEMAND );
     // Set camera manipulator with default home position
     osgEarth::Util::EarthManipulator* manip = new osgEarth::Util::EarthManipulator();
     mOsgViewer->setCameraManipulator( manip );
@@ -393,22 +391,20 @@ void GlobePlugin::run()
       mRootNode = new osg::Group();
       mRootNode->addChild( mMapNode );
 
-#ifdef INCREMENTAL_UPDATE_TEST
       osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
-#endif
 
       // Add draped layer
       osgEarth::TileSourceOptions opts;
-#ifdef INCREMENTAL_UPDATE_TEST
+//#ifdef INCREMENTAL_UPDATE_TEST
       opts.L2CacheSize() = 0;
-#endif
+//#endif
       mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
       osgEarth::ImageLayerOptions options( "QGIS" );
-#ifdef INCREMENTAL_UPDATE_TEST
+//#ifdef INCREMENTAL_UPDATE_TEST
       options.driver()->L2CacheSize() = 0;
       options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
-#endif
+//#endif
       mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
       map->addImageLayer( mQgisMapLayer );
 
@@ -786,32 +782,22 @@ void GlobePlugin::setupProxy()
   settings.endGroup();
 }
 
-void GlobePlugin::refreshLayerExtent()
-{
-  QgsMapLayer* layer = qobject_cast<QgsMapLayer*>( QObject::sender() );
-  refreshQGISMapLayer( layer->extent(), layer->crs().authid() );
-}
-
-void GlobePlugin::refreshQGISMapLayer( const QgsRectangle &rect, const QString &authid )
+void GlobePlugin::refreshQGISMapLayer( QgsRectangle rect )
 {
   if ( mTileSource )
   {
-    QgsRectangle extent = QgsCoordinateTransformCache::instance()->transform( authid, GEO_EPSG_CRS_AUTHID )->transform( rect );
-    mTileSource->refresh( extent );
-#ifdef INCREMENTAL_UPDATE_TEST
-    osgEarth::GeoExtent geoExtent( osgEarth::SpatialReference::get( "wgs84" ), extent.xMinimum(), extent.yMinimum(), extent.xMaximum(), extent.yMaximum() );
-    mMapNode->getTerrainEngine()->invalidateRegion( geoExtent );
-#else
-    mMapNode->getMap()->removeImageLayer( mQgisMapLayer );
-    mMapNode->getMap()->addImageLayer( mQgisMapLayer );
-#endif
+    if ( rect.isEmpty() )
+    {
+      const QString& canvasCrs = mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid();
+      rect = QgsCoordinateTransformCache::instance()->transform( canvasCrs, GEO_EPSG_CRS_AUTHID )->transform( mQGisIface->mapCanvas()->fullExtent() );
+    }
+    mTileSource->refresh( rect );
+    mOsgViewer->requestRedraw();
   }
 }
 
 void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConfig* layerConfig )
 {
-  disconnect( vLayer, SIGNAL( repaintRequested() ), this, SLOT( refreshVectorLayerExtent() ) );
-
   QgsGlobeFeatureOptions  featureOpt;
   featureOpt.setLayer( vLayer );
   osgEarth::Style style;
@@ -926,10 +912,28 @@ void GlobePlugin::updateLayers()
 {
   if ( mOsgViewer )
   {
+    // Disconnect any previous repaintRequested signals
+    foreach ( const QString& layerId, mTileSource->layerSet() )
+    {
+      QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+      if ( mapLayer )
+        disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+    }
+    osgEarth::ModelLayerVector modelLayers;
+    mMapNode->getMap()->getModelLayers( modelLayers );
+    foreach ( const osg::ref_ptr<osgEarth::ModelLayer>& modelLayer, modelLayers )
+    {
+      QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( QString::fromStdString( modelLayer->getName() ) );
+      if ( mapLayer )
+        disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+    }
+
     QStringList drapedLayers;
 
     Q_FOREACH ( QgsMapLayer* mapLayer, mQGisIface->mapCanvas()->layers() )
     {
+      connect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+
       QgsGlobeVectorLayerConfig* layerConfig = 0;
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
       {
@@ -938,63 +942,25 @@ void GlobePlugin::updateLayers()
 
       if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
       {
-        osgEarth::ModelLayer* modelLayer = mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() );
-        if ( modelLayer )
-        {
-          mMapNode->getMap()->removeModelLayer( modelLayer );
-        }
+        mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
         addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
       }
       else
       {
-        connect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( refreshLayerExtent() ) );
         drapedLayers.append( mapLayer->id() );
       }
     }
-    // Determine area to repaint: from behind to front, layers must match.
-    // As soon as they don't, their extent must be updated.
-    // Note: layer lists must be reversed since first item is top item in original order
-    QStringList prevLayers = mTileSource->layerSet();
-    for ( int k = 0, n = prevLayers.size(); k < n / 2; ++k ) prevLayers.swap( k, n - 1 - k );
-    QStringList newLayers = drapedLayers;
-    for ( int k = 0, n = newLayers.size(); k < n / 2; ++k ) newLayers.swap( k, n - 1 - k );
-    int i = 0;
-    for ( ; i < prevLayers.size() && i < newLayers.size() && prevLayers[i] == newLayers[i]; ++i );
-    QgsRectangle updateExtent;
-    for ( int j = i; j < prevLayers.size(); ++j )
-    {
-      QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( prevLayers[j] );
-      QgsRectangle layerExtent = QgsCoordinateTransformCache::instance()->transform( layer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( layer->extent() );
-      if ( updateExtent.isEmpty() )
-      {
-        updateExtent = layerExtent;
-      }
-      else
-      {
-        updateExtent.combineExtentWith( &layerExtent );
-      }
-    }
-    for ( int j = i; j < newLayers.size(); ++j )
-    {
-      QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( newLayers[j] );
-      QgsRectangle layerExtent = QgsCoordinateTransformCache::instance()->transform( layer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( layer->extent() );
-      if ( updateExtent.isEmpty() )
-      {
-        updateExtent = layerExtent;
-      }
-      else
-      {
-        updateExtent.combineExtentWith( &layerExtent );
-      }
-    }
-
     mTileSource->setLayerSet( drapedLayers );
-    refreshQGISMapLayer( updateExtent, GEO_EPSG_CRS_AUTHID );
+    refreshQGISMapLayer();
   }
 }
 
 void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
 {
+  if ( !mapLayer )
+  {
+    mapLayer = qobject_cast<QgsMapLayer*>( QObject::sender() );
+  }
   if ( mMapNode )
   {
     QgsGlobeVectorLayerConfig* layerConfig = 0;
@@ -1005,16 +971,22 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
 
     if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
     {
-      osgEarth::ModelLayer* modelLayer = mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() );
-      if ( modelLayer )
+      // If was previously a draped layer, refresh the draped layer
+      if ( mTileSource->layerSet().contains( mapLayer->id() ) )
       {
-        mMapNode->getMap()->removeModelLayer( modelLayer );
+        QStringList layerSet = mTileSource->layerSet();
+        layerSet.removeAll( mapLayer->id() );
+        mTileSource->setLayerSet( layerSet );
+        refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() ) );
       }
+      mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
       addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
     }
     else
     {
-      refreshQGISMapLayer( mapLayer->extent(), mapLayer->crs().authid() );
+      // Remove any model layer of that layer, in case one existed
+      mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
+      refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() ) );
     }
   }
 }

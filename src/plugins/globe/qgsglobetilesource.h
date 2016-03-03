@@ -19,21 +19,24 @@
 #define QGSGLOBETILESOURCE_H
 
 #include <osgEarth/TileSource>
+#include <osg/ImageStream>
 #include <QStringList>
 #include "qgsrectangle.h"
 
 class QgsCoordinateTransform;
 class QgsMapCanvas;
 class QgsMapRenderer;
+class QgsMapSettings;
 class QgsGlobeTileSource;
+class QgsMapRendererParallelJob;
 
 class QgsGlobeTileImage : public osg::Image
 {
   public:
     QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
     ~QgsGlobeTileImage();
-
     bool requiresUpdateCall() const;
+
     void update( osg::NodeVisitor * );
 
   private:
@@ -42,6 +45,9 @@ class QgsGlobeTileImage : public osg::Image
     mutable osgEarth::TimeStamp mLastUpdateTime;
     int mTileSize;
     unsigned char* mTileData;
+    QgsMapRendererParallelJob* mRenderer;
+
+    QgsMapSettings createSettings( int dpi ) const;
 };
 
 
@@ -60,7 +66,7 @@ class QgsGlobeTileSource : public osgEarth::TileSource
     bool isDynamic() const { return true; }
     osgEarth::TimeStamp getLastModifiedTime() const { return mLastModifiedTime; }
 
-    void refresh( const QgsRectangle &extent );
+    void refresh( const QgsRectangle &updateExtent );
     void setLayerSet( const QStringList& layerSet );
     const QStringList &layerSet() const;
 

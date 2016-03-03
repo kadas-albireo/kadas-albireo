@@ -24,70 +24,21 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaprenderercustompainterjob.h"
+#include "qgsmaprendererparalleljob.h"
+
 
 QgsGlobeTileImage::QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize )
     : osg::Image()
     , mTileSource( tileSource )
     , mTileExtent( tileExtent )
     , mTileSize( tileSize )
-    , mTileData( 0 )
+    , mRenderer( 0 )
 {
-  update( 0 );
-}
-
-QgsGlobeTileImage::~QgsGlobeTileImage()
-{
-  delete[] mTileData;
-}
-
-bool QgsGlobeTileImage::requiresUpdateCall() const
-{
-  /*if(mLastUpdateTime < mTileSource->getLastModifiedTime()) {
-    if(mTileExtent.intersects(mTileSource->mLastUpdateExtent)) {
-      return true;
-    } else {
-      mLastUpdateTime = mTileSource->getLastModifiedTime();
-      return false;
-    }
-  }*/
-  return false;
-}
-
-void QgsGlobeTileImage::update( osg::NodeVisitor * )
-{
-  if ( !mTileSource->mViewExtent.intersects( mTileExtent ) )
-  {
-    // Aka osg::ImageUtils::createEmptyImage
-    allocateImage( 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE );
-    setInternalTextureFormat( GL_RGBA8 );
-    unsigned char *d = data( 0, 0 );
-    std::memset( d, 0, 4 );
-    return;
-  }
-  QgsDebugMsg( QString( "Updating earth tile image: %1" ).arg( mTileExtent.toString( 5 ) ) );
-
-  QgsMapSettings settings;
-  settings.setBackgroundColor( QColor( 0, 0, 0, 0 ) );
-  settings.setDestinationCrs( QgsCRSCache::instance()->crsByAuthId( GEO_EPSG_CRS_AUTHID ) );
-  settings.setCrsTransformEnabled( true );
-  settings.setExtent( mTileExtent );
-  settings.setLayers( mTileSource->layerSet() );
-  settings.setFlag( QgsMapSettings::DrawEditingInfo, false );
-  settings.setFlag( QgsMapSettings::DrawLabeling, false );
-  settings.setFlag( QgsMapSettings::DrawSelection, false );
-  settings.setMapUnits( QGis::Degrees );
-  settings.setOutputSize( QSize( mTileSize, mTileSize ) );
-  settings.setOutputImageFormat( QImage::Format_ARGB32_Premultiplied );
-
-  if ( !mTileData )
-  {
-    mTileData = new unsigned char[mTileSize * mTileSize * 4];
-  }
+  mTileData = new unsigned char[mTileSize * mTileSize * 4];
   std::memset( mTileData, 0, mTileSize * mTileSize * 4 );
   QImage qImage( mTileData, mTileSize, mTileSize, QImage::Format_ARGB32_Premultiplied );
   QPainter painter( &qImage );
-  settings.setOutputDpi( qImage.logicalDpiX() );
-  QgsMapRendererCustomPainterJob job( settings, &painter );
+  QgsMapRendererCustomPainterJob job( createSettings( qImage.logicalDpiX() ), &painter );
   job.renderSynchronously();
 
   setImage( mTileSize, mTileSize, 1, 4, // width, height, depth, internal_format
@@ -97,6 +48,77 @@ void QgsGlobeTileImage::update( osg::NodeVisitor * )
   mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
 }
 
+QgsGlobeTileImage::~QgsGlobeTileImage()
+{
+  delete[] mTileData;
+  delete mRenderer;
+}
+
+bool QgsGlobeTileImage::requiresUpdateCall() const
+{
+  if ( mLastUpdateTime < mTileSource->mLastModifiedTime )
+  {
+    if ( mTileExtent.intersects( mTileSource->mLastUpdateExtent ) )
+    {
+      return true;
+    }
+    mLastUpdateTime = mTileSource->mLastModifiedTime;
+  }
+  return false;
+}
+
+QgsMapSettings QgsGlobeTileImage::createSettings( int dpi ) const
+{
+  QgsMapSettings settings;
+  settings.setBackgroundColor( QColor( Qt::transparent ) );
+  settings.setDestinationCrs( QgsCRSCache::instance()->crsByAuthId( GEO_EPSG_CRS_AUTHID ) );
+  settings.setCrsTransformEnabled( true );
+  settings.setExtent( mTileExtent );
+  settings.setLayers( mTileSource->mLayerSet );
+  settings.setFlag( QgsMapSettings::DrawEditingInfo, false );
+  settings.setFlag( QgsMapSettings::DrawLabeling, false );
+  settings.setFlag( QgsMapSettings::DrawSelection, false );
+  settings.setMapUnits( QGis::Degrees );
+  settings.setOutputSize( QSize( mTileSize, mTileSize ) );
+  settings.setOutputImageFormat( QImage::Format_ARGB32_Premultiplied );
+  settings.setOutputDpi( dpi );
+  return settings;
+}
+
+void QgsGlobeTileImage::update( osg::NodeVisitor * )
+{
+  if ( mLastUpdateTime == mTileSource->mLastModifiedTime )
+  {
+    return;
+  }
+
+  QgsDebugMsg( QString( "Updating earth tile image: %1" ).arg( mTileExtent.toString( 5 ) ) );
+  if ( !mRenderer )
+  {
+    QImage image;
+    mRenderer = new QgsMapRendererParallelJob( createSettings( image.logicalDpiX() ) );
+    mRenderer->start();
+  }
+  else if ( mRenderer && !mRenderer->isActive() )
+  {
+    // If rendering is complete then update the contents of this image with the new pixels
+    QImage image = mRenderer->renderedImage();
+    if ( !image.isNull() )
+    {
+      std::memcpy( mTileData, image.bits(), mTileSize * mTileSize * 4 );
+      setImage( mTileSize, mTileSize, 1, 4, // width, height, depth, internal_format
+                GL_BGRA, GL_UNSIGNED_BYTE,
+                mTileData, osg::Image::NO_DELETE );
+      flipVertical();
+    }
+    mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
+    delete mRenderer;
+    mRenderer = 0;
+  }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 QgsGlobeTileSource::QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::TileSourceOptions& options )
     : TileSource( options )
@@ -144,11 +166,11 @@ bool QgsGlobeTileSource::hasData( const osgEarth::TileKey& key ) const
   return rect.intersects( mViewExtent );
 }
 
-void QgsGlobeTileSource::refresh( const QgsRectangle& extent )
+void QgsGlobeTileSource::refresh( const QgsRectangle& updateExtent )
 {
   osgEarth::TimeStamp old = mLastModifiedTime;
   mLastModifiedTime = osgEarth::DateTime().asTimeStamp();
-  mLastUpdateExtent = extent;
+  mLastUpdateExtent = updateExtent;
   QgsDebugMsg( QString( "Updated QGIS map layer modified time from %1 to %2" ).arg( old ).arg( mLastModifiedTime ) );
   mViewExtent = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mCanvas->fullExtent() );
 }
