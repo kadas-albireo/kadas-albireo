@@ -98,7 +98,6 @@ void QgsMapToolHillshade::drawFinished()
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
 
   QgsHillshadeFilter hillshade( layer->source(), outputFile, "GTiff", spinHorAngle->value(), spinVerAngle->value(), rect, rectCrs );
-  hillshade.setZFactor( 1 );
   QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   hillshade.processRaster( &p );
