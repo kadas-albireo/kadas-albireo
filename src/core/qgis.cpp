@@ -24,9 +24,9 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
-#include <QTextDocument>
 #include "qgsconfig.h"
 #include "qgslogger.h"
+#include "qgswkbtypes.h"
 
 #include <ogr_api.h>
 
@@ -47,31 +47,31 @@ const int QGis::QGIS_VERSION_INT = VERSION_INT;
 const char* QGis::QGIS_RELEASE_NAME = RELEASE_NAME;
 
 #if GDAL_VERSION_NUM >= 1800
-extern const CORE_EXPORT QString GEOPROJ4 = "+proj=longlat +datum=WGS84 +no_defs";
+const CORE_EXPORT QString GEOPROJ4 = "+proj=longlat +datum=WGS84 +no_defs";
 #else
-extern const CORE_EXPORT QString GEOPROJ4 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+const CORE_EXPORT QString GEOPROJ4 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 #endif
 
-extern const CORE_EXPORT QString GEOWKT =
-    "GEOGCS[\"WGS 84\", "
-    "  DATUM[\"WGS_1984\", "
-    "    SPHEROID[\"WGS 84\",6378137,298.257223563, "
-    "      AUTHORITY[\"EPSG\",7030]], "
-    "    TOWGS84[0,0,0,0,0,0,0], "
-    "    AUTHORITY[\"EPSG\",6326]], "
-    "  PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",8901]], "
-    "  UNIT[\"DMSH\",0.0174532925199433,AUTHORITY[\"EPSG\",9108]], "
-    "  AXIS[\"Lat\",NORTH], "
-    "  AXIS[\"Long\",EAST], "
-    "  AUTHORITY[\"EPSG\",4326]]";
+const CORE_EXPORT QString GEOWKT =
+  "GEOGCS[\"WGS 84\", "
+  "  DATUM[\"WGS_1984\", "
+  "    SPHEROID[\"WGS 84\",6378137,298.257223563, "
+  "      AUTHORITY[\"EPSG\",7030]], "
+  "    TOWGS84[0,0,0,0,0,0,0], "
+  "    AUTHORITY[\"EPSG\",6326]], "
+  "  PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",8901]], "
+  "  UNIT[\"DMSH\",0.0174532925199433,AUTHORITY[\"EPSG\",9108]], "
+  "  AXIS[\"Lat\",NORTH], "
+  "  AXIS[\"Long\",EAST], "
+  "  AUTHORITY[\"EPSG\",4326]]";
 
-extern const CORE_EXPORT QString PROJECT_SCALES =
-    "1:1000000,1:500000,1:250000,1:100000,1:50000,1:25000,"
-    "1:10000,1:5000,1:2500,1:1000,1:500";
+const CORE_EXPORT QString PROJECT_SCALES =
+  "1:1000000,1:500000,1:250000,1:100000,1:50000,1:25000,"
+  "1:10000,1:5000,1:2500,1:1000,1:500";
 
-extern const CORE_EXPORT QString GEO_EPSG_CRS_AUTHID = "EPSG:4326";
+const CORE_EXPORT QString GEO_EPSG_CRS_AUTHID = "EPSG:4326";
 
-extern const CORE_EXPORT QString GEO_NONE = "NONE";
+const CORE_EXPORT QString GEO_NONE = "NONE";
 
 const double QGis::DEFAULT_IDENTIFY_RADIUS = 0.5;
 const double QGis::DEFAULT_SEARCH_RADIUS_MM = 2.;
@@ -252,38 +252,6 @@ bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs )
   return ! qgsVariantLessThan( lhs, rhs );
 }
 
-QString qgsInsertLinkAnchors( const QString& text )
-{
-  QString value = text;
-  // http://alanstorm.com/url_regex_explained
-  static QRegExp urlRegEx( "(\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^!\"#$%&'()*+,\\-./:;<=>?@[\\\\\\]^_`{|}~\\s]|/))))" );
-  static QRegExp protoRegEx( "^(?:f|ht)tps?://" );
-  static QRegExp emailRegEx( "([\\w._%+-]+@[\\w.-]+\\.[A-Za-z]+)" );
-
-  int offset = 0;
-  while ( urlRegEx.indexIn( value, offset ) != -1 )
-  {
-    QString url = urlRegEx.cap( 1 );
-    QString protoUrl = url;
-    if ( protoRegEx.indexIn( protoUrl ) == -1 )
-    {
-      protoUrl.prepend( "http://" );
-    }
-    QString anchor = QString( "<a href=\"%1\">%2</a>" ).arg( Qt::escape( protoUrl ) ).arg( Qt::escape( url ) );
-    value.replace( urlRegEx.pos( 1 ), url.length(), anchor );
-    offset = urlRegEx.pos( 1 ) + anchor.length();
-  }
-  offset = 0;
-  while ( emailRegEx.indexIn( value, offset ) != -1 )
-  {
-    QString email = emailRegEx.cap( 1 );
-    QString anchor = QString( "<a href=\"mailto:%1\">%1</a>" ).arg( Qt::escape( email ) ).arg( Qt::escape( email ) );
-    value.replace( emailRegEx.pos( 1 ), email.length(), anchor );
-    offset = emailRegEx.pos( 1 ) + anchor.length();
-  }
-  return value;
-}
-
 QString qgsVsiPrefix( QString path )
 {
   if ( path.startsWith( "/vsizip/", Qt::CaseInsensitive ) ||
@@ -299,4 +267,34 @@ QString qgsVsiPrefix( QString path )
     return "/vsigzip/";
   else
     return "";
+}
+
+QGis::WkbType QGis::singleType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::singleType(( QgsWKBTypes::Type )type );
+}
+
+QGis::WkbType QGis::multiType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::multiType(( QgsWKBTypes::Type )type );
+}
+
+QGis::WkbType QGis::flatType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::flatType(( QgsWKBTypes::Type )type );
+}
+
+bool QGis::isSingleType( WkbType type )
+{
+  return QgsWKBTypes::isSingleType(( QgsWKBTypes::Type )type );
+}
+
+bool QGis::isMultiType( WkbType type )
+{
+  return QgsWKBTypes::isMultiType(( QgsWKBTypes::Type )type );
+}
+
+int QGis::wkbDimensions( WkbType type )
+{
+  return QgsWKBTypes::wkbDimensions(( QgsWKBTypes::Type )type );
 }

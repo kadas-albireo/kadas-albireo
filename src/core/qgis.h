@@ -24,7 +24,7 @@
 #include <QMetaType>
 #include <QVariant>
 #include <stdlib.h>
-#include <limits>
+#include <cfloat>
 #include <cmath>
 #include <qnumeric.h>
 
@@ -66,7 +66,6 @@ class CORE_EXPORT QGis
       WKBMultiCurve = 11,
       WKBMultiSurface = 12,
       WKBNoGeometry = 100, //attributes only
-      WKBMixedGeometry = 101,
       WKBPointZ = 1001,
       WKBLineStringZ = 1002,
       WKBPolygonZ = 1003,
@@ -111,90 +110,12 @@ class CORE_EXPORT QGis
       WKBMultiPolygon25D
     };
 
-    static WkbType singleType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBMultiPoint:         return WKBPoint;
-        case WKBMultiLineString:    return WKBLineString;
-        case WKBMultiPolygon:       return WKBPolygon;
-        case WKBMultiPoint25D:      return WKBPoint25D;
-        case WKBMultiLineString25D: return WKBLineString25D;
-        case WKBMultiPolygon25D:    return WKBPolygon25D;
-        default:                    return type;
-      }
-    }
-
-    static WkbType multiType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBPoint:         return WKBMultiPoint;
-        case WKBLineString:    return WKBMultiLineString;
-        case WKBPolygon:       return WKBMultiPolygon;
-        case WKBPoint25D:      return WKBMultiPoint25D;
-        case WKBLineString25D: return WKBMultiLineString25D;
-        case WKBPolygon25D:    return WKBMultiPolygon25D;
-        default:               return type;
-      }
-    }
-
-    static WkbType flatType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBPoint25D:           return WKBPoint;
-        case WKBLineString25D:      return WKBLineString;
-        case WKBPolygon25D:         return WKBPolygon;
-        case WKBMultiPoint25D:      return WKBMultiPoint;
-        case WKBMultiLineString25D: return WKBMultiLineString;
-        case WKBMultiPolygon25D:    return WKBMultiPolygon;
-        default:                    return type;
-      }
-    }
-
-    static bool isSingleType( WkbType type )
-    {
-      switch ( flatType( type ) )
-      {
-        case WKBPoint:
-        case WKBLineString:
-        case WKBPolygon:
-          return true;
-        default:
-          return false;
-      }
-    }
-
-    static bool isMultiType( WkbType type )
-    {
-      switch ( flatType( type ) )
-      {
-        case WKBMultiPoint:
-        case WKBMultiLineString:
-        case WKBMultiPolygon:
-          return true;
-        default:
-          return false;
-      }
-    }
-
-    static int wkbDimensions( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBUnknown:            return 0;
-        case WKBNoGeometry:         return 0;
-        case WKBMixedGeometry:      return 0;
-        case WKBPoint25D:           return 3;
-        case WKBLineString25D:      return 3;
-        case WKBPolygon25D:         return 3;
-        case WKBMultiPoint25D:      return 3;
-        case WKBMultiLineString25D: return 3;
-        case WKBMultiPolygon25D:    return 3;
-        default:                    return 2;
-      }
-    }
+    static WkbType singleType( WkbType type );
+    static WkbType multiType( WkbType type );
+    static WkbType flatType( WkbType type );
+    static bool isSingleType( WkbType type );
+    static bool isMultiType( WkbType type );
+    static int wkbDimensions( WkbType type );
 
     enum GeometryType
     {
@@ -202,8 +123,7 @@ class CORE_EXPORT QGis
       Line,
       Polygon,
       UnknownGeometry,
-      NoGeometry,
-      AnyGeometry
+      NoGeometry
     };
 
     //! description strings for geometry types
@@ -372,7 +292,7 @@ inline QString qgsDoubleToString( const double &a, const int &precision = 17 )
 //
 // compare two doubles (but allow some difference)
 //
-inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * std::numeric_limits<double>::epsilon() )
+inline bool qgsDoubleNear( double a, double b, double epsilon = 4 * DBL_EPSILON )
 {
   const double diff = a - b;
   return diff > -epsilon && diff <= epsilon;
@@ -408,9 +328,7 @@ bool qgsVariantLessThan( const QVariant& lhs, const QVariant& rhs );
 
 bool qgsVariantGreaterThan( const QVariant& lhs, const QVariant& rhs );
 
-QString CORE_EXPORT qgsInsertLinkAnchors( const QString& text );
-
-QString CORE_EXPORT qgsVsiPrefix( QString path );
+QString qgsVsiPrefix( QString path );
 
 /** Allocates size bytes and returns a pointer to the allocated  memory.
     Works like C malloc() but prints debug message by QgsLogger if allocation fails.
