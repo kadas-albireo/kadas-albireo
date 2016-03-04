@@ -194,15 +194,25 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
   outStream << "<kml xmlns=\"http://earth.google.com/kml/2.1\">" << "\n";
   outStream << "<Document>" << "\n";
 
-  //Region
-  outStream << "<Region>" << "\n";
-  outStream << "<Lod><minLodPixels>128</minLodPixels><maxLodPixels>-1</maxLodPixels></Lod>" << "\n";
-  writeLatLongBox( outStream, extent );
-  outStream << "</Region>" << "\n";
 
-  //todo: create NetworkLinks for four subtiles if resolution has not yet reached the minimum...
+  //create NetworkLinks for four subtiles if resolution has not yet reached the minimum...
   double resolution = extent.width() / 256.0;
   double minResolution = 0.0001;
+
+  int minLodPixels = ( currentTileNumber == 0 ) ? 0 : 192;
+  int maxLodPixels = ( resolution > minResolution ) ? 384 : -1;
+
+  //Region
+  outStream << "<Region>" << "\n";
+  outStream << "<LatLonAltBox>" << "\n";
+  writeRectangle( outStream, extent );
+  outStream << "</LatLonAltBox>" << "\n";
+  outStream << "<Lod><minLodPixels>" << minLodPixels << "</minLodPixels><maxLodPixels>" << maxLodPixels << "</maxLodPixels></Lod>" << "\n";
+  outStream << "</Region>" << "\n";
+
+  writeGroundOverlay( outStream, fileBaseName + ".png", extent, drawingOrder );
+
+
 
   QgsRectangle upperLeft( extent.xMinimum(), centerPoint.y(), centerPoint.x(), extent.yMaximum() );
   QgsRectangle lowerLeft( extent.xMinimum(), extent.yMinimum(), centerPoint.x(), centerPoint.y() );
@@ -222,8 +232,6 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
     writeNetworkLink( outStream, upperRight,  mapLayer->id() + "_" + QString::number( currentTileNumber + 1 + 2 * tileNumberOffset ) + ".kml" );
     writeNetworkLink( outStream, lowerRight,  mapLayer->id() + "_" + QString::number( currentTileNumber + 1 + 3 * tileNumberOffset ) + ".kml" );
   }
-
-  writeGroundOverlay( outStream, fileBaseName + ".png", extent, drawingOrder );
 
   outStream << "</Document>" << "\n";
   outStream << "</kml>" << "\n";
@@ -537,26 +545,25 @@ QIODevice* QgsKMLExport::openDeviceForNewFile( const QString& fileName, QuaZip* 
   return outputFile;
 }
 
-void QgsKMLExport::writeLatLongBox( QTextStream& outStream, const QgsRectangle& rect )
+void QgsKMLExport::writeRectangle( QTextStream& outStream, const QgsRectangle& rect )
 {
-  outStream << "<LatLonBox>" << "\n";
   outStream << "<north>" << rect.yMaximum() << "</north>" << "\n";
   outStream << "<south>" << rect.yMinimum() << "</south>" << "\n";
   outStream << "<east>" << rect.xMaximum() << "</east>" << "\n";
   outStream << "<west>" << rect.xMinimum() << "</west>" << "\n";
-  outStream << "</LatLonBox>" << "\n";
 }
 
 void QgsKMLExport::writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link )
 {
   outStream << "<NetworkLink>" << "\n";
   outStream << "<Region>" << "\n";
-  writeLatLongBox( outStream, rect );
+  outStream << "<LatLonAltBox>" << "\n";
+  writeRectangle( outStream, rect );
+  outStream << "</LatLonAltBox>" << "\n";
   outStream << "<Lod><minLodPixels>128</minLodPixels><maxLodPixels>-1</maxLodPixels></Lod>" << "\n";
   outStream << "</Region>" << "\n";
   outStream << "<Link>" << "\n";
   outStream << "<href>" << link << "</href>" << "\n";
-  outStream << "<viewRefreshMode>onRegion</viewRefreshMode>" << "\n";
   outStream << "</Link>" << "\n";
   outStream << "</NetworkLink>" << "\n";
 }
@@ -571,13 +578,13 @@ void QgsKMLExport::writeGroundOverlay( QTextStream& outStream, const QString& hr
 {
   outStream << "<GroundOverlay>" << "\n";
   outStream << "<Icon><href>" << href << "</href></Icon>" << "\n";
-  outStream << "<viewRefreshMode>onStop</viewRefreshMode>" << "\n";
-  outStream << "<viewBoundScale>0.75</viewBoundScale>" << "\n";
   if ( drawingOrder >= 0 )
   {
     outStream << "<drawOrder>" << QString::number( drawingOrder ) << "</drawOrder>" << "\n";
   }
-  writeLatLongBox( outStream, latLongBox );
+  outStream << "<LatLonBox>" << "\n";
+  writeRectangle( outStream, latLongBox );
+  outStream << "</LatLonBox>" << "\n";
   outStream << "</GroundOverlay>" << "\n";
 }
 
