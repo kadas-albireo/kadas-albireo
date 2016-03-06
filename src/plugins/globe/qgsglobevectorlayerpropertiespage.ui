@@ -159,6 +159,9 @@
             <property name="toolTip">
              <string>Extrusion height, either a numeric value, or a field expression</string>
             </property>
+            <property name="text">
+             <string>0</string>
+            </property>
            </widget>
           </item>
           <item row="2" column="0">

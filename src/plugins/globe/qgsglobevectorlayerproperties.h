@@ -45,7 +45,7 @@ public:
       , verticalScale( 0.0 )
       , clampingResolution( 0.0 )
       , extrusionEnabled( false )
-      , extrusionHeight( 10 )
+      , extrusionHeight( "10" )
       , extrusionFlatten( false )
       , extrusionWallGradient( 0.5 )
       , labelingEnabled( false )

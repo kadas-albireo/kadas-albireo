@@ -206,7 +206,9 @@ void QgsGlobeLayerPropertiesFactory::readGlobeVectorLayerConfig( QgsMapLayer* ma
 
         QDomElement extrusionElem = modelRenderingElem.firstChildElement( "extrusion" );
         config->extrusionEnabled = extrusionElem.attribute( "enabled" ).toInt() == 1;
-        config->extrusionHeight = extrusionElem.attribute( "height" );
+        config->extrusionHeight = extrusionElem.attribute( "height", QString( "10" ) ).trimmed();
+        if ( config->extrusionHeight.isEmpty() )
+          config->extrusionHeight = "10";
         config->extrusionFlatten = extrusionElem.attribute( "flatten" ).toInt() == 1;
         config->extrusionWallGradient = extrusionElem.attribute( "wall-gradient" ).toDouble();
 
