@@ -393,7 +393,7 @@ void QgsVBSMilixLibraryLoader::run()
             VBSMilixClient::getSymbols( symbolXmls, symbolDescs );
             foreach ( const VBSMilixClient::SymbolDesc& symbolDesc, symbolDescs )
             {
-              addItem( subSectionItem, symbolDesc.name, symbolDesc.icon, true, symbolDesc.symbolId, symbolDesc.militaryName, symbolDesc.minNumPoints );
+              addItem( subSectionItem, symbolDesc.name, symbolDesc.icon, true, symbolDesc.symbolId, symbolDesc.militaryName, symbolDesc.minNumPoints, symbolDesc.hasVariablePoints );
             }
           }
         }
@@ -402,7 +402,7 @@ void QgsVBSMilixLibraryLoader::run()
   }
 }
 
-QStandardItem* QgsVBSMilixLibraryLoader::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount )
+QStandardItem* QgsVBSMilixLibraryLoader::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount, bool hasVariablePoints )
 {
   QStandardItem* item;
   QMetaObject::invokeMethod( mLibrary, "addItem",
@@ -414,6 +414,7 @@ QStandardItem* QgsVBSMilixLibraryLoader::addItem( QStandardItem* parent, const Q
                              Q_ARG( bool, isLeaf ),
                              Q_ARG( QString, symbolXml ),
                              Q_ARG( QString, symbolMilitaryName ),
-                             Q_ARG( int, symbolPointCount ) );
+                             Q_ARG( int, symbolPointCount ),
+                             Q_ARG( bool, hasVariablePoints ) );
   return item;
 }

@@ -82,7 +82,7 @@ class QgsVBSMilixLibraryLoader : public QThread
     QgsVBSMilixLibrary* mLibrary;
 
     void run() override;
-    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0 );
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
 };
 
 #endif // QGSVBSMILIXLIBRARY_H
