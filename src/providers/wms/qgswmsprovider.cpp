@@ -2039,7 +2039,7 @@ QString QgsWmsProvider::metadata()
   return metadata;
 }
 
-QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight, int theDpi )
+QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight )
 {
   QgsDebugMsg( QString( "theFormat = %1" ).arg( theFormat ) );
 
@@ -3043,6 +3043,7 @@ QImage QgsWmsProvider::getLegendGraphic( double scale, bool forceRefresh, const 
   mLegendGraphicFetcher.reset( new QgsWmsLegendDownloadHandler( *QgsNetworkAccessManager::instance(), mSettings, url ) );
   if ( ! mLegendGraphicFetcher ) return QImage();
   connect( mLegendGraphicFetcher.data(), SIGNAL( finish( const QImage& ) ), this, SLOT( getLegendGraphicReplyFinished( const QImage& ) ) );
+  connect( mLegendGraphicFetcher.data(), SIGNAL( error( const QString& ) ), this, SLOT( getLegendGraphicReplyErrored( const QString& ) ) );
   connect( mLegendGraphicFetcher.data(), SIGNAL( progress( qint64, qint64 ) ), this, SLOT( getLegendGraphicReplyProgress( qint64, qint64 ) ) );
   mLegendGraphicFetcher->start( );
 
@@ -3121,14 +3122,27 @@ void QgsWmsProvider::getLegendGraphicReplyFinished( const QImage& img )
   }
 }
 
+void QgsWmsProvider::getLegendGraphicReplyErrored( const QString& message )
+{
+  QgsDebugMsg( QString( "get legend failed: %1" ).arg( message ) );
+
+  QObject* reply = sender();
+
+  if ( reply == mLegendGraphicFetcher.data() )
+  {
+    QEventLoop *loop = qobject_cast< QEventLoop *>( reply->property( "eventLoop" ).value< QObject *>() );
+    if ( loop )
+      QMetaObject::invokeMethod( loop, "quit", Qt::QueuedConnection );
+    mLegendGraphicFetcher.reset();
+  }
+}
+
 void QgsWmsProvider::getLegendGraphicReplyProgress( qint64 bytesReceived, qint64 bytesTotal )
 {
   QString msg = tr( "%1 of %2 bytes of GetLegendGraphic downloaded." ).arg( bytesReceived ).arg( bytesTotal < 0 ? QString( "unknown number of" ) : QString::number( bytesTotal ) );
   QgsDebugMsg( msg );
   emit statusChanged( msg );
 }
-
-
 
 /**
  * Class factory to return a pointer to a newly created
