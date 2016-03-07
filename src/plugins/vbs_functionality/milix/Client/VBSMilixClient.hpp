@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QPoint>
 #include <QPixmap>
+#include <QThread>
 
 class QNetworkSession;
 class QRect;
@@ -13,7 +14,31 @@ class QProcess;
 class QStringList;
 class QTcpSocket;
 
-class VBSMilixClient : public QObject
+
+class VBSMilixClientWorker : public QObject {
+  Q_OBJECT
+public:
+  VBSMilixClientWorker(QObject* parent = 0);
+
+public slots:
+  bool initialize();
+  bool getCurrentLibraryVersionTag(QString& versionTag);
+  bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
+
+private:
+  QProcess* mProcess;
+  QNetworkSession* mNetworkSession;
+  QTcpSocket* mTcpSocket;
+  QString mLastError;
+  QString mLibraryVersionTag;
+
+private slots:
+  void handleSocketError();
+  void cleanup();
+};
+
+
+class VBSMilixClient : public QThread
 {
   Q_OBJECT
 public:
@@ -45,7 +70,7 @@ public:
 
   static const int SymbolSize;
 
-  static bool init() { return instance()->initialize(); }
+  static bool init();
   static bool getSymbol(const QString& symbolId, SymbolDesc& result);
   static bool getSymbols(const QStringList& symbolIds, QList<SymbolDesc>& result);
   static bool appendPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
@@ -59,29 +84,18 @@ public:
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
-  static bool getLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
-  static const QString& lastError() { return instance()->mLastError; }
-  static const QString& libraryVersionTag() {  instance()->initialize(); return instance()->mLibraryVersionTag; }
+  static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
+  static bool getCurrentLibraryVersionTag(QString& versionTag);
 
 private:
-  QProcess* mProcess;
-  QNetworkSession* mNetworkSession;
-  QTcpSocket* mTcpSocket;
-  QString mLastError;
-  QString mLibraryVersionTag;
+  VBSMilixClientWorker mWorker;
 
   VBSMilixClient();
+  ~VBSMilixClient();
   static VBSMilixClient* instance(){ static VBSMilixClient i; return &i; }
-  bool initialize();
-  bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
   static QImage renderSvg(const QByteArray& xml);
 
-private slots:
-  void handleSocketError();
-  void cleanup();
-
-private slots:
-  bool processRequestSlot(const QByteArray& request, QByteArray& response, quint8 expectedReply);
+  bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );
 };
 
 #endif // VBSMILIXCLIENT_HPP

@@ -203,8 +203,9 @@ void QgsVBSMilixLayer::exportToMilxly( QIODevice* dev, const QString& versionTag
   milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
   doc.appendChild( milxDocumentEl );
 
+  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( doc.createTextNode( VBSMilixClient::libraryVersionTag() ) );
+  milxVersionEl.appendChild( doc.createTextNode( verTag ) );
   milxDocumentEl.appendChild( milxVersionEl );
 
   QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
@@ -255,7 +256,9 @@ bool QgsVBSMilixLayer::importMilxly( QIODevice* dev, QString& errorMsg, QStringL
   QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
   QString fileMssVer = milxVersionEl.text();
 
-  if ( fileMssVer > VBSMilixClient::libraryVersionTag() )
+  QString verTag;
+  VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  if ( fileMssVer > verTag )
   {
     errorMsg = tr( "The file was created by a newer MSS library version." );
     return false;

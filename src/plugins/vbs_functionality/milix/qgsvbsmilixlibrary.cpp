@@ -144,7 +144,7 @@ QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
 
   if ( !VBSMilixClient::init() )
   {
-    QMessageBox::critical( this, tr( "MilX initialization failed" ), tr( "Failed to initialize the MilX library: %1" ).arg( VBSMilixClient::lastError() ) );
+    QMessageBox::critical( this, tr( "MilX initialization failed" ), tr( "Failed to initialize the MilX library." ) );
   }
   else
   {

@@ -17,12 +17,12 @@
 
 const int VBSMilixClient::SymbolSize = 48;
 
-VBSMilixClient::VBSMilixClient()
-    : mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
+VBSMilixClientWorker::VBSMilixClientWorker( QObject* parent )
+    : QObject( parent ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
 {
 }
 
-void VBSMilixClient::cleanup()
+void VBSMilixClientWorker::cleanup()
 {
   if ( mProcess )
     mProcess->deleteLater();
@@ -34,7 +34,7 @@ void VBSMilixClient::cleanup()
   mNetworkSession = 0;
 }
 
-bool VBSMilixClient::initialize()
+bool VBSMilixClientWorker::initialize()
 {
   if ( mTcpSocket )
   {
@@ -95,7 +95,7 @@ bool VBSMilixClient::initialize()
     QEventLoop evLoop;
     connect( mNetworkSession, SIGNAL( opened() ), &evLoop, SLOT( quit() ) );
     mNetworkSession->open();
-    evLoop.exec( QEventLoop::ExcludeUserInputEvents );
+    evLoop.exec();
 
     // Save the used configuration
     config = mNetworkSession->configuration();
@@ -123,9 +123,9 @@ bool VBSMilixClient::initialize()
     connect( &timeoutTimer, SIGNAL( timeout() ), &evLoop, SLOT( quit() ) );
     mTcpSocket->connectToHost( addr, port );
     timeoutTimer.start( 1000 );
-    evLoop.exec( QEventLoop::ExcludeUserInputEvents );
+    evLoop.exec();
   }
-
+  QTextStream( stdout ) << mTcpSocket->state() << " : " << mLastError << endl;
   if ( mTcpSocket->state() != QTcpSocket::ConnectedState )
   {
     mTcpSocket->abort();
@@ -137,9 +137,9 @@ bool VBSMilixClient::initialize()
   QDataStream istream( &request, QIODevice::WriteOnly );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   istream << VBS_MILIX_REQUEST_INIT;
-  istream << lang << SymbolSize;
+  istream << lang << VBSMilixClient::SymbolSize;
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )
+  if ( !processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )
   {
     cleanup();
     return false;
@@ -151,21 +151,17 @@ bool VBSMilixClient::initialize()
   return true;
 }
 
-bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& response, VBSMilixServerReply expectedReply )
+bool VBSMilixClientWorker::getCurrentLibraryVersionTag( QString& versionTag )
 {
-  bool result;
-  if ( QThread::currentThread() != thread() )
+  if ( initialize() )
   {
-    QMetaObject::invokeMethod( this, "processRequestSlot", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
+    versionTag = mLibraryVersionTag;
+    return true;
   }
-  else
-  {
-    result = processRequestSlot( request, response, expectedReply );
-  }
-  return result;
+  return false;
 }
 
-bool VBSMilixClient::processRequestSlot( const QByteArray& request, QByteArray& response, quint8 expectedReply )
+bool VBSMilixClientWorker::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply )
 {
   mLastError = QString();
 
@@ -209,13 +205,13 @@ bool VBSMilixClient::processRequestSlot( const QByteArray& request, QByteArray& 
   }
   else if ( replycmd != expectedReply )
   {
-    instance()->mLastError = tr( "Unexpected reply" );
+    mLastError = tr( "Unexpected reply" );
     return false;
   }
   return true;
 }
 
-void VBSMilixClient::handleSocketError()
+void VBSMilixClientWorker::handleSocketError()
 {
   if ( !mTcpSocket )
   {
@@ -237,6 +233,37 @@ void VBSMilixClient::handleSocketError()
     default:
       mLastError = tr( "An error occured: %1" ).arg( mTcpSocket->errorString() );
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+VBSMilixClient::VBSMilixClient()
+{
+  start();
+  QEventLoop loop;
+  connect( this, SIGNAL( started() ), &loop, SLOT( quit() ) );
+  loop.exec( QEventLoop::ExcludeUserInputEvents );
+  mWorker.moveToThread( this );
+}
+
+VBSMilixClient::~VBSMilixClient()
+{
+  quit();
+  wait();
+}
+
+bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& response, VBSMilixServerReply expectedReply )
+{
+  bool result;
+  QMetaObject::invokeMethod( &mWorker, "processRequest", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
+  return result;
+}
+
+bool VBSMilixClient::init()
+{
+  bool result;
+  QMetaObject::invokeMethod( &instance()->mWorker, "initialize", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ) );
+  return result;
 }
 
 bool VBSMilixClient::getSymbol( const QString& symbolId, SymbolDesc &result )
@@ -543,7 +570,7 @@ bool VBSMilixClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos
   return true;
 }
 
-bool VBSMilixClient::getLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
+bool VBSMilixClient::getSupportedLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
@@ -559,6 +586,13 @@ bool VBSMilixClient::getLibraryVersionTags( QStringList& versionTags, QStringLis
   VBSMilixServerReply replycmd = 0; ostream >> replycmd;
   ostream >> versionTags >> versionNames;
   return true;
+}
+
+bool VBSMilixClient::getCurrentLibraryVersionTag( QString& versionTag )
+{
+  bool result;
+  QMetaObject::invokeMethod( &instance()->mWorker, "getCurrentLibraryVersionTag", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( QString&, versionTag ) );
+  return result;
 }
 
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )

@@ -35,7 +35,7 @@
 bool QgsVBSMilixIO::save( QgsMessageBar* messageBar, QgsVBSMilixLayer* layer )
 {
   QStringList versionTags, versionNames;
-  VBSMilixClient::getLibraryVersionTags( versionTags, versionNames );
+  VBSMilixClient::getSupportedLibraryVersionTags( versionTags, versionNames );
   QStringList filters;
   foreach ( const QString& versionName, versionNames )
   {
