@@ -324,6 +324,9 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     //! Generic action finder
     virtual QAction* findAction( const QString& name ) override;
 
+    // Generic object finder
+    virtual QObject* findObject( const QString& name ) override;
+
     //! Project menu actions
     virtual QAction *actionNewProject() override;
     virtual QAction *actionOpenProject() override;
