@@ -33,18 +33,6 @@ QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
   mOffsetFromReferencePoint = QPoint( 0, 0 );
 }
 
-QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source )
-    : QgsAnnotationItem( canvas, source )
-{
-  mSymbolXml = source->mSymbolXml;
-  mGraphic = source->mGraphic;
-  mAdditionalPoints = source->mAdditionalPoints;
-  mRenderOffset = source->mRenderOffset;
-  mControlPoints = source->mControlPoints;
-  mIsMultiPoint = source->mIsMultiPoint;
-  mFinalized = source->mFinalized;
-}
-
 QgsVBSMilixItem* QgsVBSMilixAnnotationItem::createMilixItem() const
 {
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );

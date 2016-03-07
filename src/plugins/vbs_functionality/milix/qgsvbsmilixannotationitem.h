@@ -31,7 +31,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 
   public:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
+    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas */*canvas*/ ) override { return 0; /* Unsupported */ }
     QgsVBSMilixItem* createMilixItem() const;
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
@@ -52,9 +52,6 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
-
-  protected:
-    QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
 
   private:
     QString mSymbolXml;
