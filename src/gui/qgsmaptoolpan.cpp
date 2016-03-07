@@ -196,10 +196,10 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
         else
         {
 
-          QPair<QgsFeature, QgsVectorLayer*> result = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::AnyGeometry );
-          if ( result.first.isValid() && result.second )
+          QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+          if ( result.layer )
           {
-            emit featurePicked( result.first, result.second );
+            emit featurePicked( result.layer, result.feature, result.otherResult );
           }
         }
       }

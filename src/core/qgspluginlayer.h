@@ -55,6 +55,11 @@ class CORE_EXPORT QgsPluginLayer : public QgsMapLayer
      */
     virtual QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;
 
+    /** Test for mouse pick. */
+    virtual bool testPick( const QgsPoint& /*mapPos*/, const QgsMapSettings& /*mapSettings*/, QVariant& /*pickResult*/ ) { return false; }
+    /** Handle a pick result. */
+    virtual void handlePick( const QVariant& /*pick*/ ) {}
+
   protected:
     QString mPluginLayerType;
 };

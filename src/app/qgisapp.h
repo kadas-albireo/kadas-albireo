@@ -1068,7 +1068,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void dizzy();
 
     void showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos );
-    void handleFeaturePicked( const QgsFeature& feature, QgsVectorLayer* layer );
+    void handleFeaturePicked( QgsMapLayer *layer , const QgsFeature& feature, const QVariant &otherResult );
     void handleLabelPicked( const QgsLabelPosition& labelPos );
 
   signals:

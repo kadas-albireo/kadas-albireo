@@ -1159,8 +1159,8 @@ void QgisApp::createCanvasTools()
   mMapTools.mPan = new QgsMapToolPan( mapCanvas() );
   connect( mMapTools.mPan, SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ),
            this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
-  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsFeature, QgsVectorLayer* ) ),
-           this, SLOT( handleFeaturePicked( QgsFeature, QgsVectorLayer* ) ) );
+  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ),
+           this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
   connect( mMapTools.mPan, SIGNAL( labelPicked( QgsLabelPosition ) ),
            this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mapCanvas() );
@@ -5888,7 +5888,7 @@ void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
   QgsMapCanvasContextMenu( mapPos ).exec( screenPos );
 }
 
-void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *layer )
+void QgisApp::handleFeaturePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult )
 {
   if ( mRedlining && mRedlining->getLayer() && layer == mRedlining->getLayer() )
   {
@@ -5897,6 +5897,10 @@ void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *la
   else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && layer == mGpsRouteEditor->getLayer() )
   {
     mGpsRouteEditor->editFeature( feature );
+  }
+  else if ( layer->type() == QgsMapLayer::PluginLayer )
+  {
+    static_cast<QgsPluginLayer*>( layer )->handlePick( otherResult );
   }
 }
 
