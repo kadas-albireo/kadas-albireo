@@ -457,6 +457,12 @@ void QgsPluginRegistry::restoreSessionPlugins( QString thePluginDirString )
   QString pluginExt = "*.so*";
 #endif
 
+  //enable vector_analysis plugin by default
+  if ( !mySettings.contains( "/Plugins/libvectoranalysisplugin" ) )
+  {
+    mySettings.setValue( "/Plugins/libvectoranalysisplugin", true );
+  }
+
   // check all libs in the current plugin directory and get name and descriptions
   QDir myPluginDir( thePluginDirString, pluginExt, QDir::Name | QDir::IgnoreCase, QDir::Files | QDir::NoSymLinks );
 
@@ -482,7 +488,6 @@ void QgsPluginRegistry::restoreSessionPlugins( QString thePluginDirString )
     QgsDebugMsg( "Loading python plugins" );
 
     QStringList corePlugins = QStringList();
-    corePlugins << "fTools";
     corePlugins << "GdalTools";
     corePlugins << "db_manager";
     corePlugins << "processing";
