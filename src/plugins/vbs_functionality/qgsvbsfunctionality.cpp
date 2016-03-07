@@ -29,6 +29,7 @@
 #include "milix/qgsvbsmilixlayer.h"
 #include <QAction>
 #include <QMainWindow>
+#include <QSlider>
 #include <QToolBar>
 
 QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
@@ -56,6 +57,15 @@ void QgsVBSFunctionality::initGui()
 
   mActionLoadMilx = mQGisIface->findAction( "mActionLoadMilx" );
   connect( mActionLoadMilx, SIGNAL( triggered( ) ), this, SLOT( loadMilx( ) ) );
+
+  mSymbolSizeSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mSymbolSizeSlider" ) );
+  mLineWidthSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mLineWidthSlider" ) );
+  mSymbolSizeSlider->setValue( QSettings().value( "/vbsfunctionality/milix_symbol_size", "60" ).toInt() );
+  mLineWidthSlider->setValue( QSettings().value( "/vbsfunctionality/milix_line_width", "2" ).toInt() );
+  setMilXSymbolSize( mSymbolSizeSlider->value() );
+  setMilXLineWidth( mLineWidthSlider->value() );
+  connect( mSymbolSizeSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXSymbolSize( int ) ) );
+  connect( mLineWidthSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXLineWidth( int ) ) );
 }
 
 void QgsVBSFunctionality::unload()
@@ -92,4 +102,14 @@ void QgsVBSFunctionality::saveMilx()
 void QgsVBSFunctionality::loadMilx()
 {
   QgsVBSMilixIO::load( mQGisIface->messageBar() );
+}
+
+void QgsVBSFunctionality::setMilXSymbolSize( int value )
+{
+  VBSMilixClient::setSymbolSize( value );
+}
+
+void QgsVBSFunctionality::setMilXLineWidth( int value )
+{
+  VBSMilixClient::setLineWidth( value );
 }

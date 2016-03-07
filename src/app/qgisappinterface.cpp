@@ -490,6 +490,9 @@ QToolBar *QgisAppInterface::webToolBar() { return qgisc ? qgisc->webToolBar() : 
 //! Generic action finder
 QAction *QgisAppInterface::findAction( const QString& name ) { return qgis->findAction( name ); }
 
+//! Generic object finder
+QObject* QgisAppInterface::findObject( const QString& name ) { return qgis->findChild<QObject*>( name ); }
+
 //! Project menu actions
 QAction *QgisAppInterface::actionNewProject() { return qgisc ? qgisc->actionNewProject() : 0; }
 QAction *QgisAppInterface::actionOpenProject() { return qgisc ? qgisc->actionOpenProject() : 0; }

@@ -70,6 +70,9 @@ public:
 
   static const int SymbolSize;
 
+  static void setSymbolSize(int value) { instance()->mSymbolSize = value; }
+  static void setLineWidth(int value) { instance()->mLineWidth = value; }
+
   static bool init();
   static bool getSymbol(const QString& symbolId, SymbolDesc& result);
   static bool getSymbols(const QStringList& symbolIds, QList<SymbolDesc>& result);
@@ -89,6 +92,8 @@ public:
 
 private:
   VBSMilixClientWorker mWorker;
+  int mSymbolSize;
+  int mLineWidth;
 
   VBSMilixClient();
   ~VBSMilixClient();

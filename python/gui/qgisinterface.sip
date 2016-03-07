@@ -324,6 +324,9 @@ class QgisInterface : QObject
     // Generic action finder
     virtual QAction* findAction( const QString& name ) = 0;
 
+    // Generic object finder
+    virtual QObject* findObject( const QString& name ) = 0;
+
     // Project menu actions
     virtual QAction *actionNewProject() = 0;
     virtual QAction *actionOpenProject() = 0;

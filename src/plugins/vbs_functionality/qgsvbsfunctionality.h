@@ -19,9 +19,10 @@
 #define QGSVBSFUNCTIONALITY_H
 
 #include "qgisplugin.h"
+#include <QObject>
 
-#include <QPointer>
 class QAction;
+class QSlider;
 
 class QgsMapLayer;
 class QgsMessageBarItem;
@@ -43,12 +44,16 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QAction* mActionSaveMilx;
     QAction* mActionLoadMilx;
     QgsVBSMilixLibrary* mMilXLibrary;
+    QSlider* mSymbolSizeSlider;
+    QSlider* mLineWidthSlider;
 
   private slots:
     void importOVL();
     void toggleMilXLibrary();
     void saveMilx();
     void loadMilx();
+    void setMilXSymbolSize( int value );
+    void setMilXLineWidth( int value );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H
