@@ -23,15 +23,15 @@ SET (vbsfunctionality_SRCS
 
 SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
-  milix/qgsvbsmaptoolmilix.h
   milix/qgsvbsmilixannotationitem.h
   milix/qgsvbsmilixio.h
-  milix/qgsvbsmilixlayer.h
   ovl/qgsvbsovlimporter.h
 )
 
 SET (vbsfunctionality_MOC_HDRS
   qgsvbsfunctionality.h
+  milix/qgsvbsmaptoolmilix.h
+  milix/qgsvbsmilixlayer.h
   milix/qgsvbsmilixlibrary.h
   milix/Client/VBSMilixClient.hpp
 )

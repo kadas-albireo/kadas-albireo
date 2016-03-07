@@ -87,6 +87,7 @@ public:
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
+  static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol);
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
   static bool getCurrentLibraryVersionTag(QString& versionTag);
 

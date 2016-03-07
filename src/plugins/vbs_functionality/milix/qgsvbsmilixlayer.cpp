@@ -18,6 +18,8 @@
 #include "qgscrscache.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgsvbsmilixlayer.h"
+#include "qgslogger.h"
+#include "qgsmapcanvas.h"
 
 void QgsVBSMilixItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool haveEnoughPoints )
 {
@@ -154,7 +156,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
         if ( !items[i]->isMultiPoint() )
         {
           // Draw line from visual reference point to actual refrence point
-          mRendererContext.painter()->drawLine( itemOrigins[i] + result[i].offset, renderPos );
+          mRendererContext.painter()->drawLine( itemOrigins[i], itemOrigins[i] + items[i]->userOffset() );
         }
         mRendererContext.painter()->drawImage( renderPos, result[i].graphic );
       }
@@ -192,6 +194,34 @@ QgsVBSMilixLayer::QgsVBSMilixLayer( const QString &name )
 QgsVBSMilixLayer::~QgsVBSMilixLayer()
 {
   qDeleteAll( mItems );
+}
+
+bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult )
+{
+  QPoint screenPos = mapSettings.mapToPixel().transform( mapPos ).toQPointF().toPoint();
+  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", mapSettings.destinationCrs().authid() );
+  QList<VBSMilixClient::NPointSymbol> symbols;
+  for ( int i = 0, n = mItems.size(); i < n; ++i )
+  {
+    QList<QPoint> points = mItems[i]->screenPoints( mapSettings.mapToPixel(), *crst );
+    for ( int j = 0, m = points.size(); j < m; ++j )
+    {
+      points[j] += mItems[i]->userOffset();
+    }
+    symbols.append( VBSMilixClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), mItems[i]->hasEnoughPoints() ) );
+  }
+  int selectedSymbol = -1;
+  if ( VBSMilixClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
+  {
+    pickResult = QVariant::fromValue( selectedSymbol );
+    return true;
+  }
+  return false;
+}
+
+void QgsVBSMilixLayer::handlePick( const QVariant& pick )
+{
+  emit symbolPicked( pick.toInt() );
 }
 
 void QgsVBSMilixLayer::exportToMilxly( QIODevice* dev, const QString& versionTag, QStringList& exportMessages )

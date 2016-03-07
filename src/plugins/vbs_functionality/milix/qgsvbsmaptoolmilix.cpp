@@ -21,19 +21,19 @@
 #include "qgsmapcanvas.h"
 #include <QMouseEvent>
 
-QgsVBSMapToolMilix::QgsVBSMapToolMilix( QgsMapCanvas* canvas, QgsVBSMilixLayer* layer, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
-    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mPreview( preview ), mItem( 0 ), mLayer( layer )
+QgsVBSMapToolCreateMilixItem::QgsVBSMapToolCreateMilixItem( QgsMapCanvas* canvas, QgsVBSMilixLayer* layer, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
+    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mItem( 0 ), mLayer( layer )
 {
   setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
 }
 
-QgsVBSMapToolMilix::~QgsVBSMapToolMilix()
+QgsVBSMapToolCreateMilixItem::~QgsVBSMapToolCreateMilixItem()
 {
   // If an item is still set, it means that positioning was not finished when the tool is disabled -> delete it
   delete mItem;
 }
 
-void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
+void QgsVBSMapToolCreateMilixItem::canvasPressEvent( QMouseEvent * e )
 {
   if ( e->button() == Qt::LeftButton )
   {
@@ -74,7 +74,7 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
     {
       // Max points reached, stop
       mItem->finalize();
-      mLayer->addItem( mItem->createMilixItem() );
+      mLayer->addItem( mItem->toMilixItem() );
       delete mItem;
       mCanvas->refresh();
       mItem = 0;
@@ -88,7 +88,7 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
     {
       // Done with N point symbol, stop
       mItem->finalize();
-      mLayer->addItem( mItem->createMilixItem() );
+      mLayer->addItem( mItem->toMilixItem() );
       delete mItem;
       mCanvas->refresh();
       mItem = 0;
@@ -104,10 +104,39 @@ void QgsVBSMapToolMilix::canvasPressEvent( QMouseEvent * e )
   }
 }
 
-void QgsVBSMapToolMilix::canvasMoveEvent( QMouseEvent * e )
+void QgsVBSMapToolCreateMilixItem::canvasMoveEvent( QMouseEvent * e )
 {
   if ( mItem != 0 && e->buttons() == Qt::NoButton )
   {
     mItem->movePoint( mItem->absolutePointIdx( mNPressedPoints ), e->pos() );
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QgsVBSMapToolEditMilixItem::QgsVBSMapToolEditMilixItem( QgsMapCanvas* canvas, QgsVBSMilixLayer* layer, QgsVBSMilixItem* item )
+    : QgsMapToolPan( canvas ), mLayer( layer )
+{
+  mItem = new QgsVBSMilixAnnotationItem( canvas );
+  mItem->fromMilixItem( item );
+  mItem->setSelected( true );
+}
+
+QgsVBSMapToolEditMilixItem::~QgsVBSMapToolEditMilixItem()
+{
+  if ( !mItem.isNull() )
+  {
+    mLayer->addItem( mItem->toMilixItem() );
+    mCanvas->refresh();
+  }
+  delete mItem.data();
+}
+
+void QgsVBSMapToolEditMilixItem::canvasReleaseEvent( QMouseEvent * e )
+{
+  QgsMapToolPan::canvasReleaseEvent( e );
+  if ( mCanvas->selectedAnnotationItem() != mItem )
+  {
+    mCanvas->unsetMapTool( this );
   }
 }

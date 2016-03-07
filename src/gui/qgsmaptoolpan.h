@@ -63,7 +63,7 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
   signals:
     void contextMenuRequested( QPoint screenPos, QgsPoint mapPos );
-    void featurePicked( const QgsFeature& feature, QgsVectorLayer* layer );
+    void featurePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult );
     void labelPicked( const QgsLabelPosition& labelPos );
 
   protected:

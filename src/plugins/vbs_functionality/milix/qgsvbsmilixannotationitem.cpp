@@ -33,7 +33,23 @@ QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
   mOffsetFromReferencePoint = QPoint( 0, 0 );
 }
 
-QgsVBSMilixItem* QgsVBSMilixAnnotationItem::createMilixItem() const
+void QgsVBSMilixAnnotationItem::fromMilixItem( QgsVBSMilixItem* item )
+{
+  const QgsCoordinateReferenceSystem& canvasCrs = mMapCanvas->mapSettings().destinationCrs();
+  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", canvasCrs.authid() );
+  setMapPosition( crst->transform( item->points().front() ), canvasCrs );
+  for ( int i = 1, n = item->points().size(); i < n; ++i )
+  {
+    mAdditionalPoints.append( crst->transform( item->points()[i] ) );
+  }
+  mControlPoints = item->controlPoints();
+  setSymbolXml( item->mssString(), item->militaryName(), item->isMultiPoint() );
+  mFinalized = true;
+  mOffsetFromReferencePoint = item->userOffset();
+  updateSymbol( true );
+}
+
+QgsVBSMilixItem* QgsVBSMilixAnnotationItem::toMilixItem()
 {
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
   QList<QgsPoint> points;

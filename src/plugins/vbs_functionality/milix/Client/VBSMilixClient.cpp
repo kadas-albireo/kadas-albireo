@@ -570,6 +570,29 @@ bool VBSMilixClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos
   return true;
 }
 
+bool VBSMilixClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol )
+{
+  int nSymbols = symbols.length();
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_PICK_SYMBOL << clickPos;
+  istream << nSymbols;
+  foreach ( const NPointSymbol& symbol, symbols )
+  {
+    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
+  }
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_PICK_SYMBOL ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> selectedSymbol;
+  return true;
+}
+
 bool VBSMilixClient::getSupportedLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
 {
   QByteArray request;

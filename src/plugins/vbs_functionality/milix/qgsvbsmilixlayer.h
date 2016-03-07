@@ -49,11 +49,13 @@ class QgsVBSMilixItem
 
 class QgsVBSMilixLayer : public QgsPluginLayer
 {
+    Q_OBJECT
   public:
     QgsVBSMilixLayer( const QString& name = QString( "MilX" ) );
     ~QgsVBSMilixLayer();
     void addItem( QgsVBSMilixItem* item ) { mItems.append( item ); }
-    void removeItem( QgsVBSMilixItem* item ) { mItems.removeOne( item ); }
+    void removeItem( int idx ) { mItems.removeAt( idx ); }
+    const QList<QgsVBSMilixItem*>& items() const { return mItems; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
     void exportToMilxly( QIODevice* dev, const QString &versionTag, QStringList& exportMessages );
     bool importMilxly( QIODevice* dev, QString &errorMsg, QStringList& importMessages );
@@ -62,6 +64,11 @@ class QgsVBSMilixLayer : public QgsPluginLayer
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;
     QgsRectangle extent() override;
 
+    bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult ) override;
+    void handlePick( const QVariant& pick ) override;
+
+  signals:
+    void symbolPicked( int symbolIdx );
   private:
     class Renderer;
 

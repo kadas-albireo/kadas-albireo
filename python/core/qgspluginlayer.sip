@@ -28,4 +28,9 @@ class QgsPluginLayer : QgsMapLayer
      * @note added in 2.4
      */
     virtual QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) /Factory/;
+
+    /** Test for mouse pick. */
+    virtual bool testPick(const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult );
+    /** Handle a pick result. */
+    virtual void handlePick(const QVariant& pick);
 };

@@ -240,10 +240,10 @@ void QgsMeasureToolV2::canvasReleaseEvent( QMouseEvent *e )
   }
   else
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAngle ) ? QGis::Line : QGis::Polygon );
-    if ( pickResult.first.isValid() )
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAngle ) ? QGis::Line : QGis::Polygon );
+    if ( pickResult.feature.isValid() )
     {
-      mDrawTool->addGeometry( pickResult.first.geometry()->geometry(), pickResult.second->crs() );
+      mDrawTool->addGeometry( pickResult.feature.geometry()->geometry(), pickResult.layer->crs() );
     }
     mPickFeature = false;
     setCursor( Qt::ArrowCursor );

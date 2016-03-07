@@ -32,7 +32,10 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
   public:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
     QgsVBSMilixAnnotationItem* clone( QgsMapCanvas */*canvas*/ ) override { return 0; /* Unsupported */ }
-    QgsVBSMilixItem* createMilixItem() const;
+
+    void fromMilixItem( QgsVBSMilixItem* item );
+    QgsVBSMilixItem* toMilixItem();
+
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );

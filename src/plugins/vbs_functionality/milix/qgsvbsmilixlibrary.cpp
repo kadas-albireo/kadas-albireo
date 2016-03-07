@@ -181,6 +181,8 @@ void QgsVBSMilixLibrary::updateLayers()
   {
     if ( dynamic_cast<QgsVBSMilixLayer*>( layer ) )
     {
+      QgsVBSMilixLayer* milixLayer = static_cast<QgsVBSMilixLayer*>( layer );
+      connect( milixLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
       mLayersCombo->addItem( layer->name(), layer->id() );
       if ( mIface->mapCanvas()->currentLayer() == layer )
       {
@@ -242,7 +244,7 @@ void QgsVBSMilixLibrary::itemClicked( QModelIndex index )
       }
       else
       {
-        QgsVBSMapToolMilix* tool = new QgsVBSMapToolMilix( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
+        QgsVBSMapToolCreateMilixItem* tool = new QgsVBSMapToolCreateMilixItem( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
         connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
         mIface->mapCanvas()->setMapTool( tool );
       }
@@ -335,6 +337,18 @@ void QgsVBSMilixLibrary::addMilXLayer()
     mLayersCombo->setCurrentIndex( mLayersCombo->count() - 1 );
   }
 }
+
+void QgsVBSMilixLibrary::manageSymbolPick( int symbolIdx )
+{
+  QgsVBSMilixLayer* layer = qobject_cast<QgsVBSMilixLayer*>( QObject::sender() );
+  QgsVBSMapToolEditMilixItem* tool = new QgsVBSMapToolEditMilixItem( mIface->mapCanvas(), layer, layer->items()[symbolIdx] );
+  layer->removeItem( symbolIdx );
+  mIface->mapCanvas()->refresh();
+  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
+  mIface->mapCanvas()->setMapTool( tool );
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void QgsVBSMilixLibraryLoader::run()
 {
