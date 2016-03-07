@@ -102,7 +102,7 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   connect( mMasterCanvas, SIGNAL( mapUnitsChanged() ), this, SLOT( updateMapProjection() ) );
   connect( mMasterCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( updateMapProjection() ) );
   connect( mMasterCanvas, SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
-  connect( mMasterCanvas, SIGNAL(mapCanvasRefreshed()), mMapCanvas, SLOT(refresh()));
+  connect( mMasterCanvas, SIGNAL( mapCanvasRefreshed() ), mMapCanvas, SLOT( refresh() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), mMasterCanvas, SIGNAL( xyCoordinates( QgsPoint ) ) );
@@ -264,7 +264,10 @@ bool QgsMapWidget::eventFilter( QObject *obj, QEvent *ev )
 void QgsMapWidget::addAnnotationItem( QgsAnnotationItem *item )
 {
   QgsAnnotationItem* clonedItem = item->clone( mMapCanvas );
-  clonedItem->updatePosition();
-  connect( item, SIGNAL( destroyed( QObject* ) ), clonedItem, SLOT( deleteLater() ) );
-  connect( item, SIGNAL( itemUpdated( QgsAnnotationItem* ) ), clonedItem, SLOT( deleteLater() ) );
+  if ( clonedItem )
+  {
+    clonedItem->updatePosition();
+    connect( item, SIGNAL( destroyed( QObject* ) ), clonedItem, SLOT( deleteLater() ) );
+    connect( item, SIGNAL( itemUpdated( QgsAnnotationItem* ) ), clonedItem, SLOT( deleteLater() ) );
+  }
 }
