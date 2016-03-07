@@ -359,7 +359,7 @@ bool QgsKMLExport::writeAnnotationItem( QgsAnnotationItem* item, QTextStream& ou
 
   //position in WGS84
   QgsPoint pos = item->mapPosition();
-  QgsCoordinateReferenceSystem itemCrs = item->crs();
+  QgsCoordinateReferenceSystem itemCrs = item->mapGeoPosCrs();
   QgsCoordinateReferenceSystem wgs84;
   wgs84.createFromId( 4326 );
   QgsCoordinateTransform coordTransform( itemCrs, wgs84 );

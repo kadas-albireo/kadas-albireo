@@ -42,8 +42,6 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
     void paint( QPainter* painter ) override;
     QString asHtml() const;
 
-    QString asHtml() const;
-
   protected:
     QgsTextAnnotationItem( QgsMapCanvas* canvas, QgsTextAnnotationItem* source );
 
