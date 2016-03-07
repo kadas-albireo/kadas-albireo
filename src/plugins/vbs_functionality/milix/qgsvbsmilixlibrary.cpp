@@ -315,7 +315,7 @@ void QgsVBSMilixLibrary::setCurrentLayer( int idx )
 
 void QgsVBSMilixLibrary::setCurrentLayer( QgsMapLayer *layer )
 {
-  int idx = mLayersCombo->findData( layer->id() );
+  int idx = layer ? mLayersCombo->findData( layer->id() ) : -1;
   if ( idx >= 0 )
   {
     mLayersCombo->blockSignals( true );
