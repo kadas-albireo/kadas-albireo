@@ -51,7 +51,11 @@ QgsGlobeTileImage::QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, cons
 QgsGlobeTileImage::~QgsGlobeTileImage()
 {
   delete[] mTileData;
-  delete mRenderer;
+  if ( mRenderer )
+  {
+    mRenderer->waitForFinished();
+    delete mRenderer;
+  }
 }
 
 bool QgsGlobeTileImage::requiresUpdateCall() const
