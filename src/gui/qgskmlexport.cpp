@@ -621,7 +621,7 @@ int QgsKMLExport::offset( int nLevelsToGo )
   int exponent = 0;
   for ( int i = 0; i < nLevelsToGo; ++i )
   {
-    offset += pow( 4, exponent );
+    offset += pow( 4.0, exponent );
     ++exponent;
   }
   return offset;
