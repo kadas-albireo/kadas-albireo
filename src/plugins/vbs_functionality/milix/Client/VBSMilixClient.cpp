@@ -616,11 +616,11 @@ bool VBSMilixClient::getCurrentLibraryVersionTag( QString& versionTag )
   return result;
 }
 
-bool VBSMilixClient::setSymbolOptions( int symbolSize, int lineWidth )
+bool VBSMilixClient::setSymbolOptions( int symbolSize, int lineWidth , int workMode )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS << symbolSize << lineWidth;
+  istream << VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS << symbolSize << lineWidth << workMode;
 
   QByteArray response;
   if ( !processRequest( request, response, VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS ) )

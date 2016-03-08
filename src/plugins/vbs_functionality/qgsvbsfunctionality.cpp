@@ -28,6 +28,7 @@
 #include "milix/qgsvbsmilixio.h"
 #include "milix/qgsvbsmilixlayer.h"
 #include <QAction>
+#include <QComboBox>
 #include <QMainWindow>
 #include <QSlider>
 #include <QToolBar>
@@ -60,6 +61,7 @@ void QgsVBSFunctionality::initGui()
 
   mSymbolSizeSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mSymbolSizeSlider" ) );
   mLineWidthSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mLineWidthSlider" ) );
+  mWorkModeCombo = qobject_cast<QComboBox*>( mQGisIface->findObject( "mWorkModeCombo" ) );
   if ( mSymbolSizeSlider )
   {
     mSymbolSizeSlider->setValue( QSettings().value( "/vbsfunctionality/milix_symbol_size", "60" ).toInt() );
@@ -71,6 +73,12 @@ void QgsVBSFunctionality::initGui()
     mLineWidthSlider->setValue( QSettings().value( "/vbsfunctionality/milix_line_width", "2" ).toInt() );
     setMilXLineWidth( mLineWidthSlider->value() );
     connect( mLineWidthSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXLineWidth( int ) ) );
+  }
+  if ( mWorkModeCombo )
+  {
+    mWorkModeCombo->setCurrentIndex( QSettings().value( "/vbsfunctionality/milix_work_mode", "1" ).toInt() );
+    setMilXWorkMode( mWorkModeCombo->currentIndex() );
+    connect( mWorkModeCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setMilXWorkMode( int ) ) );
   }
 }
 
@@ -119,5 +127,11 @@ void QgsVBSFunctionality::setMilXSymbolSize( int value )
 void QgsVBSFunctionality::setMilXLineWidth( int value )
 {
   VBSMilixClient::setLineWidth( value );
+  mQGisIface->mapCanvas()->refresh();
+}
+
+void QgsVBSFunctionality::setMilXWorkMode( int idx )
+{
+  VBSMilixClient::setWorkMode( idx );
   mQGisIface->mapCanvas()->refresh();
 }

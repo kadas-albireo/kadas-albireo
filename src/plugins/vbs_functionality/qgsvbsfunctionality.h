@@ -22,6 +22,7 @@
 #include <QObject>
 
 class QAction;
+class QComboBox;
 class QSlider;
 
 class QgsMapLayer;
@@ -46,6 +47,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QgsVBSMilixLibrary* mMilXLibrary;
     QSlider* mSymbolSizeSlider;
     QSlider* mLineWidthSlider;
+    QComboBox* mWorkModeCombo;
 
   private slots:
     void importOVL();
@@ -54,6 +56,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     void loadMilx();
     void setMilXSymbolSize( int value );
     void setMilXLineWidth( int value );
+    void setMilXWorkMode( int idx );
 };
 
 #endif // QGSVBSFUNCTIONALITY_H

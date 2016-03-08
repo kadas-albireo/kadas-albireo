@@ -68,10 +68,11 @@ public:
     QList<int> controlPoints;
   };
 
-  static void setSymbolSize(int value) { instance()->mSymbolSize = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth); }
-  static void setLineWidth(int value) { instance()->mLineWidth = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth); }
+  static void setSymbolSize(int value) { instance()->mSymbolSize = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
+  static void setLineWidth(int value) { instance()->mLineWidth = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
   static int getSymbolSize() { return instance()->mSymbolSize; }
   static int getLineWidth() { return instance()->mLineWidth; }
+  static void setWorkMode(int workMode) { instance()->mWorkMode = workMode; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
 
   static bool init();
   static bool getSymbol(const QString& symbolId, SymbolDesc& result);
@@ -95,6 +96,7 @@ private:
   VBSMilixClientWorker mWorker;
   int mSymbolSize;
   int mLineWidth;
+  int mWorkMode;
 
   VBSMilixClient();
   ~VBSMilixClient();
@@ -102,7 +104,7 @@ private:
   static QImage renderSvg(const QByteArray& xml);
 
   bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );
-  bool setSymbolOptions(int symbolSize, int lineWidth);
+  bool setSymbolOptions(int symbolSize, int lineWidth, int workMode );
 };
 
 #endif // VBSMILIXCLIENT_HPP
