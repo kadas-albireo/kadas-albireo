@@ -88,7 +88,7 @@ class QgsVBSMilixLayerType : public QgsPluginLayerType
   public:
     QgsVBSMilixLayerType() : QgsPluginLayerType( QgsVBSMilixLayer::layerTypeKey() ) {}
     QgsPluginLayer* createLayer() override { return new QgsVBSMilixLayer(); }
-    bool showLayerProperties( QgsPluginLayer* layer ) override { return false; }
+    bool showLayerProperties( QgsPluginLayer* /*layer*/ ) override { return false; }
 };
 
 #endif // QGS_VBS_MILIX_LAYER_H
