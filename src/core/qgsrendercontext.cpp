@@ -64,6 +64,7 @@ QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
   mGeometry = ct.mGeometry;
   mShowSelection = ct.mShowSelection;
   mSelectionColor = ct.mSelectionColor;
+  mCustomRenderFlags = ct.mCustomRenderFlags;
   return *this;
 }
 
