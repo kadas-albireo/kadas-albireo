@@ -56,7 +56,8 @@ class CORE_EXPORT QgsMapLayer : public QObject
     {
       VectorLayer,
       RasterLayer,
-      PluginLayer
+      PluginLayer,
+      RedliningLayer
     };
 
     /** Constructor
@@ -104,9 +105,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     void setWMSCheckable( bool enable ) { mWMSCheckable = enable; }
     bool wmsCheckable() const { return mWMSCheckable; }
-
-    void setWMSShowLegendTitle( bool enable ) { mWMSShowLegendTitle = enable; }
-    bool wmsShowLegendTitle() const { return mWMSShowLegendTitle; }
 
     void setKeywordList( const QString& keywords ) { mKeywordList = keywords; }
     const QString& keywordList() const { return mKeywordList; }
@@ -175,6 +173,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Returns the source for the layer */
     const QString &source() const;
+
+    /** Sets the source for the layer */
+    void setSource( const QString& source ) { mDataSource = source; }
 
     /**
      * Returns the sublayers of this layer
@@ -535,6 +536,11 @@ class CORE_EXPORT QgsMapLayer : public QObject
      */
     void legendChanged();
 
+    /**
+     * Signal to notify that the layer extent changed.
+     */
+    void extentChanged( const QgsRectangle& oldExtent, const QgsRectangle& newExtent );
+
   protected:
     /** Set the extent */
     virtual void setExtent( const QgsRectangle &rect );
@@ -618,6 +624,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /** \brief Error */
     QgsError mError;
 
+    /** Type of the layer (eg. vector, raster) */
+    QgsMapLayer::LayerType mLayerType;
+
   private:
     /** layer's spatial reference system.
         private to make sure setCrs must be used and layerCrsChanged() is emitted */
@@ -631,9 +640,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Unique ID of this layer - used to refer to this layer in map layer registry */
     QString mID;
-
-    /** Type of the layer (eg. vector, raster) */
-    QgsMapLayer::LayerType mLayerType;
 
     /** Blend mode for the layer */
     QPainter::CompositionMode mBlendMode;
@@ -663,7 +669,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
     bool mWMSPublishLegend;
     bool mWMSPublishMetadata;
     bool mWMSCheckable;
-    bool mWMSShowLegendTitle;
 };
 
 #endif
