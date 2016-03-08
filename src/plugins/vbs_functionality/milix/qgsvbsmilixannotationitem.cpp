@@ -68,6 +68,7 @@ void QgsVBSMilixAnnotationItem::setSymbolXml( const QString &symbolXml, const QS
   mIsMultiPoint = isMultiPoint;
   mSymbolXml = symbolXml;
   mSymbolMilitaryName = symbolMilitaryName;
+  setToolTip( mSymbolMilitaryName );
 
   if ( mIsMultiPoint )
   {
@@ -278,6 +279,8 @@ void QgsVBSMilixAnnotationItem::showContextMenu( const QPoint &screenPos )
 {
   QPoint canvasPos = mMapCanvas->mapFromGlobal( screenPos );
   QMenu menu;
+  menu.addAction( mSymbolMilitaryName )->setEnabled( false );
+  menu.addSeparator();
   QList<QPoint> pts = screenPoints();
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
