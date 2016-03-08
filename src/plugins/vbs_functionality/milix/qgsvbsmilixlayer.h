@@ -57,8 +57,8 @@ class QgsVBSMilixLayer : public QgsPluginLayer
     void removeItem( int idx ) { mItems.removeAt( idx ); }
     const QList<QgsVBSMilixItem*>& items() const { return mItems; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
-    void exportToMilxly( QIODevice* dev, const QString &versionTag, QStringList& exportMessages );
-    bool importMilxly( QIODevice* dev, QString &errorMsg, QStringList& importMessages );
+    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
+    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;

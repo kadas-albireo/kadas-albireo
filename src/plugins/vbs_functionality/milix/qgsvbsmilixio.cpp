@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgisinterface.h"
 #include "qgscrscache.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
@@ -23,17 +24,54 @@
 #include "qgsvbsmilixio.h"
 #include "qgsvbsmilixannotationitem.h"
 #include "qgsvbsmilixlayer.h"
+#include <QDialogButtonBox>
 #include <QDomDocument>
 #include <QFileDialog>
 #include <QLabel>
+#include <QListWidget>
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QSettings>
 #include <QVBoxLayout>
 #include <quazip/quazipfile.h>
 
-bool QgsVBSMilixIO::save( QgsMessageBar* messageBar, QgsVBSMilixLayer* layer )
+bool QgsVBSMilixIO::save( QgisInterface* iface )
 {
+  QDialog layerSelectionDialog( iface->mainWindow() );
+  layerSelectionDialog.setWindowTitle( tr( "Export MilX layers" ) );
+  layerSelectionDialog.setLayout( new QVBoxLayout() );
+  layerSelectionDialog.layout()->addWidget( new QLabel( tr( "Select MilX layers to export" ) ) );
+  QListWidget* layerListWidget = new QListWidget();
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    {
+      QListWidgetItem* item = new QListWidgetItem( layer->name() );
+      item->setData( Qt::UserRole, layer->id() );
+      item->setCheckState( iface->mapCanvas()->layers().contains( layer ) ? Qt::Checked : Qt::Unchecked );
+      layerListWidget->addItem( item );
+    }
+  }
+  layerSelectionDialog.layout()->addWidget( layerListWidget );
+  QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+  layerSelectionDialog.layout()->addWidget( bbox );
+  connect( bbox, SIGNAL( accepted() ), &layerSelectionDialog, SLOT( accept() ) );
+  connect( bbox, SIGNAL( rejected() ), &layerSelectionDialog, SLOT( reject() ) );
+  if ( layerSelectionDialog.exec() == QDialog::Rejected )
+  {
+    return false;
+  }
+
+  QStringList exportLayers;
+  for ( int i = 0, n = layerListWidget->count(); i < n; ++i )
+  {
+    QListWidgetItem* item = layerListWidget->item( i );
+    if ( item->checkState() == Qt::Checked )
+    {
+      exportLayers.append( item->data( Qt::UserRole ).toString() );
+    }
+  }
+
   QStringList versionTags, versionNames;
   VBSMilixClient::getSupportedLibraryVersionTags( versionTags, versionNames );
   QStringList filters;
@@ -79,15 +117,37 @@ bool QgsVBSMilixIO::save( QgsMessageBar* messageBar, QgsVBSMilixLayer* layer )
   {
     delete zip;
     delete dev;
-    messageBar->pushMessage( tr( "Export Failed" ), tr( "Failed to open the output file for writing." ), QgsMessageBar::CRITICAL, 5 );
+    iface->messageBar()->pushMessage( tr( "Export Failed" ), tr( "Failed to open the output file for writing." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
 
   QStringList exportMessages;
-  layer->exportToMilxly( dev, versionTag, exportMessages );
+
+  QDomDocument doc;
+  doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
+  QDomElement milxDocumentEl = doc.createElement( "MilXDocument_Layer" );
+  milxDocumentEl.setAttribute( "xmlns", "http://gs-soft.com/MilX/V3.1" );
+  milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
+  doc.appendChild( milxDocumentEl );
+
+  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
+  milxVersionEl.appendChild( doc.createTextNode( verTag ) );
+  milxDocumentEl.appendChild( milxVersionEl );
+
+  foreach ( const QString& layerId, exportLayers )
+  {
+    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    {
+      static_cast<QgsVBSMilixLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, exportMessages );
+    }
+  }
+  dev->write( doc.toString().toUtf8() );
+
   delete zip;
   delete dev;
-  messageBar->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
+  iface->messageBar()->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
   if ( !exportMessages.isEmpty() )
   {
     showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), exportMessages.join( "\n" ) );
@@ -95,7 +155,7 @@ bool QgsVBSMilixIO::save( QgsMessageBar* messageBar, QgsVBSMilixLayer* layer )
   return true;
 }
 
-bool QgsVBSMilixIO::load( QgsMessageBar *messageBar )
+bool QgsVBSMilixIO::load( QgisInterface* iface )
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
   QString filter = tr( "MilX Layer Files (*.milxly *.milxlyz)" );
@@ -117,20 +177,49 @@ bool QgsVBSMilixIO::load( QgsMessageBar *messageBar )
   if ( !dev->open( QIODevice::ReadOnly ) )
   {
     delete dev;
-    messageBar->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
+    iface->messageBar()->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
 
-  QgsVBSMilixLayer* layer = new QgsVBSMilixLayer();
-  QString errorMsg;
-  QStringList importMessages;
-  bool success = layer->importMilxly( dev, errorMsg, importMessages );
+  QDomDocument doc;
+  doc.setContent( dev->readAll() );
   delete dev;
 
-  if ( success )
+  QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
+  QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
+  QString fileMssVer = milxVersionEl.text();
+
+  QString verTag;
+  VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  if ( fileMssVer > verTag )
   {
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    messageBar->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
+    QString errorMsg = tr( "The file was created by a newer MSS library version." );
+    iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
+    return false;
+  }
+
+  QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
+  QStringList importMessages;
+  QString errorMsg;
+  QList<QgsVBSMilixLayer*> importedLayers;
+  for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
+  {
+    QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
+    QgsVBSMilixLayer* layer = new QgsVBSMilixLayer();
+    if ( !layer->importMilxly( milxLayerEl, fileMssVer, errorMsg, importMessages ) )
+    {
+      break;
+    }
+    importedLayers.append( layer );
+  }
+
+  if ( errorMsg.isEmpty() )
+  {
+    foreach ( QgsVBSMilixLayer* layer, importedLayers )
+    {
+      QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    }
+    iface->messageBar()->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
     if ( !importMessages.isEmpty() )
     {
       showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), importMessages.join( "\n" ) );
@@ -138,8 +227,8 @@ bool QgsVBSMilixIO::load( QgsMessageBar *messageBar )
   }
   else
   {
-    delete layer;
-    messageBar->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
+    qDeleteAll( importedLayers );
+    iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
   }
   return true;
 }

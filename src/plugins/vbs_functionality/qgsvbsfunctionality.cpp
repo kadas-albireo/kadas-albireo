@@ -110,12 +110,12 @@ void QgsVBSFunctionality::toggleMilXLibrary( )
 
 void QgsVBSFunctionality::saveMilx()
 {
-//  QgsVBSMilixIO::save( mQGisIface->messageBar() );
+  QgsVBSMilixIO::save( mQGisIface );
 }
 
 void QgsVBSFunctionality::loadMilx()
 {
-  QgsVBSMilixIO::load( mQGisIface->messageBar() );
+  QgsVBSMilixIO::load( mQGisIface );
 }
 
 void QgsVBSFunctionality::setMilXSymbolSize( int value )

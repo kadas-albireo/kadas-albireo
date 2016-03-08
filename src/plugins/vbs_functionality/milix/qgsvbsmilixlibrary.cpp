@@ -176,7 +176,7 @@ void QgsVBSMilixLibrary::updateLayers()
   }
   mLayersCombo->blockSignals( true );
   mLayersCombo->clear();
-  int idx = 0, current = -1;
+  int idx = 0, current = 0;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
     if ( dynamic_cast<QgsVBSMilixLayer*>( layer ) )

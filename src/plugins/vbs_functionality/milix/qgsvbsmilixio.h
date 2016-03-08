@@ -26,8 +26,8 @@ class QgsVBSMilixLayer;
 class QgsVBSMilixIO : public QObject
 {
   public:
-    static bool save( QgsMessageBar *messageBar , QgsVBSMilixLayer *layer );
-    static bool load( QgsMessageBar *messageBar );
+    static bool save( QgisInterface *iface );
+    static bool load( QgisInterface *iface );
   private:
     static void showMessageDialog( const QString& title, const QString& body, const QString& messages );
 };

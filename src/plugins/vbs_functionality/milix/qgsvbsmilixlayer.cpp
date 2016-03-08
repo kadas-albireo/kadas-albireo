@@ -229,19 +229,9 @@ void QgsVBSMilixLayer::handlePick( const QVariant& pick )
   emit symbolPicked( pick.toInt() );
 }
 
-void QgsVBSMilixLayer::exportToMilxly( QIODevice* dev, const QString& versionTag, QStringList& exportMessages )
+void QgsVBSMilixLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
 {
-  QDomDocument doc;
-  doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
-  QDomElement milxDocumentEl = doc.createElement( "MilXDocument_Layer" );
-  milxDocumentEl.setAttribute( "xmlns", "http://gs-soft.com/MilX/V3.1" );
-  milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
-  doc.appendChild( milxDocumentEl );
-
-  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
-  QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( doc.createTextNode( verTag ) );
-  milxDocumentEl.appendChild( milxVersionEl );
+  QDomDocument doc = milxDocumentEl.ownerDocument();
 
   QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
   milxDocumentEl.appendChild( milxLayerEl );
@@ -278,91 +268,69 @@ void QgsVBSMilixLayer::exportToMilxly( QIODevice* dev, const QString& versionTag
   QDomElement bwEl = doc.createElement( "DisplayBW" );
   bwEl.appendChild( doc.createTextNode( "0" ) ); // TODO
   milxLayerEl.appendChild( bwEl );
-
-  dev->write( doc.toString().toUtf8() );
 }
 
-bool QgsVBSMilixLayer::importMilxly( QIODevice* dev, QString& errorMsg, QStringList& importMessages )
+bool QgsVBSMilixLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, QString& errorMsg, QStringList& importMessages )
 {
-  QDomDocument doc;
-  doc.setContent( dev );
-
-  QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
-  QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
-  QString fileMssVer = milxVersionEl.text();
-
-  QString verTag;
-  VBSMilixClient::getCurrentLibraryVersionTag( verTag );
-  if ( fileMssVer > verTag )
+  setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
+  //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
+  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
+  QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
+  QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
+  const QgsCoordinateTransform* crst = 0;
+  if ( crs == "SwissLv03" )
   {
-    errorMsg = tr( "The file was created by a newer MSS library version." );
-    return false;
+    crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:21781", "EPSG:4326" );
+  }
+  else if ( crs == "WGS84" )
+  {
+    crst = 0;
+  }
+  else if ( crs == "UTM" )
+  {
+    QgsCoordinateReferenceSystem utmCrs;
+    QString zoneLetter = utmZone.right( 1 ).toUpper();
+    QString zoneNumber = utmZone.left( utmZone.length() - 1 );
+    QString projZone = zoneNumber + ( zoneLetter == "S" ? " +south" : "" );
+    utmCrs.createFromProj4( QString( "+proj=utm +zone=%1 +datum=WGS84 +units=m +no_defs" ).arg( projZone ) );
+    crst = QgsCoordinateTransformCache::instance()->transform( utmCrs.authid(), "EPSG:4326" );
   }
 
-  QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
-  for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
+  QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
+
+  // Dry run to validate
+  QStringList validationErrors;
+  QStringList adjustedSymbolXmls;
+  for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
   {
-    QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
-    setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
-//    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
-    int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
-    QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
-    QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
-    const QgsCoordinateTransform* crst = 0;
-    if ( crs == "SwissLv03" )
+    QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
+    QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
+    QString adjustedSymbolXml;
+    bool valid = false;
+    QString messages;
+    VBSMilixClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
+    adjustedSymbolXmls.append( adjustedSymbolXml );
+    if ( !valid )
     {
-      crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:21781", "EPSG:4326" );
+      validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
     }
-    else if ( crs == "WGS84" )
+    else if ( !messages.isEmpty() )
     {
-      crst = 0;
+      importMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
     }
-    else if ( crs == "UTM" )
-    {
-      QgsCoordinateReferenceSystem utmCrs;
-      QString zoneLetter = utmZone.right( 1 ).toUpper();
-      QString zoneNumber = utmZone.left( utmZone.length() - 1 );
-      QString projZone = zoneNumber + ( zoneLetter == "S" ? " +south" : "" );
-      utmCrs.createFromProj4( QString( "+proj=utm +zone=%1 +datum=WGS84 +units=m +no_defs" ).arg( projZone ) );
-      crst = QgsCoordinateTransformCache::instance()->transform( utmCrs.authid(), "EPSG:4326" );
-    }
+  }
+  if ( !validationErrors.isEmpty() )
+  {
+    errorMsg = tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) );
+    return false;
+  }
+  for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
+  {
+    QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
 
-    QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
-
-    // Dry run to validate
-    QStringList validationErrors;
-    QStringList adjustedSymbolXmls;
-    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-    {
-      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-      QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
-      QString adjustedSymbolXml;
-      bool valid = false;
-      QString messages;
-      VBSMilixClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
-      adjustedSymbolXmls.append( adjustedSymbolXml );
-      if ( !valid )
-      {
-        validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-      }
-      else if ( !messages.isEmpty() )
-      {
-        importMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-      }
-    }
-    if ( !validationErrors.isEmpty() )
-    {
-      errorMsg = tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) );
-      return false;
-    }
-    for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-    {
-      QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-
-      QgsVBSMilixItem* item = new QgsVBSMilixItem();
-      item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
-      addItem( item );
-    }
+    QgsVBSMilixItem* item = new QgsVBSMilixItem();
+    item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
+    addItem( item );
   }
   return true;
 }
