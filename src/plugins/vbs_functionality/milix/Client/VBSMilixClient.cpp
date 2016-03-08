@@ -630,6 +630,23 @@ bool VBSMilixClient::setSymbolOptions( int symbolSize, int lineWidth , int workM
   return true;
 }
 
+bool VBSMilixClient::getControlPoints( const QString& symbolXml, int nPoints, QList<int>& controlPoints )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_GET_CONTROL_POINTS << symbolXml << nPoints;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_CONTROL_POINTS ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> controlPoints;
+  return true;
+}
+
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )
 {
   if ( xml.isEmpty() )

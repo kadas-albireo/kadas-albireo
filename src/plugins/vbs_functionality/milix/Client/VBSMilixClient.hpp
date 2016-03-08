@@ -91,6 +91,7 @@ public:
   static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol);
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
   static bool getCurrentLibraryVersionTag(QString& versionTag);
+  static bool getControlPoints(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
 
 private:
   VBSMilixClientWorker mWorker;

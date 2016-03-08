@@ -116,6 +116,8 @@ void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& sym
   mUserOffset = QPoint( offsetX, offsetY );
   mMssString = symbolXml;
   mMilitaryName = militaryName;
+  mHaveEnoughPoints = true;
+  VBSMilixClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
