@@ -31,6 +31,19 @@ QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas )
     : QgsAnnotationItem( canvas ), mIsMultiPoint( false ), mFinalized( false )
 {
   mOffsetFromReferencePoint = QPoint( 0, 0 );
+  connect( canvas, SIGNAL( extentsChanged() ), this, SLOT( updateSymbol() ) );
+}
+
+QgsVBSMilixAnnotationItem::QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source )
+    : QgsAnnotationItem( canvas, source )
+{
+  setSymbolXml( source->mSymbolXml, source->mSymbolMilitaryName, source->mIsMultiPoint );
+  mAdditionalPoints = source->mAdditionalPoints;
+  mRenderOffset = source->mRenderOffset;
+  mControlPoints = source->mControlPoints;
+  mFinalized = source->mFinalized;
+  updateSymbol( false );
+  connect( canvas, SIGNAL( extentsChanged() ), this, SLOT( updateSymbol() ) );
 }
 
 void QgsVBSMilixAnnotationItem::fromMilixItem( QgsVBSMilixItem* item )

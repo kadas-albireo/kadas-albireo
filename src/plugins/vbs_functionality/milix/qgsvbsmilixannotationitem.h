@@ -27,11 +27,13 @@ class QgsVBSMilixItem;
 
 class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
 {
+    Q_OBJECT
+
     QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem, "MilixAnnotationItem" )
 
   public:
     QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas */*canvas*/ ) override { return 0; /* Unsupported */ }
+    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
 
     void fromMilixItem( QgsVBSMilixItem* item );
     QgsVBSMilixItem* toMilixItem();
@@ -56,6 +58,9 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
 
+  protected:
+    QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
+
   private:
     QString mSymbolXml;
     QString mSymbolMilitaryName;
@@ -67,7 +72,9 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     bool mFinalized;
 
     void _showItemEditor() override;
-    void updateSymbol( bool updatePoints );
+
+  private slots:
+    void updateSymbol( bool updatePoints = false );
 };
 
 #endif // QGSVBSMILIXANNOTATIONITEM_H
