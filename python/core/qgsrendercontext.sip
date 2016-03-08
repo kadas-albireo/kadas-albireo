@@ -92,4 +92,9 @@ class QgsRenderContext
     /** Sets pointer to original (unsegmentized) geometry
     @geometry the geometry*/
     void setGeometry( const QgsAbstractGeometryV2* geometry );
+
+    //! Get custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    const QString& customRenderFlags() const;
+    //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    void setCustomRenderFlags(const QString& customRenderFlags);
 };

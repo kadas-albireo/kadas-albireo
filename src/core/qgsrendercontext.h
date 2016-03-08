@@ -129,6 +129,11 @@ class CORE_EXPORT QgsRenderContext: public QObject
     /** Sets pointer to original (unsegmentized) geometry*/
     void setGeometry( const QgsAbstractGeometryV2* geometry ) { mGeometry = geometry; }
 
+    //! Get custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    const QString& customRenderFlags() const { return mCustomRenderFlags; }
+    //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    void setCustomRenderFlags( const QString& customRenderFlags ) { mCustomRenderFlags = customRenderFlags; }
+
   signals:
     void renderingAborted();
 
@@ -182,6 +187,8 @@ class CORE_EXPORT QgsRenderContext: public QObject
 
     /** Pointer to the (unsegmentized) geometry*/
     const QgsAbstractGeometryV2* mGeometry;
+
+    QString mCustomRenderFlags;
 };
 
 #endif
