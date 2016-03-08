@@ -75,11 +75,12 @@ void QgsVBSMapToolCreateMilixItem::canvasPressEvent( QMouseEvent * e )
       // Max points reached, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilixItem() );
-      delete mItem;
-      mCanvas->refresh();
-      mItem = 0;
       mNPressedPoints = 0;
       mCanvas->unsetMapTool( this );
+      // Delay delete until after refresh, to avoid flickering
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
+      mItem = 0;
+      mCanvas->refresh();
     }
   }
   else if ( e->button() == Qt::RightButton && mItem != 0 )
@@ -89,10 +90,11 @@ void QgsVBSMapToolCreateMilixItem::canvasPressEvent( QMouseEvent * e )
       // Done with N point symbol, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilixItem() );
-      delete mItem;
-      mCanvas->refresh();
-      mItem = 0;
       mCanvas->unsetMapTool( this );
+      // Delay delete until after refresh, to avoid flickering
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
+      mItem = 0;
+      mCanvas->refresh();
     }
     else if ( mNPressedPoints + 1 < mMinNPoints )
     {
@@ -127,9 +129,10 @@ QgsVBSMapToolEditMilixItem::~QgsVBSMapToolEditMilixItem()
   if ( !mItem.isNull() )
   {
     mLayer->addItem( mItem->toMilixItem() );
+    // Delay delete until after refresh, to avoid flickering
+    connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem.data(), SLOT( deleteLater() ) );
     mCanvas->refresh();
   }
-  delete mItem.data();
 }
 
 void QgsVBSMapToolEditMilixItem::canvasReleaseEvent( QMouseEvent * e )
