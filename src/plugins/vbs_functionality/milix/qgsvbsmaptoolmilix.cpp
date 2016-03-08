@@ -122,6 +122,7 @@ QgsVBSMapToolEditMilixItem::QgsVBSMapToolEditMilixItem( QgsMapCanvas* canvas, Qg
   mItem = new QgsVBSMilixAnnotationItem( canvas );
   mItem->fromMilixItem( item );
   mItem->setSelected( true );
+  connect( mLayer, SIGNAL( destroyed( QObject* ) ), mItem.data(), SLOT( deleteLater() ) );
 }
 
 QgsVBSMapToolEditMilixItem::~QgsVBSMapToolEditMilixItem()
