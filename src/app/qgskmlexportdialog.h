@@ -27,10 +27,13 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
 
   private slots:
     void on_mFileSelectionButton_clicked();
+    void on_mFormatComboBox_currentIndexChanged( const QString& text );
 
   private:
     QgsKMLExportDialog();
     void insertAvailableLayers();
+    void deactivatePluginLayers();
+    void activateAllLayers();
 
     QStringList mLayerIds;
 };
