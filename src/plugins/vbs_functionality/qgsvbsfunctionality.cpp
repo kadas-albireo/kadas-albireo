@@ -60,12 +60,18 @@ void QgsVBSFunctionality::initGui()
 
   mSymbolSizeSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mSymbolSizeSlider" ) );
   mLineWidthSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mLineWidthSlider" ) );
-  mSymbolSizeSlider->setValue( QSettings().value( "/vbsfunctionality/milix_symbol_size", "60" ).toInt() );
-  mLineWidthSlider->setValue( QSettings().value( "/vbsfunctionality/milix_line_width", "2" ).toInt() );
-  setMilXSymbolSize( mSymbolSizeSlider->value() );
-  setMilXLineWidth( mLineWidthSlider->value() );
-  connect( mSymbolSizeSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXSymbolSize( int ) ) );
-  connect( mLineWidthSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXLineWidth( int ) ) );
+  if ( mSymbolSizeSlider )
+  {
+    mSymbolSizeSlider->setValue( QSettings().value( "/vbsfunctionality/milix_symbol_size", "60" ).toInt() );
+    setMilXSymbolSize( mSymbolSizeSlider->value() );
+    connect( mSymbolSizeSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXSymbolSize( int ) ) );
+  }
+  if ( mLineWidthSlider )
+  {
+    mLineWidthSlider->setValue( QSettings().value( "/vbsfunctionality/milix_line_width", "2" ).toInt() );
+    setMilXLineWidth( mLineWidthSlider->value() );
+    connect( mLineWidthSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXLineWidth( int ) ) );
+  }
 }
 
 void QgsVBSFunctionality::unload()
