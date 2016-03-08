@@ -4,6 +4,7 @@
 #include "qgsgeometry.h"
 #include "qgskmlpallabeling.h"
 #include "qgsmaplayerrenderer.h"
+#include "qgspluginlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsrendercontext.h"
 #include "qgsrendererv2.h"
@@ -87,27 +88,10 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
       }
       writeVectorLayerFeatures( vl, outStream, filterRect, labelLayer, labeling, rc );
     }
-    else if ( ml->type() == QgsMapLayer::RasterLayer || ml->type() == QgsMapLayer::PluginLayer )
+    else if ( ml->type() == QgsMapLayer::PluginLayer )
     {
-      //wms layer?
-      QgsRasterLayer* rl = dynamic_cast<QgsRasterLayer*>( ml );
-      if ( rl && rl->providerType() == "wms" )
-      {
-        QString wmsString = rl->source();
-        QStringList wmsParamsList = wmsString.split( "&" );
-        QStringList::const_iterator paramIt = wmsParamsList.constBegin();
-        QMap<QString, QString> parameterMap;
-        for ( ; paramIt != wmsParamsList.constEnd(); ++paramIt )
-        {
-          QStringList eqSplit = paramIt->split( "=" );
-          if ( eqSplit.size() >= 2 )
-          {
-            parameterMap.insert( eqSplit.at( 0 ).toUpper(), eqSplit.at( 1 ) );
-          }
-        }
-        writeWMSOverlay( outStream, wgs84LayerExtent( ml ), parameterMap.value( "URL" ) , parameterMap.value( "VERSION" ), parameterMap.value( "FORMAT" ), parameterMap.value( "LAYERS" ), parameterMap.value( "STYLES" ) );
-      }
-      else //normal raster layer
+      QgsPluginLayer* pl = static_cast<QgsPluginLayer*>( ml );
+      if ( pl && pl->pluginLayerType() == "MilX_Layer" )
       {
         //reference to start kml (start with quadratic extent 256x256)
         QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
@@ -115,6 +99,38 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
         writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
         superOverlayLayers.append( ml );
       }
+
+#if 0
+      else if ( ml->type() == QgsMapLayer::RasterLayer || ( ml->type() == QgsMapLayer::PluginLayer && ml->originalName() == "MilX_Layer" ) )
+      {
+        //wms layer?
+        QgsRasterLayer* rl = dynamic_cast<QgsRasterLayer*>( ml );
+        if ( rl && rl->providerType() == "wms" )
+        {
+          QString wmsString = rl->source();
+          QStringList wmsParamsList = wmsString.split( "&" );
+          QStringList::const_iterator paramIt = wmsParamsList.constBegin();
+          QMap<QString, QString> parameterMap;
+          for ( ; paramIt != wmsParamsList.constEnd(); ++paramIt )
+          {
+            QStringList eqSplit = paramIt->split( "=" );
+            if ( eqSplit.size() >= 2 )
+            {
+              parameterMap.insert( eqSplit.at( 0 ).toUpper(), eqSplit.at( 1 ) );
+            }
+          }
+          writeWMSOverlay( outStream, wgs84LayerExtent( ml ), parameterMap.value( "URL" ) , parameterMap.value( "VERSION" ), parameterMap.value( "FORMAT" ), parameterMap.value( "LAYERS" ), parameterMap.value( "STYLES" ) );
+        }
+        else //normal raster layer
+        {
+          //reference to start kml (start with quadratic extent 256x256)
+          QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
+
+          writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
+          superOverlayLayers.append( ml );
+        }
+      }
+#endif //0
     }
   }
 
