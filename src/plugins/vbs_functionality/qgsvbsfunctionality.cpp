@@ -83,6 +83,9 @@ void QgsVBSFunctionality::initGui()
   }
 
   QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsVBSMilixLayerType() );
+
+  mMilXLibrary = new QgsVBSMilixLibrary( mQGisIface, mQGisIface->mapCanvas() );
+
 }
 
 void QgsVBSFunctionality::unload()
@@ -102,11 +105,6 @@ void QgsVBSFunctionality::importOVL()
 
 void QgsVBSFunctionality::toggleMilXLibrary( )
 {
-  if ( !mMilXLibrary )
-  {
-    mMilXLibrary = new QgsVBSMilixLibrary( mQGisIface, mQGisIface->mapCanvas() );
-  }
-  mMilXLibrary->updateLayers();
   mMilXLibrary->autocreateLayer();
   mMilXLibrary->show();
   mMilXLibrary->raise();

@@ -155,6 +155,7 @@ QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
     connect( loader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
     loader->start();
   }
+  updateLayers();
 }
 
 void QgsVBSMilixLibrary::autocreateLayer()
