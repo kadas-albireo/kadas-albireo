@@ -1,5 +1,6 @@
 #include "qgskmlexportdialog.h"
 #include "qgsmaplayerregistry.h"
+#include "qgspluginlayer.h"
 #include "qgsvectorlayer.h"
 #include <QFileDialog>
 
@@ -7,6 +8,7 @@ QgsKMLExportDialog::QgsKMLExportDialog( const QStringList layerIds, QWidget * pa
 {
   setupUi( this );
   insertAvailableLayers();
+  on_mFormatComboBox_currentIndexChanged( mFormatComboBox->currentText() );
 }
 
 QgsKMLExportDialog::QgsKMLExportDialog(): QDialog()
@@ -40,7 +42,7 @@ QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
   for ( int i = 0; i < nItems; ++i )
   {
     QListWidgetItem* item = mLayerListWidget->item( i );
-    if ( item && item->checkState() == Qt::Checked )
+    if ( item && ( item->flags() & Qt::ItemIsEnabled ) && item->checkState() == Qt::Checked )
     {
       QString id = item->data( Qt::UserRole ).toString();
       QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( id );
@@ -65,7 +67,9 @@ void QgsKMLExportDialog::insertAvailableLayers()
   for ( ; it != mLayerIds.constEnd(); ++it )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
-    if ( !layer /*|| !dynamic_cast<QgsVectorLayer*>( layer )*/ )
+    QgsVectorLayer* vLayer = dynamic_cast<QgsVectorLayer*>( layer );
+    QgsPluginLayer* pLayer = dynamic_cast<QgsPluginLayer*>( layer );
+    if ( !vLayer && ( !pLayer || !( pLayer->pluginLayerType() == "MilX_Layer" ) ) )
     {
       continue;
     }
@@ -86,6 +90,18 @@ void QgsKMLExportDialog::on_mFileSelectionButton_clicked()
   }
 }
 
+void QgsKMLExportDialog::on_mFormatComboBox_currentIndexChanged( const QString& text )
+{
+  if ( text == "KML" )
+  {
+    deactivatePluginLayers();
+  }
+  else
+  {
+    activateAllLayers();
+  }
+}
+
 QgsKMLExportDialog::ExportFormat QgsKMLExportDialog::exportFormat() const
 {
   if ( QString::compare( mFormatComboBox->currentText(), "KMZ", Qt::CaseInsensitive ) == 0 )
@@ -95,5 +111,28 @@ QgsKMLExportDialog::ExportFormat QgsKMLExportDialog::exportFormat() const
   else
   {
     return QgsKMLExportDialog::KML;
+  }
+}
+
+void QgsKMLExportDialog::deactivatePluginLayers()
+{
+  int rowCount = mLayerListWidget->count();
+  for ( int i = 0; i < rowCount; ++i )
+  {
+    QString layerId = mLayerListWidget->item( i )->data( Qt::UserRole ).toString();
+    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+    if ( layer && layer->type() == QgsMapLayer::PluginLayer )
+    {
+      mLayerListWidget->item( i )->setFlags( Qt::NoItemFlags );
+    }
+  }
+}
+
+void QgsKMLExportDialog::activateAllLayers()
+{
+  int rowCount = mLayerListWidget->count();
+  for ( int i = 0; i < rowCount; ++i )
+  {
+    mLayerListWidget->item( i )->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
   }
 }
