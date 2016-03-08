@@ -25,7 +25,7 @@ VBSMilixServerRequest VBS_MILIX_REQUEST_DOWNGRADE_SYMBOLXML = 13; // {VBS_MILIX_
 VBSMilixServerRequest VBS_MILIX_REQUEST_HIT_TEST = 14; // {VBS_MILIX_REQUEST_HIT_TEST, SymbolXml:QString, Points:QList<QPoint>, ControlPoints:QList<int>, finalized:bool, clickPos:QPoint}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS = 15; // {VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS}
 VBSMilixServerRequest VBS_MILIX_REQUEST_PICK_SYMBOL = 16; // {VBS_MILIX_REQUEST_PICK_SYMBOL, ClickPos:QPoint, nSymbols:int, SymbolXml1:QString, Points1:QList<QPoint>, ControlPoints1:QList<int>, finalized1:bool, SymbolXml2:QString, Points2:QList<QPoint>, ControlPoints2:QList<int>, finalized2:bool, ...}
-VBSMilixServerRequest VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS = 17; // {VBS_MILIX_REQUEST_SYMBOL_OPTIONS, SymbolSize:int, LineWidth:int}
+VBSMilixServerRequest VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS = 17; // {VBS_MILIX_REQUEST_SYMBOL_OPTIONS, SymbolSize:int, LineWidth:int, WorkMode:int}
 
 typedef quint8 VBSMilixServerReply;
 

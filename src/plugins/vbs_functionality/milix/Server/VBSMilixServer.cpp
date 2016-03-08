@@ -25,7 +25,7 @@ static QPlainTextEdit* gTextEdit = 0;
 #endif
 
 VBSMilixServer::VBSMilixServer( const QString& addr, int port, QWidget* parent )
-  : QObject( parent ), mAddr( addr ), mPort( port ), mTcpServer( 0 ), mNetworkSession( 0 ), mRequestSize( 0 ), mSymbolSize(60), mLineWidth(2)
+  : QObject( parent ), mAddr( addr ), mPort( port ), mTcpServer( 0 ), mNetworkSession( 0 ), mRequestSize( 0 ), mSymbolSize(60), mLineWidth(2), mWorkMode(MssComServer::mssWorkModeExtendedGS)
 {
   QNetworkConfigurationManager manager;
   if ( manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired )
@@ -553,7 +553,9 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   }
   else if(req == VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS)
   {
-    istream >> mSymbolSize >> mLineWidth;
+    int workMode;
+    istream >> mSymbolSize >> mLineWidth >> workMode;
+    mWorkMode = static_cast<MssComServer::TMssWorkModeGS>(workMode);
     ostream << VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS;
     return reply;
 
@@ -680,7 +682,7 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
     mssSymbolFormat->SymbolSize = 60;
     mssSymbolFormat->RelLineWidth = mLineWidth / 60.;
   }
-  mssSymbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
+  mssSymbolFormat->WorkMode = mWorkMode;
 
   MssComServer::IMssNPointGraphicTemplateGSPtr mssGraphicTemplate = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mssSymbolFormat );
 
@@ -738,7 +740,7 @@ bool VBSMilixServer::createDrawingItem(const SymbolInput& input, QString& errorM
     symbolFormat->SymbolSize = 60;
     symbolFormat->RelLineWidth = mLineWidth / 60.;
   }
-  symbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
+  symbolFormat->WorkMode = mWorkMode;
 
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );
   mssNPointGraphic = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, symbolFormat );

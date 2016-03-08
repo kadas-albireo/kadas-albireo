@@ -52,6 +52,7 @@ private:
     int mRequestSize;
     int mSymbolSize;
     int mLineWidth;
+    MssComServer::TMssWorkModeGS mWorkMode;
     MssComServer::TMssLanguageTypeGS mLanguage;
 
     MssComServer::IMssSymbolProviderServiceGSPtr mMssService;
