@@ -536,6 +536,11 @@ class CORE_EXPORT QgsMapLayer : public QObject
      */
     void legendChanged();
 
+    /**
+     * Signal to notify that the layer extent changed.
+     */
+    void extentChanged( const QgsRectangle& oldExtent, const QgsRectangle& newExtent );
+
   protected:
     /** Set the extent */
     virtual void setExtent( const QgsRectangle &rect );

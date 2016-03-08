@@ -918,6 +918,7 @@ void GlobePlugin::updateLayers()
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+        disconnect( mapLayer, SIGNAL(extentChanged(QgsRectangle,QgsRectangle)), this, SLOT( layerExtentChanged(QgsRectangle,QgsRectangle)));
     }
     osgEarth::ModelLayerVector modelLayers;
     mMapNode->getMap()->getModelLayers( modelLayers );
@@ -948,6 +949,7 @@ void GlobePlugin::updateLayers()
       else
       {
         drapedLayers.append( mapLayer->id() );
+        connect( mapLayer, SIGNAL(extentChanged(QgsRectangle,QgsRectangle)), this, SLOT( layerExtentChanged(QgsRectangle,QgsRectangle)));
       }
     }
     mTileSource->setLayerSet( drapedLayers );
@@ -988,6 +990,25 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
       refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() ) );
     }
+  }
+}
+
+void GlobePlugin::layerExtentChanged(const QgsRectangle& oldExtent, const QgsRectangle& newExtent)
+{
+  QgsMapLayer* mapLayer = qobject_cast<QgsMapLayer*>( QObject::sender() );
+  if(mTileSource && mTileSource->layerSet().contains(mapLayer->id())) {
+    QgsRectangle refreshExtent;
+    if(!oldExtent.isEmpty() && !newExtent.isEmpty()) {
+      refreshExtent = oldExtent;
+      refreshExtent.combineExtentWith(&newExtent);
+    } else if(!oldExtent.isEmpty()) {
+      refreshExtent = oldExtent;
+    } else if(!newExtent.isEmpty()) {
+      refreshExtent = newExtent;
+    } else {
+      return;
+    }
+    refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( refreshExtent ) );
   }
 }
 
