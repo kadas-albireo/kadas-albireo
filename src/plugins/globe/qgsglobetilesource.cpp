@@ -82,6 +82,7 @@ QgsMapSettings QgsGlobeTileImage::createSettings( int dpi ) const
   settings.setOutputSize( QSize( mTileSize, mTileSize ) );
   settings.setOutputImageFormat( QImage::Format_ARGB32_Premultiplied );
   settings.setOutputDpi( dpi );
+  settings.setCustomRenderFlags( "globe" );
   return settings;
 }
 

@@ -53,6 +53,11 @@ class QgsMapSettings
     //! @note added in 2.8
     void setLayerStyleOverrides( const QMap<QString, QString>& overrides );
 
+    //! Get custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    const QString& customRenderFlags() const;
+    //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    void setCustomRenderFlags(const QString& customRenderFlags);
+
     //! sets whether to use projections for this layer set
     void setCrsTransformEnabled( bool enabled );
     //! returns true if projections are enabled for this layer set
@@ -88,7 +93,6 @@ class QgsMapSettings
       DrawLabeling,               //!< Enable drawing of labels on top of the map
       UseRenderingOptimization,        //!< Enable vector simplification and other rendering optimizations
       DrawSelection,              //!< Whether vector selections should be shown in the rendered map
-      RenderMapTile,    //!< Draw map such that there are no problems between adjacent tiles
       // TODO: ignore scale-based visibility (overview)
     };
     typedef QFlags<QgsMapSettings::Flag> Flags;
@@ -177,6 +181,17 @@ class QgsMapSettings
      * @return transform - may be null if the transform is not needed
      */
     const QgsCoordinateTransform* layerTransform( QgsMapLayer *layer ) const;
+
+    /**
+     * @brief Compute the extent such that its center is at the specified
+     * position (mapped to the destinatonCrs) and the zoom factor corresponds
+     * to the specified scale
+     * @param point The center, wrt the sourceCRS
+     * @param scale The desired zoom factor (the x part of 1:x)
+     * @param sourceCrs The source CRS
+     * @return An extent which can be passed to QgsMapCanvas::setExtent
+     */
+    QgsRectangle computeExtentForScale(const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs) const;
 
     //! returns current extent of layer set
     QgsRectangle fullExtent() const;

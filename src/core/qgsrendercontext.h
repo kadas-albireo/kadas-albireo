@@ -120,9 +120,6 @@ class CORE_EXPORT QgsRenderContext: public QObject
     bool useRenderingOptimization() const { return mUseRenderingOptimization; }
     void setUseRenderingOptimization( bool enabled ) { mUseRenderingOptimization = enabled; }
 
-    bool renderMapTile() const { return mRenderMapTile; }
-    void setRenderMapTile( bool enabled ) { mRenderMapTile = enabled; }
-
     //! Added in QGIS v2.4
     const QgsVectorSimplifyMethod& vectorSimplifyMethod() const { return mVectorSimplifyMethod; }
     void setVectorSimplifyMethod( const QgsVectorSimplifyMethod& simplifyMethod ) { mVectorSimplifyMethod = simplifyMethod; }
@@ -131,6 +128,11 @@ class CORE_EXPORT QgsRenderContext: public QObject
     const QgsAbstractGeometryV2* geometry() const { return mGeometry; }
     /** Sets pointer to original (unsegmentized) geometry*/
     void setGeometry( const QgsAbstractGeometryV2* geometry ) { mGeometry = geometry; }
+
+    //! Get custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    const QString& customRenderFlags() const { return mCustomRenderFlags; }
+    //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    void setCustomRenderFlags( const QString& customRenderFlags ) { mCustomRenderFlags = customRenderFlags; }
 
   signals:
     void renderingAborted();
@@ -180,13 +182,13 @@ class CORE_EXPORT QgsRenderContext: public QObject
     /**True if the rendering optimization (geometry simplification) can be executed*/
     bool mUseRenderingOptimization;
 
-    bool mRenderMapTile;
-
     /**Simplification object which holds the information about how to simplify the features for fast rendering */
     QgsVectorSimplifyMethod mVectorSimplifyMethod;
 
     /** Pointer to the (unsegmentized) geometry*/
     const QgsAbstractGeometryV2* mGeometry;
+
+    QString mCustomRenderFlags;
 };
 
 #endif

@@ -65,7 +65,7 @@ class CORE_EXPORT QgsMapSettings
     //! of output size. Use visibleExtent() to get the resulting extent.
     void setExtent( const QgsRectangle& rect );
 
-    //! Return the size of the resulting map image
+    //! Return the size of the resulting map image (in pixels)
     QSize outputSize() const;
     //! Set the size of the resulting map image
     void setOutputSize( const QSize& size );
@@ -98,6 +98,11 @@ class CORE_EXPORT QgsMapSettings
     //! Set map of map layer style overrides (key: layer ID, value: style name) where a different style should be used instead of the current one
     //! @note added in 2.8
     void setLayerStyleOverrides( const QMap<QString, QString>& overrides );
+
+    //! Get custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    const QString& customRenderFlags() const { return mCustomRenderFlags; }
+    //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
+    void setCustomRenderFlags( const QString& customRenderFlags ) { mCustomRenderFlags = customRenderFlags; }
 
     //! sets whether to use projections for this layer set
     void setCrsTransformEnabled( bool enabled );
@@ -134,7 +139,6 @@ class CORE_EXPORT QgsMapSettings
       DrawLabeling       = 0x10,  //!< Enable drawing of labels on top of the map
       UseRenderingOptimization = 0x20, //!< Enable vector simplification and other rendering optimizations
       DrawSelection      = 0x40,  //!< Whether vector selections should be shown in the rendered map
-      RenderMapTile = 0x80, //!< Draw map such that there are no problems between adjacent tiles
       // TODO: ignore scale-based visibility (overview)
     };
     Q_DECLARE_FLAGS( Flags, Flag )
@@ -224,6 +228,17 @@ class CORE_EXPORT QgsMapSettings
      */
     const QgsCoordinateTransform* layerTransform( QgsMapLayer *layer ) const;
 
+    /**
+     * @brief Compute the extent such that its center is at the specified
+     * position (mapped to the destinatonCrs) and the zoom factor corresponds
+     * to the specified scale
+     * @param point The center, wrt the sourceCRS
+     * @param scale The desired zoom factor (the x part of 1:x)
+     * @param sourceCrs The source CRS
+     * @return An extent which can be passed to QgsMapCanvas::setExtent
+     */
+    QgsRectangle computeExtentForScale( const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs ) const;
+
     //! returns current extent of layer set
     QgsRectangle fullExtent() const;
 
@@ -245,6 +260,7 @@ class CORE_EXPORT QgsMapSettings
 
     QStringList mLayers;
     QMap<QString, QString> mLayerStyleOverrides;
+    QString mCustomRenderFlags;
 
     bool mProjectionsEnabled;
     QgsCoordinateReferenceSystem mDestCRS;

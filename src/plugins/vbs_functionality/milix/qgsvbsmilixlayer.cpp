@@ -136,6 +136,11 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
       QList<VBSMilixClient::NPointSymbol> symbols;
       for ( int i = 0, n = items.size(); i < n; ++i )
       {
+        if ( !items[i]->isMultiPoint() && mRendererContext.customRenderFlags().split( ";" ).contains( "globe" ) )
+        {
+          // Only render multipoint symbols in globe
+          continue;
+        }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), *mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
 
