@@ -1611,6 +1611,5 @@ QString QgsMapLayer::metadata()
 
 void QgsMapLayer::setExtent( const QgsRectangle &r )
 {
-  emit extentChanged( mExtent, r );
   mExtent = r;
 }
