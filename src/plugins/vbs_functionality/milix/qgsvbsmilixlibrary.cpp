@@ -346,6 +346,7 @@ void QgsVBSMilixLibrary::manageSymbolPick( int symbolIdx )
   layer->removeItem( symbolIdx );
   connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
   mIface->mapCanvas()->setMapTool( tool );
+  mIface->mapCanvas()->clearCache( layer->id() );
   mIface->mapCanvas()->refresh();
 }
 

@@ -80,6 +80,7 @@ void QgsVBSMapToolCreateMilixItem::canvasPressEvent( QMouseEvent * e )
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
+      mCanvas->clearCache( mLayer->id() );
       mCanvas->refresh();
     }
   }
@@ -94,6 +95,7 @@ void QgsVBSMapToolCreateMilixItem::canvasPressEvent( QMouseEvent * e )
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
+      mCanvas->clearCache( mLayer->id() );
       mCanvas->refresh();
     }
     else if ( mNPressedPoints + 1 < mMinNPoints )
@@ -132,6 +134,7 @@ QgsVBSMapToolEditMilixItem::~QgsVBSMapToolEditMilixItem()
     mLayer->addItem( mItem->toMilixItem() );
     // Delay delete until after refresh, to avoid flickering
     connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem.data(), SLOT( deleteLater() ) );
+    mCanvas->clearCache( mLayer->id() );
     mCanvas->refresh();
   }
 }
