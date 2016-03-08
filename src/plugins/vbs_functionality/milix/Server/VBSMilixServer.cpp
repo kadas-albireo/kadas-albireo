@@ -560,6 +560,46 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     return reply;
 
   }
+  else if(req == VBS_MILIX_REQUEST_GET_CONTROL_POINTS)
+  {
+    QString symbolXml;
+    QList<QPoint> points;
+    istream >> symbolXml >> points;
+
+    MssComServer::IMssSymbolFormatGSPtr symbolFormat = mMssService->CreateFormatObj();
+    symbolFormat->SymbolSize = 60;
+    symbolFormat->RelLineWidth = mLineWidth / 60.;
+    symbolFormat->WorkMode = mWorkMode;
+
+    MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( symbolXml.toLocal8Bit().data() );
+    MssComServer::IMssNPointGraphicTemplateGSPtr mssNPointGraphic = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, symbolFormat );
+    if ( !mssNPointGraphic )
+    {
+      ostream << VBS_MILIX_REPLY_ERROR << QString( "CreateNPointGraphic failed for %1" ).arg( symbolXml );
+      return reply;
+    }
+
+    MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = mMssNPointDrawingTarget->CreateNewNPointGraphic( mssNPointGraphic, false );
+    MssComServer::IMssNPointDrawingItemGSPtr mssDrawingItem = mssCreationItem->DrawingItem;
+    QVector<MssComServer::TMssPointGS> mssPoints;
+    for(int i = 0, n = points.size(); i < n; ++i)
+    {
+      MssComServer::TMssPointGS mssPoint;
+      mssPoint.X = points[i].x();
+      mssPoint.Y = points[i].y();
+      mssPoints.append( mssPoint );
+    }
+    int nPoints = mssPoints.size();
+    mssDrawingItem->AddPoints(&mssPoints[0], nPoints);
+    QList<int> controlPoints;
+    for(int i = 0; i < nPoints; ++i) {
+      if(mssDrawingItem->IsCtrlPoint(i) == VARIANT_TRUE) {
+        controlPoints.append(i);
+      }
+    }
+    ostream << VBS_MILIX_REPLY_GET_CONTROL_POINTS << controlPoints;
+    return reply;
+  }
   else
   {
     LOG( "Error: Unrecognized command" );
