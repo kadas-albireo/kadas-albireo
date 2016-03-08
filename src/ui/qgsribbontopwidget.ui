@@ -1730,20 +1730,6 @@ Sight</string>
           </item>
           <item row="0" column="3">
            <layout class="QGridLayout" name="mGridLayoutMssOptions">
-            <item row="0" column="0">
-             <widget class="QLabel" name="mSymbolSizeLabel">
-              <property name="text">
-               <string>Symbol size:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="mLineWidthLabel">
-              <property name="text">
-               <string>Line width:</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QSlider" name="mSymbolSizeSlider">
               <property name="sizePolicy">
@@ -1819,6 +1805,41 @@ Sight</string>
               <property name="tickInterval">
                <number>1</number>
               </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="mSymbolSizeLabel">
+              <property name="text">
+               <string>Symbol size:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="mLineWidthLabel">
+              <property name="text">
+               <string>Line width:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="mWorkModeLabel">
+              <property name="text">
+               <string>Work mode:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="mWorkModeCombo">
+              <item>
+               <property name="text">
+                <string>International</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>CH</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
