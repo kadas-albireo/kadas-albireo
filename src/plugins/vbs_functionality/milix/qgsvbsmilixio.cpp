@@ -115,8 +115,8 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   }
   if ( !dev->isOpen() )
   {
-    delete zip;
     delete dev;
+    delete zip;
     iface->messageBar()->pushMessage( tr( "Export Failed" ), tr( "Failed to open the output file for writing." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
@@ -145,8 +145,8 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   }
   dev->write( doc.toString().toUtf8() );
 
-  delete zip;
   delete dev;
+  delete zip;
   iface->messageBar()->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
   if ( !exportMessages.isEmpty() )
   {
