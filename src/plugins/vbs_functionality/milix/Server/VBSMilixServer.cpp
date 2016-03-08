@@ -579,8 +579,12 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
       return reply;
     }
 
-    MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = mMssNPointDrawingTarget->CreateNewNPointGraphic( mssNPointGraphic, false );
-    MssComServer::IMssNPointDrawingItemGSPtr mssDrawingItem = mssCreationItem->DrawingItem;
+    MssComServer::IMssNPointDrawingItemGSPtr mssDrawingItem = mMssNPointDrawingTarget->AddNPointGraphic( mssNPointGraphic, false );
+    if ( !mssDrawingItem )
+    {
+      ostream << VBS_MILIX_REPLY_ERROR << QString( "AddNPointGraphic failed for %1" ).arg( symbolXml );
+      return reply;
+    }
     QVector<MssComServer::TMssPointGS> mssPoints(nPoints);
     mssDrawingItem->AddPoints(&mssPoints[0], nPoints);
     QList<int> controlPoints;
