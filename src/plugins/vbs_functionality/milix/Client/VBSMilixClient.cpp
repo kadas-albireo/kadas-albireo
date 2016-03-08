@@ -15,8 +15,6 @@
 #include <QWidget>
 #include <rsvgrenderer.h>
 
-const int VBSMilixClient::SymbolSize = 48;
-
 VBSMilixClientWorker::VBSMilixClientWorker( QObject* parent )
     : QObject( parent ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
 {
@@ -137,7 +135,7 @@ bool VBSMilixClientWorker::initialize()
   QDataStream istream( &request, QIODevice::WriteOnly );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   istream << VBS_MILIX_REQUEST_INIT;
-  istream << lang << VBSMilixClient::SymbolSize;
+  istream << lang;
   QByteArray response;
   if ( !processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )
   {
@@ -616,6 +614,20 @@ bool VBSMilixClient::getCurrentLibraryVersionTag( QString& versionTag )
   bool result;
   QMetaObject::invokeMethod( &instance()->mWorker, "getCurrentLibraryVersionTag", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( QString&, versionTag ) );
   return result;
+}
+
+bool VBSMilixClient::setSymbolOptions( int symbolSize, int lineWidth )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS << symbolSize << lineWidth;
+
+  QByteArray response;
+  if ( !processRequest( request, response, VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS ) )
+  {
+    return false;
+  }
+  return true;
 }
 
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )

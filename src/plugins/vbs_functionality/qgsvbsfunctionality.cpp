@@ -107,9 +107,11 @@ void QgsVBSFunctionality::loadMilx()
 void QgsVBSFunctionality::setMilXSymbolSize( int value )
 {
   VBSMilixClient::setSymbolSize( value );
+  mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsVBSFunctionality::setMilXLineWidth( int value )
 {
   VBSMilixClient::setLineWidth( value );
+  mQGisIface->mapCanvas()->refresh();
 }

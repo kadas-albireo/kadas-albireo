@@ -1767,6 +1767,9 @@ Sight</string>
               <property name="value">
                <number>60</number>
               </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -1803,6 +1806,9 @@ Sight</string>
               </property>
               <property name="value">
                <number>2</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>

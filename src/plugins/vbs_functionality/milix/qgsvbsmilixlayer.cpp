@@ -82,11 +82,11 @@ void QgsVBSMilixItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, 
   graphicEl.appendChild( offsetEl );
 
   QDomElement factorXEl = doc.createElement( "FactorX" );
-  factorXEl.appendChild( doc.createTextNode( QString::number( mUserOffset.x() / VBSMilixClient::SymbolSize ) ) );
+  factorXEl.appendChild( doc.createTextNode( QString::number( mUserOffset.x() / VBSMilixClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorXEl );
 
   QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / VBSMilixClient::SymbolSize ) ) );
+  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / VBSMilixClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorYEl );
 }
 
@@ -267,7 +267,7 @@ void QgsVBSMilixLayer::exportToMilxly( QIODevice* dev, const QString& versionTag
   milxLayerEl.appendChild( crsEl );
 
   QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number( VBSMilixClient::SymbolSize ) ) );
+  symbolSizeEl.appendChild( doc.createTextNode( QString::number( VBSMilixClient::getSymbolSize() ) ) );
   milxLayerEl.appendChild( symbolSizeEl );
 
   QDomElement bwEl = doc.createElement( "DisplayBW" );

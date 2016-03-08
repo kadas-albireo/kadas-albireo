@@ -68,10 +68,10 @@ public:
     QList<int> controlPoints;
   };
 
-  static const int SymbolSize;
-
-  static void setSymbolSize(int value) { instance()->mSymbolSize = value; }
-  static void setLineWidth(int value) { instance()->mLineWidth = value; }
+  static void setSymbolSize(int value) { instance()->mSymbolSize = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth); }
+  static void setLineWidth(int value) { instance()->mLineWidth = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth); }
+  static int getSymbolSize() { return instance()->mSymbolSize; }
+  static int getLineWidth() { return instance()->mLineWidth; }
 
   static bool init();
   static bool getSymbol(const QString& symbolId, SymbolDesc& result);
@@ -102,6 +102,7 @@ private:
   static QImage renderSvg(const QByteArray& xml);
 
   bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );
+  bool setSymbolOptions(int symbolSize, int lineWidth);
 };
 
 #endif // VBSMILIXCLIENT_HPP
