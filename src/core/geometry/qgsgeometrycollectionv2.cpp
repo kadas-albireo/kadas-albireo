@@ -327,7 +327,7 @@ QString QgsGeometryCollectionV2::asKML( int precision ) const
   {
     kml.append( mGeometries.at( i )->asKML( precision ) );
   }
-  kml.append( "/<MultiGeometry>" );
+  kml.append( "</MultiGeometry>" );
   return kml;
 }
 

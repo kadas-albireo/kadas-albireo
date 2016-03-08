@@ -22,11 +22,13 @@
 #include <QCoreApplication>
 #include <QColor>
 #include <QDate>
+#include <QFileInfo>
 #include <QTime>
 #include <QDateTime>
 #include <QTextDocument>
 #include "qgsconfig.h"
 #include "qgslogger.h"
+#include <quazip/quazipfile.h>
 
 #include <ogr_api.h>
 
@@ -183,6 +185,39 @@ double QGis::fromUnitToUnitFactor( QGis::UnitType fromUnit, QGis::UnitType toUni
     }
   }
   return 1.0;
+}
+
+bool QGis::addFileToZip( QuaZip* zip, QString filePath, QString zipFileName )
+{
+  if ( !zip )
+  {
+    return false;
+  }
+
+  QFileInfo fi( filePath );
+  QuaZipFile zipLocalFile( zip );
+  if ( !zipLocalFile.open( QIODevice::WriteOnly, QuaZipNewInfo( zipFileName ) ) )
+  {
+    return false;
+  }
+
+  //copy from local file to zip local file
+  QFile localFile( filePath );
+  if ( !localFile.open( QIODevice::ReadOnly ) )
+  {
+    return false;
+  }
+
+  QByteArray buffer;
+  while ( !localFile.atEnd() )
+  {
+    buffer = localFile.read( 4096 );
+    if ( !buffer.isEmpty() )
+    {
+      zipLocalFile.write( buffer );
+    }
+  }
+  return true;
 }
 
 void *qgsMalloc( size_t size )

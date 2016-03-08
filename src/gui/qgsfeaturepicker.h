@@ -17,17 +17,24 @@
 #define QGSFEATUREPICKER_H
 
 #include "qgis.h"
+#include "qgsfeature.h"
 
-class QgsFeature;
 class QgsPoint;
-class QgsVectorLayer;
+class QgsMapLayer;
 class QgsMapCanvas;
 
 class GUI_EXPORT QgsFeaturePicker
 {
   public:
+    struct PickResult
+    {
+      QgsMapLayer* layer;
+      QgsFeature feature;
+      QVariant otherResult;
+    };
+
     typedef bool( *filter_t )( const QgsFeature& );
-    static QPair<QgsFeature, QgsVectorLayer*> pick(const QgsMapCanvas *canvas, const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
+    static PickResult pick( const QgsMapCanvas *canvas, const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
 };
 
 #endif // QGSFEATUREPICKER_H

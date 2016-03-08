@@ -40,6 +40,7 @@ class GUI_EXPORT QgsTextAnnotationItem: public QgsAnnotationItem
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
 
     void paint( QPainter* painter ) override;
+    QString asHtml() const;
 
   protected:
     QgsTextAnnotationItem( QgsMapCanvas* canvas, QgsTextAnnotationItem* source );

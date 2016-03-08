@@ -19,7 +19,17 @@ QgsKMLExportDialog::~QgsKMLExportDialog()
 
 QString QgsKMLExportDialog::saveFile() const
 {
-  return mFileLineEdit->text();
+  //Add file ending if not already there...
+  QString fileName = mFileLineEdit->text();
+  if ( exportFormat() == QgsKMLExportDialog::KML && !fileName.endsWith( ".kml", Qt::CaseInsensitive ) )
+  {
+    fileName.append( ".kml" );
+  }
+  else if ( exportFormat() == QgsKMLExportDialog::KMZ && !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
+  {
+    fileName.append( ".kmz" );
+  }
+  return fileName;
 }
 
 QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
@@ -36,7 +46,7 @@ QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
       QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( id );
       if ( layer )
       {
-        layerList.append( layer );
+        layerList.prepend( layer );
       }
     }
   }
@@ -55,7 +65,7 @@ void QgsKMLExportDialog::insertAvailableLayers()
   for ( ; it != mLayerIds.constEnd(); ++it )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
-    if ( !layer || !dynamic_cast<QgsVectorLayer*>( layer ) )
+    if ( !layer /*|| !dynamic_cast<QgsVectorLayer*>( layer )*/ )
     {
       continue;
     }
@@ -73,5 +83,17 @@ void QgsKMLExportDialog::on_mFileSelectionButton_clicked()
   if ( !fileName.isEmpty() )
   {
     mFileLineEdit->setText( fileName );
+  }
+}
+
+QgsKMLExportDialog::ExportFormat QgsKMLExportDialog::exportFormat() const
+{
+  if ( QString::compare( mFormatComboBox->currentText(), "KMZ", Qt::CaseInsensitive ) == 0 )
+  {
+    return QgsKMLExportDialog::KMZ;
+  }
+  else
+  {
+    return QgsKMLExportDialog::KML;
   }
 }

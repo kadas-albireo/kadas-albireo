@@ -21,6 +21,7 @@
 #include "qgsmeasuretool.h"
 #include "qgsrubberband.h"
 #include "qgssnappingutils.h"
+#include "qgsvectorlayer.h"
 
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -186,10 +187,10 @@ void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( mPickFeature )
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
-    if ( pickResult.first.isValid() )
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
+    if ( pickResult.feature.isValid() )
     {
-      addGeometry( pickResult.first.geometry(), pickResult.second );
+      addGeometry( pickResult.feature.geometry(), static_cast<QgsVectorLayer*>( pickResult.layer ) );
     }
     mPickFeature = false;
     setCursor( QCursor( QPixmap(( const char ** ) cross_hair_cursor ), 8, 8 ) );

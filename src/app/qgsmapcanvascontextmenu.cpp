@@ -39,16 +39,17 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
 {
   mRubberBand = 0;
 
-  QPair<QgsFeature, QgsVectorLayer*> pick = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
+  // TODO: Handle MiliX layers
+  QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
   // A feature was picked
-  if ( pick.first.isValid() )
+  if ( pickResult.feature.isValid() )
   {
-    mSelectedFeature = pick.first;
-    mSelectedLayer = pick.second;
-    QgsCoordinateTransform ct( pick.second->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
-    mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pick.first.geometry()->type() );
-    mRubberBand->setGeometry( pick.first.geometry()->geometry()->transformed( ct ) );
-    if ( pick.second->type() == QgsMapLayer::RedliningLayer )
+    mSelectedFeature = pickResult.feature;
+    mSelectedLayer = static_cast<QgsVectorLayer*>( pickResult.layer );
+    QgsCoordinateTransform ct( pickResult.layer->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
+    mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pickResult.feature.geometry()->type() );
+    mRubberBand->setGeometry( pickResult.feature.geometry()->geometry()->transformed( ct ) );
+    if ( pickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
     }
@@ -62,7 +63,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   {
     addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( pasteFeature() ) );
   }
-  if ( !pick.first.isValid() )
+  if ( !pickResult.feature.isValid() )
   {
     QMenu* drawMenu = new QMenu();
     addAction( tr( "Draw" ) )->setMenu( drawMenu );

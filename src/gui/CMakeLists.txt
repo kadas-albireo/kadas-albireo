@@ -184,6 +184,8 @@ qgshtmlannotationitem.cpp
 qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
 qgsribbonbutton.cpp
+qgskmlexport.cpp
+qgskmlpallabeling.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
 qgsmanageconnectionsdialog.cpp
@@ -569,6 +571,7 @@ INCLUDE_DIRECTORIES(
   ${SQLITE3_INCLUDE_DIR}
   ${QJSON_INCLUDE_DIR}
   ${QEXTSERIALPORT_INCLUDE_DIR}
+  ${QUAZIP_INCLUDE_DIR}
 )
 
 INCLUDE_DIRECTORIES(${QSCINTILLA_INCLUDE_DIR})
@@ -642,6 +645,7 @@ TARGET_LINK_LIBRARIES(qgis_gui
   ${EXIV2_LIBRARY}
   ${QJSON_LIBRARIES}
   ${qjson_LIBRARIES}
+  ${QUAZIP_LIBRARIES}
 )
 
 IF(WIN32)

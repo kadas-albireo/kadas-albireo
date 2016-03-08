@@ -207,6 +207,8 @@
 #include "qgsosmimportdialog.h"
 #include "qgsosmexportdialog.h"
 
+#include <quazip/quazipfile.h>
+
 #ifdef ENABLE_MODELTEST
 #include "modeltest.h"
 #endif
@@ -1157,8 +1159,8 @@ void QgisApp::createCanvasTools()
   mMapTools.mPan = new QgsMapToolPan( mapCanvas() );
   connect( mMapTools.mPan, SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ),
            this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
-  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsFeature, QgsVectorLayer* ) ),
-           this, SLOT( handleFeaturePicked( QgsFeature, QgsVectorLayer* ) ) );
+  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ),
+           this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
   connect( mMapTools.mPan, SIGNAL( labelPicked( QgsLabelPosition ) ),
            this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mapCanvas() );
@@ -3096,19 +3098,60 @@ void QgisApp::kmlExport()
   {
     QgsKMLExport kmlExport;
     kmlExport.setLayers( d.selectedLayers() );
+    kmlExport.setAnnotationItems( annotationItems() );
 
     QString fileName = d.saveFile();
-    QFile kmlFile( fileName );
+    QFileInfo fi( fileName );
+
+    QIODevice* outputDevice = 0;
+    QuaZip* quaZip = 0;
+    if ( d.exportFormat() == QgsKMLExportDialog::KML )
+    {
+      outputDevice = new QFile( fileName );
+    }
+    else //KMZ
+    {
+      quaZip = new QuaZip( fileName );
+      if ( !quaZip->open( QuaZip::mdCreate ) )
+      {
+        delete quaZip;
+        return;
+      }
+      outputDevice = new QuaZipFile( quaZip );
+      //quazip files need to be opened with special methods
+      static_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) );
+    }
+
+    QStringList usedLocalFiles;
+    QList<QgsMapLayer*> superOverlayLayers;
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    if ( kmlExport.writeToDevice( &kmlFile, mapCanvas()->mapSettings(), d.visibleExtentOnly() ) == 0 )
+    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly(), usedLocalFiles, superOverlayLayers ) == 0 );
+    outputDevice->close();
+    delete outputDevice;
+
+    if ( success && d.exportFormat() == QgsKMLExportDialog::KMZ )
     {
-      messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
+      QStringList::const_iterator localFileIt = usedLocalFiles.constBegin();
+      for ( ; localFileIt != usedLocalFiles.constEnd(); ++localFileIt )
+      {
+        QFileInfo fi( *localFileIt );
+        QGis::addFileToZip( quaZip, *localFileIt, fi.fileName() );
+      }
     }
-    else
+
+    //write super overlays
+    QList<QgsMapLayer*>::iterator overlayIt = superOverlayLayers.begin();
+    int drawingOrder = 0;
+    for ( ; overlayIt != superOverlayLayers.end(); ++overlayIt )
     {
-      messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
+      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath(), drawingOrder );
+      ++drawingOrder;
     }
+
+    messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), QgsMessageBar::INFO, 4 );
+
+    delete quaZip;
     QApplication::restoreOverrideCursor();
   }
 }
@@ -5845,7 +5888,7 @@ void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
   QgsMapCanvasContextMenu( mapPos ).exec( screenPos );
 }
 
-void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *layer )
+void QgisApp::handleFeaturePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult )
 {
   if ( mRedlining && mRedlining->getLayer() && layer == mRedlining->getLayer() )
   {
@@ -5854,6 +5897,10 @@ void QgisApp::handleFeaturePicked( const QgsFeature &feature, QgsVectorLayer *la
   else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && layer == mGpsRouteEditor->getLayer() )
   {
     mGpsRouteEditor->editFeature( feature );
+  }
+  else if ( layer->type() == QgsMapLayer::PluginLayer )
+  {
+    static_cast<QgsPluginLayer*>( layer )->handlePick( otherResult );
   }
 }
 

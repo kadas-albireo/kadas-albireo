@@ -17,10 +17,11 @@
 #include "qgsgeometry.h"
 #include "qgslegendinterface.h"
 #include "qgsmapcanvas.h"
+#include "qgspluginlayer.h"
 #include "qgsrendererv2.h"
 #include "qgsvectorlayer.h"
 
-QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* canvas, const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
+QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas, const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
 {
   QgsRenderContext renderContext = QgsRenderContext::fromMapSettings( canvas->mapSettings() );
   double radiusmm = QSettings().value( "/Map/searchRadiusMM", QGis::DEFAULT_SEARCH_RADIUS_MM ).toDouble();
@@ -32,10 +33,22 @@ QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* c
   filterRect.setYMinimum( mapPos.y() - radiusmu );
   filterRect.setYMaximum( mapPos.y() + radiusmu );
 
+  PickResult pickResult = {};
 
   QgsFeatureList features;
   foreach ( QgsMapLayer* layer, canvas->layers() )
   {
+    if ( layer->type() == QgsMapLayer::PluginLayer )
+    {
+      QgsPluginLayer* pluginLayer = static_cast<QgsPluginLayer*>( layer );
+      QVariant result;
+      if ( pluginLayer->testPick( mapPos, canvas->mapSettings(), result ) )
+      {
+        pickResult.layer = layer;
+        pickResult.otherResult = result;
+        return pickResult;
+      }
+    }
     if (( layer->type() != QgsMapLayer::VectorLayer && layer->type() != QgsMapLayer::RedliningLayer ) )
     {
       continue;
@@ -86,8 +99,10 @@ QPair<QgsFeature, QgsVectorLayer*> QgsFeaturePicker::pick( const QgsMapCanvas* c
     }
     if ( !features.empty() )
     {
-      return qMakePair( features.front(), vlayer );
+      pickResult.layer = vlayer;
+      pickResult.feature = features.front();
+      return pickResult;
     }
   }
-  return qMakePair( QgsFeature(), ( QgsVectorLayer* )( 0 ) );
+  return pickResult;
 }

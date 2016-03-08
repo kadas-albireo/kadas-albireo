@@ -19,6 +19,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsrubberband.h"
 #include "qgsgeometryutils.h"
+#include "qgsvectorlayer.h"
 
 #include <QMouseEvent>
 
@@ -133,10 +134,10 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent * e )
   QgsPoint p = toMapCoordinates( e->pos() );
   if ( mPicking )
   {
-    QPair<QgsFeature, QgsVectorLayer*> pickResult = QgsFeaturePicker::pick( mCanvas, p, QGis::Line );
-    if ( pickResult.first.isValid() && pickResult.first.geometry()->geometry()->vertexCount() > 1 )
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, p, QGis::Line );
+    if ( pickResult.feature.isValid() && pickResult.feature.geometry()->geometry()->vertexCount() > 1 )
     {
-      setGeometry( pickResult.first.geometry(), pickResult.second );
+      setGeometry( pickResult.feature.geometry(), static_cast<QgsVectorLayer*>( pickResult.layer ) );
     }
     mPicking = false;
     setCursor( Qt::ArrowCursor );
