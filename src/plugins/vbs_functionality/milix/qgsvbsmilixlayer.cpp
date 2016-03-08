@@ -31,12 +31,12 @@ void QgsVBSMilixItem::initialize( const QString &mssString, const QString &milit
   mHaveEnoughPoints = haveEnoughPoints;
 }
 
-QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform& crst ) const
+QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const
 {
   QList<QPoint> points;
   foreach ( const QgsPoint& p, mPoints )
   {
-    points.append( mapToPixel.transform( crst.transform( p ) ).toQPointF().toPoint() );
+    points.append( mapToPixel.transform( crst ? crst->transform( p ) : p ).toQPointF().toPoint() );
   }
   return points;
 }
@@ -141,7 +141,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
           // Only render multipoint symbols in globe
           continue;
         }
-        QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), *mRendererContext.coordinateTransform() );
+        QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
 
         symbols.append( VBSMilixClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), items[i]->hasEnoughPoints() ) );
@@ -174,7 +174,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
 
     QRect screenExtent() const
     {
-      QgsRectangle mapRect = mRendererContext.coordinateTransform()->transform( mRendererContext.extent() );
+      QgsRectangle mapRect = mRendererContext.coordinateTransform() ? mRendererContext.coordinateTransform()->transform( mRendererContext.extent() ) : mRendererContext.extent();
       QPoint topLeft = mRendererContext.mapToPixel().transform( mapRect.xMinimum(), mapRect.yMinimum() ).toQPointF().toPoint();
       QPoint topRight = mRendererContext.mapToPixel().transform( mapRect.xMaximum(), mapRect.yMinimum() ).toQPointF().toPoint();
       QPoint bottomLeft = mRendererContext.mapToPixel().transform( mapRect.xMinimum(), mapRect.yMaximum() ).toQPointF().toPoint();
@@ -208,7 +208,7 @@ bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& m
   QList<VBSMilixClient::NPointSymbol> symbols;
   for ( int i = 0, n = mItems.size(); i < n; ++i )
   {
-    QList<QPoint> points = mItems[i]->screenPoints( mapSettings.mapToPixel(), *crst );
+    QList<QPoint> points = mItems[i]->screenPoints( mapSettings.mapToPixel(), crst );
     for ( int j = 0, m = points.size(); j < m; ++j )
     {
       points[j] += mItems[i]->userOffset();

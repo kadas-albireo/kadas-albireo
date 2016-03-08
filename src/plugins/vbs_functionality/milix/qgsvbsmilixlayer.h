@@ -29,7 +29,7 @@ class QgsVBSMilixItem
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
     const QList<QgsPoint>& points() const { return mPoints; }
-    QList<QPoint> screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform& crst ) const;
+    QList<QPoint> screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
     const QList<int>& controlPoints() const { return mControlPoints; }
     const QPoint& userOffset() const { return mUserOffset; }
     bool hasEnoughPoints() const { return mHaveEnoughPoints; }
