@@ -24,7 +24,8 @@ static QPlainTextEdit* gTextEdit = 0;
 #define LOG(msg)
 #endif
 
-VBSMilixServer::VBSMilixServer( const QString& addr, int port, QWidget* parent ) : QObject( parent ), mAddr( addr ), mPort( port ), mTcpServer( 0 ), mNetworkSession( 0 ), mRequestSize( 0 )
+VBSMilixServer::VBSMilixServer( const QString& addr, int port, QWidget* parent )
+  : QObject( parent ), mAddr( addr ), mPort( port ), mTcpServer( 0 ), mNetworkSession( 0 ), mRequestSize( 0 ), mSymbolSize(60), mLineWidth(2)
 {
   QNetworkConfigurationManager manager;
   if ( manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired )
@@ -197,7 +198,6 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   {
     QString language;
     istream >> language;
-    istream >> mSymbolSize;
 
     if(language.startsWith("de", Qt::CaseInsensitive)) {
       mLanguage = MssComServer::mssLanguageGermanGS;
@@ -525,6 +525,39 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS << libraryVersionTags << libraryVersionNames;
 	return reply;
   }
+  else if(req == VBS_MILIX_REQUEST_PICK_SYMBOL)
+  {
+    QPoint clickPos;
+    int nSymbols;
+    istream >> clickPos >> nSymbols;
+    for ( int i = 0; i < nSymbols; ++i )
+    {
+      SymbolInput input;
+      istream >> input.symbolXml >> input.points >> input.controlPoints >> input.finalized;
+      bool hitTestResult = false;
+      QString errorMsg;
+      if ( !hitTest( input, clickPos, hitTestResult, errorMsg ) )
+      {
+        LOG( QString( "Error: %1" ).arg( errorMsg ) );
+        ostream << VBS_MILIX_REPLY_ERROR << errorMsg;
+        return reply;
+      }
+      else if(hitTestResult == true)
+      {
+        ostream << VBS_MILIX_REPLY_PICK_SYMBOL << i;
+        return reply;
+      }
+    }
+    ostream << VBS_MILIX_REPLY_PICK_SYMBOL << -1;
+    return reply;
+  }
+  else if(req == VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS)
+  {
+    istream >> mSymbolSize >> mLineWidth;
+    ostream << VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS;
+    return reply;
+
+  }
   else
   {
     LOG( "Error: Unrecognized command" );
@@ -641,7 +674,12 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );
 
   MssComServer::IMssSymbolFormatGSPtr mssSymbolFormat = mMssService->CreateFormatObj();
-  mssSymbolFormat->SymbolSize = mSymbolSize;
+  if(input.points.size() == 1) {
+    mssSymbolFormat->SymbolSize = mSymbolSize;
+  } else {
+    mssSymbolFormat->SymbolSize = 60;
+    mssSymbolFormat->RelLineWidth = mLineWidth / 60.;
+  }
   mssSymbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
 
   MssComServer::IMssNPointGraphicTemplateGSPtr mssGraphicTemplate = mMssSymbolProvider->CreateNPointGraphic( mssStringObj, mssSymbolFormat );
@@ -678,7 +716,7 @@ bool VBSMilixServer::hitTest(const SymbolInput& input, const QPoint& clickPos, b
   MssComServer::TMssPointGS p;
   p.X = clickPos.x();
   p.Y = clickPos.y();
-  hitTestResult = mssDrawingItem->HitTest(p, 5);
+  hitTestResult = mssDrawingItem->HitTest(p, 15);
   return true;
 }
 
@@ -694,7 +732,12 @@ void VBSMilixServer::getLibraryVersionTags(QStringList &versionTags, QStringList
 bool VBSMilixServer::createDrawingItem(const SymbolInput& input, QString& errorMsg, MssComServer::IMssNPointGraphicTemplateGSPtr& mssNPointGraphic, MssComServer::IMssNPointDrawingCreationItemGSPtr &mssCreationItem, MssComServer::IMssNPointDrawingItemGSPtr& mssDrawingItem)
 {
   MssComServer::IMssSymbolFormatGSPtr symbolFormat = mMssService->CreateFormatObj();
-  symbolFormat->SymbolSize = mSymbolSize;
+  if(input.points.size() == 1) {
+    symbolFormat->SymbolSize = mSymbolSize;
+  } else {
+    symbolFormat->SymbolSize = 60;
+    symbolFormat->RelLineWidth = mLineWidth / 60.;
+  }
   symbolFormat->WorkMode = MssComServer::mssWorkModeExtendedGS;
 
   MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( input.symbolXml.toLocal8Bit().data() );

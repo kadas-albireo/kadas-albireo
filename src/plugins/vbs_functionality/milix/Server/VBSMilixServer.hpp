@@ -51,6 +51,7 @@ private:
     QByteArray mRequestBuffer;
     int mRequestSize;
     int mSymbolSize;
+    int mLineWidth;
     MssComServer::TMssLanguageTypeGS mLanguage;
 
     MssComServer::IMssSymbolProviderServiceGSPtr mMssService;
