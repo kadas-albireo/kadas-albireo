@@ -398,6 +398,7 @@ void GlobePlugin::run()
 //#ifdef INCREMENTAL_UPDATE_TEST
       opts.L2CacheSize() = 0;
 //#endif
+      opts.tileSize() = 512;
       mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
       osgEarth::ImageLayerOptions options( "QGIS" );
@@ -918,7 +919,7 @@ void GlobePlugin::updateLayers()
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
-        disconnect( mapLayer, SIGNAL(extentChanged(QgsRectangle,QgsRectangle)), this, SLOT( layerExtentChanged(QgsRectangle,QgsRectangle)));
+      disconnect( mapLayer, SIGNAL( extentChanged( QgsRectangle, QgsRectangle ) ), this, SLOT( layerExtentChanged( QgsRectangle, QgsRectangle ) ) );
     }
     osgEarth::ModelLayerVector modelLayers;
     mMapNode->getMap()->getModelLayers( modelLayers );
@@ -949,7 +950,7 @@ void GlobePlugin::updateLayers()
       else
       {
         drapedLayers.append( mapLayer->id() );
-        connect( mapLayer, SIGNAL(extentChanged(QgsRectangle,QgsRectangle)), this, SLOT( layerExtentChanged(QgsRectangle,QgsRectangle)));
+        connect( mapLayer, SIGNAL( extentChanged( QgsRectangle, QgsRectangle ) ), this, SLOT( layerExtentChanged( QgsRectangle, QgsRectangle ) ) );
       }
     }
     mTileSource->setLayerSet( drapedLayers );
@@ -993,19 +994,27 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
   }
 }
 
-void GlobePlugin::layerExtentChanged(const QgsRectangle& oldExtent, const QgsRectangle& newExtent)
+void GlobePlugin::layerExtentChanged( const QgsRectangle& oldExtent, const QgsRectangle& newExtent )
 {
   QgsMapLayer* mapLayer = qobject_cast<QgsMapLayer*>( QObject::sender() );
-  if(mTileSource && mTileSource->layerSet().contains(mapLayer->id())) {
+  if ( mTileSource && mTileSource->layerSet().contains( mapLayer->id() ) )
+  {
     QgsRectangle refreshExtent;
-    if(!oldExtent.isEmpty() && !newExtent.isEmpty()) {
+    if ( !oldExtent.isEmpty() && !newExtent.isEmpty() )
+    {
       refreshExtent = oldExtent;
-      refreshExtent.combineExtentWith(&newExtent);
-    } else if(!oldExtent.isEmpty()) {
+      refreshExtent.combineExtentWith( &newExtent );
+    }
+    else if ( !oldExtent.isEmpty() )
+    {
       refreshExtent = oldExtent;
-    } else if(!newExtent.isEmpty()) {
+    }
+    else if ( !newExtent.isEmpty() )
+    {
       refreshExtent = newExtent;
-    } else {
+    }
+    else
+    {
       return;
     }
     refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( refreshExtent ) );
