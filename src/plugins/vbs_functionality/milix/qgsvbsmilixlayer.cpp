@@ -190,7 +190,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsVBSMilixLayer::QgsVBSMilixLayer( const QString &name )
-    : QgsPluginLayer( "MilX_Layer", name )
+    : QgsPluginLayer( layerTypeKey(), name )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
@@ -332,6 +332,31 @@ bool QgsVBSMilixLayer::importMilxly( QDomElement& milxLayerEl, const QString& fi
     item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
     addItem( item );
   }
+  return true;
+}
+
+bool QgsVBSMilixLayer::readXml( const QDomNode& layer_node )
+{
+  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QDomElement milxLayerEl = layer_node.firstChildElement( "MilXLayer" );
+  if ( !milxLayerEl.isNull() )
+  {
+    QString errMsg;
+    QStringList messages;
+    return importMilxly( milxLayerEl, verTag, errMsg, messages );
+  }
+  return true;
+}
+
+bool QgsVBSMilixLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ )
+{
+  QDomElement layerElement = layer_node.toElement();
+  layerElement.setAttribute( "type", "plugin" );
+  layerElement.setAttribute( "name", layerTypeKey() );
+
+  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QStringList messages;
+  exportToMilxly( layerElement, verTag, messages );
   return true;
 }
 

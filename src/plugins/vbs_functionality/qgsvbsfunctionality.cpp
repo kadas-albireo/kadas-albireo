@@ -20,6 +20,7 @@
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
+#include "qgspluginlayerregistry.h"
 #include "qgsvbsfunctionality.h"
 #include "qgisinterface.h"
 #include "ovl/qgsvbsovlimporter.h"
@@ -80,10 +81,13 @@ void QgsVBSFunctionality::initGui()
     setMilXWorkMode( mWorkModeCombo->currentIndex() );
     connect( mWorkModeCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setMilXWorkMode( int ) ) );
   }
+
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsVBSMilixLayerType() );
 }
 
 void QgsVBSFunctionality::unload()
 {
+  QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsVBSMilixLayer::layerTypeKey() );
   delete mActionOvlImport;
   mActionOvlImport = 0;
   mActionMilx = 0;

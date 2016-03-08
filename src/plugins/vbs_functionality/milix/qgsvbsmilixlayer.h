@@ -19,6 +19,7 @@
 #define QGS_VBS_MILIX_LAYER_H
 
 #include "qgspluginlayer.h"
+#include "qgspluginlayerregistry.h"
 #include "Client/VBSMilixClient.hpp"
 
 class QgsVBSMilixItem
@@ -51,6 +52,8 @@ class QgsVBSMilixLayer : public QgsPluginLayer
 {
     Q_OBJECT
   public:
+    static QString layerTypeKey() { return "MilX_Layer"; }
+
     QgsVBSMilixLayer( const QString& name = QString( "MilX" ) );
     ~QgsVBSMilixLayer();
     void addItem( QgsVBSMilixItem* item ) { mItems.append( item ); }
@@ -69,10 +72,23 @@ class QgsVBSMilixLayer : public QgsPluginLayer
 
   signals:
     void symbolPicked( int symbolIdx );
+
+  protected:
+    bool readXml( const QDomNode& layer_node ) override;
+    bool writeXml( QDomNode & layer_node, QDomDocument & document ) override;
+
   private:
     class Renderer;
 
     QList<QgsVBSMilixItem*> mItems;
+};
+
+class QgsVBSMilixLayerType : public QgsPluginLayerType
+{
+  public:
+    QgsVBSMilixLayerType() : QgsPluginLayerType( QgsVBSMilixLayer::layerTypeKey() ) {}
+    QgsPluginLayer* createLayer() override { return new QgsVBSMilixLayer(); }
+    bool showLayerProperties( QgsPluginLayer* layer ) override { return false; }
 };
 
 #endif // QGS_VBS_MILIX_LAYER_H
