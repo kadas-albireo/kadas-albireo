@@ -563,8 +563,8 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
   else if(req == VBS_MILIX_REQUEST_GET_CONTROL_POINTS)
   {
     QString symbolXml;
-    QList<QPoint> points;
-    istream >> symbolXml >> points;
+    int nPoints;
+    istream >> symbolXml >> nPoints;
 
     MssComServer::IMssSymbolFormatGSPtr symbolFormat = mMssService->CreateFormatObj();
     symbolFormat->SymbolSize = 60;
@@ -581,15 +581,7 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
 
     MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = mMssNPointDrawingTarget->CreateNewNPointGraphic( mssNPointGraphic, false );
     MssComServer::IMssNPointDrawingItemGSPtr mssDrawingItem = mssCreationItem->DrawingItem;
-    QVector<MssComServer::TMssPointGS> mssPoints;
-    for(int i = 0, n = points.size(); i < n; ++i)
-    {
-      MssComServer::TMssPointGS mssPoint;
-      mssPoint.X = points[i].x();
-      mssPoint.Y = points[i].y();
-      mssPoints.append( mssPoint );
-    }
-    int nPoints = mssPoints.size();
+    QVector<MssComServer::TMssPointGS> mssPoints(nPoints);
     mssDrawingItem->AddPoints(&mssPoints[0], nPoints);
     QList<int> controlPoints;
     for(int i = 0; i < nPoints; ++i) {
