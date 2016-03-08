@@ -101,6 +101,7 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
     {
       pickResult.layer = vlayer;
       pickResult.feature = features.front();
+      return pickResult;
     }
   }
   return pickResult;
