@@ -123,17 +123,38 @@ void QgsVBSFunctionality::loadMilx()
 void QgsVBSFunctionality::setMilXSymbolSize( int value )
 {
   VBSMilixClient::setSymbolSize( value );
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    {
+      mQGisIface->mapCanvas()->clearCache( layer->id() );
+    }
+  }
   mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsVBSFunctionality::setMilXLineWidth( int value )
 {
   VBSMilixClient::setLineWidth( value );
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    {
+      mQGisIface->mapCanvas()->clearCache( layer->id() );
+    }
+  }
   mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsVBSFunctionality::setMilXWorkMode( int idx )
 {
   VBSMilixClient::setWorkMode( idx );
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    {
+      mQGisIface->mapCanvas()->clearCache( layer->id() );
+    }
+  }
   mQGisIface->mapCanvas()->refresh();
 }
