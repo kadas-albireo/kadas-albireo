@@ -2,6 +2,8 @@
         version=0,
         keyword_arguments="Optional")
 
+typedef void XEvent;
+
 %Import QtCore/QtCoremod.sip
 %Import QtGui/QtGuimod.sip
 
