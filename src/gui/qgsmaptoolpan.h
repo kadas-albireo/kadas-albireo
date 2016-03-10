@@ -35,7 +35,7 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     Q_OBJECT
   public:
     //! constructor
-    QgsMapToolPan( QgsMapCanvas* canvas );
+    QgsMapToolPan( QgsMapCanvas* canvas, bool allowItemInteraction = true );
 
     ~QgsMapToolPan();
 
@@ -67,6 +67,9 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     void labelPicked( const QgsLabelPosition& labelPos );
 
   protected:
+
+    //! Flag to indicate whether interaction with map items is allowed
+    bool mAllowItemInteraction;
 
     //! Flag to indicate a map canvas drag operation is taking place
     bool mDragging;

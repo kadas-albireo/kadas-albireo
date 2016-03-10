@@ -7,7 +7,7 @@ class QgsMapToolPan : QgsMapTool
 
   public:
     //! constructor
-    QgsMapToolPan( QgsMapCanvas* canvas );
+    QgsMapToolPan( QgsMapCanvas* canvas, bool allowItemInteraction = true );
 
     //! Overridden mouse double click event
     virtual void canvasDoubleClickEvent(QMouseEvent *e);

@@ -93,7 +93,7 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   mMapCanvas->setWheelAction( wheelAction, zoomFactor );
   setWidget( mMapCanvas );
 
-  QgsMapToolPan* mapTool = new QgsMapToolPan( mMapCanvas );
+  QgsMapToolPan* mapTool = new QgsMapToolPan( mMapCanvas, false );
   connect( mapTool, SIGNAL( deactivated() ), mapTool, SLOT( deleteLater() ) );
   mMapCanvas->setMapTool( mapTool );
 
