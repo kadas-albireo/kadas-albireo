@@ -24,6 +24,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include <QAction>
+#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDomDocument>
@@ -88,7 +89,7 @@ class QgsVBSMilixLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 
 
 QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
-    : QDialog( parent ), mIface( iface )
+    : QDialog( parent ), mIface( iface ), mLoader( 0 )
 {
   setWindowTitle( tr( "MilX Symbol Gallery" ) );
   QGridLayout* layout = new QGridLayout( this );
@@ -150,12 +151,22 @@ QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
   {
     setCursor( Qt::WaitCursor );
     mTreeView->setModel( mLoadingModel );
-    QgsVBSMilixLibraryLoader* loader = new QgsVBSMilixLibraryLoader( this );
-    connect( loader, SIGNAL( finished() ), loader, SLOT( deleteLater() ) );
-    connect( loader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
-    loader->start();
+    mLoader = new QgsVBSMilixLibraryLoader( this );
+    connect( mLoader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
+    mLoader->start();
   }
   updateLayers();
+}
+
+QgsVBSMilixLibrary::~QgsVBSMilixLibrary()
+{
+  if ( mLoader )
+  {
+    while ( !mLoader->isFinished() )
+    {
+      QApplication::instance()->processEvents( QEventLoop::ExcludeUserInputEvents );
+    }
+  }
 }
 
 void QgsVBSMilixLibrary::autocreateLayer()
@@ -198,6 +209,8 @@ void QgsVBSMilixLibrary::updateLayers()
 
 void QgsVBSMilixLibrary::loaderFinished()
 {
+  delete mLoader;
+  mLoader = 0;
   mTreeView->setModel( mFilterProxyModel );
   unsetCursor();
 }

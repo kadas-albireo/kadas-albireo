@@ -33,12 +33,14 @@ class QStandardItem;
 class QStandardItemModel;
 class QTreeView;
 class QgsFilterLineEdit;
+class QgsVBSMilixLibraryLoader;
 
 class QgsVBSMilixLibrary : public QDialog
 {
     Q_OBJECT
   public:
     QgsVBSMilixLibrary( QgisInterface *iface, QWidget* parent = 0 );
+    ~QgsVBSMilixLibrary();
     void autocreateLayer();
 
   public slots:
@@ -54,6 +56,7 @@ class QgsVBSMilixLibrary : public QDialog
     static const int SymbolVariablePointsRole;
 
     QgisInterface* mIface;
+    QgsVBSMilixLibraryLoader* mLoader;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     QStandardItemModel* mGalleryModel;
