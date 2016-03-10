@@ -52,6 +52,6 @@ IF(WITH_PY_COMPILE)
     COMMAND ${PYTHON_EXECUTABLE} -m compileall -q "${QGIS_VBS_PYTHON_OUTPUT_DIRECTORY}"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
     COMMENT "Byte-compiling staged PyQGIS utility modules..."
-    DEPENDS osgpyutils
+    DEPENDS vbspyutils
   )
 ENDIF(WITH_PY_COMPILE)
