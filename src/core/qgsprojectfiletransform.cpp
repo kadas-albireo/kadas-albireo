@@ -711,6 +711,56 @@ void QgsProjectFileTransform::transform2300to21500()
       }
     }
   }
+
+  //composer
+
+  // rotation -> itemRotation
+  QDomNodeList composerItemNodeList = mDom.elementsByTagName( "ComposerItem" );
+  for ( int i = 0; i < composerItemNodeList.size(); ++i )
+  {
+    QDomElement itemElem = composerItemNodeList.at( i ).toElement();
+    if ( itemElem.hasAttribute( "rotation" ) )
+    {
+      double rotation = itemElem.attribute( "rotation" ).toDouble();
+
+      if ( qgsDoubleNear( rotation, 90.0 ) )
+      {
+        //calculate new x/y, width / height
+        double xBefore = itemElem.attribute( "x" ).toDouble();
+        double yBefore = itemElem.attribute( "y" ).toDouble();
+        double widthBefore = itemElem.attribute( "width" ).toDouble();
+        double heightBefore = itemElem.attribute( "height" ).toDouble();
+
+        QTransform rotationTransform;
+        rotationTransform.rotate( -rotation );
+
+        QPointF p1( -widthBefore / 2.0, -heightBefore / 2.0 );
+        QPointF p2( widthBefore / 2.0,  -heightBefore / 2.0 );
+        QPointF p3( widthBefore / 2.0,  heightBefore / 2.0 );
+        QPointF p4( -widthBefore / 2.0, heightBefore / 2.0 );
+
+        QPolygonF boundingPoly;
+        boundingPoly.append( rotationTransform.map( p1 ) );
+        boundingPoly.append( rotationTransform.map( p2 ) );
+        boundingPoly.append( rotationTransform.map( p3 ) );
+        boundingPoly.append( rotationTransform.map( p4 ) );
+
+        QRectF rotatedRect = boundingPoly.boundingRect();
+
+        double widthAfter = rotatedRect.width();
+        double heightAfter = rotatedRect.height();
+
+        itemElem.setAttribute( "x",  xBefore + widthBefore );
+        itemElem.setAttribute( "y", yBefore );
+        itemElem.setAttribute( "width", widthAfter );
+        itemElem.setAttribute( "height", heightAfter );
+      }
+
+      itemElem.setAttribute( "itemRotation", itemElem.attribute( "rotation" ) );
+      itemElem.removeAttribute( "rotation" );
+    }
+  }
+
 }
 
 void QgsProjectFileTransform::convertRasterProperties( QDomDocument& doc, QDomNode& parentNode,
