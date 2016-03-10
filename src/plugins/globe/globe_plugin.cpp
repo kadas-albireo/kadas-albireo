@@ -388,11 +388,6 @@ void GlobePlugin::run()
 
       // The MapNode will render the Map object in the scene graph.
       osgEarth::MapNodeOptions mapNodeOptions;
-#ifdef INCREMENTAL_UPDATE_TEST
-      osgEarth::Drivers::MPTerrainEngine::MPTerrainEngineOptions terrainOptions;
-      terrainOptions.incrementalUpdate() = true;
-      mapNodeOptions.setTerrainOptions( terrainOptions );
-#endif
       mMapNode = new osgEarth::MapNode( map, mapNodeOptions );
 
       mRootNode = new osg::Group();
