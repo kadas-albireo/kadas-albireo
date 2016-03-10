@@ -57,6 +57,7 @@ QgsProjectFileTransform::transform QgsProjectFileTransform::transformers[] =
   {PFV( 2, 0, 0 ), PFV( 2, 1, 0 ), &QgsProjectFileTransform::transformNull},
   {PFV( 2, 1, 0 ), PFV( 2, 2, 0 ), &QgsProjectFileTransform::transformNull},
   {PFV( 2, 2, 0 ), PFV( 2, 3, 0 ), &QgsProjectFileTransform::transform2200to2300},
+  {PFV( 2, 3, 0 ), PFV( 2, 15, 0 ), &QgsProjectFileTransform::transform2300to21500},
 };
 
 bool QgsProjectFileTransform::updateRevision( QgsProjectVersion newVersion )
@@ -606,6 +607,45 @@ void QgsProjectFileTransform::transform2200to2300()
   {
     QDomElement picture = composerPictureList.at( i ).toElement();
     picture.setAttribute( "anchorPoint", QString::number( 4 ) );
+  }
+}
+
+void QgsProjectFileTransform::transform2300to21500()
+{
+  //changed symbol layers
+  QDomNodeList symbolLayerNodeList = mDom.elementsByTagName( "layer" );
+  for ( int i = 0; i < symbolLayerNodeList.size(); ++i )
+  {
+    QDomElement layerElem = symbolLayerNodeList.at( i ).toElement();
+    QString layerClass = layerElem.attribute( "class" );
+
+    if ( layerClass == "SimpleLine" )
+    {
+      QDomNodeList propNodeList = layerElem.elementsByTagName( "prop" );
+      for ( int j = 0; j < propNodeList.size(); ++j )
+      {
+        QDomElement propElem = propNodeList.at( j ).toElement();
+        QString key = propElem.attribute( "k" );
+        //color -> line_color
+        if ( key == "color" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_color" );
+        }
+        //width -> line_width
+        else if ( key == "width" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_width" );
+        }
+        //width_unit -> line_width_unit
+        else if ( key == "width_unit" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_width_unit" );
+        }
+      }
+    }
   }
 }
 
