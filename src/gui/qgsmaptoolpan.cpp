@@ -27,8 +27,9 @@
 #include <QPinchGesture>
 
 
-QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas )
+QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas , bool allowItemInteraction )
     : QgsMapTool( canvas )
+    , mAllowItemInteraction( allowItemInteraction )
     , mDragging( false )
     , mPinching( false )
     , mZoomRubberBand( 0 )
@@ -59,11 +60,14 @@ void QgsMapToolPan::deactivate()
 
 void QgsMapToolPan::canvasDoubleClickEvent( QMouseEvent *e )
 {
-  QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
-  if ( selItem && selItem == mCanvas->annotationItemAtPos( e->pos() ) )
+  if ( mAllowItemInteraction )
   {
-    mAnnotationMoveAction = QgsAnnotationItem::NoAction;
-    selItem->showItemEditor();
+    QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
+    if ( selItem && selItem == mCanvas->annotationItemAtPos( e->pos() ) )
+    {
+      mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+      selItem->showItemEditor();
+    }
   }
 }
 
@@ -80,7 +84,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
       mZoomRubberBand->setToCanvasRectangle( mZoomRect );
       mZoomRubberBand->show();
     }
-    else
+    else if ( mAllowItemInteraction )
     {
       mPickClick = true;
       mMouseMoveLastXY = e->pos();
@@ -92,7 +96,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
       }
     }
   }
-  else if ( e->button() == Qt::RightButton )
+  else if ( e->button() == Qt::RightButton && mAllowItemInteraction )
   {
     // First, try to show menu for annotation items
     QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
@@ -110,7 +114,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
 
 void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 {
-  QgsAnnotationItem* selAnnotationItem = mCanvas->selectedAnnotationItem();
+  QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
   mPickClick = false;
 
   if (( e->buttons() & Qt::LeftButton ) )
@@ -168,7 +172,7 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
       mCanvas->panActionEnd( e->pos() );
       mDragging = false;
     }
-    else if ( mPickClick )
+    else if ( mAllowItemInteraction && mPickClick )
     {
       QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
       QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
@@ -230,7 +234,7 @@ void QgsMapToolPan::keyPressEvent( QKeyEvent *e )
     case Qt::Key_Delete:
     case Qt::Key_Backspace:
     {
-      QgsAnnotationItem* selAnnotationItem = mCanvas->selectedAnnotationItem();
+      QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
       if ( selAnnotationItem )
       {
         delete selAnnotationItem;
