@@ -723,7 +723,7 @@ void QgsProjectFileTransform::transform2300to21500()
     {
       double rotation = itemElem.attribute( "rotation" ).toDouble();
 
-      if ( qgsDoubleNear( rotation, 90.0 ) )
+      if ( qgsDoubleNear( rotation, 90.0 ) || qgsDoubleNear( rotation, 270.0 ) )
       {
         //calculate new x/y, width / height
         double xBefore = itemElem.attribute( "x" ).toDouble();
@@ -750,8 +750,16 @@ void QgsProjectFileTransform::transform2300to21500()
         double widthAfter = rotatedRect.width();
         double heightAfter = rotatedRect.height();
 
-        itemElem.setAttribute( "x",  xBefore + widthBefore );
-        itemElem.setAttribute( "y", yBefore );
+        if ( qgsDoubleNear( rotation, 90.0 ) )
+        {
+          itemElem.setAttribute( "x",  xBefore + widthBefore );
+          itemElem.setAttribute( "y", yBefore );
+        }
+        else //270
+        {
+          itemElem.setAttribute( "x",  xBefore );
+          itemElem.setAttribute( "y", yBefore + heightBefore );
+        }
         itemElem.setAttribute( "width", widthAfter );
         itemElem.setAttribute( "height", heightAfter );
       }
