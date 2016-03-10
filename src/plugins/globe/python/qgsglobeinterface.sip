@@ -33,20 +33,11 @@ class QgsGlobeInterface : QObject
 
 
   public:
-//    osgViewer::Viewer* osgViewer();
-
-    void syncExtent();
-%Docstring
-Synchronize the extent currently visible on the globe with the extent currently
-visible on the mapcanvas.
-%End
-
-//    osgEarth::MapNode* mapNode();
-
-    void enableFrustumHighlight( bool status );
-
-    void enableFeatureIdentification( bool status );
-
+        osgViewer::Viewer* osgViewer();
+//        osgEarth::MapNode* mapNode();
+        void syncExtent();
+        void enableFrustumHighlight( bool status );
+        void enableFeatureIdentification( bool status );
   private:
     // Instances will only be created from the globe plugin itself
     QgsGlobeInterface();

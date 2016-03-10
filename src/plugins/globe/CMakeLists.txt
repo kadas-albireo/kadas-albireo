@@ -89,9 +89,9 @@ TARGET_LINK_LIBRARIES(globeplugin
   ${OPENTHREADS_LIBRARY}
 )
 
-#IF (WITH_BINDINGS)
-#    ADD_SUBDIRECTORY(python)
-#ENDIF (WITH_BINDINGS)
+IF (WITH_BINDINGS)
+    ADD_SUBDIRECTORY(python)
+ENDIF (WITH_BINDINGS)
 ADD_SUBDIRECTORY(featuresource)
 
 ########################################################

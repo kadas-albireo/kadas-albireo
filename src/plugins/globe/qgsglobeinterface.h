@@ -39,10 +39,6 @@ class GLOBE_EXPORT QgsGlobeInterface : public QgsPluginInterface
 
     void enableFeatureIdentification( bool status );
 
-    void setBaseMap( const QString &url );
-
-    void setSkyParameters( bool enabled, const QDateTime& dateTime, bool autoAmbient );
-
   private:
     GlobePlugin* mGlobe;
 };
