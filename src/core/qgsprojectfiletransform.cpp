@@ -647,6 +647,70 @@ void QgsProjectFileTransform::transform2300to21500()
       }
     }
   }
+
+  //line pattern
+  for ( int i = 0; i < symbolLayerNodeList.size(); ++i )
+  {
+    QDomElement layerElem = symbolLayerNodeList.at( i ).toElement();
+    QString layerClass = layerElem.attribute( "class" );
+    if ( layerClass == "LinePatternFill" )
+    {
+      QDomElement symbolElem = layerElem.firstChildElement( "symbol" );
+      if ( symbolElem.isNull() )
+      {
+        continue;
+      }
+
+      QDomElement outlineElem = symbolElem.firstChildElement( "layer" );
+      if ( outlineElem.isNull() )
+      {
+        continue;
+      }
+
+      //copy child <layer> element as second layer for the outline
+      QDomElement copyLineLayerElem = outlineElem.cloneNode().toElement();
+      layerElem.parentNode().insertAfter( copyLineLayerElem, layerElem );
+
+      //remove line_color, line_width properties below outlineElem
+      QDomNodeList outlinePropNodeList = outlineElem.elementsByTagName( "prop" );
+      for ( int j = outlinePropNodeList.size() - 1; j >= 0; --j )
+      {
+        QDomElement propElem = outlinePropNodeList.at( j ).toElement();
+        QString key = propElem.attribute( "k" );
+        if ( key == "line_color" || key == "line_width" )
+        {
+          outlineElem.removeChild( propElem );
+        }
+      }
+
+      //copy line_color, line_width properties from layerElem to outlineElem
+      QDomNodeList layerChildList = layerElem.childNodes();
+      for ( int j = 0; j < layerChildList.size(); ++j )
+      {
+        QDomElement propElem = layerChildList.at( j ).toElement();
+        if ( propElem.tagName() != "prop" )
+        {
+          continue;
+        }
+
+        QString key = propElem.attribute( "k" );
+        if ( key == "color" )
+        {
+          QDomElement lineColorElem = mDom.createElement( "prop" );
+          lineColorElem.setAttribute( "k", "line_color" );
+          lineColorElem.setAttribute( "v", propElem.attribute( "v" ) );
+          outlineElem.appendChild( lineColorElem );
+        }
+        else if ( key == "linewidth" )
+        {
+          QDomElement lineWidthElem = mDom.createElement( "prop" );
+          lineWidthElem.setAttribute( "k", "line_width" );
+          lineWidthElem.setAttribute( "v", propElem.attribute( "v" ) );
+          outlineElem.appendChild( lineWidthElem );
+        }
+      }
+    }
+  }
 }
 
 void QgsProjectFileTransform::convertRasterProperties( QDomDocument& doc, QDomNode& parentNode,
