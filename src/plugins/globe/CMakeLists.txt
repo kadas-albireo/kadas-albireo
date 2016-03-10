@@ -28,10 +28,10 @@ SET (GLOBE_PLUGIN_MOC_HDRS
     qgsglobeplugindialog.h
     qgsglobeinterface.h
     qgsglobevectorlayerproperties.h
+    qgsglobetilesource.h
 )
 
 SET (GLOBE_PLUGIN_HDRS
-    qgsglobetilesource.h
     qgsglobeinterface.h
     qgsglobevectorlayerproperties.h
     qgsglobefeatureidentify.h

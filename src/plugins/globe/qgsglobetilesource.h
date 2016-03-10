@@ -20,7 +20,10 @@
 
 #include <osgEarth/TileSource>
 #include <osg/ImageStream>
+#include <QImage>
 #include <QStringList>
+#include <QLabel>
+#include <QMutex>
 #include "qgsrectangle.h"
 
 class QgsCoordinateTransform;
@@ -30,31 +33,75 @@ class QgsMapSettings;
 class QgsGlobeTileSource;
 class QgsMapRendererParallelJob;
 
+class QgsGlobeTileStatistics : public QObject
+{
+    Q_OBJECT
+  public:
+    QgsGlobeTileStatistics();
+    ~QgsGlobeTileStatistics() { s_instance = 0; }
+    static QgsGlobeTileStatistics* instance() { return s_instance; }
+    void updateTileCount( int change );
+    void updateQueueTileCount( int change );
+  signals:
+    void changed( int queued, int tot );
+  private:
+    static QgsGlobeTileStatistics* s_instance;
+    QMutex mMutex;
+    int mTileCount;
+    int mQueueTileCount;
+};
+
+int getTileCount();
+
 class QgsGlobeTileImage : public osg::Image
 {
   public:
-    QgsGlobeTileImage( const QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
+    QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
     ~QgsGlobeTileImage();
     bool requiresUpdateCall() const;
+    QgsMapSettings createSettings( int dpi, const QStringList &layerSet ) const;
+    void setUpdatedImage( const QImage& image ) { mUpdatedImage = image; }
 
     void update( osg::NodeVisitor * );
 
   private:
-    const QgsGlobeTileSource* mTileSource;
+    QgsGlobeTileSource* mTileSource;
     QgsRectangle mTileExtent;
     mutable osgEarth::TimeStamp mLastUpdateTime;
     int mTileSize;
     unsigned char* mTileData;
-    QgsMapRendererParallelJob* mRenderer;
-
-    QgsMapSettings createSettings( int dpi ) const;
+    mutable bool mImageUpdatePending;
+    QImage mUpdatedImage;
 };
 
+class QgsGlobeTileUpdateManager : public QObject
+{
+    Q_OBJECT
+  public:
+    QgsGlobeTileUpdateManager( QObject* parent = 0 );
+    ~QgsGlobeTileUpdateManager();
+    void updateLayerSet( const QStringList& layerSet ) { mLayerSet = layerSet; }
+    void addTile( QgsGlobeTileImage* tile );
+    void removeTile( QgsGlobeTileImage* tile );
+
+  signals:
+    void startRendering();
+    void cancelRendering();
+
+  private:
+    QStringList mLayerSet;
+    QList<QgsGlobeTileImage*> mTileQueue;
+    QgsGlobeTileImage* mCurrentTile;
+    QgsMapRendererParallelJob* mRenderer;
+
+  private slots:
+    void start();
+    void cancel();
+    void renderingFinished();
+};
 
 class QgsGlobeTileSource : public osgEarth::TileSource
 {
-    friend class QgsGlobeTileImage;
-
   public:
     QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::TileSourceOptions& options = osgEarth::TileSourceOptions() );
     Status initialize( const osgDB::Options *dbOptions ) override;
@@ -71,11 +118,14 @@ class QgsGlobeTileSource : public osgEarth::TileSource
     const QStringList &layerSet() const;
 
   private:
+    friend class QgsGlobeTileImage;
+
     QgsMapCanvas* mCanvas;
     osgEarth::TimeStamp mLastModifiedTime;
     QgsRectangle mViewExtent;
     QgsRectangle mLastUpdateExtent;
     QStringList mLayerSet;
+    QgsGlobeTileUpdateManager mTileUpdateManager;
 };
 
 #endif // QGSGLOBETILESOURCE_H

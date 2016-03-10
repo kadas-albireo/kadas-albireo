@@ -69,6 +69,7 @@ namespace osgEarth
     {
       class Control;
       class ControlEventHandler;
+      class LabelControl;
     }
   }
 }
@@ -141,6 +142,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::ImageLayer> mBaseLayer;
     osg::ref_ptr<osgEarth::ImageLayer> mQgisMapLayer;
     osg::ref_ptr<QgsGlobeTileSource> mTileSource;
+    QMap<QString, QgsRectangle> mLayerExtents;
     osg::ref_ptr<osgEarth::Util::VerticalScale> mVerticalScale;
 
     //! Creates additional pages in the layer properties for adjusting 3D properties
@@ -152,6 +154,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::Util::FeatureHighlightCallback> mFeatureQueryToolHighlightCb;
 #endif
     osg::ref_ptr<osgEarth::Util::FeatureQueryTool> mFeatureQueryTool;
+    osg::ref_ptr<osgEarth::Util::Controls::LabelControl> mStatsLabel;
 
     osg::Group* mAnnotationsGroup;
     QMap<QgsAnnotationItem*, osg::ref_ptr<osgEarth::Annotation::PlaceNode> > mAnnotations;
@@ -172,6 +175,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     void updateAnnotationItem( QgsAnnotationItem* item );
     void removeAnnotationItem( QObject* item );
     void refreshQGISMapLayer( QgsRectangle rect = QgsRectangle() );
+    void updateTileStats( int queued, int tot );
 
   signals:
     //! emits current mouse position

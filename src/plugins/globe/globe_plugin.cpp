@@ -334,6 +334,8 @@ void GlobePlugin::run()
 {
   if ( mViewerWidget == 0 )
   {
+    QgsGlobeTileStatistics* tileStats = new QgsGlobeTileStatistics();
+    connect( tileStats, SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
     QSettings settings;
 
 //    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
@@ -354,6 +356,11 @@ void GlobePlugin::run()
     manip->home( 0 );
 
     setupProxy();
+
+    // Tile stats label
+    mStatsLabel = new osgEarth::Util::Controls::LabelControl( "", 10 );
+    mStatsLabel->setPosition( 0, 0 );
+    osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer )->addControl( mStatsLabel.get() );
 
     if ( getenv( "GLOBE_MAPXML" ) )
     {
@@ -395,17 +402,13 @@ void GlobePlugin::run()
 
       // Add draped layer
       osgEarth::TileSourceOptions opts;
-//#ifdef INCREMENTAL_UPDATE_TEST
       opts.L2CacheSize() = 0;
-//#endif
       opts.tileSize() = 512;
       mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
       osgEarth::ImageLayerOptions options( "QGIS" );
-//#ifdef INCREMENTAL_UPDATE_TEST
       options.driver()->L2CacheSize() = 0;
       options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
-//#endif
       mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
       map->addImageLayer( mQgisMapLayer );
 
@@ -789,12 +792,25 @@ void GlobePlugin::refreshQGISMapLayer( QgsRectangle rect )
   {
     if ( rect.isEmpty() )
     {
-      const QString& canvasCrs = mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid();
-      rect = QgsCoordinateTransformCache::instance()->transform( canvasCrs, GEO_EPSG_CRS_AUTHID )->transform( mQGisIface->mapCanvas()->fullExtent() );
+      if ( mLayerExtents.isEmpty() )
+      {
+        return;
+      }
+
+      rect = mLayerExtents.values().front();
+      foreach ( const QgsRectangle& extent, mLayerExtents.values() )
+      {
+        rect.combineExtentWith( &extent );
+      }
     }
     mTileSource->refresh( rect );
     mOsgViewer->requestRedraw();
   }
+}
+
+void GlobePlugin::updateTileStats( int queued, int tot )
+{
+  mStatsLabel->setText( QString( "Queued tiles: %1\nTot tiles: %2" ).arg( queued ).arg( tot ).toStdString() );
 }
 
 void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConfig* layerConfig )
@@ -913,6 +929,14 @@ void GlobePlugin::updateLayers()
 {
   if ( mOsgViewer )
   {
+    // Get previous full extent
+    QgsRectangle fullExtent = mLayerExtents.isEmpty() ? QgsRectangle() : mLayerExtents.values().front();
+    foreach ( const QgsRectangle& rect, mLayerExtents.values() )
+    {
+      fullExtent.combineExtentWith( &rect );
+    }
+    mLayerExtents.clear();
+
     // Disconnect any previous repaintRequested signals
     foreach ( const QString& layerId, mTileSource->layerSet() )
     {
@@ -949,10 +973,20 @@ void GlobePlugin::updateLayers()
       else
       {
         drapedLayers.append( mapLayer->id() );
+        QgsRectangle extent = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() );
+        mLayerExtents.insert( mapLayer->id(), extent );
+        if ( fullExtent.isEmpty() )
+        {
+          fullExtent = extent;
+        }
+        else
+        {
+          fullExtent.combineExtentWith( &extent );
+        }
       }
     }
     mTileSource->setLayerSet( drapedLayers );
-    refreshQGISMapLayer();
+    refreshQGISMapLayer( fullExtent );
   }
 }
 
@@ -978,7 +1012,8 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
         QStringList layerSet = mTileSource->layerSet();
         layerSet.removeAll( mapLayer->id() );
         mTileSource->setLayerSet( layerSet );
-        refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() ) );
+        refreshQGISMapLayer( mLayerExtents[mapLayer->id()] );
+        mLayerExtents.remove( mapLayer->id() );
       }
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
       addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
@@ -987,7 +1022,14 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
     {
       // Remove any model layer of that layer, in case one existed
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
-      refreshQGISMapLayer( QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() ) );
+      QgsRectangle layerExtent = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() );
+      QgsRectangle updateExtent = layerExtent;
+      if ( mLayerExtents.contains( mapLayer->id() ) )
+      {
+        updateExtent.combineExtentWith( &mLayerExtents[mapLayer->id()] );
+      }
+      mLayerExtents[mapLayer->id()] = layerExtent;
+      refreshQGISMapLayer( updateExtent );
     }
   }
 }
@@ -1075,6 +1117,8 @@ void GlobePlugin::reset()
   mViewerWidget = 0;
   mDockWidget = 0;
   mAnnotationsGroup = 0;
+  delete QgsGlobeTileStatistics::instance();
+  mStatsLabel = 0;
 }
 
 void GlobePlugin::unload()
