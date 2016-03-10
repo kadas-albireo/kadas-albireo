@@ -43,6 +43,10 @@ SET (vbsfunctionality_RCCS
   qgsvbsfunctionality.qrc
 )
 
+IF (WITH_BINDINGS)
+    ADD_SUBDIRECTORY(python)
+ENDIF (WITH_BINDINGS)
+
 ########################################################
 # Build
 
@@ -52,7 +56,7 @@ QT4_WRAP_CPP (vbsfunctionality_MOC_SRCS  ${vbsfunctionality_MOC_HDRS})
 
 QT4_ADD_RESOURCES(vbsfunctionality_RCC_SRCS ${vbsfunctionality_RCCS})
 
-ADD_LIBRARY (vbsfunctionality   MODULE ${vbsfunctionality_SRCS} ${vbsfunctionality_HDRS} ${vbsfunctionality_MOC_SRCS} ${vbsfunctionality_RCC_SRCS} ${vbsfunctionality_UIS_H})
+ADD_LIBRARY (vbsfunctionality   SHARED ${vbsfunctionality_SRCS} ${vbsfunctionality_HDRS} ${vbsfunctionality_MOC_SRCS} ${vbsfunctionality_RCC_SRCS} ${vbsfunctionality_UIS_H})
 
 INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
@@ -68,6 +72,12 @@ INCLUDE_DIRECTORIES(
      ../../gui
      ../
 )
+
+IF(WIN32)
+    ADD_DEFINITIONS("\"-DVBS_EXPORT=${DLLEXPORT}\"")
+ELSE(WIN32)
+    ADD_DEFINITIONS("-DVBS_EXPORT=")
+ENDIF(WIN32)
 
 TARGET_LINK_LIBRARIES(vbsfunctionality
   qgis_core

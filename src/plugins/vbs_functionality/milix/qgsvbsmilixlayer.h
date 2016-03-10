@@ -22,7 +22,7 @@
 #include "qgspluginlayerregistry.h"
 #include "Client/VBSMilixClient.hpp"
 
-class QgsVBSMilixItem
+class VBS_EXPORT QgsVBSMilixItem
 {
   public:
     QgsVBSMilixItem() {}
@@ -48,13 +48,16 @@ class QgsVBSMilixItem
     bool mHaveEnoughPoints;
 };
 
-class QgsVBSMilixLayer : public QgsPluginLayer
+/** \class QgsVBSMilixLayer
+    \brief Milix layer
+*/
+class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
 {
     Q_OBJECT
   public:
     static QString layerTypeKey() { return "MilX_Layer"; }
 
-    QgsVBSMilixLayer( const QString& name = QString( "MilX" ) );
+    QgsVBSMilixLayer( const QString& name = "MilX" );
     ~QgsVBSMilixLayer();
     void addItem( QgsVBSMilixItem* item ) { mItems.append( item ); }
     void removeItem( int idx ) { mItems.removeAt( idx ); }
@@ -83,7 +86,7 @@ class QgsVBSMilixLayer : public QgsPluginLayer
     QList<QgsVBSMilixItem*> mItems;
 };
 
-class QgsVBSMilixLayerType : public QgsPluginLayerType
+class VBS_EXPORT QgsVBSMilixLayerType : public QgsPluginLayerType
 {
   public:
     QgsVBSMilixLayerType() : QgsPluginLayerType( QgsVBSMilixLayer::layerTypeKey() ) {}
