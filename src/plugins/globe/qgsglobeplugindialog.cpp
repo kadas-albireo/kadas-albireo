@@ -99,16 +99,6 @@ void QgsGlobePluginDialog::restoreSavedSettings()
   groupBoxAntiAliasing->setChecked( settings.value( "/Plugin-Globe/anti-aliasing", false ).toBool() );
   lineEditAASamples->setText( settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toString() );
 
-  // Map settings
-  mBaseLayerGroupBox->setChecked( settings.value( "/Plugin-Globe/baseLayerEnabled", true ).toBool() );
-  lineEditBaseLayerURL->setText( settings.value( "/Plugin-Globe/baseLayerURL", "http://readymap.org/readymap/tiles/1.0.0/7/" ).toString() );
-  int idx = comboBoxBaseLayer->findData( lineEditBaseLayerURL->text() );
-  comboBoxBaseLayer->setCurrentIndex( idx == -1 ? comboBoxBaseLayer->count() - 1 : idx );
-  groupBoxSky->setChecked( settings.value( "/Plugin-Globe/skyEnabled", false ).toBool() );
-  dateTimeEditSky->setDateTime( settings.value( "/Plugin-Globe/skyDateTime", QDateTime::currentDateTime() ).toDateTime() );
-  checkBoxSkyAutoAmbient->setChecked( settings.value( "/Plugin-Globe/skyAutoAmbient", false ).toBool() );
-  horizontalSliderMinAmbient->setValue( settings.value( "/Plugin-Globe/skyMinAmbient", 30 ) .toInt() );
-
   // Advanced
   checkBoxFrustumHighlighting->setChecked( settings.value( "/Plugin-Globe/frustum-highlighting", false ).toBool() );
   checkBoxFeatureIdentification->setChecked( settings.value( "/Plugin-Globe/feature-identification", false ).toBool() );
@@ -150,14 +140,6 @@ void QgsGlobePluginDialog::apply()
   settings.setValue( "/Plugin-Globe/anti-aliasing", groupBoxAntiAliasing->isChecked() );
   settings.setValue( "/Plugin-Globe/anti-aliasing-level", lineEditAASamples->text() );
 
-  // Map settings
-  settings.setValue( "/Plugin-Globe/baseLayerEnabled", mBaseLayerGroupBox->isChecked() );
-  settings.setValue( "/Plugin-Globe/baseLayerURL", lineEditBaseLayerURL->text() );
-  settings.setValue( "/Plugin-Globe/skyEnabled", groupBoxSky->isChecked() );
-  settings.setValue( "/Plugin-Globe/skyDateTime", dateTimeEditSky->dateTime() );
-  settings.setValue( "/Plugin-Globe/skyAutoAmbient", checkBoxSkyAutoAmbient->isChecked() );
-  settings.setValue( "/Plugin-Globe/skyMinAmbient", horizontalSliderMinAmbient->value() );
-
   // Advanced settings
   settings.setValue( "/Plugin-Globe/frustum-highlighting", checkBoxFrustumHighlighting->isChecked() );
   settings.setValue( "/Plugin-Globe/feature-identification", checkBoxFeatureIdentification->isChecked() );
@@ -196,7 +178,7 @@ void QgsGlobePluginDialog::apply()
 
 void QgsGlobePluginDialog::readProjectSettings()
 {
-  // clear the widget
+  // Elevation settings
   elevationDatasourcesWidget->setRowCount( 0 );
   foreach ( const ElevationDataSource& ds, getElevationDataSources() )
   {
@@ -212,10 +194,21 @@ void QgsGlobePluginDialog::readProjectSettings()
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 5, 0 )
   mSpinBoxVerticalScale->setValue( QgsProject::instance()->readDoubleEntry( "Globe-Plugin", "/verticalScale", 1 ) );
 #endif
+
+  // Map settings
+  mBaseLayerGroupBox->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/baseLayerEnabled/", true ) );
+  lineEditBaseLayerURL->setText( QgsProject::instance()->readEntry( "Globe-Plugin", "/baseLayerURL/", "http://readymap.org/readymap/tiles/1.0.0/7/" ) );
+  int idx = comboBoxBaseLayer->findData( lineEditBaseLayerURL->text() );
+  comboBoxBaseLayer->setCurrentIndex( idx == -1 ? comboBoxBaseLayer->count() - 1 : idx );
+  groupBoxSky->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyEnabled", true ) );
+  dateTimeEditSky->setDateTime( QDateTime::fromString( QgsProject::instance()->readEntry( "Globe-Plugin", "/skyDateTime", QDateTime::currentDateTime().toString() ) ) );
+  checkBoxSkyAutoAmbient->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyAutoAmbient", true ) );
+  horizontalSliderMinAmbient->setValue( QgsProject::instance()->readDoubleEntry( "Globe-Plugin", "/skyMinAmbient", 30. ) );
 }
 
 void QgsGlobePluginDialog::writeProjectSettings()
 {
+  // Elevation settings
   QgsProject::instance()->removeEntry( "Globe-Plugin", "/elevationDatasources/" );
   for ( int row = 0, nRows = elevationDatasourcesWidget->rowCount(); row < nRows; ++row )
   {
@@ -231,6 +224,14 @@ void QgsGlobePluginDialog::writeProjectSettings()
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 5, 0 )
   QgsProject::instance()->writeEntry( "Globe-Plugin", "/verticalScale", mSpinBoxVerticalScale->value() );
 #endif
+
+  // Map settings
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/baseLayerEnabled/", mBaseLayerGroupBox->isChecked() );
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/baseLayerURL/", lineEditBaseLayerURL->text() );
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyEnabled/", groupBoxSky->isChecked() );
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyDateTime/", dateTimeEditSky->dateTime().toString() );
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyAutoAmbient/", checkBoxSkyAutoAmbient->isChecked() );
+  QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyMinAmbient/", horizontalSliderMinAmbient->value() );
 }
 
 /// ELEVATION /////////////////////////////////////////////////////////////////
