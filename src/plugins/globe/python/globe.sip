@@ -14,7 +14,9 @@
         version=0,
         keyword_arguments="Optional")
 
+%If(WS_WIN)
 typedef void XEvent;
+%End
 
 //%Include qgsglobefeatureutils.sip
 %Include qgsglobeinterface.sip
