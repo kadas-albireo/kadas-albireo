@@ -1728,7 +1728,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="0" column="4">
            <layout class="QGridLayout" name="mGridLayoutMssOptions">
             <item row="0" column="1">
              <widget class="QSlider" name="mSymbolSizeSlider">
@@ -1844,7 +1844,7 @@ Sight</string>
             </item>
            </layout>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="5">
            <spacer name="horizontalSpacer_7">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1856,6 +1856,31 @@ Sight</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="mOvlButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Import OVL</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -2333,6 +2358,14 @@ Sight</string>
    </property>
    <property name="toolTip">
     <string>Load MILXLY</string>
+   </property>
+  </action>
+  <action name="mActionImportOVL_2">
+   <property name="text">
+    <string>Import OVL</string>
+   </property>
+   <property name="toolTip">
+    <string>Import OVL</string>
    </property>
   </action>
  </widget>
