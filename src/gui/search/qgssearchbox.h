@@ -32,6 +32,7 @@ class QgsMapToolDrawShape;
 class QgsPoint;
 class QgsRectangle;
 class QgsRubberBand;
+class QgsPinAnnotationItem;
 
 class GUI_EXPORT QgsSearchBox : public QWidget
 {
@@ -64,6 +65,7 @@ class GUI_EXPORT QgsSearchBox : public QWidget
 
     QgsMapCanvas* mMapCanvas;
     QgsRubberBand* mRubberBand;
+    QgsPinAnnotationItem* mPin;
     QgsMapToolDrawShape* mFilterTool;
     QList<QgsSearchProvider*> mSearchProviders;
     QTimer mTimer;
