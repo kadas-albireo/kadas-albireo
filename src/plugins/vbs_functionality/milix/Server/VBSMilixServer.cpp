@@ -596,6 +596,15 @@ QByteArray VBSMilixServer::processCommand( QByteArray &request )
     ostream << VBS_MILIX_REPLY_GET_CONTROL_POINTS << controlPoints;
     return reply;
   }
+  else if(req == VBS_MILIX_REQUEST_GET_MILITARY_NAME)
+  {
+    QString symbolXml;
+    istream >> symbolXml;
+    MssComServer::IMssStringObjGSPtr mssStringObj = mMssService->CreateMssStringObjStr( symbolXml.toLocal8Bit().data() );
+    QString militaryName = bstr2qstring(mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS ));
+    ostream << VBS_MILIX_REPLY_GET_MILITARY_NAME << militaryName;
+    return reply;
+  }
   else
   {
     LOG( "Error: Unrecognized command" );
@@ -620,7 +629,7 @@ bool VBSMilixServer::getSymbolInfo(const QString& symbolXml, QString& name, QStr
   }
 
   svgXml = bstr2qstring(mssSymbolGraphic->CreateSvg() ).toUtf8();
-  name = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatNodeNameGS );
+  name = bstr2qstring(mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatNodeNameGS ));
   militaryName = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS );
   MssComServer::IMssNPointDrawingCreationItemGSPtr mssCreationItem = mMssNPointDrawingTarget->CreateNewNPointGraphic( mssNPointGraphic, false );
   hasVariablePoints = mssCreationItem->HasVariablePoints;
@@ -737,7 +746,7 @@ bool VBSMilixServer::editSymbol(const QRect& visibleExtent, const SymbolInput& i
   SymbolInput newInput = input;
   newInput.symbolXml = bstr2qstring(mssStringObj->XmlString);
   outputSymbolXml = newInput.symbolXml;
-  outputMilitaryName = mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS );
+  outputMilitaryName = bstr2qstring(mMssSymbolProvider->LookupSymbolName( mssStringObj, MssComServer::mssWorkModeExtendedGS, mLanguage, MssComServer::mssNameFormatFormattedModifiersGS ));
   LOG(QString("New symbol XML: %1").arg(outputSymbolXml));
   return renderSymbol(visibleExtent, newInput, output, errorMsg);
 }

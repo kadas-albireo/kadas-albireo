@@ -27,6 +27,7 @@ VBSMilixServerRequest VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS = 15; // {VBS_M
 VBSMilixServerRequest VBS_MILIX_REQUEST_PICK_SYMBOL = 16; // {VBS_MILIX_REQUEST_PICK_SYMBOL, ClickPos:QPoint, nSymbols:int, SymbolXml1:QString, Points1:QList<QPoint>, ControlPoints1:QList<int>, finalized1:bool, SymbolXml2:QString, Points2:QList<QPoint>, ControlPoints2:QList<int>, finalized2:bool, ...}
 VBSMilixServerRequest VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS = 17; // {VBS_MILIX_REQUEST_SYMBOL_OPTIONS, SymbolSize:int, LineWidth:int, WorkMode:int}
 VBSMilixServerRequest VBS_MILIX_REQUEST_GET_CONTROL_POINTS = 18; // {VBS_MILIX_REQUEST_GET_CONTROL_POINTS, SymbolXml:QString, nPoints:int}
+VBSMilixServerRequest VBS_MILIX_REQUEST_GET_MILITARY_NAME = 19; // {VBS_MILIX_REQUEST_GET_MILITARY_NAME, SymbolXml:QString}
 
 typedef quint8 VBSMilixServerReply;
 
@@ -53,5 +54,6 @@ VBSMilixServerReply VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS = 115; // {VBS_MILI
 VBSMilixServerReply VBS_MILIX_REPLY_PICK_SYMBOL = 116; // {VBS_MILIX_REPLY_PICK_SYMBOL, SelectedSymbol:int}
 VBSMilixServerReply VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS = 117; // {VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS}
 VBSMilixServerReply VBS_MILIX_REPLY_GET_CONTROL_POINTS = 118; // {VBS_MILIX_REPLY_GET_CONTROL_POINTS, ControlPoints:QList<int>}
+VBSMilixServerReply VBS_MILIX_REPLY_GET_MILITARY_NAME = 119; // {VBS_MILIX_REPLY_GET_MILITARY_NAME, MilitaryName:QString}
 
 #endif // VBS_MILIX_SERVER_COMMANDS_HPP
