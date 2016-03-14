@@ -1,21 +1,5 @@
 <RCC>
     <qresource prefix="/vbsfunctionality">
         <file>icons/icon.svg</file>
-        <file>icons/mapcoordinates.svg</file>
-        <file>icons/search.svg</file>
-        <file>icons/clear.svg</file>
-        <file>icons/pin_red.svg</file>
-        <file>icons/pin_blue.svg</file>
-        <file>icons/search_filter.svg</file>
-        <file>icons/search_filter_rect.svg</file>
-        <file>icons/search_filter_circle.svg</file>
-        <file>icons/search_filter_none.svg</file>
-        <file>icons/search_filter_poly.svg</file>
-        <file>icons/sync_views.svg</file>
-        <file>icons/add_map_view.svg</file>
-        <file>icons/slope.svg</file>
-        <file>icons/viewshed.svg</file>
-        <file>icons/hillshade.svg</file>
-        <file>icons/viewshed_sector.svg</file>
     </qresource>
 </RCC>
