@@ -1858,7 +1858,7 @@ Sight</string>
            </spacer>
           </item>
           <item row="0" column="3">
-           <widget class="QToolButton" name="mOvlButton">
+           <widget class="QgsRibbonButton" name="mOvlButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
