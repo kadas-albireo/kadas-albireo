@@ -17,6 +17,8 @@
 
 #include "qgspinannotationitem.h"
 #include "qgsproject.h"
+#include "qgsbillboardregistry.h"
+#include "qgscrscache.h"
 #include <QApplication>
 #include <QClipboard>
 #include <QImageReader>
@@ -33,6 +35,14 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinate
   setFilePath( ":/images/themes/default/pin_red.svg" );
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
+}
+
+QgsPinAnnotationItem::~QgsPinAnnotationItem()
+{
+  if ( !mIsClone )
+  {
+    QgsBillBoardRegistry::instance()->removeItem( this );
+  }
 }
 
 QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source )
@@ -66,6 +76,11 @@ void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordin
 {
   QgsSvgAnnotationItem::setMapPosition( pos, crs );
   updateToolTip();
+  if ( !mIsClone )
+  {
+    QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
+    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
+  }
 }
 
 void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )

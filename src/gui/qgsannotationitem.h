@@ -183,6 +183,9 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     /**Second segment point for drawing the balloon connection (ccw direction)*/
     QPointF mBalloonSegmentPoint2;
 
+    /** Whether this annotation item is a clone in a passive map view */
+    bool mIsClone;
+
     void updateBoundingRect();
     /**Check where to attach the balloon connection between frame and map point*/
     void updateBalloon();

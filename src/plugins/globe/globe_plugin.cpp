@@ -45,6 +45,7 @@
 #include <qgspallabeling.h>
 #include <qgssvgannotationitem.h>
 #include <qgsgeoimageannotationitem.h>
+#include <qgsbillboardregistry.h>
 
 #include <QAction>
 #include <QDir>
@@ -324,7 +325,9 @@ void GlobePlugin::initGui()
 
   connect( mActionToggleGlobe, SIGNAL( triggered( bool ) ), this, SLOT( setGlobeEnabled( bool ) ) );
   connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
-  connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
+//  connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
+  connect( QgsBillBoardRegistry::instance(), SIGNAL( itemAdded( QgsBillBoardItem* ) ), this, SLOT( addBillboard( QgsBillBoardItem* ) ) );
+  connect( QgsBillBoardRegistry::instance(), SIGNAL( itemRemoved( QgsBillBoardItem* ) ), this, SLOT( removeBillboard( QgsBillBoardItem* ) ) );
   connect( mLayerPropertiesFactory, SIGNAL( layerSettingsChanged( QgsMapLayer* ) ), this, SLOT( layerChanged( QgsMapLayer* ) ) );
   connect( this, SIGNAL( xyCoordinates( const QgsPoint & ) ), mQGisIface->mapCanvas(), SIGNAL( xyCoordinates( const QgsPoint & ) ) );
   connect( mQGisIface->mainWindow(), SIGNAL( projectRead() ), this, SLOT( projectRead() ) );
@@ -419,12 +422,9 @@ void GlobePlugin::run()
 
     mAnnotationsGroup = new osg::Group();
     mRootNode->addChild( mAnnotationsGroup );
-    foreach ( QGraphicsItem* item, mQGisIface->mapCanvas()->items() )
+    foreach ( QgsBillBoardItem* item, QgsBillBoardRegistry::instance()->items() )
     {
-      if ( dynamic_cast<QgsAnnotationItem*>( item ) )
-      {
-        updateAnnotationItem( static_cast<QgsAnnotationItem*>( item ) );
-      }
+      addBillboard( item );
     }
 
     mOsgViewer->setSceneData( mRootNode );
@@ -1028,7 +1028,7 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
     }
   }
 }
-
+/*
 void GlobePlugin::updateAnnotationItem( QgsAnnotationItem * item )
 {
   if ( mOsgViewer )
@@ -1074,6 +1074,41 @@ void GlobePlugin::removeAnnotationItem( QObject *item )
   {
     mAnnotationsGroup->removeChild( mAnnotations[reinterpret_cast<QgsAnnotationItem*>( item )] );
     mAnnotations.take( reinterpret_cast<QgsAnnotationItem*>( item ) ) = 0;
+  }
+}*/
+
+void GlobePlugin::addBillboard( QgsBillBoardItem* item )
+{
+  if ( mOsgViewer )
+  {
+    mAnnotationsGroup->removeChild( mAnnotations[item] );
+    mAnnotations.take( item ) = 0;
+    const QgsPoint& p = item->worldPos;
+    osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
+
+    const QImage& image = item->image;
+    unsigned char* imgbuf = new unsigned char[image.bytesPerLine() * image.height()];
+    std::memcpy( imgbuf, image.bits(), image.bytesPerLine() * image.height() );
+    osg::Image* osgImage = new osg::Image;
+    osgImage->setImage( image.width(), image.height(), 1, 4, // width, height, depth, internal_format
+                        GL_BGRA, GL_UNSIGNED_BYTE, imgbuf, osg::Image::USE_NEW_DELETE );
+    osgImage->flipVertical();
+    osgEarth::Style pin;
+    pin.getOrCreateSymbol<osgEarth::IconSymbol>()->setImage( osgImage );
+
+    osg::ref_ptr<osgEarth::Annotation::PlaceNode> placeNode = new osgEarth::Annotation::PlaceNode( mMapNode, geop, "", pin );
+    placeNode->setOcclusionCulling( true );
+    mAnnotations[item] = placeNode;
+    mAnnotationsGroup->addChild( placeNode );
+  }
+}
+
+void GlobePlugin::removeBillboard( QgsBillBoardItem* item )
+{
+  if ( mOsgViewer )
+  {
+    mAnnotationsGroup->removeChild( mAnnotations[item] );
+    mAnnotations.take( item ) = 0;
   }
 }
 
