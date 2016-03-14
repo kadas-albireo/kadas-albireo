@@ -24,7 +24,7 @@
 
 class QgsMapCanvasItem;
 
-struct QgsBillBoardItem
+struct GUI_EXPORT QgsBillBoardItem
 {
   QImage image;
   QgsPoint worldPos;
