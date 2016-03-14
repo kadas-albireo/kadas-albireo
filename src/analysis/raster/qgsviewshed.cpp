@@ -49,7 +49,7 @@ static inline double pixelToGeoY( double gtrans[6], double px, double py )
   return gtrans[3] + px * gtrans[4] + py * gtrans[5];
 }
 
-bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, QProgressDialog *progress )
+bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, bool displayVisible, QProgressDialog *progress )
 {
   // Open input file
   GDALDatasetH inputDataset = GDALOpen( inputFile.toLocal8Bit().data(), GA_ReadOnly );
@@ -183,7 +183,7 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
     QgsDebugMsg( "Failed to get output dataset band 1" );
     return false;
   }
-  GDALSetRasterNoDataValue( outputBand, 0 );
+  GDALSetRasterNoDataValue( outputBand, 255 * !displayVisible );
 
 
   // Read input heightmap
@@ -204,7 +204,7 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   {
     progress->setRange( 0, 8 * roi );
   }
-  QVector<unsigned char> viewshed( hmapWidth * hmapHeight, 0 );
+  QVector<unsigned char> viewshed( hmapWidth * hmapHeight, 255 * !displayVisible );
   for ( int radiusNumber = 0; radiusNumber < 8 * roi; ++radiusNumber )
   {
     if ( progress )
@@ -309,6 +309,10 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       if ( pElev + targetHeight >= horizon_alt )
       {
         viewshed[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )] = 255;
+      }
+      else
+      {
+        viewshed[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )] = 0;
       }
     }
   }

@@ -22,15 +22,19 @@
 
 #include <QDialog>
 
+class QComboBox;
 class QDoubleSpinBox;
 
 class APP_EXPORT QgsViewshedDialog : public QDialog
 {
     Q_OBJECT
   public:
+    enum DisplayMode { DisplayVisibleArea, DisplayInvisibleArea };
+
     QgsViewshedDialog( double radius, QWidget* parent = 0 );
     double getObserverHeight() const;
     double getTargetHeight() const;
+    DisplayMode getDisplayMode() const;
 
   signals:
     void radiusChanged( double radius );
@@ -38,6 +42,7 @@ class APP_EXPORT QgsViewshedDialog : public QDialog
   private:
     QDoubleSpinBox* mSpinBoxObserverHeight;
     QDoubleSpinBox* mSpinBoxTargetHeight;
+    QComboBox* mDisplayModeCombo;
 };
 
 class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircularSector

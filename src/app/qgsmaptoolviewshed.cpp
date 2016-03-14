@@ -34,6 +34,7 @@
 #include "qgsviewshed.h"
 #include "qgspinannotationitem.h"
 
+#include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QDoubleSpinBox>
@@ -47,24 +48,24 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   setWindowTitle( tr( "Viewshed setup" ) );
 
   QGridLayout* heightDialogLayout = new QGridLayout();
-  heightDialogLayout->addWidget( new QLabel( tr( "Observer height:" ) ), 0, 0, 1, 1 );
 
+  heightDialogLayout->addWidget( new QLabel( tr( "Observer height:" ) ), 0, 0, 1, 1 );
   mSpinBoxObserverHeight = new QDoubleSpinBox();
   mSpinBoxObserverHeight->setRange( 0, 8000 );
   mSpinBoxObserverHeight->setDecimals( 1 );
   mSpinBoxObserverHeight->setValue( 2. );
   mSpinBoxObserverHeight->setSuffix( " m" );
   heightDialogLayout->addWidget( mSpinBoxObserverHeight, 0, 1, 1, 1 );
-  heightDialogLayout->addWidget( new QLabel( tr( "Target height:" ) ), 1, 0, 1, 1 );
 
+  heightDialogLayout->addWidget( new QLabel( tr( "Target height:" ) ), 1, 0, 1, 1 );
   mSpinBoxTargetHeight = new QDoubleSpinBox();
   mSpinBoxTargetHeight->setRange( 0, 8000 );
   mSpinBoxTargetHeight->setDecimals( 1 );
   mSpinBoxTargetHeight->setValue( 2. );
   mSpinBoxTargetHeight->setSuffix( " m" );
   heightDialogLayout->addWidget( mSpinBoxTargetHeight, 1, 1, 1, 1 );
-  heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 2, 0, 1, 1 );
 
+  heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 2, 0, 1, 1 );
   QDoubleSpinBox* spinRadius = new QDoubleSpinBox();
   spinRadius->setRange( 1, 100000 );
   spinRadius->setDecimals( 0 );
@@ -74,10 +75,16 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   connect( spinRadius, SIGNAL( valueChanged( double ) ), this, SIGNAL( radiusChanged( double ) ) );
   heightDialogLayout->addWidget( spinRadius, 2, 1, 1, 1 );
 
+  heightDialogLayout->addWidget( new QLabel( tr( "Display:" ) ), 3, 0, 1, 1 );
+  mDisplayModeCombo = new QComboBox();
+  mDisplayModeCombo->addItem( tr( "Visible area" ) );
+  mDisplayModeCombo->addItem( tr( "Invisible area" ) );
+  heightDialogLayout->addWidget( mDisplayModeCombo, 3, 1, 1, 1 );
+
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-  heightDialogLayout->addWidget( bbox, 3, 0, 1, 2 );
+  heightDialogLayout->addWidget( bbox, 4, 0, 1, 2 );
 
   setLayout( heightDialogLayout );
   setFixedSize( sizeHint() );
@@ -91,6 +98,11 @@ double QgsViewshedDialog::getObserverHeight() const
 double QgsViewshedDialog::getTargetHeight() const
 {
   return mSpinBoxTargetHeight->value();
+}
+
+QgsViewshedDialog::DisplayMode QgsViewshedDialog::getDisplayMode() const
+{
+  return static_cast<DisplayMode>( mDisplayModeCombo->currentIndex() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,14 +166,24 @@ void QgsMapToolViewshed::drawFinished()
 
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight(), viewshedDialog.getTargetHeight(), curRadius, QGis::Meters, filterRegion, &p );
+  bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
+  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight(), viewshedDialog.getTargetHeight(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
   if ( success )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
-    QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
-        << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
-    rampShader->setColorRampItemList( colorRampItems );
+    if ( displayVisible )
+    {
+      QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
+          << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
+      rampShader->setColorRampItemList( colorRampItems );
+    }
+    else
+    {
+      QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
+          << QgsColorRampShader::ColorRampItem( 0, QColor( 255, 0, 0 ), tr( "Invisible" ) );
+      rampShader->setColorRampItemList( colorRampItems );
+    }
     QgsRasterShader* shader = new QgsRasterShader();
     shader->setRasterShaderFunction( rampShader );
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );

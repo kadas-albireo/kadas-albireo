@@ -34,7 +34,7 @@ class ANALYSIS_EXPORT QgsViewshed
                                  QgsPoint observerPos, const QgsCoordinateReferenceSystem& observerPosCrs,
                                  double observerHeight, double targetHeight, double radius,
                                  const QGis::UnitType distanceElevUnit,
-                                 const QVector<QgsPoint> &filterRegion = QVector<QgsPoint>(),
+                                 const QVector<QgsPoint> &filterRegion = QVector<QgsPoint>(), bool displayVisible = true,
                                  QProgressDialog* progress = 0 );
 
 };
