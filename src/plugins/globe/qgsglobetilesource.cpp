@@ -41,22 +41,23 @@ void QgsGlobeTileStatistics::updateTileCount( int change )
   mMutex.unlock();
 }
 
-void QgsGlobeTileStatistics::updateQueueTileCount( int change )
+void QgsGlobeTileStatistics::updateQueueTileCount( int num )
 {
   mMutex.lock();
-  mQueueTileCount += change;
+  mQueueTileCount = num;
   emit changed( mQueueTileCount, mTileCount );
   mMutex.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize )
+QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize , int tileLod )
     : osg::Image()
     , mTileSource( tileSource )
     , mTileExtent( tileExtent )
     , mTileSize( tileSize )
     , mImageUpdatePending( false )
+    , mLod( tileLod )
 {
   QgsGlobeTileStatistics::instance()->updateTileCount( + 1 );
   mTileData = new unsigned char[mTileSize * mTileSize * 4];
@@ -141,6 +142,7 @@ QgsGlobeTileUpdateManager::QgsGlobeTileUpdateManager( QObject* parent )
 
 QgsGlobeTileUpdateManager::~QgsGlobeTileUpdateManager()
 {
+  QgsGlobeTileStatistics::instance()->updateQueueTileCount( 0 );
   mTileQueue.clear();
   mCurrentTile = 0;
   if ( mRenderer )
@@ -152,8 +154,11 @@ QgsGlobeTileUpdateManager::~QgsGlobeTileUpdateManager()
 void QgsGlobeTileUpdateManager::addTile( QgsGlobeTileImage *tile )
 {
   if ( !mTileQueue.contains( tile ) )
+  {
     mTileQueue.append( tile );
-  QgsGlobeTileStatistics::instance()->updateQueueTileCount( + 1 );
+    QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
+    qSort( mTileQueue.begin(), mTileQueue.end(), QgsGlobeTileImage::lodSort );
+  }
   emit startRendering();
 }
 
@@ -161,14 +166,14 @@ void QgsGlobeTileUpdateManager::removeTile( QgsGlobeTileImage *tile )
 {
   if ( mCurrentTile == tile )
   {
-    QgsGlobeTileStatistics::instance()->updateQueueTileCount( -1 );
     mCurrentTile = 0;
     if ( mRenderer )
       emit cancelRendering();
   }
-  else
+  else if ( mTileQueue.contains( tile ) )
   {
     mTileQueue.removeAll( tile );
+    QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
   }
 }
 
@@ -177,6 +182,7 @@ void QgsGlobeTileUpdateManager::start()
   if ( mRenderer == 0 && !mTileQueue.isEmpty() )
   {
     mCurrentTile = mTileQueue.takeFirst();
+    QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
     QImage image;
     mRenderer = new QgsMapRendererParallelJob( mCurrentTile->createSettings( image.logicalDpiX(), mLayerSet ) );
     connect( mRenderer, SIGNAL( finished() ), this, SLOT( renderingFinished() ) );
@@ -197,7 +203,6 @@ void QgsGlobeTileUpdateManager::renderingFinished()
     QImage image = mRenderer->renderedImage();
     mCurrentTile->setUpdatedImage( image );
     mCurrentTile = 0;
-    QgsGlobeTileStatistics::instance()->updateQueueTileCount( -1 );
   }
   mRenderer->deleteLater();
   mRenderer = 0;
@@ -235,7 +240,7 @@ osg::Image* QgsGlobeTileSource::createImage( const osgEarth::TileKey& key, osgEa
   QgsRectangle tileExtent( xmin, ymin, xmax, ymax );
 
   QgsDebugMsg( QString( "Create earth tile image: %1" ).arg( tileExtent.toString( 5 ) ) );
-  return new QgsGlobeTileImage( this, tileExtent, getPixelsPerTile() );
+  return new QgsGlobeTileImage( this, tileExtent, getPixelsPerTile(), key.getLOD() );
 }
 
 bool QgsGlobeTileSource::hasDataInExtent( const osgEarth::GeoExtent &extent ) const

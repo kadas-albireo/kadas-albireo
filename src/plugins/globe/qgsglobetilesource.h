@@ -56,13 +56,15 @@ int getTileCount();
 class QgsGlobeTileImage : public osg::Image
 {
   public:
-    QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize );
+    QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsRectangle& tileExtent, int tileSize, int tileLod );
     ~QgsGlobeTileImage();
     bool requiresUpdateCall() const;
     QgsMapSettings createSettings( int dpi, const QStringList &layerSet ) const;
     void setUpdatedImage( const QImage& image ) { mUpdatedImage = image; }
 
     void update( osg::NodeVisitor * );
+
+    static bool lodSort( const QgsGlobeTileImage* lhs, const QgsGlobeTileImage* rhs ) { return lhs->mLod > rhs->mLod; }
 
   private:
     QgsGlobeTileSource* mTileSource;
@@ -71,6 +73,7 @@ class QgsGlobeTileImage : public osg::Image
     int mTileSize;
     unsigned char* mTileData;
     mutable bool mImageUpdatePending;
+    int mLod;
     QImage mUpdatedImage;
 };
 
