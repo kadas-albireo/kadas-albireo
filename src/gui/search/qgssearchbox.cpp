@@ -30,6 +30,7 @@
 #include "qgsremotedatasearchprovider.h"
 #include "qgsworldlocationsearchprovider.h"
 #include "qgsrubberband.h"
+#include "qgspinannotationitem.h"
 #include <QCheckBox>
 #include <QHeaderView>
 #include <QKeyEvent>
@@ -76,6 +77,7 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   mMapCanvas = canvas;
   mNumRunningProviders = 0;
   mRubberBand = 0;
+  mPin = 0;
   mFilterTool = 0;
 
   mSearchBox = new LineEdit( this );
@@ -318,9 +320,12 @@ void QgsSearchBox::clearSearch()
   mSearchBox->clear();
   mSearchButton->setVisible( true );
   mClearButton->setVisible( false );
-  mMapCanvas->scene()->removeItem( mRubberBand );
-  delete mRubberBand;
-  mRubberBand = 0;
+//  mMapCanvas->scene()->removeItem( mRubberBand );
+//  delete mRubberBand;
+//  mRubberBand = 0;
+  mMapCanvas->scene()->removeItem( mPin );
+  delete mPin;
+  mPin = 0;
   mTreeWidget->close();
   mTreeWidget->blockSignals( true );
   mTreeWidget->clear();
@@ -390,10 +395,17 @@ void QgsSearchBox::resultSelected()
       return;
 
     QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
-    if ( !mRubberBand )
-      createRubberBand();
-    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
-    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
+//    if ( !mRubberBand )
+//      createRubberBand();
+//    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
+//    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
+    if ( !mPin )
+    {
+      mPin = new QgsPinAnnotationItem( mMapCanvas, QgsCoordinateUtils::Default, result.crs );
+      mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
+      mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+    }
+    mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
     mSearchBox->blockSignals( true );
     mSearchBox->setText( result.text );
     mSearchBox->blockSignals( false );
@@ -415,10 +427,17 @@ void QgsSearchBox::resultActivated()
     if ( result.bbox.isEmpty() )
     {
       zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
-      if ( !mRubberBand )
-        createRubberBand();
-      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
-      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
+//      if ( !mRubberBand )
+//        createRubberBand();
+//      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
+//      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
+      if ( !mPin )
+      {
+        mPin = new QgsPinAnnotationItem( mMapCanvas, QgsCoordinateUtils::Default, result.crs );
+        mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
+        mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+      }
+      mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
     }
     else
     {
@@ -451,11 +470,17 @@ void QgsSearchBox::cancelSearch()
   }
   // If the clear button is visible, the rubberband marks an activated search
   // result, which can be cleared by pressing the clear button
-  if ( mRubberBand && !mClearButton->isVisible() )
+//  if ( mRubberBand && !mClearButton->isVisible() )
+//  {
+//    mMapCanvas->scene()->removeItem( mRubberBand );
+//    delete mRubberBand;
+//    mRubberBand = 0;
+//  }
+  if ( mPin && !mClearButton->isVisible() )
   {
-    mMapCanvas->scene()->removeItem( mRubberBand );
-    delete mRubberBand;
-    mRubberBand = 0;
+    mMapCanvas->scene()->removeItem( mPin );
+    delete mPin;
+    mPin = 0;
   }
 }
 
