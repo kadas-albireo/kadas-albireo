@@ -3,13 +3,14 @@ SET (QGIS_VBS_PYTHON_OUTPUT_DIRECTORY ${QGIS_OUTPUT_DIRECTORY}/python/qgis/vbs)
 
 INCLUDE_DIRECTORIES(
   ${PYTHON_INCLUDE_PATH}
+  ${GDAL_INCLUDE_DIR} # HACK: SIP_INCLUDE_DIR is wrong under windows, we need <OSGeo4W>\include, not <OSGeo4W>\apps\Python27\include. Abusing of GDAL_INCLUDE_DIR since it happens to point to <OSGeo4W>\include
   ${SIP_INCLUDE_DIR}
   ..
   ../../../core
 )
 
 IF(WIN32)
-    ADD_DEFINITIONS("\"-DVBS_EXPORT=${DLLEXPORT}\"")
+    ADD_DEFINITIONS("\"-DVBS_EXPORT=${DLLIMPORT}\"")
 ELSE(WIN32)
     ADD_DEFINITIONS("-DVBS_EXPORT=")
 ENDIF(WIN32)
