@@ -69,6 +69,7 @@
 #include <osgEarth/Registry>
 #include <osgEarth/TileSource>
 #include <osgEarth/Version>
+#include <osgEarthAnnotation/AnnotationSettings>
 #include <osgEarthAnnotation/PlaceNode>
 #include <osgEarthDrivers/engine_mp/MPTerrainEngineOptions>
 #include <osgEarthUtil/Controls>
@@ -426,6 +427,7 @@ void GlobePlugin::run()
     {
       addBillboard( item );
     }
+    osgEarth::Annotation::AnnotationSettings::setOcclusionCullingHeightAdjustment( 50 );
 
     mOsgViewer->setSceneData( mRootNode );
 
