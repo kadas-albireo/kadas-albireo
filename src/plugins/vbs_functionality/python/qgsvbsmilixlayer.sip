@@ -12,7 +12,6 @@ class QgsVBSMilixItem
     QList<QPoint> screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
     const QList<int>& controlPoints() const;
     const QPoint& userOffset() const;
-    bool hasEnoughPoints() const;
     bool isMultiPoint() const;
 
     void writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString &versionTag, QString &messages ) const;
