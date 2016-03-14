@@ -92,6 +92,7 @@ public:
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
   static bool getCurrentLibraryVersionTag(QString& versionTag);
   static bool getControlPoints(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
+  static bool getMilitaryName(const QString& symbolXml, QString& militaryName);
 
 private:
   VBSMilixClientWorker mWorker;

@@ -647,6 +647,22 @@ bool VBSMilixClient::getControlPoints( const QString& symbolXml, int nPoints, QL
   return true;
 }
 
+bool VBSMilixClient::getMilitaryName( const QString &symbolXml, QString &militaryName )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << VBS_MILIX_REQUEST_GET_MILITARY_NAME << symbolXml;
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_MILITARY_NAME ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> militaryName;
+  return true;
+}
+
 QImage VBSMilixClient::renderSvg( const QByteArray& xml )
 {
   if ( xml.isEmpty() )
