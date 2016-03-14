@@ -401,7 +401,7 @@ void GlobePlugin::run()
       // Add draped layer
       osgEarth::TileSourceOptions opts;
       opts.L2CacheSize() = 0;
-      opts.tileSize() = 512;
+      opts.tileSize() = 128;
       mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
       osgEarth::ImageLayerOptions options( "QGIS" );
