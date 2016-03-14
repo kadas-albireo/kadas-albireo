@@ -34,6 +34,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
     , mMapPositionFixed( true )
     , mOffsetFromReferencePoint( QPointF( 50, -50 ) )
     , mBalloonSegment( -1 )
+    , mIsClone( false )
 {
   setFlag( QGraphicsItem::ItemIsSelectable, true );
   mMarkerSymbol = new QgsMarkerSymbolV2();
@@ -64,6 +65,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* s
   mBalloonSegment = source->mBalloonSegment;
   mBalloonSegmentPoint1 = source->mBalloonSegmentPoint1;
   mBalloonSegmentPoint2 = source->mBalloonSegmentPoint2;
+  mIsClone = true;
 
   setFlag( QGraphicsItem::ItemIsSelectable, true );
   setData( 0, "AnnotationItem" );

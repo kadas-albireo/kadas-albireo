@@ -29,6 +29,7 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
   public:
 
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
+    ~QgsPinAnnotationItem();
 
     QgsPinAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsPinAnnotationItem( canvas, this ); }
 

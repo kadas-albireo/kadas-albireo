@@ -20,6 +20,15 @@
 #include "qgsvbsmilixlayer.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
+#include "qgsbillboardregistry.h"
+
+QgsVBSMilixItem::~QgsVBSMilixItem()
+{
+  if ( mPoints.size() == 1 )
+  {
+    QgsBillBoardRegistry::instance()->removeItem( this );
+  }
+}
 
 void QgsVBSMilixItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool queryControlPoints )
 {
@@ -34,7 +43,16 @@ void QgsVBSMilixItem::initialize( const QString &mssString, const QString &milit
   {
     VBSMilixClient::getMilitaryName( mMssString, mMilitaryName );
   }
-
+  if ( mPoints.size() == 1 )
+  {
+    int symbolSize = VBSMilixClient::getSymbolSize();
+    VBSMilixClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true );
+    VBSMilixClient::NPointSymbolGraphic graphic;
+    if ( VBSMilixClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+    {
+      QgsBillBoardRegistry::instance()->addItem( this, graphic.graphic, mPoints.front() );
+    }
+  }
 }
 
 QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const

@@ -29,11 +29,14 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     static QgsGeoImageAnnotationItem* create( QgsMapCanvas* canvas, const QString& filePath , QString *errMsg = 0 );
 
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas );
+    ~QgsGeoImageAnnotationItem();
 
     QgsGeoImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsGeoImageAnnotationItem( canvas ); }
 
     void setFilePath( const QString& filePath );
     const QImage& getImage() const { return mImage; }
+
+    void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs ) override;
 
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;

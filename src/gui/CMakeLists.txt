@@ -129,6 +129,7 @@ qgsattributeform.cpp
 qgsattributeforminterface.cpp
 qgsattributeformlegacyinterface.cpp
 qgsattributetypeloaddialog.cpp
+qgsbillboardregistry.cpp
 qgsblendmodecombobox.cpp
 qgsbusyindicatordialog.cpp
 qgscharacterselectdialog.cpp
@@ -261,6 +262,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsattributeeditor.h
   qgsattributeform.h
   qgsattributetypeloaddialog.h
+  qgsbillboardregistry.h
   qgsblendmodecombobox.h
   qgsbusyindicatordialog.h
   qgscharacterselectdialog.h
