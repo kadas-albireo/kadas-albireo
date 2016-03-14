@@ -23,7 +23,6 @@
 #include "qgspluginlayerregistry.h"
 #include "qgsvbsfunctionality.h"
 #include "qgisinterface.h"
-#include "ovl/qgsvbsovlimporter.h"
 #include "vbsfunctionality_plugin.h"
 #include "milix/qgsvbsmilixlibrary.h"
 #include "milix/qgsvbsmilixio.h"
@@ -37,20 +36,12 @@
 QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
     , mQGisIface( theQgisInterface )
-    , mActionOvlImport( 0 )
     , mMilXLibrary( 0 )
 {
 }
 
 void QgsVBSFunctionality::initGui()
 {
-  mActionOvlImport = new QAction( QIcon( ":/vbsfunctionality/icons/ovl.svg" ), tr( "Import ovl" ), this );
-  connect( mActionOvlImport, SIGNAL( triggered( bool ) ), this, SLOT( importOVL() ) );
-  if ( mQGisIface->pluginToolBar() )
-  {
-    mQGisIface->pluginToolBar()->addAction( mActionOvlImport );
-  }
-
   mActionMilx = mQGisIface->findAction( "mActionMilx" );
   connect( mActionMilx, SIGNAL( triggered( ) ), this, SLOT( toggleMilXLibrary( ) ) );
 
@@ -91,16 +82,9 @@ void QgsVBSFunctionality::initGui()
 void QgsVBSFunctionality::unload()
 {
   QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsVBSMilixLayer::layerTypeKey() );
-  delete mActionOvlImport;
-  mActionOvlImport = 0;
   mActionMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
-}
-
-void QgsVBSFunctionality::importOVL()
-{
-  QgsVBSOvlImporter( mQGisIface, mQGisIface->mainWindow() ).import();
 }
 
 void QgsVBSFunctionality::toggleMilXLibrary( )

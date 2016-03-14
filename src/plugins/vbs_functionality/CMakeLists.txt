@@ -18,13 +18,11 @@ SET (vbsfunctionality_SRCS
   milix/qgsvbsmilixio.cpp
   milix/qgsvbsmilixlayer.cpp
   milix/Client/VBSMilixClient.cpp
-  ovl/qgsvbsovlimporter.cpp
 )
 
 SET (vbsfunctionality_HDRS
   vbsfunctionality_plugin.h
   milix/qgsvbsmilixio.h
-  ovl/qgsvbsovlimporter.h
 )
 
 SET (vbsfunctionality_MOC_HDRS

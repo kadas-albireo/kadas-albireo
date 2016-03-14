@@ -40,7 +40,6 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
 
   private:
     QgisInterface* mQGisIface;
-    QAction* mActionOvlImport;
     QAction* mActionMilx;
     QAction* mActionSaveMilx;
     QAction* mActionLoadMilx;
@@ -50,7 +49,6 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QComboBox* mWorkModeCombo;
 
   private slots:
-    void importOVL();
     void toggleMilXLibrary();
     void saveMilx();
     void loadMilx();
