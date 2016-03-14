@@ -119,7 +119,7 @@ void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& sym
 
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  initialize( symbolXml, militaryName, points, QList<int>, QPoint( offsetX, offsetY ),  true );
+  initialize( symbolXml, militaryName, points, QList<int>(), QPoint( offsetX, offsetY ),  true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
