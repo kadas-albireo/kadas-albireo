@@ -1,5 +1,5 @@
 /* XPM */
-static char *splash[] = {
+extern SPLASH_EXPORT const char* splash_image[] = {
 /* columns rows colors chars-per-pixel */
 "648 310 256 2 ",
 "   c #30E31BBE07A0",
