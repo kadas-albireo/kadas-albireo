@@ -427,6 +427,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionMilx, mMilxButton );
   setActionToButton( mActionSaveMilx, mSaveMilxButton );
   setActionToButton( mActionLoadMilx, mLoadMilxButton );
+  setActionToButton( mActionImportOVL, mOvlButton );
 
   //settings tab
   connect( mActionSettings, SIGNAL( triggered() ), this, SLOT( options() ) );
