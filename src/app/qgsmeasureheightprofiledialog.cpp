@@ -234,7 +234,6 @@ void QgsMeasureHeightProfileDialog::replot()
     GDALClose( raster );
     return;
   }
-  double heightToMeters = QGis::fromUnitToUnitFactor( rasterCrs.mapUnits(), QGis::Meters );
 
   GDALRasterBandH band = GDALGetRasterBand( raster, 1 );
   if ( !raster )
@@ -243,6 +242,10 @@ void QgsMeasureHeightProfileDialog::replot()
     GDALClose( raster );
     return;
   }
+
+  // Get vertical unit
+  QGis::UnitType vertUnit = strcmp( GDALGetRasterUnitType( band ), "ft" ) == 0 ? QGis::Feet : QGis::Meters;
+  double heightToMeters = QGis::fromUnitToUnitFactor( vertUnit, QGis::Meters );
 
 #if QWT_VERSION < 0x060000
   QVector<double> xSamples, ySamples;
