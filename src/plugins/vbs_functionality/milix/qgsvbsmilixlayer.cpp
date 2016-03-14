@@ -21,14 +21,20 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 
-void QgsVBSMilixItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool haveEnoughPoints )
+void QgsVBSMilixItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool queryControlPoints )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
   mPoints = points;
   mControlPoints = controlPoints;
   mUserOffset = userOffset;
-  mHaveEnoughPoints = haveEnoughPoints;
+  if ( queryControlPoints && mPoints.size() > 1 )
+    VBSMilixClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
+  if ( militaryName.isEmpty() )
+  {
+    VBSMilixClient::getMilitaryName( mMssString, mMilitaryName );
+  }
+
 }
 
 QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const
@@ -93,8 +99,8 @@ void QgsVBSMilixItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, 
 void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
 {
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
+  QList<QgsPoint> points;
 
-  mPoints.clear();
   QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
   for ( int iPoint = 0, nPoints = pointEls.count(); iPoint < nPoints; ++iPoint )
   {
@@ -103,22 +109,17 @@ void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& sym
     double y = pointEl.firstChildElement( "Y" ).text().toDouble();
     if ( crst )
     {
-      mPoints.append( crst->transform( QgsPoint( x, y ) ) );
+      points.append( crst->transform( QgsPoint( x, y ) ) );
     }
     else
     {
-      mPoints.append( QgsPoint( x, y ) );
+      points.append( QgsPoint( x, y ) );
     }
   }
 
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  mUserOffset = QPoint( offsetX, offsetY );
-  mMssString = symbolXml;
-  mMilitaryName = militaryName;
-  mHaveEnoughPoints = true;
-  if ( mPoints.size() > 1 )
-    VBSMilixClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
+  initialize( symbolXml, militaryName, points, QList<int>, QPoint( offsetX, offsetY ),  true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,7 +148,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
 
-        symbols.append( VBSMilixClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), items[i]->hasEnoughPoints() ) );
+        symbols.append( VBSMilixClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true ) );
       }
       if ( symbols.isEmpty() )
       {
@@ -216,7 +217,7 @@ bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& m
     {
       points[j] += mItems[i]->userOffset();
     }
-    symbols.append( VBSMilixClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), mItems[i]->hasEnoughPoints() ) );
+    symbols.append( VBSMilixClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true ) );
   }
   int selectedSymbol = -1;
   if ( VBSMilixClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )

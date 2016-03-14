@@ -64,6 +64,7 @@ void QgsVBSMilixAnnotationItem::fromMilixItem( QgsVBSMilixItem* item )
 
 QgsVBSMilixItem* QgsVBSMilixAnnotationItem::toMilixItem()
 {
+  Q_ASSERT( mFinalized );
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
   QList<QgsPoint> points;
   points.append( crst->transform( mGeoPos ) );
@@ -72,7 +73,7 @@ QgsVBSMilixItem* QgsVBSMilixAnnotationItem::toMilixItem()
     points.append( crst->transform( p ) );
   }
   QgsVBSMilixItem* item = new QgsVBSMilixItem();
-  item->initialize( mSymbolXml, mSymbolMilitaryName, points, mControlPoints, mOffsetFromReferencePoint.toPoint() - mRenderOffset, mFinalized );
+  item->initialize( mSymbolXml, mSymbolMilitaryName, points, mControlPoints, mOffsetFromReferencePoint.toPoint() - mRenderOffset );
   return item;
 }
 

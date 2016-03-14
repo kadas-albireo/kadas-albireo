@@ -26,14 +26,13 @@ class VBS_EXPORT QgsVBSMilixItem
 {
   public:
     QgsVBSMilixItem() {}
-    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool haveEnoughPoints = false );
+    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool queryControlPoints = false );
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
     const QList<QgsPoint>& points() const { return mPoints; }
     QList<QPoint> screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
     const QList<int>& controlPoints() const { return mControlPoints; }
     const QPoint& userOffset() const { return mUserOffset; }
-    bool hasEnoughPoints() const { return mHaveEnoughPoints; }
     bool isMultiPoint() const { return mPoints.size() > 1; }
 
     void writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString &versionTag, QString &messages ) const;
@@ -45,7 +44,6 @@ class VBS_EXPORT QgsVBSMilixItem
     QList<QgsPoint> mPoints; // Points as WGS84 coordinates
     QList<int> mControlPoints;
     QPoint mUserOffset; // In pixels
-    bool mHaveEnoughPoints;
 };
 
 /** \class QgsVBSMilixLayer
