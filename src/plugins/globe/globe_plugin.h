@@ -173,8 +173,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     void projectRead();
     void applySettings();
     void layerChanged( QgsMapLayer* mapLayer = 0 );
-//    void updateAnnotationItem( QgsAnnotationItem* item );
-//    void removeAnnotationItem( QObject* item );
     void addBillboard( QgsBillBoardItem* item );
     void removeBillboard( QgsBillBoardItem* item );
     void refreshQGISMapLayer( QgsRectangle rect = QgsRectangle() );
