@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgscoordinateutils.cpp                                                 *
- *  -------------------                                                    *
+ *  qgscoordinateformat.cpp                                                *
+ *  -----------------------                                                *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgscoordinateutils.h"
+#include "qgscoordinateformat.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
 #include "qgscrscache.h"
@@ -28,8 +28,79 @@
 #include <gdal.h>
 #include <qmath.h>
 
+QgsCoordinateFormat::QgsCoordinateFormat()
+{
+  mFormat = Format::Default;
+  mEpsg = "EPSG:4326";
+}
 
-double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg )
+QgsCoordinateFormat* QgsCoordinateFormat::instance()
+{
+  static QgsCoordinateFormat instance;
+  return &instance;
+}
+
+void QgsCoordinateFormat::setCoordinateDisplayFormat( Format format, const QString& epsg )
+{
+  mFormat = format;
+  mEpsg = epsg;
+  emit coordinateDisplayFormatChanged(format, epsg);
+}
+
+void QgsCoordinateFormat::getCoordinateDisplayFormat( Format& format, QString& epsg ) const
+{
+  format = mFormat;
+  epsg = mEpsg;
+}
+
+QString QgsCoordinateFormat::getDisplayString(const QgsPoint& p , const QgsCoordinateReferenceSystem &sSrs) const
+{
+  return getDisplayString(p, sSrs, mFormat, mEpsg);
+}
+
+QString QgsCoordinateFormat::getDisplayString(const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs , Format format, const QString &epsg)
+{
+  QgsPoint pTrans = QgsCoordinateTransformCache::instance()->transform( sSrs.authid(), epsg )->transform( p );
+  switch ( format )
+  {
+    case Default:
+    {
+      const QgsCoordinateReferenceSystem& crs = QgsCRSCache::instance()->crsByAuthId(epsg);
+      int prec = crs.mapUnits() == QGis::Degrees ? 4 : 0;
+      return QString( "%1, %2" ).arg( pTrans.x(), 0, 'f', prec ).arg( pTrans.y(), 0, 'f', prec );
+    }
+    case DegMinSec:
+    {
+      return pTrans.toDegreesMinutesSeconds( 1 );
+    }
+    case DegMin:
+    {
+      return pTrans.toDegreesMinutes( 3 );
+    }
+    case DecDeg:
+    {
+      return QString( "%1%2,%3%4" ).arg( pTrans.x(), 0, 'f', 5 ).arg( QChar( 176 ) )
+             .arg( pTrans.y(), 0, 'f', 5 ).arg( QChar( 176 ) );
+    }
+    case UTM:
+    {
+      QgsLatLonToUTM::UTMCoo coo = QgsLatLonToUTM::LL2UTM( pTrans );
+      return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
+    }
+    case MGRS:
+    {
+      QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( pTrans );
+      QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
+      if ( mgrs.letter100kID.isEmpty() )
+        return QString();
+
+      return QString( "%1%2%3 %4 %5" ).arg( mgrs.zoneNumber ).arg( mgrs.zoneLetter ).arg( mgrs.letter100kID ).arg( mgrs.easting, 5, 10, QChar( '0' ) ).arg( mgrs.northing, 5, 10, QChar( '0' ) );
+    }
+  }
+  return "";
+}
+
+double QgsCoordinateFormat::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg )
 {
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
@@ -112,44 +183,3 @@ double QgsCoordinateUtils::getHeightAtPos( const QgsPoint& p, const QgsCoordinat
   }
   return value;
 }
-
-QString QgsCoordinateUtils::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs, TargetFormat targetFormat, const QString& targetEpsg )
-{
-  QgsPoint pTrans = QgsCoordinateTransformCache::instance()->transform( sSrs.authid(), targetEpsg )->transform( p );
-  switch ( targetFormat )
-  {
-    case Default:
-    {
-      return QString( "%1, %2" ).arg( pTrans.x(), 0, 'f', 0 ).arg( pTrans.y(), 0, 'f', 0 );
-    }
-    case DegMinSec:
-    {
-      return pTrans.toDegreesMinutesSeconds( 1 );
-    }
-    case DegMin:
-    {
-      return pTrans.toDegreesMinutes( 3 );
-    }
-    case DecDeg:
-    {
-      return QString( "%1%2,%3%4" ).arg( pTrans.x(), 0, 'f', 5 ).arg( QChar( 176 ) )
-             .arg( pTrans.y(), 0, 'f', 5 ).arg( QChar( 176 ) );
-    }
-    case UTM:
-    {
-      QgsLatLonToUTM::UTMCoo coo = QgsLatLonToUTM::LL2UTM( pTrans );
-      return QString( "%1, %2 (zone %3%4)" ).arg( coo.easting ).arg( coo.northing ).arg( coo.zoneNumber ).arg( coo.zoneLetter );
-    }
-    case MGRS:
-    {
-      QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::LL2UTM( pTrans );
-      QgsLatLonToUTM::MGRSCoo mgrs = QgsLatLonToUTM::UTM2MGRS( utm );
-      if ( mgrs.letter100kID.isEmpty() )
-        return QString();
-
-      return QString( "%1%2%3 %4 %5" ).arg( mgrs.zoneNumber ).arg( mgrs.zoneLetter ).arg( mgrs.letter100kID ).arg( mgrs.easting, 5, 10, QChar( '0' ) ).arg( mgrs.northing, 5, 10, QChar( '0' ) );
-    }
-  }
-  return "";
-}
-

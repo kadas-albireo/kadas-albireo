@@ -41,7 +41,6 @@ class APP_EXPORT QgsClassicApp : public QgisApp, private Ui::MainWindow
     QgsLayerTreeView* layerTreeView() const override { return mLayerTreeView; }
     QgsMessageBar *messageBar() const override { return mInfoBar; }
     void setTheme( QString themeName ) override;
-    void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) override;
 
     /** Add a toolbar to the main window. Overloaded from QMainWindow.
      * After adding the toolbar to the ui (by delegating to the QMainWindow

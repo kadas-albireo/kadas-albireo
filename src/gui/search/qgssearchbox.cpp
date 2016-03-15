@@ -320,9 +320,6 @@ void QgsSearchBox::clearSearch()
   mSearchBox->clear();
   mSearchButton->setVisible( true );
   mClearButton->setVisible( false );
-//  mMapCanvas->scene()->removeItem( mRubberBand );
-//  delete mRubberBand;
-//  mRubberBand = 0;
   mMapCanvas->scene()->removeItem( mPin );
   delete mPin;
   mPin = 0;
@@ -395,13 +392,9 @@ void QgsSearchBox::resultSelected()
       return;
 
     QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
-//    if ( !mRubberBand )
-//      createRubberBand();
-//    const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
-//    mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
     if ( !mPin )
     {
-      mPin = new QgsPinAnnotationItem( mMapCanvas, QgsCoordinateUtils::Default, result.crs );
+      mPin = new QgsPinAnnotationItem( mMapCanvas );
       mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
       mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
     }
@@ -427,13 +420,9 @@ void QgsSearchBox::resultActivated()
     if ( result.bbox.isEmpty() )
     {
       zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
-//      if ( !mRubberBand )
-//        createRubberBand();
-//      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
-//      mRubberBand->setToGeometry( QgsGeometry::fromPoint( t->transform( result.pos ) ), 0 );
       if ( !mPin )
       {
-        mPin = new QgsPinAnnotationItem( mMapCanvas, QgsCoordinateUtils::Default, result.crs );
+        mPin = new QgsPinAnnotationItem( mMapCanvas );
         mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
         mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
       }
@@ -470,12 +459,6 @@ void QgsSearchBox::cancelSearch()
   }
   // If the clear button is visible, the rubberband marks an activated search
   // result, which can be cleared by pressing the clear button
-//  if ( mRubberBand && !mClearButton->isVisible() )
-//  {
-//    mMapCanvas->scene()->removeItem( mRubberBand );
-//    delete mRubberBand;
-//    mRubberBand = 0;
-//  }
   if ( mPin && !mClearButton->isVisible() )
   {
     mMapCanvas->scene()->removeItem( mPin );

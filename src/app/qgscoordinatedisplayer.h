@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include <qgspoint.h>
-#include "qgscoordinateutils.h"
+#include "qgscoordinateformat.h"
 
 class QLabel;
 class QLineEdit;
@@ -33,7 +33,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     Q_OBJECT
   public:
     QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
-    void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg );
+    void getCoordinateDisplayFormat( QgsCoordinateFormat::Format &format, QString& epsg );
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
     double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
 
@@ -47,13 +47,10 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     QAction* mActionDisplayLV95;
     QAction* mActionDisplayDMS;
 
-  signals:
-    void coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat format, QString epsg );
-
   private slots:
     void displayCoordinates( const QgsPoint& p );
     void syncProjectCrs();
-    void displayFormatChanged();
+    void displayFormatChanged( QAction* action );
 };
 
 #endif // QGSCOORDINATEDISPAYER_H

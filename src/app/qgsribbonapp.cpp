@@ -96,7 +96,6 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mMapCanvas->installEventFilter( this );
 
   mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mMapCanvas, this );
-  connect( mCoordinateDisplayer, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ), this, SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ) );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
@@ -181,11 +180,6 @@ void QgsRibbonApp::setTheme( QString themeName )
   }
 
   emit currentThemeChanged( themeName );
-}
-
-void QgsRibbonApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
-{
-  mCoordinateDisplayer->getCoordinateDisplayFormat( format, epsg );
 }
 
 bool QgsRibbonApp::eventFilter( QObject *obj, QEvent *ev )

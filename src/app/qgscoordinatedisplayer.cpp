@@ -17,7 +17,6 @@
 
 #include "qgisapp.h"
 #include "qgscoordinatedisplayer.h"
-#include "qgscoordinateutils.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapsettings.h"
 
@@ -48,7 +47,6 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   crsSelectionMenu->addAction( "DD" )->setData( static_cast<int>( DD ) );
   crsSelectionMenu->addAction( "UTM" )->setData( static_cast<int>( UTM ) );
   crsSelectionMenu->addAction( "MGRS" )->setData( static_cast<int>( MGRS ) );
-  mCRSSelectionButton->setDefaultAction( crsSelectionMenu->actions().front() );
 
   QFont font = mCoordinateLineEdit->font();
   font.setPointSize( 9 );
@@ -59,14 +57,13 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
 
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
-  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), mCoordinateLineEdit, SLOT( clear() ) );
-  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( displayFormatChanged() ) );
-  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), mCRSSelectionButton, SLOT( setDefaultAction( QAction* ) ) );
+  connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( displayFormatChanged( QAction* ) ) );
 
   syncProjectCrs();
+  displayFormatChanged( crsSelectionMenu->actions().front() );
 }
 
-void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
+void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateFormat::Format& format, QString& epsg )
 {
   QVariant v = mCRSSelectionButton->defaultAction()->data();
   TargetFormat targetFormat = static_cast<TargetFormat>( v.toInt() );
@@ -74,27 +71,27 @@ void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateUtils::Tar
   switch ( targetFormat )
   {
     case LV03:
-      format = QgsCoordinateUtils::Default;
+      format = QgsCoordinateFormat::Default;
       epsg = "EPSG:21781";
       return;
     case LV95:
-      format = QgsCoordinateUtils::Default;
+      format = QgsCoordinateFormat::Default;
       epsg = "EPSG:2056";
       return;
     case DMS:
-      format = QgsCoordinateUtils::DegMinSec;
+      format = QgsCoordinateFormat::DegMinSec;
       return;
     case DM:
-      format = QgsCoordinateUtils::DegMin;
+      format = QgsCoordinateFormat::DegMin;
       return;
     case DD:
-      format = QgsCoordinateUtils::DecDeg;
+      format = QgsCoordinateFormat::DecDeg;
       return;
     case UTM:
-      format = QgsCoordinateUtils::UTM;
+      format = QgsCoordinateFormat::UTM;
       return;
     case MGRS:
-      format = QgsCoordinateUtils::MGRS;
+      format = QgsCoordinateFormat::MGRS;
       return;
   }
 }
@@ -106,19 +103,19 @@ QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCo
   switch ( format )
   {
     case LV03:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::Default, "EPSG:21781" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::Default, "EPSG:21781" );
     case LV95:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::Default, "EPSG:2056" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::Default, "EPSG:2056" );
     case DMS:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMinSec, "EPSG:4326" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::DegMinSec, "EPSG:4326" );
     case DM:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DegMin, "EPSG:4326" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::DegMin, "EPSG:4326" );
     case DD:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::DecDeg, "EPSG:4326" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::DecDeg, "EPSG:4326" );
     case UTM:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::UTM, "EPSG:4326" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::UTM, "EPSG:4326" );
     case MGRS:
-      return QgsCoordinateUtils::getDisplayString( p, crs, QgsCoordinateUtils::MGRS, "EPSG:4326" );
+      return QgsCoordinateFormat::getDisplayString( p, crs, QgsCoordinateFormat::MGRS, "EPSG:4326" );
   }
   return QString();
 }
@@ -145,10 +142,12 @@ void QgsCoordinateDisplayer::syncProjectCrs()
   }
 }
 
-void QgsCoordinateDisplayer::displayFormatChanged()
+void QgsCoordinateDisplayer::displayFormatChanged( QAction *action )
 {
-  QgsCoordinateUtils::TargetFormat format;
+  mCRSSelectionButton->setDefaultAction( action );
+  mCoordinateLineEdit->clear();
+  QgsCoordinateFormat::Format format;
   QString epsg;
   getCoordinateDisplayFormat( format, epsg );
-  emit coordinateDisplayFormatChanged( format, epsg );
+  QgsCoordinateFormat::instance()->setCoordinateDisplayFormat( format, epsg );
 }

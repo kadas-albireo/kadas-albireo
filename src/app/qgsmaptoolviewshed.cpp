@@ -189,10 +189,7 @@ void QgsMapToolViewshed::drawFinished()
     QgsSingleBandPseudoColorRenderer* renderer = new QgsSingleBandPseudoColorRenderer( 0, 1, shader );
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    QgsCoordinateUtils::TargetFormat format;
-    QString epsg;
-    QgisApp::instance()->getCoordinateDisplayFormat( format, epsg );
-    QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas(), format, epsg );
+    QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas() );
     pin->setMapPosition( center, canvasCrs );
   }
   reset();
