@@ -163,16 +163,16 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
       const QList<QgsVBSMilixItem*>& items = mLayer->mItems;
       QList<QPoint> itemOrigins;
       QList<VBSMilixClient::NPointSymbol> symbols;
+      bool isGlobe = mRendererContext.customRenderFlags().split( ";" ).contains( "globe" );
       for ( int i = 0, n = items.size(); i < n; ++i )
       {
-        if ( !items[i]->isMultiPoint() && mRendererContext.customRenderFlags().split( ";" ).contains( "globe" ) )
+        if ( isGlobe && !items[i]->isMultiPoint() )
         {
           // Only render multipoint symbols in globe
           continue;
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
-
         symbols.append( VBSMilixClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true ) );
       }
       if ( symbols.isEmpty() )
