@@ -110,7 +110,7 @@ void QgsVBSMilixAnnotationItem::paint( QPainter* painter )
   painter->setPen( Qt::black );
   if ( !mIsMultiPoint )
   {
-    painter->drawLine( QPoint( 0, 0 ), mOffsetFromReferencePoint + QPoint( 0.5 * mGraphic.width(), 0.5 * mGraphic.height() ) );
+    painter->drawLine( QPoint( 0, 0 ), mOffsetFromReferencePoint.toPoint() - mRenderOffset );
   }
 
   painter->drawPixmap( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mGraphic );
