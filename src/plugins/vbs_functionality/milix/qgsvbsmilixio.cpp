@@ -242,5 +242,9 @@ void QgsVBSMilixIO::showMessageDialog( const QString& title, const QString& body
   QPlainTextEdit* textEdit = new QPlainTextEdit( messages );
   textEdit->setReadOnly( true );
   dialog.layout()->addWidget( textEdit );
+  QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close );
+  dialog.layout()->addWidget( bbox );
+  connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
+  connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
   dialog.exec();
 }
