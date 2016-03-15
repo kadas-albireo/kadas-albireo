@@ -133,6 +133,9 @@ class QgsMapLayer : QObject
     /** Return the extent of the layer */
     virtual QgsRectangle extent();
 
+    /** Return a margin in pixels which needs to be added to the layer extent */
+    virtual int margin() const;
+
     /*! Return the status of the layer. An invalid layer is one which has a bad datasource
      * or other problem. Child classes set this flag when intialized
      * @return True if the layer is valid and can be accessed

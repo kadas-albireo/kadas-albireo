@@ -67,6 +67,7 @@ class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;
     QgsRectangle extent() override;
+    int margin() const override;
 
     bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult ) override;
     void handlePick( const QVariant& pick ) override;
@@ -82,6 +83,7 @@ class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
     class Renderer;
 
     QList<QgsVBSMilixItem*> mItems;
+    int mMargin;
 };
 
 class VBS_EXPORT QgsVBSMilixLayerType : public QgsPluginLayerType

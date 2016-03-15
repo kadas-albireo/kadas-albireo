@@ -177,6 +177,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
       {
         return false;
       }
+      mLayer->mMargin = 0;
       for ( int i = 0, n = result.size(); i < n; ++i )
       {
         QPoint renderPos = itemOrigins[i] + result[i].offset + items[i]->userOffset();
@@ -186,6 +187,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
           mRendererContext.painter()->drawLine( itemOrigins[i], itemOrigins[i] + items[i]->userOffset() );
         }
         mRendererContext.painter()->drawImage( renderPos, result[i].graphic );
+        mLayer->mMargin = qMax( mLayer->mMargin, qMax( result[i].graphic.width(), result[i].graphic.height() ) );
       }
       return true;
     }
@@ -212,7 +214,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsVBSMilixLayer::QgsVBSMilixLayer( const QString &name )
-    : QgsPluginLayer( layerTypeKey(), name )
+    : QgsPluginLayer( layerTypeKey(), name ), mMargin( 0 )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
@@ -410,4 +412,9 @@ QgsRectangle QgsVBSMilixLayer::extent()
     }
   }
   return r;
+}
+
+int QgsVBSMilixLayer::margin() const
+{
+  return mMargin;
 }
