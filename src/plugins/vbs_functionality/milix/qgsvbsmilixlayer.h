@@ -25,6 +25,8 @@
 class VBS_EXPORT QgsVBSMilixItem
 {
   public:
+    static bool validateMssString( const QString& mssString, QString &adjustedMssString, QString& messages );
+
     ~QgsVBSMilixItem();
     void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool queryControlPoints = false );
     const QString& mssString() const { return mMssString; }

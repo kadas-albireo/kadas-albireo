@@ -22,6 +22,13 @@
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
 
+bool QgsVBSMilixItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
+{
+  bool valid = false;
+  QString libVersion; VBSMilixClient::getCurrentLibraryVersionTag( libVersion );
+  return VBSMilixClient::validateSymbolXml( mssString, libVersion, adjustedMssString, valid, messages ) && valid;
+}
+
 QgsVBSMilixItem::~QgsVBSMilixItem()
 {
   if ( mPoints.size() == 1 )
