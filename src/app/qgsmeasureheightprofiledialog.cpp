@@ -16,6 +16,7 @@
 
 #include "qgisapp.h"
 #include "qgscoordinatetransform.h"
+#include "qgscoordinateformat.h"
 #include "qgsimageannotationitem.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
@@ -69,11 +70,13 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   connect( pickButton, SIGNAL( clicked( bool ) ), mTool, SLOT( pickLine() ) );
   vboxLayout->addWidget( pickButton );
 
+  QGis::UnitType heightDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
+
   mPlot = new QwtPlot( this );
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
   mPlot->enableAxis( QwtPlot::xBottom );
-  mPlot->setAxisTitle( QwtPlot::yLeft, tr( "Height [m]" ) );
+  mPlot->setAxisTitle( QwtPlot::yLeft, heightDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
   mPlot->setAxisTitle( QwtPlot::xBottom, tr( "Distance [m]" ) );
   vboxLayout->addWidget( mPlot );
 
@@ -117,7 +120,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mObserverHeightSpinBox = new QDoubleSpinBox();
   mObserverHeightSpinBox->setRange( 0, 8000 );
   mObserverHeightSpinBox->setDecimals( 1 );
-  mObserverHeightSpinBox->setSuffix( " m" );
+  mObserverHeightSpinBox->setSuffix( heightDisplayUnit == QGis::Feet ? " ft" : " m" );
   mObserverHeightSpinBox->setValue( QSettings().value( "/qgis/measure/heightprofile/observerheight", 2.0 ).toDouble() );
   mObserverHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mObserverHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
@@ -126,7 +129,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mTargetHeightSpinBox = new QDoubleSpinBox();
   mTargetHeightSpinBox->setRange( 0, 8000 );
   mTargetHeightSpinBox->setDecimals( 1 );
-  mTargetHeightSpinBox->setSuffix( " m" );
+  mTargetHeightSpinBox->setSuffix( heightDisplayUnit == QGis::Feet ? " ft" : " m" );
   mTargetHeightSpinBox->setValue( QSettings().value( "/qgis/measure/heightprofile/targetheight", 2.0 ).toDouble() );
   mTargetHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
@@ -142,6 +145,8 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   connect( copyButton, SIGNAL( clicked( bool ) ), this, SLOT( copyToClipboard() ) );
   connect( addButton, SIGNAL( clicked( bool ) ), this, SLOT( addToCanvas() ) );
   connect( this, SIGNAL( finished( int ) ), this, SLOT( finish() ) );
+
+  connect( QgsCoordinateFormat::instance(), SIGNAL( heightDisplayUnitChanged( QGis::UnitType ) ), this, SLOT( replot() ) );
 
   restoreGeometry( QSettings().value( "/Windows/MeasureHeightProfile/geometry" ).toByteArray() );
 }
@@ -203,6 +208,16 @@ void QgsMeasureHeightProfileDialog::finish()
 
 void QgsMeasureHeightProfileDialog::replot()
 {
+  QGis::UnitType vertDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
+  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
+  mObserverHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
+  mTargetHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
+
+  if ( mPoints.isEmpty() )
+  {
+    return;
+  }
+
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
@@ -245,7 +260,10 @@ void QgsMeasureHeightProfileDialog::replot()
 
   // Get vertical unit
   QGis::UnitType vertUnit = strcmp( GDALGetRasterUnitType( band ), "ft" ) == 0 ? QGis::Feet : QGis::Meters;
-  double heightToMeters = QGis::fromUnitToUnitFactor( vertUnit, QGis::Meters );
+  double heightConversion = QGis::fromUnitToUnitFactor( vertUnit, vertDisplayUnit );
+  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
+  mObserverHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
+  mTargetHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
 
 #if QWT_VERSION < 0x060000
   QVector<double> xSamples, ySamples;
@@ -293,9 +311,9 @@ void QgsMeasureHeightProfileDialog::replot()
                        + ( pixValues[2] * ( 1. - lambdaC ) + pixValues[3] * lambdaC ) * ( lambdaR );
 #if QWT_VERSION < 0x060000
         xSamples.append( xSamples.size() );
-        ySamples.append( value * heightToMeters );
+        ySamples.append( value * heightConversion );
 #else
-        samples.append( QPointF( samples.size(), value * heightToMeters ) );
+        samples.append( QPointF( samples.size(), value * heightConversion ) );
 #endif
       }
       x += mTotLength / mNSamples;
@@ -316,11 +334,10 @@ void QgsMeasureHeightProfileDialog::replot()
 
   GDALClose( raster );
 
-  updateLineOfSight( false );
-  mPlot->replot();
+  updateLineOfSight( );
 }
 
-void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
+void QgsMeasureHeightProfileDialog::updateLineOfSight( )
 {
   qDeleteAll( mLinesOfSight );
   mLinesOfSight.clear();
@@ -331,10 +348,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 
   if ( !mLineOfSightGroupBoxgroupBox->isEnabled() || !mLineOfSightGroupBoxgroupBox->isChecked() )
   {
-    if ( replot )
-    {
-      mPlot->replot();
-    }
+    mPlot->replot();
     return;
   }
 
@@ -354,12 +368,14 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 
   QPointF p1( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
 
+  double meterToDisplayUnit = QGis::fromUnitToUnitFactor( QGis::Meters, QgsCoordinateFormat::instance()->getHeightDisplayUnit() );
+
   for ( int i = 0; i < nSamples - 1; ++i )
   {
     // Curvature correction
     double distFromObserver = samples[i].x() / mNSamples * mTotLength;
     double earthRadius = 6370000;
-    double hCorr = 0.87 * distFromObserver * distFromObserver / ( 2 * earthRadius );
+    double hCorr = 0.87 * distFromObserver * distFromObserver / ( 2 * earthRadius ) * meterToDisplayUnit;
 
     QPointF p2( samples[i].x(), samples[i].y() + mTargetHeightSpinBox->value() - hCorr );
     // X = p1.x() + d * (p2.x() - p1.x())
@@ -434,10 +450,7 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( bool replot )
 #endif
   mLineOfSightMarker->attach( mPlot );
 
-  if ( replot )
-  {
-    mPlot->replot();
-  }
+  mPlot->replot();
 }
 
 void QgsMeasureHeightProfileDialog::copyToClipboard()

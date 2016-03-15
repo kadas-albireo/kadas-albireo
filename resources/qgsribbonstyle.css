@@ -169,7 +169,8 @@ QPushButton#mLayerTreeViewButton {
 #mStatusWidget #mDisplayCRSButton,
 #mStatusWidget #mScaleComboBox,
 #mStatusWidget #mCRSSelectionButton,
-#mStatusWidget #mGpsToolButton
+#mStatusWidget #mGpsToolButton,
+#mStatusWidget #mHeightSelectionButton
 {
   background-color: #16171B;
   color: #FFFFFF;

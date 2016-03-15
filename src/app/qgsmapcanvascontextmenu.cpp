@@ -259,9 +259,9 @@ void QgsMapCanvasContextMenu::copyCoordinates()
   {
     posStr = QString( "%1 (%2)" ).arg( mMapPos.toString() ).arg( mapCrs.authid() );
   }
-  QString text = tr( "Position: %1\nHeight: %3" )
+  QString text = QString( "%1\n%2" )
                  .arg( posStr )
-                 .arg( QgsCoordinateFormat::getHeightAtPos( mMapPos, mapCrs, QGis::Meters ) );
+                 .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mMapPos, mapCrs ) );
   QApplication::clipboard()->setText( text );
 }
 

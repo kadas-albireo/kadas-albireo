@@ -72,6 +72,7 @@ void QgsMeasureHeightProfileTool::deactivate()
 {
   restart();
   mDialog->close();
+  mDialog->setPoints( QList<QgsPoint>(), mCanvas->mapSettings().destinationCrs() );
   QgsMapTool::deactivate();
 }
 

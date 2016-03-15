@@ -19,6 +19,7 @@
 #include "qgsmaptoolviewshed.h"
 #include "qgisinterface.h"
 #include "qgscircularstringv2.h"
+#include "qgscoordinateformat.h"
 #include "qgscurvepolygonv2.h"
 #include "qgscolorrampshader.h"
 #include "qgsdistancearea.h"
@@ -47,6 +48,8 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
 {
   setWindowTitle( tr( "Viewshed setup" ) );
 
+  QGis::UnitType vertDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
+
   QGridLayout* heightDialogLayout = new QGridLayout();
 
   heightDialogLayout->addWidget( new QLabel( tr( "Observer height:" ) ), 0, 0, 1, 1 );
@@ -54,7 +57,7 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   mSpinBoxObserverHeight->setRange( 0, 8000 );
   mSpinBoxObserverHeight->setDecimals( 1 );
   mSpinBoxObserverHeight->setValue( 2. );
-  mSpinBoxObserverHeight->setSuffix( " m" );
+  mSpinBoxObserverHeight->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
   heightDialogLayout->addWidget( mSpinBoxObserverHeight, 0, 1, 1, 1 );
 
   heightDialogLayout->addWidget( new QLabel( tr( "Target height:" ) ), 1, 0, 1, 1 );
@@ -62,7 +65,7 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   mSpinBoxTargetHeight->setRange( 0, 8000 );
   mSpinBoxTargetHeight->setDecimals( 1 );
   mSpinBoxTargetHeight->setValue( 2. );
-  mSpinBoxTargetHeight->setSuffix( " m" );
+  mSpinBoxTargetHeight->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
   heightDialogLayout->addWidget( mSpinBoxTargetHeight, 1, 1, 1, 1 );
 
   heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 2, 0, 1, 1 );
@@ -164,10 +167,12 @@ void QgsMapToolViewshed::drawFinished()
     da.convertMeasurement( curRadius, measureUnits, QGis::Meters, false );
   }
 
+  double heightConv = QGis::fromUnitToUnitFactor( QgsCoordinateFormat::instance()->getHeightDisplayUnit(), QGis::Meters );
+
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight(), viewshedDialog.getTargetHeight(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
+  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, curRadius, QGis::Meters, filterRegion, displayVisible, &p );
   if ( success )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
