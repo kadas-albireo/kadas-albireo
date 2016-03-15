@@ -32,6 +32,7 @@ QgsCoordinateFormat::QgsCoordinateFormat()
 {
   mFormat = Format::Default;
   mEpsg = "EPSG:4326";
+  mHeightUnit = QGis::Meters;
 }
 
 QgsCoordinateFormat* QgsCoordinateFormat::instance()
@@ -44,7 +45,13 @@ void QgsCoordinateFormat::setCoordinateDisplayFormat( Format format, const QStri
 {
   mFormat = format;
   mEpsg = epsg;
-  emit coordinateDisplayFormatChanged(format, epsg);
+  emit coordinateDisplayFormatChanged( format, epsg );
+}
+
+void QgsCoordinateFormat::setHeightDisplayUnit( QGis::UnitType heightUnit )
+{
+  mHeightUnit = heightUnit;
+  emit heightDisplayUnitChanged( heightUnit );
 }
 
 void QgsCoordinateFormat::getCoordinateDisplayFormat( Format& format, QString& epsg ) const
@@ -53,19 +60,19 @@ void QgsCoordinateFormat::getCoordinateDisplayFormat( Format& format, QString& e
   epsg = mEpsg;
 }
 
-QString QgsCoordinateFormat::getDisplayString(const QgsPoint& p , const QgsCoordinateReferenceSystem &sSrs) const
+QString QgsCoordinateFormat::getDisplayString( const QgsPoint& p , const QgsCoordinateReferenceSystem &sSrs ) const
 {
-  return getDisplayString(p, sSrs, mFormat, mEpsg);
+  return getDisplayString( p, sSrs, mFormat, mEpsg );
 }
 
-QString QgsCoordinateFormat::getDisplayString(const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs , Format format, const QString &epsg)
+QString QgsCoordinateFormat::getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& sSrs , Format format, const QString &epsg )
 {
   QgsPoint pTrans = QgsCoordinateTransformCache::instance()->transform( sSrs.authid(), epsg )->transform( p );
   switch ( format )
   {
     case Default:
     {
-      const QgsCoordinateReferenceSystem& crs = QgsCRSCache::instance()->crsByAuthId(epsg);
+      const QgsCoordinateReferenceSystem& crs = QgsCRSCache::instance()->crsByAuthId( epsg );
       int prec = crs.mapUnits() == QGis::Degrees ? 4 : 0;
       return QString( "%1, %2" ).arg( pTrans.x(), 0, 'f', prec ).arg( pTrans.y(), 0, 'f', prec );
     }
@@ -98,6 +105,11 @@ QString QgsCoordinateFormat::getDisplayString(const QgsPoint& p, const QgsCoordi
     }
   }
   return "";
+}
+
+double QgsCoordinateFormat::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QString* errMsg )
+{
+  return getHeightAtPos( p, crs, mHeightUnit, errMsg );
 }
 
 double QgsCoordinateFormat::getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg )

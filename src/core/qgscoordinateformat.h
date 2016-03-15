@@ -40,22 +40,28 @@ class CORE_EXPORT QgsCoordinateFormat : public QObject
 
     static QgsCoordinateFormat* instance();
     void getCoordinateDisplayFormat( QgsCoordinateFormat::Format& format, QString& epsg ) const;
+    QGis::UnitType getHeightDisplayUnit() const { return mHeightUnit; }
+
     QString getDisplayString( const QgsPoint& p , const QgsCoordinateReferenceSystem &sSrs ) const;
     static QString getDisplayString( const QgsPoint& p , const QgsCoordinateReferenceSystem &sSrs, Format format, const QString& epsg );
 
+    double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QString* errMsg = 0 );
     static double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg = 0 );
 
   public slots:
     void setCoordinateDisplayFormat( Format format, const QString& epsg );
+    void setHeightDisplayUnit( QGis::UnitType heightUnit );
 
   signals:
     void coordinateDisplayFormatChanged( QgsCoordinateFormat::Format format, const QString& epsg );
+    void heightDisplayUnitChanged( QGis::UnitType heightUnit );
 
   private:
     QgsCoordinateFormat();
 
     Format mFormat;
     QString mEpsg;
+    QGis::UnitType mHeightUnit;
 };
 
 #endif // QGSCOORDINATEFORMAT_H

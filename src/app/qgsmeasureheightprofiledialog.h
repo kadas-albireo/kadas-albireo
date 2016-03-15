@@ -43,7 +43,7 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
   private slots:
     void finish();
     void replot();
-    void updateLineOfSight( bool replot = true );
+    void updateLineOfSight();
     void copyToClipboard();
     void addToCanvas();
 

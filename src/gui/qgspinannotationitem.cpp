@@ -37,6 +37,7 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas )
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
   connect( QgsCoordinateFormat::instance(), SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateFormat::Format, QString ) ), this, SLOT( updateToolTip() ) );
+  connect( QgsCoordinateFormat::instance(), SIGNAL( heightDisplayUnitChanged( QGis::UnitType ) ), this, SLOT( updateToolTip() ) );
 }
 
 QgsPinAnnotationItem::~QgsPinAnnotationItem()
@@ -59,9 +60,9 @@ void QgsPinAnnotationItem::updateToolTip()
   {
     posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
   }
-  QString toolTipText = tr( "Position: %1\nHeight: %3" )
+  QString toolTipText = QString( "%1\n%2" )
                         .arg( posStr )
-                        .arg( QgsCoordinateFormat::getHeightAtPos( mGeoPos, mGeoPosCrs, QGis::Meters ) );
+                        .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) );
   setToolTip( toolTipText );
 }
 

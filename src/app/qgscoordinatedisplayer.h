@@ -32,7 +32,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
+    QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QToolButton *heightButton, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
     void getCoordinateDisplayFormat( QgsCoordinateFormat::Format &format, QString& epsg );
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
     double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
@@ -41,6 +41,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     enum TargetFormat { LV03, LV95, DMS, DM, DD, UTM, MGRS };
     QgsMapCanvas* mMapCanvas;
     QToolButton* mCRSSelectionButton;
+    QToolButton* mHeightSelectionButton;
     QLabel* mIconLabel;
     QLineEdit* mCoordinateLineEdit;
     QAction* mActionDisplayLV03;
@@ -51,6 +52,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     void displayCoordinates( const QgsPoint& p );
     void syncProjectCrs();
     void displayFormatChanged( QAction* action );
+    void heightUnitChanged( QAction *action );
 };
 
 #endif // QGSCOORDINATEDISPAYER_H

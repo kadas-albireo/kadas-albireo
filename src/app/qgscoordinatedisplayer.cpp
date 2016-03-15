@@ -25,9 +25,9 @@
 #include <QMenu>
 #include <QToolButton>
 
-QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdit* coordLineEdit, QgsMapCanvas* mapCanvas,
+QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdit* coordLineEdit, QToolButton* heightButton, QgsMapCanvas* mapCanvas,
     QWidget *parent ) : QWidget( parent ), mMapCanvas( mapCanvas ),
-    mCRSSelectionButton( crsButton ), mCoordinateLineEdit( coordLineEdit )
+    mCRSSelectionButton( crsButton ), mCoordinateLineEdit( coordLineEdit ), mHeightSelectionButton( heightButton )
 {
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
@@ -55,12 +55,19 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   mCoordinateLineEdit->setAlignment( Qt::AlignCenter );
   mCoordinateLineEdit->setFixedWidth( 200 );
 
+  QMenu* heightSelectionMenu = new QMenu();
+  mHeightSelectionButton->setMenu( heightSelectionMenu );
+  heightSelectionMenu->addAction( "m" )->setData( static_cast<int>( QGis::Meters ) );
+  heightSelectionMenu->addAction( "ft" )->setData( static_cast<int>( QGis::Feet ) );
+
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
   connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( displayFormatChanged( QAction* ) ) );
+  connect( heightSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( heightUnitChanged( QAction* ) ) );
 
   syncProjectCrs();
   displayFormatChanged( crsSelectionMenu->actions().front() );
+  heightUnitChanged( heightSelectionMenu->actions().front() );
 }
 
 void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateFormat::Format& format, QString& epsg )
@@ -150,4 +157,10 @@ void QgsCoordinateDisplayer::displayFormatChanged( QAction *action )
   QString epsg;
   getCoordinateDisplayFormat( format, epsg );
   QgsCoordinateFormat::instance()->setCoordinateDisplayFormat( format, epsg );
+}
+
+void QgsCoordinateDisplayer::heightUnitChanged( QAction *action )
+{
+  mHeightSelectionButton->setDefaultAction( action );
+  QgsCoordinateFormat::instance()->setHeightDisplayUnit( static_cast<QGis::UnitType>( action->data().toInt() ) );
 }
