@@ -458,10 +458,17 @@ void QgsPluginRegistry::restoreSessionPlugins( QString thePluginDirString )
 #endif
 
   //enable vector_analysis plugin by default
+#if defined(WIN32)
+  if ( !mySettings.contains( "/Plugins/vectoranalysisplugin" ) )
+  {
+    mySettings.setValue( "/Plugins/vectoranalysisplugin", true );
+  }
+#else
   if ( !mySettings.contains( "/Plugins/libvectoranalysisplugin" ) )
   {
     mySettings.setValue( "/Plugins/libvectoranalysisplugin", true );
   }
+#endif
 
   // check all libs in the current plugin directory and get name and descriptions
   QDir myPluginDir( thePluginDirString, pluginExt, QDir::Name | QDir::IgnoreCase, QDir::Files | QDir::NoSymLinks );
