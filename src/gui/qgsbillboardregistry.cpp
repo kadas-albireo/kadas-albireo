@@ -40,3 +40,8 @@ void QgsBillBoardRegistry::removeItem( void* parent )
   emit itemRemoved( mItems[parent] );
   delete mItems.take( parent );
 }
+
+QList<QgsBillBoardItem*> QgsBillBoardRegistry::items() const
+{
+  return mItems.values();
+}

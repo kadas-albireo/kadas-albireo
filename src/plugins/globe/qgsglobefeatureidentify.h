@@ -23,9 +23,9 @@ class QgsMapCanvas;
 class QgsRubberBand;
 
 #if OSGEARTH_VERSION_LESS_THAN(2, 7, 0)
-struct QgsGlobeFeatureIdentifyCallback : public osgEarth::Util::FeatureQueryTool::Callback
+class QgsGlobeFeatureIdentifyCallback : public osgEarth::Util::FeatureQueryTool::Callback
 #else
-struct QgsGlobeFeatureIdentifyCallback : public osgEarth::Picker::Callback
+class QgsGlobeFeatureIdentifyCallback : public osgEarth::Picker::Callback
 #endif
 {
 public:
