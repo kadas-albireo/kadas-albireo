@@ -19,7 +19,6 @@
 #define QGSPINANNOTATIONITEM_H
 
 #include "qgssvgannotationitem.h"
-#include "qgscoordinateutils.h"
 
 class QgsCoordinateDisplayer;
 
@@ -28,7 +27,7 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
     Q_OBJECT
   public:
 
-    QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
+    QgsPinAnnotationItem( QgsMapCanvas* canvas );
     ~QgsPinAnnotationItem();
 
     QgsPinAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsPinAnnotationItem( canvas, this ); }
@@ -38,20 +37,14 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 
     void writeXML( QDomDocument& doc ) const override;
 
-  public slots:
-    void changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat targetFormat, const QString& targetEPSG = QString() );
-
   protected:
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source );
 
   private:
-    QgsCoordinateUtils::TargetFormat mTargetFormat;
-    QString mTargetEPSG;
-
-    void updateToolTip();
 
   private slots:
     void copyPosition();
+    void updateToolTip();
 };
 
 #endif // QGSPINANNOTATIONITEM_H

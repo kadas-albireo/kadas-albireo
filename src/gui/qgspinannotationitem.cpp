@@ -18,14 +18,15 @@
 #include "qgspinannotationitem.h"
 #include "qgsproject.h"
 #include "qgsbillboardregistry.h"
+#include "qgscoordinateformat.h"
 #include "qgscrscache.h"
 #include <QApplication>
 #include <QClipboard>
 #include <QImageReader>
 #include <QMenu>
 
-QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinateUtils::TargetFormat targetFormat , const QString &targetEPSG )
-    : QgsSvgAnnotationItem( canvas ), mTargetFormat( targetFormat ), mTargetEPSG( targetEPSG )
+QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas )
+    : QgsSvgAnnotationItem( canvas )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
                 QgsAnnotationItem::ItemHasNoFrame |
@@ -35,6 +36,7 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas , QgsCoordinate
   setFilePath( ":/images/themes/default/pin_red.svg" );
   setFrameSize( imageSize );
   setOffsetFromReferencePoint( QPointF( -imageSize.width() / 2., -imageSize.height() ) );
+  connect( QgsCoordinateFormat::instance(), SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateFormat::Format, QString ) ), this, SLOT( updateToolTip() ) );
 }
 
 QgsPinAnnotationItem::~QgsPinAnnotationItem()
@@ -48,27 +50,18 @@ QgsPinAnnotationItem::~QgsPinAnnotationItem()
 QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source )
     : QgsSvgAnnotationItem( canvas, source )
 {
-  mTargetFormat = source->mTargetFormat;
-  mTargetEPSG = source->mTargetEPSG;
-}
-
-void QgsPinAnnotationItem::changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat targetFormat, const QString &targetEPSG )
-{
-  mTargetFormat = targetFormat;
-  mTargetEPSG = targetEPSG;
-  updateToolTip();
 }
 
 void QgsPinAnnotationItem::updateToolTip()
 {
-  QString posStr = QgsCoordinateUtils::getDisplayString( mGeoPos, mGeoPosCrs, mTargetFormat, mTargetEPSG );
+  QString posStr = QgsCoordinateFormat::instance()->getDisplayString( mGeoPos, mGeoPosCrs );
   if ( posStr.isEmpty() )
   {
     posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
   }
   QString toolTipText = tr( "Position: %1\nHeight: %3" )
                         .arg( posStr )
-                        .arg( QgsCoordinateUtils::getHeightAtPos( mGeoPos, mGeoPosCrs, QGis::Meters ) );
+                        .arg( QgsCoordinateFormat::getHeightAtPos( mGeoPos, mGeoPosCrs, QGis::Meters ) );
   setToolTip( toolTipText );
 }
 

@@ -25,6 +25,7 @@
 #include "qgscolorbuttonv2.h"
 #include "qgsclipboard.h"
 #include "qgscomposer.h"
+#include "qgscoordinateformat.h"
 #include "qgscustomization.h"
 #include "qgscustomlayerorderwidget.h"
 #include "qgsdoublespinbox.h"
@@ -383,12 +384,6 @@ void QgsClassicApp::setTheme( QString theThemeName )
   }
 
   emit currentThemeChanged( theThemeName );
-}
-
-void QgsClassicApp::getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg )
-{
-  format = QgsCoordinateUtils::Default;
-  epsg = mapCanvas()->mapSettings().destinationCrs().authid();
 }
 
 void QgsClassicApp::createActions()
@@ -2152,7 +2147,7 @@ void QgsClassicApp::updateCRSStatusBar()
       tr( "Current CRS: %1 (OTFR disabled)" ).arg( mapCanvas()->mapSettings().destinationCrs().description() ) );
     mOnTheFlyProjectionStatusButton->setIcon( QgsApplication::getThemeIcon( "mIconProjectionDisabled.png" ) );
   }
-  emit coordinateDisplayFormatChanged( QgsCoordinateUtils::Default, mapCanvas()->mapSettings().destinationCrs().authid() );
+  QgsCoordinateFormat::instance()->setCoordinateDisplayFormat( QgsCoordinateFormat::Default, mapCanvas()->mapSettings().destinationCrs().authid() );
 }
 
 void QgsClassicApp::updateUndoActions()

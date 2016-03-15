@@ -72,7 +72,7 @@ SET(QGIS_CORE_SRCS
   qgscontexthelp_texts.cpp
   qgscoordinatereferencesystem.cpp
   qgscoordinatetransform.cpp
-  qgscoordinateutils.cpp
+  qgscoordinateformat.cpp
   qgscredentials.cpp
   qgsdartmeasurement.cpp
   qgscrscache.cpp
@@ -369,6 +369,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgsapplication.h
   qgsbrowsermodel.h
   qgscontexthelp.h
+  qgscoordinateformat.h
   qgscoordinatetransform.h
   qgsdataitem.h
   qgsdataprovider.h
@@ -502,7 +503,6 @@ SET(QGIS_CORE_HDRS
   qgsconnectionpool.h
   qgscontexthelp.h
   qgscoordinatereferencesystem.h
-  qgscoordinateutils.h
   qgscrscache.h
   qgscsexception.h
   qgsdartmeasurement.h

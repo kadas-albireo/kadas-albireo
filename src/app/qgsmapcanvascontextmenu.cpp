@@ -20,7 +20,7 @@
 #include <QToolButton>
 #include "qgisapp.h"
 #include "qgsattributedialog.h"
-#include "qgscoordinateutils.h"
+#include "qgscoordinateformat.h"
 #include "qgsgeometry.h"
 #include "qgsgeometryrubberband.h"
 #include "qgisinterface.h"
@@ -254,17 +254,14 @@ void QgsMapCanvasContextMenu::terrainLineOfSight()
 void QgsMapCanvasContextMenu::copyCoordinates()
 {
   const QgsCoordinateReferenceSystem& mapCrs = QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs();
-  QgsCoordinateUtils::TargetFormat format;
-  QString epsg;
-  QgisApp::instance()->getCoordinateDisplayFormat( format, epsg );
-  QString posStr = QgsCoordinateUtils::getDisplayString( mMapPos, mapCrs, format, epsg );
+  QString posStr = QgsCoordinateFormat::instance()->getDisplayString( mMapPos, mapCrs );
   if ( posStr.isEmpty() )
   {
     posStr = QString( "%1 (%2)" ).arg( mMapPos.toString() ).arg( mapCrs.authid() );
   }
   QString text = tr( "Position: %1\nHeight: %3" )
                  .arg( posStr )
-                 .arg( QgsCoordinateUtils::getHeightAtPos( mMapPos, mapCrs, QGis::Meters ) );
+                 .arg( QgsCoordinateFormat::getHeightAtPos( mMapPos, mapCrs, QGis::Meters ) );
   QApplication::clipboard()->setText( text );
 }
 

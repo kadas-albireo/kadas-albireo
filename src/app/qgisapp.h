@@ -85,7 +85,6 @@ class QgsDecorationGrid;
 #include <QSet>
 #include <QSslError>
 
-#include "qgscoordinateutils.h"
 #include "qgsfeature.h"
 #include "qgsmessagebar.h"
 #include "qgspoint.h"
@@ -412,8 +411,6 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     QgsRedlining* redlining() const { return mRedlining; }
     QgsRedliningLayer* redliningLayer() const;
-
-    virtual void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) = 0;
 
     /** Register a new tab in the layer properties dialog */
     void registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
@@ -1124,8 +1121,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     void progress( int cur, int tot );
 
     void editingToggled();
-
-    void coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat format, QString epsg );
 
   protected:
     static bool cmpByText_( QAction* a, QAction* b );

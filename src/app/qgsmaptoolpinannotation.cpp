@@ -16,17 +16,12 @@
  ***************************************************************************/
 
 #include "qgisapp.h"
-#include "qgscoordinateutils.h"
 #include "qgsmaptoolpinannotation.h"
 #include "qgspinannotationitem.h"
 
 QgsAnnotationItem* QgsMapToolPinAnnotation::createItem( const QPoint &pos )
 {
-  QgsCoordinateUtils::TargetFormat format;
-  QString epsg;
-  QgisApp::instance()->getCoordinateDisplayFormat( format, epsg );
-  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas, format, epsg );
-  connect( QgisApp::instance(), SIGNAL( coordinateDisplayFormatChanged( QgsCoordinateUtils::TargetFormat, QString ) ), pinItem, SLOT( changeCoordinateFormatter( QgsCoordinateUtils::TargetFormat, QString ) ) );
+  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
   pinItem->setMapPosition( toMapCoordinates( pos ) );
   pinItem->setSelected( true );
   return pinItem;

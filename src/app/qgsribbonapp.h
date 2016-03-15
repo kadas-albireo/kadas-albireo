@@ -68,7 +68,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QMenu *panelMenu() const override { return mPanelMenu; }
     QMenu *featureActionMenu() const override { return mFeatureActionMenu; }
     void setTheme( QString themeName ) override;
-    void getCoordinateDisplayFormat( QgsCoordinateUtils::TargetFormat& format, QString& epsg ) override;
 
   private slots:
     void activateDeactivateLayerRelatedActions( QgsMapLayer */*layer*/ ) override {}
