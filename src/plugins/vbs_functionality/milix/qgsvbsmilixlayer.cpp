@@ -194,7 +194,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
           mRendererContext.painter()->drawLine( itemOrigins[i], itemOrigins[i] + items[i]->userOffset() );
         }
         mRendererContext.painter()->drawImage( renderPos, result[i].graphic );
-        mLayer->mMargin = qMax( mLayer->mMargin, qMax( result[i].graphic.width(), result[i].graphic.height() ) );
+        mLayer->mMargin = qMax( mLayer->mMargin, qMax( result[i].graphic.width() + items[i]->userOffset().x(), result[i].graphic.height() + items[i]->userOffset().y() ) );
       }
       return true;
     }
