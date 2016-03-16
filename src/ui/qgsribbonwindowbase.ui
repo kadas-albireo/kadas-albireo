@@ -402,6 +402,17 @@
                </widget>
               </item>
               <item>
+               <widget class="QToolButton" name="mLoginButton">
+                <property name="toolTip">
+                 <string>SAML Authentication</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../../images/images.qrc">
+                  <normaloff>:/images/ribbon/login.png</normaloff>:/images/ribbon/login.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>

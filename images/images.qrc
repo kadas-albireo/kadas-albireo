@@ -545,6 +545,7 @@
         <file>themes/default/viewshed_sector.svg</file>
         <file>themes/default/mActionCopyCoordinatesToClipboard.png</file>
         <file>ribbon/refresh.png</file>
+        <file>ribbon/login.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>
