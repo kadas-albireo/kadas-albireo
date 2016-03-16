@@ -829,6 +829,7 @@ void QgisApp::destroy()
   delete mMapTools.mHtmlAnnotation;
   delete mMapTools.mIdentify;
   delete mMapTools.mMeasureAngle;
+  delete mMapTools.mMeasureAzimuth;
   delete mMapTools.mMeasureArea;
   delete mMapTools.mMeasureDist;
   delete mMapTools.mMeasureCircle;
@@ -1172,6 +1173,7 @@ void QgisApp::createCanvasTools()
   mMapTools.mMeasureCircle = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureCircle );
   mMapTools.mMeasureHeightProfile = new QgsMeasureHeightProfileTool( mapCanvas() );
   mMapTools.mMeasureAngle = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureAngle );
+  mMapTools.mMeasureAzimuth = new QgsMeasureToolV2( mapCanvas(), QgsMeasureToolV2::MeasureAzimuth );
   mMapTools.mTextAnnotation = new QgsMapToolTextAnnotation( mapCanvas() );
   mMapTools.mPinAnnotation = new QgsMapToolPinAnnotation( mapCanvas() );
   mMapTools.mFormAnnotation = new QgsMapToolFormAnnotation( mapCanvas() );
@@ -3771,6 +3773,11 @@ void QgisApp::measureHeightProfile( bool active )
 void QgisApp::measureAngle( bool active )
 {
   toggleTool( mMapTools.mMeasureAngle, active );
+}
+
+void QgisApp::measureAzimuth( bool active )
+{
+  toggleTool( mMapTools.mMeasureAzimuth, active );
 }
 
 void QgisApp::slope( bool active )

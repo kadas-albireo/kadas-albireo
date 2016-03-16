@@ -386,8 +386,8 @@ void QgsRibbonApp::configureButtons()
   connect( mActionProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile( bool ) ) );
   setActionToButton( mActionProfile, mProfileButton, mMapTools.mMeasureHeightProfile );
 
-  connect( mActionAzimuth, SIGNAL( triggered( bool ) ), this, SLOT( measureAngle( bool ) ) );
-  setActionToButton( mActionAzimuth, mAzimuthButton, mMapTools.mMeasureAngle );
+  connect( mActionAzimuth, SIGNAL( triggered( bool ) ), this, SLOT( measureAzimuth( bool ) ) );
+  setActionToButton( mActionAzimuth, mAzimuthButton, mMapTools.mMeasureAzimuth );
 
   connect( mActionSlope, SIGNAL( triggered( bool ) ), this, SLOT( slope( bool ) ) );
   setActionToButton( mActionSlope, mSlopeButton, mMapTools.mSlope );

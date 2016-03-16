@@ -25,12 +25,13 @@
 #include <QToolButton>
 #include <QMouseEvent>
 
-QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, bool measureAngle )
-    : QFrame( canvas ), mMeasureAngle( measureAngle )
+QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::MeasureMode measureMode )
+    : QFrame( canvas )
 {
+  bool measureAngle = measureMode == QgsMeasureToolV2::MeasureAngle || measureMode == QgsMeasureToolV2::MeasureAzimuth;
   mCanvas = canvas;
   setLayout( new QHBoxLayout() );
-  if ( !measureAngle )
+  if ( measureAngle )
   {
     layout()->addWidget( new QLabel( QString( "<b>%1</b>" ).arg( tr( "Total:" ) ) ) );
   }
@@ -42,7 +43,7 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, bool measureAngle )
   static_cast<QHBoxLayout*>( layout() )->addStretch( 1 );
 
   mUnitComboBox = new QComboBox();
-  if ( !mMeasureAngle )
+  if ( !measureAngle )
   {
     mUnitComboBox->addItem( QGis::tr( QGis::Meters ), static_cast<int>( QGis::Meters ) );
     mUnitComboBox->addItem( QGis::tr( QGis::Feet ), static_cast<int>( QGis::Feet ) );
@@ -57,17 +58,20 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, bool measureAngle )
     mUnitComboBox->addItem( tr( "Radians" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_RADIANS ) );
     mUnitComboBox->addItem( tr( "Gradians" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_GRADIANS ) );
     mUnitComboBox->addItem( tr( "Angular Mil" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) );
-    mUnitComboBox->setCurrentIndex( 0 );
+    mUnitComboBox->setCurrentIndex( measureMode == QgsMeasureToolV2::MeasureAngle ? 0 : 3 );
   }
 
   connect( mUnitComboBox, SIGNAL( currentIndexChanged( const QString & ) ), this, SIGNAL( unitsChanged( ) ) );
   layout()->addWidget( mUnitComboBox );
 
-  QToolButton* pickButton = new QToolButton();
-  pickButton->setIcon( QIcon( ":/images/themes/default/mActionSelect.svg" ) );
-  pickButton->setToolTip( tr( "Pick existing geometry" ) );
-  connect( pickButton, SIGNAL( clicked( bool ) ), this, SIGNAL( pickRequested() ) );
-  layout()->addWidget( pickButton );
+  if ( measureMode != QgsMeasureToolV2::MeasureAngle )
+  {
+    QToolButton* pickButton = new QToolButton();
+    pickButton->setIcon( QIcon( ":/images/themes/default/mActionSelect.svg" ) );
+    pickButton->setToolTip( tr( "Pick existing geometry" ) );
+    connect( pickButton, SIGNAL( clicked( bool ) ), this, SIGNAL( pickRequested() ) );
+    layout()->addWidget( pickButton );
+  }
 
   QToolButton* clearButton = new QToolButton();
   clearButton->setIcon( QIcon( ":/images/themes/default/mIconClear.png" ) );
@@ -138,7 +142,11 @@ void QgsMeasureWidget::updatePosition()
 QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMode )
     : QgsMapTool( canvas ), mPickFeature( false ), mMeasureMode( measureMode )
 {
-  if ( mMeasureMode == MeasureCircle )
+  if ( mMeasureMode == MeasureAngle )
+  {
+    mDrawTool = new QgsMapToolDrawCircularSector( canvas );
+  }
+  else if ( mMeasureMode == MeasureCircle )
   {
     mDrawTool = new QgsMapToolDrawCircle( canvas );
   }
@@ -147,7 +155,7 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
     mDrawTool = new QgsMapToolDrawPolyLine( canvas, mMeasureMode == MeasurePolygon );
   }
   mDrawTool->setParent( this );
-  mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle );
+  mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );
   mDrawTool->setShowNodes( true );
   mDrawTool->setSnapPoints( true );
   mMeasureWidget = 0;
@@ -162,7 +170,7 @@ void QgsMeasureToolV2::addGeometry( const QgsGeometry* geometry, const QgsVector
 void QgsMeasureToolV2::activate()
 {
   mPickFeature = false;
-  mMeasureWidget = new QgsMeasureWidget( mCanvas, mMeasureMode == MeasureAngle );
+  mMeasureWidget = new QgsMeasureWidget( mCanvas, mMeasureMode );
   setUnits();
   connect( mMeasureWidget, SIGNAL( unitsChanged() ), this, SLOT( setUnits() ) );
   connect( mMeasureWidget, SIGNAL( clearRequested() ), mDrawTool, SLOT( reset() ) );
@@ -198,7 +206,9 @@ void QgsMeasureToolV2::setUnits()
     case MeasureCircle:
       mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_CIRCLE, mMeasureWidget->currentUnit() ); break;
     case MeasureAngle:
-      mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_ANGLES, QGis::Meters, mMeasureWidget->currentAngleUnit() ); break;
+      mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_ANGLE, QGis::Meters, mMeasureWidget->currentAngleUnit() ); break;
+    case MeasureAzimuth:
+      mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_AZIMUTH, QGis::Meters, mMeasureWidget->currentAngleUnit() ); break;
   }
 }
 
@@ -240,7 +250,7 @@ void QgsMeasureToolV2::canvasReleaseEvent( QMouseEvent *e )
   }
   else
   {
-    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAngle ) ? QGis::Line : QGis::Polygon );
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAzimuth ) ? QGis::Line : QGis::Polygon );
     if ( pickResult.feature.isValid() )
     {
       mDrawTool->addGeometry( pickResult.feature.geometry()->geometry(), pickResult.layer->crs() );

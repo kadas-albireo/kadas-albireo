@@ -80,6 +80,7 @@
      <addaction name="mActionMeasureArea"/>
      <addaction name="mActionMeasureCircle"/>
      <addaction name="mActionMeasureAngle"/>
+     <addaction name="mActionMeasureAzimuth"/>
      <addaction name="mActionMeasureHeightProfile"/>
     </widget>
     <widget class="QMenu" name="menuDecorations">
@@ -2391,6 +2392,21 @@ Acts on currently active editable layer</string>
    </property>
    <property name="toolTip">
     <string>Add Map View</string>
+   </property>
+  </action>
+  <action name="mActionMeasureAzimuth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMeasureAngle.png</normaloff>:/images/themes/default/mActionMeasureAngle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mea&amp;sure Azimuth</string>
+   </property>
+   <property name="toolTip">
+    <string>Measure Azimuth</string>
    </property>
   </action>
  </widget>
