@@ -420,22 +420,22 @@ QString QgsGlobePluginDialog::getBaseLayerUrl() const
 
 bool QgsGlobePluginDialog::getSkyEnabled() const
 {
-  return QSettings().value( "/Plugin-Globe/skyEnabled", false ).toBool();
+  return QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyEnabled", true );
 }
 
 QDateTime QgsGlobePluginDialog::getSkyDateTime() const
 {
-  return QSettings().value( "/Plugin-Globe/skyDateTime", QDateTime() ).toDateTime();
+  return QDateTime::fromString( QgsProject::instance()->readEntry( "Globe-Plugin", "/skyDateTime", QDateTime::currentDateTime().toString() ) );
 }
 
 bool QgsGlobePluginDialog::getSkyAutoAmbience() const
 {
-  return QSettings().value( "/Plugin-Globe/skyAutoAmbient", false ).toBool();
+  return QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyAutoAmbient", true );
 }
 
 double QgsGlobePluginDialog::getSkyMinAmbient() const
 {
-  return QSettings().value( "/Plugin-Globe/skyMinAmbient", 30 ).toInt() / 100.;
+  return QgsProject::instance()->readDoubleEntry( "Globe-Plugin", "/skyMinAmbient", 30. ) / 100.;
 }
 
 /// NAVIGATION ////////////////////////////////////////////////////////////////
