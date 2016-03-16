@@ -19,11 +19,13 @@
 #include "qgsabstractgeometryv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspointv2.h"
+#include "qgscompoundcurvev2.h"
 #include "qgscurvev2.h"
 #include "qgspolygonv2.h"
 #include "qgslinestringv2.h"
 #include "qgscircularstringv2.h"
 #include "qgsgeometrycollectionv2.h"
+#include "qgsgeometryutils.h"
 #include "qgsproject.h"
 #include <QPainter>
 
@@ -240,7 +242,7 @@ void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode,
 
 QString QgsGeometryRubberBand::getTotalMeasurement() const
 {
-  if ( mMeasurementMode == MEASURE_ANGLES )
+  if ( mMeasurementMode == MEASURE_ANGLE || mMeasurementMode == MEASURE_AZIMUTH )
   {
     return ""; /* Does not make sense for angles */
   }
@@ -306,21 +308,70 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry )
         }
       }
       break;
-    case MEASURE_ANGLES:
+    case MEASURE_AZIMUTH:
       if ( dynamic_cast<QgsCurveV2*>( geometry ) )
       {
         QList<QgsPointV2> points;
         static_cast<QgsCurveV2*>( geometry )->points( points );
-        for ( int i = 0, n = points.size() - 2; i < n; ++i )
+        for ( int i = 0, n = points.size() - 1; i < n; ++i )
         {
           QgsPoint p1( points[i].x(), points[i].y() );
           QgsPoint p2( points[i+1].x(), points[i+1].y() );
-          QgsPoint p3( points[i+2].x(), points[i+2].y() );
 
-          double angle = mDa.bearing( p3, p2 ) - mDa.bearing( p2, p1 );
+          double angle = mDa.bearing( p1, p2 );
+          angle = angle < 0 ? angle + 2 * M_PI : angle;
           mPartMeasurements.append( angle );
           QString segmentLength = formatAngle( angle );
-          addMeasurements( QStringList() << segmentLength, QgsPointV2( p2.x(), p2.y() ) );
+          addMeasurements( QStringList() << segmentLength, QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
+        }
+      }
+      break;
+    case MEASURE_ANGLE:
+      // Note: only works with circular sector geometry
+      if ( dynamic_cast<QgsCurvePolygonV2*>( geometry ) && dynamic_cast<QgsCompoundCurveV2*>( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() ) )
+      {
+        QgsCompoundCurveV2* curve = static_cast<QgsCompoundCurveV2*>( static_cast<QgsCurvePolygonV2*>( geometry )->exteriorRing() );
+        if ( !curve->isEmpty() )
+        {
+          if ( dynamic_cast<const QgsCircularStringV2*>( curve->curveAt( 0 ) ) )
+          {
+            const QgsCircularStringV2* circularString = static_cast<const QgsCircularStringV2*>( curve->curveAt( 0 ) );
+            if ( circularString->vertexCount() == 3 )
+            {
+              QgsPointV2 p1 = circularString->pointN( 0 );
+              QgsPointV2 p2 = circularString->pointN( 1 );
+              QgsPointV2 p3 = circularString->pointN( 2 );
+              double angle;
+              if ( p1 == p3 )
+              {
+                angle = 2 * M_PI;
+              }
+              else
+              {
+                double radius, cx, cy;
+                QgsGeometryUtils::circleCenterRadius( p1, p2, p3, radius, cx, cy );
+
+                double azimuthOne = mDa.bearing( QgsPoint( cx, cy ), QgsPoint( p1.x(), p1.y() ) );
+                double azimuthTwo = mDa.bearing( QgsPoint( cx, cy ), QgsPoint( p3.x(), p3.y() ) );
+                azimuthOne = azimuthOne < 0 ? azimuthOne + 2 * M_PI : azimuthOne;
+                azimuthTwo = azimuthTwo < 0 ? azimuthTwo + 2 * M_PI : azimuthTwo;
+                azimuthTwo = azimuthTwo < azimuthOne ? azimuthTwo + 2 * M_PI : azimuthTwo;
+                angle = azimuthTwo - azimuthOne;
+              }
+              mPartMeasurements.append( angle );
+              QString segmentLength = formatAngle( angle );
+              addMeasurements( QStringList() << segmentLength, p2 );
+            }
+          }
+          else if ( dynamic_cast<const QgsLineStringV2*>( curve->curveAt( 0 ) ) )
+          {
+            const QgsLineStringV2* lineString = static_cast<const QgsLineStringV2*>( curve->curveAt( 0 ) );
+            if ( lineString->vertexCount() == 3 )
+            {
+              mPartMeasurements.append( 0 );
+              addMeasurements( QStringList() << formatAngle( 0 ), lineString->pointN( 1 ) );
+            }
+          }
         }
       }
       break;

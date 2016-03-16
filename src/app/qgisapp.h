@@ -167,6 +167,7 @@ class APP_EXPORT QgisApp : public QMainWindow
         QgsMapTool *mMeasureCircle;
         QgsMapTool *mMeasureHeightProfile;
         QgsMapTool *mMeasureAngle;
+        QgsMapTool *mMeasureAzimuth;
         QgsMapTool *mAddFeature;
         QgsMapTool *mCircularStringCurvePoint;
         QgsMapTool *mCircularStringRadius;
@@ -916,6 +917,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     void measureHeightProfile( bool active );
     //! Measure angle
     void measureAngle( bool active );
+    //! Measure azimuth
+    void measureAzimuth( bool active );
     //! Compute terrain slope
     void slope( bool active );
     //! Compute terrain hillshade

@@ -66,7 +66,8 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       MEASURE_NONE,
       MEASURE_LINE,
       MEASURE_LINE_AND_SEGMENTS,
-      MEASURE_ANGLES,
+      MEASURE_ANGLE,
+      MEASURE_AZIMUTH,
       MEASURE_POLYGON,
       MEASURE_RECTANGLE,
       MEASURE_CIRCLE

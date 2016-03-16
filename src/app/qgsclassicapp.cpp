@@ -348,6 +348,7 @@ void QgsClassicApp::setTheme( QString theThemeName )
   mActionMeasure->setIcon( QgsApplication::getThemeIcon( "/mActionMeasure.png" ) );
   mActionMeasureArea->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureArea.png" ) );
   mActionMeasureAngle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureAngle.png" ) );
+  mActionMeasureAzimuth->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureAngle.png" ) );
   mActionMeasureCircle->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureCircle.png" ) );
   mActionMeasureHeightProfile->setIcon( QgsApplication::getThemeIcon( "/mActionMeasureHeightProfile.png" ) );
   mActionMapTips->setIcon( QgsApplication::getThemeIcon( "/mActionMapTips.png" ) );
@@ -460,6 +461,7 @@ void QgsClassicApp::createActions()
   connect( mActionMeasureCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle( bool ) ) );
   connect( mActionMeasureHeightProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile( bool ) ) );
   connect( mActionMeasureAngle, SIGNAL( triggered( bool ) ), this, SLOT( measureAngle( bool ) ) );
+  connect( mActionMeasureAzimuth, SIGNAL( triggered( bool ) ), this, SLOT( measureAzimuth( bool ) ) );
   connect( mActionZoomFullExtent, SIGNAL( triggered() ), this, SLOT( zoomFull() ) );
   connect( mActionZoomToLayer, SIGNAL( triggered() ), this, SLOT( zoomToLayerExtent() ) );
   connect( mActionZoomToSelected, SIGNAL( triggered() ), this, SLOT( zoomToSelected() ) );
@@ -657,6 +659,7 @@ void QgsClassicApp::createActionGroups()
   mMapToolGroup->addAction( mActionMeasureCircle );
   mMapToolGroup->addAction( mActionMeasureHeightProfile );
   mMapToolGroup->addAction( mActionMeasureAngle );
+  mMapToolGroup->addAction( mActionMeasureAzimuth );
   mMapToolGroup->addAction( mActionAddFeature );
   mMapToolGroup->addAction( mActionCircularStringCurvePoint );
   mMapToolGroup->addAction( mActionCircularStringRadius );
@@ -887,6 +890,7 @@ void QgsClassicApp::createToolBars()
   bt->addAction( mActionMeasureCircle );
   bt->addAction( mActionMeasureHeightProfile );
   bt->addAction( mActionMeasureAngle );
+  bt->addAction( mActionMeasureAzimuth );
 
   QAction* defMeasureAction = mActionMeasure;
   switch ( settings.value( "/UI/measureTool", 0 ).toInt() )
@@ -896,6 +900,7 @@ void QgsClassicApp::createToolBars()
     case 2: defMeasureAction = mActionMeasureAngle; break;
     case 3: defMeasureAction = mActionMeasureCircle; break;
     case 4: defMeasureAction = mActionMeasureHeightProfile; break;
+    case 5: defMeasureAction = mActionMeasureAzimuth; break;
   }
   bt->setDefaultAction( defMeasureAction );
   QAction* measureAction = mAttributesToolBar->insertWidget( mActionMapTips, bt );
@@ -1310,6 +1315,7 @@ void QgsClassicApp::setToolActions()
   mMapTools.mMeasureCircle->setAction( mActionMeasureCircle );
   mMapTools.mMeasureHeightProfile->setAction( mActionMeasureHeightProfile );
   mMapTools.mMeasureAngle->setAction( mActionMeasureAngle );
+  mMapTools.mMeasureAzimuth->setAction( mActionMeasureAzimuth );
   mMapTools.mTextAnnotation->setAction( mActionTextAnnotation );
   mMapTools.mFormAnnotation->setAction( mActionFormAnnotation );
   mMapTools.mHtmlAnnotation->setAction( mActionHtmlAnnotation );
@@ -1899,6 +1905,8 @@ void QgsClassicApp::toolButtonActionTriggered( QAction *action )
     settings.setValue( "/UI/measureCircle", 3 );
   else if ( action == mActionMeasureHeightProfile )
     settings.setValue( "/UI/measureHeightProfile", 4 );
+  else if ( action == mActionMeasureAzimuth )
+    settings.setValue( "/UI/measureAzimuth", 5 );
   else if ( action == mActionTextAnnotation )
     settings.setValue( "/UI/annotationTool", 0 );
   else if ( action == mActionFormAnnotation )

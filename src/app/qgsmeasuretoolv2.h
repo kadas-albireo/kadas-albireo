@@ -23,39 +23,13 @@
 class QComboBox;
 class QgsMapCanvas;
 class QgsVectorLayer;
-
-class APP_EXPORT QgsMeasureWidget : public QFrame
-{
-    Q_OBJECT
-  public:
-    QgsMeasureWidget( QgsMapCanvas* canvas, bool measureAngle );
-    void updateMeasurement( const QString& measurement );
-    QGis::UnitType currentUnit() const;
-    QgsGeometryRubberBand::AngleUnit currentAngleUnit() const;
-
-    bool eventFilter( QObject* obj, QEvent* event ) override;
-
-  signals:
-    void clearRequested();
-    void closeRequested();
-    void pickRequested();
-    void unitsChanged();
-
-  private:
-    QgsMapCanvas* mCanvas;
-    QLabel* mMeasurementLabel;
-    QComboBox* mUnitComboBox;
-    bool mMeasureAngle;
-
-    void updatePosition();
-};
-
+class QgsMeasureWidget;
 
 class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
 {
     Q_OBJECT
   public:
-    enum MeasureMode { MeasureLine, MeasurePolygon, MeasureCircle, MeasureAngle };
+    enum MeasureMode { MeasureLine, MeasurePolygon, MeasureCircle, MeasureAngle, MeasureAzimuth };
     QgsMeasureToolV2( QgsMapCanvas* canvas , MeasureMode measureMode );
     void addGeometry( const QgsGeometry* geometry, const QgsVectorLayer* layer );
 
@@ -75,6 +49,31 @@ class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
     void setUnits();
     void updateTotal();
     void requestPick();
+};
+
+class APP_EXPORT QgsMeasureWidget : public QFrame
+{
+    Q_OBJECT
+  public:
+    QgsMeasureWidget( QgsMapCanvas* canvas, QgsMeasureToolV2::MeasureMode measureMode );
+    void updateMeasurement( const QString& measurement );
+    QGis::UnitType currentUnit() const;
+    QgsGeometryRubberBand::AngleUnit currentAngleUnit() const;
+
+    bool eventFilter( QObject* obj, QEvent* event ) override;
+
+  signals:
+    void clearRequested();
+    void closeRequested();
+    void pickRequested();
+    void unitsChanged();
+
+  private:
+    QgsMapCanvas* mCanvas;
+    QLabel* mMeasurementLabel;
+    QComboBox* mUnitComboBox;
+
+    void updatePosition();
 };
 
 #endif // QGSMEASURETOOLV2_H
