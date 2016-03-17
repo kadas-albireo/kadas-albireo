@@ -1553,13 +1553,6 @@ void QgisApp::createMenus()
   // don't add it yet, wait for a plugin
   mWebMenu = new QMenu( tr( "&Web" ), menuBar() );
   mWebMenu->setObjectName( "mWebMenu" );
-
-  // Help menu
-  // add What's this button to it
-  QAction* before = mActionHelpAPI;
-  QAction* actionWhatsThis = QWhatsThis::createAction( this );
-  actionWhatsThis->setIcon( QgsApplication::getThemeIcon( "/mActionWhatsThis.svg" ) );
-  mHelpMenu->insertAction( before, actionWhatsThis );
 }
 
 void QgisApp::createToolBars()
@@ -7951,7 +7944,7 @@ void QgisApp::supportProviders()
 
 void QgisApp::helpQgisHomePage()
 {
-  openURL( "http://qgis.org", false );
+  openURL( "http://qgisenterprise.com", false );
 }
 
 void QgisApp::openURL( QString url, bool useQgisDocDirectory )
