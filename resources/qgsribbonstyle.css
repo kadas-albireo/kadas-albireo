@@ -139,6 +139,10 @@ QPushButton#mLayerTreeViewButton {
     color: #FFFFFF;
 }
 
+#mRibbonWidget QTabBar::tab:!enabled {
+    color: gray;
+}
+
 #mRibbonWidget > QWidget {
   background-color: #263B4E;
 }
