@@ -60,7 +60,7 @@ class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
     QgsVBSMilixLayer( const QString& name = "MilX" );
     ~QgsVBSMilixLayer();
     void addItem( QgsVBSMilixItem* item ) { mItems.append( item ); }
-    void removeItem( int idx ) { mItems.removeAt( idx ); }
+    QgsVBSMilixItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
     const QList<QgsVBSMilixItem*>& items() const { return mItems; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
     void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );

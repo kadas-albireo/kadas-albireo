@@ -356,7 +356,7 @@ void QgsVBSMilixLibrary::manageSymbolPick( int symbolIdx )
 {
   QgsVBSMilixLayer* layer = qobject_cast<QgsVBSMilixLayer*>( QObject::sender() );
   QgsVBSMapToolEditMilixItem* tool = new QgsVBSMapToolEditMilixItem( mIface->mapCanvas(), layer, layer->items()[symbolIdx] );
-  layer->removeItem( symbolIdx );
+  delete layer->takeItem( symbolIdx );
   connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
   mIface->mapCanvas()->setMapTool( tool );
   mIface->mapCanvas()->clearCache( layer->id() );

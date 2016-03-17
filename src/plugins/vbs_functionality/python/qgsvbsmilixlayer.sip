@@ -34,7 +34,7 @@ class QgsVBSMilixLayer : public QgsPluginLayer
     QgsVBSMilixLayer( const QString& name = "MilX" );
     ~QgsVBSMilixLayer();
     void addItem( QgsVBSMilixItem* item /Transfer/ );
-    void removeItem( int idx );
+    QgsVBSMilixItem* takeItem( int idx );
     const QList<QgsVBSMilixItem*>& items() const;
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize );
     void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
