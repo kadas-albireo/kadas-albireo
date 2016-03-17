@@ -20,6 +20,7 @@ ADD_SUBDIRECTORY(vbs_functionality)
 ADD_SUBDIRECTORY(geometry_checker)
 ADD_SUBDIRECTORY(geometry_snapper)
 ADD_SUBDIRECTORY(crash)
+ADD_SUBDIRECTORY(iam_auth)
 
 IF (POSTGRES_FOUND)
   ADD_SUBDIRECTORY(spit)
