@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmilixlayer.cpp                                                   *
- *  -------------------                                                    *
+ *  qgsmilxlayer.cpp                                                       *
+ *  ----------------                                                       *
  *  begin                : February 2016                                   *
  *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -17,19 +17,19 @@
 
 #include "qgscrscache.h"
 #include "qgsmaplayerrenderer.h"
-#include "qgsvbsmilixlayer.h"
+#include "qgsmilxlayer.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
 
-bool QgsVBSMilixItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
+bool QgsMilXItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
 {
   bool valid = false;
-  QString libVersion; VBSMilixClient::getCurrentLibraryVersionTag( libVersion );
-  return VBSMilixClient::validateSymbolXml( mssString, libVersion, adjustedMssString, valid, messages ) && valid;
+  QString libVersion; MilXClient::getCurrentLibraryVersionTag( libVersion );
+  return MilXClient::validateSymbolXml( mssString, libVersion, adjustedMssString, valid, messages ) && valid;
 }
 
-QgsVBSMilixItem::~QgsVBSMilixItem()
+QgsMilXItem::~QgsMilXItem()
 {
   if ( mPoints.size() == 1 )
   {
@@ -37,7 +37,7 @@ QgsVBSMilixItem::~QgsVBSMilixItem()
   }
 }
 
-void QgsVBSMilixItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool queryControlPoints )
+void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool queryControlPoints )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
@@ -45,24 +45,24 @@ void QgsVBSMilixItem::initialize( const QString &mssString, const QString &milit
   mControlPoints = controlPoints;
   mUserOffset = userOffset;
   if ( queryControlPoints && mPoints.size() > 1 )
-    VBSMilixClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
+    MilXClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
   if ( militaryName.isEmpty() )
   {
-    VBSMilixClient::getMilitaryName( mMssString, mMilitaryName );
+    MilXClient::getMilitaryName( mMssString, mMilitaryName );
   }
   if ( mPoints.size() == 1 )
   {
-    int symbolSize = VBSMilixClient::getSymbolSize();
-    VBSMilixClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true );
-    VBSMilixClient::NPointSymbolGraphic graphic;
-    if ( VBSMilixClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+    int symbolSize = MilXClient::getSymbolSize();
+    MilXClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true );
+    MilXClient::NPointSymbolGraphic graphic;
+    if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
       QgsBillBoardRegistry::instance()->addItem( this, graphic.graphic, mPoints.front() );
     }
   }
 }
 
-QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const
+QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const
 {
   QList<QPoint> points;
   foreach ( const QgsPoint& p, mPoints )
@@ -72,11 +72,11 @@ QList<QPoint> QgsVBSMilixItem::screenPoints( const QgsMapToPixel& mapToPixel, co
   return points;
 }
 
-void QgsVBSMilixItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
+void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
 {
   bool valid = false;
   QString symbolXml;
-  VBSMilixClient::downgradeSymbolXml( mMssString, versionTag, symbolXml, valid, messages );
+  MilXClient::downgradeSymbolXml( mMssString, versionTag, symbolXml, valid, messages );
   if ( !valid )
   {
     return;
@@ -113,15 +113,15 @@ void QgsVBSMilixItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, 
   graphicEl.appendChild( offsetEl );
 
   QDomElement factorXEl = doc.createElement( "FactorX" );
-  factorXEl.appendChild( doc.createTextNode( QString::number( mUserOffset.x() / VBSMilixClient::getSymbolSize() ) ) );
+  factorXEl.appendChild( doc.createTextNode( QString::number( mUserOffset.x() / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorXEl );
 
   QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / VBSMilixClient::getSymbolSize() ) ) );
+  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorYEl );
 }
 
-void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
+void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
 {
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
   QList<QgsPoint> points;
@@ -149,10 +149,10 @@ void QgsVBSMilixItem::readMilx( const QDomElement& graphicEl, const QString& sym
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
+class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
 {
   public:
-    Renderer( QgsVBSMilixLayer* layer, QgsRenderContext& rendererContext )
+    Renderer( QgsMilXLayer* layer, QgsRenderContext& rendererContext )
         : QgsMapLayerRenderer( layer->id() )
         , mLayer( layer )
         , mRendererContext( rendererContext )
@@ -160,9 +160,9 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
 
     bool render() override
     {
-      const QList<QgsVBSMilixItem*>& items = mLayer->mItems;
+      const QList<QgsMilXItem*>& items = mLayer->mItems;
       QList<QPoint> itemOrigins;
-      QList<VBSMilixClient::NPointSymbol> symbols;
+      QList<MilXClient::NPointSymbol> symbols;
       bool isGlobe = mRendererContext.customRenderFlags().split( ";" ).contains( "globe" );
       for ( int i = 0, n = items.size(); i < n; ++i )
       {
@@ -173,14 +173,14 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
-        symbols.append( VBSMilixClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true ) );
+        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true ) );
       }
       if ( symbols.isEmpty() )
       {
         return true;
       }
-      QList<VBSMilixClient::NPointSymbolGraphic> result;
-      if ( !VBSMilixClient::updateSymbols( screenExtent(), symbols, result ) )
+      QList<MilXClient::NPointSymbolGraphic> result;
+      if ( !MilXClient::updateSymbols( screenExtent(), symbols, result ) )
       {
         return false;
       }
@@ -200,7 +200,7 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
     }
 
   private:
-    QgsVBSMilixLayer* mLayer;
+    QgsMilXLayer* mLayer;
     QgsRenderContext& mRendererContext;
 
     QRect screenExtent() const
@@ -220,23 +220,23 @@ class QgsVBSMilixLayer::Renderer : public QgsMapLayerRenderer
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsVBSMilixLayer::QgsVBSMilixLayer( const QString &name )
+QgsMilXLayer::QgsMilXLayer( const QString &name )
     : QgsPluginLayer( layerTypeKey(), name ), mMargin( 0 )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
 }
 
-QgsVBSMilixLayer::~QgsVBSMilixLayer()
+QgsMilXLayer::~QgsMilXLayer()
 {
   qDeleteAll( mItems );
 }
 
-bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult )
+bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult )
 {
   QPoint screenPos = mapSettings.mapToPixel().transform( mapPos ).toQPointF().toPoint();
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", mapSettings.destinationCrs().authid() );
-  QList<VBSMilixClient::NPointSymbol> symbols;
+  QList<MilXClient::NPointSymbol> symbols;
   for ( int i = 0, n = mItems.size(); i < n; ++i )
   {
     QList<QPoint> points = mItems[i]->screenPoints( mapSettings.mapToPixel(), crst );
@@ -244,10 +244,10 @@ bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& m
     {
       points[j] += mItems[i]->userOffset();
     }
-    symbols.append( VBSMilixClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true ) );
+    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true ) );
   }
   int selectedSymbol = -1;
-  if ( VBSMilixClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
+  if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
   {
     pickResult = QVariant::fromValue( selectedSymbol );
     return true;
@@ -255,12 +255,12 @@ bool QgsVBSMilixLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& m
   return false;
 }
 
-void QgsVBSMilixLayer::handlePick( const QVariant& pick )
+void QgsMilXLayer::handlePick( const QVariant& pick )
 {
   emit symbolPicked( pick.toInt() );
 }
 
-void QgsVBSMilixLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
+void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
 
@@ -278,7 +278,7 @@ void QgsVBSMilixLayer::exportToMilxly( QDomElement& milxDocumentEl, const QStrin
   QDomElement graphicListEl = doc.createElement( "GraphicList" );
   milxLayerEl.appendChild( graphicListEl );
 
-  foreach ( const QgsVBSMilixItem* item, mItems )
+  foreach ( const QgsMilXItem* item, mItems )
   {
     QString messages;
     item->writeMilx( doc, graphicListEl, versionTag, messages );
@@ -293,7 +293,7 @@ void QgsVBSMilixLayer::exportToMilxly( QDomElement& milxDocumentEl, const QStrin
   milxLayerEl.appendChild( crsEl );
 
   QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number( VBSMilixClient::getSymbolSize() ) ) );
+  symbolSizeEl.appendChild( doc.createTextNode( QString::number( MilXClient::getSymbolSize() ) ) );
   milxLayerEl.appendChild( symbolSizeEl );
 
   QDomElement bwEl = doc.createElement( "DisplayBW" );
@@ -301,7 +301,7 @@ void QgsVBSMilixLayer::exportToMilxly( QDomElement& milxDocumentEl, const QStrin
   milxLayerEl.appendChild( bwEl );
 }
 
-bool QgsVBSMilixLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, QString& errorMsg, QStringList& importMessages )
+bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, QString& errorMsg, QStringList& importMessages )
 {
   setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
@@ -339,7 +339,7 @@ bool QgsVBSMilixLayer::importMilxly( QDomElement& milxLayerEl, const QString& fi
     QString adjustedSymbolXml;
     bool valid = false;
     QString messages;
-    VBSMilixClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
+    MilXClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
     adjustedSymbolXmls.append( adjustedSymbolXml );
     if ( !valid )
     {
@@ -359,16 +359,16 @@ bool QgsVBSMilixLayer::importMilxly( QDomElement& milxLayerEl, const QString& fi
   {
     QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
 
-    QgsVBSMilixItem* item = new QgsVBSMilixItem();
+    QgsMilXItem* item = new QgsMilXItem();
     item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
     addItem( item );
   }
   return true;
 }
 
-bool QgsVBSMilixLayer::readXml( const QDomNode& layer_node )
+bool QgsMilXLayer::readXml( const QDomNode& layer_node )
 {
-  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxLayerEl = layer_node.firstChildElement( "MilXLayer" );
   if ( !milxLayerEl.isNull() )
   {
@@ -379,32 +379,32 @@ bool QgsVBSMilixLayer::readXml( const QDomNode& layer_node )
   return true;
 }
 
-bool QgsVBSMilixLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ )
+bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ )
 {
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
 
-  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QStringList messages;
   exportToMilxly( layerElement, verTag, messages );
   return true;
 }
 
-QgsLegendSymbologyList QgsVBSMilixLayer::legendSymbologyItems( const QSize& /*iconSize*/ )
+QgsLegendSymbologyList QgsMilXLayer::legendSymbologyItems( const QSize& /*iconSize*/ )
 {
   return QgsLegendSymbologyList();
 }
 
-QgsMapLayerRenderer* QgsVBSMilixLayer::createMapRenderer( QgsRenderContext& rendererContext )
+QgsMapLayerRenderer* QgsMilXLayer::createMapRenderer( QgsRenderContext& rendererContext )
 {
   return new Renderer( this, rendererContext );
 }
 
-QgsRectangle QgsVBSMilixLayer::extent()
+QgsRectangle QgsMilXLayer::extent()
 {
   QgsRectangle r;
-  foreach ( QgsVBSMilixItem* item, mItems )
+  foreach ( QgsMilXItem* item, mItems )
   {
     foreach ( const QgsPoint& point, item->points() )
     {
@@ -421,7 +421,7 @@ QgsRectangle QgsVBSMilixLayer::extent()
   return r;
 }
 
-int QgsVBSMilixLayer::margin() const
+int QgsMilXLayer::margin() const
 {
   return mMargin;
 }

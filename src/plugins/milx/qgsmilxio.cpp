@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmilixio.h                                                        *
- *  -------------------                                                    *
+ *  qgsmilxio.h                                                            *
+ *  -----------                                                            *
  *  begin                : February 2016                                   *
  *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -21,9 +21,9 @@
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebar.h"
-#include "qgsvbsmilixio.h"
-#include "qgsvbsmilixannotationitem.h"
-#include "qgsvbsmilixlayer.h"
+#include "qgsmilxio.h"
+#include "qgsmilxannotationitem.h"
+#include "qgsmilxlayer.h"
 #include <QDialogButtonBox>
 #include <QDomDocument>
 #include <QFileDialog>
@@ -35,7 +35,7 @@
 #include <QVBoxLayout>
 #include <quazip/quazipfile.h>
 
-bool QgsVBSMilixIO::save( QgisInterface* iface )
+bool QgsMilXIO::save( QgisInterface* iface )
 {
   QDialog layerSelectionDialog( iface->mainWindow() );
   layerSelectionDialog.setWindowTitle( tr( "Export MilX layers" ) );
@@ -44,7 +44,7 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   QListWidget* layerListWidget = new QListWidget();
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
-    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
       QListWidgetItem* item = new QListWidgetItem( layer->name() );
       item->setData( Qt::UserRole, layer->id() );
@@ -73,7 +73,7 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   }
 
   QStringList versionTags, versionNames;
-  VBSMilixClient::getSupportedLibraryVersionTags( versionTags, versionNames );
+  MilXClient::getSupportedLibraryVersionTags( versionTags, versionNames );
   QStringList filters;
   foreach ( const QString& versionName, versionNames )
   {
@@ -130,7 +130,7 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
   doc.appendChild( milxDocumentEl );
 
-  QString verTag; VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
   milxVersionEl.appendChild( doc.createTextNode( verTag ) );
   milxDocumentEl.appendChild( milxVersionEl );
@@ -138,9 +138,9 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   foreach ( const QString& layerId, exportLayers )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
-    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      static_cast<QgsVBSMilixLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, exportMessages );
+      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, exportMessages );
     }
   }
   dev->write( doc.toString().toUtf8() );
@@ -155,7 +155,7 @@ bool QgsVBSMilixIO::save( QgisInterface* iface )
   return true;
 }
 
-bool QgsVBSMilixIO::load( QgisInterface* iface )
+bool QgsMilXIO::load( QgisInterface* iface )
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
   QString filter = tr( "MilX Layer Files (*.milxly *.milxlyz)" );
@@ -190,7 +190,7 @@ bool QgsVBSMilixIO::load( QgisInterface* iface )
   QString fileMssVer = milxVersionEl.text();
 
   QString verTag;
-  VBSMilixClient::getCurrentLibraryVersionTag( verTag );
+  MilXClient::getCurrentLibraryVersionTag( verTag );
   if ( fileMssVer > verTag )
   {
     QString errorMsg = tr( "The file was created by a newer MSS library version." );
@@ -201,11 +201,11 @@ bool QgsVBSMilixIO::load( QgisInterface* iface )
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
   QStringList importMessages;
   QString errorMsg;
-  QList<QgsVBSMilixLayer*> importedLayers;
+  QList<QgsMilXLayer*> importedLayers;
   for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
   {
     QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
-    QgsVBSMilixLayer* layer = new QgsVBSMilixLayer();
+    QgsMilXLayer* layer = new QgsMilXLayer();
     if ( !layer->importMilxly( milxLayerEl, fileMssVer, errorMsg, importMessages ) )
     {
       break;
@@ -215,7 +215,7 @@ bool QgsVBSMilixIO::load( QgisInterface* iface )
 
   if ( errorMsg.isEmpty() )
   {
-    foreach ( QgsVBSMilixLayer* layer, importedLayers )
+    foreach ( QgsMilXLayer* layer, importedLayers )
     {
       QgsMapLayerRegistry::instance()->addMapLayer( layer );
     }
@@ -233,7 +233,7 @@ bool QgsVBSMilixIO::load( QgisInterface* iface )
   return true;
 }
 
-void QgsVBSMilixIO::showMessageDialog( const QString& title, const QString& body, const QString& messages )
+void QgsMilXIO::showMessageDialog( const QString& title, const QString& body, const QString& messages )
 {
   QDialog dialog;
   dialog.setWindowTitle( title );

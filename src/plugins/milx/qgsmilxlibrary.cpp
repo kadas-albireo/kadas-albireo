@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgsvbsmilixlibrary.cpp                                                 *
+ *  qgsmilxlibrary.cpp                                                     *
  *  -------------------                                                    *
  *  begin                : Sep 29, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
@@ -15,9 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsvbsmilixlibrary.h"
-#include "qgsvbsmaptoolmilix.h"
-#include "qgsvbsmilixlayer.h"
+#include "qgsmilxlibrary.h"
+#include "qgsmilxmaptools.h"
+#include "qgsmilxlayer.h"
 #include "qgsfilterlineedit.h"
 #include "qgslogger.h"
 #include "qgisinterface.h"
@@ -38,15 +38,15 @@
 #include <QStandardItemModel>
 #include <QToolButton>
 #include <QTreeView>
-#include "Client/VBSMilixClient.hpp"
+#include "MilXClient.hpp"
 
-const int QgsVBSMilixLibrary::SymbolXmlRole = Qt::UserRole + 1;
-const int QgsVBSMilixLibrary::SymbolMilitaryNameRole = Qt::UserRole + 2;
-const int QgsVBSMilixLibrary::SymbolPointCountRole = Qt::UserRole + 3;
-const int QgsVBSMilixLibrary::SymbolVariablePointsRole = Qt::UserRole + 4;
+const int QgsMilXLibrary::SymbolXmlRole = Qt::UserRole + 1;
+const int QgsMilXLibrary::SymbolMilitaryNameRole = Qt::UserRole + 2;
+const int QgsMilXLibrary::SymbolPointCountRole = Qt::UserRole + 3;
+const int QgsMilXLibrary::SymbolVariablePointsRole = Qt::UserRole + 4;
 
 
-class QgsVBSMilixLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
+class QgsMilXLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 {
   public:
     TreeFilterProxyModel( QObject* parent = 0 ) : QSortFilterProxyModel( parent )
@@ -88,7 +88,7 @@ class QgsVBSMilixLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 };
 
 
-QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
+QgsMilXLibrary::QgsMilXLibrary( QgisInterface* iface, QWidget *parent )
     : QDialog( parent ), mIface( iface ), mLoader( 0 )
 {
   setWindowTitle( tr( "MilX Symbol Gallery" ) );
@@ -143,22 +143,16 @@ QgsVBSMilixLibrary::QgsVBSMilixLibrary( QgisInterface* iface, QWidget *parent )
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( updateLayers() ) );
   connect( mIface->mapCanvas(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setCurrentLayer( QgsMapLayer* ) ) );
 
-  if ( !VBSMilixClient::init() )
-  {
-    QMessageBox::critical( this, tr( "MilX initialization failed" ), tr( "Failed to initialize the MilX library." ) );
-  }
-  else
-  {
-    setCursor( Qt::WaitCursor );
-    mTreeView->setModel( mLoadingModel );
-    mLoader = new QgsVBSMilixLibraryLoader( this );
-    connect( mLoader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
-    mLoader->start();
-  }
+  setCursor( Qt::WaitCursor );
+  mTreeView->setModel( mLoadingModel );
+  mLoader = new QgsMilXLibraryLoader( this );
+  connect( mLoader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
+  mLoader->start();
+
   updateLayers();
 }
 
-QgsVBSMilixLibrary::~QgsVBSMilixLibrary()
+QgsMilXLibrary::~QgsMilXLibrary()
 {
   if ( mLoader )
   {
@@ -169,17 +163,17 @@ QgsVBSMilixLibrary::~QgsVBSMilixLibrary()
   }
 }
 
-void QgsVBSMilixLibrary::autocreateLayer()
+void QgsMilXLibrary::autocreateLayer()
 {
   if ( mLayersCombo->count() == 0 )
   {
-    QgsVBSMilixLayer* layer = new QgsVBSMilixLayer();
+    QgsMilXLayer* layer = new QgsMilXLayer();
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     mIface->mapCanvas()->setCurrentLayer( layer );
   }
 }
 
-void QgsVBSMilixLibrary::updateLayers()
+void QgsMilXLibrary::updateLayers()
 {
   // Avoid update while updating
   if ( mLayersCombo->signalsBlocked() )
@@ -191,10 +185,10 @@ void QgsVBSMilixLibrary::updateLayers()
   int idx = 0, current = 0;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
-    if ( dynamic_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( dynamic_cast<QgsMilXLayer*>( layer ) )
     {
-      QgsVBSMilixLayer* milixLayer = static_cast<QgsVBSMilixLayer*>( layer );
-      connect( milixLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
+      QgsMilXLayer* milxLayer = static_cast<QgsMilXLayer*>( layer );
+      connect( milxLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
       mLayersCombo->addItem( layer->name(), layer->id() );
       if ( mIface->mapCanvas()->currentLayer() == layer )
       {
@@ -207,7 +201,7 @@ void QgsVBSMilixLibrary::updateLayers()
   mLayersCombo->setCurrentIndex( current );
 }
 
-void QgsVBSMilixLibrary::loaderFinished()
+void QgsMilXLibrary::loaderFinished()
 {
   delete mLoader;
   mLoader = 0;
@@ -215,7 +209,7 @@ void QgsVBSMilixLibrary::loaderFinished()
   unsetCursor();
 }
 
-void QgsVBSMilixLibrary::filterChanged( const QString &text )
+void QgsMilXLibrary::filterChanged( const QString &text )
 {
   mTreeView->clearSelection();
   mFilterProxyModel->setFilterFixedString( text );
@@ -226,7 +220,7 @@ void QgsVBSMilixLibrary::filterChanged( const QString &text )
   }
 }
 
-void QgsVBSMilixLibrary::itemClicked( QModelIndex index )
+void QgsMilXLibrary::itemClicked( QModelIndex index )
 {
   index = mFilterProxyModel->mapToSource( index );
   QList<QModelIndex> indexStack;
@@ -251,14 +245,14 @@ void QgsVBSMilixLibrary::itemClicked( QModelIndex index )
     bool hasVariablePoints = item->data( SymbolVariablePointsRole ).toInt();
     if ( !symbolXml.isEmpty() )
     {
-      QgsVBSMilixLayer* layer = static_cast<QgsVBSMilixLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( mLayersCombo->currentIndex() ).toString() ) );
+      QgsMilXLayer* layer = static_cast<QgsMilXLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( mLayersCombo->currentIndex() ).toString() ) );
       if ( !layer )
       {
         mIface->messageBar()->pushMessage( tr( "No MilX Layer Selected" ), "", QgsMessageBar::WARNING, 5 );
       }
       else
       {
-        QgsVBSMapToolCreateMilixItem* tool = new QgsVBSMapToolCreateMilixItem( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
+        QgsMilXCreateTool* tool = new QgsMilXCreateTool( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
         connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
         mIface->mapCanvas()->setMapTool( tool );
       }
@@ -266,7 +260,7 @@ void QgsVBSMilixLibrary::itemClicked( QModelIndex index )
   }
 }
 
-QStandardItem* QgsVBSMilixLibrary::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount , bool symbolHasVariablePoints )
+QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount , bool symbolHasVariablePoints )
 {
   QIcon icon;
   QSize iconSize = isLeaf ? mTreeView->iconSize() : !image.isNull() ? QSize( 32, 32 ) : QSize( 1, 32 );
@@ -321,7 +315,7 @@ QStandardItem* QgsVBSMilixLibrary::addItem( QStandardItem* parent, const QString
   }
 }
 
-void QgsVBSMilixLibrary::setCurrentLayer( int idx )
+void QgsMilXLibrary::setCurrentLayer( int idx )
 {
   if ( idx >= 0 )
   {
@@ -329,7 +323,7 @@ void QgsVBSMilixLibrary::setCurrentLayer( int idx )
   }
 }
 
-void QgsVBSMilixLibrary::setCurrentLayer( QgsMapLayer *layer )
+void QgsMilXLibrary::setCurrentLayer( QgsMapLayer *layer )
 {
   int idx = layer ? mLayersCombo->findData( layer->id() ) : -1;
   if ( idx >= 0 )
@@ -340,22 +334,22 @@ void QgsVBSMilixLibrary::setCurrentLayer( QgsMapLayer *layer )
   }
 }
 
-void QgsVBSMilixLibrary::addMilXLayer()
+void QgsMilXLibrary::addMilXLayer()
 {
   QString layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new MilX layer:" ) );
   if ( !layerName.isEmpty() )
   {
-    QgsVBSMilixLayer* layer = new QgsVBSMilixLayer( layerName );
+    QgsMilXLayer* layer = new QgsMilXLayer( layerName );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     mLayersCombo->addItem( layer->name(), layer->id() );
     mLayersCombo->setCurrentIndex( mLayersCombo->count() - 1 );
   }
 }
 
-void QgsVBSMilixLibrary::manageSymbolPick( int symbolIdx )
+void QgsMilXLibrary::manageSymbolPick( int symbolIdx )
 {
-  QgsVBSMilixLayer* layer = qobject_cast<QgsVBSMilixLayer*>( QObject::sender() );
-  QgsVBSMapToolEditMilixItem* tool = new QgsVBSMapToolEditMilixItem( mIface->mapCanvas(), layer, layer->items()[symbolIdx] );
+  QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QObject::sender() );
+  QgsMilXEditTool* tool = new QgsMilXEditTool( mIface->mapCanvas(), layer, layer->items()[symbolIdx] );
   delete layer->takeItem( symbolIdx );
   connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
   mIface->mapCanvas()->setMapTool( tool );
@@ -365,9 +359,9 @@ void QgsVBSMilixLibrary::manageSymbolPick( int symbolIdx )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QgsVBSMilixLibraryLoader::run()
+void QgsMilXLibraryLoader::run()
 {
-  QString galleryPath = QSettings().value( "/vbsfunctionality/milix_gallery_path", "/home/marco/ownCloud/Shared/VBS-Realisierung/Mss-MilX/MssGallery_V1.0_2016.01.30/GalleryFiles" ).toString();
+  QString galleryPath = QSettings().value( "/milx/milx_gallery_path", "" ).toString();
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
 
   QDir galleryDir( galleryPath );
@@ -418,9 +412,9 @@ void QgsVBSMilixLibraryLoader::run()
             {
               symbolXmls.append( memberNodes.at( iMember ).toElement().attribute( "MssStringXML" ) );
             }
-            QList<VBSMilixClient::SymbolDesc> symbolDescs;
-            VBSMilixClient::getSymbols( symbolXmls, symbolDescs );
-            foreach ( const VBSMilixClient::SymbolDesc& symbolDesc, symbolDescs )
+            QList<MilXClient::SymbolDesc> symbolDescs;
+            MilXClient::getSymbols( symbolXmls, symbolDescs );
+            foreach ( const MilXClient::SymbolDesc& symbolDesc, symbolDescs )
             {
               addItem( subSectionItem, symbolDesc.name, symbolDesc.icon, true, symbolDesc.symbolId, symbolDesc.militaryName, symbolDesc.minNumPoints, symbolDesc.hasVariablePoints );
             }
@@ -431,7 +425,7 @@ void QgsVBSMilixLibraryLoader::run()
   }
 }
 
-QStandardItem* QgsVBSMilixLibraryLoader::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount, bool hasVariablePoints )
+QStandardItem* QgsMilXLibraryLoader::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount, bool hasVariablePoints )
 {
   QStandardItem* item;
   QMetaObject::invokeMethod( mLibrary, "addItem",

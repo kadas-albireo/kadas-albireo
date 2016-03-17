@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmaptoolmilix.h                                                   *
- *  -------------------                                                    *
+ *  qgsmilxmaptoolS.h                                                      *
+ *  -----------------                                                      *
  *  begin                : Oct 01, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,21 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMAPTOOLMILIX_H
-#define QGSVBSMAPTOOLMILIX_H
+#ifndef QGSMILXMAPTOOLS_H
+#define QGSMILXMAPTOOLS_H
 
 #include "qgsmaptoolannotation.h"
 #include <QPointer>
 
-class QgsVBSMilixAnnotationItem;
-class QgsVBSMilixItem;
-class QgsVBSMilixLayer;
+class QgsMilXAnnotationItem;
+class QgsMilXItem;
+class QgsMilXLayer;
 
-class QgsVBSMapToolCreateMilixItem : public QgsMapTool
+class QgsMilXCreateTool : public QgsMapTool
 {
   public:
-    QgsVBSMapToolCreateMilixItem( QgsMapCanvas* canvas, QgsVBSMilixLayer *layer, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
-    ~QgsVBSMapToolCreateMilixItem();
+    QgsMilXCreateTool( QgsMapCanvas* canvas, QgsMilXLayer *layer, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
+    ~QgsMilXCreateTool();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
 
@@ -39,23 +39,23 @@ class QgsVBSMapToolCreateMilixItem : public QgsMapTool
     int mMinNPoints;
     int mNPressedPoints;
     bool mHasVariablePoints;
-    QgsVBSMilixAnnotationItem* mItem;
-    QgsVBSMilixLayer* mLayer;
+    QgsMilXAnnotationItem* mItem;
+    QgsMilXLayer* mLayer;
 };
 
-class QgsVBSMapToolEditMilixItem : public QgsMapToolPan
+class QgsMilXEditTool : public QgsMapToolPan
 {
     Q_OBJECT
   public:
-    QgsVBSMapToolEditMilixItem( QgsMapCanvas* canvas, QgsVBSMilixLayer* layer, QgsVBSMilixItem* item );
-    ~QgsVBSMapToolEditMilixItem();
+    QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, QgsMilXItem* item );
+    ~QgsMilXEditTool();
     void canvasReleaseEvent( QMouseEvent * e );
 
   private:
-    QPointer<QgsVBSMilixAnnotationItem> mItem;
-    QgsVBSMilixLayer* mLayer;
+    QPointer<QgsMilXAnnotationItem> mItem;
+    QgsMilXLayer* mLayer;
 
 };
 
-#endif // QGSVBSMAPTOOLMILIX_H
+#endif // QGSMILXMAPTOOLS_H
 

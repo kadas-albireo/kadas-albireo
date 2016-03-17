@@ -1,9 +1,9 @@
 /***************************************************************************
-                              qgsvbsmilixannotationitem.h
-                              ---------------------------
-  begin                : Oct 01, 2015
-  copyright            : (C) 2015 by Sandro Mani
-  email                : smani@sourcepole.ch
+ *  qgsmilxannotationitem.h                                                *
+ *  -----------------------                                                *
+ *  begin                : Oct 01, 2015                                    *
+ *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
+ *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,28 +15,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMILIXANNOTATIONITEM_H
-#define QGSVBSMILIXANNOTATIONITEM_H
+#ifndef QGSMILXANNOTATIONITEM_H
+#define QGSMILXANNOTATIONITEM_H
 
 #include "qgsannotationitem.h"
-#include "Client/VBSMilixClient.hpp"
+#include "MilXClient.hpp"
 
 class QgsCoordinateTransform;
-class QgsVBSCoordinateDisplayer;
-class QgsVBSMilixItem;
+class QgsMilXItem;
 
-class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
+class QgsMilXAnnotationItem : public QgsAnnotationItem
 {
     Q_OBJECT
 
-    QGS_ANNOTATION_ITEM( QgsVBSMilixAnnotationItem, "MilixAnnotationItem" )
+    QGS_ANNOTATION_ITEM( QgsMilXAnnotationItem, "MilXAnnotationItem" )
 
   public:
-    QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas );
-    QgsVBSMilixAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsVBSMilixAnnotationItem( canvas, this ); }
+    QgsMilXAnnotationItem( QgsMapCanvas* canvas );
+    QgsMilXAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsMilXAnnotationItem( canvas, this ); }
 
-    void fromMilixItem( QgsVBSMilixItem* item );
-    QgsVBSMilixItem* toMilixItem();
+    void fromMilxItem( QgsMilXItem* item );
+    QgsMilXItem* toMilxItem();
 
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
@@ -44,7 +43,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     void movePoint( int index, const QPoint &newPos );
     QList<QPoint> screenPoints() const;
     int absolutePointIdx( int regularIdx ) const;
-    void setGraphic( VBSMilixClient::NPointSymbolGraphic& result, bool updatePoints );
+    void setGraphic( MilXClient::NPointSymbolGraphic& result, bool updatePoints );
     void finalize() { mFinalized = true; }
 
     void paint( QPainter* painter ) override;
@@ -59,7 +58,7 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     bool hitTest( const QPoint& screenPos ) const override;
 
   protected:
-    QgsVBSMilixAnnotationItem( QgsMapCanvas* canvas, QgsVBSMilixAnnotationItem* source );
+    QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnotationItem* source );
 
   private:
     QString mSymbolXml;
@@ -77,4 +76,4 @@ class QgsVBSMilixAnnotationItem : public QgsAnnotationItem
     void updateSymbol( bool updatePoints = false );
 };
 
-#endif // QGSVBSMILIXANNOTATIONITEM_H
+#endif // QGSMILXANNOTATIONITEM_H

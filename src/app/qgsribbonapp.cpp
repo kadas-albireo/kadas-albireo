@@ -80,6 +80,9 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersSpacer->setVisible( false );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
 
+  // The MilX plugin enables the tab, if the plugin is enabled
+  mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
+
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 

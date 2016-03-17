@@ -17,7 +17,7 @@
 ***************************************************************************
 """
 
-from qgis._vbs import *
+from qgis._milx import *
 
 __author__ = 'Sandro Mani'
 __date__ = 'March 2016'

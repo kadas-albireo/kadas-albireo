@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsfunctionality.cpp                                                *
- *  -------------------                                                    *
+ *  qgsmilxplugin.cpp                                                      *
+ *  -----------------                                                      *
  *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,33 +15,40 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsmilxplugin.h"
 #include "qgslegendinterface.h"
+#include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgspluginlayerregistry.h"
-#include "qgsvbsfunctionality.h"
 #include "qgisinterface.h"
-#include "vbsfunctionality_plugin.h"
-#include "milix/qgsvbsmilixlibrary.h"
-#include "milix/qgsvbsmilixio.h"
-#include "milix/qgsvbsmilixlayer.h"
+#include "milx_plugin.h"
+#include "qgsmilxlibrary.h"
+#include "qgsmilxio.h"
+#include "qgsmilxlayer.h"
 #include <QAction>
 #include <QComboBox>
 #include <QMainWindow>
 #include <QSlider>
 #include <QToolBar>
 
-QgsVBSFunctionality::QgsVBSFunctionality( QgisInterface * theQgisInterface )
+QgsMilXPlugin::QgsMilXPlugin( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
     , mQGisIface( theQgisInterface )
     , mMilXLibrary( 0 )
 {
 }
 
-void QgsVBSFunctionality::initGui()
+void QgsMilXPlugin::initGui()
 {
+  if ( !MilXClient::init() )
+  {
+    QgsDebugMsg( "Failed to initialize the MilX library." );
+    return;
+  }
+
   mActionMilx = mQGisIface->findAction( "mActionMilx" );
   connect( mActionMilx, SIGNAL( triggered( ) ), this, SLOT( toggleMilXLibrary( ) ) );
 
@@ -51,65 +58,70 @@ void QgsVBSFunctionality::initGui()
   mActionLoadMilx = mQGisIface->findAction( "mActionLoadMilx" );
   connect( mActionLoadMilx, SIGNAL( triggered( ) ), this, SLOT( loadMilx( ) ) );
 
+  QWidget* milxTab = qobject_cast<QWidget*>( mQGisIface->findObject( "mMssTab" ) );
+  QTabWidget* ribbonWidget = qobject_cast<QTabWidget*>( mQGisIface->findObject( "mRibbonWidget" ) );
+  if ( ribbonWidget && milxTab )
+    ribbonWidget->setTabEnabled( ribbonWidget->indexOf( milxTab ), true );
+
   mSymbolSizeSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mSymbolSizeSlider" ) );
   mLineWidthSlider = qobject_cast<QSlider*>( mQGisIface->findObject( "mLineWidthSlider" ) );
   mWorkModeCombo = qobject_cast<QComboBox*>( mQGisIface->findObject( "mWorkModeCombo" ) );
   if ( mSymbolSizeSlider )
   {
-    mSymbolSizeSlider->setValue( QSettings().value( "/vbsfunctionality/milix_symbol_size", "60" ).toInt() );
+    mSymbolSizeSlider->setValue( QSettings().value( "/milx/milx_symbol_size", "60" ).toInt() );
     setMilXSymbolSize( mSymbolSizeSlider->value() );
     connect( mSymbolSizeSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXSymbolSize( int ) ) );
   }
   if ( mLineWidthSlider )
   {
-    mLineWidthSlider->setValue( QSettings().value( "/vbsfunctionality/milix_line_width", "2" ).toInt() );
+    mLineWidthSlider->setValue( QSettings().value( "/milx/milx_line_width", "2" ).toInt() );
     setMilXLineWidth( mLineWidthSlider->value() );
     connect( mLineWidthSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setMilXLineWidth( int ) ) );
   }
   if ( mWorkModeCombo )
   {
-    mWorkModeCombo->setCurrentIndex( QSettings().value( "/vbsfunctionality/milix_work_mode", "1" ).toInt() );
+    mWorkModeCombo->setCurrentIndex( QSettings().value( "/milx/milx_work_mode", "1" ).toInt() );
     setMilXWorkMode( mWorkModeCombo->currentIndex() );
     connect( mWorkModeCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setMilXWorkMode( int ) ) );
   }
 
-  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsVBSMilixLayerType() );
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsMilXLayerType() );
 
-  mMilXLibrary = new QgsVBSMilixLibrary( mQGisIface, mQGisIface->mapCanvas() );
+  mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mapCanvas() );
 
 }
 
-void QgsVBSFunctionality::unload()
+void QgsMilXPlugin::unload()
 {
-  QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsVBSMilixLayer::layerTypeKey() );
+  QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsMilXLayer::layerTypeKey() );
   mActionMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
 }
 
-void QgsVBSFunctionality::toggleMilXLibrary( )
+void QgsMilXPlugin::toggleMilXLibrary( )
 {
   mMilXLibrary->autocreateLayer();
   mMilXLibrary->show();
   mMilXLibrary->raise();
 }
 
-void QgsVBSFunctionality::saveMilx()
+void QgsMilXPlugin::saveMilx()
 {
-  QgsVBSMilixIO::save( mQGisIface );
+  QgsMilXIO::save( mQGisIface );
 }
 
-void QgsVBSFunctionality::loadMilx()
+void QgsMilXPlugin::loadMilx()
 {
-  QgsVBSMilixIO::load( mQGisIface );
+  QgsMilXIO::load( mQGisIface );
 }
 
-void QgsVBSFunctionality::setMilXSymbolSize( int value )
+void QgsMilXPlugin::setMilXSymbolSize( int value )
 {
-  VBSMilixClient::setSymbolSize( value );
+  MilXClient::setSymbolSize( value );
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
-    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
       mQGisIface->mapCanvas()->clearCache( layer->id() );
     }
@@ -117,12 +129,12 @@ void QgsVBSFunctionality::setMilXSymbolSize( int value )
   mQGisIface->mapCanvas()->refresh();
 }
 
-void QgsVBSFunctionality::setMilXLineWidth( int value )
+void QgsMilXPlugin::setMilXLineWidth( int value )
 {
-  VBSMilixClient::setLineWidth( value );
+  MilXClient::setLineWidth( value );
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
-    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
       mQGisIface->mapCanvas()->clearCache( layer->id() );
     }
@@ -130,12 +142,12 @@ void QgsVBSFunctionality::setMilXLineWidth( int value )
   mQGisIface->mapCanvas()->refresh();
 }
 
-void QgsVBSFunctionality::setMilXWorkMode( int idx )
+void QgsMilXPlugin::setMilXWorkMode( int idx )
 {
-  VBSMilixClient::setWorkMode( idx );
+  MilXClient::setWorkMode( idx );
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
-    if ( qobject_cast<QgsVBSMilixLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
       mQGisIface->mapCanvas()->clearCache( layer->id() );
     }

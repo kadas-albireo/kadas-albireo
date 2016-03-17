@@ -1,5 +1,22 @@
-#include "VBSMilixClient.hpp"
-#include "../Server/VBSMilixCommands.hpp"
+/***************************************************************************
+ *  MilXClient.cpp                                                         *
+ *  --------------                                                         *
+ *  begin                : Oct 01, 2015                                    *
+ *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
+ *  email                : smani@sourcepole.ch                             *
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#include "MilXClient.hpp"
+#include "Server/MilXCommands.hpp"
 #include <QApplication>
 #include <QDataStream>
 #include <QEventLoop>
@@ -15,12 +32,12 @@
 #include <QWidget>
 #include <rsvgrenderer.h>
 
-VBSMilixClientWorker::VBSMilixClientWorker( QObject* parent )
+MilXClientWorker::MilXClientWorker( QObject* parent )
     : QObject( parent ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
 {
 }
 
-void VBSMilixClientWorker::cleanup()
+void MilXClientWorker::cleanup()
 {
   if ( mProcess )
     mProcess->deleteLater();
@@ -32,7 +49,7 @@ void VBSMilixClientWorker::cleanup()
   mNetworkSession = 0;
 }
 
-bool VBSMilixClientWorker::initialize()
+bool MilXClientWorker::initialize()
 {
   if ( mTcpSocket )
   {
@@ -49,7 +66,7 @@ bool VBSMilixClientWorker::initialize()
   mProcess = new QProcess( this );
   connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
   {
-    mProcess->start( "milixserver" );
+    mProcess->start( "milxserver" );
     mProcess->waitForReadyRead( 5000 );
     QByteArray out = mProcess->readAllStandardOutput();
     if ( !mProcess->isOpen() )
@@ -134,22 +151,22 @@ bool VBSMilixClientWorker::initialize()
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
-  istream << VBS_MILIX_REQUEST_INIT;
+  istream << MILX_REQUEST_INIT;
   istream << lang;
   QByteArray response;
-  if ( !processRequest( request, response, VBS_MILIX_REPLY_INIT_OK ) )
+  if ( !processRequest( request, response, MILX_REPLY_INIT_OK ) )
   {
     cleanup();
     return false;
   }
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> mLibraryVersionTag;
 
   return true;
 }
 
-bool VBSMilixClientWorker::getCurrentLibraryVersionTag( QString& versionTag )
+bool MilXClientWorker::getCurrentLibraryVersionTag( QString& versionTag )
 {
   if ( initialize() )
   {
@@ -159,7 +176,7 @@ bool VBSMilixClientWorker::getCurrentLibraryVersionTag( QString& versionTag )
   return false;
 }
 
-bool VBSMilixClientWorker::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply )
+bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply )
 {
   mLastError = QString();
 
@@ -195,8 +212,8 @@ bool VBSMilixClientWorker::processRequest( const QByteArray& request, QByteArray
   Q_ASSERT( mTcpSocket->bytesAvailable() == 0 );
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
-  if ( replycmd == VBS_MILIX_REPLY_ERROR )
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  if ( replycmd == MILX_REPLY_ERROR )
   {
     ostream >> mLastError;
     return false;
@@ -209,7 +226,7 @@ bool VBSMilixClientWorker::processRequest( const QByteArray& request, QByteArray
   return true;
 }
 
-void VBSMilixClientWorker::handleSocketError()
+void MilXClientWorker::handleSocketError()
 {
   if ( !mTcpSocket )
   {
@@ -235,7 +252,7 @@ void VBSMilixClientWorker::handleSocketError()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-VBSMilixClient::VBSMilixClient()
+MilXClient::MilXClient()
 {
   start();
   QEventLoop loop;
@@ -244,61 +261,61 @@ VBSMilixClient::VBSMilixClient()
   mWorker.moveToThread( this );
 }
 
-VBSMilixClient::~VBSMilixClient()
+MilXClient::~MilXClient()
 {
   quit();
   wait();
 }
 
-bool VBSMilixClient::processRequest( const QByteArray& request, QByteArray& response, VBSMilixServerReply expectedReply )
+bool MilXClient::processRequest( const QByteArray& request, QByteArray& response, MilXServerReply expectedReply )
 {
   bool result;
   QMetaObject::invokeMethod( &mWorker, "processRequest", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
   return result;
 }
 
-bool VBSMilixClient::init()
+bool MilXClient::init()
 {
   bool result;
   QMetaObject::invokeMethod( &instance()->mWorker, "initialize", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ) );
   return result;
 }
 
-bool VBSMilixClient::getSymbol( const QString& symbolId, SymbolDesc &result )
+bool MilXClient::getSymbol( const QString& symbolId, SymbolDesc &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_SYMBOL;
+  istream << MILX_REQUEST_GET_SYMBOL;
   istream << symbolId;
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOL ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml;
   ostream >> result.name >> result.militaryName >> svgxml >> result.hasVariablePoints >> result.minNumPoints;
   result.icon = renderSvg( svgxml );
   return true;
 }
 
-bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
+bool MilXClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_SYMBOLS;
+  istream << MILX_REQUEST_GET_SYMBOLS;
   istream << symbolIds;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_SYMBOLS ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOLS ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   int nResults;
   ostream >> nResults;
   if ( nResults != symbolIds.size() )
@@ -317,20 +334,20 @@ bool VBSMilixClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc>
   return true;
 }
 
-bool VBSMilixClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
+bool MilXClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_APPEND_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
+  istream << MILX_REQUEST_APPEND_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_APPEND_POINT ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_APPEND_POINT ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
@@ -339,20 +356,20 @@ bool VBSMilixClient::appendPoint( const QRect &visibleExtent, const NPointSymbol
   return true;
 }
 
-bool VBSMilixClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
+bool MilXClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_INSERT_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
+  istream << MILX_REQUEST_INSERT_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << newPoint;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_INSERT_POINT ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_INSERT_POINT ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
@@ -361,20 +378,20 @@ bool VBSMilixClient::insertPoint( const QRect &visibleExtent, const NPointSymbol
   return true;
 }
 
-bool VBSMilixClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result )
+bool MilXClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_MOVE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index << newPos;
+  istream << MILX_REQUEST_MOVE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index << newPos;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_MOVE_POINT ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_MOVE_POINT ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
@@ -383,38 +400,38 @@ bool VBSMilixClient::movePoint( const QRect &visibleExtent, const NPointSymbol& 
   return true;
 }
 
-bool VBSMilixClient::canDeletePoint( const NPointSymbol& symbol, int index, bool& canDelete )
+bool MilXClient::canDeletePoint( const NPointSymbol& symbol, int index, bool& canDelete )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_CAN_DELETE_POINT;
+  istream << MILX_REQUEST_CAN_DELETE_POINT;
   istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index;
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_CAN_DELETE_POINT ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_CAN_DELETE_POINT ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> canDelete;
   return true;
 }
 
-bool VBSMilixClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result )
+bool MilXClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_DELETE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index;
+  istream << MILX_REQUEST_DELETE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << index;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_DELETE_POINT ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_DELETE_POINT ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
@@ -423,20 +440,20 @@ bool VBSMilixClient::deletePoint( const QRect &visibleExtent, const NPointSymbol
   return true;
 }
 
-bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result )
+bool MilXClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_EDIT_SYMBOL << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
+  istream << MILX_REQUEST_EDIT_SYMBOL << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_EDIT_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_EDIT_SYMBOL ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> newSymbolXml;
   ostream >> newSymbolMilitaryName;
   QByteArray svgxml; ostream >> svgxml;
@@ -447,22 +464,22 @@ bool VBSMilixClient::editSymbol( const QRect &visibleExtent, const NPointSymbol&
   return true;
 }
 
-bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints )
+bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_UPDATE_SYMBOL;
+  istream << MILX_REQUEST_UPDATE_SYMBOL;
   istream << visibleExtent;
   istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << returnPoints;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_UPDATE_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_UPDATE_SYMBOL ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   QByteArray svgxml; ostream >> svgxml;
   result.graphic = renderSvg( svgxml );
   ostream >> result.offset;
@@ -474,12 +491,12 @@ bool VBSMilixClient::updateSymbol( const QRect& visibleExtent, const NPointSymbo
   return true;
 }
 
-bool VBSMilixClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result )
+bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result )
 {
   int nSymbols = symbols.length();
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_UPDATE_SYMBOLS;
+  istream << MILX_REQUEST_UPDATE_SYMBOLS;
   istream << visibleExtent;
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
@@ -487,13 +504,13 @@ bool VBSMilixClient::updateSymbols( const QRect& visibleExtent, const QList<NPoi
     istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
   }
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_UPDATE_SYMBOLS ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_UPDATE_SYMBOLS ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   int nOutSymbols;
   ostream >> nOutSymbols;
   if ( nOutSymbols != nSymbols )
@@ -511,159 +528,159 @@ bool VBSMilixClient::updateSymbols( const QRect& visibleExtent, const QList<NPoi
   return true;
 }
 
-bool VBSMilixClient::validateSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
+bool MilXClient::validateSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_VALIDATE_SYMBOLXML;
+  istream << MILX_REQUEST_VALIDATE_SYMBOLXML;
   istream << symbolXml << mssVersion;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_VALIDATE_SYMBOLXML ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_VALIDATE_SYMBOLXML ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> adjustedSymbolXml >> valid >> messages;
   return true;
 }
 
-bool VBSMilixClient::downgradeSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
+bool MilXClient::downgradeSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_DOWNGRADE_SYMBOLXML;
+  istream << MILX_REQUEST_DOWNGRADE_SYMBOLXML;
   istream << symbolXml << mssVersion;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_DOWNGRADE_SYMBOLXML ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_DOWNGRADE_SYMBOLXML ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> adjustedSymbolXml >> valid >> messages;
   return true;
 }
 
-bool VBSMilixClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult )
+bool MilXClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_HIT_TEST;
+  istream << MILX_REQUEST_HIT_TEST;
   istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << clickPos;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_HIT_TEST ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_HIT_TEST ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> hitTestResult;
   return true;
 }
 
-bool VBSMilixClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol )
+bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol )
 {
   int nSymbols = symbols.length();
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_PICK_SYMBOL << clickPos;
+  istream << MILX_REQUEST_PICK_SYMBOL << clickPos;
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
     istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized;
   }
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_PICK_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_PICK_SYMBOL ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> selectedSymbol;
   return true;
 }
 
-bool VBSMilixClient::getSupportedLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
+bool MilXClient::getSupportedLibraryVersionTags( QStringList& versionTags, QStringList& versionNames )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_LIBRARY_VERSION_TAGS;
+  istream << MILX_REQUEST_GET_LIBRARY_VERSION_TAGS;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_LIBRARY_VERSION_TAGS ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_LIBRARY_VERSION_TAGS ) )
   {
     return false;
   }
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> versionTags >> versionNames;
   return true;
 }
 
-bool VBSMilixClient::getCurrentLibraryVersionTag( QString& versionTag )
+bool MilXClient::getCurrentLibraryVersionTag( QString& versionTag )
 {
   bool result;
   QMetaObject::invokeMethod( &instance()->mWorker, "getCurrentLibraryVersionTag", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( QString&, versionTag ) );
   return result;
 }
 
-bool VBSMilixClient::setSymbolOptions( int symbolSize, int lineWidth , int workMode )
+bool MilXClient::setSymbolOptions( int symbolSize, int lineWidth , int workMode )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_SET_SYMBOL_OPTIONS << symbolSize << lineWidth << workMode;
+  istream << MILX_REQUEST_SET_SYMBOL_OPTIONS << symbolSize << lineWidth << workMode;
 
   QByteArray response;
-  if ( !processRequest( request, response, VBS_MILIX_REPLY_SET_SYMBOL_OPTIONS ) )
+  if ( !processRequest( request, response, MILX_REPLY_SET_SYMBOL_OPTIONS ) )
   {
     return false;
   }
   return true;
 }
 
-bool VBSMilixClient::getControlPoints( const QString& symbolXml, int nPoints, QList<int>& controlPoints )
+bool MilXClient::getControlPoints( const QString& symbolXml, int nPoints, QList<int>& controlPoints )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_CONTROL_POINTS << symbolXml << nPoints;
+  istream << MILX_REQUEST_GET_CONTROL_POINTS << symbolXml << nPoints;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_CONTROL_POINTS ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_CONTROL_POINTS ) )
   {
     return false;
   }
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> controlPoints;
   return true;
 }
 
-bool VBSMilixClient::getMilitaryName( const QString &symbolXml, QString &militaryName )
+bool MilXClient::getMilitaryName( const QString &symbolXml, QString &militaryName )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << VBS_MILIX_REQUEST_GET_MILITARY_NAME << symbolXml;
+  istream << MILX_REQUEST_GET_MILITARY_NAME << symbolXml;
   QByteArray response;
-  if ( !instance()->processRequest( request, response, VBS_MILIX_REPLY_GET_MILITARY_NAME ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_MILITARY_NAME ) )
   {
     return false;
   }
   QDataStream ostream( &response, QIODevice::ReadOnly );
-  VBSMilixServerReply replycmd = 0; ostream >> replycmd;
+  MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> militaryName;
   return true;
 }
 
-QImage VBSMilixClient::renderSvg( const QByteArray& xml )
+QImage MilXClient::renderSvg( const QByteArray& xml )
 {
   if ( xml.isEmpty() )
   {

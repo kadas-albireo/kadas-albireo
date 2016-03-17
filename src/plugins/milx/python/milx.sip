@@ -1,4 +1,4 @@
-%Module(name=qgis._vbs,
+%Module(name=qgis._milx,
         version=0,
         keyword_arguments="Optional")
 
@@ -12,4 +12,4 @@ typedef void XEvent;
 %Import gui/gui.sip
 %Import core/core.sip
 
-%Include qgsvbsmilixlayer.sip
+%Include qgsmilxlayer.sip

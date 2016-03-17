@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmilixio.h                                                        *
- *  -------------------                                                    *
+ *  qgsmilxio.h                                                            *
+ *  -----------                                                            *
  *  begin                : February 2016                                   *
  *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,15 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMILIXIO_H
-#define QGSVBSMILIXIO_H
+#ifndef QGSMILXIO_H
+#define QGSMILXIO_H
 
 #include <QObject>
 
 class QgsMessageBar;
-class QgsVBSMilixLayer;
+class QgsMilXLayer;
 
-class QgsVBSMilixIO : public QObject
+class QgsMilXIO : public QObject
 {
   public:
     static bool save( QgisInterface *iface );
@@ -32,4 +32,4 @@ class QgsVBSMilixIO : public QObject
     static void showMessageDialog( const QString& title, const QString& body, const QString& messages );
 };
 
-#endif // QGSVBSMILIXIO_H
+#endif // QGSMILXIO_H

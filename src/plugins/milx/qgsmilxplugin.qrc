@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/vbsfunctionality">
+    <qresource prefix="/milx">
         <file>icons/icon.svg</file>
     </qresource>
 </RCC>

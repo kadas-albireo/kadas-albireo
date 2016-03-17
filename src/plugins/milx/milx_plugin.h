@@ -1,6 +1,6 @@
 /***************************************************************************
- *  vbsfunctionality_plugin.h                                              *
- *  -------------------                                                    *
+ *  milx_plugin.h                                                          *
+ *  -------------                                                          *
  *  begin                : Jul 13, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,15 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VBSSEARCH_PLUGIN_H
-#define VBSSEARCH_PLUGIN_H
+#ifndef MILX_PLUGIN_H
+#define MILX_PLUGIN_H
 
-static const QString sName = QObject::tr( "VBS Functionality" );
-static const QString sDescription = QObject::tr( "VBS Functionality" );
+static const QString sName = QObject::tr( "MilX" );
+static const QString sDescription = QObject::tr( "Support for MilX symbols" );
 static const QString sCategory = QObject::tr( "User Interface" );
-static const QString sPluginVersion = QObject::tr( "Version 0.1" );
+static const QString sPluginVersion = QObject::tr( "Version 1.0" );
 static const QgisPlugin::PLUGINTYPE sPluginType = QgisPlugin::UI;
-static const QString sPluginIcon = ":/vbsfunctionality/icons/icon.svg";
+static const QString sPluginIcon = ":/milx/icons/icon.svg";
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -44,7 +44,7 @@ static const QString sPluginIcon = ":/vbsfunctionality/icons/icon.svg";
 // Class factory to return a new instance of the plugin class
 QGISEXTERN QgisPlugin * classFactory( QgisInterface * theQgisInterfacePointer )
 {
-  return new QgsVBSFunctionality( theQgisInterfacePointer );
+  return new QgsMilXPlugin( theQgisInterfacePointer );
 }
 // Return the name of the plugin - note that we do not user class members as
 // the class may not yet be insantiated when this method is called.
@@ -88,4 +88,4 @@ QGISEXTERN void unload( QgisPlugin * thePluginPointer )
   delete thePluginPointer;
 }
 
-#endif // VBSSEARCH_PLUGIN_H
+#endif // MILX_PLUGIN_H

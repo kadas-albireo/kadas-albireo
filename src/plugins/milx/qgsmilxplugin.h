@@ -1,7 +1,7 @@
 /***************************************************************************
- *  qgsvbsfunctionality.h                                                  *
- *  -------------------                                                    *
- *  begin                : Jul 13, 2015                                    *
+ *  qgsmilxplugin.h                                                        *
+ *  ---------------                                                        *
+ *  begin                : Jul 09, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
  ***************************************************************************/
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSFUNCTIONALITY_H
-#define QGSVBSFUNCTIONALITY_H
+#ifndef QGS_MILX_PLUGIN_H
+#define QGS_MILX_PLUGIN_H
 
 #include "qgisplugin.h"
 #include <QObject>
@@ -27,13 +27,13 @@ class QSlider;
 
 class QgsMapLayer;
 class QgsMessageBarItem;
-class QgsVBSMilixLibrary;
+class QgsMilXLibrary;
 
-class QgsVBSFunctionality: public QObject, public QgisPlugin
+class QgsMilXPlugin: public QObject, public QgisPlugin
 {
     Q_OBJECT
   public:
-    QgsVBSFunctionality( QgisInterface * theInterface );
+    QgsMilXPlugin( QgisInterface * theInterface );
 
     void initGui();
     void unload();
@@ -43,7 +43,7 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     QAction* mActionMilx;
     QAction* mActionSaveMilx;
     QAction* mActionLoadMilx;
-    QgsVBSMilixLibrary* mMilXLibrary;
+    QgsMilXLibrary* mMilXLibrary;
     QSlider* mSymbolSizeSlider;
     QSlider* mLineWidthSlider;
     QComboBox* mWorkModeCombo;
@@ -57,4 +57,4 @@ class QgsVBSFunctionality: public QObject, public QgisPlugin
     void setMilXWorkMode( int idx );
 };
 
-#endif // QGSVBSFUNCTIONALITY_H
+#endif // QGS_MILX_PLUGIN_H

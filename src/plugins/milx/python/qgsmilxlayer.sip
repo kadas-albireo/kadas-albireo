@@ -1,12 +1,12 @@
-class QgsVBSMilixItem
+class QgsMilXItem
 {
 %TypeHeaderCode
-#include <milix/qgsvbsmilixlayer.h>
+#include <qgsmilxlayer.h>
 %End
   public:
     static bool validateMssString(const QString& mssString, QString &adjustedMssString /Out/, QString& messages /Out/);
 
-    QgsVBSMilixItem();
+    QgsMilXItem();
     void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool queryControlPoints = true );
     const QString& mssString() const;
     const QString& militaryName() const;
@@ -20,22 +20,19 @@ class QgsVBSMilixItem
     void readMilx( const QDomElement& graphicEl, const QString &symbolXml, const QgsCoordinateTransform *crst, int symbolSize );
 };
 
-/** \class QgsVBSMilixLayer
-    \brief Milix layer
-*/
-class QgsVBSMilixLayer : public QgsPluginLayer
+class QgsMilXLayer : public QgsPluginLayer
 {
 %TypeHeaderCode
-#include <milix/qgsvbsmilixlayer.h>
+#include <qgsmilxlayer.h>
 %End
   public:
     static QString layerTypeKey();
 
-    QgsVBSMilixLayer( const QString& name = "MilX" );
-    ~QgsVBSMilixLayer();
-    void addItem( QgsVBSMilixItem* item /Transfer/ );
-    QgsVBSMilixItem* takeItem( int idx );
-    const QList<QgsVBSMilixItem*>& items() const;
+    QgsMilXLayer( const QString& name = "MilX" );
+    ~QgsMilXLayer();
+    void addItem( QgsMilXItem* item /Transfer/ );
+    QgsMilXItem* takeItem( int idx );
+    const QList<QgsMilXItem*>& items() const;
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize );
     void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
     bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
@@ -55,13 +52,13 @@ class QgsVBSMilixLayer : public QgsPluginLayer
     bool writeXml( QDomNode & layer_node, QDomDocument & document );
 };
 
-class QgsVBSMilixLayerType : public QgsPluginLayerType
+class QgsMilXLayerType : public QgsPluginLayerType
 {
 %TypeHeaderCode
-#include <milix/qgsvbsmilixlayer.h>
+#include <qgsmilxlayer.h>
 %End
   public:
-    QgsVBSMilixLayerType();
+    QgsMilXLayerType();
     QgsPluginLayer* createLayer();
     bool showLayerProperties( QgsPluginLayer* /*layer*/ );
 };

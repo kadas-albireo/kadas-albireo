@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmilixlibrary.h                                                   *
- *  -------------------                                                    *
+ *  qgsmilxlibrary.h                                                       *
+ *  ----------------                                                       *
  *  begin                : Sep 29, 2015                                    *
  *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSVBSMILIXLIBRARY_H
-#define QGSVBSMILIXLIBRARY_H
+#ifndef QGSMILXLIBRARY_H
+#define QGSMILXLIBRARY_H
 
 #include <QDialog>
 #include <QIcon>
@@ -33,14 +33,14 @@ class QStandardItem;
 class QStandardItemModel;
 class QTreeView;
 class QgsFilterLineEdit;
-class QgsVBSMilixLibraryLoader;
+class QgsMilXLibraryLoader;
 
-class QgsVBSMilixLibrary : public QDialog
+class QgsMilXLibrary : public QDialog
 {
     Q_OBJECT
   public:
-    QgsVBSMilixLibrary( QgisInterface *iface, QWidget* parent = 0 );
-    ~QgsVBSMilixLibrary();
+    QgsMilXLibrary( QgisInterface *iface, QWidget* parent = 0 );
+    ~QgsMilXLibrary();
     void autocreateLayer();
 
   public slots:
@@ -48,7 +48,7 @@ class QgsVBSMilixLibrary : public QDialog
 
   private:
     class TreeFilterProxyModel;
-    friend class QgsVBSMilixLibraryLoader;
+    friend class QgsMilXLibraryLoader;
 
     static const int SymbolXmlRole;
     static const int SymbolMilitaryNameRole;
@@ -56,7 +56,7 @@ class QgsVBSMilixLibrary : public QDialog
     static const int SymbolVariablePointsRole;
 
     QgisInterface* mIface;
-    QgsVBSMilixLibraryLoader* mLoader;
+    QgsMilXLibraryLoader* mLoader;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     QStandardItemModel* mGalleryModel;
@@ -76,17 +76,17 @@ class QgsVBSMilixLibrary : public QDialog
 };
 
 
-class QgsVBSMilixLibraryLoader : public QThread
+class QgsMilXLibraryLoader : public QThread
 {
     Q_OBJECT
   public:
-    QgsVBSMilixLibraryLoader( QgsVBSMilixLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ) {}
+    QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ) {}
 
   private:
-    QgsVBSMilixLibrary* mLibrary;
+    QgsMilXLibrary* mLibrary;
 
     void run() override;
     QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
 };
 
-#endif // QGSVBSMILIXLIBRARY_H
+#endif // QGSMILXLIBRARY_H

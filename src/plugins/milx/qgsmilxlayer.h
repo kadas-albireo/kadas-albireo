@@ -1,6 +1,6 @@
 /***************************************************************************
- *  qgsvbsmilixlayer.h                                                     *
- *  -------------------                                                    *
+ *  qgsmilxlayer.h                                                         *
+ *  --------------                                                         *
  *  begin                : February 2016                                   *
  *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
  *  email                : smani@sourcepole.ch                             *
@@ -15,19 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGS_VBS_MILIX_LAYER_H
-#define QGS_VBS_MILIX_LAYER_H
+#ifndef QGSMILXLAYER_H
+#define QGSMILXLAYER_H
 
 #include "qgspluginlayer.h"
 #include "qgspluginlayerregistry.h"
-#include "Client/VBSMilixClient.hpp"
+#include "MilXClient.hpp"
 
-class VBS_EXPORT QgsVBSMilixItem
+class QGS_MILX_EXPORT QgsMilXItem
 {
   public:
     static bool validateMssString( const QString& mssString, QString &adjustedMssString, QString& messages );
 
-    ~QgsVBSMilixItem();
+    ~QgsMilXItem();
     void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool queryControlPoints = false );
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
@@ -48,20 +48,18 @@ class VBS_EXPORT QgsVBSMilixItem
     QPoint mUserOffset; // In pixels
 };
 
-/** \class QgsVBSMilixLayer
-    \brief Milix layer
-*/
-class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
+
+class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
 {
     Q_OBJECT
   public:
     static QString layerTypeKey() { return "MilX_Layer"; }
 
-    QgsVBSMilixLayer( const QString& name = "MilX" );
-    ~QgsVBSMilixLayer();
-    void addItem( QgsVBSMilixItem* item ) { mItems.append( item ); }
-    QgsVBSMilixItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
-    const QList<QgsVBSMilixItem*>& items() const { return mItems; }
+    QgsMilXLayer( const QString& name = "MilX" );
+    ~QgsMilXLayer();
+    void addItem( QgsMilXItem* item ) { mItems.append( item ); }
+    QgsMilXItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
+    const QList<QgsMilXItem*>& items() const { return mItems; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
     void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
     bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
@@ -84,16 +82,16 @@ class VBS_EXPORT QgsVBSMilixLayer : public QgsPluginLayer
   private:
     class Renderer;
 
-    QList<QgsVBSMilixItem*> mItems;
+    QList<QgsMilXItem*> mItems;
     int mMargin;
 };
 
-class VBS_EXPORT QgsVBSMilixLayerType : public QgsPluginLayerType
+class QGS_MILX_EXPORT QgsMilXLayerType : public QgsPluginLayerType
 {
   public:
-    QgsVBSMilixLayerType() : QgsPluginLayerType( QgsVBSMilixLayer::layerTypeKey() ) {}
-    QgsPluginLayer* createLayer() override { return new QgsVBSMilixLayer(); }
+    QgsMilXLayerType() : QgsPluginLayerType( QgsMilXLayer::layerTypeKey() ) {}
+    QgsPluginLayer* createLayer() override { return new QgsMilXLayer(); }
     bool showLayerProperties( QgsPluginLayer* /*layer*/ ) override { return false; }
 };
 
-#endif // QGS_VBS_MILIX_LAYER_H
+#endif // QGSMILXLAYER_H

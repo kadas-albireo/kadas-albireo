@@ -1,5 +1,22 @@
-#ifndef VBSMILIXCLIENT_HPP
-#define VBSMILIXCLIENT_HPP
+/***************************************************************************
+ *  MilXClient.hpp                                                         *
+ *  --------------                                                         *
+ *  begin                : Oct 01, 2015                                    *
+ *  copyright            : (C) 2015 by Sandro Mani / Sourcepole AG         *
+ *  email                : smani@sourcepole.ch                             *
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef MILXCLIENT_HPP
+#define MILXCLIENT_HPP
 
 #include <qglobal.h>
 #include <QMap>
@@ -15,10 +32,10 @@ class QStringList;
 class QTcpSocket;
 
 
-class VBSMilixClientWorker : public QObject {
+class MilXClientWorker : public QObject {
   Q_OBJECT
 public:
-  VBSMilixClientWorker(QObject* parent = 0);
+  MilXClientWorker(QObject* parent = 0);
 
 public slots:
   bool initialize();
@@ -38,7 +55,7 @@ private slots:
 };
 
 
-class VBSMilixClient : public QThread
+class MilXClient : public QThread
 {
   Q_OBJECT
 public:
@@ -95,18 +112,18 @@ public:
   static bool getMilitaryName(const QString& symbolXml, QString& militaryName);
 
 private:
-  VBSMilixClientWorker mWorker;
+  MilXClientWorker mWorker;
   int mSymbolSize;
   int mLineWidth;
   int mWorkMode;
 
-  VBSMilixClient();
-  ~VBSMilixClient();
-  static VBSMilixClient* instance(){ static VBSMilixClient i; return &i; }
+  MilXClient();
+  ~MilXClient();
+  static MilXClient* instance(){ static MilXClient i; return &i; }
   static QImage renderSvg(const QByteArray& xml);
 
   bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );
   bool setSymbolOptions(int symbolSize, int lineWidth, int workMode );
 };
 
-#endif // VBSMILIXCLIENT_HPP
+#endif // MILXCLIENT_HPP
