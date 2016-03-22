@@ -72,7 +72,6 @@ class QgsMilXLibrary : public QDialog
     void setCurrentLayer( int idx );
     void setCurrentLayer( QgsMapLayer* layer );
     void addMilXLayer();
-    void manageSymbolPick( int symbolIdx );
 };
 
 

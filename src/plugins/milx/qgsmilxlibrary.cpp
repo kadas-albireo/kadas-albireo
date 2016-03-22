@@ -188,8 +188,6 @@ void QgsMilXLibrary::updateLayers()
   {
     if ( dynamic_cast<QgsMilXLayer*>( layer ) )
     {
-      QgsMilXLayer* milxLayer = static_cast<QgsMilXLayer*>( layer );
-      connect( milxLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
       mLayersCombo->addItem( layer->name(), layer->id() );
       if ( mIface->mapCanvas()->currentLayer() == layer )
       {
@@ -345,17 +343,6 @@ void QgsMilXLibrary::addMilXLayer()
     mLayersCombo->addItem( layer->name(), layer->id() );
     mLayersCombo->setCurrentIndex( mLayersCombo->count() - 1 );
   }
-}
-
-void QgsMilXLibrary::manageSymbolPick( int symbolIdx )
-{
-  QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QObject::sender() );
-  QgsMilXEditTool* tool = new QgsMilXEditTool( mIface->mapCanvas(), layer, layer->items()[symbolIdx] );
-  delete layer->takeItem( symbolIdx );
-  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
-  mIface->mapCanvas()->setMapTool( tool );
-  mIface->mapCanvas()->clearCache( layer->id() );
-  mIface->mapCanvas()->refresh();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

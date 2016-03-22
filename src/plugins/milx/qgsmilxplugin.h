@@ -20,6 +20,7 @@
 
 #include "qgisplugin.h"
 #include <QObject>
+#include <QPointer>
 
 class QAction;
 class QComboBox;
@@ -28,6 +29,7 @@ class QSlider;
 class QgsMapLayer;
 class QgsMessageBarItem;
 class QgsMilXLibrary;
+class QgsMilXEditTool;
 
 class QgsMilXPlugin: public QObject, public QgisPlugin
 {
@@ -47,6 +49,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     QSlider* mSymbolSizeSlider;
     QSlider* mLineWidthSlider;
     QComboBox* mWorkModeCombo;
+    QPointer<QgsMilXEditTool> mActiveEditTool;
 
   private slots:
     void toggleMilXLibrary();
@@ -55,6 +58,9 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     void setMilXSymbolSize( int value );
     void setMilXLineWidth( int value );
     void setMilXWorkMode( int idx );
+    void stopEditing();
+    void connectPickHandlers();
+    void manageSymbolPick( int );
 };
 
 #endif // QGS_MILX_PLUGIN_H
