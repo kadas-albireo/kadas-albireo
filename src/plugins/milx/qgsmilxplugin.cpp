@@ -110,9 +110,8 @@ void QgsMilXPlugin::unload()
 {
   mQGisIface->layerTreeView()->menuProvider()->removeLegendLayerAction( mActionApprovedLayer );
   QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsMilXLayer::layerTypeKey() );
-  delete mActionApprovedLayer;
-  mActionApprovedLayer = 0,
-                         mActionMilx = 0;
+  mActionApprovedLayer = 0;
+  mActionMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
 }
