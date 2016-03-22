@@ -138,7 +138,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   restoreFavoriteButton( mFavoriteButton3 );
   restoreFavoriteButton( mFavoriteButton4 );
 
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( checkOnTheFlyProjection( QList<QgsMapLayer*> ) ) );
+  connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
   connect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( switchToTabForTool( QgsMapTool* ) ) );
@@ -493,16 +493,16 @@ void QgsRibbonApp::on_mZoomOutButton_clicked()
   }
 }
 
-void QgsRibbonApp::checkOnTheFlyProjection( const QList<QgsMapLayer*>& newLayers )
+void QgsRibbonApp::checkOnTheFlyProjection( )
 {
   mInfoBar->popWidget( mReprojMsgItem.data() );
   QString destAuthId = mMapCanvas->mapSettings().destinationCrs().authid();
   QStringList reprojLayers;
   // Look at legend interface instead of maplayerregistry, to only check layers
   // the user can actually see
-  foreach ( QgsMapLayer* layer, legendInterface()->layers() + newLayers )
+  foreach ( QgsMapLayer* layer, mMapCanvas->layers() )
   {
-    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->crs().authid() != destAuthId )
+    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->type() != QgsMapLayer::PluginLayer && layer->crs().authid() != destAuthId )
     {
       reprojLayers.append( layer->name() );
     }
