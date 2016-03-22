@@ -92,6 +92,7 @@ QgsMilXLibrary::QgsMilXLibrary( QgisInterface* iface, QWidget *parent )
     : QDialog( parent ), mIface( iface ), mLoader( 0 )
 {
   setWindowTitle( tr( "MilX Symbol Gallery" ) );
+  resize( 480, 640 );
   QGridLayout* layout = new QGridLayout( this );
   setLayout( layout );
 
