@@ -48,7 +48,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   setCustomProperty( "labeling/fieldName", "text" );
   setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
   setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
-  setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~outline" );
+  setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~fill" );
   setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
   setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Italic", "1~~1~~regexp_substr(\"flags\",'italic=([^,]+)')~~" );
