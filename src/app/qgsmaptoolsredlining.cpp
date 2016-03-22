@@ -210,7 +210,9 @@ void QgsRedliningEditTool::selectLabel( const QgsLabelPosition &labelPos )
   mRubberBand->setOutlineColor( QColor( 0, 255, 0, 150 ) );
   mRubberBand->setOutlineWidth( 3 );
   mRubberBand->setLineStyle( Qt::DotLine );
-  emit featureSelected( mCurrentLabel.featureId );
+  QgsFeature f;
+  mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( f );
+  emit featureSelected( f );
 }
 
 void QgsRedliningEditTool::selectFeature( const QgsFeature &feature )
