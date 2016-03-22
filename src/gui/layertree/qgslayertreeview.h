@@ -17,6 +17,7 @@
 #define QGSLAYERTREEVIEW_H
 
 #include <QTreeView>
+#include "qgsmaplayer.h"
 
 class QgsLayerTreeGroup;
 class QgsLayerTreeLayer;
@@ -116,6 +117,16 @@ class GUI_EXPORT QgsLayerTreeView : public QTreeView
     QString mCurrentLayerID;
 };
 
+struct LegendLayerAction
+{
+  LegendLayerAction( QAction* a, QString m, QString i, bool all )
+      : action( a ), menu( m ), id( i ), allLayers( all ) {}
+  QAction* action;
+  QString menu;
+  QString id;
+  bool allLayers;
+  QList<QgsMapLayer*> layers;
+};
 
 /**
  * Implementation of this interface can be implemented to allow QgsLayerTreeView
@@ -131,6 +142,20 @@ class GUI_EXPORT QgsLayerTreeViewMenuProvider
 
     //! Return a newly created menu instance (or null pointer on error)
     virtual QMenu* createContextMenu() = 0;
+
+
+    void addLegendLayerAction( QAction* action, QString menu, QString id,
+                               QgsMapLayer::LayerType type, bool allLayers );
+    bool removeLegendLayerAction( QAction* action );
+    void addLegendLayerActionForLayer( QAction* action, QgsMapLayer* layer );
+    void addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer );
+    void removeLegendLayerActionsForLayer( QgsMapLayer* layer );
+    QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
+
+  protected:
+    void addCustomLayerActions( QMenu* menu, QgsMapLayer* layer );
+
+    QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > > mLegendLayerActionMap;
 };
 
 

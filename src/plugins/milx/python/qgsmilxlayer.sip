@@ -28,7 +28,7 @@ class QgsMilXLayer : public QgsPluginLayer
   public:
     static QString layerTypeKey();
 
-    QgsMilXLayer( const QString& name = "MilX" );
+    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider, const QString& name = "MilX" );
     ~QgsMilXLayer();
     void addItem( QgsMilXItem* item /Transfer/ );
     QgsMilXItem* takeItem( int idx );
@@ -50,15 +50,4 @@ class QgsMilXLayer : public QgsPluginLayer
   protected:
     bool readXml( const QDomNode& layer_node );
     bool writeXml( QDomNode & layer_node, QDomDocument & document );
-};
-
-class QgsMilXLayerType : public QgsPluginLayerType
-{
-%TypeHeaderCode
-#include <qgsmilxlayer.h>
-%End
-  public:
-    QgsMilXLayerType();
-    QgsPluginLayer* createLayer();
-    bool showLayerProperties( QgsPluginLayer* /*layer*/ );
 };

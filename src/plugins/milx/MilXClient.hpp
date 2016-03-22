@@ -69,13 +69,14 @@ public:
   };
 
   struct NPointSymbol {
-    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, bool _finalized)
-      : xml(_xml), points(_points), controlPoints(_controlPoints), finalized(_finalized) {}
+    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, bool _finalized, bool _colored)
+      : xml(_xml), points(_points), controlPoints(_controlPoints), finalized(_finalized), colored(_colored) {}
 
     QString xml;
     QList<QPoint> points;
     QList<int> controlPoints;
     bool finalized;
+    bool colored;
   };
 
   struct NPointSymbolGraphic {

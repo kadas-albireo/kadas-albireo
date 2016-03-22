@@ -17,6 +17,9 @@
 
 #include "qgsmilxplugin.h"
 #include "qgsmilxmaptools.h"
+#include "layertree/qgslayertree.h"
+#include "layertree/qgslayertreemodel.h"
+#include "layertree/qgslayertreeview.h"
 #include "qgslegendinterface.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
@@ -60,6 +63,10 @@ void QgsMilXPlugin::initGui()
   mActionLoadMilx = mQGisIface->findAction( "mActionLoadMilx" );
   connect( mActionLoadMilx, SIGNAL( triggered( ) ), this, SLOT( loadMilx( ) ) );
 
+  mActionApprovedLayer = new QAction( tr( "Approved layer" ), this );
+  mActionApprovedLayer->setCheckable( true );
+  connect( mActionApprovedLayer, SIGNAL( toggled( bool ) ), this, SLOT( setApprovedLayer( bool ) ) );
+
   QWidget* milxTab = qobject_cast<QWidget*>( mQGisIface->findObject( "mMssTab" ) );
   QTabWidget* ribbonWidget = qobject_cast<QTabWidget*>( mQGisIface->findObject( "mRibbonWidget" ) );
   if ( ribbonWidget && milxTab )
@@ -87,19 +94,25 @@ void QgsMilXPlugin::initGui()
     connect( mWorkModeCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setMilXWorkMode( int ) ) );
   }
 
-  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsMilXLayerType() );
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsMilXLayerType( mQGisIface->layerTreeView()->menuProvider() ) );
 
   mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mapCanvas() );
 
   connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( connectPickHandlers() ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( stopEditing() ) );
   connectPickHandlers();
+
+
+  mQGisIface->layerTreeView()->menuProvider()->addLegendLayerAction( mActionApprovedLayer, "", "milx_approved_layer", QgsMapLayer::PluginLayer, false );
 }
 
 void QgsMilXPlugin::unload()
 {
+  mQGisIface->layerTreeView()->menuProvider()->removeLegendLayerAction( mActionApprovedLayer );
   QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsMilXLayer::layerTypeKey() );
-  mActionMilx = 0;
+  delete mActionApprovedLayer;
+  mActionApprovedLayer = 0,
+                         mActionMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
 }
@@ -184,6 +197,15 @@ void QgsMilXPlugin::connectPickHandlers()
 void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
 {
   QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QObject::sender() );
+  if ( !layer )
+  {
+    return;
+  }
+  if ( layer->isApproved() )
+  {
+    // Approved layers are not editable
+    return;
+  }
   QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface->mapCanvas(), layer, layer->items()[symbolIdx] );
   delete layer->takeItem( symbolIdx );
   connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
@@ -191,4 +213,27 @@ void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
   mQGisIface->mapCanvas()->clearCache( layer->id() );
   mQGisIface->mapCanvas()->refresh();
   mActiveEditTool = tool;
+}
+
+void QgsMilXPlugin::setApprovedLayer( bool approved )
+{
+  QModelIndex idx = mQGisIface->layerTreeView()->currentIndex();
+  if ( !idx.isValid() )
+  {
+    return;
+  }
+
+  QgsLayerTreeNode* node = mQGisIface->layerTreeView()->layerTreeModel()->index2node( idx );
+  if ( !QgsLayerTree::isLayer( node ) )
+  {
+    return;
+  }
+  QgsMilXLayer *layer = qobject_cast<QgsMilXLayer*>( QgsLayerTree::toLayer( node )->layer() );
+
+  if ( layer )
+  {
+    layer->setApproved( approved );
+    mQGisIface->mapCanvas()->clearCache( layer->id() );
+    mQGisIface->mapCanvas()->refresh();
+  }
 }

@@ -24,6 +24,7 @@
 #include "qgsmilxio.h"
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
+#include "layertree/qgslayertreeview.h"
 #include <QDialogButtonBox>
 #include <QDomDocument>
 #include <QFileDialog>
@@ -205,7 +206,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
   for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
   {
     QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
-    QgsMilXLayer* layer = new QgsMilXLayer();
+    QgsMilXLayer* layer = new QgsMilXLayer( iface->layerTreeView()->menuProvider() );
     if ( !layer->importMilxly( milxLayerEl, fileMssVer, errorMsg, importMessages ) )
     {
       break;

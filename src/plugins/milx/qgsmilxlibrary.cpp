@@ -23,6 +23,7 @@
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
+#include "layertree/qgslayertreeview.h"
 #include <QAction>
 #include <QApplication>
 #include <QComboBox>
@@ -168,7 +169,7 @@ void QgsMilXLibrary::autocreateLayer()
 {
   if ( mLayersCombo->count() == 0 )
   {
-    QgsMilXLayer* layer = new QgsMilXLayer();
+    QgsMilXLayer* layer = new QgsMilXLayer( mIface->layerTreeView()->menuProvider() );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     mIface->mapCanvas()->setCurrentLayer( layer );
   }
@@ -248,6 +249,10 @@ void QgsMilXLibrary::itemClicked( QModelIndex index )
       if ( !layer )
       {
         mIface->messageBar()->pushMessage( tr( "No MilX Layer Selected" ), "", QgsMessageBar::WARNING, 5 );
+      }
+      else if ( layer->isApproved() )
+      {
+        mIface->messageBar()->pushMessage( tr( "Non-editable MilX Layer Selected" ), tr( "Approved layers cannot be edited." ), QgsMessageBar::WARNING, 5 );
       }
       else
       {
@@ -338,7 +343,7 @@ void QgsMilXLibrary::addMilXLayer()
   QString layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new MilX layer:" ) );
   if ( !layerName.isEmpty() )
   {
-    QgsMilXLayer* layer = new QgsMilXLayer( layerName );
+    QgsMilXLayer* layer = new QgsMilXLayer( mIface->layerTreeView()->menuProvider(), layerName );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     mLayersCombo->addItem( layer->name(), layer->id() );
     mLayersCombo->setCurrentIndex( mLayersCombo->count() - 1 );
