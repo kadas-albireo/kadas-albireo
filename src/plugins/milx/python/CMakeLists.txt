@@ -7,6 +7,8 @@ INCLUDE_DIRECTORIES(
   ${SIP_INCLUDE_DIR}
   ..
   ../../../core
+  ../../../gui
+  ../../../gui/layertree
 )
 
 IF(WIN32)

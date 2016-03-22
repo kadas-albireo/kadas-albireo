@@ -22,6 +22,8 @@
 #include "qgspluginlayerregistry.h"
 #include "MilXClient.hpp"
 
+class QgsLayerTreeViewMenuProvider;
+
 class QGS_MILX_EXPORT QgsMilXItem
 {
   public:
@@ -55,11 +57,13 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
   public:
     static QString layerTypeKey() { return "MilX_Layer"; }
 
-    QgsMilXLayer( const QString& name = "MilX" );
+    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider, const QString& name = "MilX" );
     ~QgsMilXLayer();
     void addItem( QgsMilXItem* item ) { mItems.append( item ); }
     QgsMilXItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
     const QList<QgsMilXItem*>& items() const { return mItems; }
+    void setApproved( bool approved ) { mIsApproved = approved; }
+    bool isApproved() const { return mIsApproved; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
     void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
     bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
@@ -82,16 +86,22 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
   private:
     class Renderer;
 
+    QgsLayerTreeViewMenuProvider* mMenuProvider;
     QList<QgsMilXItem*> mItems;
     int mMargin;
+    bool mIsApproved;
 };
 
 class QGS_MILX_EXPORT QgsMilXLayerType : public QgsPluginLayerType
 {
   public:
-    QgsMilXLayerType() : QgsPluginLayerType( QgsMilXLayer::layerTypeKey() ) {}
-    QgsPluginLayer* createLayer() override { return new QgsMilXLayer(); }
+    QgsMilXLayerType( QgsLayerTreeViewMenuProvider* menuProvider )
+        : QgsPluginLayerType( QgsMilXLayer::layerTypeKey() ), mMenuProvider( menuProvider ) {}
+    QgsPluginLayer* createLayer() override { return new QgsMilXLayer( mMenuProvider ); }
     bool showLayerProperties( QgsPluginLayer* /*layer*/ ) override { return false; }
+
+  private:
+    QgsLayerTreeViewMenuProvider* mMenuProvider;
 };
 
 #endif // QGSMILXLAYER_H

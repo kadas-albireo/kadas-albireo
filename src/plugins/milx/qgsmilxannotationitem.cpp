@@ -188,7 +188,7 @@ void QgsMilXAnnotationItem::_showItemEditor()
 {
   QString symbolId;
   QString symbolMilitaryName;
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, symbolId, symbolMilitaryName, result ) )
   {
@@ -223,7 +223,7 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
 
 void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::appendPoint( mMapCanvas->sceneRect().toRect(), symbol, newPoint, result ) )
   {
@@ -233,7 +233,7 @@ void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
 
 void QgsMilXAnnotationItem::movePoint( int index, const QPoint& newPos )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::movePoint( mMapCanvas->sceneRect().toRect(), symbol, index, newPos, result ) )
   {
@@ -307,7 +307,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
       {
         actionRemovePoint = menu.addAction( tr( "Remove node" ) );
         actionRemovePoint->setData( i );
-        MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
+        MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
         bool canDelete = false;
         if ( !MilXClient::canDeletePoint( symbol, i, canDelete ) || !canDelete )
         {
@@ -335,7 +335,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
   if ( clickedAction == actionAddPoint )
   {
-    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
+    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
     if ( MilXClient::insertPoint( mMapCanvas->sceneRect().toRect(), symbol, canvasPos, result ) )
     {
@@ -345,7 +345,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   else if ( clickedAction == actionRemovePoint )
   {
     int index = actionRemovePoint->data().toInt();
-    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized );
+    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
     if ( MilXClient::deletePoint( mMapCanvas->sceneRect().toRect(), symbol, index, result ) )
     {
@@ -372,7 +372,7 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
   {
     return true;
   }
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   bool hitTestResult = false;
   MilXClient::hitTest( symbol, screenPos, hitTestResult );
   return hitTestResult;
@@ -380,7 +380,7 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
 
 void QgsMilXAnnotationItem::updateSymbol( bool updatePoints )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result, updatePoints ) )
   {

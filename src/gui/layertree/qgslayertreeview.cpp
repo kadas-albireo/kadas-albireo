@@ -307,3 +307,168 @@ void QgsLayerTreeView::refreshLayerSymbology( const QString& layerId )
   if ( nodeLayer )
     layerTreeModel()->refreshLayerLegend( nodeLayer );
 }
+
+
+void QgsLayerTreeViewMenuProvider::addLegendLayerAction( QAction* action, QString menu, QString id,
+    QgsMapLayer::LayerType type, bool allLayers )
+{
+  mLegendLayerActionMap[type].append( LegendLayerAction( action, menu, id, allLayers ) );
+}
+
+bool QgsLayerTreeViewMenuProvider::removeLegendLayerAction( QAction* action )
+{
+  QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > >::iterator it;
+  for ( it = mLegendLayerActionMap.begin();
+        it != mLegendLayerActionMap.end(); ++it )
+  {
+    for ( int i = 0; i < it->count(); i++ )
+    {
+      if (( *it )[i].action == action )
+      {
+        ( *it ).removeAt( i );
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+void QgsLayerTreeViewMenuProvider::addLegendLayerActionForLayer( QAction* action, QgsMapLayer* layer )
+{
+  if ( !action || !layer )
+    return;
+
+  legendLayerActions( layer->type() );
+  if ( !mLegendLayerActionMap.contains( layer->type() ) )
+    return;
+
+  QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > >::iterator it
+  = mLegendLayerActionMap.find( layer->type() );
+  for ( int i = 0; i < it->count(); i++ )
+  {
+    if (( *it )[i].action == action )
+    {
+      ( *it )[i].layers.append( layer );
+      return;
+    }
+  }
+}
+
+void QgsLayerTreeViewMenuProvider::addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer )
+{
+  if ( id.isEmpty() || !layer )
+    return;
+
+  legendLayerActions( layer->type() );
+  if ( !mLegendLayerActionMap.contains( layer->type() ) )
+    return;
+
+  QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > >::iterator it
+  = mLegendLayerActionMap.find( layer->type() );
+  for ( int i = 0; i < it->count(); i++ )
+  {
+    if (( *it )[i].id == id )
+    {
+      ( *it )[i].layers.append( layer );
+      return;
+    }
+  }
+}
+
+void QgsLayerTreeViewMenuProvider::removeLegendLayerActionsForLayer( QgsMapLayer* layer )
+{
+  if ( ! layer || ! mLegendLayerActionMap.contains( layer->type() ) )
+    return;
+
+  QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > >::iterator it
+  = mLegendLayerActionMap.find( layer->type() );
+  for ( int i = 0; i < it->count(); i++ )
+  {
+    ( *it )[i].layers.removeAll( layer );
+  }
+}
+
+QList< LegendLayerAction > QgsLayerTreeViewMenuProvider::legendLayerActions( QgsMapLayer::LayerType type ) const
+{
+#ifdef QGISDEBUG
+  if ( mLegendLayerActionMap.contains( type ) )
+  {
+    QgsDebugMsg( QString( "legendLayerActions for layers of type %1:" ).arg( type ) );
+
+    foreach ( LegendLayerAction lyrAction, mLegendLayerActionMap[ type ] )
+    {
+      QgsDebugMsg( QString( "%1/%2 - %3 layers" ).arg( lyrAction.menu ).arg( lyrAction.action->text() ).arg( lyrAction.layers.count() ) );
+    }
+  }
+#endif
+
+  return mLegendLayerActionMap.contains( type ) ? mLegendLayerActionMap.value( type ) : QList< LegendLayerAction >();
+}
+
+void QgsLayerTreeViewMenuProvider::addCustomLayerActions( QMenu* menu, QgsMapLayer* layer )
+{
+  if ( !layer )
+    return;
+
+  // add custom layer actions - should this go at end?
+  QList< LegendLayerAction > lyrActions = legendLayerActions( layer->type() );
+
+  if ( ! lyrActions.isEmpty() )
+  {
+    menu->addSeparator();
+    QList<QMenu*> theMenus;
+    for ( int i = 0; i < lyrActions.count(); i++ )
+    {
+      if ( lyrActions[i].allLayers || lyrActions[i].layers.contains( layer ) )
+      {
+        if ( lyrActions[i].menu.isEmpty() )
+        {
+          menu->addAction( lyrActions[i].action );
+        }
+        else
+        {
+          // find or create menu for given menu name
+          // adapted from QgisApp::getPluginMenu( QString menuName )
+          QString menuName = lyrActions[i].menu;
+#ifdef Q_OS_MAC
+          // Mac doesn't have '&' keyboard shortcuts.
+          menuName.remove( QChar( '&' ) );
+#endif
+          QAction* before = 0;
+          QMenu* newMenu = 0;
+          QString dst = menuName;
+          dst.remove( QChar( '&' ) );
+          foreach ( QMenu* menu, theMenus )
+          {
+            QString src = menu->title();
+            src.remove( QChar( '&' ) );
+            int comp = dst.localeAwareCompare( src );
+            if ( comp < 0 )
+            {
+              // Add item before this one
+              before = menu->menuAction();
+              break;
+            }
+            else if ( comp == 0 )
+            {
+              // Plugin menu item already exists
+              newMenu = menu;
+              break;
+            }
+          }
+          if ( ! newMenu )
+          {
+            // It doesn't exist, so create
+            newMenu = new QMenu( menuName );
+            theMenus.append( newMenu );
+            // Where to put it? - we worked that out above...
+            menu->insertMenu( before, newMenu );
+          }
+          // QMenu* menu = getMenu( lyrActions[i].menu, &theBeforeSep, &theAfterSep, &theMenu );
+          newMenu->addAction( lyrActions[i].action );
+        }
+      }
+    }
+    menu->addSeparator();
+  }
+}

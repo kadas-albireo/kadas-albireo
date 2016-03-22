@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgscrscache.h"
+#include "layertree/qgslayertreeview.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgsmilxlayer.h"
 #include "qgslogger.h"
@@ -53,7 +54,7 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
   if ( mPoints.size() == 1 )
   {
     int symbolSize = MilXClient::getSymbolSize();
-    MilXClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true );
+    MilXClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true, true );
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
@@ -173,7 +174,7 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
-        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true ) );
+        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true, !mLayer->mIsApproved ) );
       }
       if ( symbols.isEmpty() )
       {
@@ -220,15 +221,18 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsMilXLayer::QgsMilXLayer( const QString &name )
-    : QgsPluginLayer( layerTypeKey(), name ), mMargin( 0 )
+QgsMilXLayer::QgsMilXLayer( QgsLayerTreeViewMenuProvider* menuProvider , const QString &name )
+    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( menuProvider ), mMargin( 0 ), mIsApproved( false )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
+
+  mMenuProvider->addLegendLayerActionForLayer( "milx_approved_layer", this );
 }
 
 QgsMilXLayer::~QgsMilXLayer()
 {
+  mMenuProvider->removeLegendLayerActionsForLayer( this );
   qDeleteAll( mItems );
 }
 
@@ -244,7 +248,7 @@ bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSe
     {
       points[j] += mItems[i]->userOffset();
     }
-    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true ) );
+    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true, true ) );
   }
   int selectedSymbol = -1;
   if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
@@ -297,7 +301,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( symbolSizeEl );
 
   QDomElement bwEl = doc.createElement( "DisplayBW" );
-  bwEl.appendChild( doc.createTextNode( "0" ) ); // TODO
+  bwEl.appendChild( doc.createTextNode( mIsApproved ? "1" : "0" ) );
   milxLayerEl.appendChild( bwEl );
 }
 
@@ -326,6 +330,8 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
     utmCrs.createFromProj4( QString( "+proj=utm +zone=%1 +datum=WGS84 +units=m +no_defs" ).arg( projZone ) );
     crst = QgsCoordinateTransformCache::instance()->transform( utmCrs.authid(), "EPSG:4326" );
   }
+
+  mIsApproved = milxLayerEl.firstChildElement( "DisplayBW" ).text().toInt();
 
   QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
 

@@ -45,6 +45,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     QAction* mActionMilx;
     QAction* mActionSaveMilx;
     QAction* mActionLoadMilx;
+    QAction* mActionApprovedLayer;
     QgsMilXLibrary* mMilXLibrary;
     QSlider* mSymbolSizeSlider;
     QSlider* mLineWidthSlider;
@@ -61,6 +62,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     void stopEditing();
     void connectPickHandlers();
     void manageSymbolPick( int );
+    void setApprovedLayer( bool approved );
 };
 
 #endif // QGS_MILX_PLUGIN_H

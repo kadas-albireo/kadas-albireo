@@ -37,11 +37,19 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
   }
   else if ( QgsLayerTreeNode* node = mView->layerTreeModel()->index2node( idx ) )
   {
-    menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
+    if ( QgsLayerTree::isLayer( node ) )
+    {
+      QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
+      if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RasterLayer || layer->type() == QgsMapLayer::RedliningLayer )
+      {
+        menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
+      }
+    }
     menu->addAction( QgsApplication::getThemeIcon( "/mActionRemoveLayer.svg" ), tr( "&Remove" ), mMainWidget, SLOT( removeLayer() ) );
     if ( QgsLayerTree::isLayer( node ) )
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
+      addCustomLayerActions( menu, layer );
       QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
 
