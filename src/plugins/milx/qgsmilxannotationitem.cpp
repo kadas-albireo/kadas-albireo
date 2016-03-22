@@ -298,6 +298,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   QList<QPoint> pts = screenPoints();
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
+  QAction* actionClearOffset = 0;
   if ( mIsMultiPoint )
   {
     for ( int i = 0, n = pts.size(); i < n; ++i )
@@ -319,8 +320,12 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     {
       actionAddPoint = menu.addAction( tr( "Add node" ) );
     }
-    menu.addSeparator();
   }
+  else
+  {
+    actionClearOffset = menu.addAction( tr( "Reset offset" ) );
+  }
+  menu.addSeparator();
   QAction* actionEdit = menu.addAction( "Edit symbol" );
   QAction* actionRemove = menu.addAction( "Remove symbol" );
   QAction* clickedAction = menu.exec( screenPos );
@@ -346,6 +351,10 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     {
       setGraphic( result, true );
     }
+  }
+  else if ( clickedAction == actionClearOffset )
+  {
+    setOffsetFromReferencePoint( mRenderOffset );
   }
   else if ( clickedAction == actionEdit )
   {
