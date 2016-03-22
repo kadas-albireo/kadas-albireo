@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsmilxplugin.h"
+#include "qgsmilxmaptools.h"
 #include "qgslegendinterface.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
@@ -23,6 +24,7 @@
 #include "qgsmaplayerregistry.h"
 #include "qgsmessagebaritem.h"
 #include "qgspluginlayerregistry.h"
+#include "qgsproject.h"
 #include "qgisinterface.h"
 #include "milx_plugin.h"
 #include "qgsmilxlibrary.h"
@@ -89,6 +91,9 @@ void QgsMilXPlugin::initGui()
 
   mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mapCanvas() );
 
+  connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( connectPickHandlers() ) );
+  connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( stopEditing() ) );
+  connectPickHandlers();
 }
 
 void QgsMilXPlugin::unload()
@@ -108,6 +113,7 @@ void QgsMilXPlugin::toggleMilXLibrary( )
 
 void QgsMilXPlugin::saveMilx()
 {
+  stopEditing();
   QgsMilXIO::save( mQGisIface );
 }
 
@@ -153,4 +159,36 @@ void QgsMilXPlugin::setMilXWorkMode( int idx )
     }
   }
   mQGisIface->mapCanvas()->refresh();
+}
+
+void QgsMilXPlugin::stopEditing()
+{
+  if ( !mActiveEditTool.isNull() )
+  {
+    delete mActiveEditTool.data();
+  }
+}
+
+void QgsMilXPlugin::connectPickHandlers()
+{
+  foreach ( QgsMapLayer* layer, mQGisIface->mapCanvas()->layers() )
+  {
+    QgsMilXLayer* milxLayer = qobject_cast<QgsMilXLayer*>( layer );
+    if ( milxLayer )
+    {
+      connect( milxLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
+    }
+  }
+}
+
+void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
+{
+  QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QObject::sender() );
+  QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface->mapCanvas(), layer, layer->items()[symbolIdx] );
+  delete layer->takeItem( symbolIdx );
+  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
+  mQGisIface->mapCanvas()->setMapTool( tool );
+  mQGisIface->mapCanvas()->clearCache( layer->id() );
+  mQGisIface->mapCanvas()->refresh();
+  mActiveEditTool = tool;
 }

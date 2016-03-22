@@ -125,6 +125,8 @@ QgsMilXEditTool::QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, Qgs
   mItem->fromMilxItem( item );
   mItem->setSelected( true );
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), mItem.data(), SLOT( deleteLater() ) );
+  // Ensure editing is terminated if layers change (i.e. also if the visibility of the milx layer changes)
+  connect( canvas, SIGNAL( layersChanged() ), this, SLOT( deleteLater() ) );
 }
 
 QgsMilXEditTool::~QgsMilXEditTool()
