@@ -8,7 +8,8 @@ QgsRibbonApp, QgsRibbonWindowBase QToolBar {
   background-color: #263B4E;
 }
 
-QDockWidget #mapWidgetTitleWidget {
+QDockWidget #mapWidgetTitleWidget,
+QDockWidget #globeTitleWidget {
     background: #BEDCF6;
 }
 

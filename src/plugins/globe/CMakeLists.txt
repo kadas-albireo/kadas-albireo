@@ -16,6 +16,7 @@ SET (GLOBE_PLUGIN_SRCS
     qgsglobevectorlayerproperties.cpp
     qgsglobefeatureidentify.cpp
     qgsglobefrustumhighlight.cpp
+    qgsglobewidget.cpp
 )
 
 SET (GLOBE_PLUGIN_UIS
@@ -29,6 +30,7 @@ SET (GLOBE_PLUGIN_MOC_HDRS
     qgsglobeinterface.h
     qgsglobevectorlayerproperties.h
     qgsglobetilesource.h
+    qgsglobewidget.h
 )
 
 SET (GLOBE_PLUGIN_HDRS

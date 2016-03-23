@@ -37,6 +37,7 @@ class QgsGlobeAnnotation;
 class QgsGlobeLayerPropertiesFactory;
 class QgsGlobeInterface;
 class QgsGlobePluginDialog;
+class QgsGlobeWidget;
 class QgsMapLayer;
 class QgsPoint;
 class QgsRectangle;
@@ -91,8 +92,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     //! unload the plugin
     void unload() override;
 
-    //! Sync globe extent to mapCanavas
-    void syncExtent();
     //! Enable or disable frustum highlight
     void enableFrustumHighlight( bool statu );
     //! Enable or disable feature identification
@@ -122,13 +121,14 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     void run();
     void updateLayers();
     void showSettings();
+    void syncExtent();
 
   private:
     QgisInterface *mQGisIface;
 
     QAction* mActionToggleGlobe;
     osgEarth::QtGui::ViewerWidget* mViewerWidget;
-    QDockWidget* mDockWidget;
+    QgsGlobeWidget* mDockWidget;
     QgsGlobePluginDialog* mSettingsDialog;
 
     QgsGlobeInterface mGlobeInterface;
