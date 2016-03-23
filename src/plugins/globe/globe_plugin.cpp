@@ -26,6 +26,7 @@
 #include "qgsglobefrustumhighlight.h"
 #include "qgsglobetilesource.h"
 #include "qgsglobevectorlayerproperties.h"
+#include "qgsglobewidget.h"
 #include "featuresource/qgsglobefeatureoptions.h"
 
 #include <qgisinterface.h>
@@ -138,17 +139,6 @@ class HomeControlHandler : public NavigationControlHandler
     osg::observer_ptr<osgEarth::Util::EarthManipulator> _manip;
 };
 
-struct RefreshControlHandler : public NavigationControlHandler
-{
-  RefreshControlHandler( GlobePlugin* globe ) : mGlobe( globe ) { }
-  virtual void onClick( const osgGA::GUIEventAdapter& /*ea*/, osgGA::GUIActionAdapter& /*aa*/ ) override
-  {
-    mGlobe->updateLayers( );
-  }
-private:
-  GlobePlugin* mGlobe;
-};
-
 class SyncExtentControlHandler : public NavigationControlHandler
 {
   public:
@@ -156,18 +146,6 @@ class SyncExtentControlHandler : public NavigationControlHandler
     virtual void onClick( const osgGA::GUIEventAdapter& /*ea*/, osgGA::GUIActionAdapter& /*aa*/ ) override
     {
       mGlobe->syncExtent();
-    }
-  private:
-    GlobePlugin* mGlobe;
-};
-
-class OptionsControlHandler : public NavigationControlHandler
-{
-  public:
-    OptionsControlHandler( GlobePlugin* globe ) : mGlobe( globe ) { }
-    virtual void onClick( const osgGA::GUIEventAdapter& /*ea*/, osgGA::GUIActionAdapter& /*aa*/ ) override
-    {
-      mGlobe->showSettings();
     }
   private:
     GlobePlugin* mGlobe;
@@ -202,25 +180,6 @@ class RotateControlHandler : public NavigationControlHandler
     osg::observer_ptr<osgEarth::Util::EarthManipulator> _manip;
     double _dx;
     double _dy;
-};
-
-class FlyToExtentHandler : public osgGA::GUIEventHandler
-{
-  public:
-    FlyToExtentHandler( GlobePlugin* globe ) : mGlobe( globe ) { }
-
-    bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& /*aa*/ ) override
-    {
-      if ( ea.getEventType() == ea.KEYDOWN && ea.getKey() == '1' )
-      {
-        mGlobe->syncExtent();
-      }
-      return false;
-    }
-
-  private:
-    GlobePlugin* mGlobe;
-
 };
 
 // An event handler that will print out the coordinates at the clicked point
@@ -325,7 +284,6 @@ void GlobePlugin::initGui()
   mQGisIface->registerMapLayerPropertiesFactory( mLayerPropertiesFactory );
 
   connect( mActionToggleGlobe, SIGNAL( triggered( bool ) ), this, SLOT( setGlobeEnabled( bool ) ) );
-  connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
 //  connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemAdded( QgsBillBoardItem* ) ), this, SLOT( addBillboard( QgsBillBoardItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemRemoved( QgsBillBoardItem* ) ), this, SLOT( removeBillboard( QgsBillBoardItem* ) ) );
@@ -336,144 +294,148 @@ void GlobePlugin::initGui()
 
 void GlobePlugin::run()
 {
-  if ( mViewerWidget == 0 )
+  if ( mViewerWidget != 0 )
   {
-    QgsGlobeTileStatistics* tileStats = new QgsGlobeTileStatistics();
-    connect( tileStats, SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
-    QSettings settings;
+    return;
+  }
+  QgsGlobeTileStatistics* tileStats = new QgsGlobeTileStatistics();
+  connect( tileStats, SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
+  QSettings settings;
 
 //    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
 
-    mOsgViewer = new osgViewer::Viewer();
-    mOsgViewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
-    mOsgViewer->setRunFrameScheme( osgViewer::Viewer::ON_DEMAND );
-    // Set camera manipulator with default home position
-    osgEarth::Util::EarthManipulator* manip = new osgEarth::Util::EarthManipulator();
-    mOsgViewer->setCameraManipulator( manip );
-    osgEarth::Util::Viewpoint viewpoint;
-    viewpoint.focalPoint() = osgEarth::GeoPoint( osgEarth::SpatialReference::get( "wgs84" ), -90., 0., 0. );
-    viewpoint.heading() = 0.;
-    viewpoint.pitch() = -90.;
-    viewpoint.range() = 2e7;
+  mOsgViewer = new osgViewer::Viewer();
+  mOsgViewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
+  mOsgViewer->setRunFrameScheme( osgViewer::Viewer::ON_DEMAND );
+  // Set camera manipulator with default home position
+  osgEarth::Util::EarthManipulator* manip = new osgEarth::Util::EarthManipulator();
+  mOsgViewer->setCameraManipulator( manip );
+  osgEarth::Util::Viewpoint viewpoint;
+  viewpoint.focalPoint() = osgEarth::GeoPoint( osgEarth::SpatialReference::get( "wgs84" ), -90., 0., 0. );
+  viewpoint.heading() = 0.;
+  viewpoint.pitch() = -90.;
+  viewpoint.range() = 2e7;
 
-    manip->setHomeViewpoint( viewpoint, 1. );
-    manip->home( 0 );
+  manip->setHomeViewpoint( viewpoint, 1. );
+  manip->home( 0 );
 
-    setupProxy();
+  setupProxy();
 
-    // Tile stats label
-    mStatsLabel = new osgEarth::Util::Controls::LabelControl( "", 10 );
-    mStatsLabel->setPosition( 0, 0 );
-    osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer )->addControl( mStatsLabel.get() );
+  // Tile stats label
+  mStatsLabel = new osgEarth::Util::Controls::LabelControl( "", 10 );
+  mStatsLabel->setPosition( 0, 0 );
+  osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer )->addControl( mStatsLabel.get() );
 
-    if ( getenv( "GLOBE_MAPXML" ) )
+  mDockWidget = new QgsGlobeWidget( mQGisIface, mQGisIface->mainWindow() );
+  connect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
+  connect( mDockWidget, SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
+  connect( mDockWidget, SIGNAL( showSettings() ), this, SLOT( showSettings() ) );
+  connect( mDockWidget, SIGNAL( refresh() ), this, SLOT( updateLayers() ) );
+  connect( mDockWidget, SIGNAL( syncExtent() ), this, SLOT( syncExtent() ) );
+  mQGisIface->addDockWidget( Qt::RightDockWidgetArea, mDockWidget );
+
+  if ( getenv( "GLOBE_MAPXML" ) )
+  {
+    char* mapxml = getenv( "GLOBE_MAPXML" );
+    QgsDebugMsg( mapxml );
+    osg::Node* node = osgDB::readNodeFile( mapxml );
+    if ( !node )
     {
-      char* mapxml = getenv( "GLOBE_MAPXML" );
-      QgsDebugMsg( mapxml );
-      osg::Node* node = osgDB::readNodeFile( mapxml );
-      if ( !node )
-      {
-        QgsDebugMsg( "Failed to load earth file " );
-        return;
-      }
-      mMapNode = osgEarth::MapNode::findMapNode( node );
-      mRootNode = new osg::Group();
-      mRootNode->addChild( node );
+      QgsDebugMsg( "Failed to load earth file " );
+      return;
     }
-    else
-    {
-      QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
-      osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
-      cacheOptions.rootPath() = cacheDirectory.toStdString();
-
-      osgEarth::MapOptions mapOptions;
-      mapOptions.cache() = cacheOptions;
-      osgEarth::Map *map = new osgEarth::Map( /*mapOptions*/ );
-
-      // The MapNode will render the Map object in the scene graph.
-      osgEarth::MapNodeOptions mapNodeOptions;
-      mMapNode = new osgEarth::MapNode( map, mapNodeOptions );
-
-      mRootNode = new osg::Group();
-      mRootNode->addChild( mMapNode );
-
-      osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
-
-      // Add draped layer
-      osgEarth::TileSourceOptions opts;
-      opts.L2CacheSize() = 0;
-      opts.tileSize() = 128;
-      mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
-
-      osgEarth::ImageLayerOptions options( "QGIS" );
-      options.driver()->L2CacheSize() = 0;
-      options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
-      mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
-      map->addImageLayer( mQgisMapLayer );
-
-      // Add layers to the map
-      updateLayers();
-
-      // Create the frustum highlight callback
-      mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
-        mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
-    }
-
-    mRootNode->addChild( osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer ) );
-
-    mAnnotationsGroup = new osg::Group();
-    mRootNode->addChild( mAnnotationsGroup );
-    foreach ( QgsBillBoardItem* item, QgsBillBoardRegistry::instance()->items() )
-    {
-      addBillboard( item );
-    }
-    osgEarth::Annotation::AnnotationSettings::setOcclusionCullingHeightAdjustment( 50 );
-
-    mOsgViewer->setSceneData( mRootNode );
-
-    mOsgViewer->addEventHandler( new FlyToExtentHandler( this ) );
-    mOsgViewer->addEventHandler( new QueryCoordinatesHandler( this ) );
-    mOsgViewer->addEventHandler( new KeyboardControlHandler( manip ) );
-    mOsgViewer->addEventHandler( new osgViewer::StatsHandler() );
-    mOsgViewer->addEventHandler( new osgViewer::WindowSizeHandler() );
-    mOsgViewer->addEventHandler( new osgGA::StateSetManipulator( mOsgViewer->getCamera()->getOrCreateStateSet() ) );
-    mOsgViewer->getCamera()->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback( mMapNode ) );
-
-    // osgEarth benefits from pre-compilation of GL objects in the pager. In newer versions of
-    // OSG, this activates OSG's IncrementalCompileOpeartion in order to avoid frame breaks.
-    mOsgViewer->getDatabasePager()->setDoPreCompile( true );
-
-    mViewerWidget = new osgEarth::QtGui::ViewerWidget( mOsgViewer );
-    if ( settings.value( "/Plugin-Globe/anti-aliasing", true ).toBool() &&
-         settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() > 0 )
-    {
-      QGLFormat glf = QGLFormat::defaultFormat();
-      glf.setSampleBuffers( true );
-      glf.setSamples( settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() );
-      mViewerWidget->setFormat( glf );
-    }
-
-    mDockWidget = new QDockWidget( tr( "Globe" ), mQGisIface->mainWindow() );
-    mDockWidget->setWidget( mViewerWidget );
-    mDockWidget->setMinimumSize( 128, 128 );
-    mDockWidget->setAttribute( Qt::WA_DeleteOnClose );
-    mViewerWidget->setParent( mDockWidget );
-    connect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
-    mQGisIface->addDockWidget( Qt::BottomDockWidgetArea, mDockWidget );
-    mFeatureQueryToolIdentifyCb = new QgsGlobeFeatureIdentifyCallback( mQGisIface->mapCanvas() );
-    mFeatureQueryTool = new osgEarth::Util::FeatureQueryTool();
-    mFeatureQueryTool->addChild( mMapNode );
-    mFeatureQueryTool->setDefaultCallback( mFeatureQueryToolIdentifyCb.get() );
-
-    setupControls();
-    // FIXME: Workaround for OpenGL errors, in some manner related to the SkyNode,
-    // which appear when launching the globe a second time:
-    // Delay applySettings one event loop iteration, i.e. one update call of the GL canvas
-    QTimer* timer = new QTimer();
-    connect( timer, SIGNAL( timeout() ), timer, SLOT( deleteLater() ) );
-    connect( timer, SIGNAL( timeout() ), this, SLOT( applySettings() ) );
-    timer->start( 0 );
+    mMapNode = osgEarth::MapNode::findMapNode( node );
+    mRootNode = new osg::Group();
+    mRootNode->addChild( node );
   }
+  else
+  {
+    QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
+    osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
+    cacheOptions.rootPath() = cacheDirectory.toStdString();
+
+    osgEarth::MapOptions mapOptions;
+    mapOptions.cache() = cacheOptions;
+    osgEarth::Map *map = new osgEarth::Map( /*mapOptions*/ );
+
+    // The MapNode will render the Map object in the scene graph.
+    osgEarth::MapNodeOptions mapNodeOptions;
+    mMapNode = new osgEarth::MapNode( map, mapNodeOptions );
+
+    mRootNode = new osg::Group();
+    mRootNode->addChild( mMapNode );
+
+    osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
+
+    // Add draped layer
+    osgEarth::TileSourceOptions opts;
+    opts.L2CacheSize() = 0;
+    opts.tileSize() = 128;
+    mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
+
+    osgEarth::ImageLayerOptions options( "QGIS" );
+    options.driver()->L2CacheSize() = 0;
+    options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
+    mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+    map->addImageLayer( mQgisMapLayer );
+
+    // Add layers to the map
+    updateLayers();
+
+    // Create the frustum highlight callback
+    mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
+      mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
+  }
+
+  mRootNode->addChild( osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer ) );
+
+  mAnnotationsGroup = new osg::Group();
+  mRootNode->addChild( mAnnotationsGroup );
+  foreach ( QgsBillBoardItem* item, QgsBillBoardRegistry::instance()->items() )
+  {
+    addBillboard( item );
+  }
+  osgEarth::Annotation::AnnotationSettings::setOcclusionCullingHeightAdjustment( 50 );
+
+  mOsgViewer->setSceneData( mRootNode );
+
+  mOsgViewer->addEventHandler( new QueryCoordinatesHandler( this ) );
+  mOsgViewer->addEventHandler( new KeyboardControlHandler( manip ) );
+  mOsgViewer->addEventHandler( new osgViewer::StatsHandler() );
+  mOsgViewer->addEventHandler( new osgViewer::WindowSizeHandler() );
+  mOsgViewer->addEventHandler( new osgGA::StateSetManipulator( mOsgViewer->getCamera()->getOrCreateStateSet() ) );
+  mOsgViewer->getCamera()->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback( mMapNode ) );
+
+  // osgEarth benefits from pre-compilation of GL objects in the pager. In newer versions of
+  // OSG, this activates OSG's IncrementalCompileOpeartion in order to avoid frame breaks.
+  mOsgViewer->getDatabasePager()->setDoPreCompile( true );
+
+  mViewerWidget = new osgEarth::QtGui::ViewerWidget( mOsgViewer );
+  if ( settings.value( "/Plugin-Globe/anti-aliasing", true ).toBool() &&
+       settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() > 0 )
+  {
+    QGLFormat glf = QGLFormat::defaultFormat();
+    glf.setSampleBuffers( true );
+    glf.setSamples( settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() );
+    mViewerWidget->setFormat( glf );
+  }
+
+  mDockWidget->setWidget( mViewerWidget );
+  mViewerWidget->setParent( mDockWidget );
+
+  mFeatureQueryToolIdentifyCb = new QgsGlobeFeatureIdentifyCallback( mQGisIface->mapCanvas() );
+  mFeatureQueryTool = new osgEarth::Util::FeatureQueryTool();
+  mFeatureQueryTool->addChild( mMapNode );
+  mFeatureQueryTool->setDefaultCallback( mFeatureQueryToolIdentifyCb.get() );
+
+  setupControls();
+  // FIXME: Workaround for OpenGL errors, in some manner related to the SkyNode,
+  // which appear when launching the globe a second time:
+  // Delay applySettings one event loop iteration, i.e. one update call of the GL canvas
+  QTimer* timer = new QTimer();
+  connect( timer, SIGNAL( timeout() ), timer, SLOT( deleteLater() ) );
+  connect( timer, SIGNAL( timeout() ), this, SLOT( applySettings() ) );
+  timer->start( 0 );
 }
 
 void GlobePlugin::showSettings()
@@ -750,17 +712,6 @@ void GlobePlugin::setupControls()
   addImageControl( imgDir + "/button-background.png", imgLeft, imgTop );
   addImageControl( imgDir + "/zoom-in.png", imgLeft + 3, imgTop + 3, new ZoomControlHandler( manip, 0, -MOVE_OFFSET ) );
   addImageControl( imgDir + "/zoom-out.png", imgLeft + 3, imgTop + 28, new ZoomControlHandler( manip, 0, MOVE_OFFSET ) );
-
-  // Refresh and sync controls
-  imgTop = imgTop + 60;
-  addImageControl( imgDir + "/button-background.png", imgLeft, imgTop );
-  addImageControl( imgDir + "/refresh-view.png", imgLeft + 3, imgTop + 3, new RefreshControlHandler( this ) );
-  addImageControl( imgDir + "/sync-extent.png", imgLeft + 3, imgTop + 28, new SyncExtentControlHandler( this ) );
-
-  // Options control
-  imgTop = imgTop + 60;
-  addImageControl( imgDir + "/button-background-single.png", imgLeft, imgTop );
-  addImageControl( imgDir + "/settings.png", imgLeft + 2, imgTop + 2, new OptionsControlHandler( this ) );
 }
 
 void GlobePlugin::setupProxy()
@@ -807,7 +758,8 @@ void GlobePlugin::refreshQGISMapLayer( QgsRectangle rect )
 
 void GlobePlugin::updateTileStats( int queued, int tot )
 {
-  mStatsLabel->setText( QString( "Queued tiles: %1\nTot tiles: %2" ).arg( queued ).arg( tot ).toStdString() );
+  if ( mStatsLabel )
+    mStatsLabel->setText( QString( "Queued tiles: %1\nTot tiles: %2" ).arg( queued ).arg( tot ).toStdString() );
 }
 
 void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConfig* layerConfig )
@@ -952,8 +904,9 @@ void GlobePlugin::updateLayers()
 
     QStringList drapedLayers;
 
-    Q_FOREACH ( QgsMapLayer* mapLayer, mQGisIface->mapCanvas()->layers() )
+    Q_FOREACH ( const QString& layerId, mDockWidget->getSelectedLayers() )
     {
+      QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
       connect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
 
       QgsGlobeVectorLayerConfig* layerConfig = 0;
@@ -1080,6 +1033,7 @@ void GlobePlugin::setGlobeEnabled( bool enabled )
 
 void GlobePlugin::reset()
 {
+  mStatsLabel = 0;
   mActionToggleGlobe->blockSignals( true );
   mActionToggleGlobe->setChecked( false );
   mActionToggleGlobe->blockSignals( false );
@@ -1101,8 +1055,8 @@ void GlobePlugin::reset()
   mViewerWidget = 0;
   mDockWidget = 0;
   mAnnotationsGroup = 0;
+  disconnect( QgsGlobeTileStatistics::instance(), SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
   delete QgsGlobeTileStatistics::instance();
-  mStatsLabel = 0;
 }
 
 void GlobePlugin::unload()
