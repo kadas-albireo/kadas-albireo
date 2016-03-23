@@ -48,7 +48,7 @@ QgsLayerTreeGroup::QgsLayerTreeGroup( const QgsLayerTreeGroup& other )
     , mWMSPublishLegend( other.mWMSPublishLegend )
     , mWMSPublishMetadata( other.mWMSPublishMetadata )
     , mWMSCheckable( other.mWMSCheckable )
-    , mMutuallyExclusive( false )
+    , mMutuallyExclusive( other.mMutuallyExclusive )
     , mMutuallyExclusiveChildIndex( -1 )
 {
   connect( this, SIGNAL( visibilityChanged( QgsLayerTreeNode*, Qt::CheckState ) ), this, SLOT( nodeVisibilityChanged( QgsLayerTreeNode* ) ) );
@@ -272,6 +272,7 @@ QgsLayerTreeGroup* QgsLayerTreeGroup::readXML( QDomElement& element )
   groupNode->setWMSPublishMetadata( element.attribute( "wmsPublishMetadata", "1" ) == "1" );
   groupNode->setWMSCheckable( element.attribute( "wmsCheckable", "1" ) == "1" );
   groupNode->setIsMutuallyExclusive( isMutuallyExclusive, mutuallyExclusiveChildIndex );
+  groupNode->setVisible( checked );
   return groupNode;
 }
 
