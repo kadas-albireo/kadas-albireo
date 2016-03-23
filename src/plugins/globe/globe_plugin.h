@@ -133,7 +133,8 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
 
     QgsGlobeInterface mGlobeInterface;
     QString mBaseLayerUrl;
-    QList<QgsGlobePluginDialog::ElevationDataSource> mElevationSources;
+    QList<QgsGlobePluginDialog::LayerDataSource> mImagerySources;
+    QList<QgsGlobePluginDialog::LayerDataSource> mElevationSources;
     double mSelectedLat, mSelectedLon, mSelectedElevation;
 
     osg::ref_ptr<osgViewer::Viewer> mOsgViewer;

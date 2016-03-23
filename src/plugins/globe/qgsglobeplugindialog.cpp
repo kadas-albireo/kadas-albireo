@@ -17,14 +17,17 @@
 #include "globe_plugin.h"
 
 #include <qgsapplication.h>
+#include <qgsnetworkaccessmanager.h>
 #include <qgsproject.h>
 #include <qgslogger.h>
 
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QMenu>
 #include <QSettings>
 #include <QTimer>
 
@@ -38,12 +41,42 @@ QgsGlobePluginDialog::QgsGlobePluginDialog( QWidget* parent, Qt::WFlags fl )
 {
   setupUi( this );
 
-  comboBoxBaseLayer->addItem( "Readymap: NASA BlueMarble Imagery", "http://readymap.org/readymap/tiles/1.0.0/1/" );
-  comboBoxBaseLayer->addItem( "Readymap: NASA BlueMarble with land removed, only ocean", "http://readymap.org/readymap/tiles/1.0.0/2/" );
-  comboBoxBaseLayer->addItem( "Readymap: High resolution insets from various locations around the world Austin, TX; Kandahar, Afghanistan; Bagram, Afghanistan; Boston, MA; Washington, DC", "http://readymap.org/readymap/tiles/1.0.0/3/" );
-  comboBoxBaseLayer->addItem( "Readymap: Global Land Cover Facility 15m Landsat", "http://readymap.org/readymap/tiles/1.0.0/6/" );
-  comboBoxBaseLayer->addItem( "Readymap: NASA BlueMarble + Landsat + Ocean Masking Layer", "http://readymap.org/readymap/tiles/1.0.0/7/" );
-  comboBoxBaseLayer->addItem( tr( "[Custom]" ) );
+  QMenu* addImageryMenu = new QMenu( this );
+
+  QMenu* tmsImageryMenu = new QMenu( this );
+  tmsImageryMenu->addAction( "Readymap: NASA BlueMarble Imagery", this, SLOT( addTMSImagery() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/1/" );
+  tmsImageryMenu->addAction( "Readymap: NASA BlueMarble, ocean only", this, SLOT( addTMSImagery() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/2/" );
+  tmsImageryMenu->addAction( "Readymap: High resolution insets from various world locations", this, SLOT( addTMSImagery() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/3/" );
+  tmsImageryMenu->addAction( "Readymap: Global Land Cover Facility 15m Landsat", this, SLOT( addTMSImagery() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/6/" );
+  tmsImageryMenu->addAction( "Readymap: NASA BlueMarble + Landsat + Ocean Masking Layer", this, SLOT( addTMSImagery() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/7/" );
+  tmsImageryMenu->addAction( tr( "Custom..." ), this, SLOT( addCustomTMSImagery() ) );
+  addImageryMenu->addAction( tr( "TMS" ) )->setMenu( tmsImageryMenu );
+
+  QMenu* wmsImageryMenu = new QMenu( this );
+  wmsImageryMenu->addAction( tr( "Custom..." ), this, SLOT( addCustomWMSImagery() ) );
+  addImageryMenu->addAction( tr( "WMS" ) )->setMenu( wmsImageryMenu );
+
+  QMenu* fileImageryMenu = new QMenu( this );
+//  fileImageryMenu->addAction("world.tif", this, SLOT(addRasterImagery()));
+  fileImageryMenu->addAction( tr( "Custom..." ), this, SLOT( addCustomRasterImagery() ) );
+  addImageryMenu->addAction( tr( "Raster" ) )->setMenu( fileImageryMenu );
+
+  mAddImageryButton->setMenu( addImageryMenu );
+
+
+  QMenu* addElevationMenu = new QMenu( this );
+
+  QMenu* tmsElevationMenu = new QMenu( this );
+  tmsElevationMenu->addAction( "Readymap: SRTM 90m Elevation Data", this, SLOT( addTMSElevation() ) )->setData( "http://readymap.org/readymap/tiles/1.0.0/9/" );
+  tmsElevationMenu->addAction( tr( "Custom..." ), this, SLOT( addCustomTMSElevation() ) );
+  addElevationMenu->addAction( tr( "TMS" ) )->setMenu( tmsElevationMenu );
+
+  QMenu* fileElevationMenu = new QMenu( this );
+  fileElevationMenu->addAction( tr( "Custom..." ), this, SLOT( addCustomRasterElevation() ) );
+  addElevationMenu->addAction( tr( "Raster" ) )->setMenu( fileElevationMenu );
+
+  mAddElevationButton->setMenu( addElevationMenu );
+
 
   comboBoxStereoMode->addItem( "OFF", -1 );
   comboBoxStereoMode->addItem( "ANAGLYPHIC", osg::DisplaySettings::ANAGLYPHIC );
@@ -51,12 +84,7 @@ QgsGlobePluginDialog::QgsGlobePluginDialog( QWidget* parent, Qt::WFlags fl )
   comboBoxStereoMode->addItem( "HORIZONTAL_SPLIT", osg::DisplaySettings::HORIZONTAL_SPLIT );
   comboBoxStereoMode->addItem( "VERTICAL_SPLIT", osg::DisplaySettings::VERTICAL_SPLIT );
 
-  elevationDatasourcesWidget->setColumnHidden( 1, true ); // Hide cache column for the moment
-
-
   lineEditAASamples->setValidator( new QIntValidator( lineEditAASamples ) );
-
-  lineEditElevationLayerPath->setText( QDir::homePath() );
 
 #if OSGEARTH_VERSION_LESS_THAN( 2, 5, 0 )
   mSpinBoxVerticalScale->setVisible( false );
@@ -72,7 +100,7 @@ void QgsGlobePluginDialog::restoreSavedSettings()
 {
   QSettings settings;
 
-  // Stereo settings
+  // Video settings
   comboBoxStereoMode->setCurrentIndex( comboBoxStereoMode->findText( settings.value( "/Plugin-Globe/stereoMode", "OFF" ).toString() ) );
   spinBoxStereoScreenDistance->setValue( settings.value( "/Plugin-Globe/spinBoxStereoScreenDistance",
                                          osg::DisplaySettings::instance()->getScreenDistance() ).toDouble() );
@@ -90,16 +118,12 @@ void QgsGlobePluginDialog::restoreSavedSettings()
       osg::DisplaySettings::instance()->getSplitStereoHorizontalEyeMapping() ).toInt() );
   comboBoxSplitStereoVerticalEyeMapping->setCurrentIndex( settings.value( "/Plugin-Globe/comboBoxSplitStereoVerticalEyeMapping",
       osg::DisplaySettings::instance()->getSplitStereoVerticalEyeMapping() ).toInt() );
-
-  // Navigation settings
-  sliderScrollSensitivity->setValue( settings.value( "/Plugin-Globe/scrollSensitivity", 20 ).toInt() );
-  checkBoxInvertScroll->setChecked( settings.value( "/Plugin-Globe/invertScrollWheel", 0 ).toInt() );
-
-  // Video settings
   groupBoxAntiAliasing->setChecked( settings.value( "/Plugin-Globe/anti-aliasing", false ).toBool() );
   lineEditAASamples->setText( settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toString() );
 
   // Advanced
+  sliderScrollSensitivity->setValue( settings.value( "/Plugin-Globe/scrollSensitivity", 20 ).toInt() );
+  checkBoxInvertScroll->setChecked( settings.value( "/Plugin-Globe/invertScrollWheel", 0 ).toInt() );
   checkBoxFrustumHighlighting->setChecked( settings.value( "/Plugin-Globe/frustum-highlighting", false ).toBool() );
   checkBoxFeatureIdentification->setChecked( settings.value( "/Plugin-Globe/feature-identification", false ).toBool() );
 }
@@ -121,7 +145,7 @@ void QgsGlobePluginDialog::apply()
 {
   QSettings settings;
 
-  // Stereo settings
+  // Video settings
   settings.setValue( "/Plugin-Globe/stereoMode", comboBoxStereoMode->currentText() );
   settings.setValue( "/Plugin-Globe/stereoScreenDistance", spinBoxStereoScreenDistance->value() );
   settings.setValue( "/Plugin-Globe/stereoScreenWidth", spinBoxStereoScreenWidth->value() );
@@ -131,16 +155,12 @@ void QgsGlobePluginDialog::apply()
   settings.setValue( "/Plugin-Globe/SplitStereoVerticalSeparation", spinBoxSplitStereoVerticalSeparation->value() );
   settings.setValue( "/Plugin-Globe/SplitStereoHorizontalEyeMapping", comboBoxSplitStereoHorizontalEyeMapping->currentIndex() );
   settings.setValue( "/Plugin-Globe/SplitStereoVerticalEyeMapping", comboBoxSplitStereoVerticalEyeMapping->currentIndex() );
-
-  // Navigation settings
-  settings.setValue( "/Plugin-Globe/scrollSensitivity", sliderScrollSensitivity->value() );
-  settings.setValue( "/Plugin-Globe/invertScrollWheel", checkBoxInvertScroll->checkState() );
-
-  // Video settings
   settings.setValue( "/Plugin-Globe/anti-aliasing", groupBoxAntiAliasing->isChecked() );
   settings.setValue( "/Plugin-Globe/anti-aliasing-level", lineEditAASamples->text() );
 
   // Advanced settings
+  settings.setValue( "/Plugin-Globe/scrollSensitivity", sliderScrollSensitivity->value() );
+  settings.setValue( "/Plugin-Globe/invertScrollWheel", checkBoxInvertScroll->checkState() );
   settings.setValue( "/Plugin-Globe/frustum-highlighting", checkBoxFrustumHighlighting->isChecked() );
   settings.setValue( "/Plugin-Globe/feature-identification", checkBoxFeatureIdentification->isChecked() );
 
@@ -178,28 +198,31 @@ void QgsGlobePluginDialog::apply()
 
 void QgsGlobePluginDialog::readProjectSettings()
 {
-  // Elevation settings
-  elevationDatasourcesWidget->setRowCount( 0 );
-  foreach ( const ElevationDataSource& ds, getElevationDataSources() )
+  // Imagery settings
+  mImageryTreeView->clear();
+  foreach ( const LayerDataSource& ds, getImageryDataSources() )
   {
-    int row = elevationDatasourcesWidget->rowCount();
-    elevationDatasourcesWidget->setRowCount( row + 1 );
-    elevationDatasourcesWidget->setItem( row, 0, new QTableWidgetItem( ds.type ) );
-    QTableWidgetItem* chkBoxItem = new QTableWidgetItem();
-    //chkBoxItem->setCheckState( ds.cache ? Qt::Checked : Qt::Unchecked );
-    elevationDatasourcesWidget->setItem( row, 1, chkBoxItem );
-    elevationDatasourcesWidget->setItem( row, 2, new QTableWidgetItem( ds.uri ) );
+    QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << ds.type << ds.uri );
+    item->setFlags( item->flags() & ~Qt::ItemIsDropEnabled );
+    mImageryTreeView->addTopLevelItem( item );
   }
+  mImageryTreeView->resizeColumnToContents( 0 );
+
+  // Elevation settings
+  mElevationTreeView->clear();
+  foreach ( const LayerDataSource& ds, getElevationDataSources() )
+  {
+    QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << ds.type << ds.uri );
+    item->setFlags( item->flags() & ~Qt::ItemIsDropEnabled );
+    mElevationTreeView->addTopLevelItem( item );
+  }
+  mElevationTreeView->resizeColumnToContents( 0 );
 
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 5, 0 )
   mSpinBoxVerticalScale->setValue( QgsProject::instance()->readDoubleEntry( "Globe-Plugin", "/verticalScale", 1 ) );
 #endif
 
   // Map settings
-  mBaseLayerGroupBox->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/baseLayerEnabled/", true ) );
-  lineEditBaseLayerURL->setText( QgsProject::instance()->readEntry( "Globe-Plugin", "/baseLayerURL/", "http://readymap.org/readymap/tiles/1.0.0/7/" ) );
-  int idx = comboBoxBaseLayer->findData( lineEditBaseLayerURL->text() );
-  comboBoxBaseLayer->setCurrentIndex( idx == -1 ? comboBoxBaseLayer->count() - 1 : idx );
   groupBoxSky->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyEnabled", true ) );
   dateTimeEditSky->setDateTime( QDateTime::fromString( QgsProject::instance()->readEntry( "Globe-Plugin", "/skyDateTime", QDateTime::currentDateTime().toString() ) ) );
   checkBoxSkyAutoAmbient->setChecked( QgsProject::instance()->readBoolEntry( "Globe-Plugin", "/skyAutoAmbient", true ) );
@@ -208,17 +231,24 @@ void QgsGlobePluginDialog::readProjectSettings()
 
 void QgsGlobePluginDialog::writeProjectSettings()
 {
+  // Imagery settings
+  QgsProject::instance()->removeEntry( "Globe-Plugin", "/imageryDatasources/" );
+  for ( int row = 0, nRows = mImageryTreeView->topLevelItemCount(); row < nRows; ++row )
+  {
+    QTreeWidgetItem* item = mImageryTreeView->topLevelItem( row );
+    QString key = QString( "/imageryDatasources/L%1" ).arg( row );
+    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/type", item->text( 0 ) );
+    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/uri", item->text( 1 ) );
+  }
+
   // Elevation settings
   QgsProject::instance()->removeEntry( "Globe-Plugin", "/elevationDatasources/" );
-  for ( int row = 0, nRows = elevationDatasourcesWidget->rowCount(); row < nRows; ++row )
+  for ( int row = 0, nRows = mElevationTreeView->topLevelItemCount(); row < nRows; ++row )
   {
-    QString type  = elevationDatasourcesWidget->item( row, 0 )->text();
-    QString uri   = elevationDatasourcesWidget->item( row, 2 )->text();
-    bool    cache = elevationDatasourcesWidget->item( row, 1 )->checkState();
+    QTreeWidgetItem* item = mElevationTreeView->topLevelItem( row );
     QString key = QString( "/elevationDatasources/L%1" ).arg( row );
-    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/type", type );
-    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/uri", uri );
-    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/cache", cache );
+    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/type", item->text( 0 ) );
+    QgsProject::instance()->writeEntry( "Globe-Plugin", key + "/uri", item->text( 1 ) );
   }
 
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 5, 0 )
@@ -226,167 +256,193 @@ void QgsGlobePluginDialog::writeProjectSettings()
 #endif
 
   // Map settings
-  QgsProject::instance()->writeEntry( "Globe-Plugin", "/baseLayerEnabled/", mBaseLayerGroupBox->isChecked() );
-  QgsProject::instance()->writeEntry( "Globe-Plugin", "/baseLayerURL/", lineEditBaseLayerURL->text() );
   QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyEnabled/", groupBoxSky->isChecked() );
   QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyDateTime/", dateTimeEditSky->dateTime().toString() );
   QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyAutoAmbient/", checkBoxSkyAutoAmbient->isChecked() );
   QgsProject::instance()->writeEntry( "Globe-Plugin", "/skyMinAmbient/", horizontalSliderMinAmbient->value() );
 }
 
-/// ELEVATION /////////////////////////////////////////////////////////////////
-
-QString QgsGlobePluginDialog::validateElevationResource( QString type, QString uri )
+bool QgsGlobePluginDialog::validateRemoteUri( const QString& uri, QString& errMsg ) const
 {
-  if ( "Raster" == type )
-  {
-    QFileInfo file( uri );
-    if ( file.isFile() && file.isReadable() )
-      return QString::null;
-    else
-      return tr( "Invalid Path: The file is either unreadable or does not exist" );
-  }
-  else
-  {
-    QNetworkAccessManager networkMgr;
-    QNetworkReply* reply = nullptr;
-    QUrl url( uri );
-    int timeout = 5000; // 5 sec
+  QUrl url( uri );
+  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
+  QNetworkReply* reply = nullptr;
 
-    while ( true )
+  while ( true )
+  {
+    QNetworkRequest req( url );
+    req.setRawHeader( "User-Agent" , "Wget/1.13.4" );
+    reply = nam->get( req );
+    QTimer timer;
+    QEventLoop loop;
+    QObject::connect( &timer, SIGNAL( timeout() ), &loop, SLOT( quit() ) );
+    QObject::connect( reply, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+    timer.setSingleShot( true );
+    timer.start( 500 );
+    loop.exec();
+    if ( reply->isRunning() )
     {
-      QNetworkRequest req( url );
-      req.setRawHeader( "User-Agent" , "Wget/1.13.4" );
-      reply = networkMgr.get( req );
-      QTimer timer;
-      QEventLoop loop;
-      QObject::connect( &timer, SIGNAL( timeout() ), &loop, SLOT( quit() ) );
-      QObject::connect( reply, SIGNAL( finished() ), &loop, SLOT( quit() ) );
-      timer.setSingleShot( true );
-      timer.start( timeout );
-      loop.exec();
-      if ( reply->isRunning() )
-      {
-        reply->close();
-        delete reply;
-        return tr( "Error contacting server: timeout" );
-      }
-
-      QUrl redirectUrl = reply->attribute( QNetworkRequest::RedirectionTargetAttribute ).toUrl();
-      if ( redirectUrl.isValid() && url != redirectUrl )
-      {
-        delete reply;
-        url = redirectUrl;
-      }
-      else
-      {
-        break;
-      }
+      // Timeout
+      reply->close();
+      delete reply;
+      errMsg = tr( "Timeout" );
+      return false;
     }
 
-    if ( reply->error() == QNetworkReply::NoError )
-      return QString::null;
-    else
-      return tr( "Error contacting server: %1" ).arg( reply->errorString() );
-  }
-}
-
-void QgsGlobePluginDialog::on_comboBoxElevationLayerType_currentIndexChanged( QString type )
-{
-  lineEditElevationLayerPath->setEnabled( true );
-  if ( "Raster" == type )
-  {
-    pushButtonElevationLayerBrowse->setEnabled( true );
-    lineEditElevationLayerPath->setText( QDir::homePath() );
-  }
-  else if ( "Worldwind" == type )
-  {
-    pushButtonElevationLayerBrowse->setEnabled( false );
-    lineEditElevationLayerPath->setText( "http://tileservice.worldwindcentral.com/getTile?bmng.topo.bathy.200401" );
-    lineEditElevationLayerPath->setEnabled( false );
-  }
-  else if ( "TMS" == type )
-  {
-    pushButtonElevationLayerBrowse->setEnabled( false );
-    lineEditElevationLayerPath->setText( "http://readymap.org/readymap/tiles/1.0.0/9/" );
-  }
-}
-
-void QgsGlobePluginDialog::on_pushButtonElevationLayerBrowse_clicked()
-{
-  //see http://www.gdal.org/formats_list.html
-  QString filter = tr( "GDAL files" ) + " (*.dem *.tif *.tiff *.jpg *.jpeg *.asc);;"
-                   + tr( "DEM files" ) + " (*.dem);;"
-                   + tr( "All files" ) + " (*.*)";
-  QString newPath = QFileDialog::getOpenFileName( this, tr( "Open raster file" ), QDir::homePath(), filter );
-  if ( ! newPath.isEmpty() )
-  {
-    lineEditElevationLayerPath->setText( newPath );
-  }
-}
-
-void QgsGlobePluginDialog::on_pushButtonElevationLayerAdd_clicked()
-{
-  QString error = validateElevationResource( comboBoxElevationLayerType->currentText(), lineEditElevationLayerPath->text() );
-  QString question = tr( "Do you want to add the datasource anyway?" );
-  if ( error.isNull() || QMessageBox::warning( this, tr( "Warning" ), error + "\n" + question, QMessageBox::Ok, QMessageBox::Cancel ) == QMessageBox::Ok )
-  {
-    int row = elevationDatasourcesWidget->rowCount();
-    //cache->setCheckState(( comboBoxElevationLayerType->currentText() == "Worldwind" ) ? Qt::Checked : Qt::Unchecked ); //worldwind_cache will be active
-    elevationDatasourcesWidget->setRowCount( row + 1 );
-    elevationDatasourcesWidget->setItem( row, 0, new QTableWidgetItem( comboBoxElevationLayerType->currentText() ) );
-    elevationDatasourcesWidget->setItem( row, 1, new QTableWidgetItem() );
-    elevationDatasourcesWidget->setItem( row, 2, new QTableWidgetItem( lineEditElevationLayerPath->text() ) );
-    elevationDatasourcesWidget->setCurrentIndex( elevationDatasourcesWidget->model()->index( row, 0 ) );
-  }
-}
-
-void QgsGlobePluginDialog::on_pushButtonElevationLayerRemove_clicked()
-{
-  elevationDatasourcesWidget->removeRow( elevationDatasourcesWidget->currentRow() );
-}
-
-void QgsGlobePluginDialog::on_pushButtonElevationLayerUp_clicked()
-{
-  moveRow( elevationDatasourcesWidget, -1 );
-}
-
-void QgsGlobePluginDialog::on_pushButtonElevationLayerDown_clicked()
-{
-  moveRow( elevationDatasourcesWidget, + 1 );
-}
-
-void QgsGlobePluginDialog::moveRow( QTableWidget* widget, int offset )
-{
-  if ( widget->currentItem() != 0 )
-  {
-    int srcRow = widget->currentItem()->row();
-    int dstRow = srcRow + offset;
-    if ( dstRow >= 0 && dstRow < widget->rowCount() )
+    QUrl redirectUrl = reply->attribute( QNetworkRequest::RedirectionTargetAttribute ).toUrl();
+    if ( redirectUrl.isValid() && url != redirectUrl )
     {
-      for ( int col = 0, nCols = widget->columnCount(); col < nCols; ++col )
-      {
-        QTableWidgetItem* srcItem = widget->takeItem( srcRow, col );
-        QTableWidgetItem* dstItem = widget->takeItem( dstRow, col );
-        widget->setItem( dstRow, col, srcItem );
-        widget->setItem( srcRow, col, dstItem );
-      }
-      widget->selectRow( dstRow );
+      delete reply;
+      url = redirectUrl;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  errMsg = reply->error() == QNetworkReply::NoError ? QString() : reply->errorString();
+  delete reply;
+  return errMsg.isEmpty();
+}
+
+/// MAP ///////////////////////////////////////////////////////////////////////
+
+void QgsGlobePluginDialog::addImagery( const QString& type, const QString& uri )
+{
+  QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << type << uri );
+  item->setFlags( item->flags() & ~Qt::ItemIsDropEnabled );
+  mImageryTreeView->addTopLevelItem( item );
+  mImageryTreeView->resizeColumnToContents( 0 );
+}
+
+void QgsGlobePluginDialog::addTMSImagery()
+{
+  addImagery( "TMS", qobject_cast<QAction*>( QObject::sender() )->data().toString() );
+}
+
+void QgsGlobePluginDialog::addCustomTMSImagery()
+{
+  QString url = QInputDialog::getText( this, tr( "Add TMS Imagery" ), tr( "TMS URL:" ) );
+  if ( !url.isEmpty() )
+  {
+    QString validationError;
+    if ( !validateRemoteUri( url, validationError ) )
+    {
+      QMessageBox::warning( this, tr( "Invalid URL" ), validationError );
+    }
+    else
+    {
+      addImagery( "TMS", url );
     }
   }
 }
 
-QList<QgsGlobePluginDialog::ElevationDataSource> QgsGlobePluginDialog::getElevationDataSources() const
+void QgsGlobePluginDialog::addCustomWMSImagery()
+{
+  QString url = QInputDialog::getText( this, tr( "Add WMS Imagery" ), tr( "URL:" ) );
+  if ( !url.isEmpty() )
+  {
+    QString validationError;
+    if ( !validateRemoteUri( url, validationError ) )
+    {
+      QMessageBox::warning( this, tr( "Invalid URL" ), validationError );
+    }
+    else
+    {
+      addImagery( "WMS", url );
+    }
+  }
+}
+
+void QgsGlobePluginDialog::addRasterImagery()
+{
+  addImagery( "Raster", qobject_cast<QAction*>( QObject::sender() )->data().toString() );
+}
+
+void QgsGlobePluginDialog::addCustomRasterImagery()
+{
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Add Raster Imagery" ) );
+  if ( !filename.isEmpty() )
+  {
+    addImagery( "Raster", filename );
+  }
+}
+
+void QgsGlobePluginDialog::addElevation( const QString& type, const QString& uri )
+{
+  QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << type << uri );
+  item->setFlags( item->flags() & ~Qt::ItemIsDropEnabled );
+  mElevationTreeView->addTopLevelItem( item );
+  mElevationTreeView->resizeColumnToContents( 0 );
+}
+
+void QgsGlobePluginDialog::addTMSElevation()
+{
+  addElevation( "TMS", qobject_cast<QAction*>( QObject::sender() )->data().toString() );
+}
+
+void QgsGlobePluginDialog::addCustomTMSElevation()
+{
+  QString url = QInputDialog::getText( this, tr( "Add TMS Elevation" ), tr( "TMS URL:" ) );
+  if ( !url.isEmpty() )
+  {
+    QString validationError;
+    if ( !validateRemoteUri( url, validationError ) )
+    {
+      QMessageBox::warning( this, tr( "Invalid URL" ), validationError );
+    }
+    else
+    {
+      addElevation( "TMS", url );
+    }
+  }
+}
+
+void QgsGlobePluginDialog::addCustomRasterElevation()
+{
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Add Raster Elevation" ) );
+  if ( !filename.isEmpty() )
+  {
+    addElevation( "Raster", filename );
+  }
+}
+
+void QgsGlobePluginDialog::on_mRemoveImageryButton_clicked()
+{
+  delete mImageryTreeView->currentItem();
+}
+
+void QgsGlobePluginDialog::on_mRemoveElevationButton_clicked()
+{
+  delete mElevationTreeView->currentItem();
+}
+
+QList<QgsGlobePluginDialog::LayerDataSource> QgsGlobePluginDialog::getImageryDataSources() const
+{
+  int keysCount = QgsProject::instance()->subkeyList( "Globe-Plugin", "/imageryDatasources/" ).count();
+  QList<LayerDataSource> datasources;
+  for ( int i = 0; i < keysCount; ++i )
+  {
+    QString key = QString( "/imageryDatasources/L%1" ).arg( i );
+    LayerDataSource datasource;
+    datasource.type  = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/type" );
+    datasource.uri   = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/uri" );
+    datasources.append( datasource );
+  }
+  return datasources;
+}
+
+QList<QgsGlobePluginDialog::LayerDataSource> QgsGlobePluginDialog::getElevationDataSources() const
 {
   int keysCount = QgsProject::instance()->subkeyList( "Globe-Plugin", "/elevationDatasources/" ).count();
-  QList<ElevationDataSource> datasources;
+  QList<LayerDataSource> datasources;
   for ( int i = 0; i < keysCount; ++i )
   {
     QString key = QString( "/elevationDatasources/L%1" ).arg( i );
-    ElevationDataSource datasource;
+    LayerDataSource datasource;
     datasource.type  = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/type" );
     datasource.uri   = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/uri" );
-//  datasource.cache = QgsProject::instance()->readBoolEntry( "Globe-Plugin", key + "/cache" );
     datasources.append( datasource );
   }
   return datasources;
@@ -395,27 +451,6 @@ QList<QgsGlobePluginDialog::ElevationDataSource> QgsGlobePluginDialog::getElevat
 double QgsGlobePluginDialog::getVerticalScale() const
 {
   return mSpinBoxVerticalScale->value();
-}
-
-/// MAP ///////////////////////////////////////////////////////////////////////
-
-void QgsGlobePluginDialog::on_comboBoxBaseLayer_currentIndexChanged( int index )
-{
-  QVariant url = comboBoxBaseLayer->itemData( index );
-  if ( url.isValid() )
-  {
-    lineEditBaseLayerURL->setEnabled( false );
-    lineEditBaseLayerURL->setText( url.toString() );
-  }
-  else
-  {
-    lineEditBaseLayerURL->setEnabled( true );
-  }
-}
-
-QString QgsGlobePluginDialog::getBaseLayerUrl() const
-{
-  return mBaseLayerGroupBox->isChecked() ? lineEditBaseLayerURL->text() : QString::null;
 }
 
 bool QgsGlobePluginDialog::getSkyEnabled() const
@@ -438,7 +473,7 @@ double QgsGlobePluginDialog::getSkyMinAmbient() const
   return QgsProject::instance()->readDoubleEntry( "Globe-Plugin", "/skyMinAmbient", 30. ) / 100.;
 }
 
-/// NAVIGATION ////////////////////////////////////////////////////////////////
+/// ADVANCED //////////////////////////////////////////////////////////////////
 
 float QgsGlobePluginDialog::getScrollSensitivity() const
 {
@@ -449,8 +484,6 @@ bool QgsGlobePluginDialog::getInvertScrollWheel() const
 {
   return checkBoxInvertScroll->checkState();
 }
-
-/// ADVANCED //////////////////////////////////////////////////////////////////
 
 bool QgsGlobePluginDialog::getFrustumHighlighting() const
 {
