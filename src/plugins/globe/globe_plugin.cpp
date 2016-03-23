@@ -83,6 +83,7 @@
 #include <osgEarthUtil/AutoClipPlaneHandler>
 #include <osgEarthDrivers/gdal/GDALOptions>
 #include <osgEarthDrivers/tms/TMSOptions>
+#include <osgEarthDrivers/wms/WMSOptions>
 
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 2, 0 )
 #include <osgEarthDrivers/cache_filesystem/FileSystemCache>
@@ -470,68 +471,6 @@ void GlobePlugin::applySettings()
     settings->bindScroll( osgEarth::Util::EarthManipulator::ACTION_ZOOM_IN, osgGA::GUIEventAdapter::SCROLL_DOWN );
   }
 
-  // Base map settings
-  QString baseLayerUrl = mSettingsDialog->getBaseLayerUrl();
-  if ( baseLayerUrl.isEmpty() || baseLayerUrl != mBaseLayerUrl )
-  {
-    mMapNode->getMap()->removeImageLayer( mBaseLayer );
-    if ( baseLayerUrl.isEmpty() )
-    {
-      mBaseLayer = 0;
-      mBaseLayerUrl = QString();
-    }
-    else
-    {
-      mBaseLayerUrl = baseLayerUrl;
-      if ( QFile( mBaseLayerUrl ).exists() )
-      {
-        osgEarth::Drivers::GDALOptions driverOptions;
-        driverOptions.url() = mBaseLayerUrl.toStdString();
-        mBaseLayer = new osgEarth::ImageLayer( "Imagery", driverOptions );
-      }
-      else
-      {
-        osgEarth::Drivers::TMSOptions driverOptions;
-        driverOptions.url() = mBaseLayerUrl.toStdString();
-        mBaseLayer = new osgEarth::ImageLayer( "Imagery", driverOptions );
-      }
-      mMapNode->getMap()->insertImageLayer( mBaseLayer, 0 );
-    }
-  }
-
-  // Sky settings
-  if ( mSettingsDialog->getSkyEnabled() )
-  {
-    // Create if not yet done
-    if ( !mSkyNode.get() )
-    {
-      mSkyNode = osgEarth::Util::SkyNode::create( mMapNode );
-      mSkyNode->attach( mOsgViewer );
-      mRootNode->addChild( mSkyNode );
-      // Insert sky between root and map
-      mSkyNode->addChild( mMapNode );
-      mRootNode->removeChild( mMapNode );
-    }
-
-    mSkyNode->setLighting( mSettingsDialog->getSkyAutoAmbience() ? osg::StateAttribute::ON : osg::StateAttribute::OFF );
-    double ambient = mSettingsDialog->getSkyMinAmbient();
-    mSkyNode->getSunLight()->setAmbient( osg::Vec4( ambient, ambient, ambient, 1 ) );
-
-    QDateTime dateTime = mSettingsDialog->getSkyDateTime();
-    mSkyNode->setDateTime( osgEarth::DateTime(
-                             dateTime.date().year(),
-                             dateTime.date().month(),
-                             dateTime.date().day(),
-                             dateTime.time().hour() + dateTime.time().minute() / 60.0 ) );
-  }
-  else if ( mSkyNode != 0 )
-  {
-    mRootNode->addChild( mMapNode );
-    mSkyNode->removeChild( mMapNode );
-    mRootNode->removeChild( mSkyNode );
-    mSkyNode = 0;
-  }
-
   // Advanced settings
   enableFrustumHighlight( mSettingsDialog->getFrustumHighlighting() );
   enableFeatureIdentification( mSettingsDialog->getFeatureIdenification() );
@@ -543,7 +482,56 @@ void GlobePlugin::applyProjectSettings()
 {
   if ( mOsgViewer && !getenv( "GLOBE_MAPXML" ) )
   {
-    QList<QgsGlobePluginDialog::ElevationDataSource> elevationDataSources = mSettingsDialog->getElevationDataSources();
+    // Imagery settings
+    QList<QgsGlobePluginDialog::LayerDataSource> imageryDataSources = mSettingsDialog->getImageryDataSources();
+    if ( imageryDataSources != mImagerySources )
+    {
+      mImagerySources = imageryDataSources;
+      QgsDebugMsg( "imageryLayersChanged: Globe Running, executing" );
+      osg::ref_ptr<osgEarth::Map> map = mMapNode->getMap();
+
+      if ( map->getNumImageLayers() > 1 )
+      {
+        mOsgViewer->getDatabasePager()->clear();
+      }
+
+      // Remove image layers
+      osgEarth::ImageLayerVector list;
+      map->getImageLayers( list );
+      for ( osgEarth::ImageLayerVector::iterator i = list.begin(); i != list.end(); ++i )
+      {
+        if ( *i != mQgisMapLayer )
+          map->removeImageLayer( *i );
+      }
+
+      // Add image layers
+      foreach ( const QgsGlobePluginDialog::LayerDataSource& datasource, mImagerySources )
+      {
+        osgEarth::ImageLayer* layer = 0;
+        if ( "Raster" == datasource.type )
+        {
+          osgEarth::Drivers::GDALOptions options;
+          options.url() = datasource.uri.toStdString();
+          layer = new osgEarth::ImageLayer( datasource.uri.toStdString(), options );
+        }
+        else if ( "TMS" == datasource.type )
+        {
+          osgEarth::Drivers::TMSOptions options;
+          options.url() = datasource.uri.toStdString();
+          layer = new osgEarth::ImageLayer( datasource.uri.toStdString(), options );
+        }
+        else if ( "WMS" == datasource.type )
+        {
+          osgEarth::Drivers::WMSOptions options;
+          options.url() = datasource.uri.toStdString();
+          layer = new osgEarth::ImageLayer( datasource.uri.toStdString(), options );
+        }
+        map->insertImageLayer( layer, 0 );
+      }
+    }
+
+    // Elevation settings
+    QList<QgsGlobePluginDialog::LayerDataSource> elevationDataSources = mSettingsDialog->getElevationDataSources();
     if ( elevationDataSources != mElevationSources )
     {
       mElevationSources = elevationDataSources;
@@ -564,7 +552,7 @@ void GlobePlugin::applyProjectSettings()
       }
 
       // Add elevation layers
-      foreach ( const QgsGlobePluginDialog::ElevationDataSource& datasource, mElevationSources )
+      foreach ( const QgsGlobePluginDialog::LayerDataSource& datasource, mElevationSources )
       {
         osgEarth::ElevationLayer* layer = 0;
         if ( "Raster" == datasource.type )
@@ -592,6 +580,39 @@ void GlobePlugin::applyProjectSettings()
       mMapNode->getTerrainEngine()->addEffect( mVerticalScale );
     }
 #endif
+
+    // Sky settings
+    if ( mSettingsDialog->getSkyEnabled() )
+    {
+      // Create if not yet done
+      if ( !mSkyNode.get() )
+      {
+        mSkyNode = osgEarth::Util::SkyNode::create( mMapNode );
+        mSkyNode->attach( mOsgViewer );
+        mRootNode->addChild( mSkyNode );
+        // Insert sky between root and map
+        mSkyNode->addChild( mMapNode );
+        mRootNode->removeChild( mMapNode );
+      }
+
+      mSkyNode->setLighting( mSettingsDialog->getSkyAutoAmbience() ? osg::StateAttribute::ON : osg::StateAttribute::OFF );
+      double ambient = mSettingsDialog->getSkyMinAmbient();
+      mSkyNode->getSunLight()->setAmbient( osg::Vec4( ambient, ambient, ambient, 1 ) );
+
+      QDateTime dateTime = mSettingsDialog->getSkyDateTime();
+      mSkyNode->setDateTime( osgEarth::DateTime(
+                               dateTime.date().year(),
+                               dateTime.date().month(),
+                               dateTime.date().day(),
+                               dateTime.time().hour() + dateTime.time().minute() / 60.0 ) );
+    }
+    else if ( mSkyNode != 0 )
+    {
+      mRootNode->addChild( mMapNode );
+      mSkyNode->removeChild( mMapNode );
+      mRootNode->removeChild( mSkyNode );
+      mSkyNode = 0;
+    }
   }
 }
 
@@ -751,6 +772,7 @@ void GlobePlugin::refreshQGISMapLayer( QgsRectangle rect )
         rect.combineExtentWith( &extent );
       }
     }
+    mOsgViewer->getDatabasePager()->clear();
     mTileSource->refresh( rect );
     mOsgViewer->requestRedraw();
   }

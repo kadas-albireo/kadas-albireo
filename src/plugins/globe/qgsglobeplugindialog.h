@@ -27,12 +27,12 @@ class QgsGlobePluginDialog: public QDialog, private Ui::QgsGlobePluginDialogGuiB
   public:
     QgsGlobePluginDialog( QWidget * parent = 0, Qt::WFlags fl = 0 );
 
-    struct ElevationDataSource
+    struct LayerDataSource
     {
       QString uri;
       QString type;
-      bool operator==( const ElevationDataSource& other ) { return uri == other.uri && type == other.type; }
-      bool operator!=( const ElevationDataSource& other ) { return uri != other.uri || type != other.type; }
+      bool operator==( const LayerDataSource& other ) { return uri == other.uri && type == other.type; }
+      bool operator!=( const LayerDataSource& other ) { return uri != other.uri || type != other.type; }
     };
     void readProjectSettings();
 
@@ -43,7 +43,8 @@ class QgsGlobePluginDialog: public QDialog, private Ui::QgsGlobePluginDialogGuiB
     double getSkyMinAmbient() const;
     float getScrollSensitivity() const;
     bool getInvertScrollWheel() const;
-    QList<ElevationDataSource> getElevationDataSources() const;
+    QList<LayerDataSource> getImageryDataSources() const;
+    QList<LayerDataSource> getElevationDataSources() const;
     double getVerticalScale() const;
     bool getFrustumHighlighting() const;
     bool getFeatureIdenification() const;
@@ -54,28 +55,29 @@ class QgsGlobePluginDialog: public QDialog, private Ui::QgsGlobePluginDialogGuiB
   private:
     void restoreSavedSettings();
     void writeProjectSettings();
-    QString validateElevationResource( QString type, QString uri );
-    void moveRow( QTableWidget* widget, int direction );
+    bool validateRemoteUri( const QString &uri , QString &errMsg ) const;
 
   private slots:
     void apply();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    //STEREO
     void on_comboBoxStereoMode_currentIndexChanged( int index );
     void on_pushButtonStereoResetDefaults_clicked();
 
-    //ELEVATION
-    void on_comboBoxElevationLayerType_currentIndexChanged( QString type );
-    void on_pushButtonElevationLayerBrowse_clicked();
-    void on_pushButtonElevationLayerAdd_clicked();
-    void on_pushButtonElevationLayerRemove_clicked();
-    void on_pushButtonElevationLayerUp_clicked();
-    void on_pushButtonElevationLayerDown_clicked();
+    void on_mRemoveImageryButton_clicked();
+    void on_mRemoveElevationButton_clicked();
 
-    //MAP
-    void on_comboBoxBaseLayer_currentIndexChanged( int index );
+    void addImagery( const QString &type, const QString &uri );
+    void addTMSImagery();
+    void addCustomTMSImagery();
+    void addCustomWMSImagery();
+    void addRasterImagery();
+    void addCustomRasterImagery();
+    void addElevation( const QString &type, const QString &uri );
+    void addTMSElevation();
+    void addCustomTMSElevation();
+    void addCustomRasterElevation();
 };
 
 #endif // QGSGLOBEPLUGINDIALOG_H
