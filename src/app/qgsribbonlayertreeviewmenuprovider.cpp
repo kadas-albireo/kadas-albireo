@@ -34,6 +34,7 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
   QModelIndex idx = mView->currentIndex();
   if ( !idx.isValid() )
   {
+    menu->addAction( actions->actionAddGroup( menu ) );
   }
   else if ( QgsLayerTreeNode* node = mView->layerTreeModel()->index2node( idx ) )
   {
@@ -44,6 +45,11 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
       {
         menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
       }
+    }
+    else if ( QgsLayerTree::isGroup( node ) )
+    {
+      menu->addAction( actions->actionRenameGroupOrLayer( menu ) );
+      menu->addAction( actions->actionMutuallyExclusiveGroup( menu ) );
     }
     menu->addAction( QgsApplication::getThemeIcon( "/mActionRemoveLayer.svg" ), tr( "&Remove" ), mMainWidget, SLOT( removeLayer() ) );
     if ( QgsLayerTree::isLayer( node ) )
