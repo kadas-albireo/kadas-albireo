@@ -207,7 +207,7 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
   }
   QTextStream outStream( kmlOutDevice );
   outStream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << "\n";
-  outStream << "<kml xmlns=\"http://earth.google.com/kml/2.1\">" << "\n";
+  outStream << "<kml xmlns=\"http://www.opengis.net/kml/2.2\">" << "\n";
   outStream << "<Document>" << "\n";
 
 
@@ -593,11 +593,11 @@ void QgsKMLExport::writeWMSOverlay( QTextStream& outStream, const QgsRectangle& 
 void QgsKMLExport::writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox, int drawingOrder )
 {
   outStream << "<GroundOverlay>" << "\n";
-  outStream << "<Icon><href>" << href << "</href></Icon>" << "\n";
   if ( drawingOrder >= 0 )
   {
     outStream << "<drawOrder>" << QString::number( drawingOrder ) << "</drawOrder>" << "\n";
   }
+  outStream << "<Icon><href>" << href << "</href></Icon>" << "\n";
   outStream << "<LatLonBox>" << "\n";
   writeRectangle( outStream, latLongBox );
   outStream << "</LatLonBox>" << "\n";
