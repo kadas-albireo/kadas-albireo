@@ -30,7 +30,7 @@
 
 QgsCoordinateFormat::QgsCoordinateFormat()
 {
-  mFormat = Format::Default;
+  mFormat = QgsCoordinateFormat::Default;
   mEpsg = "EPSG:4326";
   mHeightUnit = QGis::Meters;
 }
