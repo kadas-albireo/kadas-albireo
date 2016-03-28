@@ -914,6 +914,8 @@ void GlobePlugin::updateLayers()
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+      if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
+        connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
     }
     osgEarth::ModelLayerVector modelLayers;
     mMapNode->getMap()->getModelLayers( modelLayers );
@@ -922,6 +924,8 @@ void GlobePlugin::updateLayers()
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( QString::fromStdString( modelLayer->getName() ) );
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
+      if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
+        connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
     }
 
     QStringList drapedLayers;
@@ -935,6 +939,7 @@ void GlobePlugin::updateLayers()
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
       {
         layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
+        connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
       }
 
       if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
@@ -992,6 +997,21 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
     }
     else
     {
+      // Re-insert into layer set if necessary
+      if ( !mTileSource->layerSet().contains( mapLayer->id() ) )
+      {
+        QStringList layerSet;
+        foreach ( const QString& layer, mDockWidget->getSelectedLayers() )
+        {
+          if ( ! mMapNode->getMap()->getModelLayerByName( layer.toStdString() ) )
+          {
+            layerSet.append( layer );
+          }
+        }
+        mTileSource->setLayerSet( layerSet );
+        QgsRectangle extent = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() );
+        mLayerExtents.insert( mapLayer->id(), extent );
+      }
       // Remove any model layer of that layer, in case one existed
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
       QgsRectangle layerExtent = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() );
