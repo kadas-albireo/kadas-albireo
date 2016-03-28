@@ -35,7 +35,6 @@ class QgsGlobeWidget : public QDockWidget
   private:
     QgisInterface* mQgisIface;
     QMenu* mLayerSelectionMenu;
-    QStringList mInitialLayers;
 
   private slots:
     void updateLayerSelectionMenu();

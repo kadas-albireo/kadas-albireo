@@ -190,7 +190,15 @@ void QgsMapWidget::syncCanvasExtents()
 
 void QgsMapWidget::updateLayerSelectionMenu()
 {
-  QList<QgsMapLayer*> currentLayers = mMapCanvas->layers();
+  QStringList prevDisabledLayers;
+  foreach ( QAction* action, mLayerSelectionMenu->actions() )
+  {
+    if ( !action->isChecked() )
+    {
+      prevDisabledLayers.append( action->data().toString() );
+    }
+  }
+
   mLayerSelectionMenu->clear();
   // Use layerTreeRoot to get layers ordered as in the layer tree
   foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
@@ -201,7 +209,14 @@ void QgsMapWidget::updateLayerSelectionMenu()
     QAction* layerAction = new QAction( layer->name(), mLayerSelectionMenu );
     layerAction->setData( layer->id() );
     layerAction->setCheckable( true );
-    layerAction->setChecked( currentLayers.contains( layer ) || mInitialLayers.contains( layer->id() ) );
+    if ( !mInitialLayers.isEmpty() )
+    {
+      layerAction->setChecked( mInitialLayers.contains( layer->id() ) );
+    }
+    else
+    {
+      layerAction->setChecked( !prevDisabledLayers.contains( layer->id() ) );
+    }
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SLOT( updateLayerSet() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
