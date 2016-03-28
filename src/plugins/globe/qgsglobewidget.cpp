@@ -88,21 +88,22 @@ QgsGlobeWidget::QgsGlobeWidget( QgisInterface* iface, QWidget *parent )
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
 
-  // Set as initial layers all active layers which are not remote rasters
-  foreach ( const QgsMapLayer* layer, mQgisIface->mapCanvas()->layers() )
-  {
-    if ( !( layer->type() == QgsMapLayer::RasterLayer && layer->source().contains( "url=http" ) ) )
-    {
-      mInitialLayers.append( layer->id() );
-    }
-  }
-
   updateLayerSelectionMenu();
 }
 
 void QgsGlobeWidget::updateLayerSelectionMenu()
 {
-  QStringList prevLayers = getSelectedLayers();
+  QStringList prevLayers;
+  QStringList prevDisabledLayers;
+  foreach ( QAction* action, mLayerSelectionMenu->actions() )
+  {
+    prevLayers.append( action->data().toString() );
+    if ( !action->isChecked() )
+    {
+      prevDisabledLayers.append( action->data().toString() );
+    }
+  }
+
   mLayerSelectionMenu->clear();
   // Use layerTreeRoot to get layers ordered as in the layer tree
   foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
@@ -112,12 +113,15 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
       continue;
     QAction* layerAction = new QAction( layer->name(), mLayerSelectionMenu );
     layerAction->setData( layer->id() );
+    // Check if was not previously unchecked, unless it is a new layer with url=http in datasource
     layerAction->setCheckable( true );
-    layerAction->setChecked( prevLayers.contains( layer->id() ) || mInitialLayers.contains( layer->id() ) );
+    bool wasUnchecked = prevDisabledLayers.contains( layer->id() );
+    bool isNew = !prevLayers.contains( layer->id() );
+    bool isRemote = layer->source().contains( "url=http" );
+    layerAction->setChecked( !wasUnchecked && !( isNew && isRemote ) );
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SIGNAL( layersChanged() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
-  mInitialLayers.clear();
 }
 
 QStringList QgsGlobeWidget::getSelectedLayers() const
