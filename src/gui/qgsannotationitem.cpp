@@ -488,7 +488,7 @@ Qt::CursorShape QgsAnnotationItem::cursorShapeForAction( int moveAction ) const
       return Qt::ArrowCursor;
     case MoveMapPosition:
     case MoveFramePosition:
-      return Qt::SizeAllCursor;
+      return Qt::OpenHandCursor;
     case ResizeFrameUp:
     case ResizeFrameDown:
       return Qt::SizeVerCursor;

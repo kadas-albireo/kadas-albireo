@@ -37,8 +37,7 @@ QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas , bool allowItemInteraction )
     , mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
   mToolName = tr( "Pan" );
-  mPanCursor = QCursor( QBitmap::fromData( QSize( 16, 16 ), pan_bits ),  QBitmap::fromData( QSize( 16, 16 ), pan_mask_bits ), 5, 5 );
-  mCursor = mPanCursor;
+  setCursor( QCursor( Qt::ArrowCursor ) );
 }
 
 QgsMapToolPan::~QgsMapToolPan()
@@ -133,20 +132,20 @@ void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
     {
       mDragging = true;
       mCanvas->panAction( e );
+      mCanvas->setCursor( QCursor( Qt::ClosedHandCursor ) );
     }
   }
-
-  if ( selAnnotationItem )
+  else if ( selAnnotationItem )
   {
     int moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
     if ( moveAction != QgsAnnotationItem::NoAction )
-      setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
+      mCanvas->setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
     else
-      setCursor( mPanCursor );
+      mCanvas->setCursor( mCursor );
   }
   else
   {
-    setCursor( mPanCursor );
+    mCanvas->setCursor( mCursor );
   }
 }
 
@@ -171,6 +170,7 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
     {
       mCanvas->panActionEnd( e->pos() );
       mDragging = false;
+      mCanvas->setCursor( mCursor );
     }
     else if ( mAllowItemInteraction && mPickClick )
     {
@@ -186,7 +186,7 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
         annotationItem->setSelected( true );
         int moveAction = annotationItem->moveActionForPosition( e -> pos() );
         if ( moveAction != QgsAnnotationItem::NoAction )
-          setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
+          mCanvas->setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
       }
       // Otherwise pick label / feature
       else
