@@ -68,7 +68,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     typedef QgsAnnotationItem*( *AnnotationItemFactory_t )( QgsMapCanvas* );
     typedef QPair<QString, AnnotationItemFactory_t> AnnotationRegistryItem;
-    static const QList<AnnotationRegistryItem>& registeredAnnotations() { return sRegisteredAnnotations; }
+    static const QList<AnnotationRegistryItem>& registeredAnnotations() { return _registeredAnnotations(); }
 
     QgsAnnotationItem( QgsMapCanvas* mapCanvas );
     virtual ~QgsAnnotationItem();
@@ -136,12 +136,16 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
   protected:
     QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* source );
 
-    static QList< QPair<QString, AnnotationItemFactory_t> > sRegisteredAnnotations;
+    static QList< QPair<QString, AnnotationItemFactory_t> >& _registeredAnnotations()
+    {
+      static QList< QPair<QString, AnnotationItemFactory_t> > registry;
+      return registry;
+    }
 
     struct AnnotationItemRegisterer
     {
       AnnotationItemRegisterer( const QString& name, AnnotationItemFactory_t factory )
-      { sRegisteredAnnotations.append( qMakePair( name, factory ) ); }
+      { _registeredAnnotations().append( qMakePair( name, factory ) ); }
     };
 
     /**Flags specifying the features of the item*/
