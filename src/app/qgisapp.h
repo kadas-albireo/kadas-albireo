@@ -206,6 +206,7 @@ class APP_EXPORT QgisApp : public QMainWindow
         QgsMapTool *mSlope;
         QgsMapTool *mHillshade;
         QgsMapTool *mViewshed;
+        QgsMapTool *mDeleteItems;
     };
 
     //! Destructor
@@ -925,6 +926,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     void hillshade( bool active );
     //! Compute terrain viewshed
     void viewshed( bool active );
+    //! Deletes selected items
+    void deleteItems( bool active );
 
     //! Run the default feature action on the current layer
     void doFeatureAction();
