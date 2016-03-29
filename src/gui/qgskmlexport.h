@@ -31,7 +31,8 @@ class GUI_EXPORT QgsKMLExport
         @param usedLocalFiles out: files referenced in the KML document (e.g. photos). Needs to be added to the kmz*/
     int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles, QList<QgsMapLayer*>& superOverlayLayers );
 
-    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder );
+    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder,
+                               const QgsCoordinateReferenceSystem& mapCRS, double mapUnitsPerPixel );
 
     static QString convertColor( const QColor& c );
 
