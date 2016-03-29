@@ -243,6 +243,7 @@
 #include "qgsmaptoolcircularstringradius.h"
 #include "qgsmaptooldeletering.h"
 #include "qgsmaptooldeletepart.h"
+#include "qgsmaptooldeleteitems.h"
 #include "qgsmaptoolfeatureaction.h"
 #include "qgsmaptoolformannotation.h"
 #include "qgsmaptoolhtmlannotation.h"
@@ -857,6 +858,7 @@ void QgisApp::destroy()
   delete mMapTools.mSlope;
   delete mMapTools.mHillshade;
   delete mMapTools.mViewshed;
+  delete mMapTools.mDeleteItems;
 
   delete mpMaptip;
 
@@ -1212,6 +1214,7 @@ void QgisApp::createCanvasTools()
   mMapTools.mSlope = new QgsMapToolSlope( mapCanvas() );
   mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
   mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
+  mMapTools.mDeleteItems = new QgsMapToolDeleteItems( mapCanvas() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
@@ -3794,6 +3797,11 @@ void QgisApp::hillshade( bool active )
 void QgisApp::viewshed( bool active )
 {
   toggleTool( mMapTools.mViewshed, active );
+}
+
+void QgisApp::deleteItems( bool active )
+{
+  toggleTool( mMapTools.mDeleteItems, active );
 }
 
 void QgisApp::addFormAnnotation( bool active )
@@ -8023,7 +8031,7 @@ void QgisApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &erro
   }
   msg += tr( "\n\nAlways ignore these errors?" );
   *ok = QMessageBox::warning( this,
-                              tr( "%1 SSL errors occured", "number of errors").arg( errors.size() ),
+                              tr( "%1 SSL errors occured", "number of errors" ).arg( errors.size() ),
                               msg,
                               QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes;
 }
