@@ -7,6 +7,7 @@ SET (iamauth_SRCS
 
 SET (iamauth_HDRS
   iamauth_plugin.h
+  webaxwidget.h
 )
 
 SET (iamauth_MOC_HDRS
@@ -47,15 +48,16 @@ INCLUDE_DIRECTORIES(
 )
 
 IF(WIN32)
-    ADD_DEFINITIONS("\"-DVBSIAM_EXPORT=${DLLEXPORT}\"")
+    ADD_DEFINITIONS("\"-DQGS_IAM_EXPORT=${DLLEXPORT}\"")
 ELSE(WIN32)
-    ADD_DEFINITIONS("-DVBSIAM_EXPORT=")
+    ADD_DEFINITIONS("-DQGS_IAM_EXPORT=")
 ENDIF(WIN32)
 
 TARGET_LINK_LIBRARIES(iamauth
   qgis_core
   qgis_gui
   qgis_analysis
+  ${QT_QAXCONTAINER_LIBRARY}
 )
 
 ########################################################
