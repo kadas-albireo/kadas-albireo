@@ -21,6 +21,7 @@
 #include "qgscoordinatereferencesystem.h"
 #include "qgspoint.h"
 
+class QComboBox;
 class QDoubleSpinBox;
 class QGroupBox;
 class QgsMeasureHeightProfileTool;
@@ -49,6 +50,7 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
 
   private:
     class ScaleDraw;
+    enum HeightMode { HeightRelToGround, HeightRelToSeaLevel };
 
     QgsMeasureHeightProfileTool* mTool;
     QwtPlot* mPlot;
@@ -65,7 +67,9 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     QGroupBox* mLineOfSightGroupBoxgroupBox;
     QDoubleSpinBox* mObserverHeightSpinBox;
     QDoubleSpinBox* mTargetHeightSpinBox;
+    QComboBox* mHeightModeCombo;
 
+    void keyPressEvent( QKeyEvent *ev ) override;
 };
 
 #endif // QGSMEASUREHEIGHTPROFILEDIALOG_H

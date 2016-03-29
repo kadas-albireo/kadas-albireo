@@ -34,14 +34,17 @@ class APP_EXPORT QgsViewshedDialog : public QDialog
     QgsViewshedDialog( double radius, QWidget* parent = 0 );
     double getObserverHeight() const;
     double getTargetHeight() const;
+    bool getHeightRelativeToGround() const;
     DisplayMode getDisplayMode() const;
 
   signals:
     void radiusChanged( double radius );
 
   private:
+    enum HeightMode { HeightRelToGround, HeightRelToSeaLevel };
     QDoubleSpinBox* mSpinBoxObserverHeight;
     QDoubleSpinBox* mSpinBoxTargetHeight;
+    QComboBox* mComboHeightMode;
     QComboBox* mDisplayModeCombo;
 };
 

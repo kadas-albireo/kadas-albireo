@@ -28,7 +28,9 @@
 #include <gdal.h>
 #include <QApplication>
 #include <QClipboard>
+#include <QComboBox>
 #include <QDialogButtonBox>
+#include <QKeyEvent>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
@@ -116,7 +118,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   QGridLayout* layoutLOS = new QGridLayout();
   layoutLOS->setContentsMargins( 2, 2, 2, 2 );
   mLineOfSightGroupBoxgroupBox->setLayout( layoutLOS );
-  layoutLOS->addWidget( new QLabel( "Observer height:" ), 0, 0 );
+  layoutLOS->addWidget( new QLabel( tr( "Observer height:" ) ), 0, 0 );
   mObserverHeightSpinBox = new QDoubleSpinBox();
   mObserverHeightSpinBox->setRange( 0, 8000 );
   mObserverHeightSpinBox->setDecimals( 1 );
@@ -125,7 +127,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mObserverHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mObserverHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mObserverHeightSpinBox, 0, 1 );
-  layoutLOS->addWidget( new QLabel( "Target height:" ), 0, 2 );
+  layoutLOS->addWidget( new QLabel( tr( "Target height:" ) ), 0, 2 );
   mTargetHeightSpinBox = new QDoubleSpinBox();
   mTargetHeightSpinBox->setRange( 0, 8000 );
   mTargetHeightSpinBox->setDecimals( 1 );
@@ -134,6 +136,13 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mTargetHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mTargetHeightSpinBox, 0, 3 );
+  layoutLOS->addWidget( new QLabel( tr( "Heights relative to:" ) ), 0, 4 );
+  mHeightModeCombo = new QComboBox();
+  mHeightModeCombo->addItem( tr( "Ground" ), static_cast<int>( HeightRelToGround ) );
+  mHeightModeCombo->addItem( tr( "Sea level" ), static_cast<int>( HeightRelToSeaLevel ) );
+  connect( mHeightModeCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( updateLineOfSight() ) );
+  layoutLOS->addWidget( mHeightModeCombo, 0, 5 );
+
   vboxLayout->addWidget( mLineOfSightGroupBoxgroupBox );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
@@ -197,6 +206,7 @@ void QgsMeasureHeightProfileDialog::clear()
   delete mLineOfSightMarker;
   mLineOfSightMarker = 0;
   mPlot->replot();
+  mLineOfSightGroupBoxgroupBox->setEnabled( false );
 }
 
 void QgsMeasureHeightProfileDialog::finish()
@@ -365,8 +375,12 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( )
 
   QVector< QVector<QPointF> > losSampleSet;
   losSampleSet.append( QVector<QPointF>() );
+  bool heightRelToGround = static_cast<HeightMode>( mHeightModeCombo->itemData( mHeightModeCombo->currentIndex() ).toInt() ) == HeightRelToGround;
 
-  QPointF p1( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
+  double obsHeight = mObserverHeightSpinBox->value();
+  if ( heightRelToGround )
+    obsHeight += samples.front().y();
+  QPointF p1( samples.front().x(), obsHeight );
 
   double meterToDisplayUnit = QGis::fromUnitToUnitFactor( QGis::Meters, QgsCoordinateFormat::instance()->getHeightDisplayUnit() );
 
@@ -377,7 +391,12 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( )
     double earthRadius = 6370000;
     double hCorr = 0.87 * distFromObserver * distFromObserver / ( 2 * earthRadius ) * meterToDisplayUnit;
 
-    QPointF p2( samples[i].x(), samples[i].y() + mTargetHeightSpinBox->value() - hCorr );
+    double targetHeight = mTargetHeightSpinBox->value();
+    if ( heightRelToGround )
+    {
+      targetHeight += samples[i].y();
+    }
+    QPointF p2( samples[i].x(), targetHeight - hCorr );
     // X = p1.x() + d * (p2.x() - p1.x())
     // Y = p1.y() + d * (p2.y() - p1.y())
     // => d = (X - p1.x()) / (p2.x() - p1.x())
@@ -436,17 +455,22 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( )
     iColor = ( iColor + 1 ) % 2;
   }
 
+  double observerHeight = mObserverHeightSpinBox->value();
+  if ( heightRelToGround )
+  {
+    observerHeight += samples.front().y();
+  }
   mLineOfSightMarker = new QwtPlotMarker();
 #if QWT_VERSION < 0x060000
   QwtSymbol observerMarkerSymbol( QwtSymbol::LTriangle, QBrush( Qt::white ), QPen( Qt::black ), QSize( 8, 8 ) );
   mLineOfSightMarker->setSymbol( observerMarkerSymbol );
-  mLineOfSightMarker->setValue( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() );
+  mLineOfSightMarker->setValue( samples.front().x(), observerHeight );
 #else
   QwtSymbol* observerMarkerSymbol = new QwtSymbol( QwtSymbol::Pixmap );
   observerMarkerSymbol->setPixmap( QPixmap( ":/images/themes/default/observer.svg" ) );
   observerMarkerSymbol->setPinPoint( QPointF( 0, 4 ) );
   mLineOfSightMarker->setSymbol( observerMarkerSymbol );
-  mLineOfSightMarker->setValue( QPointF( samples.front().x(), samples.front().y() + mObserverHeightSpinBox->value() ) );
+  mLineOfSightMarker->setValue( QPointF( samples.front().x(), observerHeight ) );
 #endif
   mLineOfSightMarker->attach( mPlot );
 
@@ -475,4 +499,16 @@ void QgsMeasureHeightProfileDialog::addToCanvas()
   QgsImageAnnotationItem* item = new QgsImageAnnotationItem( mTool->canvas() );
   item->setImage( image );
   item->setMapPosition( mTool->canvas()->mapSettings().extent().center() );
+}
+
+void QgsMeasureHeightProfileDialog::keyPressEvent( QKeyEvent* ev )
+{
+  if ( ev->key() == Qt::Key_Enter || ev->key() == Qt::Key_Return )
+  {
+    ev->ignore();
+  }
+  else
+  {
+    QDialog::keyPressEvent( ev );
+  }
 }
