@@ -27,6 +27,7 @@
 #include "qgscoordinatesearchprovider.h"
 #include "qgslocationsearchprovider.h"
 #include "qgslocaldatasearchprovider.h"
+#include "qgspinsearchprovider.h"
 #include "qgsremotedatasearchprovider.h"
 #include "qgsworldlocationsearchprovider.h"
 #include "qgsrubberband.h"
@@ -175,6 +176,7 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   addSearchProvider( new QgsCoordinateSearchProvider( mMapCanvas ) );
   addSearchProvider( new QgsLocationSearchProvider( mMapCanvas ) );
   addSearchProvider( new QgsLocalDataSearchProvider( mMapCanvas ) );
+  addSearchProvider( new QgsPinSearchProvider( mMapCanvas ) );
   addSearchProvider( new QgsRemoteDataSearchProvider( mMapCanvas ) );
   addSearchProvider( new QgsWorldLocationSearchProvider( mMapCanvas ) );
 
@@ -392,18 +394,21 @@ void QgsSearchBox::resultSelected()
       return;
 
     QgsSearchProvider::SearchResult result = item->data( 0, sResultDataRole ).value<QgsSearchProvider::SearchResult>();
-    if ( !mPin )
+    if ( result.showPin )
     {
-      mPin = new QgsPinAnnotationItem( mMapCanvas );
-      mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
-      mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+      if ( !mPin )
+      {
+        mPin = new QgsPinAnnotationItem( mMapCanvas );
+        mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
+        mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+      }
+      mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
+      mSearchBox->blockSignals( true );
+      mSearchBox->setText( result.text );
+      mSearchBox->blockSignals( false );
+      mSearchButton->setVisible( true );
+      mClearButton->setVisible( false );
     }
-    mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
-    mSearchBox->blockSignals( true );
-    mSearchBox->setText( result.text );
-    mSearchBox->blockSignals( false );
-    mSearchButton->setVisible( true );
-    mClearButton->setVisible( false );
   }
 }
 
@@ -420,13 +425,16 @@ void QgsSearchBox::resultActivated()
     if ( result.bbox.isEmpty() )
     {
       zoomExtent = mMapCanvas->mapSettings().computeExtentForScale( result.pos, result.zoomScale, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
-      if ( !mPin )
+      if ( result.showPin )
       {
-        mPin = new QgsPinAnnotationItem( mMapCanvas );
-        mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
-        mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+        if ( !mPin )
+        {
+          mPin = new QgsPinAnnotationItem( mMapCanvas );
+          mPin->setFilePath( ":/images/themes/default/pin_blue.svg" );
+          mPin->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker );
+        }
+        mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
       }
-      mPin->setMapPosition( result.pos, QgsCRSCache::instance()->crsByAuthId( result.crs ) );
     }
     else
     {

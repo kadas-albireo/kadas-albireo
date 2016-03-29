@@ -42,6 +42,7 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
   searchResult.zoomScale = 1000;
   searchResult.category = sCategoryName;
   searchResult.categoryPrecedence = 1;
+  searchResult.showPin = true;
   bool valid = true;
 
   if ( mPatLVDD.exactMatch( searchtext ) )

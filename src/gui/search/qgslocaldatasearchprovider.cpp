@@ -157,6 +157,7 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
   result.categoryPrecedence = 10;
   result.crs = layer->crs().authid();
   result.zoomScale = 1000;
+  result.showPin = true;
   QgsGeometry* pt = feature.geometry()->pointOnSurface();
   if ( pt )
   {

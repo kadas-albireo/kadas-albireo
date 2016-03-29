@@ -25,6 +25,8 @@ class QgsCoordinateDisplayer;
 class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
 {
     Q_OBJECT
+
+    QGS_ANNOTATION_ITEM( QgsPinAnnotationItem, "PinAnnotationItem" )
   public:
 
     QgsPinAnnotationItem( QgsMapCanvas* canvas );
@@ -36,11 +38,19 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
     void showContextMenu( const QPoint& screenPos );
 
     void writeXML( QDomDocument& doc ) const override;
+    void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
+
+    const QString& getName() const { return mName; }
+    const QString& getRemarks() const { return mRemarks; }
 
   protected:
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source );
 
   private:
+    QString mName;
+    QString mRemarks;
+
+    void _showItemEditor() override;
 
   private slots:
     void copyPosition();
