@@ -568,6 +568,8 @@ IF (WIN32)
   ELSE (MSVC)
     ADD_DEFINITIONS("-UAPP_EXPORT \"-DAPP_EXPORT=${DLLEXPORT}\"")
   ENDIF (MSVC)
+ELSE(WIN32)
+  ADD_DEFINITIONS("-DAPP_EXPORT=")
 ENDIF (WIN32)
 
 # shared library used by tests - TODO: use it also for qgis executable?

@@ -587,6 +587,8 @@ IF (WIN32)
   ELSE (MSVC)
     ADD_DEFINITIONS("-UGUI_EXPORT \"-DGUI_EXPORT=${DLLEXPORT}\"")
   ENDIF (MSVC)
+ELSE(WIN32)
+    ADD_DEFINITIONS("-DGUI_EXPORT=")
 ENDIF (WIN32)
 
 # disable deprecation warnings for classes re-exporting deprecated methods
