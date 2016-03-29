@@ -8022,7 +8022,7 @@ void QgisApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &erro
   }
   msg += tr( "\n\nAlways ignore these errors?" );
   *ok = QMessageBox::warning( this,
-                              tr( "%1 SSL errors occured", "number of errors", errors.size() ),
+                              tr( "%1 SSL errors occured", "number of errors").arg( errors.size() ),
                               msg,
                               QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes;
 }
