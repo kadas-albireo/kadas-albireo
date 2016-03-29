@@ -92,9 +92,6 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     //! Previous mouse position during move
     QPointF mMouseMoveLastXY;
 
-    //! The pan cursor
-    QCursor mPanCursor;
-
     void pinchTriggered( QPinchGesture *gesture );
 
 };
