@@ -258,10 +258,10 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
 
   if ( resolution > minResolution )
   {
-    addOverlay( upperLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
-    addOverlay( lowerLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
-    addOverlay( upperRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
-    addOverlay( lowerRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
+    addOverlay( upperLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder + 1 );
+    addOverlay( lowerLeft, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder + 1 );
+    addOverlay( upperRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder + 1 );
+    addOverlay( lowerRight, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder + 1 );
   }
 }
 
