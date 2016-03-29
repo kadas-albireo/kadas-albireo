@@ -22,16 +22,23 @@
 #include "qgscrscache.h"
 #include <QApplication>
 #include <QClipboard>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QGridLayout>
 #include <QImageReader>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMenu>
+#include <QPlainTextEdit>
+
+REGISTER_QGS_ANNOTATION_ITEM( QgsPinAnnotationItem )
 
 QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas )
     : QgsSvgAnnotationItem( canvas )
 {
   setItemFlags( QgsAnnotationItem::ItemIsNotResizeable |
                 QgsAnnotationItem::ItemHasNoFrame |
-                QgsAnnotationItem::ItemHasNoMarker |
-                QgsAnnotationItem::ItemIsNotEditable );
+                QgsAnnotationItem::ItemHasNoMarker );
   QSize imageSize = QImageReader( ":/images/themes/default/pin_red.svg" ).size();
   setFilePath( ":/images/themes/default/pin_red.svg" );
   setFrameSize( imageSize );
@@ -60,9 +67,11 @@ void QgsPinAnnotationItem::updateToolTip()
   {
     posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
   }
-  QString toolTipText = QString( "%1\n%2" )
+  QString toolTipText = QString( "<b>Position:</b> %1<br /><b>Height:</b> %2<br /><b>Name:</b> %3<br /><b>Remarks:</b><br />%4" )
                         .arg( posStr )
-                        .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) );
+                        .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) )
+                        .arg( mName )
+                        .arg( mRemarks );
   setToolTip( toolTipText );
 }
 
@@ -92,12 +101,64 @@ void QgsPinAnnotationItem::writeXML( QDomDocument& doc ) const
   {
     QDomElement pinAnnotationElem = doc.createElement( "PinAnnotationItem" );
     pinAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
+    pinAnnotationElem.setAttribute( "pinName", mName );
+    QDomElement remarksElem = doc.createElement(( "PinRemarks" ) );
+    remarksElem.appendChild( doc.createTextNode( mRemarks ) );
+    pinAnnotationElem.appendChild( remarksElem );
     _writeXML( doc, pinAnnotationElem );
     documentElem.appendChild( pinAnnotationElem );
   }
 }
 
+void QgsPinAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& itemElem )
+{
+  QString filePath = QgsProject::instance()->readPath( itemElem.attribute( "file" ) );
+  setFilePath( filePath );
+  mName = itemElem.attribute( "pinName" );
+  QDomElement remarksElem = itemElem.firstChildElement( "PinRemarks" );
+  mRemarks = remarksElem.text();
+  QDomElement annotationElem = itemElem.firstChildElement( "AnnotationItem" );
+  if ( !annotationElem.isNull() )
+  {
+    _readXML( doc, annotationElem );
+  }
+  updateToolTip();
+}
+
+
 void QgsPinAnnotationItem::copyPosition()
 {
-  QApplication::clipboard()->setText( toolTip() );
+  QString posStr = QgsCoordinateFormat::instance()->getDisplayString( mGeoPos, mGeoPosCrs );
+  if ( posStr.isEmpty() )
+  {
+    posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
+  }
+  QString text = QString( "%1 %2" )
+                 .arg( posStr )
+                 .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) );
+  QApplication::clipboard()->setText( text );
+}
+
+void QgsPinAnnotationItem::_showItemEditor()
+{
+  QDialog dialog;
+  QGridLayout* layout = new QGridLayout();
+  dialog.setLayout( layout );
+  layout->addWidget( new QLabel( tr( "Name:" ) ), 0, 0, 1, 1 );
+  QLineEdit* nameEdit = new QLineEdit( mName );
+  layout->addWidget( nameEdit, 0, 1, 1, 1 );
+  layout->addWidget( new QLabel( tr( "Remarks:" ) ), 1, 0, 1, 2 );
+  QPlainTextEdit* remarksEdit = new QPlainTextEdit();
+  remarksEdit->setPlainText( mRemarks );
+  layout->addWidget( remarksEdit, 2, 0, 1, 2 );
+  QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
+  layout->addWidget( bbox, 3, 0, 1, 2 );
+  connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
+  connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
+  if ( dialog.exec() == QDialog::Accepted )
+  {
+    mName = nameEdit->text();
+    mRemarks = remarksEdit->toPlainText();
+  }
+  updateToolTip();
 }

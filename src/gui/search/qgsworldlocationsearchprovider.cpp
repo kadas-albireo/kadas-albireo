@@ -106,6 +106,7 @@ void QgsWorldLocationSearchProvider::replyFinished()
     searchResult.text = itemAttrsMap["label"].toString();
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = "EPSG:4326";
+    searchResult.showPin = true;
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

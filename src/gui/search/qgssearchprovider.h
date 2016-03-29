@@ -36,6 +36,7 @@ class GUI_EXPORT QgsSearchProvider : public QObject
       /**
        * Lower number means higher precedence.
        * 1: coordinate
+       * 2: pins
        * 10: local features
        * 11: remote features
        * 20: addresses
@@ -53,6 +54,7 @@ class GUI_EXPORT QgsSearchProvider : public QObject
       QgsRectangle bbox;
       QString crs;
       double zoomScale;
+      bool showPin;
     };
     struct SearchRegion
     {

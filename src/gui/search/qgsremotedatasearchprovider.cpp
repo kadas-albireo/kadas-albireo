@@ -174,6 +174,7 @@ void QgsRemoteDataSearchProvider::replyFinished()
     searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = "EPSG:21781";
+    searchResult.showPin = true;
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

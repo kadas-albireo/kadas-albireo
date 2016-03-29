@@ -111,6 +111,7 @@ search/qgssearchbox.cpp
 search/qgscoordinatesearchprovider.cpp
 search/qgslocationsearchprovider.cpp
 search/qgslocaldatasearchprovider.cpp
+search/qgspinsearchprovider.cpp
 search/qgsremotedatasearchprovider.cpp
 search/qgsworldlocationsearchprovider.cpp
 
@@ -371,6 +372,7 @@ SET(QGIS_GUI_MOC_HDRS
   search/qgscoordinatesearchprovider.h
   search/qgslocationsearchprovider.h
   search/qgslocaldatasearchprovider.h
+  search/qgspinsearchprovider.h
   search/qgsremotedatasearchprovider.h
   search/qgsworldlocationsearchprovider.h
 
