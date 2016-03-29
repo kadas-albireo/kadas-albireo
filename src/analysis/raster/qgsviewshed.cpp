@@ -49,7 +49,7 @@ static inline double pixelToGeoY( double gtrans[6], double px, double py )
   return gtrans[3] + px * gtrans[4] + py * gtrans[5];
 }
 
-bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, bool displayVisible, QProgressDialog *progress )
+bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, bool heightRelToTerr, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, bool displayVisible, QProgressDialog *progress )
 {
   // Open input file
   GDALDatasetH inputDataset = GDALOpen( inputFile.toLocal8Bit().data(), GA_ReadOnly );
@@ -196,7 +196,8 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
     return false;
   }
   // Offset observer elevation by position at point
-  observerHeight += heightmap[( obs[1] - rowStart ) * hmapWidth + ( obs[0] - colStart )];
+  if ( heightRelToTerr )
+    observerHeight += heightmap[( obs[1] - rowStart ) * hmapWidth + ( obs[0] - colStart )];
 
 
   // Compute viewshed
@@ -306,7 +307,10 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       horizon_slope = qMax( horizon_slope, s );
 
       double horizon_alt =  observerHeight + horizon_slope * qAbs( p[inciny] - obs[inciny] );
-      if ( pElev + targetHeight >= horizon_alt )
+      double tHeight = targetHeight;
+      if ( heightRelToTerr )
+        tHeight += pElev;
+      if ( tHeight >= horizon_alt )
       {
         viewshed[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )] = 255;
       }

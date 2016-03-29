@@ -68,7 +68,13 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   mSpinBoxTargetHeight->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
   heightDialogLayout->addWidget( mSpinBoxTargetHeight, 1, 1, 1, 1 );
 
-  heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 2, 0, 1, 1 );
+  heightDialogLayout->addWidget( new QLabel( tr( "Heights relative to:" ) ), 2, 0, 1, 1 );
+  mComboHeightMode = new QComboBox();
+  mComboHeightMode->addItem( tr( "Ground" ), static_cast<int>( HeightRelToGround ) );
+  mComboHeightMode->addItem( tr( "Sea level" ), static_cast<int>( HeightRelToSeaLevel ) );
+  heightDialogLayout->addWidget( mComboHeightMode, 2, 1, 1, 1 );
+
+  heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 3, 0, 1, 1 );
   QDoubleSpinBox* spinRadius = new QDoubleSpinBox();
   spinRadius->setRange( 1, 100000 );
   spinRadius->setDecimals( 0 );
@@ -76,18 +82,18 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   spinRadius->setSuffix( " m" );
   spinRadius->setKeyboardTracking( false );
   connect( spinRadius, SIGNAL( valueChanged( double ) ), this, SIGNAL( radiusChanged( double ) ) );
-  heightDialogLayout->addWidget( spinRadius, 2, 1, 1, 1 );
+  heightDialogLayout->addWidget( spinRadius, 3, 1, 1, 1 );
 
-  heightDialogLayout->addWidget( new QLabel( tr( "Display:" ) ), 3, 0, 1, 1 );
+  heightDialogLayout->addWidget( new QLabel( tr( "Display:" ) ), 4, 0, 1, 1 );
   mDisplayModeCombo = new QComboBox();
   mDisplayModeCombo->addItem( tr( "Visible area" ) );
   mDisplayModeCombo->addItem( tr( "Invisible area" ) );
-  heightDialogLayout->addWidget( mDisplayModeCombo, 3, 1, 1, 1 );
+  heightDialogLayout->addWidget( mDisplayModeCombo, 4, 1, 1, 1 );
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-  heightDialogLayout->addWidget( bbox, 4, 0, 1, 2 );
+  heightDialogLayout->addWidget( bbox, 5, 0, 1, 2 );
 
   setLayout( heightDialogLayout );
   setFixedSize( sizeHint() );
@@ -101,6 +107,11 @@ double QgsViewshedDialog::getObserverHeight() const
 double QgsViewshedDialog::getTargetHeight() const
 {
   return mSpinBoxTargetHeight->value();
+}
+
+bool QgsViewshedDialog::getHeightRelativeToGround() const
+{
+  return static_cast<HeightMode>( mComboHeightMode->itemData( mComboHeightMode->currentIndex() ).toInt() ) == HeightRelToGround;
 }
 
 QgsViewshedDialog::DisplayMode QgsViewshedDialog::getDisplayMode() const
@@ -172,7 +183,7 @@ void QgsMapToolViewshed::drawFinished()
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, curRadius, QGis::Meters, filterRegion, displayVisible, &p );
+  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
   if ( success )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
