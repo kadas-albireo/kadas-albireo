@@ -3147,7 +3147,8 @@ void QgisApp::kmlExport()
     int drawingOrder = 0;
     for ( ; overlayIt != superOverlayLayers.end(); ++overlayIt )
     {
-      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath(), drawingOrder );
+      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath(), drawingOrder, mapCanvas()->mapSettings().destinationCrs(),
+                                      mapCanvas()->mapSettings().mapUnitsPerPixel() );
       ++drawingOrder;
     }
 

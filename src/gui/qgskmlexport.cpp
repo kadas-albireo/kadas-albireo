@@ -148,7 +148,8 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, b
   return 0;
 }
 
-bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder )
+bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder,
+    const QgsCoordinateReferenceSystem& mapCRS, double mapUnitsPerPixel )
 {
   if ( !mapLayer )
   {
@@ -157,8 +158,28 @@ bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, 
 
   int currentTileNumber = -1; //kml files and .png tiles are named <layerid>_<currentTileNumber>.kml / png
 
-  //start with quadratic extent 256 x 256, then recursively subdivide into four equal squares for the next level (until approximate resolution is reached)
-  QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( mapLayer ) );
+  QgsCoordinateTransform ct( mapLayer->crs(), mapCRS );
+  QgsRectangle mapCRSRect = ct.transformBoundingBox( mapLayer->extent() );
+
+  //add margin
+  double extension = mapUnitsPerPixel * mapLayer->margin();
+  mapCRSRect.setXMinimum( mapCRSRect.xMinimum() - extension );
+  mapCRSRect.setYMinimum( mapCRSRect.yMinimum() - extension );
+  mapCRSRect.setXMaximum( mapCRSRect.xMaximum() + extension );
+  mapCRSRect.setYMaximum( mapCRSRect.yMaximum() + extension );
+
+  //transform back to wgs84
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform ct2( mapCRS, wgs84 );
+
+  QgsRectangle overlayStartExtent = ct2.transformBoundingBox( mapCRSRect );
+
+  //start extent needs to be a square
+  QgsPoint centerPoint = overlayStartExtent.center();
+  double midPointDist = ( overlayStartExtent.width() > overlayStartExtent.height() ) ? overlayStartExtent.width() / 2.0 : overlayStartExtent.height() / 2.0;
+  overlayStartExtent = QgsRectangle( centerPoint.x() - midPointDist, centerPoint.y() - midPointDist, centerPoint.x() + midPointDist, centerPoint.y() + midPointDist );
+
   addOverlay( overlayStartExtent, mapLayer, quaZip, filePath, currentTileNumber, drawingOrder );
   return true;
 }
