@@ -227,12 +227,14 @@ QgsMilXLayer::QgsMilXLayer( QgsLayerTreeViewMenuProvider* menuProvider , const Q
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
 
-  mMenuProvider->addLegendLayerActionForLayer( "milx_approved_layer", this );
+  if ( mMenuProvider )
+    mMenuProvider->addLegendLayerActionForLayer( "milx_approved_layer", this );
 }
 
 QgsMilXLayer::~QgsMilXLayer()
 {
-  mMenuProvider->removeLegendLayerActionsForLayer( this );
+  if ( mMenuProvider )
+    mMenuProvider->removeLegendLayerActionsForLayer( this );
   qDeleteAll( mItems );
 }
 
