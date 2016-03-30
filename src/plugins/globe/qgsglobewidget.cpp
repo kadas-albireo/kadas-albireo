@@ -105,6 +105,7 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
   }
 
   mLayerSelectionMenu->clear();
+  QString heightmap = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   // Use layerTreeRoot to get layers ordered as in the layer tree
   foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
   {
@@ -118,7 +119,8 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
     bool wasUnchecked = prevDisabledLayers.contains( layer->id() );
     bool isNew = !prevLayers.contains( layer->id() );
     bool isRemote = layer->source().contains( "url=http" );
-    layerAction->setChecked( !wasUnchecked && !( isNew && isRemote ) );
+    bool isHeightmap = layer->id() == heightmap;
+    layerAction->setChecked( !wasUnchecked && !( isNew && ( isRemote || isHeightmap ) ) );
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SIGNAL( layersChanged() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
