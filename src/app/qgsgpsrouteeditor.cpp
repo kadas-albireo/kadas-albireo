@@ -208,7 +208,7 @@ void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
 void QgsGPSRouteEditor::importGpx()
 {
   QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QString filename = QFileDialog::getOpenFileName( mApp, tr( "Import GPX" ), lastProjectDir, tr( "GPX Files (*.gpx" ) );
+  QString filename = QFileDialog::getOpenFileName( mApp, tr( "Import GPX" ), lastProjectDir, tr( "GPX Files (*.gpx)" ) );
   if ( filename.isEmpty() )
   {
     return;
