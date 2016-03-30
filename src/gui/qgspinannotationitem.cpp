@@ -67,9 +67,10 @@ void QgsPinAnnotationItem::updateToolTip()
   {
     posStr = QString( "%1 (%2)" ).arg( mGeoPos.toString() ).arg( mGeoPosCrs.authid() );
   }
-  QString toolTipText = QString( "<b>Position:</b> %1<br /><b>Height:</b> %2<br /><b>Name:</b> %3<br /><b>Remarks:</b><br />%4" )
+  QString toolTipText = QString( "<b>Position:</b> %1<br /><b>Height:</b> %2 %3<br /><b>Name:</b> %4<br /><b>Remarks:</b><br />%5" )
                         .arg( posStr )
                         .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) )
+                        .arg( QgsCoordinateFormat::instance()->getHeightDisplayUnit() == QGis::Feet ? "ft" : "m" )
                         .arg( mName )
                         .arg( mRemarks );
   setToolTip( toolTipText );
