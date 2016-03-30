@@ -13,6 +13,7 @@
  * @see QgsLayerTreeModel
  * @note added in 2.4
  */
+
 class QgsLayerTreeView : QTreeView
 {
 %TypeHeaderCode
@@ -79,6 +80,7 @@ class QgsLayerTreeView : QTreeView
     QgsMapLayer* layerForIndex( const QModelIndex& index ) const;
 };
 
+struct LegendLayerAction;
 
 /**
  * Implementation of this interface can be implemented to allow QgsLayerTreeView
@@ -94,8 +96,17 @@ class QgsLayerTreeViewMenuProvider
 %End
 
   public:
-    virtual ~QgsLayerTreeViewMenuProvider();
+        virtual ~QgsLayerTreeViewMenuProvider();
 
-    //! Return a newly created menu instance (or null pointer on error)
-    virtual QMenu* createContextMenu() = 0 /Factory/;
+        //! Return a newly created menu instance (or null pointer on error)
+        virtual QMenu* createContextMenu() = 0 /Factory/;
+
+
+        void addLegendLayerAction( QAction* action, QString menu, QString id,
+                                   QgsMapLayer::LayerType type, bool allLayers );
+        bool removeLegendLayerAction( QAction* action );
+        void addLegendLayerActionForLayer( QAction* action, QgsMapLayer* layer );
+        void addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer );
+        void removeLegendLayerActionsForLayer( QgsMapLayer* layer );
+        QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
 };
