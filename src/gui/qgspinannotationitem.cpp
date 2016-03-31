@@ -124,6 +124,8 @@ void QgsPinAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& 
     _readXML( doc, annotationElem );
   }
   updateToolTip();
+  QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
+  QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
 }
 
 
