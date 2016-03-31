@@ -31,6 +31,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea );
     ~QgsMapToolDrawShape();
+    void deactivate() override;
     void setShowNodes( bool showNodes );
     void setAllowMultipart( bool multipart ) { mMultipart = multipart; }
     void setSnapPoints( bool snapPoints ) { mSnapPoints = snapPoints; }

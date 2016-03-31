@@ -57,6 +57,12 @@ QgsMapToolDrawShape::~QgsMapToolDrawShape()
   delete mRubberBand;
 }
 
+void QgsMapToolDrawShape::deactivate()
+{
+  QgsMapTool::deactivate();
+  reset();
+}
+
 void QgsMapToolDrawShape::setShowNodes( bool showNodes )
 {
   if ( showNodes )
@@ -595,4 +601,5 @@ void QgsMapToolDrawCircularSector::clear()
   mRadii.clear();
   mStartAngles.clear();
   mStopAngles.clear();
+  mSectorStage = HaveNothing;
 }
