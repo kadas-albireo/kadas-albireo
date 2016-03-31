@@ -145,6 +145,7 @@ void QgsPinAnnotationItem::copyPosition()
 void QgsPinAnnotationItem::_showItemEditor()
 {
   QDialog dialog;
+  dialog.setWindowTitle( tr( "Pin attributes" ) );
   QGridLayout* layout = new QGridLayout();
   dialog.setLayout( layout );
   layout->addWidget( new QLabel( tr( "Name:" ) ), 0, 0, 1, 1 );
