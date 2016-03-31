@@ -376,7 +376,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionAddCameraPicture, mAddPictureButton );
 
   connect( mActionDeleteItems, SIGNAL( triggered( bool ) ), this, SLOT( deleteItems( bool ) ) );
-  setActionToButton( mActionDeleteItems, mDeleteItemsButton );
+  setActionToButton( mActionDeleteItems, mDeleteItemsButton, mMapTools.mDeleteItems );
 
   //analysis tab
 

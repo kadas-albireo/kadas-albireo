@@ -75,6 +75,8 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
 
     bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult ) override;
     void handlePick( const QVariant& pick ) override;
+    QVariantList getItems( const QgsRectangle& extent ) const override;
+    void deleteItems( const QVariantList& items ) override;
 
   signals:
     void symbolPicked( int symbolIdx );

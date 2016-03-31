@@ -266,6 +266,43 @@ void QgsMilXLayer::handlePick( const QVariant& pick )
   emit symbolPicked( pick.toInt() );
 }
 
+QVariantList QgsMilXLayer::getItems( const QgsRectangle& extent ) const
+{
+  QList<QVariant> items;
+  for ( int i = 0, n = mItems.size(); i < n; ++i )
+  {
+    bool include = true;
+    foreach ( const QgsPoint& point, mItems[i]->points() )
+    {
+      if ( !extent.contains( point ) )
+      {
+        include = false;
+        break;
+      }
+    }
+    if ( include )
+    {
+      items.append( i );
+    }
+  }
+  return items;
+}
+
+void QgsMilXLayer::deleteItems( const QVariantList &items )
+{
+  QVector<int> indices;
+  foreach ( const QVariant& item, items )
+  {
+    indices.append( item.toInt() );
+  }
+  // Sort in descending order to avoid invalidating indices
+  qSort( indices.begin(), indices.end(), qGreater<int>() );
+  foreach ( int idx, indices )
+  {
+    delete mItems.takeAt( idx );
+  }
+}
+
 void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
