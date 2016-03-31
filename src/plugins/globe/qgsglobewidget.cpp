@@ -124,6 +124,7 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SIGNAL( layersChanged() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
+  emit layersChanged();
 }
 
 QStringList QgsGlobeWidget::getSelectedLayers() const
