@@ -33,4 +33,8 @@ class QgsPluginLayer : QgsMapLayer
     virtual bool testPick(const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult );
     /** Handle a pick result. */
     virtual void handlePick(const QVariant& pick);
+    /** Get items in extent */
+    virtual QVariantList getItems(const QgsRectangle& /*extent*/) const;
+    /** Delete the specified items */
+    virtual void deleteItems(const QVariantList& /*items*/);
 };
