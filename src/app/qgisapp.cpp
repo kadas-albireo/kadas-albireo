@@ -3155,7 +3155,7 @@ void QgisApp::kmlExport()
       ++drawingOrder;
     }
 
-    messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), QgsMessageBar::INFO, 4 );
+    messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), success ? QgsMessageBar::INFO : QgsMessageBar::CRITICAL, 4 );
 
     delete quaZip;
     QApplication::restoreOverrideCursor();
