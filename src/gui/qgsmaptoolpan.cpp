@@ -98,14 +98,27 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
   else if ( e->button() == Qt::RightButton && mAllowItemInteraction )
   {
     // First, try to show menu for annotation items
+    QgsAnnotationItem* itemAtPos = canvas()->annotationItemAtPos( e->pos() );
     QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
-    if ( selItem && selItem == canvas()->annotationItemAtPos( e->pos() ) )
+    if ( itemAtPos )
     {
-      selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
+      bool isPreviouslySelected = itemAtPos == selItem;
+      if ( !isPreviouslySelected )
+      {
+        itemAtPos->setSelected( true );
+        if ( selItem )
+          selItem->setSelected( false );
+      }
+      itemAtPos->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
+      if ( !isPreviouslySelected )
+        itemAtPos->setSelected( false );
     }
     // Otherwise, request application context menu
     else
     {
+      QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
+      if ( selItem )
+        selItem->setSelected( false );
       emit contextMenuRequested( mCanvas->mapToGlobal( e->pos() ), toMapCoordinates( e->pos() ) );
     }
   }
