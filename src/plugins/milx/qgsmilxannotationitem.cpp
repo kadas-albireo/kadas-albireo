@@ -372,7 +372,17 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
   {
     return true;
   }
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
+  QList<QPoint> screenPts = screenPoints();
+  // First, check against pos/control points
+  foreach ( const QPoint& screenPt, screenPts )
+  {
+    if (( screenPos - screenPt ).manhattanLength() < 15 )
+    {
+      return true;
+    }
+  }
+  // Do the full hit test
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPts, mControlPoints, mFinalized, true );
   bool hitTestResult = false;
   MilXClient::hitTest( symbol, screenPos, hitTestResult );
   return hitTestResult;
