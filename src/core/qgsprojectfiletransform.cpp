@@ -28,6 +28,7 @@
 #include <cstdlib>
 #include "qgsproject.h"
 #include "qgsprojectproperty.h"
+#include "qgssymbollayerv2utils.h"
 
 typedef QgsProjectVersion PFV;
 
@@ -661,6 +662,13 @@ void QgsProjectFileTransform::transform2300to21500()
         continue;
       }
 
+      double outlineAlpha = 1.0;
+      if ( symbolElem.hasAttribute( "alpha" ) )
+      {
+        outlineAlpha = symbolElem.attribute( "alpha" ).toDouble();
+        symbolElem.setAttribute( "alpha", 1.0 );
+      }
+
       QDomElement outlineElem = symbolElem.firstChildElement( "layer" );
       if ( outlineElem.isNull() )
       {
@@ -669,6 +677,21 @@ void QgsProjectFileTransform::transform2300to21500()
 
       //copy child <layer> element as second layer for the outline
       QDomElement copyLineLayerElem = outlineElem.cloneNode().toElement();
+      QDomNodeList copyLinePropList = copyLineLayerElem.elementsByTagName( "prop" );
+      for ( int j = 0; j < copyLinePropList.size(); ++j )
+      {
+        QDomElement propElem = copyLinePropList.at( j ).toElement();
+        if ( propElem.attribute( "k" ) == "line_color" )
+        {
+          QColor lineColor = QgsSymbolLayerV2Utils::decodeColor( propElem.attribute( "v" ) );
+          lineColor.setAlpha( outlineAlpha );
+          propElem.setAttribute( "v", QgsSymbolLayerV2Utils::encodeColor( lineColor ) );
+          break;
+        }
+      }
+
+      //<prop k="line_color" v="0,0,0,255"/>
+
       layerElem.parentNode().insertAfter( copyLineLayerElem, layerElem );
 
       //remove line_color, line_width properties below outlineElem
