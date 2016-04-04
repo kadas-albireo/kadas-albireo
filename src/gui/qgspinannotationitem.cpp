@@ -22,6 +22,8 @@
 #include "qgscrscache.h"
 #include <QApplication>
 #include <QClipboard>
+#include <QContextMenuEvent>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
@@ -29,7 +31,61 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
-#include <QPlainTextEdit>
+#include <QMouseEvent>
+#include <QTextBrowser>
+
+
+class RemarksEdit : public QTextBrowser
+{
+  public:
+    RemarksEdit( QWidget* parent = 0 ) : QTextBrowser( parent )
+    {
+      setOpenLinks( true );
+      setOpenExternalLinks( true );
+      setReadOnly( false );
+    }
+  protected:
+    void contextMenuEvent( QContextMenuEvent *e ) override
+    {
+      QString anchor = anchorAt( e->pos() );
+      if ( !anchor.isEmpty() )
+      {
+        QMenu menu;
+        QAction* openAction = menu.addAction( tr( "Open link..." ) );
+        QAction* copyAction = menu.addAction( tr( "Copy link location" ) );
+        QAction* clickedAction = menu.exec( e->globalPos() );
+        if ( clickedAction == openAction )
+        {
+          QDesktopServices::openUrl( QUrl::fromUserInput( anchor ) );
+        }
+        else if ( clickedAction == copyAction )
+        {
+          QApplication::clipboard()->setText( anchor );
+        }
+        e->accept();
+      }
+      else
+      {
+        QTextBrowser::contextMenuEvent( e );
+      }
+    }
+    void keyPressEvent( QKeyEvent* e ) override
+    {
+      if ( e->key() == Qt::Key_Control )
+      {
+        setReadOnly( true );
+        e->accept();
+        return;
+      }
+      setReadOnly( false );
+      QTextBrowser::keyPressEvent( e );
+    }
+    void keyReleaseEvent( QKeyEvent* e ) override
+    {
+      setReadOnly( false );
+      QTextBrowser::keyReleaseEvent( e );
+    }
+};
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsPinAnnotationItem )
 
@@ -152,8 +208,8 @@ void QgsPinAnnotationItem::_showItemEditor()
   QLineEdit* nameEdit = new QLineEdit( mName );
   layout->addWidget( nameEdit, 0, 1, 1, 1 );
   layout->addWidget( new QLabel( tr( "Remarks:" ) ), 1, 0, 1, 2 );
-  QPlainTextEdit* remarksEdit = new QPlainTextEdit();
-  remarksEdit->setPlainText( mRemarks );
+  RemarksEdit* remarksEdit = new RemarksEdit();
+  remarksEdit->setHtml( mRemarks );
   layout->addWidget( remarksEdit, 2, 0, 1, 2 );
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
   layout->addWidget( bbox, 3, 0, 1, 2 );
@@ -162,7 +218,7 @@ void QgsPinAnnotationItem::_showItemEditor()
   if ( dialog.exec() == QDialog::Accepted )
   {
     mName = nameEdit->text();
-    mRemarks = remarksEdit->toPlainText();
+    mRemarks = remarksEdit->toHtml();
   }
   updateToolTip();
 }
