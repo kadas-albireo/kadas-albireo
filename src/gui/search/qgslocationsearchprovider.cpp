@@ -35,12 +35,12 @@ QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
 {
   mNetReply = 0;
 
-  mCategoryMap.insert( "address", qMakePair( tr( "Address" ), 20 ) );
-  mCategoryMap.insert( "sn25", qMakePair( tr( "Places" ), 21 ) );
-  mCategoryMap.insert( "zipcode", qMakePair( tr( "Zip Codes" ), 22 ) );
-  mCategoryMap.insert( "gg25", qMakePair( tr( "Municipalities" ), 23 ) );
-  mCategoryMap.insert( "district", qMakePair( tr( "Districts" ), 24 ) );
-  mCategoryMap.insert( "kantone", qMakePair( tr( "Cantons" ), 25 ) );
+  mCategoryMap.insert( "gg25", qMakePair( tr( "Municipalities" ), 20 ) );
+  mCategoryMap.insert( "kantone", qMakePair( tr( "Cantons" ), 21 ) );
+  mCategoryMap.insert( "district", qMakePair( tr( "Districts" ), 22 ) );
+  mCategoryMap.insert( "sn25", qMakePair( tr( "Places" ), 23 ) );
+  mCategoryMap.insert( "zipcode", qMakePair( tr( "Zip Codes" ), 24 ) );
+  mCategoryMap.insert( "address", qMakePair( tr( "Address" ), 25 ) );
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
