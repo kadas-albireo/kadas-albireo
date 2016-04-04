@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsmaptooldrawshape.h"
+#include "qgsmaptooldrawshape_p.h"
 #include "qgscircularstringv2.h"
 #include "qgscompoundcurvev2.h"
 #include "qgscrscache.h"
@@ -28,11 +29,15 @@
 #include "qgsproject.h"
 #include "qgssnappingutils.h"
 
+#include <QDoubleValidator>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <qmath.h>
 
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
-    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false )
+    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mInputWidget( 0 )
 {
   setCursor( Qt::ArrowCursor );
 
@@ -57,10 +62,25 @@ QgsMapToolDrawShape::~QgsMapToolDrawShape()
   delete mRubberBand;
 }
 
+void QgsMapToolDrawShape::activate()
+{
+  QgsMapTool::activate();
+  if ( mShowInput )
+  {
+    mInputWidget = new QgsMapToolDrawShapeInputWidget( canvas() );
+    initInputWidget();
+    // Initially out of sight
+    mInputWidget->move( -1000, -1000 );
+    mInputWidget->show();
+  }
+}
+
 void QgsMapToolDrawShape::deactivate()
 {
   QgsMapTool::deactivate();
   reset();
+  delete mInputWidget;
+  mInputWidget = 0;
 }
 
 void QgsMapToolDrawShape::setShowNodes( bool showNodes )
@@ -91,6 +111,7 @@ void QgsMapToolDrawShape::reset()
   mRubberBand->setGeometry( 0 );
   mState = StateReady;
   emit geometryChanged();
+  emit cleared();
 }
 
 void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
@@ -100,6 +121,10 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
     reset();
   }
   mState = buttonEvent( transformPoint( e->pos() ), true, e->button() );
+  if ( mShowInput )
+  {
+    updateInputWidget( transformPoint( e->pos() ) );
+  }
   update();
   if ( mState == StateFinished )
   {
@@ -114,6 +139,11 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
     moveEvent( transformPoint( e->pos() ) );
     update();
   }
+  if ( mShowInput )
+  {
+    updateInputWidget( transformPoint( e->pos() ) );
+    mInputWidget->move( e->x(), e->y() + 20 );
+  }
 }
 
 void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
@@ -121,11 +151,29 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
   if ( mState != StateFinished )
   {
     mState = buttonEvent( transformPoint( e->pos() ), false, e->button() );
+    if ( mShowInput )
+    {
+      updateInputWidget( transformPoint( e->pos() ) );
+    }
     update();
     if ( mState == StateFinished )
     {
       emit finished();
     }
+  }
+}
+
+void QgsMapToolDrawShape::acceptInput()
+{
+  if ( mState == StateFinished )
+  {
+    reset();
+  }
+  mState = inputAccepted();
+  update();
+  if ( mState == StateFinished )
+  {
+    emit finished();
   }
 }
 
@@ -148,6 +196,23 @@ void QgsMapToolDrawShape::addGeometry( const QgsAbstractGeometryV2* geometry, co
   doAddGeometry( geometry, *QgsCoordinateTransformCache::instance()->transform( sourceCrs.authid(), canvas()->mapSettings().destinationCrs().authid() ) );
   mState = mMultipart ? StateReady : StateFinished;
   update();
+}
+
+void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
+{
+  // If position is not within visible extent, center map there
+  if ( !mCanvas->mapSettings().visibleExtent().contains( geoPos ) )
+  {
+    QgsRectangle rect = mCanvas->mapSettings().visibleExtent();
+    rect = QgsRectangle( geoPos.x() - 0.5 * rect.width(), geoPos.y() - 0.5 * rect.height(), geoPos.x() + 0.5 * rect.width(), geoPos.y() + 0.5 * rect.height() );
+    mCanvas->setExtent( rect );
+    mCanvas->refresh();
+  }
+  // Then, move cursor to corresponding screen position and simulate move event
+  QPoint p = toCanvasCoordinates( geoPos );
+  QCursor::setPos( mCanvas->mapToGlobal( p ) );
+  QMouseEvent ev( QEvent::MouseMove, p, Qt::NoButton, Qt::NoButton, Qt::NoModifier );
+  canvasMoveEvent( &ev );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -218,6 +283,49 @@ void QgsMapToolDrawPoint::doAddGeometry( const QgsAbstractGeometryV2* geometry, 
       }
     }
   }
+}
+
+void QgsMapToolDrawPoint::initInputWidget()
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
+  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
+  mXEdit = new QgsMapToolDrawShapeInputField();
+  connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
+  mYEdit = new QgsMapToolDrawShapeInputField();
+  connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
+  mInputWidget->addFocusChild( mXEdit );
+  mInputWidget->addFocusChild( mYEdit );
+  mInputWidget->setFocusChild( mXEdit );
+}
+
+void QgsMapToolDrawPoint::updateInputWidget( const QgsPoint& mousePos )
+{
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
+  mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
+  if ( mInputWidget->focusChild() )
+    mInputWidget->focusChild()->selectAll();
+}
+
+QgsMapToolDrawShape::State QgsMapToolDrawPoint::inputAccepted()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  mPoints.append( QList<QgsPoint>() << QgsPoint( x, y ) );
+  mInputWidget->setFocusChild( mXEdit );
+  return mMultipart ? StateReady : StateFinished;
+}
+
+void QgsMapToolDrawPoint::inputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  moveMouseToPos( QgsPoint( x, y ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -320,6 +428,67 @@ void QgsMapToolDrawPolyLine::clear()
   mPoints.append( QList<QgsPoint>() );
 }
 
+void QgsMapToolDrawPolyLine::initInputWidget()
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
+  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
+  mXEdit = new QgsMapToolDrawShapeInputField();
+  connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
+  mYEdit = new QgsMapToolDrawShapeInputField();
+  connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
+  mInputWidget->addFocusChild( mXEdit );
+  mInputWidget->addFocusChild( mYEdit );
+  mInputWidget->setFocusChild( mXEdit );
+}
+
+void QgsMapToolDrawPolyLine::updateInputWidget( const QgsPoint& mousePos )
+{
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
+  mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
+  if ( mInputWidget->focusChild() )
+    mInputWidget->focusChild()->selectAll();
+}
+
+QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::inputAccepted()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  if ( mState == StateReady )
+  {
+    mPoints.back().append( QgsPoint( x, y ) );
+    mPoints.back().append( QgsPoint( x, y ) );
+    return StateDrawing;
+  }
+  else if ( mState == StateDrawing )
+  {
+    // At least two points and enter pressed twice -> finish
+    int n = mPoints.back().size();
+    if ( n > 1 && mPoints.back()[n - 2] == mPoints.back()[n - 1] )
+    {
+      mInputWidget->setFocusChild( mXEdit );
+      mPoints.back().removeLast();
+      mPoints.append( QList<QgsPoint>() );
+      return mMultipart ? StateReady : StateFinished;
+    }
+    mPoints.back().back() = QgsPoint( x, y );
+    mPoints.back().append( QgsPoint( x, y ) );
+  }
+  return mState;
+}
+
+void QgsMapToolDrawPolyLine::inputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  moveMouseToPos( QgsPoint( x, y ) );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawRectangle::QgsMapToolDrawRectangle( QgsMapCanvas* canvas )
@@ -327,13 +496,13 @@ QgsMapToolDrawRectangle::QgsMapToolDrawRectangle( QgsMapCanvas* canvas )
 
 QgsMapToolDrawShape::State QgsMapToolDrawRectangle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton /*button*/ )
 {
-  if ( press )
+  if ( press && mState == StateReady )
   {
     mP1.append( pos );
     mP2.append( pos );
     return StateDrawing;
   }
-  else
+  else if ( !press && mState == StateDrawing && mP1.back() != mP2.back() )
   {
     return mMultipart ? StateReady : StateFinished;
   }
@@ -396,6 +565,59 @@ void QgsMapToolDrawRectangle::clear()
   mP2.clear();
 }
 
+void QgsMapToolDrawRectangle::initInputWidget()
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
+  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
+  mXEdit = new QgsMapToolDrawShapeInputField();
+  connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
+  mYEdit = new QgsMapToolDrawShapeInputField();
+  connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
+  connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
+  mInputWidget->addFocusChild( mXEdit );
+  mInputWidget->addFocusChild( mYEdit );
+  mInputWidget->setFocusChild( mXEdit );
+}
+
+void QgsMapToolDrawRectangle::updateInputWidget( const QgsPoint& mousePos )
+{
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
+  mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
+  if ( mInputWidget->focusChild() )
+    mInputWidget->focusChild()->selectAll();
+}
+
+QgsMapToolDrawShape::State QgsMapToolDrawRectangle::inputAccepted()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  mInputWidget->setFocusChild( mXEdit );
+  if ( mState == StateReady )
+  {
+    mP1.append( QgsPoint( x, y ) );
+    mP2.append( QgsPoint( x, y ) );
+    return StateDrawing;
+  }
+  else if ( mState == StateDrawing )
+  {
+    mP2.back() = QgsPoint( x, y );
+    return mMultipart ? StateReady : StateFinished;
+  }
+  return mState;
+}
+
+void QgsMapToolDrawRectangle::inputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  moveMouseToPos( QgsPoint( x, y ) );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas )
@@ -403,13 +625,13 @@ QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas )
 
 QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton /*button*/ )
 {
-  if ( press )
+  if ( press && mState == StateReady )
   {
     mCenters.append( pos );
     mRadii.append( 0. );
     return StateDrawing;
   }
-  else
+  else if ( !press && mState == StateDrawing && mRadii.back() > 0. )
   {
     return mMultipart ? StateReady : StateFinished;
   }
@@ -478,6 +700,101 @@ void QgsMapToolDrawCircle::clear()
   mRadii.clear();
 }
 
+void QgsMapToolDrawCircle::initInputWidget()
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
+  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
+  mXEdit = new QgsMapToolDrawShapeInputField();
+  connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
+  connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
+  mYEdit = new QgsMapToolDrawShapeInputField();
+  connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
+  connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "r=" ), 2, 0, 1, 1 );
+  QDoubleValidator* validator = new QDoubleValidator();
+  validator->setBottom( 0 );
+  mREdit = new QgsMapToolDrawShapeInputField( validator );
+  connect( mREdit, SIGNAL( inputChanged() ), this, SLOT( radiusInputChanged() ) );
+  connect( mREdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mREdit, 2, 1, 1, 1 );
+  mInputWidget->addFocusChild( mXEdit );
+  mInputWidget->addFocusChild( mYEdit );
+  mInputWidget->addFocusChild( mREdit );
+  mInputWidget->setFocusChild( mXEdit );
+}
+
+void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
+{
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  if ( mState == StateReady )
+  {
+    mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
+    mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
+    mREdit->setText( "0" );
+  }
+  else if ( mState == StateDrawing )
+  {
+    mREdit->setText( QString::number( mRadii.last(), 'f', isDegrees ? 4 : 0 ) );
+  }
+  if ( mInputWidget->focusChild() )
+    mInputWidget->focusChild()->selectAll();
+}
+
+QgsMapToolDrawShape::State QgsMapToolDrawCircle::inputAccepted()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  mInputWidget->setFocusChild( mXEdit );
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    return StateDrawing;
+  }
+  else if ( mState == StateDrawing )
+  {
+    mREdit->setText( "0" );
+    mCenters.back() = QgsPoint( x, y );
+    mRadii.back() = r;
+    return mMultipart ? StateReady : StateFinished;
+  }
+  return mState;
+}
+
+void QgsMapToolDrawCircle::centerInputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    mState = StateDrawing;
+  }
+  mCenters.back() = QgsPoint( x, y );
+  moveMouseToPos( QgsPoint( x + r, y ) );
+}
+
+void QgsMapToolDrawCircle::radiusInputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    mState = StateDrawing;
+  }
+  mRadii.back() = r;
+  moveMouseToPos( QgsPoint( x + r, y ) );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawCircularSector::QgsMapToolDrawCircularSector( QgsMapCanvas* canvas )
@@ -498,10 +815,10 @@ QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::buttonEvent( const QgsP
     }
     else if ( mSectorStage == HaveCenter )
     {
-      mSectorStage = HaveArc;
+      mSectorStage = HaveRadius;
       return StateDrawing;
     }
-    else if ( mSectorStage == HaveArc )
+    else if ( mSectorStage == HaveRadius )
     {
       mSectorStage = HaveNothing;
       return mMultipart ? StateReady : StateFinished;
@@ -517,7 +834,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
     mRadii.back() = qSqrt( pos.sqrDist( mCenters.back() ) );
     mStartAngles.back() = mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
   }
-  else if ( mSectorStage == HaveArc )
+  else if ( mSectorStage == HaveRadius )
   {
     mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
     if ( mStopAngles.back() <= mStartAngles.back() )
@@ -602,4 +919,229 @@ void QgsMapToolDrawCircularSector::clear()
   mStartAngles.clear();
   mStopAngles.clear();
   mSectorStage = HaveNothing;
+}
+
+void QgsMapToolDrawCircularSector::initInputWidget()
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
+  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
+  mXEdit = new QgsMapToolDrawShapeInputField();
+  connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
+  connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
+  mYEdit = new QgsMapToolDrawShapeInputField();
+  connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
+  connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( "r=" ), 2, 0, 1, 1 );
+  QDoubleValidator* validator = new QDoubleValidator();
+  validator->setBottom( 0 );
+  mREdit = new QgsMapToolDrawShapeInputField( validator );
+  connect( mREdit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
+  connect( mREdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mREdit, 2, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( QString( QChar( 0x03B1 ) ) + "1=" ), 3, 0, 1, 1 );
+  mA1Edit = new QgsMapToolDrawShapeInputField();
+  connect( mA1Edit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
+  connect( mA1Edit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mA1Edit, 3, 1, 1, 1 );
+  gridLayout->addWidget( new QLabel( QString( QChar( 0x03B1 ) ) + "2=" ), 4, 0, 1, 1 );
+  mA2Edit = new QgsMapToolDrawShapeInputField();
+  connect( mA2Edit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
+  connect( mA2Edit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
+  gridLayout->addWidget( mA2Edit, 4, 1, 1, 1 );
+  mInputWidget->addFocusChild( mXEdit );
+  mInputWidget->addFocusChild( mYEdit );
+  mInputWidget->addFocusChild( mREdit );
+  mInputWidget->addFocusChild( mA1Edit );
+  mInputWidget->addFocusChild( mA2Edit );
+  mInputWidget->setFocusChild( mXEdit );
+}
+
+void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
+{
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  if ( mSectorStage == HaveNothing )
+  {
+    mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
+    mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
+    mREdit->setText( "0" );
+    mA1Edit->setText( "0" );
+    mA2Edit->setText( "0" );
+  }
+  else if ( mSectorStage == HaveCenter )
+  {
+    mREdit->setText( QString::number( mRadii.last(), 'f', isDegrees ? 4 : 0 ) );
+  }
+  else if ( mSectorStage == HaveRadius )
+  {
+    double startAngle = 2.5 * M_PI - mStartAngles.last();
+    if ( startAngle > 2 * M_PI )
+      startAngle -= 2 * M_PI;
+    else if ( startAngle < 0 )
+      startAngle += 2 * M_PI;
+    mA1Edit->setText( QString::number( startAngle / M_PI * 180., 'f', 1 ) );
+    double stopAngle = 2.5 * M_PI - mStopAngles.last();
+    if ( stopAngle > 2 * M_PI )
+      stopAngle -= 2 * M_PI;
+    else if ( stopAngle < 0 )
+      stopAngle += 2 * M_PI;
+    mA2Edit->setText( QString::number( stopAngle / M_PI * 180., 'f', 1 ) );
+  }
+  if ( mInputWidget->focusChild() )
+    mInputWidget->focusChild()->selectAll();
+}
+
+QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::inputAccepted()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  double a1 = 2.5 * M_PI - mA1Edit->text().toDouble() / 180. * M_PI;
+  double a2 = 2.5 * M_PI - mA2Edit->text().toDouble() / 180. * M_PI;
+  while ( a1 < 0 )
+    a1 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a1 -= 2 * M_PI;
+  while ( a2 < 0 )
+    a2 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a2 -= 2 * M_PI;
+  if ( a2 <= a1 )
+    a2 += 2 * M_PI;
+  mInputWidget->setFocusChild( mXEdit );
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    if ( r > 0 )
+    {
+      mStartAngles.append( a1 );
+      mStopAngles.append( a2 );
+      mSectorStage = HaveRadius;
+    }
+    else
+    {
+      mStartAngles.append( 0 );
+      mStopAngles.append( 0 );
+      mSectorStage = HaveCenter;
+    }
+    return StateDrawing;
+  }
+  else if ( mState == StateDrawing )
+  {
+    mCenters.back() = QgsPoint( x, y );
+    mRadii.back() = r;
+    if ( r > 0 )
+    {
+      mStartAngles.back() = a1;
+      mStopAngles.back() = a2;
+      mSectorStage = HaveRadius;
+    }
+    else
+    {
+      mStartAngles.back() = 0;
+      mStopAngles.back() = 0;
+      mSectorStage = HaveCenter;
+    }
+    if ( mSectorStage == HaveRadius )
+    {
+      mREdit->setText( "0" );
+      mA1Edit->setText( "0" );
+      mA2Edit->setText( "0" );
+      return mMultipart ? StateReady : StateFinished;
+    }
+  }
+  return mState;
+}
+
+void QgsMapToolDrawCircularSector::centerInputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  double a1 = 2.5 * M_PI - mA1Edit->text().toDouble() / 180. * M_PI;
+  double a2 = 2.5 * M_PI - mA2Edit->text().toDouble() / 180. * M_PI;
+  while ( a1 < 0 )
+    a1 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a1 -= 2 * M_PI;
+  while ( a2 < 0 )
+    a2 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a2 -= 2 * M_PI;
+  if ( a2 <= a1 )
+    a2 += 2 * M_PI;
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    if ( r > 0 )
+    {
+      mStartAngles.append( a1 );
+      mStopAngles.append( a2 );
+      mSectorStage = HaveRadius;
+    }
+    else
+    {
+      mStartAngles.append( 0 );
+      mStopAngles.append( 0 );
+      mSectorStage = HaveCenter;
+    }
+    mState = StateDrawing;
+  }
+  mCenters.back() = QgsPoint( x, y );
+  moveMouseToPos( QgsPoint( x + r * qCos( mStopAngles.back() ), y + r * qSin( mStopAngles.back() ) ) );
+}
+
+void QgsMapToolDrawCircularSector::arcInputChanged()
+{
+  double x = mXEdit->text().toDouble();
+  double y = mYEdit->text().toDouble();
+  double r = mREdit->text().toDouble();
+  double a1 = 2.5 * M_PI - mA1Edit->text().toDouble() / 180. * M_PI;
+  double a2 = 2.5 * M_PI - mA2Edit->text().toDouble() / 180. * M_PI;
+  while ( a1 < 0 )
+    a1 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a1 -= 2 * M_PI;
+  while ( a2 < 0 )
+    a2 += 2 * M_PI;
+  while ( a1 >= 2 * M_PI )
+    a2 -= 2 * M_PI;
+  if ( a2 <= a1 )
+    a2 += 2 * M_PI;
+  if ( mState == StateReady )
+  {
+    mCenters.append( QgsPoint( x, y ) );
+    mRadii.append( r );
+    if ( r > 0 )
+    {
+      mStartAngles.append( a1 );
+      mStopAngles.append( a2 );
+      mSectorStage = HaveRadius;
+    }
+    else
+    {
+      mStartAngles.append( 0 );
+      mStopAngles.append( 0 );
+      mSectorStage = HaveCenter;
+    }
+    mState = StateDrawing;
+  }
+  mRadii.back() = r;
+  if ( r > 0 )
+  {
+    mStartAngles.back() = a1;
+    mStopAngles.back() = a2;
+    mSectorStage = HaveRadius;
+  }
+  else
+  {
+    mStartAngles.back() = 0;
+    mStopAngles.back() = 0;
+    mSectorStage = HaveCenter;
+  }
+  moveMouseToPos( QgsPoint( x + r * qCos( mStopAngles.back() ), y + r * qSin( mStopAngles.back() ) ) );
 }

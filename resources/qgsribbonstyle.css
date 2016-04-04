@@ -81,7 +81,7 @@ QPushButton#mLayerTreeViewButton {
 }
 
 #mLayersWidget {
-  background-color: rgba(255,255,255, 220);
+  background-color: rgba(255,255,255,220);
   border: 1px solid #263B4E;
 }
 
@@ -253,4 +253,21 @@ QgsAttributeForm QScrollArea > QWidget > QWidget
 
 #mRibbonWidget QComboBox#mWorkModeCombo QAbstractItemView {
   background-color: #263B4E;
+}
+
+#MapToolDrawShapeInputWidget
+{
+  background-color: rgba(30,33,38,230);
+  border-radius: 3px;
+}
+
+#MapToolDrawShapeInputWidget QLabel
+{
+  color: #FFFFFF;
+}
+
+#MapToolDrawShapeInputWidget QLineEdit
+{
+  background-color: #16171B;
+  color: #FFFFFF;
 }

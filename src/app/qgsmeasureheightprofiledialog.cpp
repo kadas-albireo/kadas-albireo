@@ -66,6 +66,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
     : QDialog( parent, f ), mTool( tool ), mLineOfSightMarker( 0 ), mNSamples( 300 )
 {
   setWindowTitle( tr( "Height profile" ) );
+  setAttribute( Qt::WA_ShowWithoutActivating );
   QVBoxLayout* vboxLayout = new QVBoxLayout( this );
 
   QPushButton* pickButton = new QPushButton( QIcon( ":/images/themes/default/mActionSelect.svg" ), tr( "Measure along existing line" ), this );

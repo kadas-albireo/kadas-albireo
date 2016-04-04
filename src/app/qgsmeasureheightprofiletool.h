@@ -21,6 +21,7 @@
 
 class QgsGeometry;
 class QgsMeasureHeightProfileDialog;
+class QgsMapToolDrawPolyLine;
 class QgsRubberBand;
 class QgsVectorLayer;
 
@@ -31,8 +32,8 @@ class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
 
     QgsMeasureHeightProfileTool( QgsMapCanvas* canvas );
     ~QgsMeasureHeightProfileTool();
-    void restart();
 
+    void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void activate() override;
@@ -44,11 +45,14 @@ class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
     void pickLine();
 
   private:
+    QgsMapToolDrawPolyLine* mDrawTool;
+    QgsRubberBand *mPosMarker;
     QgsMeasureHeightProfileDialog* mDialog;
-    QgsRubberBand *mRubberBand;
-    QgsRubberBand *mRubberBandPoints;
-    bool mMoving;
     bool mPicking;
+
+  private slots:
+    void drawCleared();
+    void drawFinished();
 };
 
 #endif // QGSMEASUREHEIGHTPROFILETOOL_H

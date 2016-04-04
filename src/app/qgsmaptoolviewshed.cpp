@@ -124,6 +124,7 @@ QgsViewshedDialog::DisplayMode QgsViewshedDialog::getDisplayMode() const
 QgsMapToolViewshed::QgsMapToolViewshed( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawCircularSector( mapCanvas )
 {
+  setShowInputWidget( true );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 
