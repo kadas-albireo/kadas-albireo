@@ -39,12 +39,12 @@ class GUI_EXPORT QgsSearchProvider : public QObject
        * 2: pins
        * 10: local features
        * 11: remote features
-       * 20: addresses
-       * 21: places
-       * 22: plz codes
-       * 23: municipalities
-       * 24: districts
-       * 25: cantons
+       * 20: municipalities
+       * 21: cantons
+       * 22: districts
+       * 23: places
+       * 24: plz codes
+       * 25: addresses
        * 30: world locations
        * 100: unknown
        */
