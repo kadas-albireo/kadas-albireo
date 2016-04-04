@@ -684,7 +684,7 @@ void QgsProjectFileTransform::transform2300to21500()
         if ( propElem.attribute( "k" ) == "line_color" )
         {
           QColor lineColor = QgsSymbolLayerV2Utils::decodeColor( propElem.attribute( "v" ) );
-          lineColor.setAlpha( outlineAlpha );
+          lineColor.setAlpha( outlineAlpha * 255.0 );
           propElem.setAttribute( "v", QgsSymbolLayerV2Utils::encodeColor( lineColor ) );
           break;
         }
