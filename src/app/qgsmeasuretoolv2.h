@@ -31,6 +31,7 @@ class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
   public:
     enum MeasureMode { MeasureLine, MeasurePolygon, MeasureCircle, MeasureAngle, MeasureAzimuth };
     QgsMeasureToolV2( QgsMapCanvas* canvas , MeasureMode measureMode );
+    ~QgsMeasureToolV2();
     void addGeometry( const QgsGeometry* geometry, const QgsVectorLayer* layer );
 
     void activate() override;
