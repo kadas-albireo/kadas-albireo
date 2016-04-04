@@ -34,6 +34,7 @@
 QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape )
     : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape )
 {
+  setShowInputWidget( true );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
 
@@ -52,6 +53,7 @@ void QgsRedliningPointMapTool::onFinished()
 QgsRedliningRectangleMapTool::QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
     : QgsMapToolDrawRectangle( canvas ), mLayer( layer )
 {
+  setShowInputWidget( true );
   setMeasurementMode( QgsGeometryRubberBand::MEASURE_RECTANGLE, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
@@ -70,6 +72,7 @@ void QgsRedliningRectangleMapTool::onFinished()
 QgsRedliningPolylineMapTool::QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed )
     : QgsMapToolDrawPolyLine( canvas, closed ), mLayer( layer )
 {
+  setShowInputWidget( true );
   setMeasurementMode( closed ? QgsGeometryRubberBand::MEASURE_POLYGON : QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
@@ -87,6 +90,7 @@ void QgsRedliningPolylineMapTool::onFinished()
 QgsRedliningCircleMapTool::QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
     : QgsMapToolDrawCircle( canvas ), mLayer( layer )
 {
+  setShowInputWidget( true );
   setMeasurementMode( QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }

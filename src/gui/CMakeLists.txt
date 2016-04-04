@@ -322,6 +322,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmapoverviewcanvas.h
   qgsmaptool.h
   qgsmaptooldrawshape.h
+  qgsmaptooldrawshape_p.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h

@@ -18,10 +18,10 @@
 
 #include "qgsmaptool.h"
 #include "qgsgeometryrubberband.h"
+#include <QPointer>
 
-class QGraphicsTextItem;
-class QgsDistanceArea;
-class QgsRubberBand;
+class QgsMapToolDrawShapeInputWidget;
+class QgsMapToolDrawShapeInputField;
 
 class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 {
@@ -31,12 +31,15 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea );
     ~QgsMapToolDrawShape();
+    void activate() override;
     void deactivate() override;
     void setShowNodes( bool showNodes );
     void setAllowMultipart( bool multipart ) { mMultipart = multipart; }
     void setSnapPoints( bool snapPoints ) { mSnapPoints = snapPoints; }
+    void setShowInputWidget( bool showInput ) { mShowInput = showInput; }
     void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
+    bool isFinished() const { return mState == StateFinished; }
 
     void canvasPressEvent( QMouseEvent* e ) override;
     void canvasMoveEvent( QMouseEvent* e ) override;
@@ -50,6 +53,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void reset();
 
   signals:
+    void cleared();
     void finished();
     void geometryChanged();
 
@@ -58,12 +62,21 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     bool mIsArea;
     bool mMultipart;
     bool mSnapPoints;
+    bool mShowInput;
     QgsGeometryRubberBand* mRubberBand;
+    QgsMapToolDrawShapeInputWidget* mInputWidget;
 
     virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
     virtual void moveEvent( const QgsPoint& pos ) = 0;
     virtual void clear() = 0;
     virtual void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) = 0;
+    virtual void initInputWidget() {}
+    virtual void updateInputWidget( const QgsPoint& /*mousePos*/ ) {}
+    virtual State inputAccepted() { return mState; }
+    void moveMouseToPos( const QgsPoint& geoPos );
+
+  protected slots:
+    void acceptInput();
 
   private:
     QgsPoint transformPoint( const QPoint& p );
@@ -73,6 +86,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 
 class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
 {
+    Q_OBJECT
   public:
     QgsMapToolDrawPoint( QgsMapCanvas* canvas );
     int getPartCount() const override { return mPoints.size(); }
@@ -83,16 +97,25 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
 
   protected:
     QList< QList<QgsPoint> > mPoints;
+    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;
     void clear() override;
+    void initInputWidget() override;
+    void updateInputWidget( const QgsPoint& mousePos ) override;
+    State inputAccepted() override;
+
+  private slots:
+    void inputChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 {
+    Q_OBJECT
   public:
     QgsMapToolDrawPolyLine( QgsMapCanvas* canvas, bool closed );
     int getPartCount() const override { return mPoints.size(); }
@@ -103,16 +126,25 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 
   protected:
     QList< QList<QgsPoint> > mPoints;
+    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;
     void clear() override;
+    void initInputWidget() override;
+    void updateInputWidget( const QgsPoint& mousePos ) override;
+    State inputAccepted() override;
+
+  private slots:
+    void inputChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
 {
+    Q_OBJECT
   public:
     QgsMapToolDrawRectangle( QgsMapCanvas* canvas );
     int getPartCount() const override { return mP1.size(); }
@@ -123,16 +155,25 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
 
   protected:
     QList<QgsPoint> mP1, mP2;
+    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;
     void clear() override;
+    void initInputWidget() override;
+    void updateInputWidget( const QgsPoint& mousePos ) override;
+    State inputAccepted() override;
+
+  private slots:
+    void inputChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
 {
+    Q_OBJECT
   public:
     QgsMapToolDrawCircle( QgsMapCanvas* canvas );
     int getPartCount() const override { return mCenters.size(); }
@@ -144,16 +185,27 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
   protected:
     QList<QgsPoint> mCenters;
     QList<double> mRadii;
+    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mREdit;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;
     void clear() override;
+    void initInputWidget() override;
+    void updateInputWidget( const QgsPoint& mousePos ) override;
+    State inputAccepted() override;
+
+  private slots:
+    void centerInputChanged();
+    void radiusInputChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
 {
+    Q_OBJECT
   public:
     QgsMapToolDrawCircularSector( QgsMapCanvas* canvas );
     int getPartCount() const override { return mCenters.size(); }
@@ -169,15 +221,27 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
-    enum Stage { HaveNothing, HaveCenter, HaveArc } mSectorStage;
+    enum Stage { HaveNothing, HaveCenter, HaveRadius } mSectorStage;
     QList<QgsPoint> mCenters;
     QList<double> mRadii;
     QList<double> mStartAngles;
     QList<double> mStopAngles;
+    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
+    QPointer<QgsMapToolDrawShapeInputField> mREdit;
+    QPointer<QgsMapToolDrawShapeInputField> mA1Edit;
+    QPointer<QgsMapToolDrawShapeInputField> mA2Edit;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;
     void clear() override;
+    void initInputWidget() override;
+    void updateInputWidget( const QgsPoint& mousePos ) override;
+    State inputAccepted() override;
+
+  private slots:
+    void centerInputChanged();
+    void arcInputChanged();
 };
 
 #endif // QGSMAPTOOLDRAWSHAPE_H
