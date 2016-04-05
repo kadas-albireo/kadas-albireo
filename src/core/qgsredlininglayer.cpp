@@ -49,7 +49,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
   setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
   setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~fill" );
-  setCustomProperty( "labeling/dataDefined/Size", "1~~1~~8 + \"size\"~~" );
+  setCustomProperty( "labeling/dataDefined/Size", "1~~1~~regexp_substr(\"flags\",'fontSize=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Italic", "1~~1~~regexp_substr(\"flags\",'italic=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Family", "1~~1~~regexp_substr(\"flags\",'family=([^,]+)')~~" );
@@ -71,7 +71,7 @@ bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, 
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip, double rotation )
+bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip, double rotation, int markerSize, const QString& extraFlags )
 {
   while ( rotation <= -180 ) rotation += 360.;
   while ( rotation > 180 ) rotation -= 360.;
@@ -80,9 +80,10 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   f.setAttribute( "text", text );
   f.setAttribute( "text_x", pos.x() );
   f.setAttribute( "text_y", pos.y() );
-  f.setAttribute( "size", font.pixelSize() );
+  f.setAttribute( "size", markerSize );
+  f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( color ) );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
-  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( rotation ) );
+  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4,fontSize=%5%6" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( rotation ).arg( font.pointSize() ).arg( extraFlags ) );
   f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }

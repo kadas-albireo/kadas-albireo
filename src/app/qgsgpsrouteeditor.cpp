@@ -88,6 +88,17 @@ void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
   setTool( tool, mActionEdit );
 }
 
+void QgsGPSRouteEditor::editLabel( const QgsLabelPosition &labelPos )
+{
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
+  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
+  connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
+  connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
+  tool->selectLabel( labelPos );
+  tool->setUnsetOnMiss( true );
+  setTool( tool, mActionEdit );
+}
+
 void QgsGPSRouteEditor::clearLayer()
 {
   mLayer = 0;
@@ -105,7 +116,7 @@ void QgsGPSRouteEditor::editObject()
 
 void QgsGPSRouteEditor::createWaypoints( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), mActionCreateWaypoints, active );
+  setTool( new QgsRedliningTextTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", false ), mActionCreateWaypoints, active );
 }
 
 void QgsGPSRouteEditor::createRoutes( bool active )
@@ -235,8 +246,8 @@ void QgsGPSRouteEditor::importGpx()
     double lat = wptEl.attribute( "lat" ).toDouble();
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
-    QString flags = "symbol=circle,w=5*\"size\",h=5*\"size\",r=0";
-    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, name );
+    QString extraFlags( ",symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
+    mLayer->addText( name, QgsPointV2( lon, lat ), Qt::yellow, QFont(), QString(), 0, sFeatureSize, extraFlags );
     ++nWpts;
   }
   QDomNodeList rtes = doc.elementsByTagName( "rte" );
@@ -324,7 +335,8 @@ void QgsGPSRouteEditor::exportGpx()
       wptEl.setAttribute( "lon", pt->x() );
       wptEl.setAttribute( "lat", pt->y() );
       QDomElement nameEl = doc.createElement( "name" );
-      nameEl.setNodeValue( feature.attribute( "tooltip" ).toString() );
+      QDomText nameText = doc.createTextNode( feature.attribute( "text" ).toString() );
+      nameEl.appendChild( nameText );
       wptEl.appendChild( nameEl );
       gpxEl.appendChild( wptEl );
     }

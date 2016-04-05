@@ -71,15 +71,17 @@ class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
     void onFinished();
 };
 
-class QgsRedliningTextTool : public QgsMapTool
+class QgsRedliningTextTool : public QgsMapToolDrawPoint
 {
+    Q_OBJECT
   public:
-    QgsRedliningTextTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
-        : QgsMapTool( canvas ), mLayer( layer ) {}
-    void canvasReleaseEvent( QMouseEvent * e ) override;
-    bool isEditTool() { return true; }
+    QgsRedliningTextTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& marker = QString(), bool showEditor = true );
   private:
     QgsVectorLayer* mLayer;
+    QString mMarker;
+    bool mShowEditor;
+  private slots:
+    void onFinished();
 };
 
 class QgsRedliningEditTool : public QgsMapTool
