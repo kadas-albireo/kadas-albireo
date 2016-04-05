@@ -36,6 +36,7 @@ class QgsGPSRouteEditor : public QObject
     QgsRedliningLayer *getOrCreateLayer();
     QgsRedliningLayer *getLayer() const;
     void editFeature( const QgsFeature &feature );
+    void editLabel( const QgsLabelPosition &labelPos );
 
   public slots:
     void importGpx();

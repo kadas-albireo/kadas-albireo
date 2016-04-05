@@ -5926,6 +5926,10 @@ void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
   {
     mRedlining->editLabel( labelPos );
   }
+  else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && mGpsRouteEditor->getLayer()->id() == labelPos.layerID )
+  {
+    mGpsRouteEditor->editLabel( labelPos );
+  }
 }
 
 // toggle overview status

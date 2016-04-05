@@ -29,11 +29,13 @@ QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, QString fon
   textFont.fromString( fontstr );
   ui.checkBoxBold->setChecked( textFont.bold() );
   ui.checkBoxItalic->setChecked( textFont.italic() );
+  ui.spinBoxFontSize->setValue( textFont.pointSize() );
   textFont.setBold( false );
   textFont.setItalic( false );
   textFont.setPointSize( font().pointSize() );
   ui.fontComboBox->setCurrentFont( textFont );
   ui.spinBoxRotation->setValue( rotation );
+  ui.lineEditText->setFocus();
 
   connect( this, SIGNAL( accepted() ), this, SLOT( saveFont() ) );
 }
@@ -43,6 +45,7 @@ QFont QgsRedliningTextDialog::currentFont() const
   QFont font = ui.fontComboBox->currentFont();
   font.setBold( ui.checkBoxBold->isChecked() );
   font.setItalic( ui.checkBoxItalic->isChecked() );
+  font.setPointSize( ui.spinBoxFontSize->value() );
   return font;
 }
 
