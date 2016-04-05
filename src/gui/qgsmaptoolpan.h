@@ -78,10 +78,10 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     bool mPinching;
 
     //! Zoom are rubberband for shift+select mode
-    QgsRubberBand* mZoomRubberBand;
+    QgsRubberBand* mExtentRubberBand;
 
     //! Stores zoom rect for shift+select mode
-    QRect mZoomRect;
+    QRect mExtentRect;
 
     //!Flag to indicate whether mouseRelease is a click (i.e. no moves inbetween)
     bool mPickClick;

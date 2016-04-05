@@ -19,6 +19,7 @@
 #include "qgsmapcanvas.h"
 #include "qgscursors.h"
 #include "qgsmaptopixel.h"
+#include "qgsmaptooldeleteitems.h"
 #include "qgsrubberband.h"
 #include "qgstextannotationitem.h"
 #include <QBitmap>
@@ -32,7 +33,7 @@ QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas , bool allowItemInteraction )
     , mAllowItemInteraction( allowItemInteraction )
     , mDragging( false )
     , mPinching( false )
-    , mZoomRubberBand( 0 )
+    , mExtentRubberBand( 0 )
     , mPickClick( false )
     , mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
@@ -74,14 +75,25 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
 {
   if ( e->button() == Qt::LeftButton )
   {
-    if (( e->modifiers() & Qt::ShiftModifier ) != 0 )
+    if ( e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::ControlModifier )
     {
-      mZoomRubberBand = new QgsRubberBand( mCanvas, QGis::Polygon );
-      mZoomRubberBand->setColor( QColor( 0, 0, 255, 63 ) );
-      mZoomRect.setTopLeft( e->pos() );
-      mZoomRect.setBottomRight( e->pos() );
-      mZoomRubberBand->setToCanvasRectangle( mZoomRect );
-      mZoomRubberBand->show();
+      mExtentRubberBand = new QgsRubberBand( mCanvas, QGis::Polygon );
+      if ( e->modifiers() == Qt::ShiftModifier )
+        mExtentRubberBand->setColor( QColor( 0, 0, 255, 63 ) );
+      else if ( e->modifiers() == Qt::ControlModifier )
+      {
+        QSettings settings;
+        int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
+        int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();
+        int blue = settings.value( "/qgis/default_measure_color_blue", 0 ).toInt();
+        mExtentRubberBand->setFillColor( QColor( red, green, blue, 63 ) );
+        mExtentRubberBand->setBorderColor( QColor( red, green, blue, 255 ) );
+        mExtentRubberBand->setWidth( 3 );
+      }
+      mExtentRect.setTopLeft( e->pos() );
+      mExtentRect.setBottomRight( e->pos() );
+      mExtentRubberBand->setToCanvasRectangle( mExtentRect );
+      mExtentRubberBand->show();
     }
     else if ( mAllowItemInteraction )
     {
@@ -131,10 +143,10 @@ void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 
   if (( e->buttons() & Qt::LeftButton ) )
   {
-    if ( mZoomRubberBand )
+    if ( mExtentRubberBand )
     {
-      mZoomRect.setBottomRight( e->pos() );
-      mZoomRubberBand->setToCanvasRectangle( mZoomRect );
+      mExtentRect.setBottomRight( e->pos() );
+      mExtentRubberBand->setToCanvasRectangle( mExtentRect );
     }
     else if ( selAnnotationItem && mAnnotationMoveAction != QgsAnnotationItem::NoAction )
     {
@@ -166,18 +178,25 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( e->button() == Qt::LeftButton )
   {
-    if ( mZoomRubberBand )
+    if ( mExtentRubberBand )
     {
-      delete mZoomRubberBand;
-      mZoomRubberBand = 0;
+      if ( e->modifiers() == Qt::ShiftModifier )
+      {
+        // set center and zoom
+        QSize zoomRectSize = mExtentRect.normalized().size();
+        QSize canvasSize = mCanvas->mapSettings().outputSize();
+        double sfx = ( double )zoomRectSize.width() / canvasSize.width();
+        double sfy = ( double )zoomRectSize.height() / canvasSize.height();
+        mCanvas->setCenter( mCanvas->getCoordinateTransform()->toMapCoordinates( mExtentRect.center() ) );
+        mCanvas->zoomByFactor( qMax( sfx, sfy ) );
+      }
+      else if ( e->modifiers() == Qt::ControlModifier )
+      {
+        QgsMapToolDeleteItems( canvas() ).deleteItems( mExtentRubberBand->rect(), canvas()->mapSettings().destinationCrs() );
+      }
 
-      // set center and zoom
-      QSize zoomRectSize = mZoomRect.normalized().size();
-      QSize canvasSize = mCanvas->mapSettings().outputSize();
-      double sfx = ( double )zoomRectSize.width() / canvasSize.width();
-      double sfy = ( double )zoomRectSize.height() / canvasSize.height();
-      mCanvas->setCenter( mCanvas->getCoordinateTransform()->toMapCoordinates( mZoomRect.center() ) );
-      mCanvas->zoomByFactor( qMax( sfx, sfy ) );
+      delete mExtentRubberBand;
+      mExtentRubberBand = 0;
     }
     else if ( mDragging )
     {

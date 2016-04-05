@@ -25,6 +25,7 @@ class APP_EXPORT QgsMapToolDeleteItems : public QgsMapToolDrawRectangle
     Q_OBJECT
   public:
     QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas );
+    void deleteItems(const QgsRectangle& filterRect, const QgsCoordinateReferenceSystem& filterRectCrs);
 
   private slots:
     void drawFinished();

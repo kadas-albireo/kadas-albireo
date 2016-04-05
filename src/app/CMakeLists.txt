@@ -72,7 +72,6 @@ SET(QGIS_APP_SRCS
   qgsmaptoolchangelabelproperties.cpp
   qgsmaptooldeletering.cpp
   qgsmaptooldeletepart.cpp
-  qgsmaptooldeleteitems.cpp
   qgsmaptooledit.cpp
   qgsmaptoolfeatureaction.cpp
   qgsmaptoolformannotation.cpp
@@ -255,7 +254,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolchangelabelproperties.h
   qgsmaptooldeletepart.h
   qgsmaptooldeletering.h
-  qgsmaptooldeleteitems.h
   qgsmaptoolfeatureaction.h
   qgsmaptoollabel.h
   qgsmaptoolpinlabels.h
