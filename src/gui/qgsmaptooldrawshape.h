@@ -44,6 +44,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void canvasPressEvent( QMouseEvent* e ) override;
     void canvasMoveEvent( QMouseEvent* e ) override;
     void canvasReleaseEvent( QMouseEvent* e ) override;
+    void keyReleaseEvent( QKeyEvent *e ) override;
     virtual int getPartCount() const = 0;
     virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const = 0;
     void addGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs );

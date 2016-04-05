@@ -163,6 +163,14 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
   }
 }
 
+void QgsMapToolDrawShape::keyReleaseEvent( QKeyEvent* e )
+{
+  if ( e->key() == Qt::Key_Escape )
+  {
+    reset();
+  }
+}
+
 void QgsMapToolDrawShape::acceptInput()
 {
   if ( mState == StateFinished )

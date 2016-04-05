@@ -39,6 +39,7 @@ class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
     void canvasPressEvent( QMouseEvent *e ) override;
     void canvasMoveEvent( QMouseEvent *e ) override;
     void canvasReleaseEvent( QMouseEvent *e ) override;
+    void keyReleaseEvent( QKeyEvent *e ) override;
   private:
     QgsMeasureWidget* mMeasureWidget;
     bool mPickFeature;

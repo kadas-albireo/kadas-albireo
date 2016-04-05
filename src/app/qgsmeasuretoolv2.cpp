@@ -228,7 +228,7 @@ void QgsMeasureToolV2::updateTotal()
 void QgsMeasureToolV2::requestPick()
 {
   mPickFeature = true;
-  setCursor( QCursor( Qt::ArrowCursor ) );
+  setCursor( QCursor( Qt::CrossCursor ) );
 }
 
 void QgsMeasureToolV2::canvasPressEvent( QMouseEvent *e )
@@ -262,5 +262,18 @@ void QgsMeasureToolV2::canvasReleaseEvent( QMouseEvent *e )
     }
     mPickFeature = false;
     setCursor( Qt::ArrowCursor );
+  }
+}
+
+void QgsMeasureToolV2::keyReleaseEvent( QKeyEvent *e )
+{
+  if ( mPickFeature && e->key() == Qt::Key_Escape )
+  {
+    mPickFeature = false;
+    setCursor( Qt::ArrowCursor );
+  }
+  else
+  {
+    mDrawTool->keyReleaseEvent( e );
   }
 }
