@@ -36,6 +36,7 @@ class APP_EXPORT QgsMeasureHeightProfileTool : public QgsMapTool
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
+    void keyReleaseEvent( QKeyEvent* e ) override;
     void activate() override;
     void deactivate() override;
 

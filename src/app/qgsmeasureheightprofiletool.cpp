@@ -83,7 +83,7 @@ void QgsMeasureHeightProfileTool::pickLine()
 {
   mDrawTool->reset();
   mPicking = true;
-  setCursor( QCursor( Qt::ArrowCursor ) );
+  setCursor( QCursor( Qt::CrossCursor ) );
 }
 
 void QgsMeasureHeightProfileTool::canvasPressEvent( QMouseEvent *e )
@@ -147,6 +147,20 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent *e )
     setCursor( Qt::ArrowCursor );
   }
 }
+
+void QgsMeasureHeightProfileTool::keyReleaseEvent( QKeyEvent *e )
+{
+  if ( mPicking && e->key() == Qt::Key_Escape )
+  {
+    mPicking = false;
+    setCursor( Qt::ArrowCursor );
+  }
+  else
+  {
+    mDrawTool->keyReleaseEvent( e );
+  }
+}
+
 
 void QgsMeasureHeightProfileTool::drawCleared()
 {
