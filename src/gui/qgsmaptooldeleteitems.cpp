@@ -47,8 +47,15 @@ void QgsMapToolDeleteItems::drawFinished()
     reset();
     return;
   }
+
   QgsCoordinateReferenceSystem filterRectCrs = canvas()->mapSettings().destinationCrs();
 
+  deleteItems(filterRect, filterRectCrs);
+  reset();
+}
+
+void QgsMapToolDeleteItems::deleteItems(const QgsRectangle &filterRect, const QgsCoordinateReferenceSystem &filterRectCrs)
+{
   // Search annotation items
   QList<QgsAnnotationItem*> delAnnotationItems;
   foreach ( QGraphicsItem* item, canvas()->scene()->items() )
@@ -178,5 +185,4 @@ void QgsMapToolDeleteItems::drawFinished()
     }
     canvas()->refresh();
   }
-  reset();
 }

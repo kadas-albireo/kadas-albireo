@@ -206,6 +206,7 @@ qgsmapoverviewcanvas.cpp
 qgsmaptip.cpp
 qgsmaptool.cpp
 qgsmaptoolannotation.cpp
+qgsmaptooldeleteitems.cpp
 qgsmaptoolemitpoint.cpp
 qgsmaptoolidentify.cpp
 qgsmaptoolidentifyfeature.cpp
@@ -321,6 +322,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaplayerproxymodel.h
   qgsmapoverviewcanvas.h
   qgsmaptool.h
+  qgsmaptooldeleteitems.h
   qgsmaptooldrawshape.h
   qgsmaptooldrawshape_p.h
   qgsmaptoolemitpoint.h
