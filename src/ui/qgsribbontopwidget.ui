@@ -2399,7 +2399,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/loeschen.png</normaloff>:/images/ribbon/loeschen.png</iconset>
    </property>
    <property name="text">
     <string>Delete Items</string>
