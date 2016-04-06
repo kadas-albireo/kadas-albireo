@@ -88,10 +88,7 @@ void QgsRedliningPointMapTool::onFinished()
 {
   QgsFeature f( mLayer->pendingFields() );
   QString flags = QString( "symbol=%1,w=2*\"size\",h=2*\"size\",r=0" ).arg( mShape );
-  QgsPointV2* pos = static_cast<QgsPointV2*>( createGeometry( mLayer->crs() ) );
   f.setAttribute( "flags", flags );
-  f.setAttribute( "text_x", pos->x() );
-  f.setAttribute( "text_y", pos->y() );
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
   QStringList changedAttributes;
   if ( mEditor )
@@ -383,26 +380,12 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
     mRubberBand->setGeometry( geom );
     QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( rect.xMinimum() + bboxOffsetX, rect.yMinimum() + bboxOffsetY ) );
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_x" ), pos.x() );
-    mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().fieldNameIndex( "text_y" ), pos.y() );
+    mLayer->changeGeometry( mCurrentLabel.featureId, new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
     mCanvas->clearCache( mLayer->id() );
     mCanvas->refresh();
   }
   else if ( mMode == FeatureSelected )
   {
-    // Move label if point is moved
-    if ( mCurrentFeature->geometry()->type() == QGis::Point )
-    {
-      QgsFeature feature;
-      mLayer->getFeatures( QgsFeatureRequest( mCurrentFeature->featureId() ) ).nextFeature( feature );
-      if ( !feature.attribute( "text_x" ).isNull() )
-      {
-        double delta_x = static_cast<QgsPointV2*>( mCurrentFeature->geometry()->geometry() )->x() - static_cast<QgsPointV2*>( feature.geometry()->geometry() )->x();
-        double delta_y = static_cast<QgsPointV2*>( mCurrentFeature->geometry()->geometry() )->y() - static_cast<QgsPointV2*>( feature.geometry()->geometry() )->y();
-        mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( "text_x" ), feature.attribute( "text_x" ).toDouble() + delta_x );
-        mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( "text_y" ), feature.attribute( "text_y" ).toDouble() + delta_y );
-      }
-    }
     mLayer->changeGeometry( mCurrentFeature->featureId(), mCurrentFeature->geometry() );
     if ( mCurrentVertex >= 0 )
       mCurrentFeature->selectVertex( mCurrentVertex );
