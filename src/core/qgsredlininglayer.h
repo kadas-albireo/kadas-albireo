@@ -28,6 +28,9 @@ class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
     void read( const QDomElement& redliningElem );
     void write( QDomElement& redliningElem );
     void pasteFeatures( const QList<QgsFeature> &features );
+
+    static QMap<QString, QString> deserializeFlags( const QString& flagsStr );
+    static QString serializeFlags( const QMap<QString, QString> &flagsMap );
 };
 
 #endif // QGSREDLININGLAYER_H
