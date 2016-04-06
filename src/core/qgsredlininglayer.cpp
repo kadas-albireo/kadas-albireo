@@ -148,3 +148,24 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
     dataProvider()->addFeatures( QgsFeatureList() << feature );
   }
 }
+
+QMap<QString, QString> QgsRedliningLayer::deserializeFlags( const QString& flagsStr )
+{
+  QMap<QString, QString> flagsMap;
+  foreach ( const QString& flag, flagsStr.split( ",", QString::SkipEmptyParts ) )
+  {
+    int pos = flag.indexOf( "=" );
+    flagsMap.insert( flag.left( pos ), pos >= 0 ? flag.mid( pos + 1 ) : QString() );
+  }
+  return flagsMap;
+}
+
+QString QgsRedliningLayer::serializeFlags( const QMap<QString, QString>& flagsMap )
+{
+  QString flagsStr;
+  foreach ( const QString& key, flagsMap.keys() )
+  {
+    flagsStr += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
+  }
+  return flagsStr;
+}
