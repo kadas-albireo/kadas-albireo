@@ -78,18 +78,26 @@ void QgsRedliningRectangleMapTool::onFinished()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsRedliningPolylineMapTool::QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed )
-    : QgsMapToolDrawPolyLine( canvas, closed ), mLayer( layer )
+QgsRedliningPolylineMapTool::QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed , QgsRedliningAttributeEditor *editor )
+    : QgsMapToolDrawPolyLine( canvas, closed ), mLayer( layer ), mEditor( editor )
 {
   setShowInputWidget( true );
   setMeasurementMode( closed ? QgsGeometryRubberBand::MEASURE_POLYGON : QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
 
+QgsRedliningPolylineMapTool::~QgsRedliningPolylineMapTool()
+{
+  delete mEditor;
+}
+
 void QgsRedliningPolylineMapTool::onFinished()
 {
   QgsFeature f( mLayer->pendingFields() );
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
+  QStringList changedAttributes;
+  if ( mEditor )
+    mEditor->exec( f, changedAttributes );
   mLayer->addFeature( f );
   reset();
 }

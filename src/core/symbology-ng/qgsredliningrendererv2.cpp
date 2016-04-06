@@ -84,7 +84,7 @@ bool QgsRedliningRendererV2::renderFeature( QgsFeature& feature, QgsRenderContex
     return false;
   }
   // Don't draw features whose text attribute is set - they are drawn as labels only
-  if ( !feature.attribute( "text" ).toString().isEmpty() && !feature.attribute( "flags" ).toString().contains( "symbol=" ) )
+  if ( feature.geometry()->type() == QGis::Point && !feature.attribute( "text" ).toString().isEmpty() && !feature.attribute( "flags" ).toString().contains( "symbol=" ) )
   {
     return true;
   }

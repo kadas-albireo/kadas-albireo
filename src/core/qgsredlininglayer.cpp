@@ -54,21 +54,23 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   setDisplayField( "tooltip" );
 }
 
-bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip )
+bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip , const QString &text )
 {
+  QFont font;
   QgsFeature f( pendingFields() );
   f.setGeometry( geometry );
   f.setAttribute( "size", outlineSize );
+  f.setAttribute( "text", text );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( outline ) );
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( fill ) );
   f.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( outlineStyle ) );
   f.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( fillStyle ) );
-  f.setAttribute( "flags", flags );
+  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=0,fontSize=%4,%5" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( font.pointSize() ).arg( flags ) );
   f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip, double rotation, int markerSize, const QString& extraFlags )
+bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, const QColor& color, const QFont& font, const QString& tooltip, double rotation, int markerSize )
 {
   while ( rotation <= -180 ) rotation += 360.;
   while ( rotation > 180 ) rotation -= 360.;
@@ -78,7 +80,7 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   f.setAttribute( "size", markerSize );
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( color ) );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
-  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4,fontSize=%5%6" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( rotation ).arg( font.pointSize() ).arg( extraFlags ) );
+  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4,fontSize=%5" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( rotation ).arg( font.pointSize() ) );
   f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
