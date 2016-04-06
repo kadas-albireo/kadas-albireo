@@ -206,6 +206,7 @@ void QgsRedliningEditTool::selectLabel( const QgsLabelPosition &labelPos )
   mRubberBand->setLineStyle( Qt::DotLine );
   QgsFeature f;
   mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( f );
+  mLabelIsForPoint = f.geometry()->type() == QGis::Point;
   emit featureSelected( f );
 }
 
@@ -306,7 +307,7 @@ void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
     const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
     mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
   }
-  else if ( mMode == TextSelected )
+  else if ( mMode == TextSelected && mLabelIsForPoint )
   {
     mRubberBand->setTranslationOffset( p.x() - mPressPos.x(), p.y() - mPressPos.y() );
     mRubberBand->updatePosition();
@@ -316,7 +317,7 @@ void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
 
 void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
 {
-  if ( mMode == TextSelected )
+  if ( mMode == TextSelected && mLabelIsForPoint )
   {
     double dx, dy;
     double bboxOffsetX = mCurrentLabel.cornerPoints[0].x() - mCurrentLabel.labelRect.xMinimum();
