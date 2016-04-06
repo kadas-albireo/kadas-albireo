@@ -36,8 +36,6 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
                                  << QgsField( "outline_style", QVariant::Int, "integer", 1 )
                                  << QgsField( "fill_style", QVariant::Int, "integer", 1 )
                                  << QgsField( "text", QVariant::String, "string", 128 )
-                                 << QgsField( "text_x", QVariant::Double, "double", 20, 15 )
-                                 << QgsField( "text_y", QVariant::Double, "double", 20, 15 )
                                  << QgsField( "flags", QVariant::String, "string", 64 )
                                  << QgsField( "tooltip", QVariant::String, "string", 128 ) );
   setRendererV2( new QgsRedliningRendererV2 );
@@ -47,8 +45,6 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   setCustomProperty( "labeling/enabled", true );
   setCustomProperty( "labeling/displayAll", true );
   setCustomProperty( "labeling/fieldName", "text" );
-  setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
-  setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
   setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~fill" );
   setCustomProperty( "labeling/dataDefined/Size", "1~~1~~regexp_substr(\"flags\",'fontSize=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Bold", "1~~1~~regexp_substr(\"flags\",'bold=([^,]+)')~~" );
@@ -79,8 +75,6 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   QgsFeature f( pendingFields() );
   f.setGeometry( new QgsGeometry( pos.clone() ) );
   f.setAttribute( "text", text );
-  f.setAttribute( "text_x", pos.x() );
-  f.setAttribute( "text_y", pos.y() );
   f.setAttribute( "size", markerSize );
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( color ) );
   f.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( color ) );
@@ -105,8 +99,6 @@ void QgsRedliningLayer::read( const QDomElement& redliningElem )
       feature.setAttribute( "outline_style", redliningElem.attribute( "outline_style", "1" ) );
       feature.setAttribute( "fill_style", redliningElem.attribute( "fill_style", "1" ) );
       feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
-      feature.setAttribute( "text_x", redliningItemElem.attribute( "text_x", "" ) );
-      feature.setAttribute( "text_y", redliningItemElem.attribute( "text_y", "" ) );
       feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
       feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip" ) );
       feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
@@ -131,8 +123,6 @@ void QgsRedliningLayer::write( QDomElement &redliningElem )
     redliningItemElem.setAttribute( "outline_style", feature.attribute( "outline_style" ).toString() );
     redliningItemElem.setAttribute( "fill_style", feature.attribute( "fill_style" ).toString() );
     redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
-    redliningItemElem.setAttribute( "text_x", feature.attribute( "text_x" ).toString() );
-    redliningItemElem.setAttribute( "text_y", feature.attribute( "text_y" ).toString() );
     redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
     redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
     redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip" ).toString() );
