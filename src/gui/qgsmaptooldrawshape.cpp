@@ -59,7 +59,7 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
 
 QgsMapToolDrawShape::~QgsMapToolDrawShape()
 {
-  delete mRubberBand;
+  delete mRubberBand.data();
 }
 
 void QgsMapToolDrawShape::activate()
