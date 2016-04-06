@@ -31,12 +31,48 @@
 #include "qgsproject.h"
 
 #include <QDomDocument>
+#include <QInputDialog>
 #include <QFileDialog>
 #include <QMenu>
 #include <QSettings>
 
 
 int QgsGPSRouteEditor::sFeatureSize = 2;
+
+class QgsGPSRouteEditor::GPXAttribEditor : public QgsRedliningAttributeEditor
+{
+    bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
+    {
+      QMap<QString, QString> flagsMap;
+      foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
+      {
+        int pos = flag.indexOf( "=" );
+        flagsMap.insert( flag.left( pos ), pos >= 0 ? flag.mid( pos + 1 ) : QString() );
+      }
+      QString name = QInputDialog::getText( 0, tr( "GPX Attributes" ), tr( "Name:" ), QLineEdit::Normal, feature.attribute( "text" ).toString() );
+      if ( name.isEmpty() )
+      {
+        return false;
+      }
+      feature.setAttribute( "text", name );
+      QFont font;
+      flagsMap["family"] = font.family();
+      flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
+      flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
+      flagsMap["rotation"] = QString( "%1" ).arg( 0. );
+      flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
+
+      QString flags;
+      foreach ( const QString& key, flagsMap.keys() )
+      {
+        flags += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
+      }
+      feature.setAttribute( "flags", flags );
+      changedAttributes.append( "flags" );
+      changedAttributes.append( "text" );
+      return true;
+    }
+};
 
 QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoints, QAction *actionCreateRoutes )
     : QObject( app )
@@ -80,7 +116,7 @@ QgsRedliningLayer* QgsGPSRouteEditor::getLayer() const
 
 void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
   tool->selectFeature( feature );
@@ -90,7 +126,7 @@ void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
 
 void QgsGPSRouteEditor::editLabel( const QgsLabelPosition &labelPos )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -108,7 +144,7 @@ void QgsGPSRouteEditor::clearLayer()
 
 void QgsGPSRouteEditor::editObject()
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
   setTool( tool, mActionEdit );
@@ -116,7 +152,7 @@ void QgsGPSRouteEditor::editObject()
 
 void QgsGPSRouteEditor::createWaypoints( bool active )
 {
-  setTool( new QgsRedliningTextTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", false ), mActionCreateWaypoints, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", new GPXAttribEditor ), mActionCreateWaypoints, active );
 }
 
 void QgsGPSRouteEditor::createRoutes( bool active )

@@ -26,14 +26,29 @@ class QgsRubberBand;
 class QgsSelectedFeature;
 class QgsVectorLayer;
 
+class QgsRedliningAttributeEditor
+{
+  public:
+    virtual ~QgsRedliningAttributeEditor() {}
+    virtual bool exec( QgsFeature& f, QStringList& changedAttributes ) = 0;
+};
+
+class QgsRedliningLabelEditor : public QgsRedliningAttributeEditor
+{
+  public:
+    bool exec( QgsFeature& feature, QStringList& changedAttributes ) override;
+};
+
 class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
 {
     Q_OBJECT
   public:
-    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape );
+    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape, QgsRedliningAttributeEditor* editor = 0 );
+    ~QgsRedliningPointMapTool();
   private:
     QgsVectorLayer* mLayer;
     QString mShape;
+    QgsRedliningAttributeEditor* mEditor;
   private slots:
     void onFinished();
 };
@@ -71,24 +86,11 @@ class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
     void onFinished();
 };
 
-class QgsRedliningTextTool : public QgsMapToolDrawPoint
-{
-    Q_OBJECT
-  public:
-    QgsRedliningTextTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& marker = QString(), bool showEditor = true );
-  private:
-    QgsVectorLayer* mLayer;
-    QString mMarker;
-    bool mShowEditor;
-  private slots:
-    void onFinished();
-};
-
 class QgsRedliningEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, QgsRedliningAttributeEditor* editor );
     void setUnsetOnMiss( bool unsetOnMiss ) { mUnsetOnMiss = unsetOnMiss; }
     void selectFeature( const QgsFeature &feature );
     void selectLabel( const QgsLabelPosition& labelPos );
@@ -110,6 +112,7 @@ class QgsRedliningEditTool : public QgsMapTool
 
   private:
     QgsVectorLayer* mLayer;
+    QgsRedliningAttributeEditor* mEditor;
     enum Mode { NoSelection, TextSelected, FeatureSelected } mMode;
     QgsLabelPosition mCurrentLabel;
     QgsGeometryRubberBand* mRubberBand;
