@@ -39,17 +39,12 @@
 
 int QgsGPSRouteEditor::sFeatureSize = 2;
 
-class QgsGPSRouteEditor::GPXAttribEditor : public QgsRedliningAttributeEditor
+class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttributeEditor
 {
     bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
     {
-      QMap<QString, QString> flagsMap;
-      foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
-      {
-        int pos = flag.indexOf( "=" );
-        flagsMap.insert( flag.left( pos ), pos >= 0 ? flag.mid( pos + 1 ) : QString() );
-      }
-      QString name = QInputDialog::getText( 0, tr( "GPX Attributes" ), tr( "Name:" ), QLineEdit::Normal, feature.attribute( "text" ).toString() );
+      QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
+      QString name = QInputDialog::getText( 0, tr( "Waypoint" ), tr( "Name:" ), QLineEdit::Normal, feature.attribute( "text" ).toString() );
       if ( name.isEmpty() )
       {
         return false;
@@ -62,12 +57,49 @@ class QgsGPSRouteEditor::GPXAttribEditor : public QgsRedliningAttributeEditor
       flagsMap["rotation"] = QString( "%1" ).arg( 0. );
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
 
-      QString flags;
-      foreach ( const QString& key, flagsMap.keys() )
+      feature.setAttribute( "flags", QgsRedliningLayer::serializeFlags( flagsMap ) );
+      changedAttributes.append( "flags" );
+      changedAttributes.append( "text" );
+      return true;
+    }
+};
+
+class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttributeEditor
+{
+    bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
+    {
+      QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
+      QDialog dialog;
+      dialog.setWindowTitle( tr( "Route" ) );
+      QGridLayout* layout = new QGridLayout();
+      dialog.setLayout( layout );
+      layout->addWidget( new QLabel( tr( "Name" ) ), 0, 0, 1, 1 );
+      QLineEdit* nameEdit = new QLineEdit();
+      nameEdit->setText( feature.attribute( "text" ).toString() );
+      layout->addWidget( nameEdit, 0, 1, 1, 1 );
+      layout->addWidget( new QLabel( "Number" ), 1, 0, 1, 1 );
+      QLineEdit* numberEdit = new QLineEdit();
+      numberEdit->setValidator( new QIntValidator( 0, std::numeric_limits<int>::max() ) );
+      numberEdit->setText( flagsMap["routeNumber"] );
+      layout->addWidget( numberEdit, 1, 1, 1, 1 );
+      QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
+      connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
+      connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
+      layout->addWidget( bbox, 2, 0, 1, 2 );
+      if ( dialog.exec() != QDialog::Accepted )
       {
-        flags += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
+        return false;
       }
-      feature.setAttribute( "flags", flags );
+      feature.setAttribute( "text", nameEdit->text() );
+      QFont font;
+      flagsMap["family"] = font.family();
+      flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
+      flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
+      flagsMap["rotation"] = QString( "%1" ).arg( 0. );
+      flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
+      flagsMap["routeNumber"] = numberEdit->text();
+
+      feature.setAttribute( "flags", QgsRedliningLayer::serializeFlags( flagsMap ) );
       changedAttributes.append( "flags" );
       changedAttributes.append( "text" );
       return true;
@@ -98,11 +130,11 @@ QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
     return mLayer;
   }
   mLayer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
-  // Avoid labels overlapping with point symbols
-  mLayer->setCustomProperty( "labeling/placement", 1 );
-  mLayer->setCustomProperty( "labeling/xOffset", 3 );
-  mLayer->setCustomProperty( "labeling/quadOffset", 5 );
-  mLayer->setCustomProperty( "labeling/labelOffsetInMapUnits", false );
+  // Labeling tweaks to make both point and line labeling appear more or less sensible
+  mLayer->setCustomProperty( "labeling/placement", 2 );
+  mLayer->setCustomProperty( "labeling/placementFlags", 10 );
+  mLayer->setCustomProperty( "labeling/dist", 2 );
+  mLayer->setCustomProperty( "labeling/distInMapUnits", false );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 
@@ -121,7 +153,7 @@ QgsRedliningLayer* QgsGPSRouteEditor::getLayer() const
 
 void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), feature.geometry()->type() == QGis::Point ? static_cast<QgsRedliningAttributeEditor*>( new WaypointEditor ) : static_cast<QgsRedliningAttributeEditor*>( new RouteEditor ) );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
   tool->selectFeature( feature );
@@ -131,7 +163,9 @@ void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
 
 void QgsGPSRouteEditor::editLabel( const QgsLabelPosition &labelPos )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
+  QgsFeature feature;
+  mLayer->getFeatures( QgsFeatureRequest( labelPos.featureId ) ).nextFeature( feature );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), feature.geometry()->type() == QGis::Point ? static_cast<QgsRedliningAttributeEditor*>( new WaypointEditor ) : static_cast<QgsRedliningAttributeEditor*>( new RouteEditor ) );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -147,22 +181,14 @@ void QgsGPSRouteEditor::clearLayer()
   deactivateTool();
 }
 
-void QgsGPSRouteEditor::editObject()
-{
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new GPXAttribEditor );
-  connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
-  connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
-  setTool( tool, mActionEdit );
-}
-
 void QgsGPSRouteEditor::createWaypoints( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", new GPXAttribEditor ), mActionCreateWaypoints, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", new WaypointEditor ), mActionCreateWaypoints, active );
 }
 
 void QgsGPSRouteEditor::createRoutes( bool active )
 {
-  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), mActionCreateRoutes, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false, new RouteEditor ), mActionCreateRoutes, active );
 }
 
 void QgsGPSRouteEditor::setTool( QgsMapTool *tool, QAction* action , bool active )
@@ -287,8 +313,8 @@ void QgsGPSRouteEditor::importGpx()
     double lat = wptEl.attribute( "lat" ).toDouble();
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
-    QString extraFlags( ",symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
-    mLayer->addText( name, QgsPointV2( lon, lat ), Qt::yellow, QFont(), QString(), 0, sFeatureSize, extraFlags );
+    QString flags( "symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
+    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nWpts;
   }
   QDomNodeList rtes = doc.elementsByTagName( "rte" );
@@ -296,6 +322,7 @@ void QgsGPSRouteEditor::importGpx()
   {
     QDomElement rteEl = rtes.at( i ).toElement();
     QString name = rteEl.firstChildElement( "name" ).text();
+    QString number = rteEl.firstChildElement( "name" ).text();
     QList<QgsPointV2> pts;
     QDomNodeList rtepts = rteEl.elementsByTagName( "rtept" );
     for ( int j = 0, m = rtepts.size(); j < m; ++j )
@@ -307,7 +334,8 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    QString flags = QString( "routeNumber=%1" ).arg( number );
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nRtes;
   }
   QDomNodeList trks = doc.elementsByTagName( "trk" );
@@ -315,6 +343,7 @@ void QgsGPSRouteEditor::importGpx()
   {
     QDomElement trkEl = trks.at( i ).toElement();
     QString name = trkEl.firstChildElement( "name" ).text();
+    QString number = trkEl.firstChildElement( "name" ).text();
     QList<QgsPointV2> pts;
     QDomNodeList trkpts = trkEl.firstChildElement( "trkseg" ).elementsByTagName( "trkpt" );
     for ( int j = 0, m = trkpts.size(); j < m; ++j )
@@ -326,7 +355,8 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, QString(), name );
+    QString flags = QString( "routeNumber=%1" ).arg( number );
+    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nTracks;
   }
   mApp->mapCanvas()->clearCache( mLayer->id() );
@@ -384,19 +414,21 @@ void QgsGPSRouteEditor::exportGpx()
   }
 
   // Write routes (all line geometries)
-  int routeNum = 0;
   fit = mLayer->getFeatures();
   while ( fit.nextFeature( feature ) )
   {
     if ( feature.geometry()->type() == QGis::Line )
     {
+      QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
       QgsCurveV2* curve = static_cast<QgsCurveV2*>( feature.geometry()->geometry() );
       QDomElement rteEl = doc.createElement( "rte" );
       QDomElement nameEl = doc.createElement( "name" );
-      nameEl.setNodeValue( feature.attribute( "tooltip" ).toString() );
+      QDomText nameText = doc.createTextNode( feature.attribute( "text" ).toString() );
+      nameEl.appendChild( nameText );
       rteEl.appendChild( nameEl );
       QDomElement numberEl = doc.createElement( "number" );
-      numberEl.setNodeValue( QString::number( ++routeNum ) );
+      QDomText numberText = doc.createTextNode( flagsMap["routeNumber"] );
+      numberEl.appendChild( numberText );
       rteEl.appendChild( numberEl );
       QList<QgsPointV2> pts;
       curve->points( pts );

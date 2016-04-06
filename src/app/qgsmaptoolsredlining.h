@@ -62,9 +62,11 @@ class QgsRedliningPolylineMapTool : public QgsMapToolDrawPolyLine
 {
     Q_OBJECT
   public:
-    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed );
+    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed, QgsRedliningAttributeEditor* editor = 0 );
+    ~QgsRedliningPolylineMapTool();
   private:
     QgsVectorLayer* mLayer;
+    QgsRedliningAttributeEditor* mEditor;
   private slots:
     void onFinished();
 };
