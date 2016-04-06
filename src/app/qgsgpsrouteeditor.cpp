@@ -98,6 +98,11 @@ QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
     return mLayer;
   }
   mLayer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
+  // Avoid labels overlapping with point symbols
+  mLayer->setCustomProperty( "labeling/placement", 1 );
+  mLayer->setCustomProperty( "labeling/xOffset", 3 );
+  mLayer->setCustomProperty( "labeling/quadOffset", 5 );
+  mLayer->setCustomProperty( "labeling/labelOffsetInMapUnits", false );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 
