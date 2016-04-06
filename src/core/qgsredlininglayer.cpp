@@ -45,6 +45,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
 
   setCustomProperty( "labeling", "pal" );
   setCustomProperty( "labeling/enabled", true );
+  setCustomProperty( "labeling/displayAll", true );
   setCustomProperty( "labeling/fieldName", "text" );
   setCustomProperty( "labeling/dataDefined/PositionX", "1~~0~~~~text_x" );
   setCustomProperty( "labeling/dataDefined/PositionY", "1~~0~~~~text_y" );
