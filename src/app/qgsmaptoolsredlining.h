@@ -33,12 +33,6 @@ class QgsRedliningAttributeEditor
     virtual bool exec( QgsFeature& f, QStringList& changedAttributes ) = 0;
 };
 
-class QgsRedliningLabelEditor : public QgsRedliningAttributeEditor
-{
-  public:
-    bool exec( QgsFeature& feature, QStringList& changedAttributes ) override;
-};
-
 class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
 {
     Q_OBJECT

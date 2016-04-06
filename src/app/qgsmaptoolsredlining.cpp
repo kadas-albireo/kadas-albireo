@@ -32,46 +32,6 @@
 #include <QMouseEvent>
 
 
-bool QgsRedliningLabelEditor::exec( QgsFeature &feature, QStringList &changedAttributes )
-{
-  QMap<QString, QString> flagsMap;
-  foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
-  {
-    int pos = flag.indexOf( "=" );
-    flagsMap.insert( flag.left( pos ), pos >= 0 ? flag.mid( pos + 1 ) : QString() );
-  }
-  QFont font;
-  font.fromString( QSettings().value( "/Redlining/font", font.toString() ).toString() );
-  font.setFamily( flagsMap.value( "family", font.family() ) );
-  font.setPointSize( flagsMap.value( "fontSize", QString( "%1" ).arg( font.pointSize() ) ).toInt() );
-  font.setItalic( flagsMap.value( "italic", QString( "%1" ).arg( font.italic() ) ).toInt() );
-  font.setBold( flagsMap.value( "bold", QString( "%1" ).arg( font.bold() ) ).toInt() );
-  double rotation = flagsMap.value( "rotation" ).toDouble();
-
-  QgsRedliningTextDialog textDialog( feature.attribute( "text" ).toString(), font, rotation );
-  if ( textDialog.exec() != QDialog::Accepted || textDialog.currentText().isEmpty() )
-  {
-    return false;
-  }
-  feature.setAttribute( "text", textDialog.currentText() );
-  font = textDialog.currentFont();
-  flagsMap["family"] = font.family();
-  flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
-  flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
-  flagsMap["rotation"] = QString( "%1" ).arg( textDialog.rotation() );
-  flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
-
-  QString flags;
-  foreach ( const QString& key, flagsMap.keys() )
-  {
-    flags += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
-  }
-  feature.setAttribute( "flags", flags );
-  changedAttributes.append( "text" );
-  changedAttributes.append( "flags" );
-  return true;
-}
-
 QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape , QgsRedliningAttributeEditor* editor )
     : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape ), mEditor( editor )
 {

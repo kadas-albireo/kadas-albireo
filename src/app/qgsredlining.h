@@ -63,6 +63,8 @@ class QgsRedlining : public QObject
     void featureStyleChanged();
 
   private:
+    class LabelEditor;
+
     QgsMapCanvas* mMapCanvas;
     RedliningUi mUi;
     QAction* mActionEditObject;
