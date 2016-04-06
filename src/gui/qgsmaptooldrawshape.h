@@ -64,7 +64,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     bool mMultipart;
     bool mSnapPoints;
     bool mShowInput;
-    QgsGeometryRubberBand* mRubberBand;
+    QPointer<QgsGeometryRubberBand> mRubberBand;
     QgsMapToolDrawShapeInputWidget* mInputWidget;
 
     virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
