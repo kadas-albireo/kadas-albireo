@@ -46,6 +46,8 @@ class QgsGPSRouteEditor : public QObject
     void featureStyleChanged();
 
   private:
+    class GPXAttribEditor;
+
     static int sFeatureSize;
     QgisApp* mApp;
     QAction* mActionCreateWaypoints;

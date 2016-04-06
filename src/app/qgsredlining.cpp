@@ -157,7 +157,7 @@ QgsRedliningLayer* QgsRedlining::getLayer() const
 
 void QgsRedlining::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new QgsRedliningLabelEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -168,7 +168,7 @@ void QgsRedlining::editFeature( const QgsFeature& feature )
 
 void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new QgsRedliningLabelEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -186,7 +186,7 @@ void QgsRedlining::clearLayer()
 
 void QgsRedlining::editObject()
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new QgsRedliningLabelEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -237,7 +237,7 @@ void QgsRedlining::newCircle( bool active )
 
 void QgsRedlining::newText( bool active )
 {
-  setTool( new QgsRedliningTextTool( mMapCanvas, getOrCreateLayer() ), mActionNewText, active );
+  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "", new QgsRedliningLabelEditor ), mActionNewText, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewText );
 }
 

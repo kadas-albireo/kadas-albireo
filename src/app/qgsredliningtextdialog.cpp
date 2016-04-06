@@ -16,25 +16,19 @@
 #include "qgsredliningtextdialog.h"
 #include <QSettings>
 
-QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, QString fontstr, double rotation, QWidget *parent )
+QgsRedliningTextDialog::QgsRedliningTextDialog( const QString &text, const QFont &font, double rotation, QWidget *parent )
     : QDialog( parent )
 {
   ui.setupUi( this );
   ui.lineEditText->setText( text );
-  if ( fontstr.isEmpty() )
-  {
-    fontstr = QSettings().value( "/Redlining/font", font().toString() ).toString();
-  }
-  QFont textFont;
-  textFont.fromString( fontstr );
-  ui.checkBoxBold->setChecked( textFont.bold() );
-  ui.checkBoxItalic->setChecked( textFont.italic() );
-  ui.spinBoxFontSize->setValue( textFont.pointSize() );
-  textFont.setBold( false );
-  textFont.setItalic( false );
-  textFont.setPointSize( font().pointSize() );
-  ui.fontComboBox->setCurrentFont( textFont );
+  ui.checkBoxBold->setChecked( font.bold() );
+  ui.checkBoxItalic->setChecked( font.italic() );
+  ui.spinBoxFontSize->setValue( font.pointSize() );
   ui.spinBoxRotation->setValue( rotation );
+  // Set only family to make the text in the fontComboBox appear normal
+  QFont fontComboFont;
+  fontComboFont.setFamily( font.family() );
+  ui.fontComboBox->setCurrentFont( fontComboFont );
   ui.lineEditText->setFocus();
 
   connect( this, SIGNAL( accepted() ), this, SLOT( saveFont() ) );

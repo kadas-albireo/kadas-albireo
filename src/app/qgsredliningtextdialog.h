@@ -24,7 +24,7 @@ class QgsRedliningTextDialog : public QDialog
 {
     Q_OBJECT
   public:
-    QgsRedliningTextDialog( const QString& text, QString fontstr, double rotation, QWidget* parent = 0 );
+    QgsRedliningTextDialog( const QString& text, const QFont& font, double rotation, QWidget* parent = 0 );
     QString currentText() const { return ui.lineEditText->text(); }
     QFont currentFont() const;
     double rotation() const;

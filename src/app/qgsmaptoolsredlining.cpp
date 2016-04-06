@@ -31,19 +31,71 @@
 #include <QSettings>
 #include <QMouseEvent>
 
-QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape )
-    : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape )
+
+bool QgsRedliningLabelEditor::exec( QgsFeature &feature, QStringList &changedAttributes )
+{
+  QMap<QString, QString> flagsMap;
+  foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
+  {
+    int pos = flag.indexOf( "=" );
+    flagsMap.insert( flag.left( pos ), pos >= 0 ? flag.mid( pos + 1 ) : QString() );
+  }
+  QFont font;
+  font.fromString( QSettings().value( "/Redlining/font", font.toString() ).toString() );
+  font.setFamily( flagsMap.value( "family", font.family() ) );
+  font.setPointSize( flagsMap.value( "fontSize", QString( "%1" ).arg( font.pointSize() ) ).toInt() );
+  font.setItalic( flagsMap.value( "italic", QString( "%1" ).arg( font.italic() ) ).toInt() );
+  font.setBold( flagsMap.value( "bold", QString( "%1" ).arg( font.bold() ) ).toInt() );
+  double rotation = flagsMap.value( "rotation" ).toDouble();
+
+  QgsRedliningTextDialog textDialog( feature.attribute( "text" ).toString(), font, rotation );
+  if ( textDialog.exec() != QDialog::Accepted || textDialog.currentText().isEmpty() )
+  {
+    return false;
+  }
+  feature.setAttribute( "text", textDialog.currentText() );
+  font = textDialog.currentFont();
+  flagsMap["family"] = font.family();
+  flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
+  flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
+  flagsMap["rotation"] = QString( "%1" ).arg( textDialog.rotation() );
+  flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
+
+  QString flags;
+  foreach ( const QString& key, flagsMap.keys() )
+  {
+    flags += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
+  }
+  feature.setAttribute( "flags", flags );
+  changedAttributes.append( "text" );
+  changedAttributes.append( "flags" );
+  return true;
+}
+
+QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape , QgsRedliningAttributeEditor* editor )
+    : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape ), mEditor( editor )
 {
   setShowInputWidget( true );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
 
+QgsRedliningPointMapTool::~QgsRedliningPointMapTool()
+{
+  delete mEditor;
+}
+
 void QgsRedliningPointMapTool::onFinished()
 {
   QgsFeature f( mLayer->pendingFields() );
-  QString flags = QString( "symbol=%1,w=3*\"size\",h=3*\"size\",r=0" ).arg( mShape );
+  QString flags = QString( "symbol=%1,w=2*\"size\",h=2*\"size\",r=0" ).arg( mShape );
+  QgsPointV2* pos = static_cast<QgsPointV2*>( createGeometry( mLayer->crs() ) );
   f.setAttribute( "flags", flags );
+  f.setAttribute( "text_x", pos->x() );
+  f.setAttribute( "text_y", pos->y() );
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
+  QStringList changedAttributes;
+  if ( mEditor )
+    mEditor->exec( f, changedAttributes );
   mLayer->addFeature( f );
   reset();
 }
@@ -105,37 +157,8 @@ void QgsRedliningCircleMapTool::onFinished()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsRedliningTextTool::QgsRedliningTextTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& marker, bool showEditor )
-    : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mMarker( marker ), mShowEditor( showEditor )
-{
-  setShowInputWidget( true );
-  connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
-}
-
-void QgsRedliningTextTool::onFinished()
-{
-  QgsRedliningTextDialog textDialog( "", "", 0 );
-  if ( mShowEditor && ( textDialog.exec() != QDialog::Accepted || textDialog.currentText().isEmpty() ) )
-  {
-    return;
-  }
-  QgsFeature f( mLayer->pendingFields() );
-  QgsPointV2* pos = static_cast<QgsPointV2*>( createGeometry( mLayer->crs() ) );
-  f.setAttribute( "text", textDialog.currentText() );
-  f.setAttribute( "text_x", pos->x() );
-  f.setAttribute( "text_y", pos->y() );
-  QFont font = textDialog.currentFont();
-  QString markerFlags = mMarker.isEmpty() ? "" : QString( ",symbol=%1,w=2*\"size\",h=2*\"size\",r=0" ).arg( mMarker );
-  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=%4,fontSize=%5%6" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( textDialog.rotation() ).arg( font.pointSize() ).arg( markerFlags ) );
-  f.setGeometry( new QgsGeometry( pos ) );
-  mLayer->addFeature( f );
-  reset();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLayer *layer )
-    : QgsMapTool( canvas ), mLayer( layer ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
+QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLayer *layer , QgsRedliningAttributeEditor *editor )
+    : QgsMapTool( canvas ), mLayer( layer ), mEditor( editor ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
 {
   connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
 }
@@ -395,44 +418,15 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
   {
     QgsFeature feature;
     mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature );
-    QFont font = mCurrentLabel.labelFont;
-    // Somehow mCurrentLabel.labelFont fontSizes are incorrect
-    QRegExp fontSizeRx( "fontSize=([^,]+)" );
-    if ( fontSizeRx.indexIn( feature.attribute( "flags" ).toString() ) )
-      font.setPointSize( fontSizeRx.cap( 1 ).toInt() );
-    QgsRedliningTextDialog textDialog( mCurrentLabel.labelText, font.toString(), mCurrentLabel.rotation / M_PI * 180. );
-    if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
+    QStringList changedAttributes;
+    if ( mEditor && mEditor->exec( feature, changedAttributes ) )
     {
-      mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "text" ), textDialog.currentText() );
-      QFont font = textDialog.currentFont();
-      QStringList flags = feature.attribute( "flags" ).toString().split( "," );
-      for ( int i = 0, n = flags.size(); i < n; ++i )
+      foreach ( const QString& attrib, changedAttributes )
       {
-        if ( flags[i].startsWith( "family" ) )
-        {
-          flags[i] = QString( "family=%1" ).arg( font.family() );
-        }
-        else if ( flags[i].startsWith( "italic" ) )
-        {
-          flags[i] = QString( "italic=%1" ).arg( font.italic() );
-        }
-        else if ( flags[i].startsWith( "bold" ) )
-        {
-          flags[i] = QString( "bold=%1" ).arg( font.italic() );
-        }
-        else if ( flags[i].startsWith( "rotation" ) )
-        {
-          flags[i] = QString( "rotation=%1" ).arg( textDialog.rotation() );
-        }
-        else if ( flags[i].startsWith( "fontSize" ) )
-        {
-          flags[i] = QString( "fontSize=%1" ).arg( font.pointSize() );
-        }
+        mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( attrib ), feature.attribute( attrib ) );
       }
-      mLayer->changeAttributeValue( mCurrentLabel.featureId, mLayer->pendingFields().indexFromName( "flags" ), flags.join( "," ) );
       mCanvas->refresh();
     }
-    return;
   }
   else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() != QGis::Point && !mIsRectangle )
   {
@@ -458,75 +452,6 @@ void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
         mCanvas->refresh();
         break;
       }
-    }
-  }
-  else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() == QGis::Point )
-  {
-    QgsFeature feature;
-    mLayer->getFeatures( QgsFeatureRequest( mCurrentFeature->featureId() ) ).nextFeature( feature );
-    if ( feature.attribute( "text" ).isNull() )
-    {
-      return;
-    }
-    QgsPoint pos( feature.attribute( "text_x" ).toDouble(), feature.attribute( "text_y" ).toDouble() );
-    // Find the label for the feature, if any
-    const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
-    if ( !labelingResults )
-    {
-      return;
-    }
-    QString currentText;
-    QString currentFont;
-    int currentRot = 0;
-    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
-    foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( ct->transform( pos ) ) )
-    {
-      if ( labelPos.layerID == mLayer->id() &&
-           labelPos.featureId == mCurrentFeature->featureId() )
-      {
-        currentText = labelPos.labelText;
-        QFont font = labelPos.labelFont;
-        // Somehow mCurrentLabel.labelFont fontSizes are incorrect
-        QRegExp fontSizeRx( "fontSize=([^,]+)" );
-        if ( fontSizeRx.indexIn( feature.attribute( "flags" ).toString() ) )
-          font.setPointSize( fontSizeRx.cap( 1 ).toInt() );
-        currentFont = font.toString();
-        currentRot = labelPos.rotation / M_PI * 180.;
-        break;
-      }
-    }
-
-    QgsRedliningTextDialog textDialog( currentText, currentFont, currentRot );
-    if ( textDialog.exec() == QDialog::Accepted && !textDialog.currentText().isEmpty() )
-    {
-      mLayer->changeAttributeValue( mCurrentFeature->featureId(), mLayer->pendingFields().indexFromName( "text" ), textDialog.currentText() );
-      QFont font = textDialog.currentFont();
-      QStringList flags = feature.attribute( "flags" ).toString().split( "," );
-      for ( int i = 0, n = flags.size(); i < n; ++i )
-      {
-        if ( flags[i].startsWith( "family" ) )
-        {
-          flags[i] = QString( "family=%1" ).arg( font.family() );
-        }
-        else if ( flags[i].startsWith( "italic" ) )
-        {
-          flags[i] = QString( "italic=%1" ).arg( font.italic() );
-        }
-        else if ( flags[i].startsWith( "bold" ) )
-        {
-          flags[i] = QString( "bold=%1" ).arg( font.italic() );
-        }
-        else if ( flags[i].startsWith( "rotation" ) )
-        {
-          flags[i] = QString( "rotation=%1" ).arg( textDialog.rotation() );
-        }
-        else if ( flags[i].startsWith( "fontSize" ) )
-        {
-          flags[i] = QString( "fontSize=%1" ).arg( font.pointSize() );
-        }
-      }
-      mLayer->changeAttributeValue( mCurrentFeature->featureId(), mLayer->pendingFields().indexFromName( "flags" ), flags.join( "," ) );
-      mCanvas->refresh();
     }
   }
 }
@@ -605,12 +530,10 @@ void QgsRedliningEditTool::updateLabelBoundingBox()
   if ( mMode == TextSelected )
   {
     // Try to find the label again
-    QgsPoint p( mCurrentLabel.labelRect.xMinimum(), mCurrentLabel.labelRect.yMinimum() );
-
     const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
     if ( labelingResults )
     {
-      foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( p ) )
+      foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsWithinRect( mCurrentLabel.labelRect ) )
       {
         if ( labelPos.layerID == mCurrentLabel.layerID &&
              labelPos.featureId == mCurrentLabel.featureId &&
