@@ -20,10 +20,8 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
   p.setBrush( QBrush( palette().color( QPalette::Window ) ) );
   if ( isChecked() )
   {
-    p.setBrush( QBrush( palette().color( QPalette::Window ).darker( 125 ) ) );
-    QPen checkedPen( palette().color( QPalette::Dark ) );
-    //QPen checkedPen( Qt::red );
-    p.setPen( checkedPen );
+    p.setBrush( QBrush( QColor( 190, 220, 246 ) ) );
+    p.setPen( QColor( 38, 59, 78 ) );
   }
   else if ( underMouse() && isEnabled() )
   {
@@ -62,19 +60,22 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
   if ( !buttonIcon.isNull() )
   {
     QSize iSize = iconSize();
-    QPixmap pixmap = buttonIcon.pixmap( iSize, QIcon::Normal, QIcon::On );
     int pixmapY = iconBottomY - iSize.height();
     int pixmapX = width() / 2.0 - iSize.width() / 2.0;
-    if ( isEnabled() )
+    if ( isEnabled() && !isChecked() )
     {
+      QPixmap pixmap = buttonIcon.pixmap( iSize, QIcon::Normal, QIcon::On );
       p.drawPixmap( pixmapX, pixmapY, pixmap );
     }
     else
     {
+      // Largest pixmap, to avoid issues with masking a downscaled image
+      QPixmap pixmap = buttonIcon.pixmap( QSize( 1024, 1024 ), QIcon::Normal, QIcon::On );
       QBitmap mask = pixmap.createMaskFromColor( QColor( 0, 0, 0, 0 ), Qt::MaskInColor );
       p.save();
+      p.setRenderHint( QPainter::SmoothPixmapTransform );
       p.setPen( QColor( 38, 59, 78 ) );
-      p.drawPixmap( QPoint( pixmapX, pixmapY ), mask );
+      p.drawPixmap( QRect( pixmapX, pixmapY, iSize.width(), iSize.height() ), mask );
       p.restore();
     }
   }
@@ -85,7 +86,10 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
   {
     QFontMetricsF fm( font() );
     p.setFont( font() );
-    p.setPen( QPen( palette().color( QPalette::Text ) ) );
+    if ( isChecked() )
+      p.setPen( QColor( 38, 59, 78 ) );
+    else
+      p.setPen( QPen( palette().color( QPalette::Text ) ) );
 
     QStringList rawRextLines = buttonText.split( "\n" );
     // Insert additional line breaks where exceeds button width
