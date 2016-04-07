@@ -26,10 +26,10 @@ class QgsRubberBand;
 class QgsSelectedFeature;
 class QgsVectorLayer;
 
-class QgsRedliningAttributeEditor
+class QgsRedliningAttributeEditor : public QObject
 {
   public:
-    virtual ~QgsRedliningAttributeEditor() {}
+    virtual QString getName() const = 0;
     virtual bool exec( QgsFeature& f, QStringList& changedAttributes ) = 0;
 };
 
@@ -86,7 +86,7 @@ class QgsRedliningEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, QgsRedliningAttributeEditor* editor );
+    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, QgsRedliningAttributeEditor* editor = 0 );
     void setUnsetOnMiss( bool unsetOnMiss ) { mUnsetOnMiss = unsetOnMiss; }
     void selectFeature( const QgsFeature &feature );
     void selectLabel( const QgsLabelPosition& labelPos );
@@ -123,6 +123,10 @@ class QgsRedliningEditTool : public QgsMapTool
 
     void clearCurrent( bool refresh = true );
     void checkVertexSelection();
+    void showContextMenu( QMouseEvent *e );
+    void addVertex( const QPoint& pos );
+    void deleteCurrentVertex();
+    void runEditor( const QgsFeatureId& featureId );
 
   private slots:
     void updateLabelBoundingBox();

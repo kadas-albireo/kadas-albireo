@@ -35,6 +35,8 @@
 class QgsRedlining::LabelEditor : public QgsRedliningAttributeEditor
 {
   public:
+    QString getName() const override { return tr( "label" ); }
+
     bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
     {
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
@@ -193,7 +195,7 @@ QgsRedliningLayer* QgsRedlining::getLayer() const
 
 void QgsRedlining::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new LabelEditor );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );

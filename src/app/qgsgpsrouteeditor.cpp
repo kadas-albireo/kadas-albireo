@@ -41,6 +41,7 @@ int QgsGPSRouteEditor::sFeatureSize = 2;
 
 class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttributeEditor
 {
+    QString getName() const override { return tr( "waypoint attributes" ); }
     bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
     {
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
@@ -66,6 +67,7 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttributeEditor
 
 class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttributeEditor
 {
+    QString getName() const override { return tr( "route attributes" ); }
     bool exec( QgsFeature& feature, QStringList& changedAttributes ) override
     {
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( feature.attribute( "flags" ).toString() );
