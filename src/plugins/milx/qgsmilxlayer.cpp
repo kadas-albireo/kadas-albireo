@@ -17,6 +17,7 @@
 
 #include "qgscrscache.h"
 #include "layertree/qgslayertreeview.h"
+#include "qgisinterface.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgsmilxlayer.h"
 #include "qgslogger.h"
@@ -223,6 +224,16 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
 
 QgsMilXLayer::QgsMilXLayer( QgsLayerTreeViewMenuProvider* menuProvider , const QString &name )
     : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( menuProvider ), mMargin( 0 ), mIsApproved( false )
+{
+  mValid = true;
+  setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
+
+  if ( mMenuProvider )
+    mMenuProvider->addLegendLayerActionForLayer( "milx_approved_layer", this );
+}
+
+QgsMilXLayer::QgsMilXLayer( QgisInterface* iface, const QString &name )
+    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( iface->layerTreeView()->menuProvider() ), mMargin( 0 ), mIsApproved( false )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );

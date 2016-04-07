@@ -22,6 +22,7 @@
 #include "qgspluginlayerregistry.h"
 #include "MilXClient.hpp"
 
+class QgisInterface;
 class QgsLayerTreeViewMenuProvider;
 
 class QGS_MILX_EXPORT QgsMilXItem
@@ -57,7 +58,9 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
   public:
     static QString layerTypeKey() { return "MilX_Layer"; }
 
-    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider = 0, const QString& name = "MilX" );
+    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider, const QString& name = "MilX" );
+    // This second variant is just because for some reason SIP mishandles QgsLayerTreeViewMenuProvider and the first variant is unusable from python...
+    QgsMilXLayer( QgisInterface* iface, const QString& name = "MilX" );
     ~QgsMilXLayer();
     void addItem( QgsMilXItem* item ) { mItems.append( item ); }
     QgsMilXItem* takeItem( int idx ) { return mItems.takeAt( idx ); }

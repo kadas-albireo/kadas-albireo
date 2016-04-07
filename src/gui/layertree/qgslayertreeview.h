@@ -150,12 +150,14 @@ class GUI_EXPORT QgsLayerTreeViewMenuProvider
     void addLegendLayerActionForLayer( QAction* action, QgsMapLayer* layer );
     void addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer );
     void removeLegendLayerActionsForLayer( QgsMapLayer* layer );
-    QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
 
   protected:
     void addCustomLayerActions( QMenu* menu, QgsMapLayer* layer );
 
     QMap< QgsMapLayer::LayerType, QList< LegendLayerAction > > mLegendLayerActionMap;
+
+  private:
+    QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
 };
 
 

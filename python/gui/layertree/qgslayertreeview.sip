@@ -80,8 +80,6 @@ class QgsLayerTreeView : QTreeView
     QgsMapLayer* layerForIndex( const QModelIndex& index ) const;
 };
 
-struct LegendLayerAction;
-
 /**
  * Implementation of this interface can be implemented to allow QgsLayerTreeView
  * instance to provide custom context menus (opened upon right-click).
@@ -94,7 +92,6 @@ class QgsLayerTreeViewMenuProvider
 %TypeHeaderCode
 #include <qgslayertreeview.h>
 %End
-
   public:
         virtual ~QgsLayerTreeViewMenuProvider();
 
@@ -108,8 +105,4 @@ class QgsLayerTreeViewMenuProvider
         void addLegendLayerActionForLayer( QAction* action, QgsMapLayer* layer );
         void addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer );
         void removeLegendLayerActionsForLayer( QgsMapLayer* layer );
-        QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
-
-protected:
-  void addCustomLayerActions( QMenu* menu, QgsMapLayer* layer );
 };
