@@ -21,6 +21,8 @@
 //used in main.cpp and anywhere else where the release name is needed
 #define RELEASE_NAME "${RELEASE_NAME}"
 
+#define BUILD_DATE "${BUILD_DATE}"
+
 #define QGIS_PLUGIN_SUBDIR "${QGIS_PLUGIN_SUBDIR}"
 #define QGIS_DATA_SUBDIR "${QGIS_DATA_SUBDIR}"
 #define QGIS_LIBEXEC_SUBDIR "${QGIS_LIBEXEC_SUBDIR}"

@@ -438,6 +438,7 @@ void QgsRibbonApp::configureButtons()
 
   //help tab
   setActionToButton( mActionHelp, mHelpButton );
+  setActionToButton( mActionAbout, mAboutButton );
 }
 
 void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )

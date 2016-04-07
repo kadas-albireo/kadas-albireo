@@ -46,6 +46,8 @@ class CORE_EXPORT QGis
     static const char* QGIS_RELEASE_NAME;
     // The development version
     static const char* QGIS_DEV_VERSION;
+    // The build date
+    static const char* QGIS_BUILD_DATE;
 
     // Enumerations
     //
