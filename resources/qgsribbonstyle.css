@@ -152,9 +152,9 @@ QPushButton#mLayerTreeViewButton {
   color: #FFFFFF;
 }
 
-#mRibbonWidget QAbstractButton,
-#mRibbonWidget QComboBox,
-#mRibbonWidget QSpinBox {
+#mRibbonWidget > QWidget > QWidget > QAbstractButton,
+#mRibbonWidget > QWidget > QWidget > QComboBox,
+#mRibbonWidget > QWidget > QWidget > QSpinBox {
   background-color: #5D7081;
   color: #FFFFFF;
 }
