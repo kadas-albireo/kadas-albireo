@@ -340,6 +340,9 @@ void QgsRibbonApp::configureButtons()
   connect( mActionSave, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
   setActionToButton( mActionSave, mSaveButton );
 
+  connect( mActionSaveAs, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
+  setActionToButton( mActionSaveAs, mSaveAsButton );
+
   setActionToButton( mActionPrint, mPrintButton );
 
   connect( mActionCopy, SIGNAL( triggered() ), this, SLOT( saveMapToClipboard() ) );
