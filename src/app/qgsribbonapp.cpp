@@ -75,7 +75,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersWidget->setVisible( false );
   mLayersWidget->setCursor( Qt::ArrowCursor );
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
-  mGeodataBox->setCollapsed( true );
+  mGeodataBox->setCollapsed( false );
   mLayersBox->setCollapsed( false );
   mLayersSpacer->setVisible( false );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
