@@ -432,6 +432,9 @@ void QgsRibbonApp::configureButtons()
   //settings tab
   connect( mActionSettings, SIGNAL( triggered() ), this, SLOT( options() ) );
   setActionToButton( mActionSettings, mSettingsButton );
+
+  //help tab
+  setActionToButton( mActionHelp, mHelpButton );
 }
 
 void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsMapTool* tool )
