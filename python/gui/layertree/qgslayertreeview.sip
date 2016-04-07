@@ -109,4 +109,7 @@ class QgsLayerTreeViewMenuProvider
         void addLegendLayerActionForLayer( const QString& id, QgsMapLayer* layer );
         void removeLegendLayerActionsForLayer( QgsMapLayer* layer );
         QList< LegendLayerAction > legendLayerActions( QgsMapLayer::LayerType type ) const;
+
+protected:
+  void addCustomLayerActions( QMenu* menu, QgsMapLayer* layer );
 };
