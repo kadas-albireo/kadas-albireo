@@ -28,7 +28,9 @@ class QgsMilXLayer : public QgsPluginLayer
   public:
     static QString layerTypeKey();
 
-    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider = 0, const QString& name = "MilX" );
+    QgsMilXLayer( QgsLayerTreeViewMenuProvider *menuProvider, const QString& name = "MilX" );
+    // This second variant is just because for some reason SIP mishandles QgsLayerTreeViewMenuProvider and the first variant is unusable from python...
+    QgsMilXLayer( QgisInterface* iface, const QString& name = "MilX" );
     ~QgsMilXLayer();
     void addItem( QgsMilXItem* item /Transfer/ );
     QgsMilXItem* takeItem( int idx );
