@@ -2277,6 +2277,9 @@ Sight</string>
    <property name="text">
     <string>Save Map</string>
    </property>
+   <property name="toolTip">
+    <string>Save Map to Image</string>
+   </property>
   </action>
   <action name="mActionExportKML">
    <property name="icon">
