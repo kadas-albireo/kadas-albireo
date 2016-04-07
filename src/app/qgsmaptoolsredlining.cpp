@@ -29,6 +29,7 @@
 #include "nodetool/qgsvertexentry.h"
 
 #include <QSettings>
+#include <QMenu>
 #include <QMouseEvent>
 
 
@@ -153,6 +154,10 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
     {
       if ( labelPos.layerID == mLayer->id() && labelPos.featureId == mCurrentLabel.featureId )
       {
+        if ( e->button() == Qt::RightButton )
+        {
+          showContextMenu( e );
+        }
         return;
       }
     }
@@ -165,6 +170,10 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
       if ( feature.id() == mCurrentFeature->featureId() )
       {
         checkVertexSelection();
+        if ( e->button() == Qt::RightButton )
+        {
+          showContextMenu( e );
+        }
         return;
       }
     }
@@ -271,6 +280,57 @@ void QgsRedliningEditTool::checkVertexSelection()
   }
 }
 
+void QgsRedliningEditTool::showContextMenu( QMouseEvent *e )
+{
+  QMenu menu;
+  QAction* actionRemoveObject = 0;
+  QAction* actionRemoveNode = 0;
+  QAction* actionAddNode = 0;
+  QAction* actionEdit = 0;
+  QgsFeatureId currentFeatureId = mCurrentFeature ? mCurrentFeature->featureId() : mCurrentLabel.featureId;
+
+  if ( mCurrentFeature && mCurrentFeature->geometry()->type() != QGis::Point && !mIsRectangle )
+  {
+    if ( mCurrentVertex != -1 )
+    {
+      actionRemoveNode = menu.addAction( tr( "Remove node" ) );
+    }
+    else
+    {
+      actionAddNode = menu.addAction( tr( "Add node" ) );
+    }
+    menu.addSeparator();
+  }
+  actionRemoveObject = menu.addAction( tr( "Remove object" ) );
+  if ( mEditor != 0 )
+  {
+    menu.addSeparator();
+    actionEdit = menu.addAction( tr( "Edit %1" ).arg( mEditor->getName() ) );
+  }
+  QAction* clickedAction = menu.exec( e->globalPos() );
+  if ( clickedAction == 0 )
+  {
+    // pass
+  }
+  else if ( clickedAction == actionRemoveNode )
+  {
+    deleteCurrentVertex();
+  }
+  else if ( clickedAction == actionAddNode )
+  {
+    addVertex( e->pos() );
+  }
+  else if ( clickedAction == actionRemoveObject )
+  {
+    mLayer->deleteFeature( currentFeatureId );
+    clearCurrent();
+  }
+  else if ( clickedAction == actionEdit )
+  {
+    runEditor( currentFeatureId );
+  }
+}
+
 void QgsRedliningEditTool::canvasMoveEvent( QMouseEvent *e )
 {
   QgsPoint p = toMapCoordinates( e->pos() );
@@ -365,46 +425,13 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
 
 void QgsRedliningEditTool::canvasDoubleClickEvent( QMouseEvent *e )
 {
-  QgsFeature feature;
-  if ( mMode == TextSelected && mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature ) )
+  if ( mMode == TextSelected )
   {
-    QgsFeature feature;
-    mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( feature );
-    QStringList changedAttributes;
-    if ( mEditor && mEditor->exec( feature, changedAttributes ) )
-    {
-      foreach ( const QString& attrib, changedAttributes )
-      {
-        mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( attrib ), feature.attribute( attrib ) );
-      }
-      mCanvas->refresh();
-    }
+    runEditor( mCurrentLabel.featureId );
   }
   else if ( mMode == FeatureSelected && mCurrentFeature->geometry()->type() != QGis::Point && !mIsRectangle )
   {
-    QgsSnapper snapper( mCanvas->mapSettings() );
-    snapper.setSnapMode( QgsSnapper::SnapWithResultsWithinTolerances );
-    QgsSnapper::SnapLayer snapLayer;
-    snapLayer.mLayer = mLayer;
-    snapLayer.mSnapTo = QgsSnapper::SnapToSegment;
-    snapLayer.mTolerance = 10;
-    snapLayer.mUnitType = QgsTolerance::Pixels;
-    snapper.setSnapLayers( QList<QgsSnapper::SnapLayer>() << snapLayer );
-    QList<QgsSnappingResult> results;
-    snapper.snapMapPoint( toMapCoordinates( e->pos() ), results );
-    foreach ( const QgsSnappingResult& result, results )
-    {
-      if ( result.snappedAtGeometry == mCurrentFeature->featureId() && result.afterVertexNr != -1 )
-      {
-        QgsPoint layerCoord = toLayerCoordinates( mLayer, results.first().snappedVertex );
-        mLayer->insertVertex( layerCoord.x(), layerCoord.y(), mCurrentFeature->featureId(), result.afterVertexNr );
-        const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
-        mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
-        mCanvas->clearCache( mLayer->id() );
-        mCanvas->refresh();
-        break;
-      }
-    }
+    addVertex( e->pos() );
   }
 }
 
@@ -422,15 +449,7 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
     {
       if ( mCurrentFeature && mCurrentVertex >= 0 )
       {
-        if ( !mIsRectangle )
-        {
-          mCurrentFeature->deleteSelectedVertexes();
-          mCurrentVertex = -1;
-          const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
-          mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
-          mCanvas->clearCache( mLayer->id() );
-          mCanvas->refresh();
-        }
+        deleteCurrentVertex();
       }
       else
       {
@@ -439,6 +458,61 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
       }
       e->ignore();
     }
+  }
+}
+
+void QgsRedliningEditTool::addVertex( const QPoint &pos )
+{
+  QgsSnapper snapper( mCanvas->mapSettings() );
+  snapper.setSnapMode( QgsSnapper::SnapWithResultsWithinTolerances );
+  QgsSnapper::SnapLayer snapLayer;
+  snapLayer.mLayer = mLayer;
+  snapLayer.mSnapTo = QgsSnapper::SnapToSegment;
+  snapLayer.mTolerance = 10;
+  snapLayer.mUnitType = QgsTolerance::Pixels;
+  snapper.setSnapLayers( QList<QgsSnapper::SnapLayer>() << snapLayer );
+  QList<QgsSnappingResult> results;
+  snapper.snapMapPoint( toMapCoordinates( pos ), results );
+  foreach ( const QgsSnappingResult& result, results )
+  {
+    if ( result.snappedAtGeometry == mCurrentFeature->featureId() && result.afterVertexNr != -1 )
+    {
+      QgsPoint layerCoord = toLayerCoordinates( mLayer, results.first().snappedVertex );
+      mLayer->insertVertex( layerCoord.x(), layerCoord.y(), mCurrentFeature->featureId(), result.afterVertexNr );
+      const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+      mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
+      mCanvas->clearCache( mLayer->id() );
+      mCanvas->refresh();
+      break;
+    }
+  }
+}
+
+void QgsRedliningEditTool::deleteCurrentVertex()
+{
+  if ( !mIsRectangle )
+  {
+    mCurrentFeature->deleteSelectedVertexes();
+    mCurrentVertex = -1;
+    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+    mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
+    mCanvas->clearCache( mLayer->id() );
+    mCanvas->refresh();
+  }
+}
+
+void QgsRedliningEditTool::runEditor( const QgsFeatureId& featureId )
+{
+  QgsFeature feature;
+  mLayer->getFeatures( QgsFeatureRequest( featureId ) ).nextFeature( feature );
+  QStringList changedAttributes;
+  if ( mEditor && mEditor->exec( feature, changedAttributes ) )
+  {
+    foreach ( const QString& attrib, changedAttributes )
+    {
+      mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( attrib ), feature.attribute( attrib ) );
+    }
+    mCanvas->refresh();
   }
 }
 
