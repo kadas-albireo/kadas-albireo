@@ -39,8 +39,6 @@
 
 #include <QApplication>
 #include <QFileInfo>
-#include <QDesktopServices>
-#include <QDir>
 #include <QDomNode>
 #include <QObject>
 #include <QTextStream>
@@ -1051,31 +1049,12 @@ bool QgsProject::write()
 
     if ( ml )
     {
-      // Don't store redlining layer in project - it is created automatically as needed
-      if ( ml->type() == QgsMapLayer::RedliningLayer )
-      {
-        li++;
-        continue;
-      }
       QString externalProjectFile = layerIsEmbedded( ml->id() );
       QHash< QString, QPair< QString, bool> >::const_iterator emIt = mEmbeddedLayers.find( ml->id() );
       if ( emIt == mEmbeddedLayers.constEnd() )
       {
         // general layer metadata
         QDomElement maplayerElem = doc->createElement( "maplayer" );
-
-        // If layer is stored in tmp dir, move to <project>_files folder
-        if ( ml->source().startsWith( QDesktopServices::storageLocation( QDesktopServices::TempLocation ) ) )
-        {
-          QDir projectDir = QFileInfo( fileName() ).absoluteDir();
-          QString projectFilesDirName = QFileInfo( fileName() ).baseName() + "_files";
-          QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
-          QString newDataUrl = projectFilesDir.absoluteFilePath( QFileInfo( ml->source() ).fileName() );
-          if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( ml->source() ).copy( newDataUrl ) )
-          {
-            ml->setSource( newDataUrl );
-          }
-        }
 
         ml->writeLayerXML( maplayerElem, *doc );
 
@@ -1442,6 +1421,11 @@ QString QgsProject::readPath( QString src ) const
 
   QString srcPath = src;
   QString projPath = fileName();
+  QFileInfo projFi( projPath );
+  if ( projFi.exists() )
+  {
+    projPath = projFi.canonicalFilePath();
+  }
 
   if ( projPath.isEmpty() )
   {
@@ -1498,15 +1482,12 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
     return src;
   }
 
-  QFileInfo srcFileInfo( src );
-  QFileInfo projFileInfo( fileName() );
-  QString srcPath = srcFileInfo.exists() ? srcFileInfo.canonicalFilePath() : src;
-  QString projPath = projFileInfo.canonicalFilePath();
+  QString proj = relativeBasePath.isNull() ? fileName() : relativeBasePath;
 
-  if ( !relativeBasePath.isNull() )
-  {
-    projPath = relativeBasePath;
-  }
+  QFileInfo srcFileInfo( src );
+  QFileInfo projFileInfo( proj );
+  QString srcPath = srcFileInfo.exists() ? srcFileInfo.canonicalFilePath() : src;
+  QString projPath = projFileInfo.exists() ? projFileInfo.canonicalFilePath() : proj;
 
   if ( projPath.isEmpty() )
   {
