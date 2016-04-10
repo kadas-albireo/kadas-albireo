@@ -33,7 +33,7 @@ class QgsOgrFeatureSource : public QgsAbstractFeatureSource
     virtual QgsFeatureIterator getFeatures( const QgsFeatureRequest& request ) override;
 
   protected:
-    QString mFilePath;
+    QString mDataSource;
     QString mLayerName;
     int mLayerIndex;
     QString mSubsetString;
