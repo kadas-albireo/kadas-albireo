@@ -79,6 +79,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersBox->setCollapsed( false );
   mLayersSpacer->setVisible( false );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
+  mGeodataBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 18px; }" );
+  mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 18px; }" );
 
   // The MilX plugin enables the tab, if the plugin is enabled
   mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );

@@ -308,6 +308,12 @@ void QgsCollapsibleGroupBoxBasic::toggleCollapsed()
   clearModifiers();
 }
 
+void QgsCollapsibleGroupBoxBasic::setStyleSheet( const QString &styleSheet )
+{
+  mUserStyle = styleSheet;
+  updateStyle();
+}
+
 void QgsCollapsibleGroupBoxBasic::updateStyle()
 {
   setUpdatesEnabled( false );
@@ -390,10 +396,11 @@ void QgsCollapsibleGroupBoxBasic::updateStyle()
   ss += QString( "  top: %1px;" ).arg( offsetTop );
   if ( QApplication::style()->objectName().contains( "macintosh" ) )
   {
-    ss += "  background-color: rgba(0,0,0,0)";
+    ss += "  background-color: rgba(0,0,0,0);";
   }
   ss += "}";
-  setStyleSheet( ss );
+  ss += mUserStyle;
+  QGroupBox::setStyleSheet( ss );
 
   // clear toolbutton default background and border and apply offset
   QString ssd;
