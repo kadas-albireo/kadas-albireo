@@ -101,6 +101,7 @@ class GUI_EXPORT QgsCollapsibleGroupBoxBasic : public QGroupBox
     void checkToggled( bool ckd );
     void checkClicked( bool ckd );
     void toggleCollapsed();
+    void setStyleSheet( const QString& styleSheet );
 
   protected:
     void init();
@@ -129,6 +130,7 @@ class GUI_EXPORT QgsCollapsibleGroupBoxBasic : public QGroupBox
     bool mAltDown;
     bool mShiftDown;
     bool mTitleClicked;
+    QString mUserStyle;
 
     static QIcon mCollapseIcon;
     static QIcon mExpandIcon;
