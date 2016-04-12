@@ -277,6 +277,40 @@ QString configPath( const QString& defaultConfigPath, const QMap<QString, QStrin
   return cfPath;
 }
 
+void saveEnvVar( const QString& variableName, QHash< QString, QString >& envVars )
+{
+  const char* env = getenv( variableName.toLocal8Bit() );
+  if ( !env )
+  {
+    return;
+  }
+
+  envVars.insert( variableName, QString::fromLocal8Bit( env ) );
+}
+
+void saveEnvVars( QHash< QString, QString >& envVars )
+{
+  saveEnvVar( "MAX_CACHE_LAYERS", envVars );
+  saveEnvVar( "DEFAULT_DATUM_TRANSFORM", envVars );
+}
+
+void putenv( const QString &var, const QString &val )
+{
+#ifdef _MSC_VER
+  _putenv_s( var.toUtf8().data(), val.toUtf8().data() );
+#else
+  setenv( var.toUtf8().data(), val.toUtf8().data(), 1 );
+#endif
+}
+
+void setEnvVars( QHash< QString, QString >& envVars )
+{
+  QHash< QString, QString >::const_iterator envIt = envVars.constBegin();
+  for ( ; envIt != envVars.constEnd(); ++envIt )
+  {
+    putenv( envIt.key(), envIt.value() );
+  }
+}
 
 int main( int argc, char * argv[] )
 {
@@ -381,8 +415,15 @@ int main( int argc, char * argv[] )
 
   QgsEditorWidgetRegistry::initEditors();
 
+  //save environment variables
+  QHash< QString, QString > environmentVars;
+  saveEnvVars( environmentVars );
+
   while ( fcgi_accept() >= 0 )
   {
+    //restore environment variables
+    setEnvVars( environmentVars );
+
     QgsMapLayerRegistry::instance()->removeAllMapLayers();
     qgsapp.processEvents();
 

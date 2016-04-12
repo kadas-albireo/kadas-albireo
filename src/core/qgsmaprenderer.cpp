@@ -60,6 +60,8 @@ QgsMapRenderer::QgsMapRenderer()
   mOutputUnits = QgsMapRenderer::Millimeters;
 
   mLabelingEngine = NULL;
+
+  readDefaultDatumTransformations();
 }
 
 QgsMapRenderer::~QgsMapRenderer()
@@ -440,7 +442,7 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
       // blending occuring between objects on the layer
       // (this is not required for raster layers or when layer caching is enabled, since that has the same effect)
       bool flattenedLayer = false;
-      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
+      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer ) )
       {
         QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
         if ((( vl->blendMode() != QPainter::CompositionMode_SourceOver )
@@ -516,7 +518,7 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
       }
 
       //apply layer transparency for vector layers
-      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
+      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer ) )
       {
         QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
         if ( vl->layerTransparency() != 0 )
@@ -774,8 +776,8 @@ bool QgsMapRenderer::splitLayersExtent( QgsMapLayer* layer, QgsRectangle& extent
     {
       Q_UNUSED( cse );
       QgsDebugMsg( "Transform error caught" );
-      extent = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
-      r2     = QgsRectangle( -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() );
+      extent = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
+      r2     = QgsRectangle( -DBL_MAX, -DBL_MAX, DBL_MAX, DBL_MAX );
     }
   }
   return split;
@@ -1109,6 +1111,12 @@ const QgsCoordinateTransform *QgsMapRenderer::transformation( const QgsMapLayer 
   }
   else
   {
+    //is there a defined datum transformation?
+    QHash< QPair< QString, QString >, QPair< int, int > >::const_iterator it = mDefaultDatumTransformations.find( qMakePair( layer->crs().authid(), mDestCRS->authid() ) );
+    if ( it != mDefaultDatumTransformations.constEnd() )
+    {
+      return QgsCoordinateTransformCache::instance()->transform( it.key().first, it.key().second, it.value().first, it.value().second );
+    }
     emit datumTransformInfoRequested( layer, layer->crs().authid(), mDestCRS->authid() );
   }
 
@@ -1272,6 +1280,26 @@ void QgsMapRenderer::addLayerCoordinateTransform( const QString& layerId, const 
 void QgsMapRenderer::clearLayerCoordinateTransforms()
 {
   mLayerCoordinateTransformInfo.clear();
+}
+
+void QgsMapRenderer::readDefaultDatumTransformations()
+{
+  const char* envChar = getenv( "DEFAULT_DATUM_TRANSFORM" );
+  if ( envChar )
+  {
+    QString envString( envChar );
+    QStringList transformSplit = envString.split( ";" );
+    for ( int i = 0; i < transformSplit.size(); ++i )
+    {
+      QStringList slashSplit = transformSplit.at( i ).split( "/" );
+      if ( slashSplit.size() < 4 )
+      {
+        continue;
+      }
+
+      mDefaultDatumTransformations.insert( qMakePair( slashSplit.at( 0 ), slashSplit.at( 1 ) ), qMakePair( slashSplit.at( 2 ).toInt(), slashSplit.at( 3 ).toInt() ) );
+    }
+  }
 }
 
 bool QgsMapRenderer::mDrawing = false;
