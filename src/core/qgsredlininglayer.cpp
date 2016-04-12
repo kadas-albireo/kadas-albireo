@@ -43,7 +43,6 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
 
   setCustomProperty( "labeling", "pal" );
   setCustomProperty( "labeling/enabled", true );
-  setCustomProperty( "labeling/displayAll", true );
   setCustomProperty( "labeling/fieldName", "text" );
   setCustomProperty( "labeling/dataDefined/Color", "1~~0~~~~fill" );
   setCustomProperty( "labeling/dataDefined/Size", "1~~1~~regexp_substr(\"flags\",'fontSize=([^,]+)')~~" );
