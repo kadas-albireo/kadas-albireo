@@ -15,6 +15,7 @@
 
 #include "qgsprojecttemplateselectiondialog.h"
 #include "qgsapplication.h"
+#include "qgisapp.h"
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QFileSystemModel>
@@ -47,6 +48,9 @@ QgsProjectTemplateSelectionDialog::QgsProjectTemplateSelectionDialog( QWidget *p
 
   mButtonBox = new QDialogButtonBox( QDialogButtonBox::Open | QDialogButtonBox::Cancel, Qt::Horizontal, this );
   mButtonBox->button( QDialogButtonBox::Open )->setEnabled( false );
+  connect( mButtonBox->button( QDialogButtonBox::Open ), SIGNAL( clicked() ), this, SLOT( openProject() ) );
+  QAbstractButton* newProjButton = mButtonBox->addButton( tr( "Empty Project" ), QDialogButtonBox::AcceptRole );
+  connect( newProjButton, SIGNAL( clicked() ), this, SLOT( newEmptyProject() ) );
 
   setLayout( new QVBoxLayout() );
   layout()->addWidget( mTreeView );
@@ -65,15 +69,20 @@ void QgsProjectTemplateSelectionDialog::itemDoubleClicked( const QModelIndex& in
 {
   if ( mModel->fileInfo( index ).isFile() )
   {
-    accept();
+    openProject();
   }
 }
 
-QString QgsProjectTemplateSelectionDialog::run()
+void QgsProjectTemplateSelectionDialog::openProject()
 {
-  if ( exec() == QDialog::Accepted )
+  QString filename = mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
+  if ( !filename.isEmpty() )
   {
-    return mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
+    QgisApp::instance()->openProject( filename );
   }
-  return QString();
+}
+
+void QgsProjectTemplateSelectionDialog::newEmptyProject()
+{
+  QgisApp::instance()->fileNew( true );
 }

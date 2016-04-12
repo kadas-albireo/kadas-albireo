@@ -421,6 +421,9 @@ class APP_EXPORT QgisApp : public QMainWindow
     void unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
 
   public slots:
+    //! As above but allows forcing without prompt and forcing blank project
+    void fileNew( bool thePromptToSaveFlag, bool forceBlank = false );
+
     void layerTreeViewDoubleClicked( const QModelIndex& index );
     //! Make sure the insertion point for new layers is up-to-date with the current item in layer tree view
     void updateNewLayerInsertionPoint();
@@ -723,8 +726,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     void fileNew();
     //! Create a new blank project (no template)
     void fileNewBlank();
-    //! As above but allows forcing without prompt and forcing blank project
-    void fileNew( bool thePromptToSaveFlag, bool forceBlank = false );
     /** What type of project to open after launch */
     void fileOpenAfterLaunch();
     /** After project read, set any auto-opened project as successful */
