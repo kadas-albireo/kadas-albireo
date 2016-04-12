@@ -1115,6 +1115,8 @@ const QgsCoordinateTransform *QgsMapRenderer::transformation( const QgsMapLayer 
     QHash< QPair< QString, QString >, QPair< int, int > >::const_iterator it = mDefaultDatumTransformations.find( qMakePair( layer->crs().authid(), mDestCRS->authid() ) );
     if ( it != mDefaultDatumTransformations.constEnd() )
     {
+      //QgsMessageLog::logMessage( "***********Found default datum transform*************", "MapRenderer", QgsMessageLog::INFO );
+      //QgsMessageLog::logMessage( it.key().first + "/" + it.key().second + "/" + QString::number( it.value().first ) + "/" + QString::number( it.value().second ), "MapRenderer", QgsMessageLog::INFO );
       return QgsCoordinateTransformCache::instance()->transform( it.key().first, it.key().second, it.value().first, it.value().second );
     }
     emit datumTransformInfoRequested( layer, layer->crs().authid(), mDestCRS->authid() );
