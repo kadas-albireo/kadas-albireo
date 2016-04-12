@@ -20,7 +20,7 @@
 
 #include "qgsmaptooldrawshape.h"
 
-class APP_EXPORT QgsMapToolDeleteItems : public QgsMapToolDrawRectangle
+class GUI_EXPORT QgsMapToolDeleteItems : public QgsMapToolDrawRectangle
 {
     Q_OBJECT
   public:
