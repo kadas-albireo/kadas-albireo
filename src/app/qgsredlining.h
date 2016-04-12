@@ -65,7 +65,7 @@ class QgsRedlining : public QObject
   private:
     class LabelEditor;
 
-    QgsMapCanvas* mMapCanvas;
+    QgisApp* mApp;
     RedliningUi mUi;
     QAction* mActionEditObject;
     QAction* mActionNewPoint;
