@@ -2209,7 +2209,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/hillshade.png</normaloff>:/images/ribbon/hillshade.png</iconset>
    </property>
    <property name="text">
     <string>Hillshade</string>
@@ -2272,7 +2272,7 @@ Sight</string>
   <action name="mActionSaveMapExtent">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/save_map_image.png</normaloff>:/images/ribbon/save_map_image.png</iconset>
    </property>
    <property name="text">
     <string>Save Map</string>
@@ -2284,7 +2284,7 @@ Sight</string>
   <action name="mActionExportKML">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/kml_export.png</normaloff>:/images/ribbon/kml_export.png</iconset>
    </property>
    <property name="text">
     <string>Export KML/KMZ</string>
@@ -2293,7 +2293,7 @@ Sight</string>
   <action name="mActionImportOVL">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/ovl_import.png</normaloff>:/images/ribbon/ovl_import.png</iconset>
    </property>
    <property name="text">
     <string>Import OVL</string>
@@ -2302,7 +2302,7 @@ Sight</string>
   <action name="mActionZoomLast">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/prev_extent.png</normaloff>:/images/ribbon/prev_extent.png</iconset>
    </property>
    <property name="text">
     <string>Previous Extent</string>
@@ -2314,7 +2314,7 @@ Sight</string>
   <action name="mActionZoomNext">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/next_extent.png</normaloff>:/images/ribbon/next_extent.png</iconset>
    </property>
    <property name="text">
     <string>Next Extent</string>
@@ -2326,7 +2326,7 @@ Sight</string>
   <action name="mActionNewMapWindow">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/new_map_view.png</normaloff>:/images/ribbon/new_map_view.png</iconset>
    </property>
    <property name="text">
     <string>New map window</string>
@@ -2338,7 +2338,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/globe_view.png</normaloff>:/images/ribbon/globe_view.png</iconset>
    </property>
    <property name="text">
     <string>3D</string>
@@ -2359,7 +2359,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/routes.png</normaloff>:/images/ribbon/routes.png</iconset>
    </property>
    <property name="text">
     <string>Draw Routes</string>
@@ -2374,7 +2374,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/waypoints.png</normaloff>:/images/ribbon/waypoints.png</iconset>
    </property>
    <property name="text">
     <string>Draw Waypoints</string>
@@ -2389,7 +2389,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/gps.png</normaloff>:/images/ribbon/gps.png</iconset>
    </property>
    <property name="text">
     <string>Enable GPS</string>
@@ -2404,7 +2404,7 @@ Sight</string>
    </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/gps_sync.png</normaloff>:/images/ribbon/gps_sync.png</iconset>
    </property>
    <property name="text">
     <string>Move with GPS</string>
@@ -2416,7 +2416,7 @@ Sight</string>
   <action name="mActionImportGPX">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/gpx_import.png</normaloff>:/images/ribbon/gpx_import.png</iconset>
    </property>
    <property name="text">
     <string>Import GPX</string>
@@ -2428,7 +2428,7 @@ Sight</string>
   <action name="mActionExportGPX">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/gpx_export.png</normaloff>:/images/ribbon/gpx_export.png</iconset>
    </property>
    <property name="text">
     <string>Export GPX</string>
@@ -2440,7 +2440,7 @@ Sight</string>
   <action name="mActionAddCameraPicture">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/picture.png</normaloff>:/images/ribbon/picture.png</iconset>
    </property>
    <property name="text">
     <string>Add Picture</string>
@@ -2464,7 +2464,7 @@ Sight</string>
   <action name="mActionMilx">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/milx_symbol.png</normaloff>:/images/ribbon/milx_symbol.png</iconset>
    </property>
    <property name="text">
     <string>Add MilX Symbol</string>
@@ -2476,7 +2476,7 @@ Sight</string>
   <action name="mActionSaveMilx">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/milxly_export.png</normaloff>:/images/ribbon/milxly_export.png</iconset>
    </property>
    <property name="text">
     <string>Export MILXLY</string>
@@ -2488,7 +2488,7 @@ Sight</string>
   <action name="mActionLoadMilx">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/milxly_import.png</normaloff>:/images/ribbon/milxly_import.png</iconset>
    </property>
    <property name="text">
     <string>Import MILXLY</string>
@@ -2498,6 +2498,10 @@ Sight</string>
    </property>
   </action>
   <action name="mActionImportOVL_2">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/ovl_import.png</normaloff>:/images/ribbon/ovl_import.png</iconset>
+   </property>
    <property name="text">
     <string>Import OVL</string>
    </property>
@@ -2523,7 +2527,7 @@ Sight</string>
   <action name="mActionHelp">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/help.png</normaloff>:/images/ribbon/help.png</iconset>
    </property>
    <property name="text">
     <string>Help</string>
@@ -2547,7 +2551,7 @@ Sight</string>
   <action name="mActionAbout">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
+     <normaloff>:/images/ribbon/about.png</normaloff>:/images/ribbon/about.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
