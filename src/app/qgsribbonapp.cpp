@@ -601,11 +601,7 @@ void QgsRibbonApp::toggleLayersSpacer()
 
 void QgsRibbonApp::showProjectSelectionWidget()
 {
-  QString filename = QgsProjectTemplateSelectionDialog( this ).run();
-  if ( !filename.isEmpty() )
-  {
-    openProject( filename );
-  }
+  QgsProjectTemplateSelectionDialog( this ).exec();
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )

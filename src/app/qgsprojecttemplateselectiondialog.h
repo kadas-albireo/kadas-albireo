@@ -28,7 +28,6 @@ class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog
     Q_OBJECT
   public:
     QgsProjectTemplateSelectionDialog( QWidget* parent = 0 );
-    QString run();
 
   private:
     QFileSystemModel* mModel;
@@ -38,6 +37,8 @@ class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog
   private slots:
     void itemClicked( const QModelIndex& index );
     void itemDoubleClicked( const QModelIndex& index );
+    void openProject();
+    void newEmptyProject();
 
 };
 
