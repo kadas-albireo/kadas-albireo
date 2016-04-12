@@ -201,7 +201,7 @@ void QgsGPSRouteEditor::setTool( QgsMapTool *tool, QAction* action , bool active
     connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
     if ( mLayerRefCount == 0 )
     {
-      mApp->mapCanvas()->setCurrentLayer( getOrCreateLayer() );
+      mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
       mLayer->startEditing();
     }
     ++mLayerRefCount;
@@ -226,7 +226,7 @@ void QgsGPSRouteEditor::deactivateTool()
         mLayer->commitChanges();
         if ( mApp->mapCanvas()->currentLayer() == mLayer )
         {
-          mApp->mapCanvas()->setCurrentLayer( 0 );
+          mApp->layerTreeView()->setCurrentLayer( 0 );
         }
       }
     }

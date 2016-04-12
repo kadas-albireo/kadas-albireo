@@ -71,7 +71,7 @@ class QgsRedlining::LabelEditor : public QgsRedliningAttributeEditor
 
 QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
     : QObject( app )
-    , mMapCanvas( app->mapCanvas() )
+    , mApp( app )
     , mUi( ui )
     , mLayer( 0 )
     , mLayerRefCount( 0 )
@@ -195,7 +195,7 @@ QgsRedliningLayer* QgsRedlining::getLayer() const
 
 void QgsRedlining::editFeature( const QgsFeature& feature )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer() );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer() );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -206,7 +206,7 @@ void QgsRedlining::editFeature( const QgsFeature& feature )
 
 void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new LabelEditor );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new LabelEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -224,7 +224,7 @@ void QgsRedlining::clearLayer()
 
 void QgsRedlining::editObject()
 {
-  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mMapCanvas, getOrCreateLayer(), new LabelEditor );
+  QgsRedliningEditTool* tool = new QgsRedliningEditTool( mApp->mapCanvas(), getOrCreateLayer(), new LabelEditor );
   connect( this, SIGNAL( featureStyleChanged() ), tool, SLOT( onStyleChanged() ) );
   connect( tool, SIGNAL( featureSelected( QgsFeature ) ), this, SLOT( syncStyleWidgets( QgsFeature ) ) );
   connect( tool, SIGNAL( updateFeatureStyle( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ) );
@@ -233,71 +233,71 @@ void QgsRedlining::editObject()
 
 void QgsRedlining::newPoint( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "circle" ), mActionNewPoint, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle" ), mActionNewPoint, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewPoint );
 }
 
 void QgsRedlining::newSquare( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "rectangle" ), mActionNewSquare, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "rectangle" ), mActionNewSquare, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewSquare );
 }
 
 void QgsRedlining::newTriangle( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "triangle" ), mActionNewTriangle, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "triangle" ), mActionNewTriangle, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewTriangle );
 }
 
 void QgsRedlining::newLine( bool active )
 {
-  setTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), false ), mActionNewLine, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false ), mActionNewLine, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewLine );
 }
 
 void QgsRedlining::newRectangle( bool active )
 {
-  setTool( new QgsRedliningRectangleMapTool( mMapCanvas, getOrCreateLayer() ), mActionNewRectangle, active );
+  setTool( new QgsRedliningRectangleMapTool( mApp->mapCanvas(), getOrCreateLayer() ), mActionNewRectangle, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewRectangle );
 }
 
 void QgsRedlining::newPolygon( bool active )
 {
-  setTool( new QgsRedliningPolylineMapTool( mMapCanvas, getOrCreateLayer(), true ), mActionNewPolygon, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), true ), mActionNewPolygon, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewPolygon );
 }
 
 void QgsRedlining::newCircle( bool active )
 {
-  setTool( new QgsRedliningCircleMapTool( mMapCanvas, getOrCreateLayer() ), mActionNewCircle, active );
+  setTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), getOrCreateLayer() ), mActionNewCircle, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewCircle );
 }
 
 void QgsRedlining::newText( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mMapCanvas, getOrCreateLayer(), "", new LabelEditor ), mActionNewText, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "", new LabelEditor ), mActionNewText, active );
   mUi.buttonNewObject->setDefaultAction( mActionNewText );
 }
 
 void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
 {
-  if ( active && ( mMapCanvas->mapTool() == 0 || mMapCanvas->mapTool()->action() != action ) )
+  if ( active && ( mApp->mapCanvas()->mapTool() == 0 || mApp->mapCanvas()->mapTool()->action() != action ) )
   {
     tool->setAction( action );
     connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
     if ( mLayerRefCount == 0 )
     {
-      mMapCanvas->setCurrentLayer( getOrCreateLayer() );
+      mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
       mLayer->startEditing();
     }
     ++mLayerRefCount;
-    mMapCanvas->setMapTool( tool );
+    mApp->mapCanvas()->setMapTool( tool );
     mRedliningTool = tool;
   }
-  else if ( !active && mMapCanvas->mapTool() && mMapCanvas->mapTool()->action() == action )
+  else if ( !active && mApp->mapCanvas()->mapTool() && mApp->mapCanvas()->mapTool()->action() == action )
   {
     delete tool;
-    mMapCanvas->unsetMapTool( mMapCanvas->mapTool() );
+    mApp->mapCanvas()->unsetMapTool( mApp->mapCanvas()->mapTool() );
   }
 }
 
@@ -311,9 +311,9 @@ void QgsRedlining::deactivateTool()
       if ( mLayerRefCount == 0 )
       {
         mLayer->commitChanges();
-        if ( mMapCanvas->currentLayer() == mLayer )
+        if ( mApp->mapCanvas()->currentLayer() == mLayer )
         {
-          mMapCanvas->setCurrentLayer( 0 );
+          mApp->layerTreeView()->setCurrentLayer( 0 );
         }
       }
     }
@@ -357,8 +357,8 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mUi.colorButtonFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mUi.comboOutlineStyle->itemData( mUi.comboOutlineStyle->currentIndex() ).toInt() ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mUi.comboFillStyle->itemData( mUi.comboFillStyle->currentIndex() ).toInt() ) ) );
-  mMapCanvas->clearCache( mLayer->id() );
-  mMapCanvas->refresh();
+  mApp->mapCanvas()->clearCache( mLayer->id() );
+  mApp->mapCanvas()->refresh();
 }
 
 void QgsRedlining::saveColor()

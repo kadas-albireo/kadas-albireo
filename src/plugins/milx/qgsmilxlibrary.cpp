@@ -171,7 +171,7 @@ void QgsMilXLibrary::autocreateLayer()
   {
     QgsMilXLayer* layer = new QgsMilXLayer( mIface->layerTreeView()->menuProvider() );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    mIface->mapCanvas()->setCurrentLayer( layer );
+    mIface->layerTreeView()->setCurrentLayer( layer );
   }
 }
 
@@ -323,7 +323,7 @@ void QgsMilXLibrary::setCurrentLayer( int idx )
 {
   if ( idx >= 0 )
   {
-    mIface->mapCanvas()->setCurrentLayer( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( idx ).toString() ) );
+    mIface->layerTreeView()->setCurrentLayer( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( idx ).toString() ) );
   }
 }
 
