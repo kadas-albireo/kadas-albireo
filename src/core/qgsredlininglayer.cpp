@@ -51,6 +51,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   setCustomProperty( "labeling/dataDefined/Family", "1~~1~~regexp_substr(\"flags\",'family=([^,]+)')~~" );
   setCustomProperty( "labeling/dataDefined/Rotation", "1~~1~~regexp_substr(\"flags\",'rotation=([^,]+)')~~" );
   setDisplayField( "tooltip" );
+  connect( this, SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( changeTextTransparency( int ) ) );
 }
 
 bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip , const QString &text )
@@ -169,4 +170,9 @@ QString QgsRedliningLayer::serializeFlags( const QMap<QString, QString>& flagsMa
     flagsStr += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
   }
   return flagsStr;
+}
+
+void QgsRedliningLayer::changeTextTransparency( int transparency )
+{
+  setCustomProperty( "labeling/textTransp", transparency );
 }
