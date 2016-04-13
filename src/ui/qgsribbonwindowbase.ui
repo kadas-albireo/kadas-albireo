@@ -278,6 +278,12 @@
         </property>
         <item>
          <widget class="QgsCollapsibleGroupBox" name="mLayersBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Layers</string>
           </property>
@@ -300,7 +306,7 @@
            <item>
             <widget class="QgsLayerTreeView" name="mLayerTreeView">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>

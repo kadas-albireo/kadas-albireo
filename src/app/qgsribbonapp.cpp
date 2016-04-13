@@ -79,8 +79,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersBox->setCollapsed( false );
   mLayersSpacer->setVisible( false );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
-  mGeodataBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 18px; }" );
-  mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 18px; }" );
+  mGeodataBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
+  mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
 
   // The MilX plugin enables the tab, if the plugin is enabled
   mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
@@ -240,6 +240,7 @@ void QgsRibbonApp::initLayerTreeView()
 
   //setup connections
   connect( mLayerTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( layerTreeViewDoubleClicked( QModelIndex ) ) );
+  connect( mLayerTreeView, SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( activeLayerChanged( QgsMapLayer* ) ) );
 
   mLayerTreeCanvasBridge = new QgsLayerTreeMapCanvasBridge( QgsProject::instance()->layerTreeRoot(), mMapCanvas, this );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), mLayerTreeCanvasBridge, SLOT( writeProject( QDomDocument& ) ) );
@@ -595,7 +596,7 @@ void QgsRibbonApp::switchToTabForTool( QgsMapTool *tool )
 
 void QgsRibbonApp::toggleLayersSpacer()
 {
-  mLayersSpacer->setVisible( mLayersBox->isCollapsed() && mGeodataBox->isCollapsed() );
+  mLayersSpacer->setVisible( mLayersBox->isCollapsed() || mGeodataBox->isCollapsed() );
 }
 
 
