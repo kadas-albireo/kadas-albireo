@@ -32,44 +32,46 @@
 #include <QWebView>
 #include <QWebPage>
 
-StackedDialog::StackedDialog(QWidget* parent, Qt::WindowFlags flags)
-  : QDialog(parent, flags)
+StackedDialog::StackedDialog( QWidget* parent, Qt::WindowFlags flags )
+    : QDialog( parent, flags )
 {
   mLayout = new QStackedLayout();
-  setLayout(mLayout);
+  setLayout( mLayout );
 }
 
-void StackedDialog::pushWidget(QWidget *widget)
+void StackedDialog::pushWidget( QWidget *widget )
 {
-  mLayout->setCurrentIndex(mLayout->addWidget(widget));
+  mLayout->setCurrentIndex( mLayout->addWidget( widget ) );
 }
 
-void StackedDialog::popWidget(QWidget *widget)
+void StackedDialog::popWidget( QWidget *widget )
 {
-  if(mLayout->currentWidget() == widget) {
-    mLayout->setCurrentIndex( mLayout->currentIndex() - 1);
+  if ( mLayout->currentWidget() == widget )
+  {
+    mLayout->setCurrentIndex( mLayout->currentIndex() - 1 );
   }
-  mLayout->removeWidget(widget);
+  mLayout->removeWidget( widget );
   widget->deleteLater();
 }
 
 QgsIAMAuth::QgsIAMAuth( QgisInterface * theQgisInterface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType )
-    , mQGisIface( theQgisInterface ), mLoginButton(0), mLoginDialog(0)
+    , mQGisIface( theQgisInterface ), mLoginButton( 0 ), mLoginDialog( 0 )
 {
 }
 
 void QgsIAMAuth::initGui()
 {
-  mLoginButton = qobject_cast<QToolButton*>(mQGisIface->findObject("mLoginButton"));
-  if(mLoginButton) {
-    connect(mLoginButton, SIGNAL(clicked(bool)), this, SLOT(performLogin()));
+  mLoginButton = qobject_cast<QToolButton*>( mQGisIface->findObject( "mLoginButton" ) );
+  if ( mLoginButton )
+  {
+    connect( mLoginButton, SIGNAL( clicked( bool ) ), this, SLOT( performLogin() ) );
   }
 }
 
 void QgsIAMAuth::unload()
 {
-  disconnect(mLoginButton, SIGNAL(clicked(bool)), this, SLOT(performLogin()));
+  disconnect( mLoginButton, SIGNAL( clicked( bool ) ), this, SLOT( performLogin() ) );
   mLoginButton = 0;
   delete mLoginDialog;
   mLoginDialog = 0;
@@ -77,76 +79,81 @@ void QgsIAMAuth::unload()
 
 void QgsIAMAuth::performLogin()
 {
-  mLoginDialog = new StackedDialog(mQGisIface->mainWindow());
-  mLoginDialog->setWindowTitle(tr("eIAM Authentication"));
-  mLoginDialog->resize(640, 480);
+  mLoginDialog = new StackedDialog( mQGisIface->mainWindow() );
+  mLoginDialog->setWindowTitle( tr( "eIAM Authentication" ) );
+  mLoginDialog->resize( 640, 480 );
 
   WebAxWidget* webWidget = new WebAxWidget();
-  webWidget->setControl(QString::fromUtf8("{8856F961-340A-11D0-A96B-00C04FD705A2}"));
-  webWidget->dynamicCall("Navigate(const QString&)", QString("https://st74523a.lt.admin.ch/arcgis/home/signin.html"));
-  connect(webWidget, SIGNAL(NavigateComplete(QString)), this, SLOT(checkLoginComplete(QString)));
-  connect(webWidget, SIGNAL(NewWindow3(IDispatch**,bool&,uint,QString,QString)), this, SLOT(handleNewWindow(IDispatch**,bool&,uint,QString,QString)));
-  connect(webWidget, SIGNAL(WindowClosing(bool,bool&)), this, SLOT(handleWindowClose(bool,bool&)));
-  mLoginDialog->pushWidget(webWidget);
+  webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
+  webWidget->dynamicCall( "Navigate(const QString&)", QString( "https://npe.adr.admin.ch/arcgis/home/signin.html" ) );
+  connect( webWidget, SIGNAL( NavigateComplete( QString ) ), this, SLOT( checkLoginComplete( QString ) ) );
+  connect( webWidget, SIGNAL( NewWindow3( IDispatch**, bool&, uint, QString, QString ) ), this, SLOT( handleNewWindow( IDispatch**, bool&, uint, QString, QString ) ) );
+  connect( webWidget, SIGNAL( WindowClosing( bool, bool& ) ), this, SLOT( handleWindowClose( bool, bool& ) ) );
+  mLoginDialog->pushWidget( webWidget );
   mLoginDialog->exec();
 }
 
-void QgsIAMAuth::checkLoginComplete(QString /*addr*/)
+void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
 {
-  if(mLoginDialog) {
-    WebAxWidget* webWidget = static_cast<WebAxWidget*>(QObject::sender());
-    QUrl url(webWidget->dynamicCall("LocationURL()").toString());
-	QUrl baseUrl;
-	baseUrl.setScheme(url.scheme());
-	baseUrl.setHost(url.host());
-    QAxObject* document = webWidget->querySubObject("Document()");
-    QStringList cookies = document->property("cookie").toString().split(QRegExp("\\s*;\\s*"));
-    foreach(const QString& cookie, cookies) {
-      QStringList pair = cookie.split("=");
-      if(!pair.isEmpty() && pair.first() == "esri_auth") {
-        QMessageBox::information(mLoginDialog, tr("Authentication successful"), QString("Url: %1\nCookie: %2").arg(baseUrl.toString()).arg(cookie));
+  if ( mLoginDialog )
+  {
+    WebAxWidget* webWidget = static_cast<WebAxWidget*>( QObject::sender() );
+    QUrl url( webWidget->dynamicCall( "LocationURL()" ).toString() );
+    QUrl baseUrl;
+    baseUrl.setScheme( url.scheme() );
+    baseUrl.setHost( url.host() );
+    QAxObject* document = webWidget->querySubObject( "Document()" );
+    QStringList cookies = document->property( "cookie" ).toString().split( QRegExp( "\\s*;\\s*" ) );
+    foreach ( const QString& cookie, cookies )
+    {
+      QStringList pair = cookie.split( "=" );
+      if ( !pair.isEmpty() && pair.first() == "esri_auth" )
+      {
+        QMessageBox::information( mLoginDialog, tr( "Authentication successful" ), QString( "Url: %1\nCookie: %2" ).arg( baseUrl.toString() ).arg( cookie ) );
         mLoginDialog->accept();
         mLoginDialog->deleteLater();
         mLoginDialog = 0;
         QNetworkCookieJar* jar = QgsNetworkAccessManager::instance()->cookieJar();
-        jar->setCookiesFromUrl(QList<QNetworkCookie>() << QNetworkCookie(cookie.toLocal8Bit()), baseUrl);
+        jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), baseUrl );
 
         QWebView* view = new QWebView();
         QWebPage* page = new QWebPage();
-        page->setNetworkAccessManager(QgsNetworkAccessManager::instance());
-        view->setPage(page);
+        page->setNetworkAccessManager( QgsNetworkAccessManager::instance() );
+        view->setPage( page );
         QNetworkRequest req;
-        req.setUrl(QUrl("https://npe.lt.admin.ch/arcgis/sharing/rest/search"));
+        req.setUrl( QUrl( "https://npe.lt.admin.ch/arcgis/sharing/rest/search" ) );
         QSslConfiguration conf = req.sslConfiguration();
-        conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-        req.setSslConfiguration(conf);
-        view->load(req);
+        conf.setPeerVerifyMode( QSslSocket::VerifyNone );
+        req.setSslConfiguration( conf );
+        view->load( req );
         view->show();
-        view->setAttribute(Qt::WA_DeleteOnClose);
+        view->setAttribute( Qt::WA_DeleteOnClose );
       }
     }
   }
 }
 
-void QgsIAMAuth::handleNewWindow(IDispatch** ppDisp, bool& cancel, uint /*dwFlags*/, QString /*bstrUrlContext*/, QString /*bstrUrl*/)
+void QgsIAMAuth::handleNewWindow( IDispatch** ppDisp, bool& cancel, uint /*dwFlags*/, QString /*bstrUrlContext*/, QString /*bstrUrl*/ )
 {
-  if(mLoginDialog) {
+  if ( mLoginDialog )
+  {
     WebAxWidget* webWidget = new WebAxWidget;
-    webWidget->setControl(QString::fromUtf8("{8856F961-340A-11D0-A96B-00C04FD705A2}"));
-    connect(webWidget, SIGNAL(NavigateComplete(QString)), this, SLOT(checkLoginComplete(QString)));
-    connect(webWidget, SIGNAL(NewWindow3(IDispatch**,bool&,uint,QString,QString)), this, SLOT(handleNewWindow(IDispatch**,bool&,uint,QString,QString)));
-    connect(webWidget, SIGNAL(WindowClosing(bool,bool&)), this, SLOT(handleWindowClose(bool,bool&)));
+    webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
+    connect( webWidget, SIGNAL( NavigateComplete( QString ) ), this, SLOT( checkLoginComplete( QString ) ) );
+    connect( webWidget, SIGNAL( NewWindow3( IDispatch**, bool&, uint, QString, QString ) ), this, SLOT( handleNewWindow( IDispatch**, bool&, uint, QString, QString ) ) );
+    connect( webWidget, SIGNAL( WindowClosing( bool, bool& ) ), this, SLOT( handleWindowClose( bool, bool& ) ) );
     IDispatch* appDisp;
-    QAxObject* appDispObj = webWidget->querySubObject("Application()");
-    appDispObj->queryInterface(IID_IDispatch, (void**)&appDisp);
+    QAxObject* appDispObj = webWidget->querySubObject( "Application()" );
+    appDispObj->queryInterface( IID_IDispatch, ( void** )&appDisp );
     *ppDisp = appDisp;
-    mLoginDialog->pushWidget(webWidget);
+    mLoginDialog->pushWidget( webWidget );
   }
 }
 
-void QgsIAMAuth::handleWindowClose(bool /*isChild*/, bool& /*cancel*/)
+void QgsIAMAuth::handleWindowClose( bool /*isChild*/, bool& /*cancel*/ )
 {
-  if(mLoginDialog) {
-    mLoginDialog->popWidget(qobject_cast<QWidget*>(QObject::sender()));
+  if ( mLoginDialog )
+  {
+    mLoginDialog->popWidget( qobject_cast<QWidget*>( QObject::sender() ) );
   }
 }
