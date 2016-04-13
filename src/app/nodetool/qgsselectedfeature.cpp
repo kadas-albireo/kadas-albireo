@@ -65,7 +65,7 @@ QgsSelectedFeature::~QgsSelectedFeature()
 void QgsSelectedFeature::currentLayerChanged( QgsMapLayer *layer )
 {
   QgsDebugCall;
-  if ( layer == mVlayer )
+  if ( layer != mVlayer )
     deleteLater();
 }
 
