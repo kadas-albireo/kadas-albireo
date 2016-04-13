@@ -159,6 +159,11 @@ QPushButton#mLayerTreeViewButton {
   color: #FFFFFF;
 }
 
+#mRibbonWidget > QWidget > QWidget > QToolButton:checked {
+    background-color: #BEDCF6;
+    color: #263B4E;
+}
+
 #mRibbonWidget::pane {
     /* Don't remove this, it is needed. */
 }
