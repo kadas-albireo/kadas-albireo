@@ -141,10 +141,9 @@ void QgsMilXPlugin::setMilXSymbolSize( int value )
   {
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      mQGisIface->mapCanvas()->clearCache( layer->id() );
+      layer->triggerRepaint();
     }
   }
-  mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsMilXPlugin::setMilXLineWidth( int value )
@@ -154,10 +153,9 @@ void QgsMilXPlugin::setMilXLineWidth( int value )
   {
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      mQGisIface->mapCanvas()->clearCache( layer->id() );
+      layer->triggerRepaint();
     }
   }
-  mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsMilXPlugin::setMilXWorkMode( int idx )
@@ -167,10 +165,9 @@ void QgsMilXPlugin::setMilXWorkMode( int idx )
   {
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      mQGisIface->mapCanvas()->clearCache( layer->id() );
+      layer->triggerRepaint();
     }
   }
-  mQGisIface->mapCanvas()->refresh();
 }
 
 void QgsMilXPlugin::stopEditing()
@@ -209,8 +206,7 @@ void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
   delete layer->takeItem( symbolIdx );
   connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
   mQGisIface->mapCanvas()->setMapTool( tool );
-  mQGisIface->mapCanvas()->clearCache( layer->id() );
-  mQGisIface->mapCanvas()->refresh();
+  layer->triggerRepaint();
   mActiveEditTool = tool;
 }
 
@@ -232,7 +228,6 @@ void QgsMilXPlugin::setApprovedLayer( bool approved )
   if ( layer )
   {
     layer->setApproved( approved );
-    mQGisIface->mapCanvas()->clearCache( layer->id() );
-    mQGisIface->mapCanvas()->refresh();
+    layer->triggerRepaint();
   }
 }

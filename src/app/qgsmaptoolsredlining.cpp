@@ -410,16 +410,14 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     mRubberBand->setGeometry( geom );
     QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( rect.xMinimum() + bboxOffsetX, rect.yMinimum() + bboxOffsetY ) );
     mLayer->changeGeometry( mCurrentLabel.featureId, new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
-    mCanvas->clearCache( mLayer->id() );
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
   else if ( mMode == FeatureSelected )
   {
     mLayer->changeGeometry( mCurrentFeature->featureId(), mCurrentFeature->geometry() );
     if ( mCurrentVertex >= 0 )
       mCurrentFeature->selectVertex( mCurrentVertex );
-    mCanvas->clearCache( mLayer->id() );
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
 }
 
@@ -481,8 +479,7 @@ void QgsRedliningEditTool::addVertex( const QPoint &pos )
       mLayer->insertVertex( layerCoord.x(), layerCoord.y(), mCurrentFeature->featureId(), result.afterVertexNr );
       const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
       mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
-      mCanvas->clearCache( mLayer->id() );
-      mCanvas->refresh();
+      mLayer->triggerRepaint();
       break;
     }
   }
@@ -496,8 +493,7 @@ void QgsRedliningEditTool::deleteCurrentVertex()
     mCurrentVertex = -1;
     const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
     mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
-    mCanvas->clearCache( mLayer->id() );
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
 }
 

@@ -251,8 +251,7 @@ void QgsGPSRouteEditor::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( Qt::SolidLine ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( Qt::SolidPattern ) ) );
-  mApp->mapCanvas()->clearCache( mLayer->id() );
-  mApp->mapCanvas()->refresh();
+  mLayer->triggerRepaint();
 }
 
 void QgsGPSRouteEditor::readProject( const QDomDocument& doc )
@@ -361,8 +360,7 @@ void QgsGPSRouteEditor::importGpx()
     mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nTracks;
   }
-  mApp->mapCanvas()->clearCache( mLayer->id() );
-  mApp->mapCanvas()->refresh();
+  mLayer->triggerRepaint();
   mApp->messageBar()->pushInfo( tr( "GPX import complete" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
 }
 

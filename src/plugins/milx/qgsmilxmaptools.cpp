@@ -80,8 +80,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
-      mCanvas->clearCache( mLayer->id() );
-      mCanvas->refresh();
+      mLayer->triggerRepaint();
     }
   }
   else if ( e->button() == Qt::RightButton && mItem != 0 )
@@ -95,8 +94,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
-      mCanvas->clearCache( mLayer->id() );
-      mCanvas->refresh();
+      mLayer->triggerRepaint();
     }
     else if ( mNPressedPoints + 1 < mMinNPoints )
     {
@@ -136,8 +134,7 @@ QgsMilXEditTool::~QgsMilXEditTool()
     mLayer->addItem( mItem->toMilxItem() );
     // Delay delete until after refresh, to avoid flickering
     connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem.data(), SLOT( deleteLater() ) );
-    mCanvas->clearCache( mLayer->id() );
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
 }
 
