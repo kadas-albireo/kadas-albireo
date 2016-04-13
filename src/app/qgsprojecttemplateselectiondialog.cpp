@@ -27,62 +27,70 @@
 QgsProjectTemplateSelectionDialog::QgsProjectTemplateSelectionDialog( QWidget *parent )
     : QDialog( parent )
 {
-  setWindowTitle( tr( "Select project template" ) );
+  setupUi( this );
 
   mModel = new QFileSystemModel( this );
   mModel->setNameFilters( QStringList() << "*.qgs" );
   mModel->setNameFilterDisables( false );
   mModel->setReadOnly( true );
 
-  mTreeView = new QTreeView( this );
   mTreeView->setModel( mModel );
   mTreeView->setRootIndex( mModel->setRootPath( QSettings().value( "/qgis/projectTemplateDir", QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString() ) );
   for ( int i = 1, n = mModel->columnCount(); i < n; ++i )
   {
     mTreeView->setColumnHidden( i, true );
   }
-  mTreeView->setHeaderHidden( true );
-  mTreeView->setIconSize( QSize( 32, 32 ) );
   connect( mTreeView, SIGNAL( clicked( QModelIndex ) ), this, SLOT( itemClicked( QModelIndex ) ) );
   connect( mTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( itemDoubleClicked( QModelIndex ) ) );
 
-  mButtonBox = new QDialogButtonBox( QDialogButtonBox::Open | QDialogButtonBox::Cancel, Qt::Horizontal, this );
-  mButtonBox->button( QDialogButtonBox::Open )->setEnabled( false );
-  connect( mButtonBox->button( QDialogButtonBox::Open ), SIGNAL( clicked() ), this, SLOT( openProject() ) );
-  QAbstractButton* newProjButton = mButtonBox->addButton( tr( "Empty Project" ), QDialogButtonBox::AcceptRole );
-  connect( newProjButton, SIGNAL( clicked() ), this, SLOT( newEmptyProject() ) );
+  connect( mRadioButtonGroup, SIGNAL( buttonClicked( int ) ), this, SLOT( radioChanged() ) );
 
-  setLayout( new QVBoxLayout() );
-  layout()->addWidget( mTreeView );
-  layout()->addWidget( mButtonBox );
-
-  connect( mButtonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
-  connect( mButtonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
+  mCreateButton = mButtonBox->addButton( tr( "Create" ), QDialogButtonBox::AcceptRole );
+  mCreateButton->setEnabled( false );
+  connect( mCreateButton, SIGNAL( clicked() ), this, SLOT( createProject() ) );
 }
 
 void QgsProjectTemplateSelectionDialog::itemClicked( const QModelIndex& index )
 {
-  mButtonBox->button( QDialogButtonBox::Open )->setEnabled( mModel->fileInfo( index ).isFile() );
+  mCreateButton->setEnabled( mModel->fileInfo( index ).isFile() );
 }
 
 void QgsProjectTemplateSelectionDialog::itemDoubleClicked( const QModelIndex& index )
 {
   if ( mModel->fileInfo( index ).isFile() )
   {
-    openProject();
+    createProject();
   }
 }
 
-void QgsProjectTemplateSelectionDialog::openProject()
+void QgsProjectTemplateSelectionDialog::createProject()
 {
-  QString filename = mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
-  if ( !filename.isEmpty() )
+  if ( mProjectFromTemplateRadio->isChecked() )
   {
-    QgisApp::instance()->openProject( filename );
+    QString filename = mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
+    if ( !filename.isEmpty() )
+    {
+      QgisApp::instance()->fileNewFromTemplate( filename );
+      accept();
+    }
+  }
+  else
+  {
+    QgisApp::instance()->fileNew( true );
+    accept();
   }
 }
 
-void QgsProjectTemplateSelectionDialog::newEmptyProject()
+void QgsProjectTemplateSelectionDialog::radioChanged()
 {
-  QgisApp::instance()->fileNew( true );
+  if ( mRadioButtonGroup->checkedButton() == mProjectFromTemplateRadio )
+  {
+    mCreateButton->setEnabled( mModel->fileInfo( mTreeView->currentIndex() ).isFile() );
+    mTreeView->setEnabled( true );
+  }
+  else
+  {
+    mCreateButton->setEnabled( true );
+    mTreeView->setEnabled( false );
+  }
 }
