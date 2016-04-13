@@ -357,8 +357,7 @@ void QgsRedlining::updateFeatureStyle( const QgsFeatureId &fid )
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( mUi.colorButtonFillColor->color() ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( mUi.comboOutlineStyle->itemData( mUi.comboOutlineStyle->currentIndex() ).toInt() ) ) );
   mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( mUi.comboFillStyle->itemData( mUi.comboFillStyle->currentIndex() ).toInt() ) ) );
-  mApp->mapCanvas()->clearCache( mLayer->id() );
-  mApp->mapCanvas()->refresh();
+  mLayer->triggerRepaint();
 }
 
 void QgsRedlining::saveColor()

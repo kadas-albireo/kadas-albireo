@@ -50,11 +50,11 @@ void QgsMapToolDeleteItems::drawFinished()
 
   QgsCoordinateReferenceSystem filterRectCrs = canvas()->mapSettings().destinationCrs();
 
-  deleteItems(filterRect, filterRectCrs);
+  deleteItems( filterRect, filterRectCrs );
   reset();
 }
 
-void QgsMapToolDeleteItems::deleteItems(const QgsRectangle &filterRect, const QgsCoordinateReferenceSystem &filterRectCrs)
+void QgsMapToolDeleteItems::deleteItems( const QgsRectangle &filterRect, const QgsCoordinateReferenceSystem &filterRectCrs )
 {
   // Search annotation items
   QList<QgsAnnotationItem*> delAnnotationItems;
@@ -172,7 +172,7 @@ void QgsMapToolDeleteItems::deleteItems(const QgsRectangle &filterRect, const Qg
         {
           layer->dataProvider()->deleteFeatures( delRedliningItems[layer] );
         }
-        canvas()->clearCache( layer->id() );
+        layer->triggerRepaint();
       }
       foreach ( QgsPluginLayer* layer, checkBoxPluginItems.keys() )
       {
@@ -180,9 +180,8 @@ void QgsMapToolDeleteItems::deleteItems(const QgsRectangle &filterRect, const Qg
         {
           layer->deleteItems( delPluginItems[layer] );
         }
-        canvas()->clearCache( layer->id() );
+        layer->triggerRepaint();
       }
     }
-    canvas()->refresh();
   }
 }
