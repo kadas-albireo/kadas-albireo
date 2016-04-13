@@ -121,7 +121,6 @@ class QgsRedliningEditTool : public QgsMapTool
     QgsPoint mPrevPos;
     bool mUnsetOnMiss;
 
-    void clearCurrent( bool refresh = true );
     void checkVertexSelection();
     void showContextMenu( QMouseEvent *e );
     void addVertex( const QPoint& pos );
@@ -129,6 +128,7 @@ class QgsRedliningEditTool : public QgsMapTool
     void runEditor( const QgsFeatureId& featureId );
 
   private slots:
+    void clearCurrent( bool refresh = true );
     void updateLabelBoundingBox();
 };
 
