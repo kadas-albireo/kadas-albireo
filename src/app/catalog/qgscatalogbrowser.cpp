@@ -59,6 +59,7 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
         {
           groupItem = new QStandardItem( value );
           groupItem->setDragEnabled( false );
+          groupItem->setToolTip( value );
           parent->setChild( parent->rowCount(), groupItem );
         }
         return groupItem;
@@ -67,8 +68,8 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
       {
         QStandardItem* item = new QStandardItem( value );
         parent->setChild( parent->rowCount(), item );
+        item->setToolTip( value );
         item->setData( QgsMimeDataUtils::decodeUriList( mimeData ).front().data() );
-        item->setToolTip( QgsMimeDataUtils::decodeUriList( mimeData ).front().uri );
         return item;
       }
     }
