@@ -17,13 +17,14 @@
 #define QGSPROJECTTEMPLATESELECTIONDIALOG_H
 
 #include <QDialog>
+#include <ui_qgsprojecttemplateselectiondialog.h>
 
 class QDialogButtonBox;
 class QFileSystemModel;
 class QModelIndex;
 class QTreeView;
 
-class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog
+class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog, Ui::QgsProjectTemplateSelectionDialogBase
 {
     Q_OBJECT
   public:
@@ -31,14 +32,13 @@ class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog
 
   private:
     QFileSystemModel* mModel;
-    QTreeView* mTreeView;
-    QDialogButtonBox* mButtonBox;
+    QAbstractButton* mCreateButton;
 
   private slots:
     void itemClicked( const QModelIndex& index );
     void itemDoubleClicked( const QModelIndex& index );
-    void openProject();
-    void newEmptyProject();
+    void radioChanged();
+    void createProject();
 
 };
 
