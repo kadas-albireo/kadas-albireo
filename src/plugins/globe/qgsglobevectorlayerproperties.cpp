@@ -42,7 +42,8 @@ QgsGlobeVectorLayerPropertiesPage::QgsGlobeVectorLayerPropertiesPage( QgsVectorL
 
   // Populate combo boxes
   comboBoxRenderingMode->addItem( tr( "Rasterized" ), QgsGlobeVectorLayerConfig::RenderingModeRasterized );
-  comboBoxRenderingMode->addItem( tr( "Model" ), QgsGlobeVectorLayerConfig::RenderingModeModel );
+  comboBoxRenderingMode->addItem( tr( "Model (Simple)" ), QgsGlobeVectorLayerConfig::RenderingModeModelSimple );
+  comboBoxRenderingMode->addItem( tr( "Model (Advanced)" ), QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced );
   comboBoxRenderingMode->setItemData( 0, tr( "Rasterize the layer to a texture, and drape it on the terrain" ), Qt::ToolTipRole );
   comboBoxRenderingMode->setItemData( 1, tr( "Render the layer features as models" ), Qt::ToolTipRole );
   comboBoxRenderingMode->setCurrentIndex( -1 );
@@ -74,7 +75,7 @@ QgsGlobeVectorLayerPropertiesPage::QgsGlobeVectorLayerPropertiesPage( QgsVectorL
   comboBoxAltitudeBinding->setCurrentIndex( -1 );
 
   // Connect signals (setCurrentIndex(-1) above ensures the signal is called when the current values are set below)
-  connect( comboBoxRenderingMode, SIGNAL( currentIndexChanged( int ) ), stackedWidgetRenderingMode, SLOT( setCurrentIndex( int ) ) );
+  connect( comboBoxRenderingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( showRenderingModeWidget( int ) ) );
   connect( comboBoxAltitudeClamping, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAltitudeClampingChanged( int ) ) );
   connect( comboBoxAltitudeTechnique, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAltituteTechniqueChanged( int ) ) );
 
@@ -156,6 +157,24 @@ void QgsGlobeVectorLayerPropertiesPage::onAltituteTechniqueChanged( int index )
   comboBoxAltitudeBinding->setVisible( mapTechnique );
   labelAltitudeResolution->setVisible( mapTechnique );
   spinBoxAltitudeResolution->setVisible( mapTechnique );
+}
+
+void QgsGlobeVectorLayerPropertiesPage::showRenderingModeWidget( int index )
+{
+  stackedWidgetRenderingMode->setCurrentIndex( index != 0 );
+  bool advanced = index == 2;
+  groupBoxAltitude->setVisible( advanced );
+  checkBoxLighting->setVisible( advanced );
+  checkBoxExtrusionFlatten->setVisible( advanced );
+  if ( !advanced )
+  {
+    comboBoxAltitudeClamping->setCurrentIndex( comboBoxAltitudeClamping->findData( static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN ) ) );
+    comboBoxAltitudeTechnique->setCurrentIndex( comboBoxAltitudeTechnique->findData( static_cast<int>( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_GPU ) ) );
+    spinBoxAltitudeResolution->setValue( 0 );
+    spinBoxAltitudeOffset->setValue( 0 );
+    spinBoxAltitudeScale->setValue( 0 );
+    checkBoxExtrusionFlatten->setChecked( false );
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
