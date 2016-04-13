@@ -218,7 +218,7 @@ QDialog QDialogButtonBox {
   dialogbuttonbox-buttons-have-icons: 0;
 }
 
-QDialog QPushButton {
+QDialogButtonBox QPushButton {
   border-radius: 3px;
   background-color: #e6e6e6;
   border: 1px solid #cdcdcd;
@@ -227,35 +227,35 @@ QDialog QPushButton {
   min-width: 80px;
 }
 
-QDialog QPushButton:pressed {
+QDialogButtonBox QPushButton:pressed {
     border-style: inset;
 }
 
-QDialog QPushButton:disabled {
+QDialogButtonBox QPushButton:disabled {
     color: #C0C0C0;
 }
 
-QDialog QPushButton[text="&OK"], QDialog QPushButton[text="&Open"], QDialog QPushButton[text="&Create"],
-QDialog QPushButton[text="OK"], QDialog QPushButton[text="Open"], QDialog QPushButton[text="Create"] {
+QDialogButtonBox QPushButton[text="&OK"], QDialogButtonBox QPushButton[text="&Open"], QDialogButtonBox QPushButton[text="&Create"],
+QDialogButtonBox QPushButton[text="OK"], QDialogButtonBox QPushButton[text="Open"], QDialogButtonBox QPushButton[text="Create"] {
   background-color: #106BBC;
   color: #FFFFFF;
 }
 
-QDialog QPushButton[text="&OK"]:disabled, QDialog QPushButton[text="&Open"]:disabled, QDialog QPushButton[text="&Create"]:disabled,
-QDialog QPushButton[text="OK"]:disabled, QDialog QPushButton[text="Open"]:disabled, QDialog QPushButton[text="Create"]:disabled {
+QDialogButtonBox QPushButton[text="&OK"]:disabled, QDialogButtonBox QPushButton[text="&Open"]:disabled, QDialogButtonBox QPushButton[text="&Create"]:disabled,
+QDialogButtonBox QPushButton[text="OK"]:disabled,  QDialogButtonBox QPushButton[text="Open"]:disabled,  QDialogButtonBox QPushButton[text="Create"]:disabled {
   color: #C0C0C0;
 }
 
-QDialog QPushButton[text="&Cancel"],    QDialog QPushButton[text="&Close"],
-QDialog QPushButton[text="Cancel"],    QDialog QPushButton[text="Close"],
-QDialog QPushButton[text="Abbrechen"], QDialog QPushButton[text="Schließen"] {
+QDialogButtonBox QPushButton[text="&Cancel"],   QDialogButtonBox QPushButton[text="&Close"],
+QDialogButtonBox QPushButton[text="Cancel"],    QDialogButtonBox QPushButton[text="Close"],
+QDialogButtonBox QPushButton[text="Abbrechen"], QDialogButtonBox QPushButton[text="Schließen"] {
   background-color: #313B44;
   color: #FFFFFF;
 }
 
-QDialog QPushButton[text="&Cancel"]:disabled,    QDialog QPushButton[text="&Close"]:disabled,
-QDialog QPushButton[text="Cancel"]:disabled,    QDialog QPushButton[text="Close"]:disabled,
-QDialog QPushButton[text="Abbrechen"]:disabled, QDialog QPushButton[text="Schließen"]:disabled {
+QDialogButtonBox QPushButton[text="&Cancel"]:disabled,   QDialogButtonBox QPushButton[text="&Close"]:disabled,
+QDialogButtonBox QPushButton[text="Cancel"]:disabled,    QDialogButtonBox QPushButton[text="Close"]:disabled,
+QDialogButtonBox QPushButton[text="Abbrechen"]:disabled, QDialogButtonBox QPushButton[text="Schließen"]:disabled {
   color: #C0C0C0;
 }
 /*
