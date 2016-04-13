@@ -237,6 +237,8 @@ void QgsRedliningEditTool::selectFeature( const QgsFeature &feature )
   mRubberBand->setOutlineWidth( 3 );
   mRubberBand->setLineStyle( Qt::DotLine );
   mCurrentFeature = new QgsSelectedFeature( feature.id(), mLayer, mCanvas );
+  connect( mCurrentFeature.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearCurrent() ) ); // When current layer changes
+
   mIsRectangle = false;
   foreach ( const QString& flag, feature.attribute( "flags" ).toString().split( "," ) )
   {
