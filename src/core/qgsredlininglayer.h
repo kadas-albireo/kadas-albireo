@@ -31,6 +31,9 @@ class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
 
     static QMap<QString, QString> deserializeFlags( const QString& flagsStr );
     static QString serializeFlags( const QMap<QString, QString> &flagsMap );
+
+  private slots:
+    void changeTextTransparency( int );
 };
 
 #endif // QGSREDLININGLAYER_H
