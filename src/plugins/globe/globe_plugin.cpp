@@ -942,7 +942,7 @@ void GlobePlugin::updateLayers()
         connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
       }
 
-      if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
+      if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
       {
         mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
         addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
@@ -981,7 +981,7 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
       layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
     }
 
-    if ( layerConfig && layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModel )
+    if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
     {
       // If was previously a draped layer, refresh the draped layer
       if ( mTileSource->layerSet().contains( mapLayer->id() ) )

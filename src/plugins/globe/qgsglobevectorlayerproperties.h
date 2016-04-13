@@ -32,7 +32,8 @@ public:
   enum RenderingMode
   {
     RenderingModeRasterized,
-    RenderingModeModel
+    RenderingModeModelSimple,
+    RenderingModeModelAdvanced
   };
 
   QgsGlobeVectorLayerConfig( QObject* parent = 0 )
@@ -91,6 +92,7 @@ class QgsGlobeVectorLayerPropertiesPage : public QgsVectorLayerPropertiesPage, p
   private slots:
     void onAltitudeClampingChanged( int index );
     void onAltituteTechniqueChanged( int index );
+    void showRenderingModeWidget( int index );
 
   signals:
     void layerSettingsChanged( QgsMapLayer* );
