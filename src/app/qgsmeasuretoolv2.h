@@ -74,8 +74,12 @@ class APP_EXPORT QgsMeasureWidget : public QFrame
     QgsMapCanvas* mCanvas;
     QLabel* mMeasurementLabel;
     QComboBox* mUnitComboBox;
+    QgsMeasureToolV2::MeasureMode mMeasureMode;
 
     void updatePosition();
+
+  private slots:
+    void saveDefaultUnits( int index );
 };
 
 #endif // QGSMEASURETOOLV2_H

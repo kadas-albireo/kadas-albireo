@@ -26,7 +26,7 @@
 #include <QMouseEvent>
 
 QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::MeasureMode measureMode )
-    : QFrame( canvas )
+    : QFrame( canvas ), mMeasureMode( measureMode )
 {
   bool measureAngle = measureMode == QgsMeasureToolV2::MeasureAngle || measureMode == QgsMeasureToolV2::MeasureAzimuth;
   mCanvas = canvas;
@@ -49,8 +49,8 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
     mUnitComboBox->addItem( QGis::tr( QGis::Feet ), static_cast<int>( QGis::Feet ) );
 //    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
     mUnitComboBox->addItem( QGis::tr( QGis::NauticalMiles ), static_cast<int>( QGis::NauticalMiles ) );
-    QString units = QSettings().value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
-    mUnitComboBox->setCurrentIndex( mUnitComboBox->findText( QGis::tr( QGis::fromLiteral( units ) ), Qt::MatchFixedString ) );
+    int defUnit = QSettings().value( "/qgis/measure/last_measure_unit", QGis::Meters ).toInt();
+    mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
   }
   else
   {
@@ -58,10 +58,20 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
     mUnitComboBox->addItem( tr( "Radians" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_RADIANS ) );
     mUnitComboBox->addItem( tr( "Gradians" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_GRADIANS ) );
     mUnitComboBox->addItem( tr( "Angular Mil" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) );
-    mUnitComboBox->setCurrentIndex( measureMode == QgsMeasureToolV2::MeasureAngle ? 0 : 3 );
+    if ( measureMode == QgsMeasureToolV2::MeasureAngle )
+    {
+      int defUnit = QSettings().value( "/qgis/measure/last_angle_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_DEGREES ) ).toInt();
+      mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
+    }
+    else
+    {
+      int defUnit = QSettings().value( "/qgis/measure/last_azimuth_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) ).toInt();
+      mUnitComboBox->setCurrentIndex( defUnit );
+    }
   }
 
   connect( mUnitComboBox, SIGNAL( currentIndexChanged( const QString & ) ), this, SIGNAL( unitsChanged( ) ) );
+  connect( mUnitComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveDefaultUnits( int ) ) );
   layout()->addWidget( mUnitComboBox );
 
   if ( measureMode != QgsMeasureToolV2::MeasureAngle )
@@ -101,6 +111,22 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   }
 
   updatePosition();
+}
+
+void QgsMeasureWidget::saveDefaultUnits( int index )
+{
+  if ( mMeasureMode == QgsMeasureToolV2::MeasureAzimuth )
+  {
+    QSettings().setValue( "/qgis/measure/last_azimuth_unit", mUnitComboBox->itemData( index ).toInt() );
+  }
+  else if ( mMeasureMode == QgsMeasureToolV2::MeasureAngle )
+  {
+    QSettings().setValue( "/qgis/measure/last_angle_unit", mUnitComboBox->itemData( index ).toInt() );
+  }
+  else
+  {
+    QSettings().setValue( "/qgis/measure/last_measure_unit", mUnitComboBox->itemData( index ).toInt() );
+  }
 }
 
 void QgsMeasureWidget::updateMeasurement( const QString& measurement )
