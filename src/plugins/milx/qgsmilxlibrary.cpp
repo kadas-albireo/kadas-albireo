@@ -406,7 +406,7 @@ void QgsMilXLibraryLoader::run()
               symbolXmls.append( memberNodes.at( iMember ).toElement().attribute( "MssStringXML" ) );
             }
             QList<MilXClient::SymbolDesc> symbolDescs;
-            MilXClient::getSymbols( symbolXmls, symbolDescs );
+            MilXClient::getSymbolsMetadata( symbolXmls, symbolDescs );
             foreach ( const MilXClient::SymbolDesc& symbolDesc, symbolDescs )
             {
               addItem( subSectionItem, symbolDesc.name, symbolDesc.icon, true, symbolDesc.symbolId, symbolDesc.militaryName, symbolDesc.minNumPoints, symbolDesc.hasVariablePoints );

@@ -28,10 +28,17 @@ class QgsLayerTreeViewMenuProvider;
 class QGS_MILX_EXPORT QgsMilXItem
 {
   public:
+    enum ControlPointState
+    {
+      HAVE_CONTROL_POINTS,
+      NEED_CONTROL_POINTS_AND_INDICES,
+      NEED_CONTROL_POINT_INDICES,
+    };
+
     static bool validateMssString( const QString& mssString, QString &adjustedMssString, QString& messages );
 
     ~QgsMilXItem();
-    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), bool queryControlPoints = false );
+    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS );
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
     const QList<QgsPoint>& points() const { return mPoints; }
