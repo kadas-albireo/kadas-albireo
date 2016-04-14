@@ -281,14 +281,14 @@ bool MilXClient::init()
   return result;
 }
 
-bool MilXClient::getSymbol( const QString& symbolId, SymbolDesc &result )
+bool MilXClient::getSymbolMetadata( const QString& symbolId, SymbolDesc &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_GET_SYMBOL;
+  istream << MILX_REQUEST_GET_SYMBOL_METADATA;
   istream << symbolId;
   QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOL_METADATA ) )
   {
     return false;
   }
@@ -301,15 +301,15 @@ bool MilXClient::getSymbol( const QString& symbolId, SymbolDesc &result )
   return true;
 }
 
-bool MilXClient::getSymbols( const QStringList& symbolIds, QList<SymbolDesc> &result )
+bool MilXClient::getSymbolsMetadata( const QStringList& symbolIds, QList<SymbolDesc> &result )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_GET_SYMBOLS;
+  istream << MILX_REQUEST_GET_SYMBOLS_METADATA;
   istream << symbolIds;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOLS ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_SYMBOLS_METADATA ) )
   {
     return false;
   }
@@ -647,11 +647,28 @@ bool MilXClient::setSymbolOptions( int symbolSize, int lineWidth , int workMode 
   return true;
 }
 
-bool MilXClient::getControlPoints( const QString& symbolXml, int nPoints, QList<int>& controlPoints )
+bool MilXClient::getControlPointIndices( const QString& symbolXml, int nPoints, QList<int>& controlPoints )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_GET_CONTROL_POINTS << symbolXml << nPoints;
+  istream << MILX_REQUEST_GET_CONTROL_POINT_INDICES << symbolXml << nPoints;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_CONTROL_POINT_INDICES ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> controlPoints;
+  return true;
+}
+
+bool MilXClient::getControlPoints( const QString &symbolXml, QList<QPoint> &points, QList<int> &controlPoints )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_GET_CONTROL_POINTS << symbolXml << points;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_GET_CONTROL_POINTS ) )
@@ -660,7 +677,7 @@ bool MilXClient::getControlPoints( const QString& symbolXml, int nPoints, QList<
   }
   QDataStream ostream( &response, QIODevice::ReadOnly );
   MilXServerReply replycmd = 0; ostream >> replycmd;
-  ostream >> controlPoints;
+  ostream >> points >> controlPoints;
   return true;
 }
 

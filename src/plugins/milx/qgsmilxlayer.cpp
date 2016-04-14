@@ -39,15 +39,41 @@ QgsMilXItem::~QgsMilXItem()
   }
 }
 
-void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, bool queryControlPoints )
+void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, ControlPointState controlPointState )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
   mPoints = points;
   mControlPoints = controlPoints;
   mUserOffset = userOffset;
-  if ( queryControlPoints && mPoints.size() > 1 )
-    MilXClient::getControlPoints( mMssString, mPoints.count(), mControlPoints );
+  if ( mPoints.size() > 1 )
+  {
+    if ( controlPointState == NEED_CONTROL_POINTS_AND_INDICES )
+    {
+      // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
+      double scale = 100000.;
+      QPoint origin = QPoint( mPoints[0].x() * scale, mPoints[0].y() * scale );
+      QList<QPoint> screenPoints = QList<QPoint>() << QPoint( 0, 0 );
+      for ( int i = 1, n = mPoints.size(); i < n; ++i )
+      {
+        screenPoints.append( QPoint( mPoints[i].x() * scale, mPoints[i].y() * scale ) - origin );
+      }
+      if ( MilXClient::getControlPoints( mMssString, screenPoints, mControlPoints ) )
+      {
+        mPoints.clear();
+        for ( int i = 0, n = screenPoints.size(); i < n; ++i )
+        {
+          mPoints.append( QgsPoint(( origin.x() + screenPoints[i].x() ) / scale,
+                                   ( origin.y() + screenPoints[i].y() ) / scale ) );
+        }
+      }
+    }
+    else if ( controlPointState == NEED_CONTROL_POINT_INDICES )
+    {
+      MilXClient::getControlPointIndices( mMssString, mPoints.count(), mControlPoints );
+    }
+  }
+
   if ( militaryName.isEmpty() )
   {
     MilXClient::getMilitaryName( mMssString, mMilitaryName );
@@ -146,7 +172,7 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
 
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  initialize( symbolXml, militaryName, points, QList<int>(), QPoint( offsetX, offsetY ),  true );
+  initialize( symbolXml, militaryName, points, QList<int>(), QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

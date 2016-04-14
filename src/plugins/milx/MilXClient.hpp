@@ -93,24 +93,29 @@ public:
   static void setWorkMode(int workMode) { instance()->mWorkMode = workMode; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
 
   static bool init();
-  static bool getSymbol(const QString& symbolId, SymbolDesc& result);
-  static bool getSymbols(const QStringList& symbolIds, QList<SymbolDesc>& result);
+  static bool getSymbolMetadata(const QString& symbolId, SymbolDesc& result);
+  static bool getSymbolsMetadata(const QStringList& symbolIds, QList<SymbolDesc>& result);
+  static bool getMilitaryName(const QString& symbolXml, QString& militaryName);
+  static bool getControlPointIndices(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
+  static bool getControlPoints(const QString& symbolXml, QList<QPoint>& points, QList<int>& controlPoints);
+
   static bool appendPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
   static bool insertPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
   static bool movePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result);
   static bool canDeletePoint(const NPointSymbol& symbol, int index, bool& canDelete);
   static bool deletePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result);
   static bool editSymbol(const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result);
+
   static bool updateSymbol(const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
   static bool updateSymbols(const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);
-  static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
-  static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
+
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
   static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol);
-  static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
+
   static bool getCurrentLibraryVersionTag(QString& versionTag);
-  static bool getControlPoints(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
-  static bool getMilitaryName(const QString& symbolXml, QString& militaryName);
+  static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
+  static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
+  static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
 
 private:
   MilXClientWorker mWorker;
