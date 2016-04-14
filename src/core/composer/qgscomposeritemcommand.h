@@ -83,6 +83,7 @@ class CORE_EXPORT QgsComposerMergeCommand: public QgsComposerItemCommand
       //composer label
       ComposerLabelSetText,
       ComposerLabelSetId,
+      ComposerLabelLengthLimit,
       //composer map
       ComposerMapRotation,
       ComposerMapAnnotationDistance,

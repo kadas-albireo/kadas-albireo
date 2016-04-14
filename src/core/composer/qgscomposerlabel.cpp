@@ -47,6 +47,7 @@ QgsComposerLabel::QgsComposerLabel( QgsComposition *composition )
     , mExpressionFeature( 0 )
     , mExpressionLayer( 0 )
     , mDistanceArea( 0 )
+    , mMaxLength( -1 )
 {
   mDistanceArea = new QgsDistanceArea();
   mHtmlUnitsToMM = htmlUnitsToMM();
@@ -205,6 +206,10 @@ double QgsComposerLabel::htmlUnitsToMM()
 void QgsComposerLabel::setText( const QString& text )
 {
   mText = text;
+  if ( mMaxLength >= 0 )
+  {
+    mText.truncate( mMaxLength );
+  }
   emit itemChanged();
 
   if ( mComposition && id().isEmpty() && !mHtmlState )
@@ -386,6 +391,7 @@ bool QgsComposerLabel::writeXML( QDomElement& elem, QDomDocument & doc ) const
   composerLabelElem.setAttribute( "marginY", QString::number( mMarginY ) );
   composerLabelElem.setAttribute( "halign", mHAlignment );
   composerLabelElem.setAttribute( "valign", mVAlignment );
+  composerLabelElem.setAttribute( "maxLength", mMaxLength );
 
   //font
   QDomElement labelFontElem = doc.createElement( "LabelFont" );
@@ -438,6 +444,8 @@ bool QgsComposerLabel::readXML( const QDomElement& itemElem, const QDomDocument&
 
   //Vertical alignment
   mVAlignment = ( Qt::AlignmentFlag )( itemElem.attribute( "valign" ).toInt() );
+
+  mMaxLength = itemElem.attribute( "maxLength", "-1" ).toInt();
 
   //font
   QDomNodeList labelFontList = itemElem.elementsByTagName( "LabelFont" );

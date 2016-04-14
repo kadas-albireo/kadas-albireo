@@ -247,6 +247,8 @@ void QgsComposerLabelWidget::setGuiElementValues()
   mCenterRadioButton->setChecked( mComposerLabel->hAlign() == Qt::AlignHCenter );
   mRightRadioButton->setChecked( mComposerLabel->hAlign() == Qt::AlignRight );
   mFontColorButton->setColor( mComposerLabel->fontColor() );
+  mLengthLimitCheckBox->setChecked( mComposerLabel->maxLength() >= 0 );
+  mLengthLimitSpinBox->setValue( mComposerLabel->maxLength() );
   blockAllSignals( false );
 }
 
@@ -263,4 +265,20 @@ void QgsComposerLabelWidget::blockAllSignals( bool block )
   mCenterRadioButton->blockSignals( block );
   mRightRadioButton->blockSignals( block );
   mFontColorButton->blockSignals( block );
+  mLengthLimitCheckBox->blockSignals( block );
+  mLengthLimitSpinBox->blockSignals( block );
+}
+
+void QgsComposerLabelWidget::on_mLengthLimitCheckBox_stateChanged( int state )
+{
+  mLengthLimitSpinBox->setValue( state == Qt::Checked ? 100 : -1 );
+  mLengthLimitSpinBox->setEnabled( state == Qt::Checked );
+}
+
+void QgsComposerLabelWidget::on_mLengthLimitSpinBox_valueChanged( int i )
+{
+  mComposerLabel->beginCommand( tr( "Label length limit changed" ), QgsComposerMergeCommand::ComposerLabelLengthLimit );
+  mComposerLabel->setMaxLength( i );
+  mComposerLabel->update();
+  mComposerLabel->endCommand();
 }

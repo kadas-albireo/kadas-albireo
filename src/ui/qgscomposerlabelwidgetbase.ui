@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>304</width>
-    <height>705</height>
+    <height>604</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -52,8 +52,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>302</width>
-        <height>682</height>
+        <width>298</width>
+        <height>580</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="mainLayout">
@@ -95,6 +95,33 @@
              <string>Insert an expression...</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QCheckBox" name="mLengthLimitCheckBox">
+              <property name="text">
+               <string>Maximum length</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="mLengthLimitSpinBox">
+              <property name="suffix">
+               <string> characters</string>
+              </property>
+              <property name="minimum">
+               <number>-1</number>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
