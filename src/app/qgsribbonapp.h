@@ -82,6 +82,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void switchToTabForTool( QgsMapTool* tool );
     void toggleLayersSpacer();
     void showProjectSelectionWidget();
+    void onLanguageChanged( int idx );
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );

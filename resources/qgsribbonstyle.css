@@ -271,7 +271,9 @@ QgsAttributeForm QScrollArea > QWidget > QWidget
   background-color: #FFFFFF;
 }
 
-#mRibbonWidget QComboBox#mWorkModeCombo QAbstractItemView {
+#mRibbonWidget QComboBox#mWorkModeCombo QAbstractItemView,
+#mRibbonWidget QComboBox#mLanguageCombo QAbstractItemView
+{
   background-color: #263B4E;
 }
 

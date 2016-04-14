@@ -37,6 +37,7 @@
 #include <QFileDialog>
 #include <QImageReader>
 #include <QMenu>
+#include <QMessageBox>
 #include <QMouseEvent>
 
 QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget* parent, Qt::WindowFlags fl )
@@ -83,7 +84,28 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
 
   // The MilX plugin enables the tab, if the plugin is enabled
-  mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
+//  mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
+
+  mLanguageCombo->addItem( tr( "System language" ), "" );
+  mLanguageCombo->addItem( "English", "en" );
+  mLanguageCombo->addItem( "Deutsch", "de" );
+  mLanguageCombo->addItem( QString( "Fran%1ais" ).arg( QChar( 0x00E7 ) ), "fr" );
+  mLanguageCombo->addItem( "Italiano", "it" );
+  bool localeOverridden = QSettings().value( "/locale/overrideFlag", false ).toBool();
+  QString userLocale = QSettings().value( "/locale/userLocale" ).toString();
+  if ( !localeOverridden )
+  {
+    mLanguageCombo->setCurrentIndex( 0 );
+  }
+  else
+  {
+    int idx = mLanguageCombo->findData( userLocale.left( 2 ).toLower() );
+    if ( idx >= 0 )
+    {
+      mLanguageCombo->setCurrentIndex( idx );
+    }
+  }
+  connect( mLanguageCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onLanguageChanged( int ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
@@ -374,7 +396,6 @@ void QgsRibbonApp::configureButtons()
   connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
 
   //draw tab
-
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   setActionToButton( mActionPin, mPinButton, mMapTools.mPinAnnotation );
 
@@ -385,7 +406,6 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionDeleteItems, mDeleteItemsButton, mMapTools.mDeleteItems );
 
   //analysis tab
-
   connect( mActionDistance, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
   setActionToButton( mActionDistance, mDistanceButton, mMapTools.mMeasureDist );
 
@@ -429,15 +449,10 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionExportGPX, mGpxExportButton );
 
   //mss tab
-
   setActionToButton( mActionMilx, mMilxButton );
   setActionToButton( mActionSaveMilx, mSaveMilxButton );
   setActionToButton( mActionLoadMilx, mLoadMilxButton );
   setActionToButton( mActionImportOVL, mOvlButton );
-
-  //settings tab
-  connect( mActionSettings, SIGNAL( triggered() ), this, SLOT( options() ) );
-  setActionToButton( mActionSettings, mSettingsButton );
 
   //help tab
   setActionToButton( mActionHelp, mHelpButton );
@@ -603,6 +618,21 @@ void QgsRibbonApp::toggleLayersSpacer()
 void QgsRibbonApp::showProjectSelectionWidget()
 {
   QgsProjectTemplateSelectionDialog( this ).exec();
+}
+
+void QgsRibbonApp::onLanguageChanged( int idx )
+{
+  QString locale = mLanguageCombo->itemData( idx ).toString();
+  if ( locale.isEmpty() )
+  {
+    QSettings().setValue( "/locale/overrideFlag", false );
+  }
+  else
+  {
+    QSettings().setValue( "/locale/overrideFlag", true );
+    QSettings().setValue( "/locale/userLocale", locale );
+  }
+  QMessageBox::information( this, tr( "Language Changed" ), tr( "The language will be changed at the next program launch." ) );
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )
