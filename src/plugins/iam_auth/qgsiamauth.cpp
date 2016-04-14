@@ -81,7 +81,7 @@ void QgsIAMAuth::performLogin()
 {
   mLoginDialog = new StackedDialog( mQGisIface->mainWindow() );
   mLoginDialog->setWindowTitle( tr( "eIAM Authentication" ) );
-  mLoginDialog->resize( 640, 480 );
+  mLoginDialog->resize( 800, 480 );
 
   WebAxWidget* webWidget = new WebAxWidget();
   webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
