@@ -34,6 +34,7 @@ QgsVBSCatalogProvider::QgsVBSCatalogProvider( const QString &baseUrl, QgsCatalog
 
 void QgsVBSCatalogProvider::load()
 {
+  mPendingTasks = 0;
   QNetworkRequest req( mBaseUrl );
   req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
