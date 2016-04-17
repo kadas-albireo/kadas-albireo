@@ -99,6 +99,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
+  QString referer = QSettings().value( "search/referrer", "http://localhost" ).toString();
 
   if ( reply->error() == QNetworkReply::NoError )
   {
@@ -114,7 +115,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
         {
           QString title;
           QMimeData* mimeData;
-          parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), "", title, layerid, mimeData );
+          parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
           mBrowser->addItem( getCategoryItem( QStringList() << ( *entries )[layerid].category ), ( *entries )[layerid].title, true, mimeData );
         }
       }
