@@ -142,3 +142,14 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
                       "%3&url=%4" ).arg( supportedCrs[0] ).arg( imgFormat ).arg( subLayerParams ).arg( url );
   mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
 }
+
+QStandardItem* QgsCatalogProvider::getCategoryItem( const QStringList& titles )
+{
+  QStandardItem* cat = 0;
+  foreach ( const QString& title, titles )
+  {
+    cat = mBrowser->addItem( cat, title );
+  }
+  return cat;
+}
+
