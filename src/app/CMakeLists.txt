@@ -146,6 +146,7 @@ SET(QGIS_APP_SRCS
   catalog/qgscatalogprovider.cpp
   catalog/qgsgeoadminrestcatalogprovider.cpp
   catalog/qgsarcgisrestcatalogprovider.cpp
+  catalog/qgsvbscatalogprovider.cpp
 
   composer/qgsattributeselectiondialog.cpp
   composer/qgscomposer.cpp
@@ -315,6 +316,7 @@ SET (QGIS_APP_MOC_HDRS
   catalog/qgscatalogprovider.h
   catalog/qgsgeoadminrestcatalogprovider.h
   catalog/qgsarcgisrestcatalogprovider.h
+  catalog/qgsvbscatalogprovider.h
 
   composer/qgsattributeselectiondialog.h
   composer/qgscomposer.h

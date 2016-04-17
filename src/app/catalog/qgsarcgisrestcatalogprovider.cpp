@@ -45,16 +45,6 @@ void QgsArcGisRestCatalogProvider::endTask()
   }
 }
 
-QStandardItem* QgsArcGisRestCatalogProvider::getCategoryItem( const QStringList& titles )
-{
-  QStandardItem* cat = 0;
-  foreach ( const QString& title, titles )
-  {
-    cat = mBrowser->addItem( cat, title );
-  }
-  return cat;
-}
-
 void QgsArcGisRestCatalogProvider::parseFolder( const QString& path, const QStringList& catTitles )
 {
   mPendingTasks += 1;

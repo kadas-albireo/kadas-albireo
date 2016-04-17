@@ -34,7 +34,6 @@ class APP_EXPORT QgsArcGisRestCatalogProvider : public QgsCatalogProvider
     int mPendingTasks;
 
     void endTask();
-    QStandardItem* getCategoryItem( const QStringList& titles );
     void parseFolder( const QString& path, const QStringList& catTitles = QStringList() );
     void parseService( const QString& path, const QStringList& catTitles );
     void parseWMTS( const QString& path, const QStringList& catTitles );

@@ -20,6 +20,7 @@
 #include "qgscatalogprovider.h"
 #include "qgsarcgisrestcatalogprovider.h"
 #include "qgsgeoadminrestcatalogprovider.h"
+#include "qgsvbscatalogprovider.h"
 #include "qgsfilterlineedit.h"
 #include "qgsmimedatautils.h"
 #include <QSettings>
@@ -190,6 +191,10 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
     else if ( type == "arcgisrest" )
     {
       addProvider( new QgsArcGisRestCatalogProvider( url, this ) );
+    }
+    else if ( type == "vbs" )
+    {
+      addProvider( new QgsVBSCatalogProvider( url, this ) );
     }
   }
 }
