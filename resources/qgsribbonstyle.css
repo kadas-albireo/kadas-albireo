@@ -275,6 +275,7 @@ QgsAttributeForm QScrollArea > QWidget > QWidget
 #mRibbonWidget QComboBox#mLanguageCombo QAbstractItemView
 {
   background-color: #263B4E;
+  color: white;
 }
 
 #MapToolDrawShapeInputWidget
