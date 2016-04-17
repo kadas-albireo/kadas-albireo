@@ -443,9 +443,7 @@ int main( int argc, char *argv[] )
 #endif
 
 #ifdef _MSC_VER
-  QgsCrashRpt crashReporter;
-  if ( !crashReporter.install() )
-    SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
+  SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
 #endif
 
   // initialize random number seed
@@ -684,6 +682,13 @@ int main( int argc, char *argv[] )
   QCoreApplication::setOrganizationDomain( QgsApplication::QGIS_ORGANIZATION_DOMAIN );
   QCoreApplication::setApplicationName( QgsApplication::QGIS_APPLICATION_NAME );
   QCoreApplication::setAttribute( Qt::AA_DontShowIconsInMenus, false );
+
+	// This is as early as possible (need settings environment initialized)
+#ifdef _MSC_VER
+  QgsCrashRpt crashReporter;
+  if ( !crashReporter.install() )
+    SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
+#endif
 
   QSettings* customizationsettings;
   if ( !optionpath.isEmpty() || !configpath.isEmpty() )
