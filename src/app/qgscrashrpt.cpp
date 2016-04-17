@@ -67,7 +67,6 @@ bool QgsCrashRpt::install()
   info.pszUrl = _strdup( submitUrl.toLocal8Bit().data() );
   info.dwFlags = 0;
   info.dwFlags |= CR_INST_ALL_POSSIBLE_HANDLERS; // Install all available exception handlers.
-  info.dwFlags |= CR_INST_APP_RESTART; // Restart on crash
   info.dwFlags |= CR_INST_AUTO_THREAD_HANDLERS; // Automatically install handlers to threads
   info.dwFlags |= CR_INST_SHOW_ADDITIONAL_INFO_FIELDS;
   info.dwFlags |= CR_INST_SEND_QUEUED_REPORTS;
