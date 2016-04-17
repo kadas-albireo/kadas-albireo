@@ -43,6 +43,7 @@ void QgsVBSCatalogProvider::load()
 void QgsVBSCatalogProvider::replyFinished()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   if ( reply->error() != QNetworkReply::NoError )
   {
     return;
@@ -98,6 +99,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilities( const QString& wmtsUrl, const 
 void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
   QString referer = QSettings().value( "search/referrer", "http://localhost" ).toString();
 
@@ -123,7 +125,6 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
   }
 
   delete entries;
-  reply->deleteLater();
   endTask();
 }
 
@@ -139,6 +140,7 @@ void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmtsUrl, const R
 void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   ResultEntry* entry = reinterpret_cast<ResultEntry*>( reply->property( "entry" ).value<void*>() );
 
   if ( reply->error() == QNetworkReply::NoError )
@@ -156,6 +158,5 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
   }
 
   delete entry;
-  reply->deleteLater();
   endTask();
 }
