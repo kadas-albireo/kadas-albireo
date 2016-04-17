@@ -53,7 +53,7 @@ QgsCrashRpt::~QgsCrashRpt()
 bool QgsCrashRpt::install()
 {
 #ifdef _MSC_VER
-  QString submitUrl = QSettings().value( "/qgis/crashrpt_url" ).toString();
+  QString submitUrl = QSettings().value( "/Qgis/crashrpt_url" ).toString();
   if ( submitUrl.isEmpty() )
   {
     QgsDebugMsg( "Failed to install crash reporter: submit url is empty" );
