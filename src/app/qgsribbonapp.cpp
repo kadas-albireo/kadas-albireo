@@ -84,7 +84,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
 
   // The MilX plugin enables the tab, if the plugin is enabled
-//  mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
+  mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
 
   mLanguageCombo->addItem( tr( "System language" ), "" );
   mLanguageCombo->addItem( "English", "en" );
