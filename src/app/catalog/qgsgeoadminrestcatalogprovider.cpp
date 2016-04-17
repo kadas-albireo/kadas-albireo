@@ -56,13 +56,13 @@ void QgsGeoAdminRestCatalogProvider::parseTheme( QStandardItem *parent, const QD
 void QgsGeoAdminRestCatalogProvider::replyFinished()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   if ( reply->error() != QNetworkReply::NoError )
   {
     return;
   }
   QDomDocument doc;
   doc.setContent( reply->readAll() );
-  reply->deleteLater();
 
   if ( doc.isNull() )
   {

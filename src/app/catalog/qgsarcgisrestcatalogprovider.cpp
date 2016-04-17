@@ -58,6 +58,7 @@ void QgsArcGisRestCatalogProvider::parseFolder( const QString& path, const QStri
 void QgsArcGisRestCatalogProvider::parseFolderDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   QString path = reply->property( "path" ).toString();
   QStringList catTitles = reply->property( "catTitles" ).toStringList();
 
@@ -80,7 +81,6 @@ void QgsArcGisRestCatalogProvider::parseFolderDo()
     }
   }
 
-  reply->deleteLater();
   endTask();
 }
 
@@ -97,6 +97,7 @@ void QgsArcGisRestCatalogProvider::parseService( const QString& path, const QStr
 void QgsArcGisRestCatalogProvider::parseServiceDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   QString path = reply->property( "path" ).toString();
   QStringList catTitles = reply->property( "catTitles" ).toStringList();
 
@@ -125,7 +126,6 @@ void QgsArcGisRestCatalogProvider::parseServiceDo()
     }
   }
 
-  reply->deleteLater();
   endTask();
 }
 
@@ -144,6 +144,7 @@ void QgsArcGisRestCatalogProvider::parseWMTS( const QString& path, const QString
 void QgsArcGisRestCatalogProvider::parseWMTSDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   QString path = reply->property( "path" ).toString();
   QStringList catTitles = reply->property( "catTitles" ).toStringList();
   QString url = reply->property( "url" ).toString();
@@ -167,7 +168,6 @@ void QgsArcGisRestCatalogProvider::parseWMTSDo()
     }
   }
 
-  reply->deleteLater();
   endTask();
 }
 
@@ -186,6 +186,7 @@ void QgsArcGisRestCatalogProvider::parseWMS( const QString& path, const QStringL
 void QgsArcGisRestCatalogProvider::parseWMSDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  reply->deleteLater();
   QString path = reply->property( "path" ).toString();
   QStringList catTitles = reply->property( "catTitles" ).toStringList();
   QString url = reply->property( "url" ).toString();
@@ -204,6 +205,5 @@ void QgsArcGisRestCatalogProvider::parseWMSDo()
     }
   }
 
-  reply->deleteLater();
   endTask();
 }
