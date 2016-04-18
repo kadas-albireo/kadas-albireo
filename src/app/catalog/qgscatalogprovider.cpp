@@ -113,7 +113,8 @@ QString QgsCatalogProvider::parseWMSNestedLayer( const QDomNode& layerItem ) con
 void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, QString& title, QMimeData*& mimeData ) const
 {
   title = layerItem.firstChildElement( "Title" ).text();
-  QString subLayerParams = parseWMSNestedLayer( layerItem );
+  QString layerid = layerItem.firstChildElement( "Name" ).text();
+  QString subLayerParams = QString( "&layers=%1&styles=" ).arg( layerid );
   QStringList supportedCrs;
   foreach ( const QDomNode& crsItem, childrenByTagName( layerItem.toElement(), "CRS" ) )
   {
