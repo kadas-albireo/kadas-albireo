@@ -95,12 +95,17 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
 {
   QStringList prevLayers;
   QStringList prevDisabledLayers;
+  QStringList prevEnabledLayers;
   foreach ( QAction* action, mLayerSelectionMenu->actions() )
   {
     prevLayers.append( action->data().toString() );
     if ( !action->isChecked() )
     {
       prevDisabledLayers.append( action->data().toString() );
+    }
+    else
+    {
+      prevEnabledLayers.append( action->data().toString() );
     }
   }
 
@@ -124,7 +129,8 @@ void QgsGlobeWidget::updateLayerSelectionMenu()
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SIGNAL( layersChanged() ) );
     mLayerSelectionMenu->addAction( layerAction );
   }
-  emit layersChanged();
+  if ( prevEnabledLayers != getSelectedLayers() )
+    emit layersChanged();
 }
 
 QStringList QgsGlobeWidget::getSelectedLayers() const
