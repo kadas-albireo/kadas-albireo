@@ -731,8 +731,8 @@ void GlobePlugin::setupControls()
   imgLeft = 28;
   imgTop = imgTop + 62;
   addImageControl( imgDir + "/button-background.png", imgLeft, imgTop );
-  addImageControl( imgDir + "/zoom-in.png", imgLeft + 3, imgTop + 3, new ZoomControlHandler( manip, 0, -MOVE_OFFSET ) );
-  addImageControl( imgDir + "/zoom-out.png", imgLeft + 3, imgTop + 28, new ZoomControlHandler( manip, 0, MOVE_OFFSET ) );
+  addImageControl( imgDir + "/zoom-in.png", imgLeft + 3, imgTop + 2, new ZoomControlHandler( manip, 0, -MOVE_OFFSET ) );
+  addImageControl( imgDir + "/zoom-out.png", imgLeft + 3, imgTop + 29, new ZoomControlHandler( manip, 0, MOVE_OFFSET ) );
 }
 
 void GlobePlugin::setupProxy()
