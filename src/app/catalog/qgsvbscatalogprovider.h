@@ -49,7 +49,7 @@ class APP_EXPORT QgsVBSCatalogProvider : public QgsCatalogProvider
     void endTask();
 
     void readWMTSCapabilities( const QString& wmtsUrl, const EntryMap &entries );
-    void readWMSCapabilities( const QString& wmtsUrl, const ResultEntry& entry );
+    void readWMSCapabilities(const QString& wmtsUrl, const EntryMap &entries );
 
   private slots:
     void readWMTSCapabilitiesDo();
