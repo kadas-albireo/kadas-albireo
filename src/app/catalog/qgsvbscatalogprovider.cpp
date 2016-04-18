@@ -119,7 +119,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
           QString title;
           QMimeData* mimeData;
           parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
-          mBrowser->addItem( getCategoryItem( ( *entries )[layerid].category.split("/") ), ( *entries )[layerid].title, true, mimeData );
+          mBrowser->addItem( getCategoryItem(( *entries )[layerid].category.split( "/" ) ), ( *entries )[layerid].title, true, mimeData );
         }
       }
     }
@@ -129,11 +129,12 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
   endTask();
 }
 
-void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmtsUrl, const EntryMap& entries )
+void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
-  QNetworkRequest req( QUrl( wmtsUrl + "?request=GetCapabilities&service=WMS" ) );
+  QNetworkRequest req( QUrl( wmsUrl + "?request=GetCapabilities&service=WMS" ) );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
+  reply->setProperty( "url", wmsUrl );
   reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
   connect( reply, SIGNAL( finished() ), this, SLOT( readWMSCapabilitiesDo() ) );
 }
@@ -143,6 +144,7 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   reply->deleteLater();
   EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
+  QString url = reply->property( "url" ).toString();
 
   if ( reply->error() == QNetworkReply::NoError )
   {
@@ -151,17 +153,37 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
     QStringList imgFormats = parseWMSFormats( doc );
     foreach ( const QDomNode& layerItem, childrenByTagName( doc.firstChildElement( "WMS_Capabilities" ).firstChildElement( "Capability" ), "Layer" ) )
     {
-      QString layerid = layerItem.firstChildElement( "Title" ).text();
-      if ( entries->contains( layerid ) )
+      if ( searchMatchingWMSLayer( layerItem, *entries, url, imgFormats ) )
       {
-        QString title;
-        QMimeData* mimeData;
-        parseWMSLayerCapabilities( layerItem, imgFormats, reply->request().url().toString(), title, mimeData );
-        mBrowser->addItem( getCategoryItem( ( *entries )[layerid].category.split("/") ), ( *entries )[layerid].title, true, mimeData );
+        break;
       }
     }
   }
 
   delete entries;
   endTask();
+}
+
+bool QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString& url, const QStringList& imgFormats )
+{
+  QString layerid = layerItem.firstChildElement( "Name" ).text();
+  if ( entries.contains( layerid ) )
+  {
+    QString title;
+    QMimeData* mimeData;
+    parseWMSLayerCapabilities( layerItem, imgFormats, url, title, mimeData );
+    mBrowser->addItem( getCategoryItem( entries[layerid].category.split( "/" ) ), entries[layerid].title, true, mimeData );
+    return true;
+  }
+  else
+  {
+    foreach ( const QDomNode& subLayerItem, childrenByTagName( layerItem.toElement(), "Layer" ) )
+    {
+      if ( searchMatchingWMSLayer( subLayerItem, entries, url, imgFormats ) )
+      {
+        return true;
+      }
+    }
+  }
+  return false;
 }
