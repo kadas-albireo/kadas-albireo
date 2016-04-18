@@ -18,7 +18,7 @@
 #include "qgsrasterviewport.h"
 
 QgsRasterIterator::QgsRasterIterator( QgsRasterInterface* input ): mInput( input ),
-    mMaximumTileWidth( 256 ), mMaximumTileHeight( 256 )
+    mMaximumTileWidth( 2000 ), mMaximumTileHeight( 2000 )
 {
 }
 
