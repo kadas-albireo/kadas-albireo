@@ -52,7 +52,7 @@ void QgsVBSCatalogProvider::replyFinished()
 
   QJson::Parser parser;
   QMap<QString, EntryMap> wmtsLayers;
-  QMap<QString, ResultEntry> wmsLayers;
+  QMap<QString, EntryMap> wmsLayers;
   QVariantMap listData = parser.parse( reply->readAll() ).toMap();
   foreach ( const QVariant& resultData, listData["results"].toList() )
   {
@@ -63,7 +63,7 @@ void QgsVBSCatalogProvider::replyFinished()
     }
     else if ( resultMap["type"].toString() == "wms" )
     {
-      wmsLayers.insert( resultMap["url"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
+      wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
     }
   }
 
@@ -119,7 +119,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
           QString title;
           QMimeData* mimeData;
           parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
-          mBrowser->addItem( getCategoryItem( QStringList() << ( *entries )[layerid].category ), ( *entries )[layerid].title, true, mimeData );
+          mBrowser->addItem( getCategoryItem( ( *entries )[layerid].category.split("/") ), ( *entries )[layerid].title, true, mimeData );
         }
       }
     }
@@ -129,12 +129,12 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
   endTask();
 }
 
-void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmtsUrl, const ResultEntry& entry )
+void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmtsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
   QNetworkRequest req( QUrl( wmtsUrl + "?request=GetCapabilities&service=WMS" ) );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
-  reply->setProperty( "entry", QVariant::fromValue<void*>( reinterpret_cast<ResultEntry*>( new ResultEntry( entry ) ) ) );
+  reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
   connect( reply, SIGNAL( finished() ), this, SLOT( readWMSCapabilitiesDo() ) );
 }
 
@@ -142,7 +142,7 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   reply->deleteLater();
-  ResultEntry* entry = reinterpret_cast<ResultEntry*>( reply->property( "entry" ).value<void*>() );
+  EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
 
   if ( reply->error() == QNetworkReply::NoError )
   {
@@ -151,13 +151,17 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
     QStringList imgFormats = parseWMSFormats( doc );
     foreach ( const QDomNode& layerItem, childrenByTagName( doc.firstChildElement( "WMS_Capabilities" ).firstChildElement( "Capability" ), "Layer" ) )
     {
-      QString title;
-      QMimeData* mimeData;
-      parseWMSLayerCapabilities( layerItem, imgFormats, reply->request().url().toString(), title, mimeData );
-      mBrowser->addItem( getCategoryItem( QStringList() << entry->category ), entry->title, true, mimeData );
+      QString layerid = layerItem.firstChildElement( "Title" ).text();
+      if ( entries->contains( layerid ) )
+      {
+        QString title;
+        QMimeData* mimeData;
+        parseWMSLayerCapabilities( layerItem, imgFormats, reply->request().url().toString(), title, mimeData );
+        mBrowser->addItem( getCategoryItem( ( *entries )[layerid].category.split("/") ), ( *entries )[layerid].title, true, mimeData );
+      }
     }
   }
 
-  delete entry;
+  delete entries;
   endTask();
 }
