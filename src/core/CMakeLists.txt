@@ -126,6 +126,7 @@ SET(QGIS_CORE_SRCS
   qgsmimedatautils.cpp
   qgsmultirenderchecker.cpp
   qgsnetworkaccessmanager.cpp
+  qgsnetworkdiskcache.cpp
   qgsnetworkcontentfetcher.cpp
   qgsnetworkreplyparser.cpp
   qgsobjectcustomproperties.cpp
@@ -404,6 +405,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgsvectorlayereditpassthrough.h
   qgsvectorlayereditbuffer.h
   qgsnetworkaccessmanager.h
+  qgsnetworkdiskcache.h
   qgsvectordataprovider.h
   qgsvectorlayercache.h
   qgsvectorlayerjoinbuffer.h

@@ -43,11 +43,15 @@
  * that the fallback proxy should not be used for, then no proxy will be used.
  *
  */
-class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public QgsSingleton<QgsNetworkAccessManager>
+class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager
 {
     Q_OBJECT
 
   public:
+    //! returns a pointer to the single instance
+    // and creates that instance on the first call.
+    static QgsNetworkAccessManager* instance();
+
     QgsNetworkAccessManager( QObject *parent = 0 );
 
     //! destructor
@@ -80,6 +84,7 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
     //! Setup the NAM according to the user's settings
     void setupDefaultProxyAndCache();
 
+    //! return whether the system proxy should be used
     bool useSystemProxy() { return mUseSystemProxy; }
 
     QNetworkReply *head( const QNetworkRequest &request )
@@ -147,6 +152,8 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager, public
     QNetworkProxy mFallbackProxy;
     QStringList mExcludedURLs;
     bool mUseSystemProxy;
+    bool mInitialized;
+    static QgsNetworkAccessManager *smMainNAM;
 
     QNetworkRequest requestWithUserInfo( const QNetworkRequest& req );
 };

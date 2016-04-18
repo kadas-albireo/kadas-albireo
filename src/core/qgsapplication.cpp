@@ -630,7 +630,6 @@ void QgsApplication::exitQgis()
 {
   // Cleanup known singletons
   QgsMapLayerRegistry::cleanup();
-  QgsNetworkAccessManager::cleanup();
   QgsCoordinateTransformCache::cleanup();
 
   // Cleanup providers

@@ -24,10 +24,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QTimer>
-
-#include <typeinfo>
-
 #include "qgslogger.h"
 #include "qgswmsprovider.h"
 #include "qgswmsconnection.h"
@@ -50,27 +46,19 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QNetworkProxy>
-#include <QNetworkDiskCache>
-
-#include <QtXmlPatterns/QXmlSchema>
-#include <QtXmlPatterns/QXmlSchemaValidator>
-
 #include <QUrl>
-#include <QIcon>
 #include <QImage>
 #include <QImageReader>
 #include <QPainter>
-#include <QSet>
 #include <QSettings>
 #include <QEventLoop>
-#include <QCoreApplication>
 #include <QTextCodec>
-#include <QTime>
 #include <QThread>
-
 #include <QScriptEngine>
 #include <QScriptValue>
 #include <QScriptValueIterator>
+#include <QNetworkDiskCache>
+#include <QTimer>
 
 #include <ogr_api.h>
 
@@ -557,10 +545,6 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
     QgsWmsImageDownloadHandler handler( dataSourceUri(), url, mSettings.authorization(), mCachedImage );
     QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
     handler.downloadBlocking();
-
-    //QTime t;
-    //t.start();
-
   }
   else
   {
@@ -2039,7 +2023,7 @@ QString QgsWmsProvider::metadata()
   return metadata;
 }
 
-QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight )
+QgsRasterIdentifyResult QgsWmsProvider::identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent, int theWidth, int theHeight, int theDpi )
 {
   QgsDebugMsg( QString( "theFormat = %1" ).arg( theFormat ) );
 
@@ -3043,7 +3027,6 @@ QImage QgsWmsProvider::getLegendGraphic( double scale, bool forceRefresh, const 
   mLegendGraphicFetcher.reset( new QgsWmsLegendDownloadHandler( *QgsNetworkAccessManager::instance(), mSettings, url ) );
   if ( ! mLegendGraphicFetcher ) return QImage();
   connect( mLegendGraphicFetcher.data(), SIGNAL( finish( const QImage& ) ), this, SLOT( getLegendGraphicReplyFinished( const QImage& ) ) );
-  connect( mLegendGraphicFetcher.data(), SIGNAL( error( const QString& ) ), this, SLOT( getLegendGraphicReplyErrored( const QString& ) ) );
   connect( mLegendGraphicFetcher.data(), SIGNAL( progress( qint64, qint64 ) ), this, SLOT( getLegendGraphicReplyProgress( qint64, qint64 ) ) );
   mLegendGraphicFetcher->start( );
 
@@ -3122,27 +3105,14 @@ void QgsWmsProvider::getLegendGraphicReplyFinished( const QImage& img )
   }
 }
 
-void QgsWmsProvider::getLegendGraphicReplyErrored( const QString& message )
-{
-  QgsDebugMsg( QString( "get legend failed: %1" ).arg( message ) );
-
-  QObject* reply = sender();
-
-  if ( reply == mLegendGraphicFetcher.data() )
-  {
-    QEventLoop *loop = qobject_cast< QEventLoop *>( reply->property( "eventLoop" ).value< QObject *>() );
-    if ( loop )
-      QMetaObject::invokeMethod( loop, "quit", Qt::QueuedConnection );
-    mLegendGraphicFetcher.reset();
-  }
-}
-
 void QgsWmsProvider::getLegendGraphicReplyProgress( qint64 bytesReceived, qint64 bytesTotal )
 {
   QString msg = tr( "%1 of %2 bytes of GetLegendGraphic downloaded." ).arg( bytesReceived ).arg( bytesTotal < 0 ? QString( "unknown number of" ) : QString::number( bytesTotal ) );
   QgsDebugMsg( msg );
   emit statusChanged( msg );
 }
+
+
 
 /**
  * Class factory to return a pointer to a newly created
@@ -3181,14 +3151,11 @@ QgsWmsImageDownloadHandler::QgsWmsImageDownloadHandler( const QString& providerU
     : mProviderUri( providerUri )
     , mCachedImage( image )
     , mEventLoop( new QEventLoop )
-    , mNAM( new QgsNetworkAccessManager )
 {
-  mNAM->setupDefaultProxyAndCache();
-
   QNetworkRequest request( url );
   auth.setAuthorization( request );
   request.setAttribute( QNetworkRequest::CacheSaveControlAttribute, true );
-  mCacheReply = mNAM->get( request );
+  mCacheReply = QgsNetworkAccessManager::instance()->get( request );
   connect( mCacheReply, SIGNAL( finished() ), this, SLOT( cacheReplyFinished() ) );
   connect( mCacheReply, SIGNAL( downloadProgress( qint64, qint64 ) ), this, SLOT( cacheReplyProgress( qint64, qint64 ) ) );
 
@@ -3198,7 +3165,6 @@ QgsWmsImageDownloadHandler::QgsWmsImageDownloadHandler( const QString& providerU
 
 QgsWmsImageDownloadHandler::~QgsWmsImageDownloadHandler()
 {
-  delete mNAM;
   delete mEventLoop;
 }
 
@@ -3225,7 +3191,7 @@ void QgsWmsImageDownloadHandler::cacheReplyFinished()
       mCacheReply->deleteLater();
 
       QgsDebugMsg( QString( "redirected getmap: %1" ).arg( redirect.toString() ) );
-      mCacheReply = mNAM->get( QNetworkRequest( redirect.toUrl() ) );
+      mCacheReply = QgsNetworkAccessManager::instance()->get( QNetworkRequest( redirect.toUrl() ) );
       connect( mCacheReply, SIGNAL( finished() ), this, SLOT( cacheReplyFinished() ) );
       return;
     }
@@ -3329,12 +3295,9 @@ QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString&
     , mCachedImage( cachedImage )
     , mCachedViewExtent( cachedViewExtent )
     , mEventLoop( new QEventLoop )
-    , mNAM( new QgsNetworkAccessManager )
     , mTileReqNo( tileReqNo )
     , mSmoothPixmapTransform( smoothPixmapTransform )
 {
-  mNAM->setupDefaultProxyAndCache();
-
   foreach ( const TileRequest& r, requests )
   {
     QNetworkRequest request( r.url );
@@ -3346,7 +3309,7 @@ QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString&
     request.setAttribute( static_cast<QNetworkRequest::Attribute>( TileRect ), r.rect );
     request.setAttribute( static_cast<QNetworkRequest::Attribute>( TileRetry ), 0 );
 
-    QNetworkReply *reply = mNAM->get( request );
+    QNetworkReply *reply = QgsNetworkAccessManager::instance()->get( request );
     connect( reply, SIGNAL( finished() ), this, SLOT( tileReplyFinished() ) );
 
     mReplies << reply;
@@ -3355,7 +3318,6 @@ QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString&
 
 QgsWmsTiledImageDownloadHandler::~QgsWmsTiledImageDownloadHandler()
 {
-  delete mNAM;
   delete mEventLoop;
 }
 
@@ -3399,9 +3361,9 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
   }
 #endif
 
-  if ( mNAM->cache() )
+  if ( QgsNetworkAccessManager::instance()->cache() )
   {
-    QNetworkCacheMetaData cmd = mNAM->cache()->metaData( reply->request().url() );
+    QNetworkCacheMetaData cmd = QgsNetworkAccessManager::instance()->cache()->metaData( reply->request().url() );
 
     QNetworkCacheMetaData::RawHeaderList hl;
     foreach ( const QNetworkCacheMetaData::RawHeader &h, cmd.rawHeaders() )
@@ -3418,7 +3380,7 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
       cmd.setExpirationDate( QDateTime::currentDateTime().addSecs( s.value( "/qgis/defaultTileExpiry", "24" ).toInt() * 60 * 60 ) );
     }
 
-    mNAM->cache()->updateMetaData( cmd );
+    QgsNetworkAccessManager::instance()->cache()->updateMetaData( cmd );
   }
 
   int tileReqNo = reply->request().attribute( static_cast<QNetworkRequest::Attribute>( TileReqNo ) ).toInt();
@@ -3454,7 +3416,7 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
       reply->deleteLater();
 
       QgsDebugMsg( QString( "redirected gettile: %1" ).arg( redirect.toString() ) );
-      reply = mNAM->get( request );
+      reply = QgsNetworkAccessManager::instance()->get( request );
       mReplies << reply;
 
       connect( reply, SIGNAL( finished() ), this, SLOT( tileReplyFinished() ) );
@@ -3630,7 +3592,7 @@ void QgsWmsTiledImageDownloadHandler::repeatTileRequest( QNetworkRequest const &
   QgsDebugMsg( QString( "repeat tileRequest %1 %2(retry %3) for url: %4" ).arg( tileReqNo ).arg( tileNo ).arg( retry ).arg( url ) );
   request.setAttribute( static_cast<QNetworkRequest::Attribute>( TileRetry ), retry );
 
-  QNetworkReply *reply = mNAM->get( request );
+  QNetworkReply *reply = QgsNetworkAccessManager::instance()->get( request );
   mReplies << reply;
   connect( reply, SIGNAL( finished() ), this, SLOT( tileReplyFinished() ) );
 }

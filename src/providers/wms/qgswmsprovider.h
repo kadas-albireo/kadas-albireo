@@ -222,6 +222,8 @@ class QgsWmsProvider : public QgsRasterDataProvider
      */
     QStringList subLayerStyles() const override;
 
+    /** \brief Returns whether the provider supplies a legend graphic */
+    bool supportsLegendGraphic() const override { return true; }
 
     /**
      * \brief Get GetLegendGraphic if service is available otherwise QImage()
@@ -275,7 +277,7 @@ class QgsWmsProvider : public QgsRasterDataProvider
      */
     QString metadata() override;
 
-    QgsRasterIdentifyResult identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent = QgsRectangle(), int theWidth = 0, int theHeight = 0 ) override;
+    QgsRasterIdentifyResult identify( const QgsPoint & thePoint, QgsRaster::IdentifyFormat theFormat, const QgsRectangle &theExtent = QgsRectangle(), int theWidth = 0, int theHeight = 0, int theDpi = 96 ) override;
 
     /**
      * \brief   Returns the caption error text for the last error in this provider
@@ -367,7 +369,6 @@ class QgsWmsProvider : public QgsRasterDataProvider
   private slots:
     void identifyReplyFinished();
     void getLegendGraphicReplyFinished( const QImage& );
-    void getLegendGraphicReplyErrored( const QString& message );
     void getLegendGraphicReplyProgress( qint64, qint64 );
 
   private:
@@ -594,7 +595,6 @@ class QgsWmsImageDownloadHandler : public QObject
     QImage* mCachedImage;
 
     QEventLoop* mEventLoop;
-    QgsNetworkAccessManager* mNAM;
 };
 
 
@@ -643,7 +643,6 @@ class QgsWmsTiledImageDownloadHandler : public QObject
     QgsRectangle mCachedViewExtent;
 
     QEventLoop* mEventLoop;
-    QgsNetworkAccessManager* mNAM;
 
     int mTileReqNo;
     bool mSmoothPixmapTransform;

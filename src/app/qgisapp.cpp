@@ -356,7 +356,7 @@ static void setTitleBarText_( QWidget & qgisApp )
 */
 static QgsMessageOutput *messageOutputViewer_()
 {
-  if ( QThread::currentThread() == QApplication::instance()->thread() )
+  if ( QThread::currentThread() == qApp->thread() )
     return new QgsMessageViewer( QgisApp::instance() );
   else
     return new QgsMessageOutputConsole();

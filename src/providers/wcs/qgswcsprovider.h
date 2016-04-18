@@ -201,8 +201,6 @@ class QgsWcsProvider : public QgsRasterDataProvider, QgsGdalProviderBase
     void dataChanged();
 
   private:
-    void showMessageBox( const QString& title, const QString& text );
-
     // case insensitive attribute value lookup
     static QString nodeAttribute( const QDomElement &e, QString name, QString defValue = QString::null );
 
@@ -423,7 +421,6 @@ class QgsWcsDownloadHandler : public QObject
   protected:
     void finish() { QMetaObject::invokeMethod( mEventLoop, "quit", Qt::QueuedConnection ); }
 
-    QgsNetworkAccessManager* mNAM;
     QEventLoop* mEventLoop;
 
     QNetworkReply* mCacheReply;
