@@ -400,8 +400,7 @@ QByteArray QgsArcGisRestUtils::queryService( const QUrl& url, QString& errorTitl
 
   QNetworkRequest request( url );
   QNetworkReply* reply = 0;
-  bool mainThread = QThread::currentThread() == QgsNetworkAccessManager::instance()->thread();
-  QgsNetworkAccessManager* nam = mainThread ? QgsNetworkAccessManager::instance() : new QgsNetworkAccessManager;
+  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
 
   // Request data, handling redirects
   while ( true )
@@ -419,10 +418,6 @@ QByteArray QgsArcGisRestUtils::queryService( const QUrl& url, QString& errorTitl
       QgsDebugMsg( QString( "Network error: %1" ).arg( reply->errorString() ) );
       errorTitle = "Network error";
       errorText = reply->errorString();
-      if ( !mainThread )
-      {
-        delete nam;
-      }
       return QByteArray();
     }
 
@@ -437,10 +432,6 @@ QByteArray QgsArcGisRestUtils::queryService( const QUrl& url, QString& errorTitl
     request.setUrl( redirect.toUrl() );
   }
   QByteArray result = reply->readAll();
-  if ( !mainThread )
-  {
-    delete nam;
-  }
   return result;
 }
 
@@ -471,8 +462,6 @@ QVariantMap QgsArcGisRestUtils::queryServiceJSON( const QUrl &url, QString &erro
 QgsArcGisAsyncQuery::QgsArcGisAsyncQuery( QObject* parent )
     : QObject( parent )
 {
-  bool mainThread = QThread::currentThread() == QgsNetworkAccessManager::instance()->thread();
-  mNAM = mainThread ? QgsNetworkAccessManager::instance() : new QgsNetworkAccessManager( this );
 }
 
 void QgsArcGisAsyncQuery::start( const QUrl &url, QByteArray *result, bool allowCache )
@@ -484,7 +473,7 @@ void QgsArcGisAsyncQuery::start( const QUrl &url, QByteArray *result, bool allow
     request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache );
     request.setAttribute( QNetworkRequest::CacheSaveControlAttribute, true );
   }
-  mReply = mNAM->get( request );
+  mReply = QgsNetworkAccessManager::instance()->get( request );
   connect( mReply, SIGNAL( finished() ), this, SLOT( handleReply() ) );
 }
 
@@ -506,7 +495,7 @@ void QgsArcGisAsyncQuery::handleReply()
     QNetworkRequest request = mReply->request();
     QgsDebugMsg( "redirecting to " + redirect.toUrl().toString() );
     request.setUrl( redirect.toUrl() );
-    mReply = mNAM->get( request );
+    mReply = QgsNetworkAccessManager::instance()->get( request );
     connect( mReply, SIGNAL( finished() ), this, SLOT( handleReply() ) );
     return;
   }
@@ -521,8 +510,6 @@ void QgsArcGisAsyncQuery::handleReply()
 QgsArcGisAsyncParallelQuery::QgsArcGisAsyncParallelQuery( QObject* parent )
     : QObject( parent )
 {
-  bool mainThread = QThread::currentThread() == QgsNetworkAccessManager::instance()->thread();
-  mNAM = mainThread ? QgsNetworkAccessManager::instance() : new QgsNetworkAccessManager( this );
 }
 
 void QgsArcGisAsyncParallelQuery::start( const QVector<QUrl> &urls, QVector<QByteArray> *results, bool allowCache )
@@ -540,7 +527,7 @@ void QgsArcGisAsyncParallelQuery::start( const QVector<QUrl> &urls, QVector<QByt
       request.setAttribute( QNetworkRequest::CacheSaveControlAttribute, true );
       request.setRawHeader( "Connection", "keep-alive" );
     }
-    QNetworkReply* reply = mNAM->get( request );
+    QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( request );
     reply->setProperty( "idx", i );
     connect( reply, SIGNAL( finished() ), this, SLOT( handleReply() ) );
   }
@@ -564,7 +551,7 @@ void QgsArcGisAsyncParallelQuery::handleReply()
     QNetworkRequest request = reply->request();
     QgsDebugMsg( "redirecting to " + redirect.toUrl().toString() );
     request.setUrl( redirect.toUrl() );
-    reply = mNAM->get( request );
+    reply = QgsNetworkAccessManager::instance()->get( request );
     reply->setProperty( "idx", idx );
     connect( reply, SIGNAL( finished() ), this, SLOT( handleReply() ) );
   }

@@ -3,7 +3,7 @@
                          OGC Web Coverage Service layers
                              -------------------
     begin                : 2 July, 2012
-    copyright            : (C) (C) 2012 by Radim Blazek
+    copyright            : (C) 2012 by Radim Blazek
     email                : radim dot blazek at gmail.com
 
     Based on qgswmsprovider.cpp written by Brendan Morley.
@@ -19,8 +19,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <typeinfo>
-
 #include "qgslogger.h"
 #include "qgswcsprovider.h"
 #include "qgscoordinatetransform.h"
@@ -31,20 +29,14 @@
 #include "qgscoordinatereferencesystem.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgsnetworkreplyparser.h"
-#include "qgsmessageoutput.h"
 #include "qgsmessagelog.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QNetworkProxy>
-#include <QNetworkDiskCache>
 
 #include <QUrl>
-#include <QRegExp>
-#include <QSettings>
 #include <QEventLoop>
-#include <QCoreApplication>
-#include <QTime>
 #include <QFile>
 
 #ifdef QGISDEBUG
@@ -1585,14 +1577,6 @@ QString QgsWcsProvider::nodeAttribute( const QDomElement &e, QString name, QStri
   return defValue;
 }
 
-void QgsWcsProvider::showMessageBox( const QString& title, const QString& text )
-{
-  QgsMessageOutput *message = QgsMessageOutput::createMessageOutput();
-  message->setTitle( title );
-  message->setMessage( text, QgsMessageOutput::MessageText );
-  message->showMessage();
-}
-
 QMap<QString, QString> QgsWcsProvider::supportedMimes()
 {
   QMap<QString, QString> mimes;
@@ -1666,20 +1650,17 @@ QGISEXTERN bool isProvider()
 int QgsWcsDownloadHandler::sErrors = 0;
 
 QgsWcsDownloadHandler::QgsWcsDownloadHandler( const QUrl& url, QgsWcsAuthorization& auth, QNetworkRequest::CacheLoadControl cacheLoadControl, QByteArray& cachedData, const QString& wcsVersion, QgsError& cachedError )
-    : mNAM( new QgsNetworkAccessManager )
-    , mEventLoop( new QEventLoop )
+    : mEventLoop( new QEventLoop )
     , mCachedData( cachedData )
     , mWcsVersion( wcsVersion )
     , mCachedError( cachedError )
 {
-  mNAM->setupDefaultProxyAndCache();
-
   QNetworkRequest request( url );
   auth.setAuthorization( request );
   request.setAttribute( QNetworkRequest::CacheSaveControlAttribute, true );
   request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, cacheLoadControl );
 
-  mCacheReply = mNAM->get( request );
+  mCacheReply = QgsNetworkAccessManager::instance()->get( request );
   connect( mCacheReply, SIGNAL( finished() ), this, SLOT( cacheReplyFinished() ) );
   connect( mCacheReply, SIGNAL( downloadProgress( qint64, qint64 ) ), this, SLOT( cacheReplyProgress( qint64, qint64 ) ) );
 }
@@ -1687,7 +1668,6 @@ QgsWcsDownloadHandler::QgsWcsDownloadHandler( const QUrl& url, QgsWcsAuthorizati
 QgsWcsDownloadHandler::~QgsWcsDownloadHandler()
 {
   delete mEventLoop;
-  delete mNAM;
 }
 
 void QgsWcsDownloadHandler::blockingDownload()
@@ -1708,7 +1688,7 @@ void QgsWcsDownloadHandler::cacheReplyFinished()
       mCacheReply->deleteLater();
 
       QgsDebugMsg( QString( "redirected getmap: %1" ).arg( redirect.toString() ) );
-      mCacheReply = mNAM->get( QNetworkRequest( redirect.toUrl() ) );
+      mCacheReply = QgsNetworkAccessManager::instance()->get( QNetworkRequest( redirect.toUrl() ) );
       connect( mCacheReply, SIGNAL( finished() ), this, SLOT( cacheReplyFinished() ) );
       connect( mCacheReply, SIGNAL( downloadProgress( qint64, qint64 ) ), this, SLOT( cacheReplyProgress( qint64, qint64 ) ) );
 
@@ -1872,7 +1852,7 @@ void QgsWcsDownloadHandler::cacheReplyFinished()
 
       mCacheReply->deleteLater();
 
-      mCacheReply = mNAM->get( request );
+      mCacheReply = QgsNetworkAccessManager::instance()->get( request );
       connect( mCacheReply, SIGNAL( finished() ), this, SLOT( cacheReplyFinished() ), Qt::DirectConnection );
       connect( mCacheReply, SIGNAL( downloadProgress( qint64, qint64 ) ), this, SLOT( cacheReplyProgress( qint64, qint64 ) ), Qt::DirectConnection );
 

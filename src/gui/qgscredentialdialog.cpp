@@ -53,6 +53,7 @@ bool QgsCredentialDialog::request( QString realm, QString &username, QString &pa
 
 void QgsCredentialDialog::requestCredentials( QString realm, QString *username, QString *password, QString message, bool *ok )
 {
+  Q_ASSERT( qApp->thread() == thread() && thread() == QThread::currentThread() );
   QgsDebugMsg( "Entering." );
   labelRealm->setText( realm );
   leUsername->setText( *username );

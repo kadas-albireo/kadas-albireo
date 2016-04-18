@@ -56,7 +56,6 @@ class QgsArcGisAsyncQuery : public QObject
     void handleReply();
 
   private:
-    QgsNetworkAccessManager* mNAM;
     QNetworkReply* mReply;
     QByteArray* mResult;
 };
@@ -73,7 +72,6 @@ class QgsArcGisAsyncParallelQuery : public QObject
     void handleReply();
 
   private:
-    QgsNetworkAccessManager* mNAM;
     QVector<QByteArray>* mResults;
     int mPendingRequests;
     QStringList mErrors;
