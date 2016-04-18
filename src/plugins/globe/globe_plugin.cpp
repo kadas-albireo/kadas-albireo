@@ -973,6 +973,10 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
   {
     mapLayer = qobject_cast<QgsMapLayer*>( QObject::sender() );
   }
+  if ( mapLayer->isEditable() )
+  {
+    return;
+  }
   if ( mMapNode )
   {
     QgsGlobeVectorLayerConfig* layerConfig = 0;
