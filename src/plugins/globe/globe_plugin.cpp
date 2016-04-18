@@ -1101,6 +1101,8 @@ void GlobePlugin::reset()
   mViewerWidget = 0;
   mDockWidget = 0;
   mAnnotationsGroup = 0;
+  mImagerySources.clear();
+  mElevationSources.clear();
   disconnect( QgsGlobeTileStatistics::instance(), SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
   delete QgsGlobeTileStatistics::instance();
 }
