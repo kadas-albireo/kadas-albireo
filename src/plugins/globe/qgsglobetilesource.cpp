@@ -71,6 +71,7 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
             GL_BGRA, GL_UNSIGNED_BYTE,
             mTileData, osg::Image::NO_DELETE );
   flipVertical();
+  mDpi = qImage.logicalDpiX();
   mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
 }
 
@@ -183,8 +184,7 @@ void QgsGlobeTileUpdateManager::start()
   {
     mCurrentTile = mTileQueue.takeFirst();
     QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
-    QImage image;
-    mRenderer = new QgsMapRendererParallelJob( mCurrentTile->createSettings( image.logicalDpiX(), mLayerSet ) );
+    mRenderer = new QgsMapRendererParallelJob( mCurrentTile->createSettings( mCurrentTile->dpi(), mLayerSet ) );
     connect( mRenderer, SIGNAL( finished() ), this, SLOT( renderingFinished() ) );
     mRenderer->start();
   }
