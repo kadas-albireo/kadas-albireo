@@ -3247,7 +3247,10 @@ QColor QgsSymbolLayerV2Utils::parseColorWithAlpha( const QString colorStr, bool 
 
 double QgsSymbolLayerV2Utils::lineWidthScaleFactor( const QgsRenderContext& c, QgsSymbolV2::OutputUnit u, const QgsMapUnitScale& scale )
 {
-
+  if ( c.customRenderFlags().split( ";" ).contains( "globe" ) )
+  {
+    return qMin( 2., 30000. / c.rendererScale() );
+  }
   if ( u == QgsSymbolV2::MM )
   {
     return c.scaleFactor();
@@ -3268,6 +3271,10 @@ double QgsSymbolLayerV2Utils::lineWidthScaleFactor( const QgsRenderContext& c, Q
 
 double QgsSymbolLayerV2Utils::pixelSizeScaleFactor( const QgsRenderContext& c, QgsSymbolV2::OutputUnit u, const QgsMapUnitScale& scale )
 {
+  if ( c.customRenderFlags().split( ";" ).contains( "globe" ) )
+  {
+    return qMin( 2., 30000. / c.rendererScale() );
+  }
   if ( u == QgsSymbolV2::MM )
   {
     return ( c.scaleFactor() * c.rasterScaleFactor() );
