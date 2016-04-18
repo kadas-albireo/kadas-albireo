@@ -61,6 +61,7 @@ class QgsGlobeTileImage : public osg::Image
     bool requiresUpdateCall() const;
     QgsMapSettings createSettings( int dpi, const QStringList &layerSet ) const;
     void setUpdatedImage( const QImage& image ) { mUpdatedImage = image; }
+    int dpi() const { return mDpi; }
 
     void update( osg::NodeVisitor * );
 
@@ -74,6 +75,7 @@ class QgsGlobeTileImage : public osg::Image
     unsigned char* mTileData;
     mutable bool mImageUpdatePending;
     int mLod;
+    int mDpi;
     QImage mUpdatedImage;
 };
 
