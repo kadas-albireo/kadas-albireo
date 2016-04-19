@@ -20,7 +20,7 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
   p.setBrush( QBrush( palette().color( QPalette::Window ) ) );
   if ( isChecked() )
   {
-    p.setBrush( QBrush( QColor( 190, 220, 246 ) ) );
+    p.setBrush( QBrush( QColor( 188, 210, 227 ) ) );
     p.setPen( QColor( 38, 59, 78 ) );
   }
   else if ( underMouse() && isEnabled() )
