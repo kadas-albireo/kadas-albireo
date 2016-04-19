@@ -76,7 +76,7 @@ class QgsNetworkAccessManager : QNetworkAccessManager
   signals:
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
-    void requestTimedOut( QNetworkReply * );
+    void requestTimedOut( QUrl );
 
   protected:
     virtual QNetworkReply *createRequest( QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0 );

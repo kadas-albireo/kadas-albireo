@@ -131,7 +131,7 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager
   signals:
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
-    void requestTimedOut( QNetworkReply * );
+    void requestTimedOut( QUrl );
     void sslErrorsConformationRequired( const QUrl& url, const QList<QSslError> &errors, bool* ok );
 
   private slots:
