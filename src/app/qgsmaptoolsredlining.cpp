@@ -36,7 +36,7 @@
 QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape , QgsRedliningAttributeEditor* editor )
     : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape ), mEditor( editor )
 {
-  setShowInputWidget( true );
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
 
@@ -63,7 +63,7 @@ void QgsRedliningPointMapTool::onFinished()
 QgsRedliningRectangleMapTool::QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
     : QgsMapToolDrawRectangle( canvas ), mLayer( layer )
 {
-  setShowInputWidget( true );
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   setMeasurementMode( QgsGeometryRubberBand::MEASURE_RECTANGLE, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
@@ -82,7 +82,7 @@ void QgsRedliningRectangleMapTool::onFinished()
 QgsRedliningPolylineMapTool::QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed , QgsRedliningAttributeEditor *editor )
     : QgsMapToolDrawPolyLine( canvas, closed ), mLayer( layer ), mEditor( editor )
 {
-  setShowInputWidget( true );
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   setMeasurementMode( closed ? QgsGeometryRubberBand::MEASURE_POLYGON : QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
@@ -108,7 +108,7 @@ void QgsRedliningPolylineMapTool::onFinished()
 QgsRedliningCircleMapTool::QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer )
     : QgsMapToolDrawCircle( canvas ), mLayer( layer )
 {
-  setShowInputWidget( true );
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   setMeasurementMode( QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
   connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }

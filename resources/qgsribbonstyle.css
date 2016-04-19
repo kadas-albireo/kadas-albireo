@@ -32,7 +32,6 @@ QTreeView::indicator::unchecked {
   image: url(:/images/ribbon/unchecked.png);
 }
 
-
 /*QCheckBox::indicator:unchecked {
     image: url(:/images/checkbox_unchecked.png);
 }*/
@@ -148,15 +147,23 @@ QPushButton#mLayerTreeViewButton {
   background-color: #263B4E;
 }
 
-#mRibbonWidget QLabel {
+#mRibbonWidget > QWidget > QWidget > QLabel,
+#mRibbonWidget > QWidget > QWidget > QCheckBox {
   color: #FFFFFF;
 }
 
-#mRibbonWidget > QWidget > QWidget > QAbstractButton,
+#mRibbonWidget > QWidget > QWidget > QToolButton,
+#mRibbonWidget > QWidget > QWidget > QPushButton,
 #mRibbonWidget > QWidget > QWidget > QComboBox,
 #mRibbonWidget > QWidget > QWidget > QSpinBox {
   background-color: #5D7081;
   color: #FFFFFF;
+}
+
+#mRibbonWidget > QWidget > QWidget > QComboBox QAbstractItemView
+{
+  background-color: #263B4E;
+  color: white;
 }
 
 #mRibbonWidget > QWidget > QWidget > QToolButton:checked {
@@ -179,8 +186,7 @@ QPushButton#mLayerTreeViewButton {
 #mStatusWidget #mDisplayCRSButton,
 #mStatusWidget #mScaleComboBox,
 #mStatusWidget #mCRSSelectionButton,
-#mStatusWidget #mGpsToolButton,
-#mStatusWidget #mHeightSelectionButton
+#mStatusWidget #mGpsToolButton
 {
   background-color: #16171B;
   color: #FFFFFF;
@@ -269,13 +275,6 @@ QDialog QComboBox, QDialog QLineEdit {
 QgsAttributeForm QScrollArea > QWidget > QWidget
 {
   background-color: #FFFFFF;
-}
-
-#mRibbonWidget QComboBox#mWorkModeCombo QAbstractItemView,
-#mRibbonWidget QComboBox#mLanguageCombo QAbstractItemView
-{
-  background-color: #263B4E;
-  color: white;
 }
 
 #MapToolDrawShapeInputWidget
