@@ -683,7 +683,7 @@ int main( int argc, char *argv[] )
   QCoreApplication::setApplicationName( QgsApplication::QGIS_APPLICATION_NAME );
   QCoreApplication::setAttribute( Qt::AA_DontShowIconsInMenus, false );
 
-	// This is as early as possible (need settings environment initialized)
+  // This is as early as possible (need settings environment initialized)
 #ifdef _MSC_VER
   QgsCrashRpt crashReporter;
   if ( !crashReporter.install() )
@@ -994,6 +994,7 @@ int main( int argc, char *argv[] )
           templatePath = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
         }
       }
+      delete reply;
     }
   }
 
