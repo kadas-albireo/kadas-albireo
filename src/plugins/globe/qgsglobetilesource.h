@@ -26,6 +26,8 @@
 #include <QMutex>
 #include "qgsrectangle.h"
 
+//#define GLOBE_SHOW_TILE_STATS
+
 class QgsCoordinateTransform;
 class QgsMapCanvas;
 class QgsMapRenderer;

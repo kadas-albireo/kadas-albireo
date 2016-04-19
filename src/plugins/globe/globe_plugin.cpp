@@ -299,8 +299,10 @@ void GlobePlugin::run()
   {
     return;
   }
+#ifdef GLOBE_SHOW_TILE_STATS
   QgsGlobeTileStatistics* tileStats = new QgsGlobeTileStatistics();
   connect( tileStats, SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
+#endif
   QSettings settings;
 
 //    osgEarth::setNotifyLevel( osg::DEBUG_INFO );
@@ -558,6 +560,7 @@ void GlobePlugin::applyProjectSettings()
         if ( "Raster" == datasource.type )
         {
           osgEarth::Drivers::GDALOptions options;
+          options.interpolation() = osgEarth::Drivers::INTERP_NEAREST;
           options.url() = datasource.uri.toStdString();
           layer = new osgEarth::ElevationLayer( datasource.uri.toStdString(), options );
         }
@@ -1103,8 +1106,10 @@ void GlobePlugin::reset()
   mAnnotationsGroup = 0;
   mImagerySources.clear();
   mElevationSources.clear();
+#ifdef GLOBE_SHOW_TILE_STATS
   disconnect( QgsGlobeTileStatistics::instance(), SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
   delete QgsGlobeTileStatistics::instance();
+#endif
 }
 
 void GlobePlugin::unload()

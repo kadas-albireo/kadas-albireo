@@ -59,7 +59,9 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
     , mImageUpdatePending( false )
     , mLod( tileLod )
 {
+#ifdef GLOBE_SHOW_TILE_STATS
   QgsGlobeTileStatistics::instance()->updateTileCount( + 1 );
+#endif
   mTileData = new unsigned char[mTileSize * mTileSize * 4];
   std::memset( mTileData, 0, mTileSize * mTileSize * 4 );
   QImage qImage( mTileData, mTileSize, mTileSize, QImage::Format_ARGB32_Premultiplied );
@@ -73,13 +75,16 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
   flipVertical();
   mDpi = qImage.logicalDpiX();
   mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
+#endif
 }
 
 QgsGlobeTileImage::~QgsGlobeTileImage()
 {
   mTileSource->mTileUpdateManager.removeTile( this );
   delete[] mTileData;
+#ifdef GLOBE_SHOW_TILE_STATS
   QgsGlobeTileStatistics::instance()->updateTileCount( -1 );
+#endif
 }
 
 bool QgsGlobeTileImage::requiresUpdateCall() const
@@ -143,7 +148,9 @@ QgsGlobeTileUpdateManager::QgsGlobeTileUpdateManager( QObject* parent )
 
 QgsGlobeTileUpdateManager::~QgsGlobeTileUpdateManager()
 {
+#ifdef GLOBE_SHOW_TILE_STATS
   QgsGlobeTileStatistics::instance()->updateQueueTileCount( 0 );
+#endif
   mTileQueue.clear();
   mCurrentTile = 0;
   if ( mRenderer )
@@ -157,7 +164,9 @@ void QgsGlobeTileUpdateManager::addTile( QgsGlobeTileImage *tile )
   if ( !mTileQueue.contains( tile ) )
   {
     mTileQueue.append( tile );
+#ifdef GLOBE_SHOW_TILE_STATS
     QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
+#endif
     qSort( mTileQueue.begin(), mTileQueue.end(), QgsGlobeTileImage::lodSort );
   }
   emit startRendering();
@@ -174,7 +183,9 @@ void QgsGlobeTileUpdateManager::removeTile( QgsGlobeTileImage *tile )
   else if ( mTileQueue.contains( tile ) )
   {
     mTileQueue.removeAll( tile );
+#ifdef GLOBE_SHOW_TILE_STATS
     QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
+#endif
   }
 }
 
@@ -183,7 +194,9 @@ void QgsGlobeTileUpdateManager::start()
   if ( mRenderer == 0 && !mTileQueue.isEmpty() )
   {
     mCurrentTile = mTileQueue.takeFirst();
+#ifdef GLOBE_SHOW_TILE_STATS
     QgsGlobeTileStatistics::instance()->updateQueueTileCount( mTileQueue.size() );
+#endif
     mRenderer = new QgsMapRendererParallelJob( mCurrentTile->createSettings( mCurrentTile->dpi(), mLayerSet ) );
     connect( mRenderer, SIGNAL( finished() ), this, SLOT( renderingFinished() ) );
     mRenderer->start();
