@@ -84,6 +84,7 @@ class QgsDecorationGrid;
 #include <QMainWindow>
 #include <QSet>
 #include <QSslError>
+#include <QUrl>
 
 #include "qgsfeature.h"
 #include "qgsmessagebar.h"
@@ -558,7 +559,7 @@ class APP_EXPORT QgisApp : public QMainWindow
 #ifndef QT_NO_OPENSSL
     void namConfirmSslErrors( const QUrl &url, const QList<QSslError> &errors, bool* ok );
 #endif
-    void namRequestTimedOut( QNetworkReply *reply );
+    void namRequestTimedOut( QUrl url );
 
     //! Watch for QFileOpenEvent.
     virtual bool event( QEvent *event ) override;

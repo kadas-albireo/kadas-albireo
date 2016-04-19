@@ -226,7 +226,7 @@ void QgsNetworkAccessManager::abortRequest()
   if ( reply->isRunning() )
     reply->close();
 
-  emit requestTimedOut( reply );
+  emit requestTimedOut( reply->request().url() );
 }
 
 void QgsNetworkAccessManager::getCredentials( QNetworkReply *reply, QAuthenticator * auth )
@@ -381,8 +381,8 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
              smMainNAM, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
              Qt::BlockingQueuedConnection );
 
-    connect( this, SIGNAL( requestTimedOut( QNetworkReply* ) ),
-             smMainNAM, SIGNAL( requestTimedOut( QNetworkReply* ) ) );
+    connect( this, SIGNAL( requestTimedOut( QUrl ) ),
+             smMainNAM, SIGNAL( requestTimedOut( QUrl ) ) );
 
 #ifndef QT_NO_OPENSSL
     connect( this, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
