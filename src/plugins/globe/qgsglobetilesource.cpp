@@ -75,7 +75,6 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
   flipVertical();
   mDpi = qImage.logicalDpiX();
   mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
-#endif
 }
 
 QgsGlobeTileImage::~QgsGlobeTileImage()
