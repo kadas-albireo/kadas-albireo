@@ -122,12 +122,15 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   mMapCanvas->installEventFilter( this );
 
-  mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mHeightSelectionButton, mMapCanvas, this );
+  mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mHeightUnitCombo, mMapCanvas, this );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
   connect( mLayersBox, SIGNAL( collapsedStateChanged( bool ) ), this, SLOT( toggleLayersSpacer() ) );
   connect( mGeodataBox, SIGNAL( collapsedStateChanged( bool ) ), this, SLOT( toggleLayersSpacer() ) );
+
+  mNumericInputCheckbox->setChecked( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  connect( mNumericInputCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onNumericInputCheckboxToggled( bool ) ) );
 
   initLayerTreeView();
 
@@ -633,6 +636,11 @@ void QgsRibbonApp::onLanguageChanged( int idx )
     QSettings().setValue( "/locale/userLocale", locale );
   }
   QMessageBox::information( this, tr( "Language Changed" ), tr( "The language will be changed at the next program launch." ) );
+}
+
+void QgsRibbonApp::onNumericInputCheckboxToggled( bool checked )
+{
+  QSettings().setValue( "/qgis/showNumericInput", checked );
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )

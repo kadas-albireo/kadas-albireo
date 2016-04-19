@@ -34,7 +34,7 @@
 QgsMapToolSlope::QgsMapToolSlope( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawRectangle( mapCanvas )
 {
-  setShowInputWidget( true );
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 

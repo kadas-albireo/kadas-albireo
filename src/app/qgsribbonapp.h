@@ -83,6 +83,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void toggleLayersSpacer();
     void showProjectSelectionWidget();
     void onLanguageChanged( int idx );
+    void onNumericInputCheckboxToggled( bool checked );
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );

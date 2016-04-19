@@ -1935,6 +1935,72 @@ Sight</string>
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="mSettingsTab">
+         <attribute name="title">
+          <string>Settings</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>10</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <layout class="QGridLayout" name="mGridLayoutSettings">
+            <item row="2" column="0" colspan="2">
+             <widget class="QCheckBox" name="mNumericInputCheckbox">
+              <property name="text">
+               <string>Show numeric input box when drawing</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="mLanguageCombo"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="mLanguageLabel">
+              <property name="text">
+               <string>Language:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="mLabelHeightUnit">
+              <property name="text">
+               <string>Height unit:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="mHeightUnitCombo"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>413</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
         <widget class="QWidget" name="mHelpTab">
          <attribute name="title">
           <string>Help</string>
@@ -2004,20 +2070,6 @@ Sight</string>
              <string>About</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="mLanguageLabel">
-              <property name="text">
-               <string>Language:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="mLanguageCombo"/>
-            </item>
-           </layout>
           </item>
           <item>
            <spacer name="horizontalSpacer_8">
@@ -2493,14 +2545,15 @@ Sight</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsRibbonButton</class>
-   <extends>QToolButton</extends>
-   <header>qgsribbonbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>QgsColorButtonV2</class>
    <extends>QToolButton</extends>
    <header>qgscolorbuttonv2.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QgsRibbonButton</class>
+   <extends>QToolButton</extends>
+   <header>qgsribbonbutton.h</header>
   </customwidget>
   <customwidget>
    <class>QgsSearchBox</class>

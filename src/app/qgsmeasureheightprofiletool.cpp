@@ -30,7 +30,7 @@ QgsMeasureHeightProfileTool::QgsMeasureHeightProfileTool( QgsMapCanvas *canvas )
   setCursor( Qt::ArrowCursor );
 
   mDrawTool = new QgsMapToolDrawPolyLine( canvas, false );
-  mDrawTool->setShowInputWidget( true );
+  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   mDrawTool->setShowNodes( true );
 
   QSettings settings;
