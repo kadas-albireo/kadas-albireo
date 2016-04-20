@@ -322,9 +322,12 @@ void QgsSearchBox::clearSearch()
   mSearchBox->clear();
   mSearchButton->setVisible( true );
   mClearButton->setVisible( false );
-  mMapCanvas->scene()->removeItem( mPin );
-  delete mPin;
-  mPin = 0;
+  if ( mPin )
+  {
+    mMapCanvas->scene()->removeItem( mPin );
+    delete mPin.data();
+    mPin = 0;
+  }
   mTreeWidget->close();
   mTreeWidget->blockSignals( true );
   mTreeWidget->clear();
@@ -470,7 +473,7 @@ void QgsSearchBox::cancelSearch()
   if ( mPin && !mClearButton->isVisible() )
   {
     mMapCanvas->scene()->removeItem( mPin );
-    delete mPin;
+    delete mPin.data();
     mPin = 0;
   }
 }
