@@ -286,12 +286,13 @@ void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
 
 void QgsGPSRouteEditor::importGpx()
 {
-  QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QString filename = QFileDialog::getOpenFileName( mApp, tr( "Import GPX" ), lastProjectDir, tr( "GPX Files (*.gpx)" ) );
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+  QString filename = QFileDialog::getOpenFileName( mApp, tr( "Import GPX" ), lastDir, tr( "GPX Files (*.gpx)" ) );
   if ( filename.isEmpty() )
   {
     return;
   }
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
 
   QFile file( filename );
   if ( !file.open( QIODevice::ReadOnly ) )
@@ -370,12 +371,13 @@ void QgsGPSRouteEditor::exportGpx()
   {
     return;
   }
-  QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
-  QString filename = QFileDialog::getSaveFileName( mApp, tr( "Export to GPX" ), lastProjectDir, tr( "GPX Files (*.gpx)" ) );
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+  QString filename = QFileDialog::getSaveFileName( mApp, tr( "Export to GPX" ), lastDir, tr( "GPX Files (*.gpx)" ) );
   if ( filename.isEmpty() )
   {
     return;
   }
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
   if ( !filename.endsWith( ".gpx", Qt::CaseInsensitive ) )
   {
     filename += ".gpx";

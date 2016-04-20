@@ -82,14 +82,15 @@ bool QgsMilXIO::save( QgisInterface* iface )
     filters.append( tr( "MilX Layer [%1] (*.milxly)" ).arg( versionName ) );
   }
 
-  QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
   QString selectedFilter;
 
-  QString filename = QFileDialog::getSaveFileName( 0, tr( "Select Output" ), lastProjectDir, filters.join( ";;" ), &selectedFilter );
+  QString filename = QFileDialog::getSaveFileName( 0, tr( "Select Output" ), lastDir, filters.join( ";;" ), &selectedFilter );
   if ( filename.isEmpty() )
   {
     return false;
   }
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
   if ( selectedFilter == filters[0] && !filename.endsWith( ".milxlyz", Qt::CaseInsensitive ) )
   {
     filename += ".milxlyz";
@@ -158,13 +159,14 @@ bool QgsMilXIO::save( QgisInterface* iface )
 
 bool QgsMilXIO::load( QgisInterface* iface )
 {
-  QString lastProjectDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
   QString filter = tr( "MilX Layer Files (*.milxly *.milxlyz)" );
-  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastProjectDir, filter );
+  QString filename = QFileDialog::getOpenFileName( 0, tr( "Select Milx Layer File" ), lastDir, filter );
   if ( filename.isEmpty() )
   {
     return false;
   }
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
 
   QIODevice* dev = 0;
   if ( filename.endsWith( ".milxlyz", Qt::CaseInsensitive ) )
