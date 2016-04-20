@@ -853,112 +853,6 @@
           <property name="verticalSpacing">
            <number>0</number>
           </property>
-          <item row="0" column="1">
-           <widget class="QgsRibbonButton" name="mAreaButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Area</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="10">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>49</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="8">
-           <widget class="QgsRibbonButton" name="mViewshedButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Viewshed</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="6">
-           <widget class="QgsRibbonButton" name="mSlopeButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Slope</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="4">
            <widget class="QgsRibbonButton" name="mProfileButton">
             <property name="sizePolicy">
@@ -991,8 +885,8 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="9">
-           <widget class="QgsRibbonButton" name="mWPSButton">
+          <item row="0" column="8">
+           <widget class="QgsRibbonButton" name="mViewshedButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1012,7 +906,7 @@ Sight</string>
              </size>
             </property>
             <property name="text">
-             <string>WPS</string>
+             <string>Viewshed</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1084,6 +978,37 @@ Sight</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="1">
+           <widget class="QgsRibbonButton" name="mAreaButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Area</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="7">
            <widget class="QgsRibbonButton" name="mHillshadeButton">
             <property name="sizePolicy">
@@ -1145,6 +1070,50 @@ Sight</string>
              </size>
             </property>
            </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QgsRibbonButton" name="mSlopeButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Slope</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>49</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -2219,15 +2188,6 @@ Sight</string>
    </property>
    <property name="text">
     <string>Viewshed</string>
-   </property>
-  </action>
-  <action name="mActionWPS">
-   <property name="icon">
-    <iconset resource="../../images/images.qrc">
-     <normaloff>:/images/ribbon/question_mark.png</normaloff>:/images/ribbon/question_mark.png</iconset>
-   </property>
-   <property name="text">
-    <string>WPS</string>
    </property>
   </action>
   <action name="mActionCircle">
