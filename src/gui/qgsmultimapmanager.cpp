@@ -26,8 +26,8 @@
 #include <QMainWindow>
 #include <QToolBar>
 
-QgsMultiMapManager::QgsMultiMapManager(QgsMapCanvas *masterCanvas, QMainWindow *parent )
-    : QObject( parent ), mMainWindow( parent), mMasterCanvas( masterCanvas )
+QgsMultiMapManager::QgsMultiMapManager( QgsMapCanvas *masterCanvas, QMainWindow *parent )
+    : QObject( parent ), mMainWindow( parent ), mMasterCanvas( masterCanvas )
 {
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProjectSettings( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProjectSettings( QDomDocument& ) ) );
@@ -92,8 +92,6 @@ void QgsMultiMapManager::addMapWidget()
   {
     initialLayers.append( layerTreeLayer->layer()->id() );
   }
-  mapWidget->setInitialLayers( initialLayers, true );
-
   mapWidget->setFixedSize( initialSize );
   mMainWindow->addDockWidget( addArea, mapWidget );
   mapWidget->resize( initialSize );

@@ -191,12 +191,19 @@ void QgsMapWidget::syncCanvasExtents()
 void QgsMapWidget::updateLayerSelectionMenu()
 {
   QStringList prevDisabledLayers;
+  QStringList prevLayers;
   foreach ( QAction* action, mLayerSelectionMenu->actions() )
   {
+    prevLayers.append( action->data().toString() );
     if ( !action->isChecked() )
     {
       prevDisabledLayers.append( action->data().toString() );
     }
+  }
+  QStringList masterLayers;
+  foreach ( const QgsMapLayer* layer, mMasterCanvas->layers() )
+  {
+    masterLayers.append( layer->id() );
   }
 
   mLayerSelectionMenu->clear();
@@ -215,7 +222,9 @@ void QgsMapWidget::updateLayerSelectionMenu()
     }
     else
     {
-      layerAction->setChecked( !prevDisabledLayers.contains( layer->id() ) );
+      bool wasDisabled = prevDisabledLayers.contains( layer->id() );
+      bool isNewEnabledLayer = !prevLayers.contains( layer->id() ) && masterLayers.contains( layer->id() );
+      layerAction->setChecked(( prevLayers.contains( layer->id() ) && !wasDisabled ) || isNewEnabledLayer );
     }
     connect( layerAction, SIGNAL( toggled( bool ) ), this, SLOT( updateLayerSet() ) );
     mLayerSelectionMenu->addAction( layerAction );
