@@ -25,6 +25,7 @@ class APP_EXPORT QgsMapToolHillshade : public QgsMapToolDrawRectangle
     Q_OBJECT
   public:
     QgsMapToolHillshade( QgsMapCanvas* mapCanvas );
+    void activate();
 
   private slots:
     void drawFinished();

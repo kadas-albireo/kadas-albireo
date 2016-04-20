@@ -53,6 +53,7 @@ class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircularSector
     Q_OBJECT
   public:
     QgsMapToolViewshed( QgsMapCanvas* mapCanvas );
+    void activate();
 
   private slots:
     void drawFinished();

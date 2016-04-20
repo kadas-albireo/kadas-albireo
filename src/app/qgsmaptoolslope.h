@@ -24,7 +24,8 @@ class APP_EXPORT QgsMapToolSlope : public QgsMapToolDrawRectangle
 {
     Q_OBJECT
   public:
-    QgsMapToolSlope(QgsMapCanvas* mapCanvas);
+    QgsMapToolSlope( QgsMapCanvas* mapCanvas );
+    void activate();
 
   private slots:
     void drawFinished();

@@ -125,8 +125,13 @@ QgsMapToolViewshed::QgsMapToolViewshed( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawCircularSector( mapCanvas )
 {
   setCursor( Qt::ArrowCursor );
-  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
+}
+
+void QgsMapToolViewshed::activate()
+{
+  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  QgsMapToolDrawShape::activate();
 }
 
 void QgsMapToolViewshed::drawFinished()
