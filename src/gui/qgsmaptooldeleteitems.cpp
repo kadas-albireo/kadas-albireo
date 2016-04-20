@@ -33,6 +33,7 @@
 QgsMapToolDeleteItems::QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawRectangle( mapCanvas )
 {
+  setCursor( Qt::ArrowCursor );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }
 

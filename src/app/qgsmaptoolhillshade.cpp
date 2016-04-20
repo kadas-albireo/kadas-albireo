@@ -39,6 +39,7 @@
 QgsMapToolHillshade::QgsMapToolHillshade( QgsMapCanvas* mapCanvas )
     : QgsMapToolDrawRectangle( mapCanvas )
 {
+  setCursor( Qt::ArrowCursor );
   setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
 }

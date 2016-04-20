@@ -71,14 +71,14 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
   int addMode = QSettings().value( "/qgis/layerLegendAddMode", 0 ).toInt();
   int ins = addMode == 0 ? 0 : mInsertionPointIndex;
 
-  // Modify insertion point to the first possible slot below any redlining layer
+  // Modify insertion point to the first possible slot below any redlining and plugin layer
   QList<QgsLayerTreeNode*> childNodes = mInsertionPointGroup->children();
   for ( int i = childNodes.size() - 1; i >= ins; --i )
   {
     if ( childNodes[i]->nodeType() == QgsLayerTreeNode::NodeLayer )
     {
       QgsLayerTreeLayer* layerNode = static_cast<QgsLayerTreeLayer*>( childNodes[i] );
-      if ( layerNode->layer()->type() == QgsMapLayer::RedliningLayer && i <= ins )
+      if ( (layerNode->layer()->type() == QgsMapLayer::RedliningLayer || layerNode->layer()->type() == QgsMapLayer::PluginLayer) && i <= ins )
       {
         ins = i + 1;
         break;
