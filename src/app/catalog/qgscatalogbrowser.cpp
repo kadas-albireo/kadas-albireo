@@ -166,6 +166,7 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   mTreeView->setFrameShape( QTreeView::NoFrame );
   mTreeView->setEditTriggers( QTreeView::NoEditTriggers );
   mTreeView->setDragEnabled( true );
+  mTreeView->setIndentation( 10 );
   layout()->addWidget( mTreeView );
   connect( mTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( itemDoubleClicked( QModelIndex ) ) );
   mCatalogModel = new CatalogModel( this );
