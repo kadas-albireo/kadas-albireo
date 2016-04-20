@@ -85,6 +85,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   // The MilX plugin enables the tab, if the plugin is enabled
   mRibbonWidget->setTabEnabled( mRibbonWidget->indexOf( mMssTab ), false );
+  // The Globe plugin enables the action, if the plugin is enabled
+  mAction3D->setEnabled( false );
 
   mLanguageCombo->addItem( tr( "System language" ), "" );
   mLanguageCombo->addItem( "English", "en" );

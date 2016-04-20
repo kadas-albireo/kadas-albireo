@@ -269,6 +269,7 @@ GlobePlugin::~GlobePlugin() {}
 
 void GlobePlugin::initGui()
 {
+
   mSettingsDialog = new QgsGlobePluginDialog( mQGisIface->mainWindow(), QgisGui::ModalDialogFlags );
   connect( mSettingsDialog, SIGNAL( settingsApplied() ), this, SLOT( applySettings() ) );
 
@@ -279,6 +280,10 @@ void GlobePlugin::initGui()
     mActionToggleGlobe->setCheckable( true );
     mQGisIface->addToolBarIcon( mActionToggleGlobe );
     mQGisIface->addPluginToMenu( tr( "&Globe" ), mActionToggleGlobe );
+  }
+  else
+  {
+    mActionToggleGlobe->setEnabled( true );
   }
 
   mLayerPropertiesFactory = new QgsGlobeLayerPropertiesFactory( this );
