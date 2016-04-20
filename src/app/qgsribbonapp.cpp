@@ -433,8 +433,6 @@ void QgsRibbonApp::configureButtons()
   connect( mActionViewshed, SIGNAL( triggered( bool ) ), this, SLOT( viewshed( bool ) ) );
   setActionToButton( mActionViewshed, mViewshedButton, mMapTools.mViewshed );
 
-  setActionToButton( mActionWPS, mWPSButton );
-
   //gps tab
   setActionToButton( mActionDrawWaypoint, mDrawWaypointButton );
   setActionToButton( mActionDrawRoute, mDrawRouteButton );
