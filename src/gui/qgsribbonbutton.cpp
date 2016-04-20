@@ -88,8 +88,10 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
     p.setFont( font() );
     if ( isChecked() )
       p.setPen( QColor( 38, 59, 78 ) );
+    else if ( isEnabled() )
+      p.setPen( QColor( 255, 255, 255 ) );
     else
-      p.setPen( QPen( palette().color( QPalette::Text ) ) );
+      p.setPen( QColor( 38, 59, 78 ) );
 
     QStringList rawRextLines = buttonText.split( "\n" );
     // Insert additional line breaks where exceeds button width
