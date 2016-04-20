@@ -118,7 +118,7 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
 QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas *canvas )
     : QgsAnnotationItem( canvas )
 {
-  setItemFlags( ItemIsNotResizeable | ItemHasNoMarker );
+  setItemFlags( ItemIsNotResizeable );
 }
 
 QgsGeoImageAnnotationItem::~QgsGeoImageAnnotationItem()
