@@ -31,7 +31,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas );
     ~QgsGeoImageAnnotationItem();
 
-    QgsGeoImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsGeoImageAnnotationItem( canvas ); }
+    QgsGeoImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsGeoImageAnnotationItem( canvas, this ); }
 
     void setFilePath( const QString& filePath );
     const QImage& getImage() const { return mImage; }
