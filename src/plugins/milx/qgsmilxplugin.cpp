@@ -104,10 +104,12 @@ void QgsMilXPlugin::initGui()
 
 
   mQGisIface->layerTreeView()->menuProvider()->addLegendLayerAction( mActionApprovedLayer, "", "milx_approved_layer", QgsMapLayer::PluginLayer, false );
+  connect( mQGisIface->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setApprovedActionState( QgsMapLayer* ) ) );
 }
 
 void QgsMilXPlugin::unload()
 {
+  disconnect( mQGisIface->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setApprovedActionState( QgsMapLayer* ) ) );
   mQGisIface->layerTreeView()->menuProvider()->removeLegendLayerAction( mActionApprovedLayer );
   QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsMilXLayer::layerTypeKey() );
   mActionApprovedLayer = 0;
@@ -229,5 +231,15 @@ void QgsMilXPlugin::setApprovedLayer( bool approved )
   {
     layer->setApproved( approved );
     layer->triggerRepaint();
+  }
+}
+
+void QgsMilXPlugin::setApprovedActionState( QgsMapLayer* layer )
+{
+  if ( dynamic_cast<QgsMilXLayer*>( layer ) )
+  {
+    mActionApprovedLayer->blockSignals( true );
+    mActionApprovedLayer->setChecked( static_cast<QgsMilXLayer*>( layer )->isApproved() );
+    mActionApprovedLayer->blockSignals( false );
   }
 }

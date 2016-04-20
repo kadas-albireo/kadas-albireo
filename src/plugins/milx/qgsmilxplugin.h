@@ -63,6 +63,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     void connectPickHandlers();
     void manageSymbolPick( int );
     void setApprovedLayer( bool approved );
+    void setApprovedActionState( QgsMapLayer*layer );
 };
 
 #endif // QGS_MILX_PLUGIN_H
