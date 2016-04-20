@@ -20,7 +20,9 @@
 
 #include <QList>
 #include <QStringList>
+#include <QMutex>
 #include <QNetworkAccessManager>
+#include <QNetworkCookieJar>
 #include <QNetworkProxy>
 #include <QNetworkRequest>
 
@@ -128,11 +130,16 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager
       return QNetworkAccessManager::sendCustomRequest( requestWithUserInfo( request ), verb, data );
     }
 
+  public slots:
+    //! adds a cookie to the cookie jar
+    void addCookie(const QByteArray& cookie, const QUrl &url);
+
   signals:
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
     void requestTimedOut( QUrl );
     void sslErrorsConformationRequired( const QUrl& url, const QList<QSslError> &errors, bool* ok );
+    void cookieAdded(QByteArray cookie, QUrl url);
 
   private slots:
     void abortRequest();
@@ -146,6 +153,13 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager
     virtual QNetworkReply *createRequest( QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0 ) override;
 
   private:
+    class QgsNetworkCookieJar : public QNetworkCookieJar {
+    public:
+      QgsNetworkCookieJar(QObject* parent) : QNetworkCookieJar(parent) {}
+      QList<QNetworkCookie> allCookies() const { return QNetworkCookieJar::allCookies(); }
+      void setAllCookies(const QList<QNetworkCookie> & cookieList) { QNetworkCookieJar::setAllCookies(cookieList); }
+    };
+
     class QgsSSLIgnoreList;
 
     QList<QNetworkProxyFactory*> mProxyFactories;
@@ -154,6 +168,7 @@ class CORE_EXPORT QgsNetworkAccessManager : public QNetworkAccessManager
     bool mUseSystemProxy;
     bool mInitialized;
     static QgsNetworkAccessManager *smMainNAM;
+    QMutex mCookieLock;
 
     QNetworkRequest requestWithUserInfo( const QNetworkRequest& req );
 };

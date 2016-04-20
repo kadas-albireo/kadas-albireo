@@ -73,10 +73,16 @@ class QgsNetworkAccessManager : QNetworkAccessManager
     QNetworkReply *deleteResource( const QNetworkRequest &request );
     QNetworkReply *sendCustomRequest( const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = 0 );
 
+
+  public slots:
+    //! adds a cookie to the cookie jar
+    void addCookie(const QByteArray& cookie, const QUrl &url);
+
   signals:
     void requestAboutToBeCreated( QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice * );
     void requestCreated( QNetworkReply * );
     void requestTimedOut( QUrl );
+    void cookieAdded(QByteArray cookie, QUrl url);
 
   protected:
     virtual QNetworkReply *createRequest( QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0 );
