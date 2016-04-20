@@ -25,7 +25,7 @@
 QgsMapToolAnnotation::QgsMapToolAnnotation( QgsMapCanvas* canvas )
     : QgsMapToolPan( canvas )
 {
-  setCursor( QCursor( Qt::ArrowCursor ) );
+  setCursor( QCursor( Qt::CrossCursor ) );
 }
 
 void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent * e )

@@ -39,7 +39,7 @@
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
     : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mInputWidget( 0 )
 {
-  setCursor( Qt::ArrowCursor );
+  setCursor( Qt::CrossCursor );
 
   QSettings settings;
   int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
