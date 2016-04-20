@@ -132,6 +132,7 @@ QgsNetworkAccessManager::QgsNetworkAccessManager( QObject *parent )
     , mInitialized( false )
 {
   setProxyFactory( new QgsNetworkProxyFactory() );
+  setCookieJar(new QgsNetworkCookieJar(this));
 }
 
 QgsNetworkAccessManager::~QgsNetworkAccessManager()
@@ -389,6 +390,7 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
              smMainNAM, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
              Qt::BlockingQueuedConnection );
 #endif
+    connect(smMainNAM, SIGNAL(cookieAdded(QByteArray,QUrl)), this, SLOT(addCookie(QByteArray,QUrl)));
   }
 
   // check if proxy is enabled
@@ -469,6 +471,21 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 #else
   setProxy( proxy );
 #endif
+
+  if(smMainNAM) {
+    smMainNAM->mCookieLock.lock();
+    static_cast<QgsNetworkCookieJar*>(cookieJar())->setAllCookies(static_cast<QgsNetworkCookieJar*>(smMainNAM->cookieJar())->allCookies());
+    smMainNAM->mCookieLock.unlock();
+  }
+}
+
+void QgsNetworkAccessManager::addCookie(const QByteArray &cookie, const QUrl& url )
+{
+  mCookieLock.lock();
+  QNetworkCookieJar* jar = cookieJar();
+  jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie ), url );
+  mCookieLock.unlock();
+  emit cookieAdded(cookie, url);
 }
 
 QNetworkRequest QgsNetworkAccessManager::requestWithUserInfo( const QNetworkRequest& req )
