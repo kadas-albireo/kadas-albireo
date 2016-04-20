@@ -547,16 +547,17 @@ void QgsRibbonApp::checkOnTheFlyProjection( )
 
 void QgsRibbonApp::addCameraPicture()
 {
-  QString lastUsedDir = QSettings().value( "/UI/lastProjectDir", "." ).toString();
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
   QSet<QString> formats;
   foreach ( const QByteArray& format, QImageReader::supportedImageFormats() )
   {
     formats.insert( QString( "*.%1" ).arg( QString( format ).toLower() ) );
   }
   QString filter = QString( "Camera pictures (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
-  QString filename = QFileDialog::getOpenFileName( this, tr( "Select Camera Picture" ), lastUsedDir, filter );
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Select Camera Picture" ), lastDir, filter );
   if ( !filename.isEmpty() )
   {
+    QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
     QString errMsg;
     if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, &errMsg ) )
     {
