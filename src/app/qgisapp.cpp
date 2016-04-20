@@ -1345,7 +1345,7 @@ void QgisApp::updateNewLayerInsertionPoint()
     if ( QgsLayerTreeNode* currentNode = layerTreeView()->currentNode() )
     {
       // if the insertion point is actually a group, insert new layers into the group
-      if ( QgsLayerTree::isGroup( currentNode ) )
+      if ( QgsLayerTree::isGroup( currentNode ) && ! QgsLayerTree::toGroup( currentNode )->isMutuallyExclusive() )
       {
         QgsProject::instance()->layerTreeRegistryBridge()->setLayerInsertionPoint( QgsLayerTree::toGroup( currentNode ), 0 );
         return;
