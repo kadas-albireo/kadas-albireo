@@ -18,6 +18,7 @@
 #include "qgsiamauth.h"
 #include "qgisinterface.h"
 #include "qgsnetworkaccessmanager.h"
+#include "qgsmessagebar.h"
 #include "iamauth_plugin.h"
 #include "webaxwidget.h"
 
@@ -81,7 +82,7 @@ void QgsIAMAuth::performLogin()
 {
   mLoginDialog = new StackedDialog( mQGisIface->mainWindow() );
   mLoginDialog->setWindowTitle( tr( "eIAM Authentication" ) );
-  mLoginDialog->resize( 800, 480 );
+  mLoginDialog->resize( 1000, 480 );
 
   WebAxWidget* webWidget = new WebAxWidget();
   webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
@@ -109,13 +110,18 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
       QStringList pair = cookie.split( "=" );
       if ( !pair.isEmpty() && pair.first() == "esri_auth" )
       {
-        QMessageBox::information( mLoginDialog, tr( "Authentication successful" ), QString( "Url: %1\nCookie: %2" ).arg( baseUrl.toString() ).arg( cookie ) );
+//        QMessageBox::information( mLoginDialog, tr( "Authentication successful" ), QString( "Url: %1\nCookie: %2" ).arg( baseUrl.toString() ).arg( cookie ) );
+        mQGisIface->messageBar()->pushMessage(tr("Authentication successful"), QgsMessageBar::INFO, 5);
         mLoginDialog->accept();
         mLoginDialog->deleteLater();
         mLoginDialog = 0;
         QNetworkCookieJar* jar = QgsNetworkAccessManager::instance()->cookieJar();
         jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), baseUrl );
-
+        QToolButton* loginButton = qobject_cast<QToolButton*>(mQGisIface->findObject("mRefreshCatalogButton"));
+        if(loginButton) {
+          loginButton->click();
+        }
+        /*
         QWebView* view = new QWebView();
         QWebPage* page = new QWebPage();
         page->setNetworkAccessManager( QgsNetworkAccessManager::instance() );
@@ -127,7 +133,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
         req.setSslConfiguration( conf );
         view->load( req );
         view->show();
-        view->setAttribute( Qt::WA_DeleteOnClose );
+        view->setAttribute( Qt::WA_DeleteOnClose );*/
       }
     }
   }
