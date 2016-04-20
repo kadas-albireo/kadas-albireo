@@ -78,7 +78,7 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     if ( childNodes[i]->nodeType() == QgsLayerTreeNode::NodeLayer )
     {
       QgsLayerTreeLayer* layerNode = static_cast<QgsLayerTreeLayer*>( childNodes[i] );
-      if ( (layerNode->layer()->type() == QgsMapLayer::RedliningLayer || layerNode->layer()->type() == QgsMapLayer::PluginLayer) && i <= ins )
+      if ( layerNode->layer()->type() == QgsMapLayer::RedliningLayer && i <= ins )
       {
         ins = i + 1;
         break;
