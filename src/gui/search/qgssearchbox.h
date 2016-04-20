@@ -22,6 +22,7 @@
 #include <QList>
 #include <QTimer>
 #include <QWidget>
+#include <QPointer>
 
 
 class QCheckBox;
@@ -65,7 +66,7 @@ class GUI_EXPORT QgsSearchBox : public QWidget
 
     QgsMapCanvas* mMapCanvas;
     QgsRubberBand* mRubberBand;
-    QgsPinAnnotationItem* mPin;
+    QPointer<QgsPinAnnotationItem> mPin;
     QgsMapToolDrawShape* mFilterTool;
     QList<QgsSearchProvider*> mSearchProviders;
     QTimer mTimer;
