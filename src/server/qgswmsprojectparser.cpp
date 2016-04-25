@@ -624,6 +624,7 @@ void QgsWMSProjectParser::printCapabilities( QDomElement& parentElement, QDomDoc
     for ( int j = 0; j < composerLabelList.size(); ++j )
     {
       QDomElement citem = composerLabelList.at( j ).firstChildElement( "ComposerItem" );
+      QDomElement lItem = composerLabelList.at( j ).toElement();
       QString id = citem.attribute( "id" );
       if ( id.isEmpty() ) //only export labels with ids for text replacement
       {
@@ -631,6 +632,7 @@ void QgsWMSProjectParser::printCapabilities( QDomElement& parentElement, QDomDoc
       }
       QDomElement composerLabelElem = doc.createElement( "ComposerLabel" );
       composerLabelElem.setAttribute( "name", id );
+      composerLabelElem.setAttribute( "maxLength", lItem.attribute( "maxLength", "-1" ) );
       composerTemplateElem.appendChild( composerLabelElem );
     }
 
