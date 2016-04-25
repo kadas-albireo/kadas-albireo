@@ -334,14 +334,16 @@ void QgsMeasureHeightProfileDialog::replot()
 
 #if QWT_VERSION < 0x060000
   mPlotCurve->setData( xSamples, ySamples );
+  int nSamples = xSamples.size();
 #else
   static_cast<QwtPointSeriesData*>( mPlotCurve->data() )->setSamples( samples );
+  int nSamples = samples.size();
 #endif
   mPlotMarker->setValue( 0, 0 );
-  mPlot->setAxisScaleDraw( QwtPlot::xBottom, new ScaleDraw( mTotLength, xSamples.size() ) );
-  double step = qPow( 10, qFloor( log10( mTotLength ) ) ) / ( mTotLength ) * xSamples.size();
-  while ( xSamples.size() / step < 10 ) step /= 2.;
-  mPlot->setAxisScale( QwtPlot::xBottom, 0, xSamples.size(), step );
+  mPlot->setAxisScaleDraw( QwtPlot::xBottom, new ScaleDraw( mTotLength, nSamples ) );
+  double step = qPow( 10, qFloor( log10( mTotLength ) ) ) / ( mTotLength ) * nSamples;
+  while ( nSamples / step < 10 ) step /= 2.;
+  mPlot->setAxisScale( QwtPlot::xBottom, 0, nSamples, step );
 
   GDALClose( raster );
 
