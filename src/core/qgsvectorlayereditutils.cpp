@@ -135,7 +135,7 @@ int QgsVectorLayerEditUtils::addRing( QgsCurveV2* ring )
   QgsFeature f;
   while ( fit.nextFeature( f ) )
   {
-    addRingReturnCode = f.geometry()->addRing( ring );
+    addRingReturnCode = f.geometry()->addRing( static_cast<QgsCurveV2*>( ring->clone() ) );
     if ( addRingReturnCode == 0 )
     {
       L->editBuffer()->changeGeometry( f.id(), f.geometry() );
@@ -145,6 +145,7 @@ int QgsVectorLayerEditUtils::addRing( QgsCurveV2* ring )
     }
   }
 
+  delete ring;
   return addRingReturnCode;
 }
 
