@@ -256,6 +256,7 @@ void QgsMilXLibrary::itemClicked( QModelIndex index )
       }
       else
       {
+        mIface->layerTreeView()->setLayerVisible( layer, true );
         QgsMilXCreateTool* tool = new QgsMilXCreateTool( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
         connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
         mIface->mapCanvas()->setMapTool( tool );

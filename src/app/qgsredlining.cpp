@@ -17,6 +17,7 @@
 #include "qgisapp.h"
 #include "qgscolorbuttonv2.h"
 #include "qgsribbonapp.h"
+#include "qgslayertreemodel.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsmaptooladdfeature.h"
@@ -288,6 +289,7 @@ void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
     if ( mLayerRefCount == 0 )
     {
       mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
+      mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
       mLayer->startEditing();
     }
     ++mLayerRefCount;

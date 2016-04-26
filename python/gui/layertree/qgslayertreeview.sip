@@ -50,6 +50,9 @@ class QgsLayerTreeView : QTreeView
     //! Set currently selected layer. Null pointer will deselect any layer.
     void setCurrentLayer( QgsMapLayer* layer );
 
+    //! Sets the visible state of the specified layer
+    void setLayerVisible(QgsMapLayer* layer, bool visible );
+
     //! Get current node. May be null
     QgsLayerTreeNode* currentNode() const;
     //! Get current group node. If a layer is current node, the function will return parent group. May be null.
