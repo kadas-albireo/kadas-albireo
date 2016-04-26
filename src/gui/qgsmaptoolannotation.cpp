@@ -43,3 +43,15 @@ void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent * e )
     QgsMapToolPan::canvasReleaseEvent( e );
   }
 }
+
+void QgsMapToolAnnotation::keyReleaseEvent( QKeyEvent* e )
+{
+  if ( e->key() == Qt::Key_Escape )
+  {
+    canvas()->unsetMapTool( this ); // unset
+  }
+  else
+  {
+    QgsMapToolPan::keyReleaseEvent( e );
+  }
+}

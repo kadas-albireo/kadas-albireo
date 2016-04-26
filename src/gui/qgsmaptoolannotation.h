@@ -29,6 +29,7 @@ class GUI_EXPORT QgsMapToolAnnotation : public QgsMapToolPan
     QgsMapToolAnnotation( QgsMapCanvas* canvas );
 
     void canvasReleaseEvent( QMouseEvent* e ) override;
+    void keyReleaseEvent( QKeyEvent* e );
 
   protected:
     virtual QgsAnnotationItem* createItem( const QPoint &/*pos*/ ) { return 0; }

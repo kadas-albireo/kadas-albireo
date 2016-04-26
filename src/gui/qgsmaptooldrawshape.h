@@ -39,7 +39,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void setShowInputWidget( bool showInput ) { mShowInput = showInput; }
     void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
-    bool isFinished() const { return mState == StateFinished; }
+    State getState() const { return mState; }
 
     void canvasPressEvent( QMouseEvent* e ) override;
     void canvasMoveEvent( QMouseEvent* e ) override;
