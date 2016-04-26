@@ -510,7 +510,7 @@ void QgsRedliningEditTool::runEditor( const QgsFeatureId& featureId )
     {
       mLayer->changeAttributeValue( feature.id(), mLayer->pendingFields().indexFromName( attrib ), feature.attribute( attrib ) );
     }
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
 }
 
@@ -545,7 +545,7 @@ void QgsRedliningEditTool::clearCurrent( bool refresh )
   mCurrentVertex = -1;
   if ( refresh )
   {
-    mCanvas->refresh();
+    mLayer->triggerRepaint();
   }
 }
 
