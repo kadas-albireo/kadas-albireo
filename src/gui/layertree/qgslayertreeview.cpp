@@ -105,6 +105,15 @@ void QgsLayerTreeView::setCurrentLayer( QgsMapLayer* layer )
   setCurrentIndex( layerTreeModel()->node2index( nodeLayer ) );
 }
 
+void QgsLayerTreeView::setLayerVisible( QgsMapLayer* layer, bool visible )
+{
+  if ( !layer )
+    return;
+  QgsLayerTreeLayer* nodeLayer = layerTreeModel()->rootGroup()->findLayer( layer->id() );
+  if ( !nodeLayer )
+    return;
+  nodeLayer->setVisible( visible ? Qt::Checked : Qt::Unchecked );
+}
 
 void QgsLayerTreeView::contextMenuEvent( QContextMenuEvent *event )
 {

@@ -202,6 +202,7 @@ void QgsGPSRouteEditor::setTool( QgsMapTool *tool, QAction* action , bool active
     if ( mLayerRefCount == 0 )
     {
       mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
+      mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
       mLayer->startEditing();
     }
     ++mLayerRefCount;
