@@ -167,7 +167,10 @@ void QgsMapToolDrawShape::keyReleaseEvent( QKeyEvent* e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
-    reset();
+    if ( mState == StateReady )
+      canvas()->unsetMapTool( this ); // unset
+    else
+      reset();
   }
 }
 
