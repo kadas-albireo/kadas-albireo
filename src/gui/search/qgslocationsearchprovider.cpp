@@ -109,7 +109,7 @@ void QgsLocationSearchProvider::replyFinished()
     }
     // When bbox is empty, fallback to pos + zoomScale is used
     searchResult.pos = QgsPoint( itemAttrsMap["y"].toDouble(), itemAttrsMap["x"].toDouble() );
-    searchResult.zoomScale = 1000;
+    searchResult.zoomScale = origin == "address" ? 5000 : 25000;
 
     searchResult.category = mCategoryMap.contains( origin ) ? mCategoryMap[origin].first : origin;
     searchResult.categoryPrecedence = mCategoryMap.contains( origin ) ? mCategoryMap[origin].second : 100;
