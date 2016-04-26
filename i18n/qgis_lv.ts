@@ -5577,8 +5577,7 @@ Disable the &quot;Use intersected extent&quot; option to have a nonempty output.
         <translation>Izvēlēties mapi ar GDAL dokumentāciju</translation>
     </message>
     <message>
-        <source>
-A list of colon-separated (Linux and MacOS) or
+        <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to both binaries
 and python executables.
 
@@ -5587,14 +5586,12 @@ MacOS users usually need to set it to something like
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>
-A list of colon-separated (Linux and MacOS) or
+        <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>
-Useful to open local GDAL documentation instead of online help
+        <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7116,23 +7113,23 @@ GEOS ģeoprocesēšanas kļūda: vienam vai vairākiem ievades objektiem ir nede
     </message>
     <message>
         <source>Globe Settings</source>
-        <translation>Globusa iestatījumi</translation>
+        <translation type="obsolete">Globusa iestatījumi</translation>
     </message>
     <message>
         <source>Unload Globe</source>
-        <translation>Izkraut Globusu</translation>
+        <translation type="obsolete">Izkraut Globusu</translation>
     </message>
     <message>
         <source>Overlay data on a 3D globe</source>
-        <translation>Pārklāt datus uz 3D globusa</translation>
+        <translation type="obsolete">Pārklāt datus uz 3D globusa</translation>
     </message>
     <message>
         <source>Settings for 3D globe</source>
-        <translation>3D globusa iestatījumi</translation>
+        <translation type="obsolete">3D globusa iestatījumi</translation>
     </message>
     <message>
         <source>Unload globe</source>
-        <translation>Izkraut globusu</translation>
+        <translation type="obsolete">Izkraut globusu</translation>
     </message>
     <message>
         <source>&amp;Globe</source>
@@ -8982,7 +8979,7 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Move Annotation</source>
-        <translation>Pārvietot kopsavilkumu</translation>
+        <translation type="obsolete">Pārvietot kopsavilkumu</translation>
     </message>
     <message>
         <source>Labeling</source>
@@ -9086,10 +9083,6 @@ Please configure it before running LAStools algorithms.</source>
     </message>
     <message>
         <source>Full Histogram Stretch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Touch Zoom and Pan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9452,7 +9445,7 @@ Ctl (Cmd) palielina par 15 grādiem.</translation>
     </message>
     <message>
         <source>Touch zoom and pan</source>
-        <translation>Skāriena tuvināšana un pārcentrēšana</translation>
+        <translation type="obsolete">Skāriena tuvināšana un pārcentrēšana</translation>
     </message>
     <message>
         <source>Offset Curve</source>
@@ -10057,11 +10050,35 @@ Acts on currently active editable layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add Ar&amp;cGIS MapServer Layer...</source>
+        <source>Add ArcGIS MapServer Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add ArcGIS MapServer Layer</source>
+        <source>Redlining</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Arc&amp;GIS MapServer Layer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin Annotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Map View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mea&amp;sure Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Measure Azimuth</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -10498,6 +10515,41 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>Record parsing error</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MilXClientWorker</name>
+    <message>
+        <source>Process failed to start: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not determine process port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection failed</source>
+        <translation type="unfinished">Savienošanās neizdevās</translation>
+    </message>
+    <message>
+        <source>Unexpected reply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find specified host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection refused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occured: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -15202,10 +15254,6 @@ Response was:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>VBS Functionality</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>VectorAnalysis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15232,6 +15280,22 @@ Response was:
     <message>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IAM Authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MilX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support for MilX symbols</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version 1.0</source>
+        <translation type="unfinished">Versija 1.0</translation>
     </message>
 </context>
 <context>
@@ -15427,36 +15491,32 @@ Response was:
     </message>
     <message>
         <source>Minimize</source>
-        <translation>Samazināt</translation>
+        <translation type="obsolete">Samazināt</translation>
     </message>
     <message>
         <source>Ctrl+M</source>
         <comment>Minimize Window</comment>
-        <translation>Ctrl+M</translation>
+        <translation type="obsolete">Ctrl+M</translation>
     </message>
     <message>
         <source>Minimizes the active window to the dock</source>
-        <translation>Samazināt aktīvo logu uz doku</translation>
+        <translation type="obsolete">Samazināt aktīvo logu uz doku</translation>
     </message>
     <message>
         <source>Zoom</source>
-        <translation>Tuvināt</translation>
-    </message>
-    <message>
-        <source>Toggles between a predefined size and the window size set by the user</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Tuvināt</translation>
     </message>
     <message>
         <source>Bring All to Front</source>
-        <translation>Pārvietot visu uz priekšu</translation>
+        <translation type="obsolete">Pārvietot visu uz priekšu</translation>
     </message>
     <message>
         <source>Bring forward all open windows</source>
-        <translation>Pārvietot uz priekšu visus atvērtos logus</translation>
+        <translation type="obsolete">Pārvietot uz priekšu visus atvērtos logus</translation>
     </message>
     <message>
         <source>Current Edits</source>
-        <translation>Pašreizējie labojumi</translation>
+        <translation type="obsolete">Pašreizējie labojumi</translation>
     </message>
     <message>
         <source>Error</source>
@@ -15482,87 +15542,75 @@ Please contact the developers.
     </message>
     <message>
         <source>Panels</source>
-        <translation>Paneļi</translation>
+        <translation type="obsolete">Paneļi</translation>
     </message>
     <message>
         <source>Toolbars</source>
-        <translation>Rīkjoslas</translation>
+        <translation type="obsolete">Rīkjoslas</translation>
     </message>
     <message>
         <source>Window</source>
-        <translation>Logs</translation>
+        <translation type="obsolete">Logs</translation>
     </message>
     <message>
         <source>&amp;Database</source>
-        <translation>&amp;Datubāze</translation>
+        <translation type="obsolete">&amp;Datubāze</translation>
     </message>
     <message>
         <source>&amp;Web</source>
-        <translation>&amp;Tīmeklis</translation>
+        <translation type="obsolete">&amp;Tīmeklis</translation>
     </message>
     <message>
         <source>Progress bar that displays the status of rendering layers and other time-intensive operations</source>
-        <translation>Progresa josla rāda cik daudz no slāņiem jau ir parādīts, kā arī citu laikietilpīgu procesu paveikto daļu</translation>
-    </message>
-    <message>
-        <source>Toggle extents and mouse position display</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Progresa josla rāda cik daudz no slāņiem jau ir parādīts, kā arī citu laikietilpīgu procesu paveikto daļu</translation>
     </message>
     <message>
         <source>Coordinate:</source>
-        <translation>Koordinātas:</translation>
+        <translation type="obsolete">Koordinātas:</translation>
     </message>
     <message>
         <source>Current map coordinate</source>
-        <translation>Pašreizējā kartes koordināta</translation>
-    </message>
-    <message>
-        <source>Shows the map coordinates at the current cursor position. The display is continuously updated as the mouse is moved. It also allows editing to set the canvas center to a given position. The format is lat,lon or east,north</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Current map coordinate (lat,lon or east,north)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Pašreizējā kartes koordināta</translation>
     </message>
     <message>
         <source>Scale </source>
-        <translation>Mērogs </translation>
+        <translation type="obsolete">Mērogs </translation>
     </message>
     <message>
         <source>Current map scale</source>
-        <translation>Pašreizējais kartes mērogs</translation>
+        <translation type="obsolete">Pašreizējais kartes mērogs</translation>
     </message>
     <message>
         <source>Displays the current map scale</source>
-        <translation>Attēlo pašreizējo kartes mērogu</translation>
+        <translation type="obsolete">Attēlo pašreizējo kartes mērogu</translation>
     </message>
     <message>
         <source>Current map scale (formatted as x:y)</source>
-        <translation>Pašreizējais kartes mērogs (formēts kā x:y)</translation>
+        <translation type="obsolete">Pašreizējais kartes mērogs (formēts kā x:y)</translation>
     </message>
     <message>
         <source>Render</source>
-        <translation>Renderēt</translation>
+        <translation type="obsolete">Renderēt</translation>
     </message>
     <message>
         <source>When checked, the map layers are rendered in response to map navigation commands and other events. When not checked, no rendering is done. This allows you to add a large number of layers and symbolize them before rendering.</source>
-        <translation>Ja atzīmēts, kartes slāņi tiek renderēti uzreiz tiklīdz kāda darbība tiek veikta. Ja nav atzīmēts, renderēšana nenotiek. Tas ļauj pievienot lielu daudzumu slāņu un iestatīt tiem apzīmējumus pirms to attēlošanas kartē.</translation>
+        <translation type="obsolete">Ja atzīmēts, kartes slāņi tiek renderēti uzreiz tiklīdz kāda darbība tiek veikta. Ja nav atzīmēts, renderēšana nenotiek. Tas ļauj pievienot lielu daudzumu slāņu un iestatīt tiem apzīmējumus pirms to attēlošanas kartē.</translation>
     </message>
     <message>
         <source>Toggle map rendering</source>
-        <translation>Pārslēdz kartes renderēšanu</translation>
+        <translation type="obsolete">Pārslēdz kartes renderēšanu</translation>
     </message>
     <message>
         <source>This icon shows whether on the fly coordinate reference system transformation is enabled or not. Click the icon to bring up the project properties dialog to alter this behaviour.</source>
-        <translation>Šī ikona rāda vai tūlītēja projekciju maiņa ir ieslēgta vai nē. Klikšķiniet uz ikonas, lai mainītu projekta īpašības.</translation>
+        <translation type="obsolete">Šī ikona rāda vai tūlītēja projekciju maiņa ir ieslēgta vai nē. Klikšķiniet uz ikonas, lai mainītu projekta īpašības.</translation>
     </message>
     <message>
         <source>CRS status - Click to open coordinate reference system dialog</source>
-        <translation>CRS statuss - Klikšķini, lai atvērtu koordinātu sistēmu dialogu</translation>
+        <translation type="obsolete">CRS statuss - Klikšķini, lai atvērtu koordinātu sistēmu dialogu</translation>
     </message>
     <message>
         <source>Ready</source>
-        <translation>Gatavs</translation>
+        <translation type="obsolete">Gatavs</translation>
     </message>
     <message>
         <source>Map overview canvas. This canvas can be used to display a locator map that shows the current extent of the map canvas. The current extent is shown as a red rectangle. Any layer on the map can be added to the overview canvas.</source>
@@ -15574,20 +15622,20 @@ Please contact the developers.
     </message>
     <message>
         <source>Map legend that displays all the layers currently on the map canvas. Click on the check box to turn a layer on or off. Double click on a layer in the legend to customize its appearance and set other properties.</source>
-        <translation>Kartes slāņu saraksts, kas parāda visus kartes skata rāmī esošos slāņus. 
+        <translation type="obsolete">Kartes slāņu saraksts, kas parāda visus kartes skata rāmī esošos slāņus. 
 Uzklikšķiniet uz ķekškastes, lai parādītu / paslēptu slāni. Dubultklikšķis uz slāņa nosaukuma ļaus pielāgot tā attēlošanu un iestatīt citus tā parametrus.</translation>
     </message>
     <message>
         <source>Layers</source>
-        <translation>Slāņi</translation>
+        <translation type="obsolete">Slāņi</translation>
     </message>
     <message>
         <source>Map layer list that displays all layers in drawing order.</source>
-        <translation>Kartes slāņu saraksts, kas rāda visus slāņus to zīmēšanas secībā.</translation>
+        <translation type="obsolete">Kartes slāņu saraksts, kas rāda visus slāņus to zīmēšanas secībā.</translation>
     </message>
     <message>
         <source>Layer order</source>
-        <translation>Slāņu secība</translation>
+        <translation type="obsolete">Slāņu secība</translation>
     </message>
     <message>
         <source>Private qgis.db</source>
@@ -15921,23 +15969,19 @@ Uzklikšķiniet uz ķekškastes, lai parādītu / paslēptu slāni. Dubultklikš
     </message>
     <message>
         <source>Add Group</source>
-        <translation>Pievienot grupu</translation>
+        <translation type="obsolete">Pievienot grupu</translation>
     </message>
     <message>
         <source>Manage Layer Visibility</source>
-        <translation>Pārvaldīt slāņu redzamību</translation>
-    </message>
-    <message>
-        <source>Filter Legend By Map Content</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Pārvaldīt slāņu redzamību</translation>
     </message>
     <message>
         <source>Expand All</source>
-        <translation>Izplest visu</translation>
+        <translation type="obsolete">Izplest visu</translation>
     </message>
     <message>
         <source>Collapse All</source>
-        <translation>Sakļaut visu</translation>
+        <translation type="obsolete">Sakļaut visu</translation>
     </message>
     <message>
         <source>Compiled against GEOS</source>
@@ -16425,23 +16469,23 @@ Errors: %3
     </message>
     <message>
         <source>Current CRS: %1 (OTFR enabled)</source>
-        <translation>Pašreizējā CRS: %1 (OTFR ieslēgts)</translation>
+        <translation type="obsolete">Pašreizējā CRS: %1 (OTFR ieslēgts)</translation>
     </message>
     <message>
         <source>Current CRS: %1 (OTFR disabled)</source>
-        <translation>Pašreizējā CRS: %1 (OTFR izslēgts)</translation>
+        <translation type="obsolete">Pašreizējā CRS: %1 (OTFR izslēgts)</translation>
     </message>
     <message>
         <source>Map coordinates for the current view extents</source>
-        <translation>Kartes koordinātas pašreizējam skatam</translation>
+        <translation type="obsolete">Kartes koordinātas pašreizējam skatam</translation>
     </message>
     <message>
         <source>Map coordinates at mouse cursor position</source>
-        <translation>Kartes koordinātas peles atrašanās vietā</translation>
+        <translation type="obsolete">Kartes koordinātas peles atrašanās vietā</translation>
     </message>
     <message>
         <source>Extents:</source>
-        <translation>Apjoms: </translation>
+        <translation type="obsolete">Apjoms: </translation>
     </message>
     <message>
         <source>Maptips require an active layer</source>
@@ -16514,10 +16558,6 @@ Errors: %3
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A network request timed out, any data received is likely incomplete.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Warning</source>
         <translation>Brīdinājums</translation>
     </message>
@@ -16564,23 +16604,11 @@ Vienmēr ignorēt šīs kļūdas?</translation>
     </message>
     <message>
         <source>Rotation:</source>
-        <translation>Rotācija:</translation>
-    </message>
-    <message>
-        <source>Current clockwise map rotation in degrees</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shows the current map clockwise rotation in degrees. It also allows editing to set the rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 (OTF)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Rotācija:</translation>
     </message>
     <message>
         <source>Messages</source>
-        <translation>Ziņas</translation>
+        <translation type="obsolete">Ziņas</translation>
     </message>
     <message>
         <source>Error loading layer definition</source>
@@ -16592,10 +16620,6 @@ Vienmēr ignorēt šīs kļūdas?</translation>
     </message>
     <message>
         <source>A problem occured during deletion of %1 feature(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>QGIS Enterprise </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -16622,14 +16646,22 @@ Vienmēr ignorēt šīs kļūdas?</translation>
         <source>KML export failed</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
+    <message>
         <source>%1 SSL errors occured</source>
         <comment>number of errors</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KADAS Albireo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map saved to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A network request for %1 timed out, any data received is likely incomplete.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17055,6 +17087,13 @@ p, li { white-space: pre-wrap; }
         <source>Failed to query some layers:
 %1</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsAnnotationItem</name>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Noņemt</translation>
     </message>
 </context>
 <context>
@@ -18454,6 +18493,17 @@ Database: %2</source>
     </message>
 </context>
 <context>
+    <name>QgsCatalogBrowser</name>
+    <message>
+        <source>Filter catalog...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading...</source>
+        <translation type="unfinished">Ielādē...</translation>
+    </message>
+</context>
+<context>
     <name>QgsCategorizedSymbolRendererV2Model</name>
     <message>
         <source>Symbol</source>
@@ -18593,6 +18643,215 @@ Vai dzēst esošās klases pirms klasificēšanas?</translation>
     <message>
         <source>Representation for unchecked state</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsClassicApp</name>
+    <message>
+        <source>Panels</source>
+        <translation type="unfinished">Paneļi</translation>
+    </message>
+    <message>
+        <source>Toolbars</source>
+        <translation type="unfinished">Rīkjoslas</translation>
+    </message>
+    <message>
+        <source>Border/Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Outline:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation type="unfinished">Samazināt</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <comment>Minimize Window</comment>
+        <translation type="unfinished">Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Minimizes the active window to the dock</source>
+        <translation type="unfinished">Samazināt aktīvo logu uz doku</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation type="unfinished">Tuvināt</translation>
+    </message>
+    <message>
+        <source>Toggles between a predefined size and the window size set by the user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bring All to Front</source>
+        <translation type="unfinished">Pārvietot visu uz priekšu</translation>
+    </message>
+    <message>
+        <source>Bring forward all open windows</source>
+        <translation type="unfinished">Pārvietot uz priekšu visus atvērtos logus</translation>
+    </message>
+    <message>
+        <source>Current Edits</source>
+        <translation type="unfinished">Pašreizējie labojumi</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation type="unfinished">Logs</translation>
+    </message>
+    <message>
+        <source>&amp;Database</source>
+        <translation type="unfinished">&amp;Datubāze</translation>
+    </message>
+    <message>
+        <source>&amp;Web</source>
+        <translation type="unfinished">&amp;Tīmeklis</translation>
+    </message>
+    <message>
+        <source>Progress bar that displays the status of rendering layers and other time-intensive operations</source>
+        <translation type="unfinished">Progresa josla rāda cik daudz no slāņiem jau ir parādīts, kā arī citu laikietilpīgu procesu paveikto daļu</translation>
+    </message>
+    <message>
+        <source>Toggle extents and mouse position display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate:</source>
+        <translation type="unfinished">Koordinātas:</translation>
+    </message>
+    <message>
+        <source>Current map coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows the map coordinates at the current cursor position. The display is continuously updated as the mouse is moved. It also allows editing to set the canvas center to a given position. The format is lat,lon or east,north</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current map coordinate (lat,lon or east,north)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale </source>
+        <translation type="unfinished">Mērogs </translation>
+    </message>
+    <message>
+        <source>Current map scale</source>
+        <translation type="unfinished">Pašreizējais kartes mērogs</translation>
+    </message>
+    <message>
+        <source>Displays the current map scale</source>
+        <translation type="unfinished">Attēlo pašreizējo kartes mērogu</translation>
+    </message>
+    <message>
+        <source>Current map scale (formatted as x:y)</source>
+        <translation type="unfinished">Pašreizējais kartes mērogs (formēts kā x:y)</translation>
+    </message>
+    <message>
+        <source>Rotation:</source>
+        <translation type="unfinished">Rotācija:</translation>
+    </message>
+    <message>
+        <source>Current clockwise map rotation in degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shows the current map clockwise rotation in degrees. It also allows editing to set the rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Render</source>
+        <translation type="unfinished">Renderēt</translation>
+    </message>
+    <message>
+        <source>When checked, the map layers are rendered in response to map navigation commands and other events. When not checked, no rendering is done. This allows you to add a large number of layers and symbolize them before rendering.</source>
+        <translation type="unfinished">Ja atzīmēts, kartes slāņi tiek renderēti uzreiz tiklīdz kāda darbība tiek veikta. Ja nav atzīmēts, renderēšana nenotiek. Tas ļauj pievienot lielu daudzumu slāņu un iestatīt tiem apzīmējumus pirms to attēlošanas kartē.</translation>
+    </message>
+    <message>
+        <source>Toggle map rendering</source>
+        <translation type="unfinished">Pārslēdz kartes renderēšanu</translation>
+    </message>
+    <message>
+        <source>This icon shows whether on the fly coordinate reference system transformation is enabled or not. Click the icon to bring up the project properties dialog to alter this behaviour.</source>
+        <translation type="unfinished">Šī ikona rāda vai tūlītēja projekciju maiņa ir ieslēgta vai nē. Klikšķiniet uz ikonas, lai mainītu projekta īpašības.</translation>
+    </message>
+    <message>
+        <source>CRS status - Click to open coordinate reference system dialog</source>
+        <translation type="unfinished">CRS statuss - Klikšķini, lai atvērtu koordinātu sistēmu dialogu</translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation type="unfinished">Gatavs</translation>
+    </message>
+    <message>
+        <source>Messages</source>
+        <translation type="unfinished">Ziņas</translation>
+    </message>
+    <message>
+        <source>Map legend that displays all the layers currently on the map canvas. Click on the check box to turn a layer on or off. Double click on a layer in the legend to customize its appearance and set other properties.</source>
+        <translation type="unfinished">Kartes slāņu saraksts, kas parāda visus kartes skata rāmī esošos slāņus. 
+Uzklikšķiniet uz ķekškastes, lai parādītu / paslēptu slāni. Dubultklikšķis uz slāņa nosaukuma ļaus pielāgot tā attēlošanu un iestatīt citus tā parametrus.</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Group</source>
+        <translation type="unfinished">Pievienot grupu</translation>
+    </message>
+    <message>
+        <source>Manage Layer Visibility</source>
+        <translation type="unfinished">Pārvaldīt slāņu redzamību</translation>
+    </message>
+    <message>
+        <source>Filter Legend By Map Content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expand All</source>
+        <translation type="unfinished">Izplest visu</translation>
+    </message>
+    <message>
+        <source>Collapse All</source>
+        <translation type="unfinished">Sakļaut visu</translation>
+    </message>
+    <message>
+        <source>Map layer list that displays all layers in drawing order.</source>
+        <translation type="unfinished">Kartes slāņu saraksts, kas rāda visus slāņus to zīmēšanas secībā.</translation>
+    </message>
+    <message>
+        <source>Layer order</source>
+        <translation type="unfinished">Slāņu secība</translation>
+    </message>
+    <message>
+        <source>Map coordinates for the current view extents</source>
+        <translation type="unfinished">Kartes koordinātas pašreizējam skatam</translation>
+    </message>
+    <message>
+        <source>Map coordinates at mouse cursor position</source>
+        <translation type="unfinished">Kartes koordinātas peles atrašanās vietā</translation>
+    </message>
+    <message>
+        <source>Extents:</source>
+        <translation type="unfinished">Apjoms: </translation>
+    </message>
+    <message>
+        <source>%1 (OTF)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current CRS: %1 (OTFR enabled)</source>
+        <translation type="unfinished">Pašreizējā CRS: %1 (OTFR ieslēgts)</translation>
+    </message>
+    <message>
+        <source>Current CRS: %1 (OTFR disabled)</source>
+        <translation type="unfinished">Pašreizējā CRS: %1 (OTFR izslēgts)</translation>
     </message>
 </context>
 <context>
@@ -22147,11 +22406,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>UTM</source>
-        <translation type="unfinished">UTM</translation>
+        <translation type="obsolete">UTM</translation>
     </message>
     <message>
-        <source>MGRS</source>
-        <translation type="unfinished"></translation>
+        <source>Select...</source>
+        <translation type="unfinished">Izvēlēties...</translation>
     </message>
 </context>
 <context>
@@ -22198,7 +22457,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Y min</source>
-        <translation>Y min</translation>
+        <translation type="obsolete">Y min</translation>
     </message>
     <message>
         <source>Y max</source>
@@ -22210,7 +22469,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>X min</source>
-        <translation>X min</translation>
+        <translation type="obsolete">X min</translation>
     </message>
     <message>
         <source>...</source>
@@ -22222,10 +22481,6 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Controlled by atlas</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Margin around feature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -22334,7 +22589,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Draw grid</source>
-        <translation>Zīmēt tīklu</translation>
+        <translation type="obsolete">Zīmēt tīklu</translation>
     </message>
     <message>
         <source>Grid type</source>
@@ -22414,7 +22669,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Left</source>
-        <translation>Pa kreisi</translation>
+        <translation type="obsolete">Pa kreisi</translation>
     </message>
     <message>
         <source>Right</source>
@@ -22454,7 +22709,7 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Draw overview</source>
-        <translation>Zīmēt pārskatu</translation>
+        <translation type="obsolete">Zīmēt pārskatu</translation>
     </message>
     <message>
         <source>Map frame</source>
@@ -22502,6 +22757,30 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Lock layer styles for map item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;X min</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Y min</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Margin around feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw &amp;grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw o&amp;verview</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -23962,6 +24241,59 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
 </context>
 <context>
+    <name>QgsCoordinateDisplayer</name>
+    <message>
+        <source>Meters</source>
+        <translation type="unfinished">Metri</translation>
+    </message>
+    <message>
+        <source>Feet</source>
+        <translation type="unfinished">Pēdas</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCoordinateFormat</name>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to open raster file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to get raster geotransform</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to get raster CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to open raster band 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to read pixel values</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsCoordinateSearchProvider</name>
+    <message>
+        <source>Coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsCoordinateTransform</name>
     <message>
         <source>The source spatial reference system (CRS) is not valid. The coordinates can not be reprojected. The CRS is: %1</source>
@@ -24138,6 +24470,13 @@ and current file is [%3]</source>
     <message>
         <source>Realm</source>
         <translation>Vieta</translation>
+    </message>
+</context>
+<context>
+    <name>QgsCrsSelection</name>
+    <message>
+        <source>More...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -24910,7 +25249,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Draw annotation</source>
-        <translation>Zīmēt anotāciju</translation>
+        <translation type="obsolete">Zīmēt anotāciju</translation>
     </message>
     <message>
         <source>Annotation direction</source>
@@ -24975,6 +25314,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Horizontal and Vertical</source>
         <translation>Horizontals un vertikāls</translation>
+    </message>
+    <message>
+        <source>Draw annotations</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -28250,27 +28593,11 @@ Lūdzu izvēlēties derīgu.</translation>
 <context>
     <name>QgsGPSRouteEditor</name>
     <message>
-        <source>GPS Route Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Waypoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Route</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New Object</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit Object</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import from GPX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -28286,31 +28613,51 @@ Lūdzu izvēlēties derīgu.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>GPX Files (*.gpx</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error</source>
-        <translation type="unfinished">Kļūda</translation>
-    </message>
-    <message>
-        <source>Cannot open file for reading: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GPX Import</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 waypoints and %2 routes were read.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kļūda</translation>
     </message>
     <message>
         <source>GPX Files (*.gpx)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot open file for writing: %1</source>
+        <source>waypoint attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>route attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Nosaukums</translation>
+    </message>
+    <message>
+        <source>GPX import failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot read file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX import complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 waypoints, %2 routes and %3 tracks were read.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPX export failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot write to file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -28392,6 +28739,28 @@ Lūdzu izvēlēties derīgu.</translation>
     <message>
         <source>Coordinate Reference System Selector</source>
         <translation>Koordinātu sistēmu izvēle</translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeoAdminRestCatalogProvider</name>
+    <message>
+        <source>Uncategorized</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGeoImageAnnotationItem</name>
+    <message>
+        <source>Could not read image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to read EXIF tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to read position EXIF tags</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -28900,10 +29269,6 @@ Lūdzu izvēlēties derīgu.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to create the output layer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Non-editable Output Format</source>
         <translation type="unfinished"></translation>
     </message>
@@ -28917,6 +29282,10 @@ Lūdzu izvēlēties derīgu.</translation>
     </message>
     <message>
         <source>&lt;b&gt;Waiting for running checks to finish...&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -29245,10 +29614,6 @@ Lūdzu izvēlēties derīgu.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to create the output layer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Non-editable Output Format</source>
         <translation type="unfinished"></translation>
     </message>
@@ -29262,6 +29627,10 @@ Lūdzu izvēlēties derīgu.</translation>
     </message>
     <message>
         <source>&lt;p&gt;The following errors occured:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to create the output layer: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -29925,41 +30294,80 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsGlobeLayerPropertiesFactory</name>
+    <message>
+        <source>Globe</source>
+        <translation type="unfinished">Globuss</translation>
+    </message>
+</context>
+<context>
     <name>QgsGlobePluginDialog</name>
     <message>
         <source>GDAL files</source>
-        <translation>GDAL faili</translation>
+        <translation type="obsolete">GDAL faili</translation>
     </message>
     <message>
         <source>DEM files</source>
-        <translation>DEM faili</translation>
+        <translation type="obsolete">DEM faili</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Visi faili</translation>
+        <translation type="obsolete">Visi faili</translation>
     </message>
     <message>
         <source>Open raster file</source>
-        <translation>Atvērt rastra failu</translation>
+        <translation type="obsolete">Atvērt rastra failu</translation>
     </message>
     <message>
-        <source>Invalid Path: The file is either unreadable or does not exist</source>
+        <source>Custom...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invalid URL: </source>
+        <source>TMS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you want to add the datasource anyway?</source>
+        <source>WMS</source>
+        <translation type="unfinished">WMS</translation>
+    </message>
+    <message>
+        <source>Raster</source>
+        <translation type="unfinished">Rastrs</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open 3D model file</source>
+        <source>Add TMS Imagery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Model files</source>
+        <source>TMS URL:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add WMS Imagery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Raster Imagery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add TMS Elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Raster Elevation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -29975,67 +30383,39 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Type</source>
-        <translation>Tips</translation>
+        <translation type="obsolete">Tips</translation>
     </message>
     <message>
         <source>Raster</source>
-        <translation>Rastrs</translation>
-    </message>
-    <message>
-        <source>TMS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>URL/File</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Rastrs</translation>
     </message>
     <message>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="obsolete">...</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation>Uz augšu</translation>
+        <translation type="obsolete">Uz augšu</translation>
     </message>
     <message>
         <source>Map</source>
         <translation>Karte</translation>
     </message>
     <message>
-        <source>Base Layer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>URL</source>
-        <translation>URL</translation>
+        <translation type="obsolete">URL</translation>
     </message>
     <message>
         <source>TextLabel</source>
-        <translation>TekstaBirka</translation>
-    </message>
-    <message>
-        <source>Sky</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Date / Time (UTC)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">TekstaBirka</translation>
     </message>
     <message>
         <source>dd.MM.yyyy HH:mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Auto ambient</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Vertical Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Down</source>
-        <translation>Uz leju</translation>
+        <translation type="obsolete">Uz leju</translation>
     </message>
     <message>
         <source>Add</source>
@@ -30047,11 +30427,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Cache</source>
-        <translation>Kešatmiņa</translation>
+        <translation type="obsolete">Kešatmiņa</translation>
     </message>
     <message>
         <source>Path</source>
-        <translation type="unfinished">Ceļš</translation>
+        <translation type="obsolete">Ceļš</translation>
     </message>
     <message>
         <source>Video</source>
@@ -30070,20 +30450,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;i&gt;Changing video settings requires a restart of the globe plugin&lt;/i&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Model</source>
-        <translation>Modelis</translation>
-    </message>
-    <message>
-        <source>Point Layer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3D Model</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Modelis</translation>
     </message>
     <message>
         <source>Stereo</source>
@@ -30128,6 +30496,296 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Split stereo horizontal eye mapping</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sk&amp;y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date / Time (UTC):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambient lighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imagery</source>
+        <translation type="unfinished">Attēli</translation>
+    </message>
+    <message>
+        <source>Vertical scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Change requires a restart of the globe plugin&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished">Paplašināti</translation>
+    </message>
+    <message>
+        <source>Scrolling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sensitivity:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invert scroll wheel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable feature identification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable frustum highlighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGlobeVectorLayerPropertiesPage</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Forma</translation>
+    </message>
+    <message>
+        <source>Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain following behaviur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamping</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain following behavior</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain following technique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Technique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Granulatiry at which to sample the terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevation data resolution at which to sample terrain height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished">Izšķirtspēja</translation>
+    </message>
+    <message>
+        <source>Vertical offset to apply to geometry Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset</source>
+        <translation type="unfinished">Nobīde</translation>
+    </message>
+    <message>
+        <source>Scale factor to apply to geometry Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Mērogs</translation>
+    </message>
+    <message>
+        <source>E&amp;xtrusion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extrusion height, either a numeric value, or a field expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation type="unfinished">0</translation>
+    </message>
+    <message>
+        <source>Wall gradient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wall coloring gradient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Whether the top cap of the extruded geometry should be flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flatten</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable &amp;labeling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Declutter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rendering mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rendering method for the layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rasterized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model (Simple)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Model (Advanced)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rasterize the layer to a texture, and drape it on the terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Render the layer features as models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Absolute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map</source>
+        <translation type="unfinished">Karte</translation>
+    </message>
+    <message>
+        <source>Drape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scene</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamp geometry to the map model&apos;s elevation data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamp geometry to the terrain&apos;s scene graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamp geometry to the terrain as they are rendered by the GPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamp geometry at draw time using projective texturing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Centroid</source>
+        <translation type="unfinished">Centroīds</translation>
+    </message>
+    <message>
+        <source>Clamp every vertex independently</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clamp to the centroid of the entire geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsGlobeWidget</name>
+    <message>
+        <source>Globe</source>
+        <translation type="unfinished">Globuss</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sync extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reload scene</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Globe settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Aizvērt</translation>
     </message>
 </context>
 <context>
@@ -32676,6 +33334,17 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     </message>
 </context>
 <context>
+    <name>QgsIAMAuth</name>
+    <message>
+        <source>eIAM Authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authentication successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsIDWInterpolatorDialogBase</name>
     <message>
         <source>Dialog</source>
@@ -33118,296 +33787,204 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Export features intersecting the current map extent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save as</source>
-        <translation type="unfinished">Saglabāt kā</translation>
+        <translation type="obsolete">Saglabāt kā</translation>
     </message>
     <message>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation type="obsolete">...</translation>
+    </message>
+    <message>
+        <source>Output file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only export features intersecting the current map extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select layers to export:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished">Pārlūkot</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation type="unfinished">Formāts</translation>
+    </message>
+    <message>
+        <source>KML</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KMZ</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QgsKadasMainWidget</name>
     <message>
-        <source>Default failed to open: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Default not found: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Commit errors</source>
-        <translation type="unfinished">Ievietošanas kļūdas</translation>
+        <translation type="obsolete">Ievietošanas kļūdas</translation>
     </message>
     <message>
         <source>Could not commit changes to layer %1</source>
-        <translation type="unfinished">Nebija iespējams iesūtīt izmaiņas slānī %1</translation>
+        <translation type="obsolete">Nebija iespējams iesūtīt izmaiņas slānī %1</translation>
     </message>
     <message>
         <source>Errors: %1
 </source>
-        <translation type="unfinished">Kļūdas: %1
+        <translation type="obsolete">Kļūdas: %1
 </translation>
     </message>
     <message>
         <source>Show more</source>
-        <translation type="unfinished">Rādīt vairāk</translation>
+        <translation type="obsolete">Rādīt vairāk</translation>
     </message>
     <message>
         <source>Choose a QGIS project file to open</source>
-        <translation type="unfinished">Izvēlieties QGIS projekta failu ko atvērt</translation>
+        <translation type="obsolete">Izvēlieties QGIS projekta failu ko atvērt</translation>
     </message>
     <message>
         <source>QGIS files</source>
-        <translation type="unfinished">QGIS faili</translation>
+        <translation type="obsolete">QGIS faili</translation>
     </message>
     <message>
         <source>Choose a QGIS project file</source>
-        <translation type="unfinished">Izvēlieties QGIS projekta failu</translation>
+        <translation type="obsolete">Izvēlieties QGIS projekta failu</translation>
     </message>
     <message>
         <source>Insufficient permissions</source>
-        <translation type="unfinished">Nepietiek tiesību</translation>
+        <translation type="obsolete">Nepietiek tiesību</translation>
     </message>
     <message>
         <source>The project file is not writable.</source>
-        <translation type="unfinished">Projekta fails nav rakstāms.</translation>
+        <translation type="obsolete">Projekta fails nav rakstāms.</translation>
     </message>
     <message>
         <source>Unable to save project %1</source>
-        <translation type="unfinished">Nav iespējams saglabāt projektu %1</translation>
+        <translation type="obsolete">Nav iespējams saglabāt projektu %1</translation>
     </message>
     <message>
         <source>Unable to open project</source>
-        <translation type="unfinished">Nav iespējams atvērt projektu</translation>
-    </message>
-    <message>
-        <source>Enable macros</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Nav iespējams atvērt projektu</translation>
     </message>
     <message>
         <source>Security warning</source>
-        <translation type="unfinished">Drošības brīdinājums</translation>
-    </message>
-    <message>
-        <source>project macros have been disabled.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Drošības brīdinājums</translation>
     </message>
     <message>
         <source>Save?</source>
-        <translation type="unfinished">Saglabāt?</translation>
+        <translation type="obsolete">Saglabāt?</translation>
     </message>
     <message>
         <source>Do you want to save the current project? %1</source>
-        <translation type="unfinished">Vai vēlaties saglabāt šo projektu? %1</translation>
+        <translation type="obsolete">Vai vēlaties saglabāt šo projektu? %1</translation>
     </message>
     <message>
         <source>Saved project to: %1</source>
-        <translation type="unfinished">Saglabāt projektu iekš: %1</translation>
+        <translation type="obsolete">Saglabāt projektu iekš: %1</translation>
     </message>
     <message>
         <source>Start editing failed</source>
-        <translation type="unfinished">Rediģēšanas sākšana neizdevās</translation>
+        <translation type="obsolete">Rediģēšanas sākšana neizdevās</translation>
     </message>
     <message>
         <source>Provider cannot be opened for editing</source>
-        <translation type="unfinished">Sniedzējs nevar tikt atvērts rediģēšanai</translation>
+        <translation type="obsolete">Sniedzējs nevar tikt atvērts rediģēšanai</translation>
     </message>
     <message>
         <source>Stop editing</source>
-        <translation type="unfinished">Beigt rediģēšanu</translation>
+        <translation type="obsolete">Beigt rediģēšanu</translation>
     </message>
     <message>
         <source>Do you want to save the changes to layer %1?</source>
-        <translation type="unfinished">Vai vēlies saglabāt veiktās izmaiņas slānim %1?</translation>
+        <translation type="obsolete">Vai vēlies saglabāt veiktās izmaiņas slānim %1?</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">Kļūda</translation>
+        <translation type="obsolete">Kļūda</translation>
     </message>
     <message>
         <source>Problems during roll back</source>
-        <translation type="unfinished">Problēmas pie darbību atcelšanas</translation>
+        <translation type="obsolete">Problēmas pie darbību atcelšanas</translation>
     </message>
 </context>
 <context>
     <name>QgsKadasMainWidgetBase</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Forma</translation>
-    </message>
-    <message>
-        <source>My maps</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Forma</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Kopēt</translation>
-    </message>
-    <message>
-        <source>Copy to 
- clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export
- KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import
- OVL</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kopēt</translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished">Jauns</translation>
+        <translation type="obsolete">Jauns</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished">Atvērt</translation>
+        <translation type="obsolete">Atvērt</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished">Drukāt</translation>
+        <translation type="obsolete">Drukāt</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Saglabāt</translation>
-    </message>
-    <message>
-        <source>Save map
- extent</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Saglabāt</translation>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished">Skats</translation>
-    </message>
-    <message>
-        <source>Zoom last</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zoom next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New map window</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Skats</translation>
     </message>
     <message>
         <source>3D</source>
-        <translation type="unfinished">3D</translation>
+        <translation type="obsolete">3D</translation>
     </message>
     <message>
         <source>Grid</source>
-        <translation type="unfinished">Tīkls</translation>
+        <translation type="obsolete">Tīkls</translation>
     </message>
     <message>
         <source>Analysis</source>
-        <translation type="unfinished">Analīze</translation>
+        <translation type="obsolete">Analīze</translation>
     </message>
     <message>
         <source>Area</source>
-        <translation type="unfinished">Platība</translation>
-    </message>
-    <message>
-        <source>Azimuth</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Platība</translation>
     </message>
     <message>
         <source>Distance</source>
-        <translation type="unfinished">Attālums</translation>
+        <translation type="obsolete">Attālums</translation>
     </message>
     <message>
         <source>Hillshade</source>
-        <translation type="unfinished">Kalna ēna</translation>
-    </message>
-    <message>
-        <source>Line of Sight</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kalna ēna</translation>
     </message>
     <message>
         <source>Circle</source>
-        <translation type="unfinished">Riņķis</translation>
+        <translation type="obsolete">Riņķis</translation>
     </message>
     <message>
         <source>Profile</source>
-        <translation type="unfinished">Profils</translation>
+        <translation type="obsolete">Profils</translation>
     </message>
     <message>
         <source>Slope</source>
-        <translation type="unfinished">Kritums</translation>
-    </message>
-    <message>
-        <source>Viewshed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>WPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Draw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Situation report</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kritums</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">Parametri</translation>
+        <translation type="obsolete">Parametri</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished">Palīdzība</translation>
-    </message>
-    <message>
-        <source>Mouse position:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Coordinate system:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open project</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy to Clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save map extent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import OVL</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Palīdzība</translation>
     </message>
 </context>
 <context>
@@ -34628,6 +35205,10 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
         <source>Use as heightmap</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Mutually Exclusive Group</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -34699,6 +35280,44 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>Load Style</source>
         <translation>Ielādēt stilu</translation>
+    </message>
+</context>
+<context>
+    <name>QgsLocalDataSearchCrawler</name>
+    <message>
+        <source>Local Data Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1: Layer %2, feature %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsLocationSearchProvider</name>
+    <message>
+        <source>Municipalities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cantons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Districts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zip Codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34822,6 +35441,117 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>Canvas refresh: %1 ms</source>
         <translation>Skata atsvaidzināšana: %1 ms</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapCanvasContextMenu</name>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished">Izgriezt</translation>
+    </message>
+    <message>
+        <source>Attributes</source>
+        <translation type="unfinished">Atribūti</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Kopēt</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished">Ievietot</translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Point marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Square marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triangle marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">Līnija</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished">Taisnstūris</translation>
+    </message>
+    <message>
+        <source>Polygon</source>
+        <translation type="unfinished">Poligons</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Riņķis</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished">Teksts</translation>
+    </message>
+    <message>
+        <source>Measure</source>
+        <translation type="unfinished">Mērīt</translation>
+    </message>
+    <message>
+        <source>Length</source>
+        <translation type="unfinished">Garums</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">Platība</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation type="unfinished">Leņķis</translation>
+    </message>
+    <message>
+        <source>Height profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain analysis</source>
+        <translation type="unfinished">Reljefa analīze</translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Kritums</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Kalna ēna</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line of sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">Drukāt</translation>
     </message>
 </context>
 <context>
@@ -35171,6 +35901,25 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     </message>
 </context>
 <context>
+    <name>QgsMapToolDeleteItems</name>
+    <message>
+        <source>Delete items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to delete the following items?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 annotation item(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 items(s) from layer %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsMapToolDeletePart</name>
     <message>
         <source>Delete part</source>
@@ -35262,6 +36011,41 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     </message>
     <message>
         <source>could not add ring since %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapToolHillshade</name>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hillshade setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Azimuth (horizontal angle):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating hillshade...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hillshade [%1]</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -35530,6 +36314,29 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     </message>
 </context>
 <context>
+    <name>QgsMapToolSlope</name>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating slope...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsMapToolSplitFeatures</name>
     <message>
         <source>Coordinate transform error</source>
@@ -35620,6 +36427,37 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     </message>
 </context>
 <context>
+    <name>QgsMapToolViewshed</name>
+    <message>
+        <source>No heightmap is defined in the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right-click a raster layer in the layer tree and select it to be used as heightmap.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculating viewshed...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible</source>
+        <translation type="unfinished">Redzams</translation>
+    </message>
+    <message>
+        <source>Invisible</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsMapToolZoom</name>
     <message>
         <source>Zoom</source>
@@ -35643,6 +36481,21 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>Scale only within the following map unit scale range:</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMapWidget</name>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock with main view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Aizvērt</translation>
     </message>
 </context>
 <context>
@@ -35796,6 +36649,34 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
         <source>Failed to open raster file: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance [m]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heights relative to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ground</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sea level</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -35806,6 +36687,41 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>&lt;p&gt;This map is defined with a geographic coordinate system (latitude/longitude) but the map extents suggests that it is actually a projected coordinate system (e.g., Mercator). If so, the results from line or area measurements will be incorrect.&lt;/p&gt;&lt;p&gt;To fix this, explicitly set an appropriate map coordinate system using the &lt;tt&gt;Settings:Project Properties&lt;/tt&gt; menu.</source>
         <translation>&lt;p&gt;Šī karte ir definēta ģeogrāfiskā koordinātu sistēmā (garums/platums), bet, spriežot pēc kartes apjoma, karte ir projecētā koordinātu sistēmā (piem. Merkatora). Ja tas ir tā, tad attāluma un platības mērījumi būs nepareizi.&lt;/p&gt;&lt;p&gt;Lai šo izlabotu, iestatiet pareizu projekta koordinātu sistēmu iekš &lt;tt&gt;Iestatījumi &gt; Projekta īpašības&lt;/tt&gt;.</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMeasureWidget</name>
+    <message>
+        <source>Total:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished">Grādi</translation>
+    </message>
+    <message>
+        <source>Radians</source>
+        <translation type="unfinished">Radiāni</translation>
+    </message>
+    <message>
+        <source>Gradians</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pick existing geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">Attīrīt</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Aizvērt</translation>
     </message>
 </context>
 <context>
@@ -35961,6 +36877,150 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>Don&apos;t show this message again</source>
         <translation>Turpmāk nerādīt šo paziņojumu</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXAnnotationItem</name>
+    <message>
+        <source>Remove node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXIO</name>
+    <message>
+        <source>Export MilX layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select MilX layers to export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compressed MilX Layer [%1] (*.milxlyz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MilX Layer [%1] (*.milxly)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to open the output file for writing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export Completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export Messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following messages were emitted while exporting:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MilX Layer Files (*.milxly *.milxlyz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Milx Layer File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to open the output file for reading.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file was created by a newer MSS library version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Completed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following messages were emitted while importing:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXLayer</name>
+    <message>
+        <source>The following validation errors occured:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXLibrary</name>
+    <message>
+        <source>MilX Symbol Gallery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading...</source>
+        <translation type="unfinished">Ielādē...</translation>
+    </message>
+    <message>
+        <source>No MilX Layer Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-editable MilX Layer Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Approved layers cannot be edited.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter name of new MilX layer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXPlugin</name>
+    <message>
+        <source>Approved layer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36437,6 +37497,13 @@ uzlabošana</translation>
     <message>
         <source>Blue band</source>
         <translation>Zilais kanāls</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMultiMapManager</name>
+    <message>
+        <source>View #%1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -38319,6 +39386,14 @@ Always network: always load from network and do not check if the cache has a val
         <source>None / Planimetric</source>
         <translation>Nav / plaknes</translation>
     </message>
+    <message>
+        <source>Choose default online project file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose default offline project file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsOptionsBase</name>
@@ -39400,6 +40475,18 @@ Always network: always load from network and do not check if the cache has a val
     </message>
     <message>
         <source>Use pro&amp;xy for web access</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Online project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offline project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Online mode test URL:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -40858,6 +41945,40 @@ Error: %2</source>
     <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+</context>
+<context>
+    <name>QgsPinAnnotationItem</name>
+    <message>
+        <source>Copy position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Noņemt</translation>
+    </message>
+    <message>
+        <source>Pin attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsPinSearchProvider</name>
+    <message>
+        <source>Pins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pin %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42793,6 +43914,28 @@ Proceed?</source>
     </message>
     <message>
         <source>Exclusive layer groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsProjectTemplateSelectionDialog</name>
+    <message>
+        <source>Create</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsProjectTemplateSelectionDialogBase</name>
+    <message>
+        <source>Create New Project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create a new pro&amp;ject from a template</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create a new blan&amp;k project</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -45027,16 +46170,41 @@ standard deviation ×</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Border/Size:</source>
+        <source>label</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedliningEditTool</name>
+    <message>
+        <source>Remove node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Outline:</source>
+        <source>Add node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fill:</source>
+        <source>Remove object</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedliningLayerProperties</name>
+    <message>
+        <source>Layer Properties - %1</source>
+        <translation type="unfinished">Slāņa īpašības - %1</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRedliningLayerPropertiesBase</name>
+    <message>
+        <source>Layer Properties</source>
+        <translation type="unfinished">Slāņa īpašības</translation>
     </message>
 </context>
 <context>
@@ -45255,6 +46423,13 @@ standard deviation ×</source>
     </message>
 </context>
 <context>
+    <name>QgsRemoteDataSearchProvider</name>
+    <message>
+        <source>Remote Data Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsRendererRulePropsDialog</name>
     <message>
         <source>Rule properties</source>
@@ -45462,6 +46637,399 @@ standard deviation ×</source>
     <message>
         <source>Type</source>
         <translation type="unfinished">Tips</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRibbonApp</name>
+    <message>
+        <source>System language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add vector layer</source>
+        <translation type="unfinished">Pievienot vektordatu slāni</translation>
+    </message>
+    <message>
+        <source>Add raster layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On the fly projection enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Camera Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not add picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language Changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The language will be changed at the next program launch.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting to GPS device...</source>
+        <translation type="unfinished">Savienojas ar GPS iekārtu...</translation>
+    </message>
+    <message>
+        <source>GPS connection closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS device successfully connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection to GPS device failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsRibbonLayerTreeViewMenuProvider</name>
+    <message>
+        <source>&amp;Remove</source>
+        <translation type="unfinished">&amp;Noņemt</translation>
+    </message>
+    <message>
+        <source>&amp;Properties</source>
+        <translation type="unfinished">Ī&amp;pašības</translation>
+    </message>
+</context>
+<context>
+    <name>QgsRibbonStatusWidget</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Forma</translation>
+    </message>
+    <message>
+        <source>GPS:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;Black: disconnected&lt;br /&gt;Blue: connecting&lt;br /&gt;White: no data&lt;br /&gt;Red: no fix&lt;br /&gt;Yellow: 2D fix&lt;br /&gt;Green: 3D fix&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mouse position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinate system:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsRibbonTopWidget</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Forma</translation>
+    </message>
+    <message>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">Drukāt</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished">Jauns</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished">Atvērt</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Saglabāt</translation>
+    </message>
+    <message>
+        <source>Export
+ KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">Skats</translation>
+    </message>
+    <message>
+        <source>3D</source>
+        <translation type="unfinished">3D</translation>
+    </message>
+    <message>
+        <source>Previous Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New map window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Grid</source>
+        <translation type="unfinished">Tīkls</translation>
+    </message>
+    <message>
+        <source>Next Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished">Analīze</translation>
+    </message>
+    <message>
+        <source>Profile
+Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation type="unfinished">Riņķis</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished">Attālums</translation>
+    </message>
+    <message>
+        <source>Area</source>
+        <translation type="unfinished">Platība</translation>
+    </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Kalna ēna</translation>
+    </message>
+    <message>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Kritums</translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fill:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+    <message>
+        <source>Size:</source>
+        <translation type="unfinished">Izmērs:</translation>
+    </message>
+    <message>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move with GPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw Waypoints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable GPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw Routes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MilX Symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export MILXLY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import MILXLY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Symbol size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>International</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CH</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import OVL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Parametri</translation>
+    </message>
+    <message>
+        <source>Show numeric input box when drawing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height unit:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">Palīdzība</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished">Par</translation>
+    </message>
+    <message>
+        <source>Open project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile &amp; Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile and Line of Sight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Map to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Map to Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom to previous Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom to next Extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Camera Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsRibbonWindowBase</name>
+    <message>
+        <source>MainWindow</source>
+        <translation type="unfinished">GalvenaisLogs</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Geodata</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Local Dataset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Catalog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SAML Authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading...</source>
+        <translation type="unfinished">Ielādē...</translation>
     </message>
 </context>
 <context>
@@ -45860,6 +47428,41 @@ standard deviation ×</source>
     </message>
     <message>
         <source>A widget to define the scale.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsSearchBox</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Meklēt</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished">Attīrīt</translation>
+    </message>
+    <message>
+        <source>No filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter by polygon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search for Places, Coordinates, Adresses, ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -48933,285 +50536,53 @@ p, li { white-space: pre-wrap; }
     <name>QgsVBSCoordinateDisplayer</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished">Kļūda</translation>
-    </message>
-    <message>
-        <source>Failed to open raster file: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSCoordinateSearchProvider</name>
-    <message>
-        <source>Coordinates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>zone</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSCrsSelection</name>
-    <message>
-        <source>More...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSFunctionality</name>
-    <message>
-        <source>Import ovl</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compute slope</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compute viewshed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compute hillshade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>On the fly projection enabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSHillshadeTool</name>
-    <message>
-        <source>Hillshade setup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Azimuth (horizontal angle):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Vertical angle:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Calculating hillshade...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hillshade [%1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSLocalDataSearchCrawler</name>
-    <message>
-        <source>Local data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1: Layer %2, feature %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSLocationSearchProvider</name>
-    <message>
-        <source>Places</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Municipalities</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cantons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Districts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zip Codes</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kļūda</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSMapWidget</name>
     <message>
-        <source>Layers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Lock with main view</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Close</source>
-        <translation type="unfinished">Aizvērt</translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSMultiMapManager</name>
-    <message>
-        <source>Add Map View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>View #%1</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Aizvērt</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSOvlImporter</name>
     <message>
-        <source>Select OVL File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OVL Files (*.ovl);;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error</source>
-        <translation type="unfinished">Kļūda</translation>
-    </message>
-    <message>
-        <source>Cannot open file for reading: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OVL Import</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 features were imported.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kļūda</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSPinAnnotationItem</name>
     <message>
-        <source>Position: %1
-Height: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy position</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Remove</source>
-        <translation type="unfinished">Noņemt</translation>
+        <translation type="obsolete">Noņemt</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSRemoteDataSearchProvider</name>
     <message>
         <source>Feature</source>
-        <translation type="unfinished">Objekts</translation>
+        <translation type="obsolete">Objekts</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSSearchBox</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Meklēt</translation>
+        <translation type="obsolete">Meklēt</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished">Attīrīt</translation>
-    </message>
-    <message>
-        <source>No filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter by radius</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter by rectangle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter by polygon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSSlopeTool</name>
-    <message>
-        <source>Calculating slope...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slope [%1]</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Attīrīt</translation>
     </message>
 </context>
 <context>
     <name>QgsVBSViewshedTool</name>
     <message>
-        <source>Viewshed setup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Observer height:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Target height:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Radius:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Calculating viewshed...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Viewshed [%1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Visible</source>
-        <translation type="unfinished">Redzams</translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSWorldLocationSearchProvider</name>
-    <message>
-        <source>World Places</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Redzams</translation>
     </message>
 </context>
 <context>
@@ -50316,6 +51687,49 @@ Kļūda bija %2</translation>
     </message>
 </context>
 <context>
+    <name>QgsViewshedDialog</name>
+    <message>
+        <source>Viewshed setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Observer height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heights relative to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ground</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sea level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Visible area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invisible area</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsVisibilityPresets</name>
     <message>
         <source>Add Preset...</source>
@@ -50331,6 +51745,22 @@ Kļūda bija %2</translation>
     </message>
     <message>
         <source>Name of the new preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide all layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show selected layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide selected layers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -52009,6 +53439,13 @@ Reason phrase: %2</source>
     </message>
 </context>
 <context>
+    <name>QgsWorldLocationSearchProvider</name>
+    <message>
+        <source>World Places</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsZonalStatisticsDialogBase</name>
     <message>
         <source>Raster layer:</source>
@@ -52470,10 +53907,6 @@ Please configure it before running R scripts.</source>
 <context>
     <name>RedliningTextDialog</name>
     <message>
-        <source>Text Properties</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Font:</source>
         <translation type="unfinished">Fonts:</translation>
     </message>
@@ -52492,6 +53925,14 @@ Please configure it before running R scripts.</source>
     <message>
         <source>Rotation:</source>
         <translation type="unfinished">Rotācija:</translation>
+    </message>
+    <message>
+        <source>Edit Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> pt</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -52519,6 +53960,17 @@ Please configure it before running R scripts.</source>
     <message>
         <source>Regular points</source>
         <translation>Regulāri punkti</translation>
+    </message>
+</context>
+<context>
+    <name>RemarksEdit</name>
+    <message>
+        <source>Open link...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy link location</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -53391,27 +54843,6 @@ Problem with line %d</source>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Smtp</name>
-    <message>
-        <source>Message sent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Qt Simple SMTP client</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unexpected reply from SMTP server:
-
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to send message</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
