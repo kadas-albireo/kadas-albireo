@@ -231,9 +231,9 @@ QgsMapToolDrawPoint::QgsMapToolDrawPoint( QgsMapCanvas *canvas )
   mRubberBand->setIconType( QgsGeometryRubberBand::ICON_CIRCLE );
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawPoint::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton /*button*/ )
+QgsMapToolDrawShape::State QgsMapToolDrawPoint::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button )
 {
-  if ( !press )
+  if ( !press && button == Qt::LeftButton )
   {
     mPoints.append( QList<QgsPoint>() << pos );
     return mMultipart ? StateReady : StateFinished;
@@ -502,9 +502,9 @@ void QgsMapToolDrawPolyLine::inputChanged()
 QgsMapToolDrawRectangle::QgsMapToolDrawRectangle( QgsMapCanvas* canvas )
     : QgsMapToolDrawShape( canvas, true ) {}
 
-QgsMapToolDrawShape::State QgsMapToolDrawRectangle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton /*button*/ )
+QgsMapToolDrawShape::State QgsMapToolDrawRectangle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
 {
-  if ( press && mState == StateReady )
+  if ( press && button == Qt::LeftButton && mState == StateReady )
   {
     mP1.append( pos );
     mP2.append( pos );
@@ -631,9 +631,9 @@ void QgsMapToolDrawRectangle::inputChanged()
 QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas )
     : QgsMapToolDrawShape( canvas, true ) {}
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton /*button*/ )
+QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
 {
-  if ( press && mState == StateReady )
+  if ( press && button == Qt::LeftButton && mState == StateReady )
   {
     mCenters.append( pos );
     mRadii.append( 0. );
@@ -808,9 +808,9 @@ void QgsMapToolDrawCircle::radiusInputChanged()
 QgsMapToolDrawCircularSector::QgsMapToolDrawCircularSector( QgsMapCanvas* canvas )
     : QgsMapToolDrawShape( canvas, true ), mSectorStage( HaveNothing ) {}
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton /*button*/ )
+QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
 {
-  if ( press )
+  if ( press && button == Qt::LeftButton )
   {
     if ( mSectorStage == HaveNothing )
     {
