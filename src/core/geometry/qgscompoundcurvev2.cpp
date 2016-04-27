@@ -334,6 +334,14 @@ QgsLineStringV2* QgsCompoundCurveV2::curveToLine() const
   QgsLineStringV2* currentLine = 0;
   for ( ; curveIt != mCurves.constEnd(); ++curveIt )
   {
+    if ( curveIt != mCurves.constBegin() )
+    {
+      int lastVertex = line->numPoints() - 1;
+      if ( lastVertex >= 0 )
+      {
+        line->deleteVertex( QgsVertexId( 0, 0, lastVertex ) );
+      }
+    }
     currentLine = ( *curveIt )->curveToLine();
     line->append( currentLine );
     delete currentLine;

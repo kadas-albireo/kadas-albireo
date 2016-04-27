@@ -138,6 +138,8 @@ class QgsWMSConfigParser
 
     virtual QSet<QString> subLayersOfGroup( const QString& groupName ) const = 0;
 
+    virtual bool allowRequestDefinedDatasources() const { return true; }
+
     /**Adds highlight layers to the layer registry and to the layer set. Returns the ids of the newly created layers (for later removal)*/
     static QStringList addHighlightLayers( const QMap<QString, QString>& parameterMap, QStringList& layerSet, const QString& parameterPrefix = QString() );
     static void removeHighlightLayers( const QStringList& layerIds );

@@ -202,8 +202,6 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="mActionHelpContents"/>
-    <addaction name="mActionHelpAPI"/>
     <addaction name="separator"/>
     <addaction name="mActionQgisHomePage"/>
     <addaction name="separator"/>
@@ -1512,7 +1510,7 @@
      <normaloff>:/images/themes/default/mActionQgisHomePage.png</normaloff>:/images/themes/default/mActionQgisHomePage.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;QGIS Home Page</string>
+    <string>QGIS Enterprise Homepage</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>

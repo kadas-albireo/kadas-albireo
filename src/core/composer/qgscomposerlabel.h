@@ -157,6 +157,9 @@ class CORE_EXPORT QgsComposerLabel: public QgsComposerItem
     */
     virtual void setFrameOutlineWidth( const double outlineWidth ) override;
 
+    void setMaxLength( int l ) { mMaxLength = l; }
+    int maxLength() const { return mMaxLength; }
+
   public slots:
     void refreshExpressionContext();
 
@@ -201,6 +204,9 @@ class CORE_EXPORT QgsComposerLabel: public QgsComposerItem
     QgsVectorLayer* mExpressionLayer;
     QMap<QString, QVariant> mSubstitutions;
     QgsDistanceArea* mDistanceArea;
+
+    /**Maximum length (in characters) or -1 if no limit*/
+    int mMaxLength;
 };
 
 #endif

@@ -1588,6 +1588,11 @@ QgsGeometry *QgsGeometry::unaryUnion( const QList<QgsGeometry*> &geometryList, Q
   }
 
   QgsAbstractGeometryV2* geom = geos.combine( geomV2List, errorMsg );
+  if ( !geom )
+  {
+    return 0;
+  }
+
   return new QgsGeometry( geom );
 }
 

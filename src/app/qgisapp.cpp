@@ -1273,7 +1273,7 @@ void QgisApp::createOverview()
 
   mapCanvas()->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
 
-  mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", false ).toBool() );
+  mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", true ).toBool() );
 
   mapCanvas()->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
 }
@@ -4307,7 +4307,15 @@ void QgisApp::checkForDeprecatedLabelsInProject()
 
 void QgisApp::layerProperties()
 {
-  showLayerProperties( activeLayer() );
+  QgsMapLayer* layer = activeLayer();
+  if ( layer )
+  {
+    showLayerProperties( layer );
+  }
+  else
+  {
+    groupProperties();
+  }
 }
 
 void QgisApp::groupProperties()
@@ -6585,7 +6593,7 @@ void QgisApp::showOptionsDialog( QWidget *parent, QString currentPage )
 
     mapCanvas()->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
 
-    mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", false ).toBool() );
+    mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", true ).toBool() );
 
     mapCanvas()->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
 
@@ -6779,7 +6787,7 @@ void QgisApp::supportProviders()
 
 void QgisApp::helpQgisHomePage()
 {
-  openURL( "http://qgis.org", false );
+  openURL( "http://qgisenterprise.com", false );
 }
 
 void QgisApp::openURL( QString url, bool useQgisDocDirectory )

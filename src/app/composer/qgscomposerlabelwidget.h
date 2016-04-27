@@ -46,6 +46,8 @@ class QgsComposerLabelWidget: public QgsComposerItemBaseWidget, private Ui::QgsC
     void on_mTopRadioButton_clicked();
     void on_mBottomRadioButton_clicked();
     void on_mMiddleRadioButton_clicked();
+    void on_mLengthLimitCheckBox_stateChanged( int state );
+    void on_mLengthLimitSpinBox_valueChanged( int i );
 
   private slots:
     void setGuiElementValues();

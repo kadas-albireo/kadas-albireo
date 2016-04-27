@@ -284,6 +284,10 @@ bool QgsComposerLegend::writeXML( QDomElement& elem, QDomDocument & doc ) const
   composerLegendElem.setAttribute( "wrapChar", mSettings.wrapChar() );
   composerLegendElem.setAttribute( "fontColor", mSettings.fontColor().name() );
 
+  //write "iconLabelSpace", "symbolSpace" for compatibility (e.g. needed by WMS Server)
+  composerLegendElem.setAttribute( "iconLabelSpace", style( QgsComposerLegendStyle::SymbolLabel ).margin( QgsComposerLegendStyle::Left ) );
+  composerLegendElem.setAttribute( "symbolSpace", style( QgsComposerLegendStyle::Symbol ).margin( QgsComposerLegendStyle::Top ) );
+
   if ( mComposerMap )
   {
     composerLegendElem.setAttribute( "map", mComposerMap->id() );

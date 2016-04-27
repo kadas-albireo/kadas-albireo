@@ -721,14 +721,16 @@ QString QgsWMSServer::getLegendGraphicHtml()
   // TODO: not available: layer title space
   legendSettings.rstyle( QgsComposerLegendStyle::Symbol ).setMargin( QgsComposerLegendStyle::Top, symbolSpace );
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setMargin( QgsComposerLegendStyle::Left, iconLabelSpace );
-  legendSettings.setSymbolSize( QSizeF( symbolWidth, symbolHeight ) );
   legendSettings.rstyle( QgsComposerLegendStyle::Subgroup ).setFont( layerFont );
   legendSettings.rstyle( QgsComposerLegendStyle::SymbolLabel ).setFont( itemFont );
   // TODO: not available: layer font color
   legendSettings.setFontColor( itemFontColor );
   legendSettings.setWMSLegend( true );
 
-
+  if ( scaleDenominator > 0 )
+  {
+    legendSettings.setMapScale( scaleDenominator );
+  }
 
   //create first image (to find out dpi)
   QImage* theImage = createImage( 10, 10 );
@@ -736,6 +738,10 @@ QString QgsWMSServer::getLegendGraphicHtml()
   {
     return emptyHtml();
   }
+
+  legendSettings.setDpi( theImage->dotsPerMeterX() * 25.4 / 1000.0 );
+  double dotsPerMM = theImage->dotsPerMeterX() / 1000.0;
+  legendSettings.setSymbolSize( QSizeF( symbolWidth, symbolHeight ) );
 
   // Create the layer tree root
   QgsLayerTreeGroup rootGroup;
@@ -775,7 +781,7 @@ QString QgsWMSServer::getLegendGraphicHtml()
       continue;
     }
 
-    bool showLayerTitle = ( layerTitle && layer /*&& layer->wmsShowLegendTitle()*/ );
+    bool showLayerTitle = ( layerTitle && layer && layer->wmsShowLegendTitle() );
     if ( layerTitle || ruleLabel )
     {
       htmlString.append( "<TABLE border=\"1\" width=\"100%\">\n" );
@@ -794,19 +800,6 @@ QString QgsWMSServer::getLegendGraphicHtml()
       double currentSymbolHeight = symbolHeight;
       double currentSymbolWidth = symbolWidth;
 
-      //embed png image directly
-      QImage img( currentSymbolWidth + 0.5, currentSymbolHeight + 0.5, QImage::Format_ARGB32_Premultiplied );
-      img.setDotsPerMeterX( theImage->dotsPerMeterX() );
-      img.setDotsPerMeterY( theImage->dotsPerMeterY() );
-      img.fill( 0 );
-      QPainter p;
-      p.begin( &img );
-
-      QgsLayerTreeModelLegendNode::ItemContext itemCtx;
-      itemCtx.painter = &p;
-      itemCtx.point = QPointF( 0.0, 0.0 );
-      itemCtx.labelXOffset = 0;
-
       if ( layerTitle || ruleLabel )
       {
         htmlString.append( "<TR>\n" );
@@ -817,7 +810,25 @@ QString QgsWMSServer::getLegendGraphicHtml()
         continue;
       }
 
-      QSizeF size = ( *lIt )->drawSymbol( legendSettings, &itemCtx, symbolHeight );
+      QSizeF size = ( *lIt )->drawSymbol( legendSettings, 0, symbolHeight );
+
+      //embed png image directly
+      QImage img( size.width() * dotsPerMM + 1.0, size.height() * dotsPerMM + 1.0, QImage::Format_ARGB32_Premultiplied );
+      img.setDotsPerMeterX( theImage->dotsPerMeterX() );
+      img.setDotsPerMeterY( theImage->dotsPerMeterY() );
+      img.fill( 0 );
+      QPainter p;
+      p.begin( &img );
+      p.setRenderHint( QPainter::Antialiasing, true );
+      p.scale( dotsPerMM, dotsPerMM );
+
+      QgsLayerTreeModelLegendNode::ItemContext itemCtx;
+      itemCtx.point = QPointF( 0.0, 0.0 );
+      itemCtx.labelXOffset = 0;
+      itemCtx.painter = 0;
+      itemCtx.painter = &p;
+
+      ( *lIt )->drawSymbol( legendSettings, &itemCtx, symbolHeight );
 
       QByteArray ba;
       QBuffer buffer( &ba );
@@ -1511,6 +1522,12 @@ QImage* QgsWMSServer::getMap( HitTest* hitTest )
   QStringList layersList, stylesList, layerIdList;
   QImage* theImage = initializeRendering( layersList, stylesList, layerIdList );
 
+  if ( !theImage )
+  {
+    QgsMessageLog::logMessage( "Initialisation paint device failed", "Server", QgsMessageLog::CRITICAL );
+    return 0;
+  }
+
   QPainter thePainter( theImage );
   thePainter.setRenderHint( QPainter::Antialiasing ); //make it look nicer
 
@@ -1901,6 +1918,12 @@ QImage* QgsWMSServer::initializeRendering( QStringList& layersList, QStringList&
   QString gml = mParameters.value( "GML" );
   if ( !gml.isEmpty() )
   {
+    if ( !mConfigParser->allowRequestDefinedDatasources() )
+    {
+      QgsMessageLog::logMessage( "The project configuration does not allow datasources defined in the request", "Server", QgsMessageLog::CRITICAL );
+      return 0;
+    }
+
     QDomDocument* gmlDoc = new QDomDocument();
     if ( gmlDoc->setContent( gml, true ) )
     {
@@ -2147,9 +2170,8 @@ int QgsWMSServer::initializeSLDParser( QStringList& layersList, QStringList& sty
 
     if ( !theDocument->setContent( xml, true, &errorMsg, &errorLine, &errorColumn ) )
     {
-      //std::cout << xml.toAscii().data() << std::endl;
-      QgsDebugMsg( "Error, could not create DomDocument from SLD" );
-      QgsDebugMsg( QString( "The error message is: %1" ).arg( errorMsg ) );
+      QgsMessageLog::logMessage( QString( "Could not create xml document from SLD. Error: %1, line %2, column %3" ).arg( errorMsg ).arg( errorLine ).arg( errorColumn ),
+                                 "Server", QgsMessageLog::CRITICAL );
       delete theDocument;
       return 1;
     }

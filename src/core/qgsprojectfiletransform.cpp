@@ -28,6 +28,7 @@
 #include <cstdlib>
 #include "qgsproject.h"
 #include "qgsprojectproperty.h"
+#include "qgssymbollayerv2utils.h"
 
 typedef QgsProjectVersion PFV;
 
@@ -57,6 +58,7 @@ QgsProjectFileTransform::transform QgsProjectFileTransform::transformers[] =
   {PFV( 2, 0, 0 ), PFV( 2, 1, 0 ), &QgsProjectFileTransform::transformNull},
   {PFV( 2, 1, 0 ), PFV( 2, 2, 0 ), &QgsProjectFileTransform::transformNull},
   {PFV( 2, 2, 0 ), PFV( 2, 3, 0 ), &QgsProjectFileTransform::transform2200to2300},
+  {PFV( 2, 3, 0 ), PFV( 2, 15, 0 ), &QgsProjectFileTransform::transform2300to21500},
 };
 
 bool QgsProjectFileTransform::updateRevision( QgsProjectVersion newVersion )
@@ -607,6 +609,189 @@ void QgsProjectFileTransform::transform2200to2300()
     QDomElement picture = composerPictureList.at( i ).toElement();
     picture.setAttribute( "anchorPoint", QString::number( 4 ) );
   }
+}
+
+void QgsProjectFileTransform::transform2300to21500()
+{
+  //changed symbol layers
+  QDomNodeList symbolLayerNodeList = mDom.elementsByTagName( "layer" );
+  for ( int i = 0; i < symbolLayerNodeList.size(); ++i )
+  {
+    QDomElement layerElem = symbolLayerNodeList.at( i ).toElement();
+    QString layerClass = layerElem.attribute( "class" );
+
+    if ( layerClass == "SimpleLine" )
+    {
+      QDomNodeList propNodeList = layerElem.elementsByTagName( "prop" );
+      for ( int j = 0; j < propNodeList.size(); ++j )
+      {
+        QDomElement propElem = propNodeList.at( j ).toElement();
+        QString key = propElem.attribute( "k" );
+        //color -> line_color
+        if ( key == "color" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_color" );
+        }
+        //width -> line_width
+        else if ( key == "width" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_width" );
+        }
+        //width_unit -> line_width_unit
+        else if ( key == "width_unit" )
+        {
+          propElem.removeAttribute( "k" );
+          propElem.setAttribute( "k", "line_width_unit" );
+        }
+      }
+    }
+  }
+
+  //line pattern
+  for ( int i = 0; i < symbolLayerNodeList.size(); ++i )
+  {
+    QDomElement layerElem = symbolLayerNodeList.at( i ).toElement();
+    QString layerClass = layerElem.attribute( "class" );
+    if ( layerClass == "LinePatternFill" )
+    {
+      QDomElement symbolElem = layerElem.firstChildElement( "symbol" );
+      if ( symbolElem.isNull() )
+      {
+        continue;
+      }
+
+      double outlineAlpha = 1.0;
+      if ( symbolElem.hasAttribute( "alpha" ) )
+      {
+        outlineAlpha = symbolElem.attribute( "alpha" ).toDouble();
+        symbolElem.setAttribute( "alpha", 1.0 );
+      }
+
+      QDomElement outlineElem = symbolElem.firstChildElement( "layer" );
+      if ( outlineElem.isNull() )
+      {
+        continue;
+      }
+
+      //copy child <layer> element as second layer for the outline
+      QDomElement copyLineLayerElem = outlineElem.cloneNode().toElement();
+      QDomNodeList copyLinePropList = copyLineLayerElem.elementsByTagName( "prop" );
+      for ( int j = 0; j < copyLinePropList.size(); ++j )
+      {
+        QDomElement propElem = copyLinePropList.at( j ).toElement();
+        if ( propElem.attribute( "k" ) == "line_color" )
+        {
+          QColor lineColor = QgsSymbolLayerV2Utils::decodeColor( propElem.attribute( "v" ) );
+          lineColor.setAlpha( outlineAlpha * 255.0 );
+          propElem.setAttribute( "v", QgsSymbolLayerV2Utils::encodeColor( lineColor ) );
+          break;
+        }
+      }
+
+      //<prop k="line_color" v="0,0,0,255"/>
+
+      layerElem.parentNode().insertAfter( copyLineLayerElem, layerElem );
+
+      //remove line_color, line_width properties below outlineElem
+      QDomNodeList outlinePropNodeList = outlineElem.elementsByTagName( "prop" );
+      for ( int j = outlinePropNodeList.size() - 1; j >= 0; --j )
+      {
+        QDomElement propElem = outlinePropNodeList.at( j ).toElement();
+        QString key = propElem.attribute( "k" );
+        if ( key == "line_color" || key == "line_width" )
+        {
+          outlineElem.removeChild( propElem );
+        }
+      }
+
+      //copy line_color, line_width properties from layerElem to outlineElem
+      QDomNodeList layerChildList = layerElem.childNodes();
+      for ( int j = 0; j < layerChildList.size(); ++j )
+      {
+        QDomElement propElem = layerChildList.at( j ).toElement();
+        if ( propElem.tagName() != "prop" )
+        {
+          continue;
+        }
+
+        QString key = propElem.attribute( "k" );
+        if ( key == "color" )
+        {
+          QDomElement lineColorElem = mDom.createElement( "prop" );
+          lineColorElem.setAttribute( "k", "line_color" );
+          lineColorElem.setAttribute( "v", propElem.attribute( "v" ) );
+          outlineElem.appendChild( lineColorElem );
+        }
+        else if ( key == "linewidth" )
+        {
+          QDomElement lineWidthElem = mDom.createElement( "prop" );
+          lineWidthElem.setAttribute( "k", "line_width" );
+          lineWidthElem.setAttribute( "v", propElem.attribute( "v" ) );
+          outlineElem.appendChild( lineWidthElem );
+        }
+      }
+    }
+  }
+
+  //composer
+
+  // rotation -> itemRotation
+  QDomNodeList composerItemNodeList = mDom.elementsByTagName( "ComposerItem" );
+  for ( int i = 0; i < composerItemNodeList.size(); ++i )
+  {
+    QDomElement itemElem = composerItemNodeList.at( i ).toElement();
+    if ( itemElem.hasAttribute( "rotation" ) )
+    {
+      double rotation = itemElem.attribute( "rotation" ).toDouble();
+
+      if ( qgsDoubleNear( rotation, 90.0 ) || qgsDoubleNear( rotation, 270.0 ) )
+      {
+        //calculate new x/y, width / height
+        double xBefore = itemElem.attribute( "x" ).toDouble();
+        double yBefore = itemElem.attribute( "y" ).toDouble();
+        double widthBefore = itemElem.attribute( "width" ).toDouble();
+        double heightBefore = itemElem.attribute( "height" ).toDouble();
+
+        QTransform rotationTransform;
+        rotationTransform.rotate( -rotation );
+
+        QPointF p1( -widthBefore / 2.0, -heightBefore / 2.0 );
+        QPointF p2( widthBefore / 2.0,  -heightBefore / 2.0 );
+        QPointF p3( widthBefore / 2.0,  heightBefore / 2.0 );
+        QPointF p4( -widthBefore / 2.0, heightBefore / 2.0 );
+
+        QPolygonF boundingPoly;
+        boundingPoly.append( rotationTransform.map( p1 ) );
+        boundingPoly.append( rotationTransform.map( p2 ) );
+        boundingPoly.append( rotationTransform.map( p3 ) );
+        boundingPoly.append( rotationTransform.map( p4 ) );
+
+        QRectF rotatedRect = boundingPoly.boundingRect();
+
+        double widthAfter = rotatedRect.width();
+        double heightAfter = rotatedRect.height();
+
+        if ( qgsDoubleNear( rotation, 90.0 ) )
+        {
+          itemElem.setAttribute( "x",  xBefore + widthBefore );
+          itemElem.setAttribute( "y", yBefore );
+        }
+        else //270
+        {
+          itemElem.setAttribute( "x",  xBefore );
+          itemElem.setAttribute( "y", yBefore + heightBefore );
+        }
+        itemElem.setAttribute( "width", widthAfter );
+        itemElem.setAttribute( "height", heightAfter );
+      }
+
+      itemElem.setAttribute( "itemRotation", itemElem.attribute( "rotation" ) );
+      itemElem.removeAttribute( "rotation" );
+    }
+  }
+
 }
 
 void QgsProjectFileTransform::convertRasterProperties( QDomDocument& doc, QDomNode& parentNode,

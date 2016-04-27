@@ -16,12 +16,16 @@
 #include "qgsmaplayerlegend.h"
 
 #include <QSettings>
-
+#include "qgsapplication.h"
+#include "qgsfillsymbollayerv2.h"
 #include "qgslayertree.h"
 #include "qgslayertreemodellegendnode.h"
+#include "qgslinesymbollayerv2.h"
+#include "qgsmarkersymbollayerv2.h"
 #include "qgspluginlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsrendererv2.h"
+#include "qgssymbolv2.h"
 #include "qgsvectorlayer.h"
 
 
@@ -198,9 +202,34 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultVectorLayerLegend::createLayerTree
     nodes.append( new QgsSimpleLegendNode( nodeLayer, r->legendClassificationAttribute() ) );
   }
 
-  foreach ( const QgsLegendSymbolItemV2& i, r->legendSymbolItemsV2() )
+  QgsLegendSymbolListV2 legendSymbolList = r->legendSymbolItemsV2();
+
+  //check if the layer is a label layer only
+  bool labelLayer = true;
+  QgsLegendSymbolListV2::const_iterator it = legendSymbolList.constBegin();
+  for ( ; it != legendSymbolList.constEnd(); ++it )
   {
-    nodes.append( new QgsSymbolV2LegendNode( nodeLayer, i ) );
+    if ( !legendSymbolIsEmpty( *it ) )
+    {
+      labelLayer = false;
+    }
+  }
+
+  if ( mLayer->customProperty( "labeling/enabled", "false" ).toString().compare( "false", Qt::CaseInsensitive ) == 0 )
+  {
+    labelLayer = false;
+  }
+
+  if ( labelLayer )
+  {
+    nodes.append( new QgsVectorLabelLegendNode( nodeLayer ) );
+  }
+  else
+  {
+    for ( int i = 0; i < legendSymbolList.size(); ++i )
+    {
+      nodes.append( new QgsSymbolV2LegendNode( nodeLayer, legendSymbolList.at( i ) ) );
+    }
   }
 
   if ( nodes.count() == 1 && nodes[0]->data( Qt::EditRole ).toString().isEmpty() )
@@ -209,7 +238,67 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultVectorLayerLegend::createLayerTree
   return nodes;
 }
 
+bool QgsDefaultVectorLayerLegend::legendSymbolIsEmpty( const QgsLegendSymbolItemV2& symbolItem )
+{
+  //symbol has dedicated legend symbol
+  if ( symbolItem.legendSymbol() )
+  {
+    return false;
+  }
 
+  QgsSymbolV2* symbol = symbolItem.symbol();
+  if ( !symbol )
+  {
+    return true;
+  }
+
+  if ( symbol->symbolLayerCount() > 1 )
+  {
+    return false;
+  }
+
+  if ( symbol->type() == QgsSymbolV2::Marker )
+  {
+    QgsSimpleMarkerSymbolLayerV2* simpleMarker = dynamic_cast<QgsSimpleMarkerSymbolLayerV2*>( symbol->symbolLayer( 0 ) );
+    if ( !simpleMarker )
+    {
+      return false;
+    }
+
+    if ( simpleMarker-> size() <= 0 || ( simpleMarker->fillColor().alpha() <= 0 && simpleMarker->outlineColor().alpha() <= 0 ) )
+    {
+      return true;
+    }
+  }
+  else if ( symbol->type() == QgsSymbolV2::Line )
+  {
+    QgsSimpleLineSymbolLayerV2* simpleLine = dynamic_cast<QgsSimpleLineSymbolLayerV2*>( symbol->symbolLayer( 0 ) );
+    if ( !simpleLine )
+    {
+      return false;
+    }
+
+    if ( simpleLine->width() <= 0 || simpleLine->color().alpha() <= 0 )
+    {
+      return true;
+    }
+  }
+  else if ( symbol->type() == QgsSymbolV2::Fill )
+  {
+    QgsSimpleFillSymbolLayerV2* simpleFill = dynamic_cast<QgsSimpleFillSymbolLayerV2*>( symbol->symbolLayer( 0 ) );
+    if ( !simpleFill )
+    {
+      return false;
+    }
+
+    if ( simpleFill->fillColor().alpha() <= 0 && simpleFill->outlineColor().alpha() <= 0 )
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 // -------------------------------------------------------------------------
 
@@ -228,6 +317,24 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultRasterLayerLegend::createLayerTree
   if ( mLayer->dataProvider()->supportsLegendGraphic() )
   {
     nodes << new QgsWMSLegendNode( nodeLayer );
+  }
+
+  //for palletted and multiband raster symbolisation, we only show an icon instead of all the color entries
+  QgsRasterRenderer* rasterRenderer = mLayer->renderer();
+  if ( !rasterRenderer )
+  {
+    return nodes;
+  }
+
+  if ( rasterRenderer->type() == "paletted" )
+  {
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QImage( QgsApplication::iconsPath() + "paletted_raster.png" ) );
+    return nodes;
+  }
+  else if ( rasterRenderer->type() == "multibandcolor" )
+  {
+    nodes << new QgsSimpleLegendNode( nodeLayer, QString(), QImage( QgsApplication::iconsPath() + "multibandcolor_raster.png" ) );
+    return nodes;
   }
 
   QgsLegendColorList rasterItemList = mLayer->legendSymbologyItems();
@@ -277,7 +384,7 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultPluginLayerLegend::createLayerTree
   typedef QPair<QString, QPixmap> XY;
   foreach ( XY item, symbologyList )
   {
-    nodes << new QgsSimpleLegendNode( nodeLayer, item.first, QIcon( item.second ) );
+    nodes << new QgsSimpleLegendNode( nodeLayer, item.first, item.second.toImage() );
   }
 
   return nodes;

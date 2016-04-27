@@ -216,7 +216,7 @@ SET(SIP_EXTRA_FILES_DEPEND ${sip_files_core} ${sip_files_network_analysis})
 SET(SIP_EXTRA_OPTIONS ${PYQT4_SIP_FLAGS} -o -a ${CMAKE_BINARY_DIR}/python/qgis.networkanalysis.api)
 ADD_SIP_PYTHON_MODULE(qgis._networkanalysis analysis/network/networkanalysis.sip qgis_core qgis_networkanalysis)
 
-SET(QGIS_PYTHON_DIR ${PYTHON_SITE_PACKAGES_DIR}/qgis)
+SET(QGIS_PYTHON_DIR ${PYTHON_SITE_PACKAGES_DIR}/${QGIS_APP_NAME})
 
 IF(WITH_QSCIAPI)
   # wait until after python module builds for api files to be available
@@ -252,7 +252,7 @@ IF(WITH_QSCIAPI)
 ENDIF(WITH_QSCIAPI)
 
 IF(WITH_CUSTOM_WIDGETS)
-  INSTALL(FILES custom_widgets/qgis_customwidgets.py DESTINATION "${PYUIC_WIDGET_PLUGIN_DIRECTORY}")
+  INSTALL(FILES custom_widgets/qgis_customwidgets.py DESTINATION "${PYUIC_WIDGET_PLUGIN_DIRECTORY}" RENAME ${QGIS_APP_NAME}_customwidgets.py)
 ENDIF(WITH_CUSTOM_WIDGETS)
 
 # Plugin utilities files to copy to staging or install

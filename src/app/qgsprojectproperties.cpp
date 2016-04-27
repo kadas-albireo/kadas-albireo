@@ -108,6 +108,8 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   QgsDebugMsg( "Read project CRSID: " + QString::number( mProjectSrsId ) );
   projectionSelector->setSelectedCrsId( mProjectSrsId );
 
+  mMapTileRenderingCheckBox->setChecked( mMapCanvas->mapSettings().testFlag( QgsMapSettings::RenderMapTile ) );
+
   // see end of constructor for updating of projection selector
 
   ///////////////////////////////////////////////////////////
@@ -366,6 +368,9 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas* mapCanvas, QWidget *pa
   bool addWktGeometry = QgsProject::instance()->readBoolEntry( "WMSAddWktGeometry", "/" );
   mAddWktGeometryCheckBox->setChecked( addWktGeometry );
 
+  bool requestDefinedSources = QgsProject::instance()->readBoolEntry( "WMSRequestDefinedDataSources", "/", false );
+  mAllowRequestDefinedDataSourcesBox->setChecked( requestDefinedSources );
+
   bool useLayerIDs = QgsProject::instance()->readBoolEntry( "WMSUseLayerIDs", "/" );
   mWmsUseLayerIDs->setChecked( useLayerIDs );
 
@@ -620,6 +625,8 @@ void QgsProjectProperties::apply()
   mMapCanvas->setMapUnits( mapUnit );
   mMapCanvas->setCrsTransformEnabled( cbxProjectionEnabled->isChecked() );
 
+  mMapCanvas->enableMapTileRendering( mMapTileRenderingCheckBox->isChecked() );
+
   // Only change the projection if there is a node in the tree
   // selected that has an srid. This prevents error if the user
   // selects a top-level node rather than an actual coordinate
@@ -868,6 +875,7 @@ void QgsProjectProperties::apply()
   }
 
   QgsProject::instance()->writeEntry( "WMSAddWktGeometry", "/", mAddWktGeometryCheckBox->isChecked() );
+  QgsProject::instance()->writeEntry( "WMSRequestDefinedDataSources", "/", mAllowRequestDefinedDataSourcesBox->isChecked() );
   QgsProject::instance()->writeEntry( "WMSUseLayerIDs", "/", mWmsUseLayerIDs->isChecked() );
 
   QString maxWidthText = mMaxWidthLineEdit->text();

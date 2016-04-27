@@ -515,7 +515,7 @@ QString QgsDataSourceURI::uri() const
   if ( mWkbType != QGis::WKBUnknown && mWkbType != QGis::WKBNoGeometry )
   {
     theUri += " type=";
-    theUri += QgsWKBTypes::displayString( QgsWKBTypes::flatType(( QgsWKBTypes::Type( mWkbType ) ) ) );
+    theUri += QgsWKBTypes::displayString( QgsWKBTypes::Type( mWkbType ) );
   }
 
   if ( mSelectAtIdDisabled )

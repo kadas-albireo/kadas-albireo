@@ -615,6 +615,8 @@ IF (UNIX)
   TARGET_LINK_LIBRARIES(qgis.g.info m)
 ENDIF (UNIX)
 
+SET_TARGET_PROPERTIES(qgisgrass PROPERTIES OUTPUT_NAME ${QGIS_APP_NAME}grass)
+
 ########################################################
 # Install
 

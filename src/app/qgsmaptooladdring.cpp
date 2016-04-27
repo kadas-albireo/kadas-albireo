@@ -83,19 +83,27 @@ void QgsMapToolAddRing::canvasMapReleaseEvent( QgsMapMouseEvent * e )
 
     vlayer->beginEditCommand( tr( "Ring added" ) );
 
-    //does compoundcurve contain circular strings?
-    //does provider support circular strings?
-    bool hasCurvedSegments = captureCurve()->hasCurvedSegments();
+    //convert to linestring or keep as compound curve
     bool providerSupportsCurvedSegments = vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::CircularGeometries;
 
     QgsCurveV2* curveToAdd = 0;
-    if ( hasCurvedSegments && providerSupportsCurvedSegments )
+    if ( QgsWKBTypes::isCurvedType( QgsWKBTypes::Type( vlayer->wkbType() ) ) && providerSupportsCurvedSegments )
     {
       curveToAdd = dynamic_cast<QgsCurveV2*>( captureCurve()->clone() );
     }
     else
     {
       curveToAdd = captureCurve()->curveToLine();
+    }
+
+    //consider z/m support
+    if ( QgsWKBTypes::hasZ( QgsWKBTypes::Type( vlayer->wkbType() ) ) )
+    {
+      curveToAdd->addZValue();
+    }
+    if ( QgsWKBTypes::hasM( QgsWKBTypes::Type( vlayer->wkbType() ) ) )
+    {
+      curveToAdd->addMValue();
     }
 
     int addRingReturnCode = vlayer->addRing( curveToAdd );

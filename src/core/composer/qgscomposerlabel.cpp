@@ -47,6 +47,7 @@ QgsComposerLabel::QgsComposerLabel( QgsComposition *composition )
     , mExpressionFeature( 0 )
     , mExpressionLayer( 0 )
     , mDistanceArea( 0 )
+    , mMaxLength( -1 )
 {
   mDistanceArea = new QgsDistanceArea();
   mHtmlUnitsToMM = htmlUnitsToMM();
@@ -205,6 +206,10 @@ double QgsComposerLabel::htmlUnitsToMM()
 void QgsComposerLabel::setText( const QString& text )
 {
   mText = text;
+  if ( mMaxLength >= 0 )
+  {
+    mText.truncate( mMaxLength );
+  }
   emit itemChanged();
 
   if ( mComposition && id().isEmpty() && !mHtmlState )
@@ -333,13 +338,25 @@ void QgsComposerLabel::setMarginY( const double margin )
 
 void QgsComposerLabel::adjustSizeToText()
 {
-  double textWidth = QgsComposerUtils::textWidthMM( mFont, displayText() );
+  QString text = displayText();
+  double maxTextWidth = 0;
+
+  QStringList multiLineSplit = text.split( "\n" );
+  QStringList::const_iterator mlSplitIt = multiLineSplit.constBegin();
+  for ( ; mlSplitIt != multiLineSplit.constEnd(); ++mlSplitIt )
+  {
+    double currentTextWidth = textWidthMillimeters( mFont, *mlSplitIt );
+    if ( currentTextWidth > maxTextWidth )
+    {
+      maxTextWidth = currentTextWidth;
+    }
+  }
   double fontHeight = QgsComposerUtils::fontHeightMM( mFont );
 
   double penWidth = hasFrame() ? ( pen().widthF() / 2.0 ) : 0;
 
-  double width = textWidth + 2 * mMarginX + 2 * penWidth + 1;
-  double height = fontHeight + 2 * mMarginY + 2 * penWidth;
+  double width = maxTextWidth + 2 * mMarginX + 2 * penWidth + 1;
+  double height = multiLineSplit.size() * ( fontHeight + 2 * mMarginY + 2 * penWidth );
 
   //keep alignment point constant
   double xShift = 0;
@@ -374,6 +391,7 @@ bool QgsComposerLabel::writeXML( QDomElement& elem, QDomDocument & doc ) const
   composerLabelElem.setAttribute( "marginY", QString::number( mMarginY ) );
   composerLabelElem.setAttribute( "halign", mHAlignment );
   composerLabelElem.setAttribute( "valign", mVAlignment );
+  composerLabelElem.setAttribute( "maxLength", mMaxLength );
 
   //font
   QDomElement labelFontElem = doc.createElement( "LabelFont" );
@@ -426,6 +444,8 @@ bool QgsComposerLabel::readXML( const QDomElement& itemElem, const QDomDocument&
 
   //Vertical alignment
   mVAlignment = ( Qt::AlignmentFlag )( itemElem.attribute( "valign" ).toInt() );
+
+  mMaxLength = itemElem.attribute( "maxLength", "-1" ).toInt();
 
   //font
   QDomNodeList labelFontList = itemElem.elementsByTagName( "LabelFont" );

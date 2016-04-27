@@ -132,7 +132,7 @@ void QgsMapToolAddPart::canvasMapReleaseEvent( QgsMapMouseEvent * e )
       bool providerSupportsCurvedSegments = vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::CircularGeometries;
 
       QgsCurveV2* curveToAdd = 0;
-      if ( hasCurvedSegments && providerSupportsCurvedSegments )
+      if ( hasCurvedSegments && providerSupportsCurvedSegments && QgsWKBTypes::isCurvedType( QgsWKBTypes::Type( vlayer->wkbType() ) ) )
       {
         curveToAdd = dynamic_cast<QgsCurveV2*>( captureCurve()->clone() );
       }

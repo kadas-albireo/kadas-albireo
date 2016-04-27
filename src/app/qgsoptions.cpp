@@ -560,7 +560,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   //Changed to default to true as of QGIS 1.7
   chkAntiAliasing->setChecked( settings.value( "/qgis/enable_anti_aliasing", true ).toBool() );
   chkUseRenderCaching->setChecked( settings.value( "/qgis/enable_render_caching", true ).toBool() );
-  chkParallelRendering->setChecked( settings.value( "/qgis/parallel_rendering", false ).toBool() );
+  chkParallelRendering->setChecked( settings.value( "/qgis/parallel_rendering", true ).toBool() );
   spinMapUpdateInterval->setValue( settings.value( "/qgis/map_update_interval", 250 ).toInt() );
   chkMaxThreads->setChecked( QgsApplication::maxThreads() != -1 );
   spinMaxThreads->setEnabled( chkMaxThreads->isChecked() );

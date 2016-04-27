@@ -47,6 +47,7 @@ class QgsGeometrySnapperDialog: public QDialog
     void updateLayers();
     void validateInput();
     void selectOutputFile();
+    void progressStep();
 };
 
 #endif // QGS_GEOMETRY_SNAPPER_DIALOG_H

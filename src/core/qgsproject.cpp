@@ -1442,6 +1442,11 @@ QString QgsProject::readPath( QString src ) const
 
   QString srcPath = src;
   QString projPath = fileName();
+  QFileInfo projFi( projPath );
+  if ( projFi.exists() )
+  {
+    projPath = projFi.canonicalFilePath();
+  }
 
   if ( projPath.isEmpty() )
   {
@@ -1498,15 +1503,12 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
     return src;
   }
 
-  QFileInfo srcFileInfo( src );
-  QFileInfo projFileInfo( fileName() );
-  QString srcPath = srcFileInfo.exists() ? srcFileInfo.canonicalFilePath() : src;
-  QString projPath = projFileInfo.canonicalFilePath();
+  QString proj = relativeBasePath.isNull() ? fileName() : relativeBasePath;
 
-  if ( !relativeBasePath.isNull() )
-  {
-    projPath = relativeBasePath;
-  }
+  QFileInfo srcFileInfo( src );
+  QFileInfo projFileInfo( proj );
+  QString srcPath = srcFileInfo.exists() ? srcFileInfo.canonicalFilePath() : src;
+  QString projPath = projFileInfo.exists() ? projFileInfo.canonicalFilePath() : proj;
 
   if ( projPath.isEmpty() )
   {

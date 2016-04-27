@@ -19,6 +19,7 @@
 #ifndef QGSLAYERTREEMODELLEGENDNODE_H
 #define QGSLAYERTREEMODELLEGENDNODE_H
 
+#include <QFont>
 #include <QIcon>
 #include <QObject>
 
@@ -175,6 +176,26 @@ class CORE_EXPORT QgsSymbolV2LegendNode : public QgsLayerTreeModelLegendNode
     bool mSymbolUsesMapUnits;
 };
 
+class CORE_EXPORT QgsVectorLabelLegendNode : public QgsLayerTreeModelLegendNode
+{
+  public:
+    QgsVectorLabelLegendNode( QgsLayerTreeLayer* nodeLayer, QObject* parent = 0 );
+    ~QgsVectorLabelLegendNode();
+
+    virtual QVariant data( int role ) const override;
+    QSizeF drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const override;
+
+  private:
+    QFont mFont;
+    bool mLabelsEnabled;
+    QColor mFontColor;
+    double mFontSize;
+    bool mFontSizeInMapUnits;
+    QString mLayerLabel;
+
+    void updateSettings();
+};
+
 
 /**
  * Implementation of legend node interface for displaying arbitrary label with icon.
@@ -184,14 +205,17 @@ class CORE_EXPORT QgsSymbolV2LegendNode : public QgsLayerTreeModelLegendNode
 class CORE_EXPORT QgsSimpleLegendNode : public QgsLayerTreeModelLegendNode
 {
   public:
-    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QIcon& icon = QIcon(), QObject* parent = 0, const QString& key = QString() );
+    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QIcon& icon, QObject* parent = 0, const QString& key = QString() );
+    QgsSimpleLegendNode( QgsLayerTreeLayer* nodeLayer, const QString& label, const QImage& img = QImage(), QObject* parent = 0, const QString& key = QString() );
 
     virtual QVariant data( int role ) const override;
+
+    QSizeF drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const override;
 
   private:
     QString mLabel;
     QString mId;
-    QIcon mIcon;
+    QImage mImage;
     QString mKey;
 };
 

@@ -282,8 +282,6 @@ void QgsGeometrySnapperDialog::run()
   /** Run **/
   QEventLoop evLoop;
   QFutureWatcher<void> futureWatcher;
-  connect( &futureWatcher, SIGNAL( progressRangeChanged( int, int ) ), ui.progressBar, SLOT( setRange( int, int ) ) );
-  connect( &futureWatcher, SIGNAL( progressValueChanged( int ) ), ui.progressBar, SLOT( setValue( int ) ) );
   connect( &futureWatcher, SIGNAL( finished() ), &evLoop, SLOT( quit() ) );
   connect( ui.buttonBox->button( QDialogButtonBox::Abort ), SIGNAL( clicked() ), &futureWatcher, SLOT( cancel() ) );
 
@@ -296,6 +294,8 @@ void QgsGeometrySnapperDialog::run()
   ui.widgetInputs->setEnabled( false );
 
   QgsGeometrySnapper snapper( layer, referenceLayer, selectedOnly, ui.doubleSpinBoxMaxDistance->value(), &mIface->mapCanvas()->mapSettings() );
+  connect( &snapper, SIGNAL( progressRangeChanged( int, int ) ), ui.progressBar, SLOT( setRange( int, int ) ) );
+  connect( &snapper, SIGNAL( progressStep() ), this, SLOT( progressStep() ) );
   futureWatcher.setFuture( snapper.processFeatures() );
   evLoop.exec();
 
@@ -317,5 +317,10 @@ void QgsGeometrySnapperDialog::run()
     QMessageBox::warning( this, tr( "Errors occurred" ), tr( "<p>The following errors occured:</p><ul><li>%1</li></ul>" ).arg( snapper.getErrors().join( "</li><li>" ) ) );
   }
   hide();
+}
+
+void QgsGeometrySnapperDialog::progressStep()
+{
+  ui.progressBar->setValue( ui.progressBar->value() + 1 );
 }
 

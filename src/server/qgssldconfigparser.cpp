@@ -22,6 +22,7 @@
 #include "qgslabelattributes.h"
 #include "qgslogger.h"
 #include "qgsmapserviceexception.h"
+#include "qgsmessagelog.h"
 #include "qgsrasterlayer.h"
 #include "qgsrendererv2.h"
 #include "qgssinglesymbolrendererv2.h"
@@ -1561,6 +1562,17 @@ QDomElement QgsSLDConfigParser::findUserLayerElement( const QString& layerName )
 
 QgsMapLayer* QgsSLDConfigParser::mapLayerFromUserLayer( const QDomElement& userLayerElem, const QString& layerName, bool allowCaching ) const
 {
+  if ( !mFallbackParser )
+  {
+    return 0;
+  }
+
+  if ( !mFallbackParser->allowRequestDefinedDatasources() )
+  {
+    QgsMessageLog::logMessage( "The project configuration does not allow datasources defined in the request", "Server", QgsMessageLog::CRITICAL );
+    return 0;
+  }
+
   QgsDebugMsg( "Entering." );
   QgsMSLayerBuilder* layerBuilder = 0;
   QDomElement builderRootElement;
@@ -1741,6 +1753,15 @@ void QgsSLDConfigParser::legendPermissionFilter( QStringList& layerIds ) const
   {
     mFallbackParser->legendPermissionFilter( layerIds );
   }
+}
+
+bool QgsSLDConfigParser::allowRequestDefinedDatasources() const
+{
+  if ( mFallbackParser )
+  {
+    return mFallbackParser->allowRequestDefinedDatasources();
+  }
+  return false;
 }
 
 

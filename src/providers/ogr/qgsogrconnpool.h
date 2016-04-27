@@ -35,7 +35,8 @@ inline QString qgsConnectionPool_ConnectionToName( QgsOgrConn* c )
 inline void qgsConnectionPool_ConnectionCreate( QString connInfo, QgsOgrConn*& c )
 {
   c = new QgsOgrConn;
-  c->ds = OGROpen( connInfo.toUtf8().constData(), false, NULL );
+  QString filePath = connInfo.left( connInfo.indexOf( "|" ) );
+  c->ds = OGROpen( filePath.toUtf8().constData(), false, NULL );
   c->path = connInfo;
   c->valid = true;
 }
@@ -102,7 +103,12 @@ class QgsOgrConnPool : public QgsConnectionPool<QgsOgrConn*, QgsOgrConnPoolGroup
     {
       mMutex.lock();
       T_Groups::iterator it = mGroups.find( connInfo );
-      Q_ASSERT( it != mGroups.end() );
+      if ( it == mGroups.end() )
+      {
+        mMutex.unlock();
+        return;
+      }
+
       if ( it.value()->unref() )
       {
         delete it.value();

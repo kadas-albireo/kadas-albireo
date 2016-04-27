@@ -115,90 +115,12 @@ class CORE_EXPORT QGis
       WKBMultiPolygon25D
     };
 
-    static WkbType singleType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBMultiPoint:         return WKBPoint;
-        case WKBMultiLineString:    return WKBLineString;
-        case WKBMultiPolygon:       return WKBPolygon;
-        case WKBMultiPoint25D:      return WKBPoint25D;
-        case WKBMultiLineString25D: return WKBLineString25D;
-        case WKBMultiPolygon25D:    return WKBPolygon25D;
-        default:                    return type;
-      }
-    }
-
-    static WkbType multiType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBPoint:         return WKBMultiPoint;
-        case WKBLineString:    return WKBMultiLineString;
-        case WKBPolygon:       return WKBMultiPolygon;
-        case WKBPoint25D:      return WKBMultiPoint25D;
-        case WKBLineString25D: return WKBMultiLineString25D;
-        case WKBPolygon25D:    return WKBMultiPolygon25D;
-        default:               return type;
-      }
-    }
-
-    static WkbType flatType( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBPoint25D:           return WKBPoint;
-        case WKBLineString25D:      return WKBLineString;
-        case WKBPolygon25D:         return WKBPolygon;
-        case WKBMultiPoint25D:      return WKBMultiPoint;
-        case WKBMultiLineString25D: return WKBMultiLineString;
-        case WKBMultiPolygon25D:    return WKBMultiPolygon;
-        default:                    return type;
-      }
-    }
-
-    static bool isSingleType( WkbType type )
-    {
-      switch ( flatType( type ) )
-      {
-        case WKBPoint:
-        case WKBLineString:
-        case WKBPolygon:
-          return true;
-        default:
-          return false;
-      }
-    }
-
-    static bool isMultiType( WkbType type )
-    {
-      switch ( flatType( type ) )
-      {
-        case WKBMultiPoint:
-        case WKBMultiLineString:
-        case WKBMultiPolygon:
-          return true;
-        default:
-          return false;
-      }
-    }
-
-    static int wkbDimensions( WkbType type )
-    {
-      switch ( type )
-      {
-        case WKBUnknown:            return 0;
-        case WKBNoGeometry:         return 0;
-        case WKBMixedGeometry:      return 0;
-        case WKBPoint25D:           return 3;
-        case WKBLineString25D:      return 3;
-        case WKBPolygon25D:         return 3;
-        case WKBMultiPoint25D:      return 3;
-        case WKBMultiLineString25D: return 3;
-        case WKBMultiPolygon25D:    return 3;
-        default:                    return 2;
-      }
-    }
+    static WkbType singleType( WkbType type );
+    static WkbType multiType( WkbType type );
+    static WkbType flatType( WkbType type );
+    static bool isSingleType( WkbType type );
+    static bool isMultiType( WkbType type );
+    static int wkbDimensions( WkbType type );
 
     enum GeometryType
     {

@@ -317,6 +317,11 @@ void QgsMapCanvas::enableAntiAliasing( bool theFlag )
     mMapOverview->enableAntiAliasing( theFlag );
 } // anti aliasing
 
+void QgsMapCanvas::enableMapTileRendering( bool theFlag )
+{
+  mSettings.setFlag( QgsMapSettings::RenderMapTile, theFlag );
+}
+
 void QgsMapCanvas::useImageToRender( bool theFlag )
 {
   Q_UNUSED( theFlag );
@@ -1054,28 +1059,33 @@ void QgsMapCanvas::zoomToSelected( QgsVectorLayer* layer )
   }
 
   QgsRectangle rect = mapSettings().layerExtentToOutputExtent( layer, layer->boundingBoxOfSelected() );
-
-  // no selected features, only one selected point feature
-  //or two point features with the same x- or y-coordinates
-  if ( rect.isEmpty() )
-  {
-    // zoom in
-    QgsPoint c = rect.center();
-    rect = extent();
-    rect.scale( 1.0, &c );
-  }
-  //zoom to an area
-  else
-  {
-    // Expand rect to give a bit of space around the selected
-    // objects so as to keep them clear of the map boundaries
-    // The same 5% should apply to all margins.
-    rect.scale( 1.05 );
-  }
-
-  setExtent( rect );
-  refresh();
+  zoomToFeatureExtent( rect );
 } // zoomToSelected
+
+void QgsMapCanvas::zoomToFeatureId( QgsVectorLayer* layer, QgsFeatureId id )
+{
+  if ( !layer )
+  {
+    return;
+  }
+
+  QgsFeatureIterator it = layer->getFeatures( QgsFeatureRequest().setFilterFid( id ).setSubsetOfAttributes( QgsAttributeList() ) );
+
+  QgsFeature fet;
+  if ( !it.nextFeature( fet ) )
+  {
+    return;
+  }
+
+  QgsGeometry* geom = fet.geometry();
+  if ( !geom )
+  {
+    return;
+  }
+
+  QgsRectangle rect = mapSettings().layerExtentToOutputExtent( layer, geom->boundingBox() );
+  zoomToFeatureExtent( rect );
+}
 
 void QgsMapCanvas::panToSelected( QgsVectorLayer* layer )
 {
@@ -1731,6 +1741,30 @@ void QgsMapCanvas::moveCanvasContents( bool reset )
   setSceneRect( -pnt.x(), -pnt.y(), viewport()->size().width(), viewport()->size().height() );
 }
 
+void QgsMapCanvas::zoomToFeatureExtent( QgsRectangle& rect )
+{
+  // no selected features, only one selected point feature
+  //or two point features with the same x- or y-coordinates
+  if ( rect.isEmpty() )
+  {
+    // zoom in
+    QgsPoint c = rect.center();
+    rect = extent();
+    rect.scale( 1.0, &c );
+  }
+  //zoom to an area
+  else
+  {
+    // Expand rect to give a bit of space around the selected
+    // objects so as to keep them clear of the map boundaries
+    // The same 5% should apply to all margins.
+    rect.scale( 1.05 );
+  }
+
+  setExtent( rect );
+  refresh();
+}
+
 void QgsMapCanvas::showError( QgsMapLayer * mapLayer )
 {
   Q_UNUSED( mapLayer );
@@ -1838,6 +1872,7 @@ void QgsMapCanvas::readProject( const QDomDocument & doc )
     setExtent( tmpSettings.extent() );
     setRotation( tmpSettings.rotation() );
     mSettings.datumTransformStore() = tmpSettings.datumTransformStore();
+    enableMapTileRendering( tmpSettings.testFlag( QgsMapSettings::RenderMapTile ) );
 
     clearExtentHistory(); // clear the extent history on project load
   }

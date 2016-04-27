@@ -133,6 +133,8 @@ class QgsSLDConfigParser : public QgsWMSConfigParser
 
     void legendPermissionFilter( QStringList& layerIds ) const;
 
+    bool allowRequestDefinedDatasources() const;
+
   private:
 
     /**SLD as dom document*/

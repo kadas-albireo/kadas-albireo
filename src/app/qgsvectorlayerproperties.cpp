@@ -253,6 +253,7 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
   mWMSMetadataCheckBox->setChecked( layer->wmsPublishMetadata() );
   mWMSLegendCheckBox->setChecked( layer->wmsPublishLegend() );
   mWMSCheckboxBox->setChecked( layer->wmsCheckable() );
+  mWMSLegendTitleCheckBox->setChecked( layer->wmsShowLegendTitle() );
   mLayerKeywordListLineEdit->setText( layer->keywordList() );
   mLayerDataUrlLineEdit->setText( layer->dataUrl() );
   mLayerDataUrlFormatComboBox->setCurrentIndex(
@@ -584,6 +585,7 @@ void QgsVectorLayerProperties::apply()
   layer->setWMSPublishLegend( mWMSLegendCheckBox->isChecked() );
   layer->setWMSPublishMetadata( mWMSMetadataCheckBox->isChecked() );
   layer->setWMSCheckable( mWMSCheckboxBox->isChecked() );
+  layer->setWMSShowLegendTitle( mWMSLegendTitleCheckBox->isChecked() );
   layer->setKeywordList( mLayerKeywordListLineEdit->text() );
   layer->setDataUrl( mLayerDataUrlLineEdit->text() );
   layer->setDataUrlFormat( mLayerDataUrlFormatComboBox->currentText() );

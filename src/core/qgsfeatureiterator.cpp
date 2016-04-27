@@ -52,6 +52,7 @@ bool QgsAbstractFeatureIterator::nextFeature( QgsFeature& f )
       break;
   }
 
+#if 0 //turn of client side simplification, since too error prone
   // simplify the geometry using the simplifier configured
   if ( dataOk && mLocalSimplification )
   {
@@ -59,6 +60,7 @@ bool QgsAbstractFeatureIterator::nextFeature( QgsFeature& f )
     if ( geometry )
       simplify( f );
   }
+#endif //0
   return dataOk;
 }
 

@@ -184,6 +184,124 @@ void QgsOgrProvider::repack()
   }
 }
 
+void QgsOgrProvider::open()
+{
+  bool openReadOnly = false;
+
+  // Try to open using VSIFileHandler
+  //   see http://trac.osgeo.org/gdal/wiki/UserDocs/ReadInZip
+  QString vsiPrefix = QgsZipItem::vsiPrefix( dataSourceUri() );
+  if ( vsiPrefix != "" )
+  {
+    // GDAL>=1.8.0 has write support for zip, but read and write operations
+    // cannot be interleaved, so for now just use read-only.
+    openReadOnly = true;
+    if ( !mFilePath.startsWith( vsiPrefix ) )
+    {
+      mFilePath = vsiPrefix + mFilePath;
+      setDataSourceUri( mFilePath );
+    }
+    QgsDebugMsg( QString( "Trying %1 syntax, mFilePath= %2" ).arg( vsiPrefix ).arg( mFilePath ) );
+  }
+
+  QgsDebugMsg( "mFilePath: " + mFilePath );
+  QgsDebugMsg( "mLayerIndex: " + QString::number( mLayerIndex ) );
+  QgsDebugMsg( "mLayerName: " + mLayerName );
+  QgsDebugMsg( "mSubsetString: " + mSubsetString );
+  CPLSetConfigOption( "OGR_ORGANIZE_POLYGONS", "ONLY_CCW" );  // "SKIP" returns MULTIPOLYGONs for multiringed POLYGONs
+
+  if ( mFilePath.startsWith( "MySQL:" ) && !mLayerName.isEmpty() )
+  {
+    mFilePath += ",tables=" + mLayerName;
+  }
+
+  // first try to open in update mode (unless specified otherwise)
+  if ( !openReadOnly )
+    ogrDataSource = OGROpen( TO8F( mFilePath ), true, &ogrDriver );
+
+  if ( ogrDataSource )
+  {
+    mWriteAccess = true;
+  }
+  else
+  {
+    QgsDebugMsg( "OGR failed to opened in update mode, trying in read-only mode" );
+
+    // try to open read-only
+    ogrDataSource = OGROpen( TO8F( mFilePath ), false, &ogrDriver );
+
+    //TODO Need to set a flag or something to indicate that the layer
+    //TODO is in read-only mode, otherwise edit ops will fail
+    //TODO: capabilities() should now reflect this; need to test.
+  }
+
+  if ( ogrDataSource )
+  {
+    QgsDebugMsg( "OGR opened using Driver " + QString( OGR_Dr_GetName( ogrDriver ) ) );
+
+    ogrDriverName = OGR_Dr_GetName( ogrDriver );
+
+    // We get the layer which was requested by the uri. The layername
+    // has precedence over the layerid if both are given.
+    if ( mLayerName.isNull() )
+    {
+      ogrOrigLayer = OGR_DS_GetLayer( ogrDataSource, mLayerIndex );
+    }
+    else
+    {
+      ogrOrigLayer = OGR_DS_GetLayerByName( ogrDataSource, TO8( mLayerName ) );
+    }
+
+    ogrLayer = ogrOrigLayer;
+    if ( ogrLayer )
+    {
+      // check that the initial encoding setting is fit for this layer
+      setEncoding( encoding() );
+
+      valid = setSubsetString( mSubsetString );
+      if ( valid )
+      {
+        QgsDebugMsg( "Data source is valid" );
+      }
+      else
+      {
+        QgsMessageLog::logMessage( tr( "Data source is invalid (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
+      }
+    }
+    else
+    {
+      QgsMessageLog::logMessage( tr( "Data source is invalid, no layer found (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
+    }
+  }
+  else
+  {
+    QgsMessageLog::logMessage( tr( "Data source is invalid (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
+  }
+}
+
+void QgsOgrProvider::close()
+{
+  if ( ogrLayer != ogrOrigLayer )
+  {
+    OGR_DS_ReleaseResultSet( ogrDataSource, ogrLayer );
+  }
+
+  QgsOgrConnPool::instance()->unref( mFilePath );
+  repack();
+
+  if ( ogrDataSource )
+  {
+    OGR_DS_Destroy( ogrDataSource );
+  }
+  ogrDataSource = 0;
+
+  if ( extent_ )
+  {
+    free( extent_ );
+    extent_ = 0;
+  }
+}
+
 
 QgsVectorLayerImport::ImportError QgsOgrProvider::createEmptyLayer(
   const QString& uri,
@@ -346,97 +464,7 @@ QgsOgrProvider::QgsOgrProvider( QString const & uri )
     }
   }
 
-  bool openReadOnly = false;
-
-  // Try to open using VSIFileHandler
-  //   see http://trac.osgeo.org/gdal/wiki/UserDocs/ReadInZip
-  QString vsiPrefix = QgsZipItem::vsiPrefix( uri );
-  if ( vsiPrefix != "" )
-  {
-    // GDAL>=1.8.0 has write support for zip, but read and write operations
-    // cannot be interleaved, so for now just use read-only.
-    openReadOnly = true;
-    if ( !mFilePath.startsWith( vsiPrefix ) )
-    {
-      mFilePath = vsiPrefix + mFilePath;
-      setDataSourceUri( mFilePath );
-    }
-    QgsDebugMsg( QString( "Trying %1 syntax, mFilePath= %2" ).arg( vsiPrefix ).arg( mFilePath ) );
-  }
-
-  QgsDebugMsg( "mFilePath: " + mFilePath );
-  QgsDebugMsg( "mLayerIndex: " + QString::number( mLayerIndex ) );
-  QgsDebugMsg( "mLayerName: " + mLayerName );
-  QgsDebugMsg( "mSubsetString: " + mSubsetString );
-  CPLSetConfigOption( "OGR_ORGANIZE_POLYGONS", "ONLY_CCW" );  // "SKIP" returns MULTIPOLYGONs for multiringed POLYGONs
-
-  if ( mFilePath.startsWith( "MySQL:" ) && !mLayerName.isEmpty() )
-  {
-    mFilePath += ",tables=" + mLayerName;
-  }
-
-  // first try to open in update mode (unless specified otherwise)
-  if ( !openReadOnly )
-    ogrDataSource = OGROpen( TO8F( mFilePath ), true, &ogrDriver );
-
-  if ( ogrDataSource )
-  {
-    mWriteAccess = true;
-  }
-  else
-  {
-    QgsDebugMsg( "OGR failed to opened in update mode, trying in read-only mode" );
-
-    // try to open read-only
-    ogrDataSource = OGROpen( TO8F( mFilePath ), false, &ogrDriver );
-
-    //TODO Need to set a flag or something to indicate that the layer
-    //TODO is in read-only mode, otherwise edit ops will fail
-    //TODO: capabilities() should now reflect this; need to test.
-  }
-
-  if ( ogrDataSource )
-  {
-    QgsDebugMsg( "OGR opened using Driver " + QString( OGR_Dr_GetName( ogrDriver ) ) );
-
-    ogrDriverName = OGR_Dr_GetName( ogrDriver );
-
-    // We get the layer which was requested by the uri. The layername
-    // has precedence over the layerid if both are given.
-    if ( mLayerName.isNull() )
-    {
-      ogrOrigLayer = OGR_DS_GetLayer( ogrDataSource, mLayerIndex );
-    }
-    else
-    {
-      ogrOrigLayer = OGR_DS_GetLayerByName( ogrDataSource, TO8( mLayerName ) );
-    }
-
-    ogrLayer = ogrOrigLayer;
-    if ( ogrLayer )
-    {
-      // check that the initial encoding setting is fit for this layer
-      setEncoding( encoding() );
-
-      valid = setSubsetString( mSubsetString );
-      if ( valid )
-      {
-        QgsDebugMsg( "Data source is valid" );
-      }
-      else
-      {
-        QgsMessageLog::logMessage( tr( "Data source is invalid (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
-      }
-    }
-    else
-    {
-      QgsMessageLog::logMessage( tr( "Data source is invalid, no layer found (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
-    }
-  }
-  else
-  {
-    QgsMessageLog::logMessage( tr( "Data source is invalid (%1)" ).arg( QString::fromUtf8( CPLGetLastErrorMsg() ) ), tr( "OGR" ) );
-  }
+  open();
 
   mNativeTypes
   << QgsVectorDataProvider::NativeType( tr( "Whole number (integer)" ), "integer", QVariant::Int, 1, 10 )
@@ -457,26 +485,7 @@ QgsOgrProvider::QgsOgrProvider( QString const & uri )
 
 QgsOgrProvider::~QgsOgrProvider()
 {
-  if ( ogrLayer != ogrOrigLayer )
-  {
-    OGR_DS_ReleaseResultSet( ogrDataSource, ogrLayer );
-  }
-
-  repack();
-
-  if ( ogrDataSource )
-  {
-    OGR_DS_Destroy( ogrDataSource );
-  }
-  ogrDataSource = 0;
-
-  if ( extent_ )
-  {
-    free( extent_ );
-    extent_ = 0;
-  }
-
-  QgsOgrConnPool::instance()->unref( mFilePath );
+  close();
 }
 
 QgsAbstractFeatureSource* QgsOgrProvider::featureSource() const
@@ -2460,33 +2469,40 @@ QByteArray QgsOgrUtils::quotedIdentifier( QByteArray field, const QString& ogrDr
 
 bool QgsOgrProvider::syncToDisc()
 {
+  QgsOgrConnPool::instance()->unref( mFilePath );
+
+  //for shapefiles, remove spatial index files and create a new index
+  bool shapeIndex = false;
+  if ( ogrDriverName == "ESRI Shapefile" )
+  {
+    QString sbnIndexFile;
+    QFileInfo fi( mFilePath );
+    int suffixLength = fi.suffix().length();
+    sbnIndexFile = mFilePath;
+    sbnIndexFile.chop( suffixLength );
+    sbnIndexFile.append( "sbn" );
+
+    if ( QFile::exists( sbnIndexFile ) )
+    {
+      shapeIndex = true;
+      close();
+      QgsOgrConnPool::instance()->invalidateConnections( mFilePath );
+      QFile::remove( sbnIndexFile );
+      open();
+    }
+  }
+
   if ( OGR_L_SyncToDisk( ogrLayer ) != OGRERR_NONE )
   {
     pushError( tr( "OGR error syncing to disk: %1" ).arg( CPLGetLastErrorMsg() ) );
   }
 
-  //for shapefiles: is there already a spatial index?
-  if ( !mFilePath.isEmpty() )
-  {
-    QFileInfo fi( mFilePath );
-
-    //remove the suffix and add .qix
-    int suffixLength = fi.suffix().length();
-    if ( suffixLength > 0 )
-    {
-      QString indexFilePath = mFilePath;
-      indexFilePath.chop( suffixLength );
-      indexFilePath.append( "qix" );
-      QFile indexFile( indexFilePath );
-      if ( indexFile.exists() ) //there is already a spatial index file
-      {
-        //the already existing spatial index is removed automatically by OGR
-        return createSpatialIndex();
-      }
-    }
-  }
-
   mDataModified = true;
+  QgsOgrConnPool::instance()->ref( mFilePath );
+  if ( shapeIndex )
+  {
+    return createSpatialIndex();
+  }
 
   return true;
 }

@@ -134,37 +134,45 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     }
 
     //layers / styles
-    QString layers = parameterMap.value( mapId + ":LAYERS" );
-    QString styles = parameterMap.value( mapId + ":STYLES" );
     QStringList layerSet;
-
-    if ( layers.isEmpty() )
+    if ( currentMap->keepLayerSet() )
     {
-      layers = parameterMap.value( "LAYERS" );
-      styles = parameterMap.value( "STYLES" );
+      layerSet = currentMap->layerSet();
     }
-
-    QStringList wmsLayerList = layers.split( "," );
-    QStringList wmsStyleList;
-
-    if ( !styles.isEmpty() )
+    else
     {
-      wmsStyleList = styles.split( "," );
-    }
+      QString layers = parameterMap.value( mapId + ":LAYERS" );
+      QString styles = parameterMap.value( mapId + ":STYLES" );
 
-    for ( int i = 0; i < wmsLayerList.size(); ++i )
-    {
-      QString styleName;
-      if ( wmsStyleList.size() > i )
+
+      if ( layers.isEmpty() )
       {
-        styleName = wmsStyleList.at( i );
+        layers = parameterMap.value( "LAYERS" );
+        styles = parameterMap.value( "STYLES" );
       }
 
-      foreach ( QgsMapLayer *layer, mapLayerFromStyle( wmsLayerList.at( i ), styleName ) )
+      QStringList wmsLayerList = layers.split( "," );
+      QStringList wmsStyleList;
+
+      if ( !styles.isEmpty() )
       {
-        if ( layer )
+        wmsStyleList = styles.split( "," );
+      }
+
+      for ( int i = 0; i < wmsLayerList.size(); ++i )
+      {
+        QString styleName;
+        if ( wmsStyleList.size() > i )
         {
-          layerSet.push_back( layer->id() );
+          styleName = wmsStyleList.at( i );
+        }
+
+        foreach ( QgsMapLayer *layer, mapLayerFromStyle( wmsLayerList.at( i ), styleName ) )
+        {
+          if ( layer )
+          {
+            layerSet.prepend( layer->id() );
+          }
         }
       }
     }
@@ -241,7 +249,7 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
         else
         {
           QgsMapLayer* layer = nodeLayer->layer();
-          if ( layer->hasScaleBasedVisibility() )
+          if ( layer && layer->hasScaleBasedVisibility() )
           {
             if ( layer->minimumScale() > scale )
               qobject_cast<QgsLayerTreeGroup*>( nodeLayer->parent() )->removeChildNode( nodeLayer );
@@ -272,6 +280,7 @@ QgsComposition* QgsWMSConfigParser::createPrintComposition( const QString& compo
     }
 
     currentLabel->setText( title );
+    currentLabel->adjustSizeToText();
   }
 
   //replace urls in composer pictures

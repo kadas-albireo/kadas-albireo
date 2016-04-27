@@ -532,7 +532,7 @@ QgsComposition* QgsWMSProjectParser::initComposition( const QString& composerTem
               layer = mProjectParser->createLayerFromElement( layerElemIt.value(), true );
             }
           }
-          QgsMapLayerRegistry::instance()->addMapLayer( layer );
+          QgsMapLayerRegistry::instance()->addMapLayer( layer, true, false );
         }
         legend->updateLegend();
       }
@@ -624,6 +624,7 @@ void QgsWMSProjectParser::printCapabilities( QDomElement& parentElement, QDomDoc
     for ( int j = 0; j < composerLabelList.size(); ++j )
     {
       QDomElement citem = composerLabelList.at( j ).firstChildElement( "ComposerItem" );
+      QDomElement lItem = composerLabelList.at( j ).toElement();
       QString id = citem.attribute( "id" );
       if ( id.isEmpty() ) //only export labels with ids for text replacement
       {
@@ -631,6 +632,7 @@ void QgsWMSProjectParser::printCapabilities( QDomElement& parentElement, QDomDoc
       }
       QDomElement composerLabelElem = doc.createElement( "ComposerLabel" );
       composerLabelElem.setAttribute( "name", id );
+      composerLabelElem.setAttribute( "maxLength", lItem.attribute( "maxLength", "-1" ) );
       composerTemplateElem.appendChild( composerLabelElem );
     }
 
@@ -2130,6 +2132,27 @@ void QgsWMSProjectParser::legendPermissionFilter( QStringList& layerIds ) const
       layerIds.removeAt( i );
     }
   }
+}
+
+bool QgsWMSProjectParser::allowRequestDefinedDatasources() const
+{
+  if ( !mProjectParser->xmlDocument() )
+  {
+    return false;
+  }
+
+  QDomElement propertiesElem = mProjectParser->propertiesElem();
+  if ( propertiesElem.isNull() )
+  {
+    return false;
+  }
+  QDomElement dsElem = propertiesElem.firstChildElement( "WMSRequestDefinedDataSources" );
+  if ( dsElem.isNull() )
+  {
+    return false;
+  }
+
+  return ( dsElem.text().compare( "true", Qt::CaseInsensitive ) == 0 );
 }
 
 QDomElement QgsWMSProjectParser::composerByName( const QString& composerName ) const

@@ -154,6 +154,11 @@ class CORE_EXPORT QgsWKBTypes
      */
     static Type addM( Type type );
 
+    /** Returns true if the WKB type is a curved type or can contain curved geometries.
+         * @note added in QGIS 2.14
+         */
+    static bool isCurvedType( Type type );
+
   private:
     static QMap<Type, wkbEntry> registerTypes();
     static QMap<Type, wkbEntry>* entries();

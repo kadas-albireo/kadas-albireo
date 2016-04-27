@@ -107,6 +107,17 @@ int QgsGeometryEditUtils::addPart( QgsAbstractGeometryV2* geom, QgsAbstractGeome
     return 1;
   }
 
+  //add z/m
+  QgsWKBTypes::Type geomType = geom->wkbType();
+  if ( QgsWKBTypes::hasZ( geomType ) )
+  {
+    part->addZValue();
+  }
+  if ( QgsWKBTypes::hasM( geomType ) )
+  {
+    part->addMValue();
+  }
+
   bool added = false;
   if ( geom->geometryType() == "MultiSurface" || geom->geometryType() == "MultiPolygon" )
   {
@@ -114,13 +125,14 @@ int QgsGeometryEditUtils::addPart( QgsAbstractGeometryV2* geom, QgsAbstractGeome
     if ( curve && curve->isClosed() && curve->numPoints() >= 4 )
     {
       QgsCurvePolygonV2 *poly = 0;
-      if ( curve->geometryType() == "LineString" )
+      bool isMultiSurface = ( QgsWKBTypes::flatType( geom->wkbType() ) == QgsWKBTypes::MultiSurface );
+      if ( isMultiSurface )
       {
-        poly = new QgsPolygonV2();
+        poly = new QgsCurvePolygonV2();
       }
       else
       {
-        poly = new QgsCurvePolygonV2();
+        poly = new QgsPolygonV2();
       }
       poly->setExteriorRing( curve );
       added = geomCollection->addGeometry( poly );
