@@ -23,6 +23,7 @@
 #include "qgscoordinateformat.h"
 #include "qgsgeometry.h"
 #include "qgsgeometryrubberband.h"
+#include "qgsgpsrouteeditor.h"
 #include "qgisinterface.h"
 #include "qgsfeature.h"
 #include "qgsfeaturepicker.h"
@@ -41,6 +42,8 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
 
   // TODO: Handle MiliX layers
   QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
+  const QgsLabelingResults* labelingResults = QgisApp::instance()->mapCanvas()->labelingResults();
+  mLabelPositions = labelingResults ? labelingResults->labelsAtPosition( mMapPos ) : QList<QgsLabelPosition>();
   // A feature was picked
   if ( pickResult.feature.isValid() )
   {
@@ -51,6 +54,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     mRubberBand->setGeometry( pickResult.feature.geometry()->geometry()->transformed( ct ) );
     if ( pickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
+      addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
     }
     else
@@ -59,12 +63,16 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     }
     addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
   }
-  if ( QgisApp::instance()->editCanPaste() )
+  else if ( !mLabelPositions.isEmpty() )
   {
-    addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( pasteFeature() ) );
+    addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editLabel() ) );
   }
-  if ( !pickResult.feature.isValid() )
+  if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
   {
+    if ( QgisApp::instance()->editCanPaste() )
+    {
+      addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( pasteFeature() ) );
+    }
     QMenu* drawMenu = new QMenu();
     addAction( tr( "Draw" ) )->setMenu( drawMenu );
     drawMenu->addAction( QIcon( ":/images/themes/default/pin_red.svg" ), tr( "Pin marker" ), this, SLOT( drawPin() ) );
@@ -76,6 +84,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     drawMenu->addAction( QIcon( ":/images/themes/default/redlining_polygon.svg" ), tr( "Polygon" ), this, SLOT( drawPolygon() ) );
     drawMenu->addAction( QIcon( ":/images/themes/default/redlining_circle.svg" ), tr( "Circle" ), this, SLOT( drawCircle() ) );
     drawMenu->addAction( QIcon( ":/images/themes/default/redlining_text.svg" ), tr( "Text" ), this, SLOT( drawText() ) );
+    addAction( QIcon( ":/images/themes/default/mIconSelectRemove.svg" ), tr( "Delete items" ), this, SLOT( deleteItems() ) );
   }
   addSeparator();
   QMenu* measureMenu = new QMenu();
@@ -112,9 +121,34 @@ void QgsMapCanvasContextMenu::featureAttributes()
   }
 }
 
+void QgsMapCanvasContextMenu::editFeature()
+{
+  if ( mSelectedLayer == QgisApp::instance()->redlining()->getLayer() )
+    QgisApp::instance()->redlining()->editFeature( mSelectedFeature );
+  else if ( mSelectedLayer == QgisApp::instance()->gpsRouteEditor()->getLayer() )
+    QgisApp::instance()->gpsRouteEditor()->editFeature( mSelectedFeature );
+}
+
+void QgsMapCanvasContextMenu::editLabel()
+{
+  if ( !mLabelPositions.isEmpty() )
+  {
+    QgsRedliningLayer* redliningLayer = QgisApp::instance()->redlining()->getLayer();
+    QgsRedliningLayer* gpsLayer = QgisApp::instance()->gpsRouteEditor()->getLayer();
+    if ( redliningLayer && redliningLayer->id() == mLabelPositions.first().layerID )
+    {
+      QgisApp::instance()->redlining()->editLabel( mLabelPositions.first() );
+    }
+    else if ( gpsLayer && gpsLayer->id() == mLabelPositions.first().layerID )
+    {
+      QgisApp::instance()->gpsRouteEditor()->editLabel( mLabelPositions.first() );
+    }
+  }
+}
+
 void QgsMapCanvasContextMenu::cutFeature()
 {
-  if ( mSelectedLayer )
+  if ( mSelectedLayer && mSelectedLayer == QgisApp::instance()->redlining()->getLayer() )
   {
     QgsFeatureIds prevSelection = mSelectedLayer->selectedFeaturesIds();
     mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature.id() );
@@ -277,4 +311,9 @@ void QgsMapCanvasContextMenu::print()
   {
     printAction->trigger();
   }
+}
+
+void QgsMapCanvasContextMenu::deleteItems()
+{
+  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mDeleteItems );
 }

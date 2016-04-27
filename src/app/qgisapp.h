@@ -415,6 +415,9 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsRedlining* redlining() const { return mRedlining; }
     QgsRedliningLayer* redliningLayer() const;
 
+    QgsGPSRouteEditor* gpsRouteEditor() const { return mGpsRouteEditor; }
+    QgsRedliningLayer* gpsRoutesLayer() const;
+
     /** Register a new tab in the layer properties dialog */
     void registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
 

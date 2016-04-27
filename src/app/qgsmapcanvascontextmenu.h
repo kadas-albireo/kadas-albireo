@@ -21,6 +21,7 @@
 #include <QMenu>
 #include "qgspoint.h"
 #include "qgsfeature.h"
+#include "qgsmaprenderer.h"
 
 class QgsGeometryRubberBand;
 class QgsVectorLayer;
@@ -34,6 +35,8 @@ class QgsMapCanvasContextMenu : public QMenu
 
   private slots:
     void featureAttributes();
+    void editFeature();
+    void editLabel();
     void cutFeature();
     void copyFeature();
     void pasteFeature();
@@ -58,12 +61,14 @@ class QgsMapCanvasContextMenu : public QMenu
     void copyCoordinates();
     void copyMap();
     void print();
+    void deleteItems();
 
   private:
     QgsPoint mMapPos;
     QgsVectorLayer* mSelectedLayer;
     QgsFeature mSelectedFeature;
     QgsGeometryRubberBand* mRubberBand;
+    QList<QgsLabelPosition> mLabelPositions;
 };
 
 #endif // QGSMAPCANVASCONTEXTMENU_H
