@@ -39,6 +39,8 @@
 
 #include <QApplication>
 #include <QFileInfo>
+#include <QDesktopServices>
+#include <QDir>
 #include <QDomNode>
 #include <QObject>
 #include <QTextStream>
@@ -1049,12 +1051,31 @@ bool QgsProject::write()
 
     if ( ml )
     {
+      // Don't store redlining layer in project - it is created automatically as needed
+      if ( ml->type() == QgsMapLayer::RedliningLayer )
+      {
+        li++;
+        continue;
+      }
       QString externalProjectFile = layerIsEmbedded( ml->id() );
       QHash< QString, QPair< QString, bool> >::const_iterator emIt = mEmbeddedLayers.find( ml->id() );
       if ( emIt == mEmbeddedLayers.constEnd() )
       {
         // general layer metadata
         QDomElement maplayerElem = doc->createElement( "maplayer" );
+
+        // If layer is stored in tmp dir, move to <project>_files folder
+        if ( ml->source().startsWith( QDesktopServices::storageLocation( QDesktopServices::TempLocation ) ) )
+        {
+          QDir projectDir = QFileInfo( fileName() ).absoluteDir();
+          QString projectFilesDirName = QFileInfo( fileName() ).baseName() + "_files";
+          QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
+          QString newDataUrl = projectFilesDir.absoluteFilePath( QFileInfo( ml->source() ).fileName() );
+          if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( ml->source() ).copy( newDataUrl ) )
+          {
+            ml->setSource( newDataUrl );
+          }
+        }
 
         ml->writeLayerXML( maplayerElem, *doc );
 

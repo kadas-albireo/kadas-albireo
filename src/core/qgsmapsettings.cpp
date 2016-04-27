@@ -342,6 +342,45 @@ const QgsCoordinateTransform* QgsMapSettings::layerTransform( QgsMapLayer *layer
   return mDatumTransformStore.transformation( layer );
 }
 
+QgsRectangle QgsMapSettings::computeExtentForScale( const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs ) const
+{
+  QgsPoint center = QgsCoordinateTransformCache::instance()->transform( sourceCrs.authid(), destinationCrs().authid() )->transform( point );
+
+  // Output width in inches
+  double outWIn = outputSize().width() / double( outputDpi() );
+
+  // Desired visible width (honouring scale)
+  double scaledWIn = outWIn * scale;
+
+  // Conversion factor to inches
+  double conversionFactor = 0;
+  switch ( mapUnits() )
+  {
+    case QGis::Meters:
+      conversionFactor = 39.3700787;
+      break;
+    case QGis::Feet:
+      conversionFactor = 12.0;
+      break;
+    case QGis::NauticalMiles:
+      conversionFactor = 72913.4;
+      break;
+
+    default:
+    case QGis::Degrees:
+      // Start with an 1x1 extent around the center
+      QgsRectangle ext( center.x() - 0.5, center.y() - 0.5, center.x() + 0.5, center.y() + 0.5 );
+      // Get scale at extent, and then scale extent to the desired scale
+      double testScale = mScaleCalculator.calculate( ext, outputSize().width() );
+      ext.scale( scale / testScale );
+      return ext;
+      break;
+  }
+
+  double delta = 0.5 * scaledWIn / conversionFactor;
+  return QgsRectangle( center.x() - delta, center.y() - delta, center.x() + delta, center.y() + delta );
+}
+
 double QgsMapSettings::layerToMapUnits( QgsMapLayer *theLayer, const QgsRectangle& referenceExtent ) const
 {
   QgsRectangle extent = referenceExtent.isEmpty() ? theLayer->extent() : referenceExtent;

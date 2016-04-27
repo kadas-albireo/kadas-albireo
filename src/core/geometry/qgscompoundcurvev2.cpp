@@ -623,7 +623,7 @@ bool QgsCompoundCurveV2::addZValue( double zValue )
 
   mWkbType = QgsWKBTypes::addZ( mWkbType );
 
-  Q_FOREACH( QgsCurveV2* curve, mCurves )
+  Q_FOREACH ( QgsCurveV2* curve, mCurves )
   {
     curve->addZValue( zValue );
   }
@@ -637,7 +637,7 @@ bool QgsCompoundCurveV2::addMValue( double mValue )
 
   mWkbType = QgsWKBTypes::addM( mWkbType );
 
-  Q_FOREACH( QgsCurveV2* curve, mCurves )
+  Q_FOREACH ( QgsCurveV2* curve, mCurves )
   {
     curve->addMValue( mValue );
   }

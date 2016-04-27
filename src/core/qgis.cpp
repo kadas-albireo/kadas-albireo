@@ -29,6 +29,7 @@
 #include "qgsconfig.h"
 #include "qgslogger.h"
 #include <quazip/quazipfile.h>
+#include "qgswkbtypes.h"
 
 #include <ogr_api.h>
 
@@ -337,4 +338,34 @@ QString qgsVsiPrefix( QString path )
     return "/vsigzip/";
   else
     return "";
+}
+
+QGis::WkbType QGis::singleType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::singleType(( QgsWKBTypes::Type )type );
+}
+
+QGis::WkbType QGis::multiType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::multiType(( QgsWKBTypes::Type )type );
+}
+
+QGis::WkbType QGis::flatType( WkbType type )
+{
+  return ( QGis::WkbType )QgsWKBTypes::flatType(( QgsWKBTypes::Type )type );
+}
+
+bool QGis::isSingleType( WkbType type )
+{
+  return QgsWKBTypes::isSingleType(( QgsWKBTypes::Type )type );
+}
+
+bool QGis::isMultiType( WkbType type )
+{
+  return QgsWKBTypes::isMultiType(( QgsWKBTypes::Type )type );
+}
+
+int QGis::wkbDimensions( WkbType type )
+{
+  return QgsWKBTypes::wkbDimensions(( QgsWKBTypes::Type )type );
 }

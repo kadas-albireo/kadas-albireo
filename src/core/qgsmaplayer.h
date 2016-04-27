@@ -106,6 +106,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     void setWMSCheckable( bool enable ) { mWMSCheckable = enable; }
     bool wmsCheckable() const { return mWMSCheckable; }
 
+    void setWMSShowLegendTitle( bool enable ) { mWMSShowLegendTitle = enable; }
+    bool wmsShowLegendTitle() const { return mWMSShowLegendTitle; }
+
     void setKeywordList( const QString& keywords ) { mKeywordList = keywords; }
     const QString& keywordList() const { return mKeywordList; }
 
@@ -667,6 +670,7 @@ class CORE_EXPORT QgsMapLayer : public QObject
     bool mWMSPublishLegend;
     bool mWMSPublishMetadata;
     bool mWMSCheckable;
+    bool mWMSShowLegendTitle;
 };
 
 #endif

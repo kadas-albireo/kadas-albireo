@@ -53,6 +53,16 @@ QgsWKBTypes::Type QgsWKBTypes::flatType( Type type )
   return it->mFlatType;
 }
 
+QgsWKBTypes::Type QgsWKBTypes::zmType( QgsWKBTypes::Type type, bool hasZ, bool hasM )
+{
+  type = singleType( type );
+  if ( hasZ )
+    type = static_cast<QgsWKBTypes::Type>( static_cast<quint32>( type ) + 1000 );
+  if ( hasM )
+    type = static_cast<QgsWKBTypes::Type>( static_cast<quint32>( type ) + 2000 );
+  return type;
+}
+
 QgsWKBTypes::Type QgsWKBTypes::parseType( const QString &wktStr )
 {
   QString typestr = wktStr.left( wktStr.indexOf( '(' ) ).simplified().replace( " ", "" );
@@ -183,6 +193,7 @@ QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
   //register the known wkb types
   entries.insert( Unknown, wkbEntry( "Unknown", false, Unknown, Unknown, Unknown, UnknownGeometry, false, false ) );
   entries.insert( NoGeometry, wkbEntry( "NoGeometry", false, NoGeometry, NoGeometry, NoGeometry, NullGeometry, false, false ) );
+  entries.insert( MixedGeometry, wkbEntry( "MixedGeometry", false, MixedGeometry, MixedGeometry, MixedGeometry, AnyGeometry, false, false ) );
   //point
   entries.insert( Point, wkbEntry( "Point", false, MultiPoint, Point, Point, PointGeometry, false, false ) );
   entries.insert( PointZ, wkbEntry( "PointZ", false, MultiPointZ, PointZ, Point, PointGeometry, true, false ) );

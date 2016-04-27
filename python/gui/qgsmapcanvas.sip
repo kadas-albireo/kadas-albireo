@@ -167,6 +167,9 @@ class QgsMapCanvas : QGraphicsView
       @param layer optionally specify different than current layer */
     void zoomToSelected( QgsVectorLayer* layer = NULL );
 
+    /** Set canvas extent to the bounding box of a feature*/
+    void zoomToFeatureId( QgsVectorLayer* layer, QgsFeatureId id );
+
     /** Pan to the selected features of current (vector) layer keeping same extent. */
     void panToSelected( QgsVectorLayer* layer = NULL );
 
@@ -266,6 +269,9 @@ class QgsMapCanvas : QGraphicsView
 
     //! true if antialising is enabled
     bool antiAliasingEnabled() const;
+
+    //! sets map tile rendering flag
+    void enableMapTileRendering( bool theFlag );
 
     //! Select which Qt class to render with
     //! @deprecated since 2.4 - does nothing because now we always render to QImage

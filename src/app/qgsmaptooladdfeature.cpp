@@ -37,8 +37,8 @@
 #include <QMouseEvent>
 #include <QSettings>
 
-QgsMapToolAddFeature::QgsMapToolAddFeature( QgsMapCanvas* canvas )
-    : QgsMapToolCapture( canvas )
+QgsMapToolAddFeature::QgsMapToolAddFeature( QgsMapCanvas* canvas , CaptureMode captureMode )
+    : QgsMapToolCapture( canvas, captureMode )
 {
   mToolName = tr( "Add feature" );
 }
@@ -104,7 +104,7 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
       return;
 
     //check we only use this tool for point/multipoint layers
-    if ( vlayer->geometryType() != QGis::Point )
+    if ( vlayer->geometryType() != QGis::Point && vlayer->geometryType() != QGis::AnyGeometry )
     {
       emit messageEmitted( tr( "Wrong editing tool, cannot apply the 'capture point' tool on this vector layer" ), QgsMessageBar::WARNING );
       return;
@@ -168,14 +168,14 @@ void QgsMapToolAddFeature::canvasMapReleaseEvent( QgsMapMouseEvent* e )
   else if ( mode() == CaptureLine || mode() == CapturePolygon )
   {
     //check we only use the line tool for line/multiline layers
-    if ( mode() == CaptureLine && vlayer->geometryType() != QGis::Line )
+    if ( mode() == CaptureLine && vlayer->geometryType() != QGis::Line && vlayer->geometryType() != QGis::AnyGeometry )
     {
       emit messageEmitted( tr( "Wrong editing tool, cannot apply the 'capture line' tool on this vector layer" ), QgsMessageBar::WARNING );
       return;
     }
 
     //check we only use the polygon tool for polygon/multipolygon layers
-    if ( mode() == CapturePolygon && vlayer->geometryType() != QGis::Polygon )
+    if ( mode() == CapturePolygon && vlayer->geometryType() != QGis::Polygon && vlayer->geometryType() != QGis::AnyGeometry )
     {
       emit messageEmitted( tr( "Wrong editing tool, cannot apply the 'capture polygon' tool on this vector layer" ), QgsMessageBar::WARNING );
       return;

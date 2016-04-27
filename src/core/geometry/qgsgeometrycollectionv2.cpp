@@ -379,6 +379,11 @@ bool QgsGeometryCollectionV2::nextVertex( QgsVertexId& id, QgsPointV2& vertex ) 
     return false;
   }
 
+  if ( mGeometries.isEmpty() )
+  {
+    return false;
+  }
+
   QgsAbstractGeometryV2* geom = mGeometries.at( id.part );
   if ( geom->nextVertex( id, vertex ) )
   {

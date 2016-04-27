@@ -30,6 +30,7 @@
 #include "qgsscaleutils.h"
 #include "qgsnetworkaccessmanager.h"
 #include "qgsproject.h"
+#include "qgsrasterlayer.h"
 
 #include "qgsattributetablefiltermodel.h"
 #include "qgsrasterformatsaveoptionswidget.h"
@@ -255,6 +256,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   // WMS/WMS-C default max retry in case of tile request errors
   mDefaultTileMaxRetrySpinBox->setValue( settings.value( "/qgis/defaultTileMaxRetry", "3" ).toInt() );
 
+  // SSO checkbox
+  mSSOCheckBox->setChecked( settings.value( "/qgis/networkAndProxy/attemptSSO", false ).toBool() );
+
   //Web proxy settings
   grpProxy->setChecked( settings.value( "proxy/proxyEnabled", "0" ).toBool() );
   leProxyHost->setText( settings.value( "proxy/proxyHost", "" ).toString() );
@@ -457,9 +461,14 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   angleButtonGroup->addButton( mDegreesRadioButton );
   angleButtonGroup->addButton( mRadiansRadioButton );
   angleButtonGroup->addButton( mGonRadioButton );
+  angleButtonGroup->addButton( mMilRadioButton );
 
   QString myAngleUnitsTxt = settings.value( "/qgis/measure/angleunits", "degrees" ).toString();
-  if ( myAngleUnitsTxt == "gon" )
+  if ( myAngleUnitsTxt == "mil" )
+  {
+    mMilRadioButton->setChecked( true );
+  }
+  else if ( myAngleUnitsTxt == "gon" )
   {
     mGonRadioButton->setChecked( true );
   }
@@ -588,6 +597,8 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
 
   cmbLegendDoubleClickAction->setCurrentIndex( settings.value( "/qgis/legendDoubleClickAction", 0 ).toInt() );
 
+  mComboBoxAddLayerMode->setCurrentIndex( settings.value( "/qgis/layerLegendAddMode", 0 ).toInt() );
+
   // WMS getLegendGraphic setting
   mLegendGraphicResolutionSpinBox->setValue( settings.value( "/qgis/defaultLegendGraphicResolution", 0 ).toInt() );
 
@@ -631,7 +642,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  pbnCanvasColor->setColor( QColor( myRed, myGreen, myBlue ) );
+  myBlue = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  pbnCanvasColor->setAllowAlpha( true );
+  pbnCanvasColor->setColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
   pbnCanvasColor->setColorDialogTitle( tr( "Set canvas color" ) );
   pbnCanvasColor->setContext( "gui" );
   pbnCanvasColor->setDefaultColor( Qt::white );
@@ -865,6 +878,10 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
 
   // load gdal driver list only when gdal tab is first opened
   mLoadedGdalDriverList = false;
+
+  mOnlineTestUrlLineEdit->setText( settings.value( "/qgis/onlineTestUrl" ).toString() );
+  mOnlineProjectLineEdit->setText( settings.value( "/qgis/onlineDefaultProject" ).toString() );
+  mOfflineProjectLineEdit->setText( settings.value( "/qgis/offlineDefaultProject" ).toString() );
 
   // restore window and widget geometry/state
   restoreOptionsBaseUi();
@@ -1109,6 +1126,8 @@ void QgsOptions::saveOptions()
 
   settings.setValue( "/qgis/map_update_interval", spinMapUpdateInterval->value() );
   settings.setValue( "/qgis/legendDoubleClickAction", cmbLegendDoubleClickAction->currentIndex() );
+  settings.setValue( "/qgis/layerLegendAddMode", mComboBoxAddLayerMode->currentIndex() );
+
   bool legendLayersCapitalise = settings.value( "/qgis/capitaliseLayerName", false ).toBool();
   settings.setValue( "/qgis/capitaliseLayerName", capitaliseCheckBox->isChecked() );
   QgsMapCanvas::enableRotation( cbxCanvasRotation->isChecked() );
@@ -1230,6 +1249,10 @@ void QgsOptions::saveOptions()
   {
     angleUnitString = "gon";
   }
+  else if ( mMilRadioButton->isChecked() )
+  {
+    angleUnitString = "mil";
+  }
   settings.setValue( "/qgis/measure/angleunits", angleUnitString );
 
   int decimalPlaces = mDecimalPlacesSpinBox->value();
@@ -1250,6 +1273,7 @@ void QgsOptions::saveOptions()
   settings.setValue( "/qgis/default_canvas_color_red", myColor.red() );
   settings.setValue( "/qgis/default_canvas_color_green", myColor.green() );
   settings.setValue( "/qgis/default_canvas_color_blue", myColor.blue() );
+  settings.setValue( "/qgis/default_canvas_color_alpha", myColor.alpha() );
 
   //set the default color for the measure tool
   myColor = pbnMeasureColor->color();
@@ -1387,6 +1411,10 @@ void QgsOptions::saveOptions()
   {
     mStyleSheetBuilder->saveToSettings( mStyleSheetNewOpts );
   }
+
+  settings.setValue( "/qgis/onlineTestUrl", mOnlineTestUrlLineEdit->text() );
+  settings.setValue( "/qgis/onlineDefaultProject", mOnlineProjectLineEdit->text() );
+  settings.setValue( "/qgis/offlineDefaultProject", mOfflineProjectLineEdit->text() );
 
   saveDefaultDatumTransformations();
 }
@@ -2117,5 +2145,34 @@ void QgsOptions::on_mButtonExportColors_clicked()
   {
     QMessageBox::critical( 0, tr( "Error exporting" ), tr( "Error writing palette file" ) );
     return;
+  }
+}
+
+void QgsOptions::on_mSSOCheckBox_toggled( bool state )
+{
+  QSettings().setValue( "/qgis/networkAndProxy/attemptSSO", state );
+}
+
+void QgsOptions::on_mSelectOnlineProjectButton_clicked()
+{
+  QString projPath = QFileDialog::getOpenFileName( this,
+                     tr( "Choose default online project file" ),
+                     QString(),
+                     tr( "QGIS files" ) + " (*.qgs *.QGS)" );
+  if ( !projPath.isEmpty() )
+  {
+    mOnlineProjectLineEdit->setText( projPath );
+  }
+}
+
+void QgsOptions::on_mSelectOfflineProjectButton_clicked()
+{
+  QString projPath = QFileDialog::getOpenFileName( this,
+                     tr( "Choose default offline project file" ),
+                     QString(),
+                     tr( "QGIS files" ) + " (*.qgs *.QGS)" );
+  if ( !projPath.isEmpty() )
+  {
+    mOfflineProjectLineEdit->setText( projPath );
   }
 }

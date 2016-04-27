@@ -24,6 +24,7 @@
 #include <memory>
 #include <deque>
 
+#include "qgsfeature.h"
 #include "qgsrectangle.h"
 #include "qgspoint.h"
 #include "qgis.h"
@@ -234,6 +235,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
       @param layer optionally specify different than current layer */
     void zoomToSelected( QgsVectorLayer* layer = NULL );
 
+    /** Set canvas extent to the bounding box of a feature*/
+    void zoomToFeatureId( QgsVectorLayer* layer, QgsFeatureId id );
+
     /** Pan to the selected features of current (vector) layer keeping same extent. */
     void panToSelected( QgsVectorLayer* layer = NULL );
 
@@ -333,6 +337,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     //! true if antialising is enabled
     bool antiAliasingEnabled() const { return mSettings.testFlag( QgsMapSettings::Antialiasing ); }
+
+    //! sets map tile rendering flag
+    void enableMapTileRendering( bool theFlag );
 
     //! Select which Qt class to render with
     //! @deprecated since 2.4 - does nothing because now we always render to QImage
@@ -596,6 +603,10 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     //! called when panning is in action, reset indicates end of panning
     void moveCanvasContents( bool reset = false );
+
+    //! Zooms to feature extent. Adds a small margin around the extent
+    //! and does a pan if rect is empty (point extent)
+    void zoomToFeatureExtent( QgsRectangle& rect );
 
     //! called on resize or changed extent to notify canvas items to change their rectangle
     void updateCanvasItemPositions();
