@@ -103,7 +103,6 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   connect( mMasterCanvas, SIGNAL( mapUnitsChanged() ), this, SLOT( updateMapProjection() ) );
   connect( mMasterCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( updateMapProjection() ) );
   connect( mMasterCanvas, SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
-  connect( mMasterCanvas, SIGNAL( mapCanvasRefreshed() ), mMapCanvas, SLOT( refresh() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), mMasterCanvas, SIGNAL( xyCoordinates( QgsPoint ) ) );
@@ -241,9 +240,16 @@ void QgsMapWidget::updateLayerSet()
   {
     if ( layerAction->isChecked() )
     {
-      layerSet.append( QgsMapCanvasLayer( QgsMapLayerRegistry::instance()->mapLayer( layerAction->data().toString() ) ) );
+      QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerAction->data().toString() );
+      connect( layer, SIGNAL( repaintRequested() ), mMapCanvas, SLOT( refresh() ) );
+      layerSet.append( QgsMapCanvasLayer( layer ) );
     }
   }
+  foreach ( QgsMapLayer* layer, mMapCanvas->layers() )
+  {
+    disconnect( layer, SIGNAL( repaintRequested() ), mMapCanvas, SLOT( refresh() ) );
+  }
+
   mMapCanvas->setLayerSet( layerSet );
 }
 
