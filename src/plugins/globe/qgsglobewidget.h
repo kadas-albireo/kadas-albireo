@@ -36,6 +36,8 @@ class QgsGlobeWidget : public QDockWidget
     QgisInterface* mQgisIface;
     QMenu* mLayerSelectionMenu;
 
+    void contextMenuEvent( QContextMenuEvent * e ) override;
+
   private slots:
     void updateLayerSelectionMenu();
 };

@@ -22,6 +22,7 @@
 #include "qgisinterface.h"
 #include "layertree/qgslayertree.h"
 
+#include <QContextMenuEvent>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
@@ -144,4 +145,9 @@ QStringList QgsGlobeWidget::getSelectedLayers() const
     }
   }
   return selectedLayers;
+}
+
+void QgsGlobeWidget::contextMenuEvent( QContextMenuEvent * e )
+{
+  e->accept();
 }
