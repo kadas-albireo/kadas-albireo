@@ -70,7 +70,7 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   mCloseButton->setIcon( QIcon( ":/images/themes/default/mActionRemove.svg" ) );
   mCloseButton->setIconSize( QSize( 12, 12 ) );
   mCloseButton->setToolTip( tr( "Close" ) );
-  connect( mCloseButton, SIGNAL( clicked( bool ) ), this, SLOT( close() ) );
+  connect( mCloseButton, SIGNAL( clicked( bool ) ), this, SLOT( closeMapWidget() ) );
 
   QWidget* titleWidget = new QWidget( this );
   titleWidget->setObjectName( "mapWidgetTitleWidget" );
@@ -300,4 +300,17 @@ void QgsMapWidget::addAnnotationItem( QgsAnnotationItem *item )
 void QgsMapWidget::contextMenuEvent( QContextMenuEvent * e )
 {
   e->accept();
+}
+
+void QgsMapWidget::closeMapWidget()
+{
+  close();
+  if ( mMapCanvas->isDrawing() )
+  {
+    connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( deleteLater() ) );
+  }
+  else
+  {
+    deleteLater();
+  }
 }
