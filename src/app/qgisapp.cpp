@@ -6816,6 +6816,11 @@ QgsRedliningLayer* QgisApp::redliningLayer() const
   return mRedlining->getOrCreateLayer();
 }
 
+QgsRedliningLayer* QgisApp::gpsRoutesLayer() const
+{
+  return mGpsRouteEditor->getOrCreateLayer();
+}
+
 void QgisApp::registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
 {
   mMapLayerPropertiesFactories << factory;
