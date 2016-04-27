@@ -132,7 +132,7 @@ QgsNetworkAccessManager::QgsNetworkAccessManager( QObject *parent )
     , mInitialized( false )
 {
   setProxyFactory( new QgsNetworkProxyFactory() );
-  setCookieJar(new QgsNetworkCookieJar(this));
+  setCookieJar( new QgsNetworkCookieJar( this ) );
 }
 
 QgsNetworkAccessManager::~QgsNetworkAccessManager()
@@ -390,7 +390,7 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
              smMainNAM, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ),
              Qt::BlockingQueuedConnection );
 #endif
-    connect(smMainNAM, SIGNAL(cookieAdded(QByteArray,QUrl)), this, SLOT(addCookie(QByteArray,QUrl)));
+    connect( smMainNAM, SIGNAL( cookieAdded( QByteArray, QUrl ) ), this, SLOT( addCookie( QByteArray, QUrl ) ) );
   }
 
   // check if proxy is enabled
@@ -458,6 +458,10 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
     newcache = new QgsNetworkDiskCache( this );
 
   QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
+  if ( cacheDirectory.isEmpty() )
+  {
+    cacheDirectory = QgsApplication::qgisSettingsDirPath() + "cache";
+  }
   qint64 cacheSize = settings.value( "cache/size", 50 * 1024 * 1024 ).toULongLong();
   QgsDebugMsg( QString( "setCacheDirectory: %1" ).arg( cacheDirectory ) );
   QgsDebugMsg( QString( "setMaximumCacheSize: %1" ).arg( cacheSize ) );
@@ -472,20 +476,21 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
   setProxy( proxy );
 #endif
 
-  if(smMainNAM) {
+  if ( smMainNAM )
+  {
     smMainNAM->mCookieLock.lock();
-    static_cast<QgsNetworkCookieJar*>(cookieJar())->setAllCookies(static_cast<QgsNetworkCookieJar*>(smMainNAM->cookieJar())->allCookies());
+    static_cast<QgsNetworkCookieJar*>( cookieJar() )->setAllCookies( static_cast<QgsNetworkCookieJar*>( smMainNAM->cookieJar() )->allCookies() );
     smMainNAM->mCookieLock.unlock();
   }
 }
 
-void QgsNetworkAccessManager::addCookie(const QByteArray &cookie, const QUrl& url )
+void QgsNetworkAccessManager::addCookie( const QByteArray &cookie, const QUrl& url )
 {
   mCookieLock.lock();
   QNetworkCookieJar* jar = cookieJar();
   jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie ), url );
   mCookieLock.unlock();
-  emit cookieAdded(cookie, url);
+  emit cookieAdded( cookie, url );
 }
 
 QNetworkRequest QgsNetworkAccessManager::requestWithUserInfo( const QNetworkRequest& req )
