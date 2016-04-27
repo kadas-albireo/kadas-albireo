@@ -140,7 +140,6 @@ bool MilXClientWorker::initialize()
     timeoutTimer.start( 1000 );
     evLoop.exec();
   }
-  QTextStream( stdout ) << mTcpSocket->state() << " : " << mLastError << endl;
   if ( mTcpSocket->state() != QTcpSocket::ConnectedState )
   {
     mTcpSocket->abort();
