@@ -70,6 +70,7 @@ class GUI_EXPORT QgsMapWidget : public QDockWidget
     void updateLayerSet();
     void updateMapProjection();
     void addAnnotationItem( QgsAnnotationItem* item );
+    void closeMapWidget();
 };
 
 #endif // QGSMAPWIDGET_H

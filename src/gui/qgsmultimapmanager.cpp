@@ -50,7 +50,6 @@ void QgsMultiMapManager::addMapWidget()
   }
 
   QgsMapWidget* mapWidget = new QgsMapWidget( highestNumber, tr( "View #%1" ).arg( highestNumber ), mMasterCanvas );
-  mapWidget->setAttribute( Qt::WA_DeleteOnClose );
   connect( mapWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( mapWidgetDestroyed( QObject* ) ) );
 
   // Determine whether to add the new dock widget in the right or bottom area
