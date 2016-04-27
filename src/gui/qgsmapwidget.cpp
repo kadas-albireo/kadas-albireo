@@ -25,6 +25,7 @@
 #include "qgsproject.h"
 #include "layertree/qgslayertreegroup.h"
 #include "layertree/qgslayertreelayer.h"
+#include <QContextMenuEvent>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -294,4 +295,9 @@ void QgsMapWidget::addAnnotationItem( QgsAnnotationItem *item )
     connect( item, SIGNAL( destroyed( QObject* ) ), clonedItem, SLOT( deleteLater() ) );
     connect( item, SIGNAL( itemUpdated( QgsAnnotationItem* ) ), clonedItem, SLOT( deleteLater() ) );
   }
+}
+
+void QgsMapWidget::contextMenuEvent( QContextMenuEvent * e )
+{
+  e->accept();
 }
