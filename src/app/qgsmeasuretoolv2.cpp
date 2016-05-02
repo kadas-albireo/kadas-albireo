@@ -31,10 +31,6 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   bool measureAngle = measureMode == QgsMeasureToolV2::MeasureAngle || measureMode == QgsMeasureToolV2::MeasureAzimuth;
   mCanvas = canvas;
   setLayout( new QHBoxLayout() );
-  if ( measureAngle )
-  {
-    layout()->addWidget( new QLabel( QString( "<b>%1</b>" ).arg( tr( "Total:" ) ) ) );
-  }
 
   mMeasurementLabel = new QLabel();
   mMeasurementLabel->setTextInteractionFlags( Qt::TextSelectableByMouse );
