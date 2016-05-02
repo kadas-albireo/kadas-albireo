@@ -166,6 +166,10 @@ void QgsRibbonButton::focusOutEvent( QFocusEvent* event )
   QAbstractButton::focusOutEvent( event );
 }
 
+void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
+{
+  event->ignore();
+}
 
 void QgsRibbonButton::mousePressEvent( QMouseEvent* event )
 {
@@ -173,7 +177,8 @@ void QgsRibbonButton::mousePressEvent( QMouseEvent* event )
   event->ignore();
 }
 
-void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
+void QgsRibbonButton::contextMenuEvent( QContextMenuEvent* event )
 {
-  event->ignore();
+  emit contextMenuRequested( event->pos() );
+  event->accept();
 }

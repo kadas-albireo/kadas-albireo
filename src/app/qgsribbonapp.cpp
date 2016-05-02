@@ -166,6 +166,10 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   restoreFavoriteButton( mFavoriteButton2 );
   restoreFavoriteButton( mFavoriteButton3 );
   restoreFavoriteButton( mFavoriteButton4 );
+  connect( mFavoriteButton1, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
+  connect( mFavoriteButton2, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
+  connect( mFavoriteButton3, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
+  connect( mFavoriteButton4, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
 
   connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
@@ -724,4 +728,20 @@ void QgsRibbonApp::setGPSIcon( const QColor &color )
   QPixmap pixmap( mGpsToolButton->size() );
   pixmap.fill( color );
   mGpsToolButton->setIcon( QIcon( pixmap ) );
+}
+
+void QgsRibbonApp::showFavoriteContextMenu( const QPoint& pos )
+{
+  QgsRibbonButton* button = qobject_cast<QgsRibbonButton*>( QObject::sender() );
+  QMenu menu;
+  QAction* removeAction = menu.addAction( tr( "Remove" ) );
+  if ( menu.exec( button->mapToGlobal( pos ) ) == removeAction )
+  {
+    QSettings().setValue( "/UI/FavoriteAction/" + button->objectName(), "" );
+    button->setText( tr( "Favorite" ) );
+    button->setIcon( QIcon( ":/images/ribbon/favorit.png" ) );
+    button->setDefaultAction( 0 );
+    button->setIconSize( QSize( 16, 16 ) );
+    button->setEnabled( false );
+  }
 }
