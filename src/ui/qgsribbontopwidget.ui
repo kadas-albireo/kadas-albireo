@@ -856,39 +856,7 @@
           <property name="verticalSpacing">
            <number>0</number>
           </property>
-          <item row="0" column="4">
-           <widget class="QgsRibbonButton" name="mProfileButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Profile
-Sight</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="8">
+          <item row="0" column="9">
            <widget class="QgsRibbonButton" name="mViewshedButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1012,7 +980,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
+          <item row="0" column="8">
            <widget class="QgsRibbonButton" name="mHillshadeButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1074,7 +1042,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
+          <item row="0" column="7">
            <widget class="QgsRibbonButton" name="mSlopeButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1105,7 +1073,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="9">
+          <item row="0" column="10">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1117,6 +1085,38 @@ Sight</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="6">
+           <widget class="QgsRibbonButton" name="mProfileButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Profile
+Sight</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
