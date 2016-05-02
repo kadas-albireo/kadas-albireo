@@ -308,13 +308,13 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
   }
   else
   {
-    QStandardItem* item = new QStandardItem( value );
+    QStandardItem* item = new QStandardItem( QString("%1 (%2)").arg(value).arg(symbolMilitaryName) );
     parent->setChild( parent->rowCount(), item );
     item->setData( symbolXml, SymbolXmlRole );
     item->setData( symbolMilitaryName, SymbolMilitaryNameRole );
     item->setData( symbolPointCount, SymbolPointCountRole );
     item->setData( symbolHasVariablePoints, SymbolVariablePointsRole );
-    item->setToolTip( symbolXml );
+    item->setToolTip( item->text() );
     item->setIcon( icon );
     return item;
   }
@@ -365,7 +365,7 @@ void QgsMilXLibraryLoader::run()
     {
       QString galleryFilePath = galleryDir.absoluteFilePath( galleryFileName );
       QFile galleryFile( galleryFilePath );
-      if ( galleryFile.open( QIODevice::ReadOnly ) )
+      if ( !galleryFilePath.endsWith("_international.xml", Qt::CaseInsensitive) && galleryFile.open( QIODevice::ReadOnly ) )
       {
         QImage galleryIcon( QString( galleryFilePath ).replace( QRegExp( ".xml$" ), ".png" ) );
         QDomDocument doc;
