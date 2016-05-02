@@ -84,6 +84,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void showProjectSelectionWidget();
     void onLanguageChanged( int idx );
     void onNumericInputCheckboxToggled( bool checked );
+    void showFavoriteContextMenu( const QPoint& pos );
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );

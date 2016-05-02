@@ -11,14 +11,18 @@ class GUI_EXPORT QgsRibbonButton: public QToolButton
     QgsRibbonButton( QWidget* parent = 0 );
     virtual ~QgsRibbonButton();
 
+  signals:
+    void contextMenuRequested( QPoint pos );
+
   protected:
     virtual void paintEvent( QPaintEvent* e );
     virtual void enterEvent( QEvent* event );
     virtual void leaveEvent( QEvent* event );
     virtual void focusInEvent( QFocusEvent* event );
     virtual void focusOutEvent( QFocusEvent* event );
-    virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void contextMenuEvent( QContextMenuEvent* event );
 };
 
 #endif // QGSRIBBONBUTTON_H
