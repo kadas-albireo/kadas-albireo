@@ -64,6 +64,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     bool mMultipart;
     bool mSnapPoints;
     bool mShowInput;
+    bool mIgnoreNextMoveEvent;
     QPointer<QgsGeometryRubberBand> mRubberBand;
     QgsMapToolDrawShapeInputWidget* mInputWidget;
 
