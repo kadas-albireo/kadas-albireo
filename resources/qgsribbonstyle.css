@@ -1,6 +1,5 @@
 /**General styling*/
 QWidget {
-  font-family: "Frutiger LT Pro 55 Roman";
   font-size: 14px;
 }
 
@@ -79,6 +78,11 @@ QPushButton#mLayerTreeViewButton {
   border-bottom-left-radius: 0px;
 }
 
+QPushButton#mLayerTreeViewButton:pressed
+{
+  background-color: #16232f;
+}
+
 #mLayersWidget {
   background-color: rgba(255,255,255,220);
   border: 1px solid #263B4E;
@@ -90,7 +94,15 @@ QPushButton#mLayerTreeViewButton {
 }
 
 #mGeodataToolbar QToolButton {
+  color: #FFFFFF;
+  padding: 1px 4px 1px 4px;
+  border: 1px solid #1b2a37;
+  border-radius: 2px;
   background-color: #263B4E;
+}
+
+#mGeodataToolbar QToolButton:pressed {
+    background: #16232f;
 }
 
 /** Search **/
@@ -116,6 +128,11 @@ QPushButton#mLayerTreeViewButton {
     border-bottom-right-radius: 2px;
     margin: 0;
     padding: 5px;
+}
+
+#searchFilter:open
+{
+  background: #485764;
 }
 
 
@@ -152,13 +169,72 @@ QPushButton#mLayerTreeViewButton {
   color: #FFFFFF;
 }
 
-#mRibbonWidget > QWidget > QWidget > QToolButton,
 #mRibbonWidget > QWidget > QWidget > QPushButton,
-#mRibbonWidget > QWidget > QWidget > QComboBox,
 #mRibbonWidget > QWidget > QWidget > QSpinBox {
   background-color: #5D7081;
   color: #FFFFFF;
 }
+
+#mRibbonWidget > QWidget > QWidget > QComboBox,
+#mRibbonWidget > QWidget > QWidget > QToolButton,
+#mRibbonWidget > QWidget > QWidget > QSpinBox
+{
+  background-color: #5D7081;
+  color: #FFFFFF;
+  padding: 1px 4px 1px 4px;
+  border: 1px solid #5D7081;
+  border-radius: 2px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QComboBox
+{
+    padding: 1px 4px 1px 4px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QToolButton
+{
+    padding: 1px 19px 1px 4px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QComboBox:drop-down,
+#mRibbonWidget > QWidget > QWidget > QToolButton:menu-button
+{
+  margin: 1px 0px 1px 0px;
+  border-left: 1px solid #263B4E;
+  width: 15px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QComboBox:down-arrow,
+#mRibbonWidget > QWidget > QWidget > QToolButton:menu-arrow
+{
+  image: url(:/images/ribbon/downarrow.png);
+}
+
+#mRibbonWidget > QWidget > QWidget > QSpinBox:up-button
+{
+    image: url(:/images/ribbon/uparrow.png);
+    border-left: 1px solid #263B4E;
+    border-bottom: 1px solid #263B4E;
+    padding-bottom: 1px;
+    width: 15px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QSpinBox:down-button
+{
+    image: url(:/images/ribbon/downarrow.png);
+    border-left: 1px solid #263B4E;
+    width: 15px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QSpinBox:up-button:pressed,
+#mRibbonWidget > QWidget > QWidget > QSpinBox:down-button:pressed,
+#mRibbonWidget > QWidget > QWidget > QComboBox:drop-down:on,
+#mRibbonWidget > QWidget > QWidget > QComboBox:drop-down:on,
+#mRibbonWidget > QWidget > QWidget > QToolButton:menu-button:open {
+    background: #485764;
+}
+
+
 
 #mRibbonWidget > QWidget > QWidget > QComboBox QAbstractItemView
 {
@@ -190,6 +266,52 @@ QPushButton#mLayerTreeViewButton {
 {
   background-color: #16171B;
   color: #FFFFFF;
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
+#mStatusWidget #mGpsToolButton:checked
+{
+    background: black;
+}
+
+#mStatusWidget #mScaleComboBox
+{
+  padding: 1px 4px 1px 4px;
+}
+
+#mStatusWidget #mScaleComboBox:drop-down
+{
+  border-left: 1px solid black;
+}
+
+#mStatusWidget #mScaleComboBox:down-arrow
+{
+  image: url(:/images/ribbon/downarrow.png);
+}
+
+#mStatusWidget #mScaleComboBox:down-arrow:on
+{
+  left: 1px;
+  top: 1px;
+}
+
+#mStatusWidget #mCoordinateLineEdit,
+#mStatusWidget #mGpsToolButton
+{
+  padding: 1px;
+}
+
+#mStatusWidget #mDisplayCRSButton,
+#mStatusWidget #mCRSSelectionButton
+{
+  padding: 1px 10px 1px 2px;
+}
+
+#mStatusWidget #mDisplayCRSButton:menu-arrow,
+#mStatusWidget #mCRSSelectionButton:menu-arrow
+{
+  image: url(:/images/ribbon/downarrow.png);
 }
 
 #mStatusWidget QLabel {
@@ -203,6 +325,12 @@ QPushButton#mZoomOutButton {
   background-color: #263B4E;
   color: #FFFFFF;
 }
+
+QPushButton#mZoomInButton:pressed,
+QPushButton#mZoomOutButton:pressed {
+  background-color: #16232f;
+}
+
 
 QFrame#mZoomInOutFrame {
     border: 1px solid #737373;
@@ -292,4 +420,6 @@ QgsAttributeForm QScrollArea > QWidget > QWidget
 {
   background-color: #16171B;
   color: #FFFFFF;
+  border: 1px solid black;
+  border-radius: 2px;
 }
