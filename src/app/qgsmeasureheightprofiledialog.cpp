@@ -148,7 +148,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
 
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
   QPushButton* copyButton = bbox->addButton( tr( "Copy to clipboard" ), QDialogButtonBox::ActionRole );
-  QPushButton* addButton = bbox->addButton( tr( "Add to canvas" ), QDialogButtonBox::ActionRole );
+  QPushButton* addButton = bbox->addButton( tr( "Add to map" ), QDialogButtonBox::ActionRole );
   vboxLayout->addWidget( bbox );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
