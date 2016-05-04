@@ -47520,7 +47520,7 @@ Sicht</translation>
     </message>
     <message>
         <source>Show numeric input box when drawing</source>
-        <translation>Numerische Einfabefelder während des Zeichen anzeigen</translation>
+        <translation type="unfinished">Numerische Einfabefelder während des Zeichnens anzeigen</translation>
     </message>
     <message>
         <source>Language:</source>
