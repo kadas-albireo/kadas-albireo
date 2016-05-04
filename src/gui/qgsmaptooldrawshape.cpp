@@ -37,7 +37,7 @@
 #include <qmath.h>
 
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
-    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mInputWidget( 0 )
+    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mIgnoreNextMoveEvent( false ), mInputWidget( 0 )
 {
   setCursor( Qt::CrossCursor );
 
@@ -134,6 +134,12 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
 
 void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
 {
+  if ( mIgnoreNextMoveEvent )
+  {
+    mIgnoreNextMoveEvent = false;
+    return;
+  }
+
   if ( mState == StateDrawing )
   {
     moveEvent( transformPoint( e->pos() ) );
@@ -221,9 +227,23 @@ void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
   }
   // Then, move cursor to corresponding screen position and simulate move event
   QPoint p = toCanvasCoordinates( geoPos );
+  // Ignore the move event emitted by re-positioning the mouse cursor:
+  // The widget mouse coordinates (stored in a integer QPoint) loses precision,
+  // and mapping it back to map coordinates in the mouseMove event handler
+  // results in a position different from geoPos, and hence the user-input
+  // may get altered
+  mIgnoreNextMoveEvent = true;
   QCursor::setPos( mCanvas->mapToGlobal( p ) );
-  QMouseEvent ev( QEvent::MouseMove, p, Qt::NoButton, Qt::NoButton, Qt::NoModifier );
-  canvasMoveEvent( &ev );
+  if ( mState == StateDrawing )
+  {
+    moveEvent( geoPos );
+    update();
+  }
+  if ( mShowInput )
+  {
+    updateInputWidget( geoPos );
+    mInputWidget->move( p.x(), p.y() + 20 );
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
