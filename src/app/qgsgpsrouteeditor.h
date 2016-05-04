@@ -59,6 +59,7 @@ class QgsGPSRouteEditor : public QObject
     QPointer<QgsMapTool> mRedliningTool;
     int mLayerRefCount;
 
+    void setLayer( QgsRedliningLayer* layer );
     void setTool( QgsMapTool* tool, QAction *action, bool active = true );
 
   private slots:

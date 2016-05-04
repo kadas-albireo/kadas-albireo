@@ -27,6 +27,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
       "memory" )
 {
   mLayerType = QgsMapLayer::RedliningLayer;
+  mValid = true;
 
   setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   dataProvider()->addAttributes( QList<QgsField>()
@@ -85,53 +86,6 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-void QgsRedliningLayer::read( const QDomElement& redliningElem )
-{
-  QgsFeatureList features;
-  QDomNodeList nodes = redliningElem.childNodes();
-  for ( int iNode = 0, nNodes = nodes.size(); iNode < nNodes; ++iNode )
-  {
-    QDomElement redliningItemElem = nodes.at( iNode ).toElement();
-    if ( redliningItemElem.nodeName() == "RedliningItem" )
-    {
-      QgsFeature feature( dataProvider()->fields() );
-      feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
-      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "255,0,0,255" ) );
-      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "0,0,255,255" ) );
-      feature.setAttribute( "outline_style", redliningElem.attribute( "outline_style", "1" ) );
-      feature.setAttribute( "fill_style", redliningElem.attribute( "fill_style", "1" ) );
-      feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
-      feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
-      feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip" ) );
-      feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
-      features.append( feature );
-    }
-  }
-  dataProvider()->addFeatures( features );
-  updateFields();
-  emit layerModified();
-}
-
-void QgsRedliningLayer::write( QDomElement &redliningElem )
-{
-  QgsFeatureIterator it = getFeatures();
-  QgsFeature feature;
-  while ( it.nextFeature( feature ) )
-  {
-    QDomElement redliningItemElem = redliningElem.ownerDocument().createElement( "RedliningItem" );
-    redliningItemElem.setAttribute( "size", feature.attribute( "size" ).toString() );
-    redliningItemElem.setAttribute( "outline", feature.attribute( "outline" ).toString() );
-    redliningItemElem.setAttribute( "fill", feature.attribute( "fill" ).toString() );
-    redliningItemElem.setAttribute( "outline_style", feature.attribute( "outline_style" ).toString() );
-    redliningItemElem.setAttribute( "fill_style", feature.attribute( "fill_style" ).toString() );
-    redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
-    redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
-    redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
-    redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip" ).toString() );
-    redliningElem.appendChild( redliningItemElem );
-  }
-}
-
 void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
 {
   foreach ( QgsFeature feature, features )
@@ -170,6 +124,57 @@ QString QgsRedliningLayer::serializeFlags( const QMap<QString, QString>& flagsMa
     flagsStr += QString( "%1=%2," ).arg( key ).arg( flagsMap.value( key ) );
   }
   return flagsStr;
+}
+
+bool QgsRedliningLayer::readXml( const QDomNode& layer_node )
+{
+  QgsFeatureList features;
+  QDomNodeList nodes = layer_node.toElement().childNodes();
+  for ( int iNode = 0, nNodes = nodes.size(); iNode < nNodes; ++iNode )
+  {
+    QDomElement redliningItemElem = nodes.at( iNode ).toElement();
+    if ( redliningItemElem.nodeName() == "RedliningItem" )
+    {
+      QgsFeature feature( dataProvider()->fields() );
+      feature.setAttribute( "size", redliningItemElem.attribute( "size", "1" ) );
+      feature.setAttribute( "outline", redliningItemElem.attribute( "outline", "255,0,0,255" ) );
+      feature.setAttribute( "fill", redliningItemElem.attribute( "fill", "0,0,255,255" ) );
+      feature.setAttribute( "outline_style", redliningItemElem.attribute( "outline_style", "1" ) );
+      feature.setAttribute( "fill_style", redliningItemElem.attribute( "fill_style", "1" ) );
+      feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
+      feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
+      feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip" ) );
+      feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
+      features.append( feature );
+    }
+  }
+  dataProvider()->addFeatures( features );
+  updateFields();
+  emit layerModified();
+  return true;
+}
+
+bool QgsRedliningLayer::writeXml( QDomNode & layer_node, QDomDocument & document )
+{
+  QDomElement layerElement = layer_node.toElement();
+  layerElement.setAttribute( "type", "redlining" );
+  QgsFeatureIterator it = getFeatures();
+  QgsFeature feature;
+  while ( it.nextFeature( feature ) )
+  {
+    QDomElement redliningItemElem = document.createElement( "RedliningItem" );
+    redliningItemElem.setAttribute( "size", feature.attribute( "size" ).toString() );
+    redliningItemElem.setAttribute( "outline", feature.attribute( "outline" ).toString() );
+    redliningItemElem.setAttribute( "fill", feature.attribute( "fill" ).toString() );
+    redliningItemElem.setAttribute( "outline_style", feature.attribute( "outline_style" ).toString() );
+    redliningItemElem.setAttribute( "fill_style", feature.attribute( "fill_style" ).toString() );
+    redliningItemElem.setAttribute( "text", feature.attribute( "text" ).toString() );
+    redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
+    redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
+    redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip" ).toString() );
+    layer_node.appendChild( redliningItemElem );
+  }
+  return true;
 }
 
 void QgsRedliningLayer::changeTextTransparency( int transparency )
