@@ -56,16 +56,17 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
       addCustomLayerActions( menu, layer );
-      QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
       menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
-
-      if ( layer->type() != QgsMapLayer::RedliningLayer )
+      if ( layer->type() == QgsMapLayer::RasterLayer )
       {
-        if ( rlayer )
-        {
-          menu->addAction( actions->actionUseAsHightMap( mMainWidget->mapCanvas() ) );
-        }
+        menu->addAction( actions->actionUseAsHightMap( mMainWidget->mapCanvas() ) );
       }
+      else if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
+      {
+//        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
+//                         QgisApp::instance(), SLOT( attributeTable() ) );
+      }
+
       menu->addAction( tr( "&Properties" ), mMainWidget, SLOT( layerProperties() ) );
     }
   }
