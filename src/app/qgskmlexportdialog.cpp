@@ -8,6 +8,7 @@ QgsKMLExportDialog::QgsKMLExportDialog( const QStringList layerIds, QWidget * pa
 {
   setupUi( this );
   insertAvailableLayers();
+  mFormatComboBox->setCurrentIndex( 1 );
   on_mFormatComboBox_currentIndexChanged( mFormatComboBox->currentText() );
 }
 
