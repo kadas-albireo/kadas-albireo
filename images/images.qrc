@@ -548,6 +548,8 @@
         <file>ribbon/hillshade.png</file>
         <file>ribbon/help.png</file>
         <file>ribbon/about.png</file>
+        <file>ribbon/downarrow.png</file>
+        <file>ribbon/uparrow.png</file>
         <file>themes/default/clear.svg</file>
         <file>themes/default/hillshade.svg</file>
         <file>themes/default/ovl.svg</file>
