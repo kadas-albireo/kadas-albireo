@@ -173,20 +173,26 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
 
 QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
 {
-  if ( mLayer )
+  if ( !mLayer )
   {
-    return mLayer;
+    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "Redlining" ) );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer, true, true );
+    setLayer( layer );
   }
-  mLayer = new QgsRedliningLayer( tr( "Redlining" ) );
-  QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
+  return mLayer;
+}
+
+void QgsRedlining::setLayer( QgsRedliningLayer *layer )
+{
+  if ( !layer )
+    return;
+  mLayer = layer;
   mLayerRefCount = 0;
 
   // QueuedConnection to delay execution of the slot until the signal-emitting function has exited,
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
   connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearLayer() ) );
-
-  return mLayer;
 }
 
 QgsRedliningLayer* QgsRedlining::getLayer() const
@@ -388,11 +394,11 @@ void QgsRedlining::readProject( const QDomDocument& doc )
 {
   clearLayer();
   QDomNodeList nl = doc.elementsByTagName( "Redlining" );
-  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  if ( nl.isEmpty() || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
-  getOrCreateLayer()->read( nl.at( 0 ).toElement() );
+  setLayer( qobject_cast<QgsRedliningLayer*>( QgsMapLayerRegistry::instance()->mapLayer( nl.at( 0 ).toElement().attribute( "layerid" ) ) ) );
 }
 
 void QgsRedlining::writeProject( QDomDocument& doc )
@@ -403,14 +409,14 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   }
 
   QDomNodeList nl = doc.elementsByTagName( "qgis" );
-  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  if ( nl.isEmpty() || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
   QDomElement qgisElem = nl.at( 0 ).toElement();
 
   QDomElement redliningElem = doc.createElement( "Redlining" );
-  mLayer->write( redliningElem );
+  redliningElem.setAttribute( "layerid", mLayer->id() );
   qgisElem.appendChild( redliningElem );
 }
 

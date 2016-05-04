@@ -34,6 +34,7 @@
 #include "qgsprojectversion.h"
 #include "qgsrasterlayer.h"
 #include "qgsrectangle.h"
+#include "qgsredlininglayer.h"
 #include "qgsrelationmanager.h"
 #include "qgsvectorlayer.h"
 
@@ -711,6 +712,10 @@ bool QgsProject::addLayer( const QDomElement &layerElem, QList<QDomNode> &broken
   {
     mapLayer = new QgsRasterLayer;
   }
+  else if ( type == "redlining" )
+  {
+    mapLayer = new QgsRedliningLayer();
+  }
   else if ( type == "plugin" )
   {
     QString typeName = layerElem.attribute( "name" );
@@ -1051,12 +1056,6 @@ bool QgsProject::write()
 
     if ( ml )
     {
-      // Don't store redlining layer in project - it is created automatically as needed
-      if ( ml->type() == QgsMapLayer::RedliningLayer )
-      {
-        li++;
-        continue;
-      }
       QString externalProjectFile = layerIsEmbedded( ml->id() );
       QHash< QString, QPair< QString, bool> >::const_iterator emIt = mEmbeddedLayers.find( ml->id() );
       if ( emIt == mEmbeddedLayers.constEnd() )

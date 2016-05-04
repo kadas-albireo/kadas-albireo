@@ -127,11 +127,20 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoin
 
 QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
 {
-  if ( mLayer )
+  if ( !mLayer )
   {
-    return mLayer;
+    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer, true, true );
+    setLayer( layer );
   }
-  mLayer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
+  return mLayer;
+}
+
+void QgsGPSRouteEditor::setLayer( QgsRedliningLayer *layer )
+{
+  if ( !layer )
+    return;
+  mLayer = layer;
   // Labeling tweaks to make both point and line labeling appear more or less sensible
   mLayer->setCustomProperty( "labeling/placement", 2 );
   mLayer->setCustomProperty( "labeling/placementFlags", 10 );
@@ -144,8 +153,6 @@ QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
   connect( mLayer.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( clearLayer() ) );
-
-  return mLayer;
 }
 
 QgsRedliningLayer* QgsGPSRouteEditor::getLayer() const
@@ -259,11 +266,11 @@ void QgsGPSRouteEditor::readProject( const QDomDocument& doc )
 {
   clearLayer();
   QDomNodeList nl = doc.elementsByTagName( "GpsRoutes" );
-  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  if ( nl.isEmpty() || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
-  getOrCreateLayer()->read( nl.at( 0 ).toElement() );
+  setLayer( qobject_cast<QgsRedliningLayer*>( QgsMapLayerRegistry::instance()->mapLayer( nl.at( 0 ).toElement().attribute( "layerid" ) ) ) );
 }
 
 void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
@@ -274,14 +281,14 @@ void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
   }
 
   QDomNodeList nl = doc.elementsByTagName( "qgis" );
-  if ( nl.count() < 1 || nl.at( 0 ).toElement().isNull() )
+  if ( nl.isEmpty() || nl.at( 0 ).toElement().isNull() )
   {
     return;
   }
   QDomElement qgisElem = nl.at( 0 ).toElement();
 
   QDomElement redliningElem = doc.createElement( "GpsRoutes" );
-  mLayer->write( redliningElem );
+  redliningElem.setAttribute( "layerid", mLayer->id() );
   qgisElem.appendChild( redliningElem );
 }
 
