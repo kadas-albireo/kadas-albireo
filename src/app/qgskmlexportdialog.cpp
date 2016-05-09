@@ -3,6 +3,7 @@
 #include "qgspluginlayer.h"
 #include "qgsvectorlayer.h"
 #include <QFileDialog>
+#include <QSettings>
 
 QgsKMLExportDialog::QgsKMLExportDialog( const QStringList layerIds, QWidget * parent, Qt::WindowFlags f ): QDialog( parent, f ), mLayerIds( layerIds )
 {
@@ -84,9 +85,20 @@ void QgsKMLExportDialog::insertAvailableLayers()
 
 void QgsKMLExportDialog::on_mFileSelectionButton_clicked()
 {
-  QString fileName = QFileDialog::getSaveFileName( 0, tr( "Save KML file" ) );
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+  QString filter = exportFormat() == QgsKMLExportDialog::KML ? "KML (*.kml);;" : "KMZ (*.kmz);;";
+  QString fileName = QFileDialog::getSaveFileName( 0, tr( "Save KML file" ), lastDir, filter );
   if ( !fileName.isEmpty() )
   {
+    QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( fileName ).absolutePath() );
+    if ( exportFormat() == QgsKMLExportDialog::KML && !fileName.endsWith( ".kml", Qt::CaseInsensitive ) )
+    {
+      fileName.append( ".kml" );
+    }
+    else if ( exportFormat() == QgsKMLExportDialog::KMZ && !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
+    {
+      fileName.append( ".kmz" );
+    }
     mFileLineEdit->setText( fileName );
   }
 }
