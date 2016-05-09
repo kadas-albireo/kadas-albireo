@@ -9923,7 +9923,7 @@ Funktioniert auf allen ändernbaren Layern</translation>
     </message>
     <message>
         <source>&amp;QGIS Home Page</source>
-        <translation>QGIS-Homepage</translation>
+        <translation type="obsolete">QGIS-Homepage</translation>
     </message>
     <message>
         <source>A&amp;bout</source>
@@ -10108,6 +10108,10 @@ Funktioniert auf allen ändernbaren Layern</translation>
     <message>
         <source>Measure Azimuth</source>
         <translation>Azimuth messen</translation>
+    </message>
+    <message>
+        <source>QGIS Enterprise Homepage</source>
+        <translation>QGIS Enterprise Homepage</translation>
     </message>
 </context>
 <context>
@@ -18079,6 +18083,10 @@ Ausdruckfehler:
         <source>Ctrl+R</source>
         <translation>Strg+R</translation>
     </message>
+    <message>
+        <source>Zoom to feature</source>
+        <translation>Zum Objekt zoomen</translation>
+    </message>
 </context>
 <context>
     <name>QgsAttributeTableModel</name>
@@ -21581,6 +21589,10 @@ Bitte versuchen Sie eine niedrigere Auflösung oder ein kleineres Papierformat</
         <source>Label alignment changed</source>
         <translation>Beschriftungsausrichtung geändert</translation>
     </message>
+    <message>
+        <source>Label length limit changed</source>
+        <translation>Limit der Beschriftungslänge geändert</translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerLabelWidgetBase</name>
@@ -21659,6 +21671,14 @@ Bitte versuchen Sie eine niedrigere Auflösung oder ein kleineres Papierformat</
     <message>
         <source>Vertical margin</source>
         <translation>Vertikaler Rand</translation>
+    </message>
+    <message>
+        <source>Maximum length</source>
+        <translation>Maximallänge</translation>
+    </message>
+    <message>
+        <source> characters</source>
+        <translation> Zeichen</translation>
     </message>
 </context>
 <context>
@@ -30910,7 +30930,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Terrain following behaviur</source>
-        <translation>Geländefolgung</translation>
+        <translation type="obsolete">Geländefolgung</translation>
     </message>
     <message>
         <source>Clamping</source>
@@ -31111,6 +31131,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
         <translation>Den Zentroid der gesamten Geometrie clampen</translation>
+    </message>
+    <message>
+        <source>Terrain following behaviour</source>
+        <translation>Geländefolgung</translation>
     </message>
 </context>
 <context>
@@ -36025,6 +36049,14 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Print</source>
         <translation>Drucken</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <source>Delete items</source>
+        <translation>Objekte löschen</translation>
+    </message>
 </context>
 <context>
     <name>QgsMapCanvasSnappingUtils</name>
@@ -37091,7 +37123,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Add to canvas</source>
-        <translation>Zur Karte hinzufügen</translation>
+        <translation type="obsolete">Zur Karte hinzufügen</translation>
     </message>
     <message>
         <source>No heightmap is defined in the project.</source>
@@ -37137,6 +37169,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Sea level</source>
         <translation>Meereshöhe</translation>
     </message>
+    <message>
+        <source>Add to map</source>
+        <translation>Zur Karte hinzufügen</translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -37153,7 +37189,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <name>QgsMeasureWidget</name>
     <message>
         <source>Total:</source>
-        <translation>Total:</translation>
+        <translation type="obsolete">Total:</translation>
     </message>
     <message>
         <source>Degrees</source>
@@ -37352,6 +37388,14 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Reset offset</source>
         <translation>Offset zurücksetzten</translation>
     </message>
+    <message>
+        <source>Edit symbol</source>
+        <translation>Symbol editieren</translation>
+    </message>
+    <message>
+        <source>Remove symbol</source>
+        <translation>Symbol entfernen</translation>
+    </message>
 </context>
 <context>
     <name>QgsMilXIO</name>
@@ -37441,7 +37485,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <name>QgsMilXLibrary</name>
     <message>
         <source>MilX Symbol Gallery</source>
-        <translation>MilX Symbolgalerie</translation>
+        <translation type="obsolete">MilX Symbolgalerie</translation>
     </message>
     <message>
         <source>Layer:</source>
@@ -37474,6 +37518,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>Enter name of new MilX layer:</source>
         <translation>Name der MilX Ebene eingeben:</translation>
+    </message>
+    <message>
+        <source>MSS Symbol Gallery</source>
+        <translation>MSS Symbolgalerie</translation>
     </message>
 </context>
 <context>
@@ -44479,6 +44527,14 @@ Fortfahren?</translation>
         <source>Exclusive layer groups</source>
         <translation>Exclusive Ebenengruppen</translation>
     </message>
+    <message>
+        <source>Render map tile</source>
+        <translation>Kartenkachel Rendern</translation>
+    </message>
+    <message>
+        <source>Allow defining datasources in server requests</source>
+        <translation>Erlaube es, Datenquellen in Serveranfragen zu definieren</translation>
+    </message>
 </context>
 <context>
     <name>QgsProjectTemplateSelectionDialog</name>
@@ -46102,11 +46158,39 @@ Auf Hilfeknopf klicken um die gültigen Erzeugungsoptionen diese Formats zu erfa
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//DE&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//DE&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot;font-family:&apos;Cantarell&apos;;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>OWS</source>
+        <translation>OWS</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation>Metadaten der Ebene in GetProjectSettings publizieren</translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation>WMS Legende publizieren</translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation>Ebenentitel in GetLegendGraphic anzeigen</translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation>Ebene als auswählbar in GetProjectSettings publizieren</translation>
     </message>
 </context>
 <context>
@@ -47266,6 +47350,14 @@ standard deviation ×</source>
         <source>Connection to GPS device failed</source>
         <translation>Verbindung zum GPS Gerät schlug fehl</translation>
     </message>
+    <message>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>Favorite</source>
+        <translation>Favorit</translation>
+    </message>
 </context>
 <context>
     <name>QgsRibbonLayerTreeViewMenuProvider</name>
@@ -47520,7 +47612,7 @@ Sicht</translation>
     </message>
     <message>
         <source>Show numeric input box when drawing</source>
-        <translation type="unfinished">Numerische Einfabefelder während des Zeichnens anzeigen</translation>
+        <translation>Numerische Einfabefelder während des Zeichnens anzeigen</translation>
     </message>
     <message>
         <source>Language:</source>
@@ -47573,6 +47665,14 @@ Sicht</translation>
     <message>
         <source>Add Camera Picture</source>
         <translation>Kamerabild hinzufügen</translation>
+    </message>
+    <message>
+        <source>Picture</source>
+        <translation>Bild</translation>
+    </message>
+    <message>
+        <source>Add MSS Symbol</source>
+        <translation>Symbol hinzufügen</translation>
     </message>
 </context>
 <context>

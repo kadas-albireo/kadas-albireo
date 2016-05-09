@@ -9962,10 +9962,6 @@ Werkt voor huidige actieve bewerkbare laag</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;QGIS Home Page</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>A&amp;bout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10147,6 +10143,10 @@ Werkt voor huidige actieve bewerkbare laag</translation>
     </message>
     <message>
         <source>Measure Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QGIS Enterprise Homepage</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18124,6 +18124,10 @@ Parser fout:
         <source>, spatially limited</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Zoom to feature</source>
+        <translation type="unfinished">Naar object inzoomen</translation>
+    </message>
 </context>
 <context>
     <name>QgsAttributeTableModel</name>
@@ -21631,6 +21635,10 @@ Probeer alstublieft een lagere resolutie of een kleiner papiergrootte</translati
         <source>Label alignment changed</source>
         <translation>Label-uitlijning aangepast</translation>
     </message>
+    <message>
+        <source>Label length limit changed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerLabelWidgetBase</name>
@@ -21709,6 +21717,14 @@ Probeer alstublieft een lagere resolutie of een kleiner papiergrootte</translati
     <message>
         <source>Vertical margin</source>
         <translation>Verticale marge</translation>
+    </message>
+    <message>
+        <source>Maximum length</source>
+        <translation type="unfinished">Maximumlengte</translation>
+    </message>
+    <message>
+        <source> characters</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -30856,10 +30872,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Altitude</translation>
     </message>
     <message>
-        <source>Terrain following behaviur</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clamping</source>
         <translation type="unfinished"></translation>
     </message>
@@ -31057,6 +31069,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain following behaviour</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -35846,6 +35862,14 @@ Er kan een probleem zijn met uw netwerkverbinding, of bij de WMS-server.</numeru
         <source>Print</source>
         <translation type="unfinished">Afdrukken</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Bewerken</translation>
+    </message>
+    <message>
+        <source>Delete items</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMapCanvasSnappingUtils</name>
@@ -36928,7 +36952,7 @@ Er kan een probleem zijn met uw netwerkverbinding, of bij de WMS-server.</numeru
     </message>
     <message>
         <source>Add to canvas</source>
-        <translation type="unfinished">Aan kaartvenster toevoegen</translation>
+        <translation type="obsolete">Aan kaartvenster toevoegen</translation>
     </message>
     <message>
         <source>No heightmap is defined in the project.</source>
@@ -36974,6 +36998,10 @@ Er kan een probleem zijn met uw netwerkverbinding, of bij de WMS-server.</numeru
         <source>Sea level</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to map</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -36994,10 +37022,6 @@ eigenschappen
 </context>
 <context>
     <name>QgsMeasureWidget</name>
-    <message>
-        <source>Total:</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Degrees</source>
         <translation type="unfinished">Graden</translation>
@@ -37195,6 +37219,14 @@ eigenschappen
         <source>Reset offset</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMilXIO</name>
@@ -37282,10 +37314,6 @@ eigenschappen
 <context>
     <name>QgsMilXLibrary</name>
     <message>
-        <source>MilX Symbol Gallery</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37315,6 +37343,10 @@ eigenschappen
     </message>
     <message>
         <source>Enter name of new MilX layer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSS Symbol Gallery</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -44319,6 +44351,14 @@ Doorgaan?</translation>
         <source>Exclusive layer groups</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Render map tile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow defining datasources in server requests</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsProjectTemplateSelectionDialog</name>
@@ -45947,11 +45987,39 @@ Klik op de help knop om geldige schrijf-opties voor dit type te verkrijgen.</tra
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -47112,6 +47180,14 @@ standaarddeviatie x</translation>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRibbonLayerTreeViewMenuProvider</name>
@@ -47417,6 +47493,14 @@ Sight</source>
     </message>
     <message>
         <source>Add Camera Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Picture</source>
+        <translation type="unfinished">Afbeelding</translation>
+    </message>
+    <message>
+        <source>Add MSS Symbol</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

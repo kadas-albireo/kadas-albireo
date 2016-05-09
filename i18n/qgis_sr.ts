@@ -9655,10 +9655,6 @@ Acts on currently active editable layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;QGIS Home Page</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>A&amp;bout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9840,6 +9836,10 @@ Acts on currently active editable layer</source>
     </message>
     <message>
         <source>Measure Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>QGIS Enterprise Homepage</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17659,6 +17659,10 @@ Parser error:
         <source>, spatially limited</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Zoom to feature</source>
+        <translation type="unfinished">Зумирај на елемент</translation>
+    </message>
 </context>
 <context>
     <name>QgsAttributeTableModel</name>
@@ -21158,6 +21162,10 @@ Please try a lower resolution or a smaller papersize</source>
         <source>Label alignment changed</source>
         <translation>Измена поравнања ознаке</translation>
     </message>
+    <message>
+        <source>Label length limit changed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsComposerLabelWidgetBase</name>
@@ -21235,6 +21243,14 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Vertical margin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> characters</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -30228,10 +30244,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Terrain following behaviur</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clamping</source>
         <translation type="unfinished"></translation>
     </message>
@@ -30429,6 +30441,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terrain following behaviour</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -35161,6 +35177,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Print</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete items</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMapCanvasSnappingUtils</name>
@@ -36230,10 +36254,6 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished">Копирај</translation>
     </message>
     <message>
-        <source>Add to canvas</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No heightmap is defined in the project.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -36277,6 +36297,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Sea level</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to map</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -36291,10 +36315,6 @@ This may be a problem in your network connection or at the WMS server.</source>
 </context>
 <context>
     <name>QgsMeasureWidget</name>
-    <message>
-        <source>Total:</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Degrees</source>
         <translation type="unfinished">Степени</translation>
@@ -36493,6 +36513,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Reset offset</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove symbol</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMilXIO</name>
@@ -36580,10 +36608,6 @@ This may be a problem in your network connection or at the WMS server.</source>
 <context>
     <name>QgsMilXLibrary</name>
     <message>
-        <source>MilX Symbol Gallery</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -36613,6 +36637,10 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Enter name of new MilX layer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSS Symbol Gallery</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -43492,6 +43520,14 @@ Proceed?</source>
         <source>Exclusive layer groups</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Render map tile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow defining datasources in server requests</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsProjectTemplateSelectionDialog</name>
@@ -45111,11 +45147,31 @@ Click on help button to get valid creation options for this format.</source>
         <translation>Хистограм</translation>
     </message>
     <message>
+        <source>OWS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Cantarell&apos;; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer metadata in GetProjectSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish WMS legend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show layer title in GetLegendGraphic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Publish layer as checkable in GetProjectSettings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -46268,6 +46324,14 @@ standard deviation ×</source>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Уклони</translation>
+    </message>
+    <message>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsRibbonLayerTreeViewMenuProvider</name>
@@ -46573,6 +46637,14 @@ Sight</source>
     </message>
     <message>
         <source>Add Camera Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add MSS Symbol</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
