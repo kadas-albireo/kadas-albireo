@@ -937,8 +937,9 @@ void GlobePlugin::updateLayers()
     }
 
     QStringList drapedLayers;
+    QStringList selectedLayers = mDockWidget->getSelectedLayers();
 
-    Q_FOREACH ( const QString& layerId, mDockWidget->getSelectedLayers() )
+    Q_FOREACH ( const QString& layerId, selectedLayers )
     {
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
       connect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
@@ -970,6 +971,18 @@ void GlobePlugin::updateLayers()
         }
       }
     }
+    foreach ( const QString& layerId, mAnnotations.keys() )
+    {
+      if ( !layerId.isEmpty() )
+      {
+        bool visible = selectedLayers.contains( layerId );
+        foreach ( const osg::ref_ptr<osgEarth::Annotation::PlaceNode>& node, mAnnotations[layerId].values() )
+        {
+          node->setNodeMask( visible ? ~0 : 0 );
+        }
+      }
+    }
+
     mTileSource->setLayerSet( drapedLayers );
     refreshQGISMapLayer( fullExtent );
   }
@@ -1042,8 +1055,11 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 {
   if ( mOsgViewer )
   {
-    mAnnotationsGroup->removeChild( mAnnotations[item] );
-    mAnnotations.take( item ) = 0;
+    if ( mAnnotations.contains( item->layerId ) )
+    {
+      mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
+      mAnnotations[item->layerId].take( item ) = 0;
+    }
     const QgsPoint& p = item->worldPos;
     osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
 
@@ -1059,17 +1075,17 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 
     osg::ref_ptr<osgEarth::Annotation::PlaceNode> placeNode = new osgEarth::Annotation::PlaceNode( mMapNode, geop, "", pin );
     placeNode->setOcclusionCulling( true );
-    mAnnotations[item] = placeNode;
+    mAnnotations[item->layerId][item] = placeNode;
     mAnnotationsGroup->addChild( placeNode );
   }
 }
 
 void GlobePlugin::removeBillboard( QgsBillBoardItem* item )
 {
-  if ( mOsgViewer )
+  if ( mOsgViewer && mAnnotations.contains( item->layerId ) )
   {
-    mAnnotationsGroup->removeChild( mAnnotations[item] );
-    mAnnotations.take( item ) = 0;
+    mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
+    mAnnotations[item->layerId].take( item ) = 0;
   }
 }
 

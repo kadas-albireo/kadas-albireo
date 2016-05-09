@@ -78,16 +78,6 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
   {
     MilXClient::getMilitaryName( mMssString, mMilitaryName );
   }
-  if ( mPoints.size() == 1 )
-  {
-    int symbolSize = MilXClient::getSymbolSize();
-    MilXClient::NPointSymbol symbol( mMssString, QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true, true );
-    MilXClient::NPointSymbolGraphic graphic;
-    if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
-    {
-      QgsBillBoardRegistry::instance()->addItem( this, graphic.graphic, mPoints.front() );
-    }
-  }
 }
 
 QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform* crst ) const
@@ -273,6 +263,21 @@ QgsMilXLayer::~QgsMilXLayer()
   if ( mMenuProvider )
     mMenuProvider->removeLegendLayerActionsForLayer( this );
   qDeleteAll( mItems );
+}
+
+void QgsMilXLayer::addItem( QgsMilXItem *item )
+{
+  mItems.append( item );
+  if ( !item->isMultiPoint() )
+  {
+    int symbolSize = MilXClient::getSymbolSize();
+    MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true, true );
+    MilXClient::NPointSymbolGraphic graphic;
+    if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+    {
+      QgsBillBoardRegistry::instance()->addItem( this, graphic.graphic, item->points().front(), id() );
+    }
+  }
 }
 
 bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult )

@@ -23,7 +23,7 @@ QgsBillBoardRegistry* QgsBillBoardRegistry::instance()
   return &instance;
 }
 
-void QgsBillBoardRegistry::addItem( void* parent, const QImage &image, const QgsPoint &worldPos )
+void QgsBillBoardRegistry::addItem( void* parent, const QImage &image, const QgsPoint &worldPos , const QString &layerId )
 {
   QMap<void*, QgsBillBoardItem*>::iterator it = mItems.find( parent );
   if ( it == mItems.end() )
@@ -32,6 +32,7 @@ void QgsBillBoardRegistry::addItem( void* parent, const QImage &image, const Qgs
   }
   it.value()->image = image;
   it.value()->worldPos = worldPos;
+  it.value()->layerId = layerId;
   emit itemAdded( it.value() );
 }
 

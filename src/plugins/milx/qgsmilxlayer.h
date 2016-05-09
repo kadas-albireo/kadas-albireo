@@ -69,7 +69,7 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     // This second variant is just because for some reason SIP mishandles QgsLayerTreeViewMenuProvider and the first variant is unusable from python...
     QgsMilXLayer( QgisInterface* iface, const QString& name = "MilX" );
     ~QgsMilXLayer();
-    void addItem( QgsMilXItem* item ) { mItems.append( item ); }
+    void addItem( QgsMilXItem* item );
     QgsMilXItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
     const QList<QgsMilXItem*>& items() const { return mItems; }
     void setApproved( bool approved ) { mIsApproved = approved; }
