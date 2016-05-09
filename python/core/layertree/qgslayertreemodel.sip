@@ -142,6 +142,13 @@ class QgsLayerTreeModel : QAbstractItemModel
     //! @note added in 2.6
     void legendMapViewData( double *mapUnitsPerPixel /Out/, int *dpi /Out/, double *scale /Out/ );
 
+    enum TooltipMode {
+      TOOLTIP_DATASOURCE,
+      TOOLTIP_NAME
+    };
+    //! Control what to show in layer tooltips
+    void setLayerTooltipMode(TooltipMode mode);
+
     //! Return true if index represents a legend node (instead of layer node)
     //! @deprecated use index2legendNode()
     bool isIndexSymbologyNode( const QModelIndex& index ) const /Deprecated/;

@@ -40,6 +40,7 @@ QgsLayerTreeModel::QgsLayerTreeModel( QgsLayerTreeGroup* rootNode, QObject *pare
     , mLegendMapViewMupp( 0 )
     , mLegendMapViewDpi( 0 )
     , mLegendMapViewScale( 0 )
+    , mTooltipMode( TOOLTIP_DATASOURCE )
 {
   connectToRootNode();
 
@@ -271,7 +272,7 @@ QVariant QgsLayerTreeModel::data( const QModelIndex &index, int role ) const
     if ( QgsLayerTree::isLayer( node ) )
     {
       if ( QgsMapLayer* layer = QgsLayerTree::toLayer( node )->layer() )
-        return layer->publicSource();
+        return mTooltipMode == TOOLTIP_DATASOURCE ? layer->publicSource() : layer->name();
     }
   }
 

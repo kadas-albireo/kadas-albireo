@@ -164,6 +164,14 @@ class CORE_EXPORT QgsLayerTreeModel : public QAbstractItemModel
     //! @note added in 2.6
     void legendMapViewData( double *mapUnitsPerPixel, int *dpi, double *scale );
 
+    enum TooltipMode
+    {
+      TOOLTIP_DATASOURCE,
+      TOOLTIP_NAME
+    };
+    //! Control what to show in layer tooltips
+    void setLayerTooltipMode( TooltipMode mode ) { mTooltipMode = mode; }
+
     //! Return true if index represents a legend node (instead of layer node)
     //! @deprecated use index2legendNode()
     Q_DECL_DEPRECATED bool isIndexSymbologyNode( const QModelIndex& index ) const;
@@ -284,6 +292,7 @@ class CORE_EXPORT QgsLayerTreeModel : public QAbstractItemModel
     double mLegendMapViewMupp;
     int mLegendMapViewDpi;
     double mLegendMapViewScale;
+    TooltipMode mTooltipMode;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QgsLayerTreeModel::Flags )
