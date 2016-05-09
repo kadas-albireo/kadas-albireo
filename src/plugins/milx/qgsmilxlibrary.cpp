@@ -92,7 +92,7 @@ class QgsMilXLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 QgsMilXLibrary::QgsMilXLibrary( QgisInterface* iface, QWidget *parent )
     : QDialog( parent ), mIface( iface ), mLoader( 0 )
 {
-  setWindowTitle( tr( "MilX Symbol Gallery" ) );
+  setWindowTitle( tr( "MSS Symbol Gallery" ) );
   resize( 480, 640 );
   QGridLayout* layout = new QGridLayout( this );
   setLayout( layout );
@@ -308,7 +308,7 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
   }
   else
   {
-    QStandardItem* item = new QStandardItem( QString("%1 (%2)").arg(value).arg(symbolMilitaryName) );
+    QStandardItem* item = new QStandardItem( QString( "%1 (%2)" ).arg( value ).arg( symbolMilitaryName ) );
     parent->setChild( parent->rowCount(), item );
     item->setData( symbolXml, SymbolXmlRole );
     item->setData( symbolMilitaryName, SymbolMilitaryNameRole );
@@ -365,7 +365,7 @@ void QgsMilXLibraryLoader::run()
     {
       QString galleryFilePath = galleryDir.absoluteFilePath( galleryFileName );
       QFile galleryFile( galleryFilePath );
-      if ( !galleryFilePath.endsWith("_international.xml", Qt::CaseInsensitive) && galleryFile.open( QIODevice::ReadOnly ) )
+      if ( !galleryFilePath.endsWith( "_international.xml", Qt::CaseInsensitive ) && galleryFile.open( QIODevice::ReadOnly ) )
       {
         QImage galleryIcon( QString( galleryFilePath ).replace( QRegExp( ".xml$" ), ".png" ) );
         QDomDocument doc;
