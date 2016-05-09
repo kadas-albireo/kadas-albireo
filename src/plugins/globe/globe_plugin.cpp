@@ -702,6 +702,8 @@ void GlobePlugin::addImageControl( const std::string& imgPath, int x, int y, osg
   osg::Image* image = osgDB::readImageFile( imgPath );
   osgEarth::Util::Controls::ImageControl* control = new NavigationControl( image );
   control->setPosition( x, y );
+  control->setWidth( image->s() );
+  control->setHeight( image->t() );
   if ( handler )
     control->addEventHandler( handler );
   osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer )->addControl( control );
@@ -1177,13 +1179,23 @@ bool NavigationControl::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActi
   }
   else if ( ea.getEventType() == osgGA::GUIEventAdapter::FRAME && mMousePressed )
   {
-    for ( osgEarth::Util::Controls::ControlEventHandlerList::const_iterator i = _eventHandlers.begin(); i != _eventHandlers.end(); ++i )
+    float canvasY = cx._vp->height() - ( ea.getY() - cx._view->getCamera()->getViewport()->y() );
+    float canvasX = ea.getX() - cx._view->getCamera()->getViewport()->x();
+
+    if ( intersects( canvasX, canvasY ) )
     {
-      NavigationControlHandler* handler = dynamic_cast<NavigationControlHandler*>( i->get() );
-      if ( handler )
+      for ( osgEarth::Util::Controls::ControlEventHandlerList::const_iterator i = _eventHandlers.begin(); i != _eventHandlers.end(); ++i )
       {
-        handler->onMouseDown();
+        NavigationControlHandler* handler = dynamic_cast<NavigationControlHandler*>( i->get() );
+        if ( handler )
+        {
+          handler->onMouseDown();
+        }
       }
+    }
+    else
+    {
+      mMousePressed = false;
     }
   }
   else if ( ea.getEventType() == osgGA::GUIEventAdapter::RELEASE )
