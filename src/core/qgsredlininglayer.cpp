@@ -130,6 +130,7 @@ bool QgsRedliningLayer::readXml( const QDomNode& layer_node )
 {
   QgsFeatureList features;
   QDomNodeList nodes = layer_node.toElement().childNodes();
+  setLayerTransparency( layer_node.firstChildElement( "layerTransparency" ).text().toInt() );
   for ( int iNode = 0, nNodes = nodes.size(); iNode < nNodes; ++iNode )
   {
     QDomElement redliningItemElem = nodes.at( iNode ).toElement();
@@ -158,6 +159,13 @@ bool QgsRedliningLayer::writeXml( QDomNode & layer_node, QDomDocument & document
 {
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "redlining" );
+
+  QDomElement transparencyElem = document.createElement( "layerTransparency" );
+  QDomText transparencyValue = document.createTextNode( QString::number( layerTransparency() ) );
+  transparencyElem.appendChild( transparencyValue );
+  layer_node.appendChild( transparencyElem );
+
+  setLayerTransparency( layer_node.firstChildElement( "layerTransparency" ).text().toInt() );
   QgsFeatureIterator it = getFeatures();
   QgsFeature feature;
   while ( it.nextFeature( feature ) )
