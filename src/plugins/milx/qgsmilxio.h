@@ -20,11 +20,13 @@
 
 #include <QObject>
 
+class QgisInterface;
 class QgsMessageBar;
 class QgsMilXLayer;
 
 class QgsMilXIO : public QObject
 {
+    Q_OBJECT
   public:
     static bool save( QgisInterface *iface );
     static bool load( QgisInterface *iface );

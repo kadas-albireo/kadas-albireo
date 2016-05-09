@@ -24,7 +24,7 @@ class QgsComposerMultiFrame;
 /**Frame item for a composer multiframe item*/
 class CORE_EXPORT QgsComposerFrame: public QgsComposerItem
 {
-
+    Q_OBJECT
   public:
 
     QgsComposerFrame( QgsComposition* c, QgsComposerMultiFrame* mf, qreal x, qreal y, qreal width, qreal height );

@@ -22,13 +22,13 @@ SET (qgs_milx_SRCS
 
 SET (qgs_milx_HDRS
   milx_plugin.h
-  qgsmilxio.h
 )
 
 SET (qgs_milx_MOC_HDRS
   qgsmilxplugin.h
   qgsmilxmaptools.h
   qgsmilxannotationitem.h
+  qgsmilxio.h
   qgsmilxlayer.h
   qgsmilxlibrary.h
   MilXClient.hpp

@@ -412,6 +412,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgsgeometryvalidator.h
 
   composer/qgsaddremoveitemcommand.h
+  composer/qgscomposerframe.h
   composer/qgscomposerlegend.h
   composer/qgscomposermap.h
   composer/qgscomposermapitem.h
@@ -597,7 +598,6 @@ SET(QGIS_CORE_HDRS
 
   composer/qgsaddremovemultiframecommand.h
   composer/qgscomposerarrow.h
-  composer/qgscomposerframe.h
   composer/qgscomposeritemcommand.h
   composer/qgscomposerlegenditem.h
   composer/qgscomposerlegendstyle.h

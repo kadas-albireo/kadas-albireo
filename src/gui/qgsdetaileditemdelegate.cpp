@@ -292,10 +292,10 @@ int QgsDetailedItemDelegate::height( const QStyleOptionViewItem &theOption,
   //we don't word wrap the category so its easy to measure
   myHeight += myCategoryMetrics.height() + verticalSpacing();
   // if category should be wrapped use this code
-  //~ myList = wordWrap( theData.category(),
-  //~ myCategoryMetrics,
-  //~ theOption.rect.width() - ( mpCheckBox->width() + horizontalSpacing() ) );
-  //~ myHeight += ( myList.count() + 1 ) * ( myCategoryMetrics.height() - verticalSpacing() );
+  // myList = wordWrap( theData.category(),
+  // myCategoryMetrics,
+  // theOption.rect.width() - ( mpCheckBox->width() + horizontalSpacing() ) );
+  // myHeight += ( myList.count() + 1 ) * ( myCategoryMetrics.height() - verticalSpacing() );
   return myHeight;
 }
 

@@ -129,7 +129,6 @@ SET(QGIS_APP_SRCS
   qgsredlining.cpp
   qgsredliningtextdialog.cpp
   qgsshortcutsmanager.cpp
-  qgsguivectorlayertools.h
   qgssnappingdialog.cpp
   qgsundowidget.cpp
   qgstipgui.cpp
@@ -225,6 +224,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsfieldcalculator.h
   qgsfieldsproperties.h
   qgsgpsrouteeditor.h
+  qgsguivectorlayertools.h
   qgscoordinatedisplayer.h
   qgscrsselection.h
   qgsmapcanvascontextmenu.h
@@ -251,6 +251,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolcircularstringradius.h
   qgsmaptooladdpart.h
   qgsmaptooladdring.h
+  qgsmaptooledit.h
   qgsmaptoolfillring.h
   qgsmaptoolchangelabelproperties.h
   qgsmaptooldeletepart.h
