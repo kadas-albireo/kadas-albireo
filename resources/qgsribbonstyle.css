@@ -196,6 +196,13 @@ QPushButton#mLayerTreeViewButton:pressed
     padding: 1px 19px 1px 4px;
 }
 
+#mRibbonWidget > QWidget > QWidget > QComboBox:hover,
+#mRibbonWidget > QWidget > QWidget > QToolButton:hover,
+#mRibbonWidget > QWidget > QWidget > QSpinBox:hover
+{
+    border-color: #3daee9;
+}
+
 #mRibbonWidget > QWidget > QWidget > QComboBox:drop-down,
 #mRibbonWidget > QWidget > QWidget > QToolButton:menu-button
 {
