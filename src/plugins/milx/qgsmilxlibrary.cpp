@@ -308,7 +308,7 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
   }
   else
   {
-    QStandardItem* item = new QStandardItem( QString( "%1 (%2)" ).arg( value ).arg( symbolMilitaryName ) );
+    QStandardItem* item = new QStandardItem( QString( "%1" ).arg( symbolMilitaryName ) );
     parent->setChild( parent->rowCount(), item );
     item->setData( symbolXml, SymbolXmlRole );
     item->setData( symbolMilitaryName, SymbolMilitaryNameRole );
