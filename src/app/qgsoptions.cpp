@@ -985,7 +985,7 @@ void QgsOptions::on_mProjectOnLaunchPushBtn_pressed()
 {
   // Retrieve last used project dir from persistent settings
   QSettings settings;
-  QString lastUsedDir = settings.value( "/UI/lastProjectDir", "." ).toString();
+  QString lastUsedDir = settings.value( "/UI/lastProjectDir", QDir::homePath() ).toString();
   QString projPath = QFileDialog::getOpenFileName( this,
                      tr( "Choose project file to open at launch" ),
                      lastUsedDir,

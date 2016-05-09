@@ -2818,7 +2818,7 @@ void QgisApp::fileOpen()
   {
     // Retrieve last used project dir from persistent settings
     QSettings settings;
-    QString lastUsedDir = settings.value( "/UI/lastProjectDir", "." ).toString();
+    QString lastUsedDir = settings.value( "/UI/lastProjectDir", QDir::homePath() ).toString();
     QString fullPath = QFileDialog::getOpenFileName( this,
                        tr( "Choose a QGIS project file to open" ),
                        lastUsedDir,
@@ -2975,7 +2975,7 @@ bool QgisApp::fileSave()
 
     // Retrieve last used project dir from persistent settings
     QSettings settings;
-    QString lastUsedDir = settings.value( "/UI/lastProjectDir", "." ).toString();
+    QString lastUsedDir = settings.value( "/UI/lastProjectDir", QDir::homePath() ).toString();
 
     QString path = QFileDialog::getSaveFileName(
                      this,
@@ -3041,7 +3041,7 @@ void QgisApp::fileSaveAs()
 {
   // Retrieve last used project dir from persistent settings
   QSettings settings;
-  QString lastUsedDir = settings.value( "/UI/lastProjectDir", "." ).toString();
+  QString lastUsedDir = settings.value( "/UI/lastProjectDir", QDir::homePath() ).toString();
 
   QString path = QFileDialog::getSaveFileName( this,
                  tr( "Choose a file name to save the QGIS project file as" ),
