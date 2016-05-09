@@ -130,7 +130,8 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
   transpSlider->setValue( curValue );
   transpSlider->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   transpSlider->setProperty( "mapcanvas", QVariant::fromValue( reinterpret_cast<void*>( canvas ) ) );
-  connect( transpSlider, SIGNAL( sliderReleased() ), this, SLOT( setLayerTransparency() ) );
+  transpSlider->setTracking( false );
+  connect( transpSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setLayerTransparency() ) );
   transpLayout->addWidget( transpSlider );
 
   QWidgetAction* transpAction = new QWidgetAction( parent );
