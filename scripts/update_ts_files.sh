@@ -104,7 +104,7 @@ done
 
 trap cleanup EXIT
 
-tar --remove-file -cf i18n/python_ts.tar $(find python -name "*.ts")
+tar --remove-file -cf i18n/python_ts.tar $(find python -name "*.ts") || :
 if [ "$exclude" != "--exclude i18n/qgis_en.ts" -o -n "$add" ]; then
   echo Saving excluded translations
   tar $fast -cf i18n/qgis_ts.tar i18n/qgis_*.ts $exclude
