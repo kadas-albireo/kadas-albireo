@@ -37,6 +37,7 @@
 
 class RemarksEdit : public QTextBrowser
 {
+    Q_DECLARE_TR_FUNCTIONS( RemarksEdit )
   public:
     RemarksEdit( QWidget* parent = 0 ) : QTextBrowser( parent )
     {

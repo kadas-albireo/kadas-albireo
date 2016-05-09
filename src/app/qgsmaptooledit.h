@@ -27,6 +27,7 @@ class QKeyEvent;
 /**Base class for map tools that edit vector geometry*/
 class APP_EXPORT QgsMapToolEdit: public QgsMapToolAdvancedDigitizing
 {
+    Q_OBJECT
   public:
     QgsMapToolEdit( QgsMapCanvas* canvas );
     virtual ~QgsMapToolEdit();

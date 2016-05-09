@@ -44,8 +44,9 @@
 
 
 
-class QgsComposerLegendMenuProvider : public QObject, public QgsLayerTreeViewMenuProvider
+class QgsComposerLegendMenuProvider : public QgsLayerTreeViewMenuProvider
 {
+    Q_DECLARE_TR_FUNCTIONS( QgsComposerLegendMenuProvider )
   public:
     QgsComposerLegendMenuProvider( QgsLayerTreeView* view, QgsComposerLegendWidget* w ) : mView( view ), mWidget( w ) {}
 

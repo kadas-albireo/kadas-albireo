@@ -27,6 +27,7 @@ class QgsRubberBand;
  */
 class GUI_EXPORT QgsMapToolZoom : public QgsMapTool
 {
+    Q_OBJECT
   public:
     //! constructor
     QgsMapToolZoom( QgsMapCanvas* canvas, bool zoomOut );

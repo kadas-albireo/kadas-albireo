@@ -329,6 +329,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
   qgsmaptoolpan.h
+  qgsmaptoolzoom.h
   qgsmapwidget.h
   qgsmultimapmanager.h
   qgsmessagebar.h
@@ -501,7 +502,6 @@ SET(QGIS_GUI_HDRS
   qgsmapcanvassnappingutils.h
   qgsmaptip.h
   qgsmaptoolannotation.h
-  qgsmaptoolzoom.h
   qgsnumericsortlistviewitem.h
   qgsrubberband.h
   qgsannotationwidget.cpp

@@ -23,6 +23,7 @@
 
 class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 {
+    Q_OBJECT
     QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem, "GeoImageAnnotationItem" )
 
   public:

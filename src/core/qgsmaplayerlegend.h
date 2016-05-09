@@ -106,6 +106,7 @@ class CORE_EXPORT QgsDefaultVectorLayerLegend : public QgsMapLayerLegend
  */
 class CORE_EXPORT QgsDefaultRasterLayerLegend : public QgsMapLayerLegend
 {
+    Q_OBJECT
   public:
     explicit QgsDefaultRasterLayerLegend( QgsRasterLayer* rl );
 
