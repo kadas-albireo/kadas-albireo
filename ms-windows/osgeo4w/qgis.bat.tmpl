@@ -3,16 +3,13 @@ call "%~dp0\o4w_env.bat"
 call "%OSGEO4W_ROOT%"\apps\grass\grass-@grassversion@\etc\env.bat
 @echo off
 path %OSGEO4W_ROOT%\apps\@package@\bin;%OSGEO4W_ROOT%\local\bin;%OSGEO4W_ROOT%\apps\grass\grass-@grassversion@\lib;%PATH%
-set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%/apps/@package@
+set QGIS_PREFIX_PATH=%OSGEO4W_ROOT:\=/%/apps/@package@
 set GDAL_FILENAME_IS_UTF8=YES
 rem Set VSI cache to be used as buffer, see #6448
 set VSI_CACHE=TRUE
 set VSI_CACHE_SIZE=1000000
 set QT_PLUGIN_PATH=%OSGEO4W_ROOT%\apps\@package@\qtplugins;%OSGEO4W_ROOT%\apps\qt4\plugins
 
-set CONFIGTEMPLATE="%OSGEO4W_ROOT%\config-template"
-rem set CONFIGPATH="%homeshare%\config\@package@"
-set CONFIGPATH="%homeshare%\config\qgis-albireo"
-if not exist "%CONFIGPATH%" xcopy /e "%CONFIGTEMPLATE%" "%CONFIGPATH%\"
+set CONFIGPATH="%APPDATA%\Sourcepole\@package@"
 
 start "QGIS" /B "%OSGEO4W_ROOT%"\bin\@package@-bin.exe --ribbongui true --configpath "%CONFIGPATH%" %*
