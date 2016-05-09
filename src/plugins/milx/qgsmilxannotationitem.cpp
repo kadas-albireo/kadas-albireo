@@ -326,8 +326,8 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     actionClearOffset = menu.addAction( tr( "Reset offset" ) );
   }
   menu.addSeparator();
-  QAction* actionEdit = menu.addAction( "Edit symbol" );
-  QAction* actionRemove = menu.addAction( "Remove symbol" );
+  QAction* actionEdit = menu.addAction( tr( "Edit symbol" ) );
+  QAction* actionRemove = menu.addAction( tr( "Remove symbol" ) );
   QAction* clickedAction = menu.exec( screenPos );
   if ( !clickedAction )
   {
