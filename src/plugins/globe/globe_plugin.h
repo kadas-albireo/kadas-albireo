@@ -159,7 +159,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::Util::Controls::LabelControl> mStatsLabel;
 
     osg::Group* mAnnotationsGroup;
-    QMap<QgsBillBoardItem*, osg::ref_ptr<osgEarth::Annotation::PlaceNode> > mAnnotations;
+    QMap<QString, QMap<QgsBillBoardItem*, osg::ref_ptr<osgEarth::Annotation::PlaceNode> > > mAnnotations;
 
     void setupProxy();
     void addControl( osgEarth::Util::Controls::Control* control, int x, int y, int w, int h, osgEarth::Util::Controls::ControlEventHandler* handler );
