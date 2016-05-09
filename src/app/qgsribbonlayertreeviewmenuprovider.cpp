@@ -6,6 +6,8 @@
 #include "qgslayertreemodel.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
+#include "qgspluginlayer.h"
+#include "qgspluginlayerregistry.h"
 #include <QMenu>
 
 QgsRibbonLayerTreeViewMenuProvider::QgsRibbonLayerTreeViewMenuProvider( QgsLayerTreeView* view, QgsRibbonApp* mainWidget ):
@@ -66,8 +68,18 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
 //        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
 //                         QgisApp::instance(), SLOT( attributeTable() ) );
       }
-
-      menu->addAction( tr( "&Properties" ), mMainWidget, SLOT( layerProperties() ) );
+      if ( layer->type() == QgsMapLayer::PluginLayer )
+      {
+        QgsPluginLayerType* plt = QgsPluginLayerRegistry::instance()->pluginLayerType( static_cast<QgsPluginLayer*>( layer )->pluginLayerType() );
+        if ( plt && plt->hasLayerProperties() != 0 )
+        {
+          menu->addAction( tr( "&Properties" ), mMainWidget, SLOT( layerProperties() ) );
+        }
+      }
+      else
+      {
+        menu->addAction( tr( "&Properties" ), mMainWidget, SLOT( layerProperties() ) );
+      }
     }
   }
   return menu;

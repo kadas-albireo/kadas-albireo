@@ -39,8 +39,16 @@ class CORE_EXPORT QgsPluginLayerType
     /** return new layer of this type. Return NULL on error */
     virtual QgsPluginLayer* createLayer();
 
+    /** Resturns whether the layer has a properties dialog: 0 = no, 1 = yes, -1 = unknown
+      * Note: the yes/no/unknown return is because this function was introduced after
+      * showLayerProperties, which was previously used to handle this by returning false
+      * if there are no layer properties. Returning -1 by default here does not break
+      * plugin layers which do not yet support this method. */
+    virtual int hasLayerProperties() const { return -1; }
+
     /** show plugin layer properties dialog. Return false if the dialog cannot be shown. */
     virtual bool showLayerProperties( QgsPluginLayer* layer );
+
 
   protected:
     QString mName;
