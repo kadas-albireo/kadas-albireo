@@ -642,7 +642,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
   myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
   myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  myBlue = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
   pbnCanvasColor->setAllowAlpha( true );
   pbnCanvasColor->setColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
   pbnCanvasColor->setColorDialogTitle( tr( "Set canvas color" ) );
