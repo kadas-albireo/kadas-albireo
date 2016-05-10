@@ -53,7 +53,12 @@ void QgsRedliningPointMapTool::onFinished()
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
   QStringList changedAttributes;
   if ( mEditor )
-    mEditor->exec( f, changedAttributes );
+  {
+    if(!mEditor->exec( f, changedAttributes ))
+    {
+      return;
+    }
+  }
   mLayer->addFeature( f );
   reset();
 }
