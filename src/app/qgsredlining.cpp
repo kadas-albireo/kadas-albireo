@@ -433,8 +433,8 @@ QIcon QgsRedlining::createOutlineStyleIcon( Qt::PenStyle style )
   painter.setRenderHint( QPainter::Antialiasing );
   QPen pen;
   pen.setStyle( style );
-  pen.setColor( Qt::black );
-  pen.setWidth( 1 );
+  pen.setColor( QColor( 232, 244, 255 ) );
+  pen.setWidth( 2 );
   painter.setPen( pen );
   painter.drawLine( 0, 8, 16, 8 );
   return pixmap;
@@ -448,7 +448,7 @@ QIcon QgsRedlining::createFillStyleIcon( Qt::BrushStyle style )
   painter.setRenderHint( QPainter::Antialiasing );
   QBrush brush;
   brush.setStyle( style );
-  brush.setColor( Qt::black );
+  brush.setColor( QColor( 232, 244, 255 ) );
   painter.fillRect( 0, 0, 16, 16, brush );
   return pixmap;
 }
