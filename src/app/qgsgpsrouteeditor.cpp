@@ -48,7 +48,7 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttributeEditor
       QString name = QInputDialog::getText( 0, tr( "Waypoint" ), tr( "Name:" ), QLineEdit::Normal, feature.attribute( "text" ).toString() );
       if ( name.isEmpty() )
       {
-        return false;
+        return true; // Empty name is allowed for waypoints
       }
       feature.setAttribute( "text", name );
       QFont font;
