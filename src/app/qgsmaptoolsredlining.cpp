@@ -54,7 +54,7 @@ void QgsRedliningPointMapTool::onFinished()
   QStringList changedAttributes;
   if ( mEditor )
   {
-    if(!mEditor->exec( f, changedAttributes ))
+    if ( !mEditor->exec( f, changedAttributes ) )
     {
       return;
     }
@@ -395,27 +395,31 @@ void QgsRedliningEditTool::canvasReleaseEvent( QMouseEvent */*e*/ )
   if ( mMode == TextSelected && mLabelIsForPoint )
   {
     double dx, dy;
-    double bboxOffsetX = mCurrentLabel.cornerPoints[0].x() - mCurrentLabel.labelRect.xMinimum();
-    double bboxOffsetY = mCurrentLabel.cornerPoints[0].y() - mCurrentLabel.labelRect.yMinimum();
     mRubberBand->translationOffset( dx, dy );
-    QgsRectangle& rect = mCurrentLabel.labelRect;
-    rect.setXMinimum( rect.xMinimum() + dx );
-    rect.setYMinimum( rect.yMinimum() + dy );
-    rect.setXMaximum( rect.xMaximum() + dx );
-    rect.setYMaximum( rect.yMaximum() + dy );
+    QgsFeature f;
+    mLayer->getFeatures( QgsFeatureRequest( mCurrentLabel.featureId ) ).nextFeature( f );
+    QgsPointV2* prevLayerPos = static_cast<QgsPointV2*>( f.geometry()->geometry() );
+    QgsPoint prevPos = toMapCoordinates( mLayer, QgsPoint( prevLayerPos->x(), prevLayerPos->y() ) );
+    prevPos.setX( prevPos.x() + dx );
+    prevPos.setY( prevPos.y() + dy );
     mCurrentLabel.cornerPoints[0] += QgsVector( dx, dy );
     mCurrentLabel.cornerPoints[1] += QgsVector( dx, dy );
     mCurrentLabel.cornerPoints[2] += QgsVector( dx, dy );
     mCurrentLabel.cornerPoints[3] += QgsVector( dx, dy );
+    QgsRectangle& labelRect = mCurrentLabel.labelRect;
+    labelRect.setXMinimum( labelRect.xMinimum() + dx );
+    labelRect.setYMinimum( labelRect.yMinimum() + dy );
+    labelRect.setXMaximum( labelRect.xMaximum() + dx );
+    labelRect.setYMaximum( labelRect.yMaximum() + dy );
     mRubberBand->setTranslationOffset( 0, 0 );
     QgsLineStringV2* geom = new QgsLineStringV2();
-    geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
-    geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMaximum() ) );
-    geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMaximum() ) );
-    geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMinimum() ) );
-    geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
+    geom->addVertex( QgsPointV2( labelRect.xMinimum(), labelRect.yMinimum() ) );
+    geom->addVertex( QgsPointV2( labelRect.xMinimum(), labelRect.yMaximum() ) );
+    geom->addVertex( QgsPointV2( labelRect.xMaximum(), labelRect.yMaximum() ) );
+    geom->addVertex( QgsPointV2( labelRect.xMaximum(), labelRect.yMinimum() ) );
+    geom->addVertex( QgsPointV2( labelRect.xMinimum(), labelRect.yMinimum() ) );
     mRubberBand->setGeometry( geom );
-    QgsPoint pos = toLayerCoordinates( mLayer, QgsPoint( rect.xMinimum() + bboxOffsetX, rect.yMinimum() + bboxOffsetY ) );
+    QgsPoint pos = toLayerCoordinates( mLayer, prevPos );
     mLayer->changeGeometry( mCurrentLabel.featureId, new QgsGeometry( new QgsPointV2( pos.x(), pos.y() ) ) );
     mLayer->triggerRepaint();
   }

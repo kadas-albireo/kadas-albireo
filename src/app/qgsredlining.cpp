@@ -189,6 +189,11 @@ void QgsRedlining::setLayer( QgsRedliningLayer *layer )
   mLayer = layer;
   mLayerRefCount = 0;
 
+  layer->setCustomProperty( "labeling/placement", "0" );
+  layer->setCustomProperty( "labeling/obstacle", "false" );
+  layer->setCustomProperty( "labeling/dataDefined/PositionX",  "1~~1~~$x~~" );
+  layer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~1~~$y~~" );
+
   // QueuedConnection to delay execution of the slot until the signal-emitting function has exited,
   // since otherwise the undo stack becomes corrupted (featureChanged change inserted before featureAdded change)
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( updateFeatureStyle( QgsFeatureId ) ), Qt::QueuedConnection );
