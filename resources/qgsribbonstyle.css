@@ -331,6 +331,8 @@ QPushButton#mZoomInButton,
 QPushButton#mZoomOutButton {
   background-color: #263B4E;
   color: #FFFFFF;
+  border-radius: 0;
+  border-width: 0;
 }
 
 QPushButton#mZoomInButton:pressed,
