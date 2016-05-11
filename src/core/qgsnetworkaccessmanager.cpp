@@ -392,6 +392,13 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 #endif
     connect( smMainNAM, SIGNAL( cookieAdded( QByteArray, QUrl ) ), this, SLOT( addCookie( QByteArray, QUrl ) ) );
   }
+  else
+  {
+    connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
+             this, SLOT( getCredentials( QNetworkReply, QAuthenticator* ) ) );
+    connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
+             this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
+  }
 
   // check if proxy is enabled
   QNetworkProxy proxy;
