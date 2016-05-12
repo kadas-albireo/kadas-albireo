@@ -30,7 +30,7 @@ QgsMilXCreateTool::QgsMilXCreateTool( QgsMapCanvas* canvas, QgsMilXLayer* layer,
 QgsMilXCreateTool::~QgsMilXCreateTool()
 {
   // If an item is still set, it means that positioning was not finished when the tool is disabled -> delete it
-  delete mItem;
+  delete mItem.data();
 }
 
 void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
@@ -99,7 +99,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
     else if ( mNPressedPoints + 1 < mMinNPoints )
     {
       // premature stop
-      delete mItem;
+      delete mItem.data();
       mItem = 0;
       mCanvas->unsetMapTool( this );
     }
