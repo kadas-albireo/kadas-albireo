@@ -3060,6 +3060,29 @@ void QgisApp::fileSaveAs()
     fullPath.setFile( fullPath.filePath() + ".qgs" );
   }
 
+  QFileInfo oldProjectPath( QgsProject::instance()->fileName() );
+  QDir oldDataDir = oldProjectPath.absoluteDir().absoluteFilePath( oldProjectPath.baseName() + "_files" );
+  if ( fullPath.filePath() != QgsProject::instance()->fileName() && oldDataDir.exists() )
+  {
+    QDir projectDir = fullPath.absoluteDir();
+    QString projectFilesDirName = fullPath.baseName() + "_files";
+    QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
+    if ( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) )
+    {
+      foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+      {
+        if ( layer->source().startsWith( oldDataDir.absolutePath() ) )
+        {
+          QString newDataUrl = projectFilesDir.absoluteFilePath( QFileInfo( layer->source() ).fileName() );
+          if ( QFile( layer->source() ).copy( newDataUrl ) )
+          {
+            layer->setSource( newDataUrl );
+          }
+        }
+      }
+    }
+  }
+
   QgsProject::instance()->setFileName( fullPath.filePath() );
 
   if ( QgsProject::instance()->write() )
