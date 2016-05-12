@@ -39,7 +39,7 @@ class QgsMilXCreateTool : public QgsMapTool
     int mMinNPoints;
     int mNPressedPoints;
     bool mHasVariablePoints;
-    QgsMilXAnnotationItem* mItem;
+    QPointer<QgsMilXAnnotationItem> mItem;
     QgsMilXLayer* mLayer;
 };
 
