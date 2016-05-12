@@ -25,6 +25,7 @@
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
 #include "layertree/qgslayertreeview.h"
+#include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDomDocument>
 #include <QFileDialog>
@@ -33,15 +34,16 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QSettings>
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <quazip/quazipfile.h>
 
 bool QgsMilXIO::save( QgisInterface* iface )
 {
   QDialog layerSelectionDialog( iface->mainWindow() );
   layerSelectionDialog.setWindowTitle( tr( "Export MilX layers" ) );
-  layerSelectionDialog.setLayout( new QVBoxLayout() );
-  layerSelectionDialog.layout()->addWidget( new QLabel( tr( "Select MilX layers to export" ) ) );
+  QGridLayout* layout = new QGridLayout();
+  layerSelectionDialog.setLayout( layout );
+  layout->addWidget( new QLabel( tr( "Select MilX layers to export" ) ), 0, 0, 1, 2 );
   QListWidget* layerListWidget = new QListWidget();
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
@@ -53,9 +55,19 @@ bool QgsMilXIO::save( QgisInterface* iface )
       layerListWidget->addItem( item );
     }
   }
-  layerSelectionDialog.layout()->addWidget( layerListWidget );
+  layout->addWidget( layerListWidget, 1, 0, 1, 2 );
+  layout->addWidget(new QLabel("MilX version:"), 2, 0, 1, 1);
+  QComboBox* combo = new QComboBox();
+  QStringList versionTags, versionNames;
+  MilXClient::getSupportedLibraryVersionTags( versionTags, versionNames );
+  for(int i = 0, n = versionTags.size(); i < n; ++i)
+  {
+    combo->addItem(versionNames[i], versionTags[i] );
+  }
+  combo->setCurrentIndex(0);
+  layout->addWidget(combo, 2, 1, 1, 1);
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
-  layerSelectionDialog.layout()->addWidget( bbox );
+  layout->addWidget( bbox, 3, 0, 1, 2 );
   connect( bbox, SIGNAL( accepted() ), &layerSelectionDialog, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), &layerSelectionDialog, SLOT( reject() ) );
   if ( layerSelectionDialog.exec() == QDialog::Rejected )
@@ -73,14 +85,9 @@ bool QgsMilXIO::save( QgisInterface* iface )
     }
   }
 
-  QStringList versionTags, versionNames;
-  MilXClient::getSupportedLibraryVersionTags( versionTags, versionNames );
   QStringList filters;
-  foreach ( const QString& versionName, versionNames )
-  {
-    filters.append( tr( "Compressed MilX Layer [%1] (*.milxlyz)" ).arg( versionName ) );
-    filters.append( tr( "MilX Layer [%1] (*.milxly)" ).arg( versionName ) );
-  }
+  filters.append( tr( "Compressed MilX Layer (*.milxlyz)" ) );
+  filters.append( tr( "MilX Layer (*.milxly)" ) );
 
   QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
   QString selectedFilter;
@@ -99,7 +106,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   {
     filename += ".milxly";
   }
-  QString versionTag = versionTags[static_cast< QList<QString> >( filters ).indexOf( selectedFilter ) / 2];
+  QString versionTag = combo->itemData(combo->currentIndex()).toString();
 
   QIODevice* dev = 0;
   QuaZip* zip = 0;
@@ -132,9 +139,8 @@ bool QgsMilXIO::save( QgisInterface* iface )
   milxDocumentEl.setAttribute( "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance" );
   doc.appendChild( milxDocumentEl );
 
-  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( doc.createTextNode( verTag ) );
+  milxVersionEl.appendChild( doc.createTextNode( versionTag ) );
   milxDocumentEl.appendChild( milxVersionEl );
 
   foreach ( const QString& layerId, exportLayers )
