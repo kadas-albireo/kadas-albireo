@@ -281,7 +281,7 @@
        <item>
         <widget class="QStackedWidget" name="mOptionsStackedWidget">
          <property name="currentIndex">
-          <number>6</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="mOptionsPageGeneral">
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1045,7 +1045,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>614</width>
+                <width>605</width>
                 <height>865</height>
                </rect>
               </property>
@@ -1429,8 +1429,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>628</width>
-                <height>634</height>
+                <width>495</width>
+                <height>411</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -3461,8 +3461,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>480</width>
-                <height>303</height>
+                <width>628</width>
+                <height>634</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_39">
@@ -3666,8 +3666,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>464</width>
-                <height>613</height>
+                <width>628</width>
+                <height>634</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_31">
@@ -4166,8 +4166,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>412</width>
-                <height>368</height>
+                <width>628</width>
+                <height>634</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -4305,7 +4305,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>512</width>
+                <width>614</width>
                 <height>639</height>
                </rect>
               </property>
@@ -4551,8 +4551,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>278</width>
-                <height>222</height>
+                <width>628</width>
+                <height>634</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_32">
@@ -4650,7 +4650,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>497</width>
+                <width>614</width>
                 <height>682</height>
                </rect>
               </property>
