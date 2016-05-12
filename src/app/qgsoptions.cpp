@@ -685,6 +685,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
 
   cmbWheelAction->setCurrentIndex( settings.value( "/qgis/wheel_action", 2 ).toInt() );
   spinZoomFactor->setValue( settings.value( "/qgis/zoom_factor", 2 ).toDouble() );
+  mOptimalScalesCheckBox->setChecked( settings.value( "/gis/useWmtsScales", 0 ).toInt() );
 
   // predefined scales for scale combobox
   myPaths = settings.value( "Map/scales", PROJECT_SCALES ).toString();
@@ -1283,6 +1284,7 @@ void QgsOptions::saveOptions()
 
   settings.setValue( "/qgis/wheel_action", cmbWheelAction->currentIndex() );
   settings.setValue( "/qgis/zoom_factor", spinZoomFactor->value() );
+  settings.setValue( "/gis/useWmtsScales", mOptimalScalesCheckBox->isChecked() );
 
   //digitizing
   settings.setValue( "/qgis/digitizing/line_width", mLineWidthSpinBox->value() );

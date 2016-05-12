@@ -180,6 +180,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mMapCanvas, SIGNAL( mapCanvasRefreshed() ), &mLoadingTimer, SLOT( stop() ) );
   connect( mMapCanvas, SIGNAL( mapCanvasRefreshed() ), mLoadingLabel, SLOT( hide() ) );
   connect( mRibbonWidget, SIGNAL( currentChanged( int ) ), this, SLOT( pan() ) ); // Change to pan tool when changing active ribbon tab
+  connect( mZoomInButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomIn() ) );
+  connect( mZoomOutButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomOut() ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -492,40 +494,6 @@ void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
   {
     mLayerTreeViewButton->setIcon( QIcon( ":/images/ribbon/layerbaum_folded.png" ) );
     mLayerTreeViewButton->move( 0, mLayerTreeViewButton->y() );
-  }
-}
-
-void QgsRibbonApp::on_mZoomInButton_clicked()
-{
-  QList<double> resolutions = wmtsResolutions();
-  if ( resolutions.isEmpty() )
-  {
-    mMapCanvas->zoomIn(); //no wmts layers
-  }
-  else
-  {
-    int zoomLevel = nextWMTSZoomLevel( resolutions, true );
-    if ( zoomLevel != -1 )
-    {
-      mMapCanvas->zoomByFactor( resolutions.at( zoomLevel ) / mMapCanvas->mapUnitsPerPixel() );
-    }
-  }
-}
-
-void QgsRibbonApp::on_mZoomOutButton_clicked()
-{
-  QList<double> resolutions = wmtsResolutions();
-  if ( resolutions.isEmpty() )
-  {
-    mMapCanvas->zoomOut();
-  }
-  else
-  {
-    int zoomLevel = nextWMTSZoomLevel( resolutions, false );
-    if ( zoomLevel != -1 )
-    {
-      mMapCanvas->zoomByFactor( resolutions.at( zoomLevel ) / mMapCanvas->mapUnitsPerPixel() );
-    }
   }
 }
 

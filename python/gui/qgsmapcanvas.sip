@@ -248,12 +248,6 @@ class QgsMapCanvas : QGraphicsView
     //! set wheel action and zoom factor (should be greater than 1)
     void setWheelAction( WheelAction action, double factor = 2 );
 
-    //! Zoom in with fixed factor
-    void zoomIn();
-
-    //! Zoom out with fixed factor
-    void zoomOut();
-
     //! Zoom to a specific scale
     void zoomScale( double scale );
 
@@ -386,6 +380,12 @@ class QgsMapCanvas : QGraphicsView
     //! change canvas rotation support
     //! @note added in 2.8
     static void enableRotation( bool enabled );
+
+    //! Zoom in with fixed factor
+    void zoomIn();
+
+    //! Zoom out with fixed factor
+    void zoomOut();
 
   signals:
     /** Let the owner know how far we are with render operations */

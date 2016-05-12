@@ -61,6 +61,7 @@ email                : sherman at mrcc.com
 #include "qgsmessageviewer.h"
 #include "qgspallabeling.h"
 #include "qgsproject.h"
+#include "qgsrasterlayer.h"
 #include "qgsrubberband.h"
 #include "qgsvectorlayer.h"
 #include <math.h>
@@ -1409,7 +1410,7 @@ void QgsMapCanvas::wheelEvent( QWheelEvent *e )
     case WheelZoomToMouseCursor:
     {
       // zoom map to mouse cursor
-      double scaleFactor = e->delta() > 0 ? 1 / mWheelZoomFactor : mWheelZoomFactor;
+      double scaleFactor = e->delta() > 0 ? zoomInFactor() : zoomOutFactor();
 
       QgsPoint oldCenter = center();
       QgsPoint mousePos( getCoordinateTransform()->toMapPoint( e->x(), e->y() ) );
@@ -1434,12 +1435,12 @@ void QgsMapCanvas::setWheelAction( WheelAction action, double factor )
 
 void QgsMapCanvas::zoomIn()
 {
-  zoomByFactor( 1 / mWheelZoomFactor );
+  zoomByFactor( zoomInFactor() );
 }
 
 void QgsMapCanvas::zoomOut()
 {
-  zoomByFactor( mWheelZoomFactor );
+  zoomByFactor( zoomOutFactor() );
 }
 
 void QgsMapCanvas::zoomScale( double newScale )
@@ -1449,7 +1450,7 @@ void QgsMapCanvas::zoomScale( double newScale )
 
 void QgsMapCanvas::zoomWithCenter( int x, int y, bool zoomIn )
 {
-  double scaleFactor = ( zoomIn ? 1 / mWheelZoomFactor : mWheelZoomFactor );
+  double scaleFactor = ( zoomIn ? zoomInFactor() : zoomOutFactor() );
 
   // transform the mouse pos to map coordinates
   QgsPoint center  = getCoordinateTransform()->toMapPoint( x, y );
@@ -2027,4 +2028,100 @@ bool QgsMapCanvas::rotationEnabled()
 void QgsMapCanvas::enableRotation( bool enable )
 {
   QSettings().setValue( "/qgis/canvasRotation", enable );
+}
+
+QList<double> QgsMapCanvas::wmtsResolutions() const
+{
+  QList<double> resolutionList;
+  foreach ( QgsMapLayer* layer, layers() )
+  {
+    QgsRasterLayer* rasterLayer = dynamic_cast<QgsRasterLayer*>( layer );
+    if ( !rasterLayer )
+    {
+      continue;
+    }
+
+    QgsRasterDataProvider* currentProvider = rasterLayer->dataProvider();
+    if ( !currentProvider || currentProvider->name().compare( "wms", Qt::CaseInsensitive ) != 0 )
+    {
+      continue;
+    }
+
+    //wmts must not be reprojected
+    if ( currentProvider->crs() != mapSettings().destinationCrs() )
+    {
+      continue;
+    }
+
+    //property 'resolutions' for wmts layers
+    foreach ( const QVariant& resolution, currentProvider->property( "resolutions" ).toList() )
+    {
+      resolutionList.append( resolution.toDouble() );
+    }
+    if ( !resolutionList.isEmpty() )
+    {
+      break;
+    }
+  }
+  return resolutionList;
+}
+
+int QgsMapCanvas::nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn ) const
+{
+  if ( resolutions.isEmpty() )
+  {
+    return -1;
+  }
+
+  int resolutionLevel = -1;
+  double currentResolution = mapUnitsPerPixel();
+
+  for ( int i = 0, n = resolutions.size(); i < n; ++i )
+  {
+    if ( qgsDoubleNear( resolutions[i], currentResolution, 0.0001 ) )
+    {
+      resolutionLevel = zoomIn ? ( i - 1 ) : ( i + 1 );
+      break;
+    }
+    else if ( currentResolution <= resolutions[i] )
+    {
+      resolutionLevel = zoomIn ? ( i - 1 ) : i;
+      break;
+    }
+  }
+  return ( resolutionLevel < 0 || resolutionLevel >= resolutions.size() ) ? -1 : resolutionLevel;
+}
+
+double QgsMapCanvas::zoomInFactor() const
+{
+  if ( QSettings().value( "/gis/useWmtsScales", 0 ).toBool() )
+  {
+    QList<double> resolutions = wmtsResolutions();
+    if ( !resolutions.isEmpty() )
+    {
+      int zoomLevel = nextWMTSZoomLevel( resolutions, true );
+      if ( zoomLevel != -1 )
+      {
+        return resolutions.at( zoomLevel ) / mapUnitsPerPixel();
+      }
+    }
+  }
+  return 1 / mWheelZoomFactor;
+}
+
+double QgsMapCanvas::zoomOutFactor() const
+{
+  if ( QSettings().value( "/gis/useWmtsScales", 0 ).toBool() )
+  {
+    QList<double> resolutions = wmtsResolutions();
+    if ( !resolutions.isEmpty() )
+    {
+      int zoomLevel = nextWMTSZoomLevel( resolutions, false );
+      if ( zoomLevel != -1 )
+      {
+        return resolutions.at( zoomLevel ) / mapUnitsPerPixel();
+      }
+    }
+  }
+  return mWheelZoomFactor;
 }
