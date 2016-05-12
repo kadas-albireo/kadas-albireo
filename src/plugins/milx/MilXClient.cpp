@@ -194,7 +194,7 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
 
   do
   {
-    mTcpSocket->waitForReadyRead();
+    mTcpSocket->waitForReadyRead(3600000);
 
     if ( !mLastError.isEmpty() || !mTcpSocket->isValid() )
     {
