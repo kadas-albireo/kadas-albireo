@@ -64,6 +64,16 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
 #endif
   mTileData = new unsigned char[mTileSize * mTileSize * 4];
   std::memset( mTileData, 0, mTileSize * mTileSize * 4 );
+#if 0
+  setImage( mTileSize, mTileSize, 1, 4, // width, height, depth, internal_format
+            GL_BGRA, GL_UNSIGNED_BYTE,
+            mTileData, osg::Image::NO_DELETE );
+
+  mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
+  mTileSource->mTileUpdateManager.addTile( const_cast<QgsGlobeTileImage*>( this ) );
+  mDpi = 72;
+  mImageUpdatePending = true;
+#else
   QImage qImage( mTileData, mTileSize, mTileSize, QImage::Format_ARGB32_Premultiplied );
   QPainter painter( &qImage );
   QgsMapRendererCustomPainterJob job( createSettings( qImage.logicalDpiX(), mTileSource->mLayerSet ), &painter );
@@ -75,6 +85,7 @@ QgsGlobeTileImage::QgsGlobeTileImage( QgsGlobeTileSource* tileSource, const QgsR
   flipVertical();
   mDpi = qImage.logicalDpiX();
   mLastUpdateTime = osgEarth::DateTime().asTimeStamp();
+#endif
 }
 
 QgsGlobeTileImage::~QgsGlobeTileImage()

@@ -609,6 +609,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   spnGreen->setValue( settings.value( "/Raster/defaultGreenBand", 2 ).toInt() );
   spnBlue->setValue( settings.value( "/Raster/defaultBlueBand", 3 ).toInt() );
 
+  comboBoxRasterDownsampling->setCurrentIndex( settings.value( "/Raster/defaultZoomedInResamplingMethod", 0 ).toInt() );
+  comboBoxRasterUpsampling->setCurrentIndex( settings.value( "/Raster/defaultZoomedOutResamplingMethod", 0 ).toInt() );
+
   initContrastEnhancement( cboxContrastEnhancementAlgorithmSingleBand, "singleBand", "StretchToMinimumMaximum" );
   initContrastEnhancement( cboxContrastEnhancementAlgorithmMultiBandSingleByte, "multiBandSingleByte", "NoEnhancement" );
   initContrastEnhancement( cboxContrastEnhancementAlgorithmMultiBandMultiByte, "multiBandMultiByte", "StretchToMinimumMaximum" );
@@ -1184,6 +1187,9 @@ void QgsOptions::saveOptions()
   settings.setValue( "/Raster/defaultRedBand", spnRed->value() );
   settings.setValue( "/Raster/defaultGreenBand", spnGreen->value() );
   settings.setValue( "/Raster/defaultBlueBand", spnBlue->value() );
+
+  settings.setValue( "/Raster/defaultZoomedInResamplingMethod", comboBoxRasterDownsampling->currentIndex() );
+  settings.setValue( "/Raster/defaultZoomedOutResamplingMethod", comboBoxRasterUpsampling->currentIndex() );
 
   saveContrastEnhancement( cboxContrastEnhancementAlgorithmSingleBand, "singleBand" );
   saveContrastEnhancement( cboxContrastEnhancementAlgorithmMultiBandSingleByte, "multiBandSingleByte" );

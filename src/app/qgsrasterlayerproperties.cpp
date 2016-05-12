@@ -243,6 +243,7 @@ QgsRasterLayerProperties::QgsRasterLayerProperties( QgsMapLayer* lyr, QgsMapCanv
   //resampling
   mResamplingGroupBox->setSaveCheckedState( true );
   const QgsRasterRenderer* renderer = mRasterLayer->renderer();
+  // Keep this in sync with Global properties -> Rendering!
   mZoomedInResamplingComboBox->insertItem( 0, tr( "Nearest neighbour" ) );
   mZoomedInResamplingComboBox->insertItem( 1, tr( "Bilinear" ) );
   mZoomedInResamplingComboBox->insertItem( 2, tr( "Cubic" ) );
