@@ -73,8 +73,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void activateDeactivateLayerRelatedActions( QgsMapLayer */*layer*/ ) override {}
     void updateLayerModifiedActions() override {}
     void on_mLayerTreeViewButton_clicked();
-    void on_mZoomInButton_clicked();
-    void on_mZoomOutButton_clicked();
     void checkOnTheFlyProjection();
     void addCameraPicture();
     void userScale();

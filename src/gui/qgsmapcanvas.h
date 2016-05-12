@@ -316,12 +316,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! set wheel action and zoom factor (should be greater than 1)
     void setWheelAction( WheelAction action, double factor = 2 );
 
-    //! Zoom in with fixed factor
-    void zoomIn();
-
-    //! Zoom out with fixed factor
-    void zoomOut();
-
     //! Zoom to a specific scale
     void zoomScale( double scale );
 
@@ -469,6 +463,12 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     /** Triggers an emission of the annotationItemChanged signal. */
     void notifyAnnotationItemChanged( QgsAnnotationItem* item ) { emit annotationItemChanged( item ); }
+
+    //! Zoom in with fixed factor
+    void zoomIn();
+
+    //! Zoom out with fixed factor
+    void zoomOut();
 
   private slots:
     //! called when current maptool is destroyed
@@ -707,6 +707,14 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     QgsRectangle imageRect( const QImage& img, const QgsMapSettings& mapSettings );
 
     QgsSnappingUtils* mSnappingUtils;
+
+
+    /**Returns wmts resolution list of the topmost wmts layer in the map. Returns empty list if no wmts layer*/
+    QList<double> wmtsResolutions() const;
+
+    int nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn = true ) const;
+    double zoomInFactor() const;
+    double zoomOutFactor() const;
 
 }; // class QgsMapCanvas
 
