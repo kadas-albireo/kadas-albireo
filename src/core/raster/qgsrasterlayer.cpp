@@ -41,6 +41,8 @@ email                : tim at linfiniti.com
 #include "qgssinglebandcolordatarenderer.h"
 #include "qgssinglebandgrayrenderer.h"
 #include "qgssinglebandpseudocolorrenderer.h"
+#include "qgsbilinearrasterresampler.h"
+#include "qgscubicrasterresampler.h"
 
 #include <cmath>
 #include <cstdio>
@@ -113,7 +115,26 @@ QgsRasterLayer::QgsRasterLayer(
   {
     setDefaultContrastEnhancement();
   }
-  return;
+
+  // Default raster resampling
+  QgsRasterResampler *zoomedInResampler = 0;
+  QgsRasterResampler *zoomedOutResampler = 0;
+  int defaultZoomedInResamplingMethod = QSettings().value( "/Raster/defaultZoomedInResamplingMethod", 0 ).toInt();
+  int defaultZoomedOutResamplingMethod = QSettings().value( "/Raster/defaultZoomedOutResamplingMethod", 0 ).toInt();
+  if ( defaultZoomedInResamplingMethod == 1 )
+  {
+    zoomedInResampler = new QgsBilinearRasterResampler();
+  }
+  else if ( defaultZoomedInResamplingMethod == 2 )
+  {
+    zoomedInResampler = new QgsCubicRasterResampler();
+  }
+  if ( defaultZoomedOutResamplingMethod == 1 )
+  {
+    zoomedOutResampler = new QgsBilinearRasterResampler();
+  }
+  mPipe.resampleFilter()->setZoomedInResampler( zoomedInResampler );
+  mPipe.resampleFilter()->setZoomedOutResampler( zoomedOutResampler );
 } // QgsRasterLayer ctor
 
 /**
