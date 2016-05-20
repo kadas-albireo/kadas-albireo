@@ -2094,7 +2094,7 @@ int QgsMapCanvas::nextWMTSZoomLevel( const QList<double>& resolutions, bool zoom
 
 double QgsMapCanvas::zoomInFactor() const
 {
-  if ( QSettings().value( "/gis/useWmtsScales", 0 ).toBool() )
+  if ( QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
   {
     QList<double> resolutions = wmtsResolutions();
     if ( !resolutions.isEmpty() )
@@ -2111,7 +2111,7 @@ double QgsMapCanvas::zoomInFactor() const
 
 double QgsMapCanvas::zoomOutFactor() const
 {
-  if ( QSettings().value( "/gis/useWmtsScales", 0 ).toBool() )
+  if ( QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
   {
     QList<double> resolutions = wmtsResolutions();
     if ( !resolutions.isEmpty() )
