@@ -251,19 +251,16 @@
          <x>0</x>
          <y>60</y>
          <width>200</width>
-         <height>301</height>
+         <height>315</height>
         </rect>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>0</number>
-        </property>
+       <layout class="QGridLayout" name="gridLayout">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -276,7 +273,10 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
          <widget class="QgsCollapsibleGroupBox" name="mLayersBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -337,7 +337,7 @@
           </layout>
          </widget>
         </item>
-        <item>
+        <item row="1" column="0">
          <widget class="QgsCollapsibleGroupBox" name="mGeodataBox">
           <property name="maximumSize">
            <size>
@@ -440,7 +440,7 @@
           </layout>
          </widget>
         </item>
-        <item>
+        <item row="2" column="0">
          <widget class="QLabel" name="mLayersSpacer">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -450,6 +450,28 @@
           </property>
           <property name="text">
            <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" rowspan="3">
+         <widget class="Line" name="mLayersWidgetResizeHandle">
+          <property name="minimumSize">
+           <size>
+            <width>2</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>2</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>SizeHorCursor</cursorShape>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
