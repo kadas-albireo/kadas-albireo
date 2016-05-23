@@ -1353,7 +1353,7 @@ void QgisApp::updateNewLayerInsertionPoint()
 
       // otherwise just set the insertion point in front of the current node
       QgsLayerTreeNode* parentNode = currentNode->parent();
-      if ( QgsLayerTree::isGroup( parentNode ) )
+      if ( QgsLayerTree::isGroup( parentNode ) && !QgsLayerTree::toGroup( parentNode )->isMutuallyExclusive() )
         parentGroup = QgsLayerTree::toGroup( parentNode );
     }
 
