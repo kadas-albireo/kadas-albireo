@@ -80,7 +80,7 @@ class QgsMilXLibraryLoader : public QThread
     Q_OBJECT
   public:
     QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ), mAborted( false ) {}
-    void abort() { mAborted = true; }
+    bool abort() { mAborted = true; }
 
   private:
     bool mAborted;
