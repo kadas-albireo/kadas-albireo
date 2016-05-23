@@ -36,7 +36,7 @@ void QgsVBSCatalogProvider::load()
 {
   mPendingTasks = 0;
   QNetworkRequest req( mBaseUrl );
-  req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
+  req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
 }
@@ -102,7 +102,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   reply->deleteLater();
   EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
-  QString referer = QSettings().value( "search/referrer", "http://localhost" ).toString();
+  QString referer = QSettings().value( "search/referer", "http://localhost" ).toString();
 
   if ( reply->error() == QNetworkReply::NoError )
   {

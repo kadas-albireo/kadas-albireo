@@ -56,7 +56,7 @@ void QgsLocationSearchProvider::startSearch( const QString &searchtext , const S
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
 
   QNetworkRequest req( url );
-  req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
+  req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
   mNetReply = QgsNetworkAccessManager::instance()->get( req );
   connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );

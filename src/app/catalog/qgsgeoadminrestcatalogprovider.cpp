@@ -32,7 +32,7 @@ QgsGeoAdminRestCatalogProvider::QgsGeoAdminRestCatalogProvider( const QString &b
 void QgsGeoAdminRestCatalogProvider::load()
 {
   QNetworkRequest req( mBaseUrl );
-  req.setRawHeader( "Referer", QSettings().value( "search/referrer", "http://localhost" ).toByteArray() );
+  req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
 }
@@ -69,7 +69,7 @@ void QgsGeoAdminRestCatalogProvider::replyFinished()
     return;
   }
 
-  QString referer = QSettings().value( "search/referrer", "http://localhost" ).toString();
+  QString referer = QSettings().value( "search/referer", "http://localhost" ).toString();
 
   // Categories
   QMap<QString, QStandardItem*> layerParentMap;
