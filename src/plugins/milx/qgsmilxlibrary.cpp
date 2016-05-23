@@ -288,6 +288,11 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
   // Create category group item if necessary
   if ( !isLeaf )
   {
+    // Don't create subgroups with same text as parent
+    if ( parent->text() == value )
+    {
+      return parent;
+    }
     QStandardItem* groupItem = 0;
     for ( int i = 0, n = parent->rowCount(); i < n; ++i )
     {
