@@ -343,6 +343,7 @@ void QgsMeasureHeightProfileDialog::replot()
   mPlot->setAxisScaleDraw( QwtPlot::xBottom, new ScaleDraw( mTotLength, nSamples ) );
   double step = qPow( 10, qFloor( log10( mTotLength ) ) ) / ( mTotLength ) * nSamples;
   while ( nSamples / step < 10 ) step /= 2.;
+  while ( nSamples / step > 10 ) step *= 2.;
   mPlot->setAxisScale( QwtPlot::xBottom, 0, nSamples, step );
 
   GDALClose( raster );
