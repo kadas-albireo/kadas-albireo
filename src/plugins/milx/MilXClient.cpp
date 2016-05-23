@@ -140,9 +140,10 @@ bool MilXClientWorker::initialize()
     timeoutTimer.start( 1000 );
     evLoop.exec();
   }
-  if ( mTcpSocket->state() != QTcpSocket::ConnectedState )
+  if ( !mTcpSocket || mTcpSocket->state() != QTcpSocket::ConnectedState )
   {
-    mTcpSocket->abort();
+    if ( mTcpSocket )
+      mTcpSocket->abort();
     cleanup();
     return false;
   }
@@ -194,7 +195,7 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
 
   do
   {
-    mTcpSocket->waitForReadyRead(3600000);
+    mTcpSocket->waitForReadyRead( 3600000 );
 
     if ( !mLastError.isEmpty() || !mTcpSocket->isValid() )
     {
@@ -273,6 +274,32 @@ bool MilXClient::processRequest( const QByteArray& request, QByteArray& response
   return result;
 }
 
+QString MilXClient::attributeName( int idx )
+{
+  if ( idx == AttributeWidth )
+    return "Width";
+  else if ( idx == AttributeLength )
+    return "Length";
+  else if ( idx == AttributeRadius )
+    return "Radius";
+  else if ( idx == AttributeAttutide )
+    return "Attitude";
+  return "";
+}
+
+int MilXClient::attributeIdx( const QString& name )
+{
+  if ( name == "Width" )
+    return AttributeWidth;
+  else if ( name == "Length" )
+    return AttributeLength;
+  else if ( name == "Radius" )
+    return AttributeRadius;
+  else if ( name == "Attitude" )
+    return AttributeAttutide;
+  return 0;
+}
+
 bool MilXClient::init()
 {
   bool result;
@@ -337,7 +364,7 @@ bool MilXClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& sy
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_APPEND_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << newPoint;
+  istream << MILX_REQUEST_APPEND_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << newPoint;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_APPEND_POINT ) )
@@ -352,6 +379,7 @@ bool MilXClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
+  ostream >> result.attributes;
   return true;
 }
 
@@ -359,7 +387,7 @@ bool MilXClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& sy
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_INSERT_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << newPoint;
+  istream << MILX_REQUEST_INSERT_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << newPoint;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_INSERT_POINT ) )
@@ -374,6 +402,7 @@ bool MilXClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
+  ostream >> result.attributes;
   return true;
 }
 
@@ -381,7 +410,7 @@ bool MilXClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symb
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_MOVE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << index << newPos;
+  istream << MILX_REQUEST_MOVE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << index << newPos;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_MOVE_POINT ) )
@@ -396,6 +425,7 @@ bool MilXClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symb
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
+  ostream >> result.attributes;
   return true;
 }
 
@@ -404,7 +434,7 @@ bool MilXClient::canDeletePoint( const NPointSymbol& symbol, int index, bool& ca
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << MILX_REQUEST_CAN_DELETE_POINT;
-  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << index;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << index;
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_CAN_DELETE_POINT ) )
   {
@@ -421,7 +451,7 @@ bool MilXClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& sy
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_DELETE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << index;
+  istream << MILX_REQUEST_DELETE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << index;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_DELETE_POINT ) )
@@ -436,6 +466,7 @@ bool MilXClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
+  ostream >> result.attributes;
   return true;
 }
 
@@ -443,7 +474,7 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& sym
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_EDIT_SYMBOL << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored;
+  istream << MILX_REQUEST_EDIT_SYMBOL << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_EDIT_SYMBOL ) )
@@ -460,6 +491,7 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& sym
   ostream >> result.offset;
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
+  ostream >> result.attributes;
   return true;
 }
 
@@ -469,7 +501,7 @@ bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& s
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << MILX_REQUEST_UPDATE_SYMBOL;
   istream << visibleExtent;
-  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << returnPoints;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << returnPoints;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_UPDATE_SYMBOL ) )
@@ -486,6 +518,7 @@ bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& s
   {
     ostream >> result.adjustedPoints;
     ostream >> result.controlPoints;
+    ostream >> result.attributes;
   }
   return true;
 }
@@ -500,7 +533,7 @@ bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSy
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
-    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored;
+    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored;
   }
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_UPDATE_SYMBOLS ) )
@@ -570,7 +603,7 @@ bool MilXClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bo
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << MILX_REQUEST_HIT_TEST;
-  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored << clickPos;
+  istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << clickPos;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_HIT_TEST ) )
@@ -593,7 +626,7 @@ bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& c
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
-    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.finalized << symbol.colored;
+    istream << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored;
   }
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_PICK_SYMBOL ) )
@@ -604,6 +637,40 @@ bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& c
   QDataStream ostream( &response, QIODevice::ReadOnly );
   MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> selectedSymbol;
+  return true;
+}
+
+bool MilXClient::getAttributeValues( const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, QPoint> >& attributes, QList< QPair<int, double> >& attributeValues )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_GET_ATTRIBUTE_VALUES << symbolXml << points << attributes;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_ATTRIBUTE_VALUES ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> attributeValues;
+  return true;
+}
+
+bool MilXClient::getAttributePoints( const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, double> >& attributes, QList< QPair<int, QPoint> >& attributePoints )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_GET_ATTRIBUTE_POINTS << symbolXml << points << attributes;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_ATTRIBUTE_POINTS ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> attributePoints;
   return true;
 }
 

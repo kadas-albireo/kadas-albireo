@@ -51,6 +51,9 @@ class QgsMilXEditTool : public QgsMapToolPan
     ~QgsMilXEditTool();
     void canvasReleaseEvent( QMouseEvent * e );
 
+  private slots:
+    void deactivateTool();
+
   private:
     QPointer<QgsMilXAnnotationItem> mItem;
     QgsMilXLayer* mLayer;
