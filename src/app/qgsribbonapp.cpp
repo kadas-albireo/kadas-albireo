@@ -75,6 +75,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   statusBar()->addPermanentWidget( statusWidget, 1 );
   mLayersWidget->setVisible( false );
   mLayersWidget->setCursor( Qt::ArrowCursor );
+  mLayersWidget->resize( QSettings().value( "/UI/ribbonLayersWidgetWidth", 200 ).toInt(), mLayersWidget->height() );
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mGeodataBox->setCollapsed( false );
   mLayersBox->setCollapsed( false );
@@ -123,6 +124,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mOpenLayerButton->setMenu( openLayerMenu );
 
   mMapCanvas->installEventFilter( this );
+  mLayersWidgetResizeHandle->installEventFilter( this );
 
   mCoordinateDisplayer = new QgsCoordinateDisplayer( mDisplayCRSButton, mCoordinateLineEdit, mHeightUnitCombo, mMapCanvas, this );
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
@@ -226,34 +228,50 @@ bool QgsRibbonApp::eventFilter( QObject *obj, QEvent *ev )
   {
     updateWidgetPositions();
   }
+  else if ( obj == mLayersWidgetResizeHandle && ev->type() == QEvent::MouseButtonPress )
+  {
+    QMouseEvent* e = static_cast<QMouseEvent*>( ev );
+    if ( e->button() == Qt::LeftButton )
+    {
+      mResizePressPos = e->pos();
+    }
+  }
+  else if ( obj == mLayersWidgetResizeHandle && ev->type() == QEvent::MouseMove )
+  {
+    QMouseEvent* e = static_cast<QMouseEvent*>( ev );
+    if ( e->buttons() == Qt::LeftButton )
+    {
+      QPoint delta = e->pos() - mResizePressPos;
+      mLayersWidget->resize( mLayersWidget->width() + delta.x(), mLayersWidget->height() );
+      QSettings().setValue( "/UI/ribbonLayersWidgetWidth", mLayersWidget->width() );
+      mLayerTreeViewButton->move( mLayersWidget->width(), mLayerTreeViewButton->y() );
+    }
+  }
   return false;
 }
 
 void QgsRibbonApp::updateWidgetPositions()
 {
-  QRect mapCanvasGeometry = mMapCanvas->geometry();
-
   // Make sure +/- buttons have constant distance to upper right corner of map canvas
-  QRect zoomLayoutGeometry = mZoomInOutFrame->geometry();
   int distanceToRightBorder = 9;
   int distanceToTop = 20;
-  mZoomInOutFrame->move( mapCanvasGeometry.width() - distanceToRightBorder - zoomLayoutGeometry.width(), distanceToTop );
+  mZoomInOutFrame->move( mMapCanvas->width() - distanceToRightBorder - mZoomInOutFrame->width(), distanceToTop );
 
   // Resize mLayersWidget and mLayerTreeViewButton
   int distanceToTopBottom = 40;
-  int layerTreeHeight = mapCanvasGeometry.height() - 2 * distanceToTopBottom;
-  mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->geometry().width(), layerTreeHeight );
-  mLayersWidget->setGeometry( mLayersWidget->pos().x(), distanceToTopBottom, mLayersWidget->geometry().width(), layerTreeHeight );
+  int layerTreeHeight = mMapCanvas->height() - 2 * distanceToTopBottom;
+  mLayerTreeViewButton->setGeometry( mLayerTreeViewButton->pos().x(), distanceToTopBottom, mLayerTreeViewButton->width(), layerTreeHeight );
+  mLayersWidget->setGeometry( mLayersWidget->pos().x(), distanceToTopBottom, mLayersWidget->width(), layerTreeHeight );
 
   // Resize info bar
-  double barwidth = 0.5 * mMapCanvas->geometry().width();
-  double x = 0.5 * mMapCanvas->geometry().width() - 0.5 * barwidth;
-  double y = mMapCanvas->geometry().y();
+  double barwidth = 0.5 * mMapCanvas->width();
+  double x = 0.5 * mMapCanvas->width() - 0.5 * barwidth;
+  double y = mMapCanvas->y();
   mInfoBar->move( x, y );
   mInfoBar->setFixedWidth( barwidth );
 
   // Move loading label
-  mLoadingLabel->move( mMapCanvas->geometry().width() - 5 - mLoadingLabel->width(), mMapCanvas->geometry().height() - 5 - mLoadingLabel->height() );
+  mLoadingLabel->move( mMapCanvas->width() - 5 - mLoadingLabel->width(), mMapCanvas->height() - 5 - mLoadingLabel->height() );
 }
 
 void QgsRibbonApp::initLayerTreeView()
