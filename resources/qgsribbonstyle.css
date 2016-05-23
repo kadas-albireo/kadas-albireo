@@ -31,9 +31,13 @@ QTreeView::indicator::unchecked {
   image: url(:/images/ribbon/unchecked.png);
 }
 
-/*QCheckBox::indicator:unchecked {
-    image: url(:/images/checkbox_unchecked.png);
-}*/
+QCheckBox::indicator:checked {
+  image: url(:/images/ribbon/checked.png);
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/ribbon/unchecked.png);
+}
 
 QMenu, QComboBox QAbstractItemView  {
     background-color: white;
