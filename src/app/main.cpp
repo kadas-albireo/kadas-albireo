@@ -976,7 +976,7 @@ int main( int argc, char *argv[] )
       QString onlineProject = mySettings.value( "/qgis/onlineDefaultProject" ).toString();
 
       QEventLoop eventLoop;
-      QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( QNetworkRequest( testUrl ) );
+      QNetworkReply* reply = QgsNetworkAccessManager::instance()->head( QNetworkRequest( testUrl ) );
       QObject::connect( reply, SIGNAL( finished() ), &eventLoop, SLOT( quit() ) );
       eventLoop.exec();
 
