@@ -31,14 +31,6 @@ QTreeView::indicator::unchecked {
   image: url(:/images/ribbon/unchecked.png);
 }
 
-QListView::indicator::checked {
-  image: url(:/images/ribbon/checked.png);
-}
-
-QListView::indicator::unchecked {
-  image: url(:/images/ribbon/unchecked.png);
-}
-
 QCheckBox::indicator:checked {
   image: url(:/images/ribbon/checked.png);
 }
