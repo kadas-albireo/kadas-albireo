@@ -38,11 +38,10 @@ QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::Geo
   mPen = QPen( QColor( 255, 0, 0 ) );
   mBrush = QBrush( QColor( 255, 0, 0 ) );
 
+  mDa.setSourceCrs( mMapCanvas->mapSettings().destinationCrs() );
+  mDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
+  mDa.setEllipsoidalMode( mMapCanvas->mapSettings().hasCrsTransformEnabled() );
   connect( mapCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( redrawMeasurements() ) );
-  connect( mapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( configureDistanceArea() ) );
-  connect( mapCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( configureDistanceArea() ) );
-  connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( configureDistanceArea() ) );
-  configureDistanceArea();
 }
 
 QgsGeometryRubberBand::~QgsGeometryRubberBand()
@@ -129,13 +128,6 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
       break;
   }
   p->restore();
-}
-
-void QgsGeometryRubberBand::configureDistanceArea()
-{
-  mDa.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
-  mDa.setEllipsoidalMode( mMapCanvas->mapSettings().hasCrsTransformEnabled() );
-  mDa.setSourceCrs( mMapCanvas->mapSettings().destinationCrs() );
 }
 
 void QgsGeometryRubberBand::redrawMeasurements()

@@ -240,7 +240,7 @@ static void dumpBacktrace( unsigned int depth )
       QgsDebugMsg( "dup to stderr failed" );
     }
     close( stderr_fd );
-    wait( &status );
+//    wait( &status );
   }
 #elif defined(_MSC_VER)
   void **buffer = new void *[ depth ];

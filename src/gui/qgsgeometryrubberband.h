@@ -25,6 +25,7 @@
 
 
 class QgsAbstractGeometryV2;
+class QgsDistanceArea;
 class QgsPointV2;
 struct QgsVertexId;
 
@@ -131,7 +132,6 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void addMeasurements( const QStringList& measurements, const QgsPointV2 &mapPos );
 
   private slots:
-    void configureDistanceArea();
     void redrawMeasurements();
 };
 
