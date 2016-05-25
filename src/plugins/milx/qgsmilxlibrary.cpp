@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsapplication.h"
 #include "qgsmilxlibrary.h"
 #include "qgsmilxmaptools.h"
 #include "qgsmilxlayer.h"
@@ -360,7 +361,11 @@ void QgsMilXLibrary::addMilXLayer()
 
 void QgsMilXLibraryLoader::run()
 {
-  QString galleryPath = QSettings().value( "/milx/milx_gallery_path", "" ).toString();
+  QString galleryPath = QDir( QgsApplication::applicationDirPath() ).absoluteFilePath( "MilXGalleryFiles" );
+  if ( !QDir( galleryPath ).exists() )
+  {
+    galleryPath = QSettings().value( "/milx/milx_gallery_path", "" ).toString();
+  }
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
 
   QDir galleryDir( galleryPath );
