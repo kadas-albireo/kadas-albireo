@@ -50064,7 +50064,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>You should select at least one symbol/color ramp.</source>
-        <translation>Sie sollten mindestens ein Symbol/Farbverlauf auswählen.</translation>
+        <translation>Sie solten mindestens ein Symbol/eine Farbverlauf wählen.</translation>
     </message>
     <message>
         <source>Save styles</source>
