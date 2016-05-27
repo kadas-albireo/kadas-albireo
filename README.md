@@ -1,14 +1,14 @@
 # KADAS Albireo
 
-KADAS Albireo is a [QGIS](http://qgis.org/) based Geographic Information System
-with a customized user interface.
+KADAS Albireo is a specialized Geographic Information System based on [QGIS](http://qgis.org/).
 
 ## Special features:
 
+ * Streamlined user interface
  * Redlining functionality
- * GPS track creation
- * Terrain Analysis functionality
- * Numeric inputs for redlining analysis
+ * GPS route digitizing
+ * Advanced terrain Analysis functionality
+ * Numeric inputs for redlining and terrain analysis
  * Place search with Swisstopo API and Sphinx search API drivers 
  * Catalog with Swisstopo API, ArcGIS Server and ArcGIS Portal drivers
  * Providers for ArcGIS Feature and Map services
@@ -23,7 +23,7 @@ Some functionality is implemented as Python plugins:
  * Print dialog with quick settings and preview
  * Integrated user manual
 
-An additional start parameter is used to activate the ribbon GUI. See kadas-albireo.bat in the bin directory.
+An additional start parameter is used to activate the ribbon GUI. See `kadas-albireo.bat` in the bin directory.
 
 ## Feedback and support:
 

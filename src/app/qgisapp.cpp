@@ -2408,7 +2408,7 @@ void QgisApp::addAfsLayer()
   delete afss;
 }
 
-void QgisApp::addAfsLayer( QString uri, QString typeName )
+void QgisApp::addAfsLayer( const QString& uri, const QString& typeName )
 {
   // TODO: this should be eventually moved to a more reasonable place
   addVectorLayer( uri, typeName, "arcgisfeatureserver" );
@@ -2441,7 +2441,7 @@ void QgisApp::addAmsLayer()
   delete amss;
 }
 
-void QgisApp::addAmsLayer( QString uri, QString typeName )
+void QgisApp::addAmsLayer( const QString& uri, const QString& typeName )
 {
   // TODO: this should be eventually moved to a more reasonable place
   addRasterLayer( uri, typeName, QString( "arcgismapserver" ) );
