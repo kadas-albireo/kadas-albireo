@@ -27,7 +27,6 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmanageconnectionsdialog.h"
-#include "qgscontexthelp.h"
 
 #include <QItemDelegate>
 #include <QListWidgetItem>
@@ -316,9 +315,16 @@ void QgsSourceSelectDialog::on_btnAdd_clicked()
   //does canvas have "on the fly" reprojection set?
   if ( pCrs.isValid() && mCanvasCrs.isValid() )
   {
-    extent = QgsCoordinateTransform( mCanvasCrs, pCrs ).transform( extent );
-    QgsDebugMsg( QString( "canvas transform: Canvas CRS=%1, Provider CRS=%2, BBOX=%3" )
-                 .arg( mCanvasCrs.authid(), pCrs.authid(), extent.asWktCoordinates() ) );
+    try
+    {
+      extent = QgsCoordinateTransform( mCanvasCrs, pCrs ).transform( extent );
+      QgsDebugMsg( QString( "canvas transform: Canvas CRS=%1, Provider CRS=%2, BBOX=%3" )
+                   .arg( mCanvasCrs.authid(), pCrs.authid(), extent.asWktCoordinates() ) );
+    }
+    catch ( const QgsCsException& )
+    {
+      // Extent is not in range for specified CRS, leave extent empty.
+    }
   }
 
   //create layers that user selected from this feature source
