@@ -66,40 +66,29 @@ void QgsAmsLegendFetcher::handleFinished()
     emit error( QString( "Parsing error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
   }
   QgsDataSourceURI dataSource( mProvider->dataSourceUri() );
-  QList< QPair<QString, QByteArray> > legendEntries;
   foreach ( const QVariant& result, queryResults["layers"].toList() )
   {
     QVariantMap queryResultMap = result.toMap();
-    QString layerId = queryResultMap["layerId"].toString();
-    if ( layerId != dataSource.param( "layer" ) && !mProvider->subLayers().contains( layerId ) )
+    if ( queryResultMap["layerId"] != dataSource.param( "layer" ) )
     {
       continue;
     }
     QVariantList legendSymbols = queryResultMap["legend"].toList();
+    int padding = 5;
+    int imageSize = 20;
+    int textWidth = 93;
+    mLegendImage = QImage( padding + imageSize + padding + textWidth + padding, padding + legendSymbols.size() * ( imageSize + padding ), QImage::Format_ARGB32 );
+    mLegendImage.fill( Qt::transparent );
+    QPainter painter( &mLegendImage );
+    int i = 0;
     foreach ( const QVariant& legendEntry, legendSymbols )
     {
       QVariantMap legendEntryMap = legendEntry.toMap();
       QString label = legendEntryMap["label"].toString();
       QByteArray imageData = QByteArray::fromBase64( legendEntryMap["imageData"].toByteArray() );
-      legendEntries.append( qMakePair( label, imageData ) );
-    }
-  }
-  if ( !legendEntries.isEmpty() )
-  {
-    int padding = 5;
-    int vpadding = 1;
-    int imageSize = 20;
-    int textWidth = 175;
-    mLegendImage = QImage( imageSize + padding + textWidth, vpadding + legendEntries.size() * ( imageSize + vpadding ), QImage::Format_ARGB32 );
-    mLegendImage.fill( Qt::transparent );
-    QPainter painter( &mLegendImage );
-    int i = 0;
-    typedef QPair<QString, QByteArray> LegendEntry_t;
-    foreach ( const LegendEntry_t& legendEntry, legendEntries )
-    {
-      QImage symbol = QImage::fromData( legendEntry.second );
-      painter.drawImage( 0, vpadding + i * ( imageSize + vpadding ), symbol );
-      painter.drawText( imageSize + padding, vpadding + i * ( imageSize + vpadding ), textWidth, imageSize, Qt::AlignLeft | Qt::AlignVCenter, legendEntry.first );
+      QImage symbol = QImage::fromData( imageData );
+      painter.drawImage( padding, padding + i * ( imageSize + padding ), symbol );
+      painter.drawText( padding + imageSize + padding, padding + i * ( imageSize + padding ) + imageSize, label );
       ++i;
     }
   }
