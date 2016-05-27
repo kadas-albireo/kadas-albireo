@@ -55,7 +55,7 @@ QgsWKBTypes::Type QgsWKBTypes::flatType( Type type )
 
 QgsWKBTypes::Type QgsWKBTypes::zmType( QgsWKBTypes::Type type, bool hasZ, bool hasM )
 {
-  type = flatType( type );
+  type = singleType( type );
   if ( hasZ )
     type = static_cast<QgsWKBTypes::Type>( static_cast<quint32>( type ) + 1000 );
   if ( hasM )
