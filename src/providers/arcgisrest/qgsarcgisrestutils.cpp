@@ -297,7 +297,7 @@ QgsAbstractGeometryV2* QgsArcGisRestUtils::parseEsriGeoJSON( const QVariantMap& 
   QgsWKBTypes::Type pointType = QgsWKBTypes::zmType( QgsWKBTypes::Point, readZ, readM );
   if ( crs )
   {
-    *crs = parseSpatialReference( geometryData["spatialReference"].toMap() );
+    *crs = QgsCRSCache::instance()->crsByEpsgId( geometryData["wkid"].toInt() );
   }
 
   // http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Geometry_Objects/02r3000000n1000000/
@@ -331,22 +331,6 @@ QgsAbstractGeometryV2* QgsArcGisRestUtils::parseEsriGeoJSON( const QVariantMap& 
   return 0;
 }
 
-QgsCoordinateReferenceSystem QgsArcGisRestUtils::parseSpatialReference( const QVariantMap &spatialReferenceMap )
-{
-  QString spatialReference = spatialReferenceMap["latestWkid"].toString();
-  if ( spatialReference.isEmpty() )
-    spatialReference = spatialReferenceMap["wkid"].toString();
-  if ( spatialReference.isEmpty() )
-    spatialReference = spatialReferenceMap["wkt"].toString();
-  else
-    spatialReference = QString( "EPSG:%1" ).arg( spatialReference );
-  QgsCoordinateReferenceSystem crs;
-  crs.createFromString( spatialReference );
-  if ( crs.authid().startsWith( "USER:" ) )
-    crs.createFromString( "EPSG:4326" ); // If we can't recognize the SRS, fall back to WGS84
-  return crs;
-}
-
 
 QVariantMap QgsArcGisRestUtils::getServiceInfo( const QString& baseurl, QString& errorTitle, QString& errorText )
 {
@@ -374,20 +358,15 @@ QVariantMap QgsArcGisRestUtils::getObjectIds( const QString& layerurl, QString& 
   return queryServiceJSON( queryUrl, errorTitle, errorText );
 }
 
-QVariantMap QgsArcGisRestUtils::getObjects( const QString& layerurl, const QList<quint32>& objectIds, const QString &crs,
+QVariantMap QgsArcGisRestUtils::getObject( const QString& layerurl, quint32 objectId, const QString &crs,
     bool fetchGeometry, const QStringList& fetchAttributes,
     bool fetchM, bool fetchZ,
     const QgsRectangle& filterRect,
     QString& errorTitle, QString& errorText )
 {
-  QStringList ids;
-  foreach ( int id, objectIds )
-  {
-    ids.append( QString::number( id ) );
-  }
   QUrl queryUrl( layerurl + "/query" );
   queryUrl.addQueryItem( "f", "json" );
-  queryUrl.addQueryItem( "objectIds", ids.join( "," ) );
+  queryUrl.addQueryItem( "where", QString( "objectid=%1" ).arg( objectId ) );
   QString wkid = crs.indexOf( ":" ) >= 0 ? crs.split( ":" )[1] : "";
   queryUrl.addQueryItem( "inSR", wkid );
   queryUrl.addQueryItem( "outSR", wkid );
@@ -395,7 +374,7 @@ QVariantMap QgsArcGisRestUtils::getObjects( const QString& layerurl, const QList
   if ( fetchGeometry )
   {
     queryUrl.addQueryItem( "returnGeometry", "true" );
-    queryUrl.addQueryItem( "outFields", outFields );
+    queryUrl.addQueryItem( "outFields", "geometry" + ( !outFields.isEmpty() ? "," + outFields : "" ) );
   }
   else
   {
@@ -407,8 +386,8 @@ QVariantMap QgsArcGisRestUtils::getObjects( const QString& layerurl, const QList
   if ( !filterRect.isEmpty() )
   {
     queryUrl.addQueryItem( "geometry", QString( "%1,%2,%3,%4" )
-                           .arg( filterRect.xMinimum(), 0, 'f', -1 ).arg( filterRect.yMinimum(), 0, 'f', -1 )
-                           .arg( filterRect.xMaximum(), 0, 'f', -1 ).arg( filterRect.yMaximum(), 0, 'f', -1 ) );
+                           .arg( filterRect.xMinimum() ).arg( filterRect.yMinimum() )
+                           .arg( filterRect.xMaximum() ).arg( filterRect.yMaximum() ) );
     queryUrl.addQueryItem( "geometryType", "esriGeometryEnvelope" );
     queryUrl.addQueryItem( "spatialRel", "esriSpatialRelEnvelopeIntersects" );
   }

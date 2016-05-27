@@ -2,11 +2,9 @@ FIND_PACKAGE(QJSON REQUIRED)
 
 INCLUDE_DIRECTORIES(
   ../../core
-  ../../core/auth
   ../../core/geometry
   ../../core/raster
   ../../gui
-  ../../gui/auth
   ${GEOS_INCLUDE_DIR}
   ${QJSON_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../../ui
