@@ -68,13 +68,9 @@ bool QgsAmsSourceSelect::connectToService( const QgsOWSConnection &connection )
     QStandardItem* abstractItem = new QStandardItem( layerData["description"].toString() );
     abstractItem->setToolTip( layerData["description"].toString() );
 
-    QgsCoordinateReferenceSystem crs = QgsArcGisRestUtils::parseSpatialReference( serviceInfoMap["spatialReference"].toMap() );
-    if ( !crs.isValid() )
-    {
-      layerErrors.append( tr( "Layer %1: unable to parse spatial reference" ).arg( layerInfoMap["id"].toString() ) );
-      continue;
-    }
-    mAvailableCRS[layerData["name"].toString()] = QList<QString>()  << crs.authid();
+    // Feature Service seems to be able to serve in any CRS as long as requested, just default to EPSG:4326 to write one
+    QString wkid = serviceInfoMap["spatialReference"].toMap()["latestWkid"].toString();
+    mAvailableCRS[layerData["name"].toString()] = QList<QString>()  << QString( "EPSG:%1" ).arg( wkid );
 
     mModel->appendRow( QList<QStandardItem*>() << idItem << nameItem << abstractItem );
   }

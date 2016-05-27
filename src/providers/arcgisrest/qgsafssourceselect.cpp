@@ -57,7 +57,7 @@ bool QgsAfsSourceSelect::connectToService( const QgsOWSConnection &connection )
     QVariantMap layerData = QgsArcGisRestUtils::getLayerInfo( connection.uri().param( "url" ) + "/" + layerInfoMap["id"].toString(), errorTitle, errorMessage );
     if ( layerData.isEmpty() )
     {
-      layerErrors.append( tr( "Layer %1: %2 - %3" ).arg( layerInfoMap["id"].toString() ).arg( errorTitle ).arg( errorMessage ) );
+      layerErrors.append( QString( "Layer %1: %2 - %3" ).arg( layerInfoMap["id"].toString() ).arg( errorTitle ).arg( errorMessage ) );
       continue;
     }
     // insert the typenames, titles and abstracts into the tree view
@@ -70,13 +70,9 @@ bool QgsAfsSourceSelect::connectToService( const QgsOWSConnection &connection )
     cachedItem->setCheckable( true );
     cachedItem->setCheckState( Qt::Checked );
 
-    QgsCoordinateReferenceSystem crs = QgsArcGisRestUtils::parseSpatialReference( serviceInfoMap["spatialReference"].toMap() );
-    if ( !crs.isValid() )
-    {
-      // If not spatial reference, just use WGS84
-      crs.createFromString( "EPSG:4326" );
-    }
-    mAvailableCRS[layerData["name"].toString()] = QList<QString>()  << crs.authid();
+    // Feature Service seems to be able to serve in any CRS as long as requested, just default to EPSG:4326 to write one
+    QString wkid = serviceInfoMap["spatialReference"].toMap()["latestWkid"].toString();
+    mAvailableCRS[layerData["name"].toString()] = QList<QString>()  << QString( "EPSG:%1" ).arg( wkid );
 
     mModel->appendRow( QList<QStandardItem*>() << idItem << nameItem << abstractItem << cachedItem << filterItem );
   }

@@ -551,8 +551,6 @@ QAction *QgisAppInterface::actionAddOgrLayer() { return qgisc ? qgisc->actionAdd
 QAction *QgisAppInterface::actionAddRasterLayer() { return qgisc ? qgisc->actionAddRasterLayer() : 0; }
 QAction *QgisAppInterface::actionAddPgLayer() { return qgisc ? qgisc->actionAddPgLayer() : 0; }
 QAction *QgisAppInterface::actionAddWmsLayer() { return qgisc ? qgisc->actionAddWmsLayer() : 0; }
-QAction *QgisAppInterface::actionAddAfsLayer() { return qgisc ? qgisc->actionAddAfsLayer() : 0; }
-QAction *QgisAppInterface::actionAddAmsLayer() { return qgisc ? qgisc->actionAddAmsLayer() : 0; }
 QAction *QgisAppInterface::actionCopyLayerStyle() { return qgisc ? qgisc->actionCopyLayerStyle() : 0; }
 QAction *QgisAppInterface::actionPasteLayerStyle() { return qgisc ? qgisc->actionPasteLayerStyle() : 0; }
 QAction *QgisAppInterface::actionOpenTable() { return qgisc ? qgisc->actionOpenTable() : 0; }
