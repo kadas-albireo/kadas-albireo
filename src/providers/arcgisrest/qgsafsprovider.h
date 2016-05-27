@@ -44,7 +44,6 @@ class QgsAfsProvider : public QgsVectorDataProvider
     QGis::WkbType geometryType() const override { return static_cast<QGis::WkbType>( mGeometryType ); }
     long featureCount() const override { return mObjectIds.size(); }
     const QgsFields &fields() const override { return mFields; }
-    void enumValues( int index, QStringList& enumList ) override { enumList = mEnumValues.value( index ); }
     /* Read only for the moment
     bool addFeatures( QgsFeatureList &flist ) override{ return false; }
     bool deleteFeatures( const QgsFeatureIds &id ) override{ return false; }
@@ -79,7 +78,6 @@ class QgsAfsProvider : public QgsVectorDataProvider
     QString mObjectIdFieldName;
     QString mLayerName;
     QString mLayerDescription;
-    QMap<int, QStringList> mEnumValues;
     QList<quint32> mObjectIds;
     QgsCoordinateReferenceSystem mSourceCRS;
     QMap<QgsFeatureId, QgsFeature> mCache;
