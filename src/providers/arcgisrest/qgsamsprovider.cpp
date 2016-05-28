@@ -80,7 +80,7 @@ void QgsAmsLegendFetcher::handleFinished()
     {
       QVariantMap legendEntryMap = legendEntry.toMap();
       QString label = legendEntryMap["label"].toString();
-      if ( label.isEmpty() )
+      if ( label.isEmpty() && legendSymbols.size() == 1 )
         label = queryResultMap["layerName"].toString();
       QByteArray imageData = QByteArray::fromBase64( legendEntryMap["imageData"].toByteArray() );
       legendEntries.append( qMakePair( label, QImage::fromData( imageData ) ) );
