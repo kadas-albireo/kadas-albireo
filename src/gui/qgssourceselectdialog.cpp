@@ -123,9 +123,11 @@ void QgsSourceSelectDialog::setCurrentExtentAndCrs( const QgsRectangle& canvasEx
 
 void QgsSourceSelectDialog::populateImageEncodings( const QStringList& availableEncodings )
 {
-  while ( gbImageEncoding->layout()->count() > 0 )
+  QLayoutItem* item;
+  while (( item = gbImageEncoding->layout()->takeAt( 0 ) ) != nullptr )
   {
-    delete gbImageEncoding->layout()->takeAt( 0 );
+    delete item->widget();
+    delete item;
   }
   bool first = true;
   QList<QByteArray> supportedFormats = QImageReader::supportedImageFormats();
