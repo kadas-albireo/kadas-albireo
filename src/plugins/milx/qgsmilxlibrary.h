@@ -79,9 +79,11 @@ class QgsMilXLibraryLoader : public QThread
 {
     Q_OBJECT
   public:
-    QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ) {}
+    QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ), mAborted( false ) {}
+    bool abort() { mAborted = true; }
 
   private:
+    bool mAborted;
     QgsMilXLibrary* mLibrary;
 
     void run() override;
