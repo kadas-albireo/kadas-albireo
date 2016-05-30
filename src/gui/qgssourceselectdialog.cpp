@@ -53,7 +53,7 @@ QgsSourceSelectDialog::QgsSourceSelectDialog( const QString& serviceName, Servic
 
   mAddButton = buttonBox->addButton( tr( "&Add" ), QDialogButtonBox::ActionRole );
   mAddButton->setEnabled( false );
-  connect( mAddButton, SIGNAL( clicked() ), this, SLOT( on_btnAdd_clicked() ) );
+  connect( mAddButton, SIGNAL( clicked() ), this, SLOT( addButtonClicked() ) );
 
   if ( mServiceType == FeatureService )
   {
@@ -301,7 +301,7 @@ void QgsSourceSelectDialog::connectToServer()
   btnChangeSpatialRefSys->setEnabled( haveLayers );
 }
 
-void QgsSourceSelectDialog::on_btnAdd_clicked()
+void QgsSourceSelectDialog::addButtonClicked()
 {
   if ( treeView->selectionModel()->selectedRows().isEmpty() )
   {

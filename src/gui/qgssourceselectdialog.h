@@ -74,7 +74,7 @@ class GUI_EXPORT QgsSourceSelectDialog : public QDialog, protected Ui::QgsSource
     void addEntryToServerList();
     void deleteEntryOfServerList();
     void modifyEntryOfServerList();
-    void on_btnAdd_clicked();
+    void addButtonClicked();
     void buildQueryButtonClicked();
     void changeCRS();
     void changeCRSFilter();
