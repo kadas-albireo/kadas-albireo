@@ -59,6 +59,7 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
 
   mHeightSelectionCombo->addItem( tr( "Meters" ), static_cast<int>( QGis::Meters ) );
   mHeightSelectionCombo->addItem( tr( "Feet" ), static_cast<int>( QGis::Feet ) );
+  mHeightSelectionCombo->setCurrentIndex( QSettings().value( "/qgis/heightUnit", 0 ).toInt() );
 
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
@@ -71,7 +72,6 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   if ( displayFormat < 0 || displayFormat >= crsSelectionMenu->actions().size() )
     displayFormat = 0;
   displayFormatChanged( crsSelectionMenu->actions().front() );
-  heightUnitChanged( 0 );
 }
 
 void QgsCoordinateDisplayer::getCoordinateDisplayFormat( QgsCoordinateFormat::Format& format, QString& epsg )
@@ -166,7 +166,7 @@ void QgsCoordinateDisplayer::displayFormatChanged( QAction *action )
 
 void QgsCoordinateDisplayer::heightUnitChanged( int idx )
 {
-  QgsProject::instance()->writeEntry( "coodisplay", "height", idx );
+  QSettings().setValue( "/qgis/heightUnit", idx );
   QgsCoordinateFormat::instance()->setHeightDisplayUnit( static_cast<QGis::UnitType>( mHeightSelectionCombo->itemData( idx ).toInt() ) );
 }
 
@@ -176,8 +176,4 @@ void QgsCoordinateDisplayer::readProjectSettings()
   if ( displayCrs < 0 || displayCrs >= mCRSSelectionButton->menu()->actions().size() )
     displayCrs = 0;
   displayFormatChanged( mCRSSelectionButton->menu()->actions()[displayCrs] );
-  int heightUnit = QgsProject::instance()->readNumEntry( "coodisplay", "height" );
-  if ( heightUnit < 0 || heightUnit >= mHeightSelectionCombo->count() )
-    heightUnit = 0;
-  heightUnitChanged( heightUnit );
 }
