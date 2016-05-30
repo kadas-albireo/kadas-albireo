@@ -18,14 +18,11 @@
 #include "qgscrscache.h"
 #include "layertree/qgslayertreeview.h"
 #include "qgisinterface.h"
-#include "qgscrscache.h"
-#include "qgsdistancearea.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgsmilxlayer.h"
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
-#include <QVector2D>
 
 bool QgsMilXItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
 {
@@ -42,13 +39,12 @@ QgsMilXItem::~QgsMilXItem()
   }
 }
 
-void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QList< QPair<int, QgsPoint> > &attributes, const QPoint &userOffset, ControlPointState controlPointState )
+void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QPoint &userOffset, ControlPointState controlPointState )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
   mPoints = points;
   mControlPoints = controlPoints;
-  mAttributes = attributes;
   mUserOffset = userOffset;
   if ( mPoints.size() > 1 )
   {
@@ -94,17 +90,6 @@ QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const 
   return points;
 }
 
-QList< QPair<int, QPoint> > QgsMilXItem::screenAttributePoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const
-{
-  QList< QPair<int, QPoint> > points;
-  typedef QPair<int, QgsPoint> AttribPt_t;
-  foreach ( const AttribPt_t& attrib, mAttributes )
-  {
-    points.append( qMakePair( attrib.first, mapToPixel.transform( crst ? crst->transform( attrib.second ) : attrib.second ).toQPointF().toPoint() ) );
-  }
-  return points;
-}
-
 void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
 {
   bool valid = false;
@@ -141,57 +126,6 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
     pYEl.appendChild( doc.createTextNode( QString::number( p.y(), 'f', 6 ) ) );
     pEl.appendChild( pYEl );
   }
-  if ( !mAttributes.isEmpty() && !mPoints.isEmpty() )
-  {
-    QList< QPair<int, double> > attributeValues;
-    // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
-    double scale = 100000.;
-    QList<QPoint> screenPoints;
-    foreach ( const QgsPoint& point, mPoints )
-    {
-      screenPoints.append( QPoint( point.x() * scale, point.y() * scale ) );
-    }
-    QList< QPair<int, QPoint> > screenAttributePoints;
-    for ( int i = 0, n = mAttributes.size(); i < n; ++i )
-    {
-      QPoint p = QPoint( mAttributes[i].second.x() * scale, mAttributes[i].second.y() * scale );
-      screenAttributePoints.append( qMakePair( mAttributes[i].first, p ) );
-    }
-    if ( MilXClient::getAttributeValues( mMssString, screenPoints, screenAttributePoints, attributeValues ) )
-    {
-      // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
-      // Since we possibly only have one single point, use another random point nearby for measuring
-      QgsDistanceArea da;
-      da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-      da.setEllipsoid( "WGS84" );
-      da.setEllipsoidalMode( true );
-      QGis::UnitType measureUnit = QGis::Degrees;
-      QgsPoint otherPoint( mPoints[0].x() + 0.001, mPoints[0].y() );
-      QPoint otherScreenPoint( otherPoint.x() * scale, otherPoint.y() * scale );
-      double ellipsoidDist = da.measureLine( mPoints[0], otherPoint );
-      da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
-      double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
-
-      QDomElement attribListEl = doc.createElement( "LocationAttributeList" );
-      graphicEl.appendChild( attribListEl );
-      for ( int i = 0, n = mAttributes.size(); i < n; ++i )
-      {
-        QDomElement attribEl = doc.createElement( "LocationAttribute" );
-        attribListEl.appendChild( attribEl );
-
-        QDomElement attrTypeEl = doc.createElement( "AttrType" );
-        attrTypeEl.appendChild( doc.createTextNode( MilXClient::attributeName( mAttributes[i].first ) ) );
-        attribEl.appendChild( attrTypeEl );
-        QDomElement attrValueEl = doc.createElement( "Value" );
-
-        if ( mAttributes[i].first != MilXClient::AttributeAttutide )
-          attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second / screenDist * ellipsoidDist ) ) );
-        else
-          attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second ) ) );
-        attribEl.appendChild( attrValueEl );
-      }
-    }
-  }
 
   QDomElement offsetEl = doc.createElement( "Offset" );
   graphicEl.appendChild( offsetEl );
@@ -225,57 +159,10 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
       points.append( QgsPoint( x, y ) );
     }
   }
-  QList< QPair<int, double> > attributes;
-  QDomNodeList attribEls = graphicEl.firstChildElement( "LocationAttributeList" ).elementsByTagName( "LocationAttribute" );
-  for ( int iAttr = 0, nAttrs = attribEls.count(); iAttr < nAttrs; ++iAttr )
-  {
-    QDomElement attribEl = attribEls.at( iAttr ).toElement();
-    attributes.append( qMakePair( MilXClient::attributeIdx( attribEl.firstChildElement( "AttrType" ).text() ), attribEl.firstChildElement( "Value" ).text().toDouble() ) );
-  }
-  QList< QPair<int, QgsPoint> > attributePoints;
-  if ( !attributes.isEmpty() && !points.isEmpty() )
-  {
-    // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
-    double scale = 100000.;
-    QPoint origin = QPoint( points[0].x() * scale, points[0].y() * scale );
-    QList<QPoint> screenPoints = QList<QPoint>() << QPoint( 0, 0 );
-    for ( int i = 1, n = points.size(); i < n; ++i )
-    {
-      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) - origin );
-    }
-
-    // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
-    // Since we possibly only have one single point, use another random point nearby for measuring
-    QgsDistanceArea da;
-    da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-    da.setEllipsoid( "WGS84" );
-    da.setEllipsoidalMode( true );
-    QGis::UnitType measureUnit = QGis::Degrees;
-    QgsPoint otherPoint( points[0].x() + 0.001, points[0].y() );
-    QPoint otherScreenPoint( otherPoint.x() * scale, otherPoint.y() * scale );
-    double ellipsoidDist = da.measureLine( points[0], otherPoint );
-    da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
-    double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
-
-    for ( int i = 0, n = attributes.size(); i < n; ++i )
-    {
-      attributes[i].second *= screenDist / ellipsoidDist;
-    }
-
-    QList< QPair<int, QPoint> > attributeScreenPoints;
-    if ( MilXClient::getAttributePoints( mMssString, screenPoints, attributes, attributeScreenPoints ) )
-    {
-      for ( int i = 0, n = attributeScreenPoints.size(); i < n; ++i )
-      {
-        const QPoint& attrp = attributeScreenPoints[i].second;
-        attributePoints.append( qMakePair( attributeScreenPoints[i].first, QgsPoint( attrp.x() / scale, attrp.y() / scale ) ) );
-      }
-    }
-  }
 
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  initialize( symbolXml, militaryName, points, QList<int>(), attributePoints, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
+  initialize( symbolXml, militaryName, points, QList<int>(), QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -303,11 +190,8 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
           continue;
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
-        if ( points.isEmpty() )
-          continue;
-        QList< QPair<int, QPoint> > attribPoints = items[i]->screenAttributePoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
-        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), attribPoints, true, !mLayer->mIsApproved ) );
+        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), true, !mLayer->mIsApproved ) );
       }
       if ( symbols.isEmpty() )
       {
@@ -384,10 +268,10 @@ QgsMilXLayer::~QgsMilXLayer()
 void QgsMilXLayer::addItem( QgsMilXItem *item )
 {
   mItems.append( item );
-  if ( !item->isMultiPoint() && !item->points().isEmpty() )
+  if ( !item->isMultiPoint() )
   {
     int symbolSize = MilXClient::getSymbolSize();
-    MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, QPoint> >(), true, true );
+    MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), true, true );
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
@@ -408,8 +292,7 @@ bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSe
     {
       points[j] += mItems[i]->userOffset();
     }
-    QList< QPair<int, QPoint> > attribPoints = mItems[i]->screenAttributePoints( mapSettings.mapToPixel(), crst );
-    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), attribPoints, true, true ) );
+    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), true, true ) );
   }
   int selectedSymbol = -1;
   if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )

@@ -37,15 +37,14 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     void fromMilxItem( QgsMilXItem* item );
     QgsMilXItem* toMilxItem();
 
-    void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName );
+    void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName, bool isMultiPoint );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
     void movePoint( int index, const QPoint &newPos );
     QList<QPoint> screenPoints() const;
-    QList< QPair<int, QPoint> > screenAttributePoints() const;
     int absolutePointIdx( int regularIdx ) const;
     void setGraphic( MilXClient::NPointSymbolGraphic& result, bool updatePoints );
-    void finalize();
+    void finalize() { mFinalized = true; }
 
     void paint( QPainter* painter ) override;
     void writeXML( QDomDocument& /*doc*/ ) const override {}
@@ -58,8 +57,6 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
 
-    bool isMultiPoint() const { return !mAdditionalPoints.isEmpty() || !mAttributes.isEmpty(); }
-
   protected:
     QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnotationItem* source );
 
@@ -70,7 +67,7 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     QList<QgsPoint> mAdditionalPoints;
     QPoint mRenderOffset;
     QList<int> mControlPoints;
-    QList< QPair<int, QgsPoint> > mAttributes;
+    bool mIsMultiPoint;
     bool mFinalized;
 
     void _showItemEditor() override;

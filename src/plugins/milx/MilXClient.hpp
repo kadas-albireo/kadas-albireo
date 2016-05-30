@@ -21,7 +21,6 @@
 #include <qglobal.h>
 #include <QMap>
 #include <QObject>
-#include <QPair>
 #include <QPoint>
 #include <QPixmap>
 #include <QThread>
@@ -70,13 +69,12 @@ public:
   };
 
   struct NPointSymbol {
-    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, const QList< QPair<int, QPoint> >& _attributes, bool _finalized, bool _colored)
-      : xml(_xml), points(_points), controlPoints(_controlPoints), attributes(_attributes), finalized(_finalized), colored(_colored) {}
+    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, bool _finalized, bool _colored)
+      : xml(_xml), points(_points), controlPoints(_controlPoints), finalized(_finalized), colored(_colored) {}
 
     QString xml;
     QList<QPoint> points;
     QList<int> controlPoints;
-    QList< QPair<int, QPoint> > attributes;
     bool finalized;
     bool colored;
   };
@@ -86,18 +84,7 @@ public:
     QPoint offset;
     QList<QPoint> adjustedPoints;
     QList<int> controlPoints;
-    QList< QPair<int, QPoint> > attributes;
   };
-
-  enum AttributeTypes {
-    AttributeWidth = 1,
-    AttributeLength = 2,
-    AttributeRadius = 4,
-    AttributeAttutide = 8
-  };
-
-  static QString attributeName(int idx);
-  static int attributeIdx(const QString& name);
 
   static void setSymbolSize(int value) { instance()->mSymbolSize = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
   static void setLineWidth(int value) { instance()->mLineWidth = value; instance()->setSymbolOptions(instance()->mSymbolSize, instance()->mLineWidth, instance()->mWorkMode); }
@@ -129,9 +116,6 @@ public:
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
-
-  static bool getAttributeValues(const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, QPoint> >& attributes, QList< QPair<int, double> >& attributeValues);
-  static bool getAttributePoints(const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, double> >& attributes, QList< QPair<int, QPoint> >& attributePoints );
 
 private:
   MilXClientWorker mWorker;

@@ -26,6 +26,7 @@
 #include "qgsmaplayerregistry.h"
 #include "layertree/qgslayertreeview.h"
 #include <QAction>
+#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDomDocument>

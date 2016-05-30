@@ -28,7 +28,7 @@
 REGISTER_QGS_ANNOTATION_ITEM( QgsMilXAnnotationItem )
 
 QgsMilXAnnotationItem::QgsMilXAnnotationItem( QgsMapCanvas* canvas )
-    : QgsAnnotationItem( canvas ), mFinalized( false )
+    : QgsAnnotationItem( canvas ), mIsMultiPoint( false ), mFinalized( false )
 {
   mOffsetFromReferencePoint = QPoint( 0, 0 );
   connect( canvas, SIGNAL( extentsChanged() ), this, SLOT( updateSymbol() ) );
@@ -37,7 +37,7 @@ QgsMilXAnnotationItem::QgsMilXAnnotationItem( QgsMapCanvas* canvas )
 QgsMilXAnnotationItem::QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnotationItem* source )
     : QgsAnnotationItem( canvas, source )
 {
-  setSymbolXml( source->mSymbolXml, source->mSymbolMilitaryName );
+  setSymbolXml( source->mSymbolXml, source->mSymbolMilitaryName, source->mIsMultiPoint );
   mAdditionalPoints = source->mAdditionalPoints;
   mRenderOffset = source->mRenderOffset;
   mControlPoints = source->mControlPoints;
@@ -56,11 +56,7 @@ void QgsMilXAnnotationItem::fromMilxItem( QgsMilXItem* item )
     mAdditionalPoints.append( crst->transform( item->points()[i] ) );
   }
   mControlPoints = item->controlPoints();
-  for ( int i = 0, n = item->attributes().size(); i < n; ++i )
-  {
-    mAttributes.append( qMakePair( item->attributes()[i].first, crst->transform( item->attributes()[i].second ) ) );
-  }
-  setSymbolXml( item->mssString(), item->militaryName() );
+  setSymbolXml( item->mssString(), item->militaryName(), item->isMultiPoint() );
   mFinalized = true;
   mOffsetFromReferencePoint = item->userOffset();
   updateSymbol( true );
@@ -76,22 +72,26 @@ QgsMilXItem* QgsMilXAnnotationItem::toMilxItem()
   {
     points.append( crst->transform( p ) );
   }
-  QList< QPair<int, QgsPoint> > attributePoints;
-  typedef QPair<int, QgsPoint> AttribPt_t;
-  foreach ( const AttribPt_t& attr, mAttributes )
-  {
-    attributePoints.append( qMakePair( attr.first, crst->transform( attr.second ) ) );
-  }
   QgsMilXItem* item = new QgsMilXItem();
-  item->initialize( mSymbolXml, mSymbolMilitaryName, points, mControlPoints, attributePoints, mOffsetFromReferencePoint.toPoint() - mRenderOffset );
+  item->initialize( mSymbolXml, mSymbolMilitaryName, points, mControlPoints, mOffsetFromReferencePoint.toPoint() - mRenderOffset );
   return item;
 }
 
-void QgsMilXAnnotationItem::setSymbolXml( const QString &symbolXml, const QString& symbolMilitaryName )
+void QgsMilXAnnotationItem::setSymbolXml( const QString &symbolXml, const QString& symbolMilitaryName, bool isMultiPoint )
 {
+  mIsMultiPoint = isMultiPoint;
   mSymbolXml = symbolXml;
   mSymbolMilitaryName = symbolMilitaryName;
   setToolTip( mSymbolMilitaryName );
+
+  if ( mIsMultiPoint )
+  {
+    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemHasNoFrame );
+  }
+  else
+  {
+    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoFrame );
+  }
 }
 
 void QgsMilXAnnotationItem::paint( QPainter* painter )
@@ -99,14 +99,6 @@ void QgsMilXAnnotationItem::paint( QPainter* painter )
   if ( !painter )
   {
     return;
-  }
-  if ( isMultiPoint() )
-  {
-    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemHasNoFrame );
-  }
-  else
-  {
-    setItemFlags( QgsAnnotationItem::ItemIsNotResizeable | QgsAnnotationItem::ItemHasNoFrame );
   }
 
   if ( mGraphic.isNull() )
@@ -116,7 +108,7 @@ void QgsMilXAnnotationItem::paint( QPainter* painter )
 
   // Draw line from visual reference point to actual refrence point
   painter->setPen( Qt::black );
-  if ( !isMultiPoint() )
+  if ( !mIsMultiPoint )
   {
     painter->drawLine( QPoint( 0, 0 ), mOffsetFromReferencePoint.toPoint() - mRenderOffset );
   }
@@ -140,47 +132,25 @@ void QgsMilXAnnotationItem::paint( QPainter* painter )
       }
       painter->restore();
     }
-    if ( !mAttributes.isEmpty() )
-    {
-      painter->save();
-      painter->setPen( QPen( Qt::black, 1 ) );
-      painter->setBrush( Qt::red );
-      QList< QPair<int, QPoint> > apts = screenAttributePoints();
-      for ( int i = 0, n = apts.size(); i < n; ++i )
-      {
-        painter->drawEllipse( apts[i].second - pos(), 4, 4 );
-      }
-      painter->restore();
-    }
   }
 }
 
 int QgsMilXAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
-  if ( isMultiPoint() )
+  if ( mIsMultiPoint )
   {
-    // Frist, check attribute points
-    QList< QPair<int, QPoint> > apts = screenAttributePoints();
-    for ( int i = 0, n = apts.size(); i < n; ++i )
-    {
-      if ( qAbs( pos.x() - apts[i].second.x() ) < 10 && qAbs( pos.y() - apts[i].second.y() ) < 10 )
-      {
-        return NumMouseMoveActions + 1 + mAdditionalPoints.size() + i;
-      }
-    }
     QList<QPoint> pts = screenPoints();
-    // Then, control points
+    // Priority to control points
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {
-      if ( mControlPoints.contains( i ) && qAbs( pos.x() - pts[i].x() ) < 10 && qAbs( pos.y() - pts[i].y() ) < 10 )
+      if ( mControlPoints.contains( i ) && qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
       {
         return NumMouseMoveActions + i;
       }
     }
-    // Last, regular points
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {
-      if ( qAbs( pos.x() - pts[i].x() ) < 10 && qAbs( pos.y() - pts[i].y() ) < 10 )
+      if ( qAbs( pos.x() - pts[i].x() ) < 7 && qAbs( pos.y() - pts[i].y() ) < 7 )
       {
         return NumMouseMoveActions + i;
       }
@@ -197,11 +167,6 @@ void QgsMilXAnnotationItem::handleMoveAction( int moveAction, const QPointF &new
     if ( idx < 1 + mAdditionalPoints.size() )
     {
       movePoint( idx, newPos.toPoint() );
-    }
-    else if ( idx < 1 + mAdditionalPoints.size() + mAttributes.size() )
-    {
-      mAttributes[idx - 1 - mAdditionalPoints.size()].second = toMapCoordinates( newPos.toPoint() );
-      updateSymbol( false );
     }
   }
   else
@@ -223,11 +188,11 @@ void QgsMilXAnnotationItem::_showItemEditor()
 {
   QString symbolId;
   QString symbolMilitaryName;
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributePoints(), mFinalized, true );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, symbolId, symbolMilitaryName, result ) )
   {
-    setSymbolXml( symbolId, symbolMilitaryName );
+    setSymbolXml( symbolId, symbolMilitaryName, result.adjustedPoints.size() > 1 );
     setGraphic( result, true );
   }
 }
@@ -245,16 +210,12 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
     {
       mAdditionalPoints[i] = t->transform( QgsPoint( mAdditionalPoints[i].x() + delta.x(), mAdditionalPoints[i].y() + delta.y() ) );
     }
-    for ( int i = 0, n = mAttributes.size(); i < n; ++i )
-    {
-      mAttributes[i].second = t->transform( QgsPoint( mAttributes[i].second.x() + delta.x(), mAttributes[i].second.y() + delta.y() ) );
-    }
   }
   else
   {
     QgsAnnotationItem::setMapPosition( pos, crs );
   }
-  if ( isMultiPoint() )
+  if ( mIsMultiPoint )
   {
     updateSymbol( false );
   }
@@ -262,7 +223,7 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
 
 void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributePoints(), mFinalized, true );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::appendPoint( mMapCanvas->sceneRect().toRect(), symbol, newPoint, result ) )
   {
@@ -272,7 +233,7 @@ void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
 
 void QgsMilXAnnotationItem::movePoint( int index, const QPoint& newPos )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributePoints(), mFinalized, true );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::movePoint( mMapCanvas->sceneRect().toRect(), symbol, index, newPos, result ) )
   {
@@ -288,18 +249,6 @@ QList<QPoint> QgsMilXAnnotationItem::screenPoints() const
   foreach ( const QgsPoint& geoPoint, mAdditionalPoints )
   {
     points.append( toCanvasCoordinates( t->transform( geoPoint ) ).toPoint() );
-  }
-  return points;
-}
-
-QList<QPair<int, QPoint> > QgsMilXAnnotationItem::screenAttributePoints() const
-{
-  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), mMapCanvas->mapSettings().destinationCrs().authid() );
-  QList<QPair<int, QPoint> > points;
-  typedef QPair<int, QgsPoint> AttribPoint_t;
-  foreach ( const AttribPoint_t& attribPoint, mAttributes )
-  {
-    points.append( qMakePair( attribPoint.first, toCanvasCoordinates( t->transform( attribPoint.second ) ).toPoint() ) );
   }
   return points;
 }
@@ -335,20 +284,9 @@ void QgsMilXAnnotationItem::setGraphic( MilXClient::NPointSymbolGraphic &result,
       mAdditionalPoints.append( t->transform( toMapCoordinates( result.adjustedPoints[i] ) ) );
     }
     mControlPoints = result.controlPoints;
-    mAttributes.clear();
-    for ( int i = 0, n = result.attributes.size(); i < n; ++i )
-    {
-      mAttributes.append( qMakePair( result.attributes[i].first, t->transform( toMapCoordinates( result.attributes[i].second ) ) ) );
-    }
   }
   updateBoundingRect();
   update();
-}
-
-void QgsMilXAnnotationItem::finalize()
-{
-  mFinalized = true;
-  updateSymbol( true );
 }
 
 void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
@@ -361,7 +299,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
   QAction* actionClearOffset = 0;
-  if ( isMultiPoint() )
+  if ( mIsMultiPoint )
   {
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {
@@ -369,26 +307,13 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
       {
         actionRemovePoint = menu.addAction( tr( "Remove node" ) );
         actionRemovePoint->setData( i );
-        MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributePoints(), mFinalized, true );
+        MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
         bool canDelete = false;
         if ( !MilXClient::canDeletePoint( symbol, i, canDelete ) || !canDelete )
         {
           actionRemovePoint->setEnabled( false );
         }
         break;
-      }
-    }
-    if ( !actionRemovePoint )
-    {
-      typedef QPair<int, QPoint> AttribPoint_t;
-      foreach ( const AttribPoint_t& attribPoint, screenAttributePoints() )
-      {
-        if ( qAbs( canvasPos.x() - attribPoint.second.x() ) < 7 && qAbs( canvasPos.y() - attribPoint.second.y() ) < 7 )
-        {
-          actionRemovePoint = menu.addAction( tr( "Remove node" ) );
-          actionRemovePoint->setEnabled( false );
-          break;
-        }
       }
     }
     if ( !actionRemovePoint )
@@ -410,7 +335,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
   if ( clickedAction == actionAddPoint )
   {
-    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributePoints(), mFinalized, true );
+    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
     if ( MilXClient::insertPoint( mMapCanvas->sceneRect().toRect(), symbol, canvasPos, result ) )
     {
@@ -420,7 +345,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   else if ( clickedAction == actionRemovePoint )
   {
     int index = actionRemovePoint->data().toInt();
-    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributePoints(), mFinalized, true );
+    MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
     if ( MilXClient::deletePoint( mMapCanvas->sceneRect().toRect(), symbol, index, result ) )
     {
@@ -443,7 +368,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
 
 bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
 {
-  if ( !isMultiPoint() )
+  if ( !mIsMultiPoint )
   {
     return true;
   }
@@ -457,7 +382,7 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
     }
   }
   // Do the full hit test
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPts, mControlPoints, screenAttributePoints(), mFinalized, true );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPts, mControlPoints, mFinalized, true );
   bool hitTestResult = false;
   MilXClient::hitTest( symbol, screenPos, hitTestResult );
   return hitTestResult;
@@ -465,7 +390,7 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
 
 void QgsMilXAnnotationItem::updateSymbol( bool updatePoints )
 {
-  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributePoints(), mFinalized, true );
+  MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   if ( MilXClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result, updatePoints ) )
   {

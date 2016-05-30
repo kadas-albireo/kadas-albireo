@@ -21,7 +21,6 @@
 #include <QObject>
 
 #include "qgis.h"
-#include "qgscrscache.h"
 #include "qgspoint.h"
 #include "qgscoordinatetransform.h"
 #include "qgscoordinatereferencesystem.h"
@@ -99,7 +98,8 @@ void QgsDistanceArea::setEllipsoidalMode( bool flag )
 
 void QgsDistanceArea::setSourceCrs( long srsid )
 {
-  QgsCoordinateReferenceSystem srcCRS = QgsCRSCache::instance()->crsByEpsgId( srsid );
+  QgsCoordinateReferenceSystem srcCRS;
+  srcCRS.createFromSrsId( srsid );
   mCoordTransform->setSourceCrs( srcCRS );
   if ( mEllipsoid == GEO_NONE )
   {
@@ -232,7 +232,8 @@ bool QgsDistanceArea::setEllipsoid( const QString& ellipsoid )
 
   // get spatial ref system for ellipsoid
   QString proj4 = "+proj=longlat +ellps=" + ellipsoid + " +no_defs";
-  QgsCoordinateReferenceSystem destCRS = QgsCRSCache::instance()->crsByProj4( proj4 );
+  QgsCoordinateReferenceSystem destCRS;
+  destCRS.createFromProj4( proj4 );
   //TODO: createFromProj4 used to save to the user database any new CRS
   // this behavior was changed in order to separate creation and saving.
   // Not sure if it necessary to save it here, should be checked by someone
@@ -856,9 +857,9 @@ void QgsDistanceArea::computeAreaInit()
 
 double QgsDistanceArea::computePolygonArea( const QList<QgsPoint>& points ) const
 {
-  if ( points.isEmpty() )
+  if(points.isEmpty())
   {
-    return 0;
+	  return 0;
   }
 
   double x1, y1, x2, y2, dx, dy;
