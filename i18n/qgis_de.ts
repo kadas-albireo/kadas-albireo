@@ -36995,7 +36995,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Lock with main view</source>
-        <translation type="unfinished">Mit Hauptansicht synchronisieren</translation>
+        <translation>Mit Haupansicht synchronisieren</translation>
     </message>
     <message>
         <source>Close</source>

@@ -159,7 +159,6 @@ QgsMilXLibrary::~QgsMilXLibrary()
 {
   if ( mLoader )
   {
-    mLoader->abort();
     while ( !mLoader->isFinished() )
     {
       QApplication::instance()->processEvents( QEventLoop::ExcludeUserInputEvents );
@@ -421,8 +420,6 @@ void QgsMilXLibraryLoader::run()
             MilXClient::getSymbolsMetadata( symbolXmls, symbolDescs );
             foreach ( const MilXClient::SymbolDesc& symbolDesc, symbolDescs )
             {
-              if ( mAborted )
-                return;
               addItem( subSectionItem, symbolDesc.name, symbolDesc.icon, true, symbolDesc.symbolId, symbolDesc.militaryName, symbolDesc.minNumPoints, symbolDesc.hasVariablePoints );
             }
           }
