@@ -54,6 +54,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     void syncProjectCrs();
     void displayFormatChanged( QAction* action );
     void heightUnitChanged( int idx );
+    void readProjectSettings();
 };
 
 #endif // QGSCOORDINATEDISPAYER_H
