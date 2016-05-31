@@ -35,6 +35,7 @@
 #include "qgsrasterlayer.h"
 #include "qgsrectangle.h"
 #include "qgscoordinatereferencesystem.h"
+#include "qgscrscache.h"
 #include "qgsmessageoutput.h"
 #include "qgsmessagelog.h"
 #include "qgsnetworkaccessmanager.h"
@@ -130,7 +131,7 @@ QgsWmsProvider::QgsWmsProvider( QString const& uri, const QgsWmsCapabilities* ca
     appendError( ERR( tr( "Cannot set CRS" ) ) );
     return;
   }
-  mCrs.createFromOgcWmsCrs( mSettings.mCrsId );
+  mCrs = QgsCRSCache::instance()->crsByOgcWms( mSettings.mCrsId );
 
   if ( !calculateExtent() || mLayerExtent.isEmpty() )
   {
@@ -1189,22 +1190,20 @@ bool QgsWmsProvider::calculateExtent()
       }
       else
       {
-        QgsCoordinateReferenceSystem qgisSrsDest;
-        qgisSrsDest.createFromOgcWmsCrs( mImageCrs );
+        QgsCoordinateReferenceSystem qgisSrsDest = QgsCRSCache::instance()->crsByOgcWms( mImageCrs );
 
         // pick the first that transforms fin(it)e
         for ( i = 0; i < mTileLayer->boundingBoxes.size(); i++ )
         {
-          QgsCoordinateReferenceSystem qgisSrsSource;
-          qgisSrsSource.createFromOgcWmsCrs( mTileLayer->boundingBoxes[i].crs );
+          QgsCoordinateReferenceSystem qgisSrsSource = QgsCRSCache::instance()->crsByOgcWms( mTileLayer->boundingBoxes[i].crs );
 
-          QgsCoordinateTransform ct( qgisSrsSource, qgisSrsDest );
+          const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( qgisSrsSource.authid(), qgisSrsDest.authid() );
 
           QgsDebugMsg( QString( "ct: %1 => %2" ).arg( mTileLayer->boundingBoxes[i].crs ).arg( mImageCrs ) );
 
           try
           {
-            QgsRectangle extent = ct.transformBoundingBox( mTileLayer->boundingBoxes[i].box, QgsCoordinateTransform::ForwardTransform );
+            QgsRectangle extent = ct->transformBoundingBox( mTileLayer->boundingBoxes[i].box, QgsCoordinateTransform::ForwardTransform );
 
             //make sure extent does not contain 'inf' or 'nan'
             if ( extent.isFinite() )
