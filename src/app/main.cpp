@@ -957,14 +957,11 @@ int main( int argc, char *argv[] )
   }
   qgis->setObjectName( "QgisApp" );
 
-  if ( QgsCustomization::instance()->isEnabled() )
-  {
-    myApp.connect(
-      &myApp, SIGNAL( preNotify( QObject *, QEvent *, bool * ) ),
-      //qgis, SLOT( preNotify( QObject *, QEvent *))
-      QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
-    );
-  }
+  myApp.connect(
+    &myApp, SIGNAL( preNotify( QObject *, QEvent *, bool * ) ),
+    //qgis, SLOT( preNotify( QObject *, QEvent *))
+    QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
+  );
 
   //open default online/offline project if no project on command line and online test url is set
   QString templatePath;
