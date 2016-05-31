@@ -97,7 +97,10 @@ void QgsMapRendererParallelJob::cancel()
   {
     disconnect( &mFutureWatcher, SIGNAL( finished() ), this, SLOT( renderLayersFinished() ) );
 
-    mFutureWatcher.waitForFinished();
+    // Instead of dangerous mFutureWatcher.waitForFinished
+    QEventLoop loop;
+    connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+    loop.exec();
 
     renderLayersFinished();
   }
@@ -106,7 +109,10 @@ void QgsMapRendererParallelJob::cancel()
   {
     disconnect( &mLabelingFutureWatcher, SIGNAL( finished() ), this, SLOT( renderingFinished() ) );
 
-    mLabelingFutureWatcher.waitForFinished();
+    // Instead of dangerous mLabelingFutureWatcher.waitForFinished
+    QEventLoop loop;
+    connect( &mLabelingFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+    loop.exec();
 
     renderingFinished();
   }
@@ -126,7 +132,10 @@ void QgsMapRendererParallelJob::waitForFinished()
     QTime t;
     t.start();
 
-    mFutureWatcher.waitForFinished();
+    // Instead of dangerous mFutureWatcher.waitForFinished
+    QEventLoop loop;
+    connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+    loop.exec();
 
     QgsDebugMsg( QString( "waitForFinished (1): %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
@@ -140,7 +149,10 @@ void QgsMapRendererParallelJob::waitForFinished()
     QTime t;
     t.start();
 
-    mLabelingFutureWatcher.waitForFinished();
+    // Instead of dangerous mFutureWatcher.mLabelingFutureWatcher
+    QEventLoop loop;
+    connect( &mLabelingFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+    loop.exec();
 
     QgsDebugMsg( QString( "waitForFinished (2): %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
