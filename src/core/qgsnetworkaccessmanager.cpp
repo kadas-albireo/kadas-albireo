@@ -236,7 +236,7 @@ void QgsNetworkAccessManager::getCredentials( QNetworkReply *reply, QAuthenticat
   QString realm = QString( "%1 at %2" ).arg( auth->realm() ).arg( reply->url().host() );
   QString username = auth->user();
   QString password = auth->password();
-  bool isGuiThread = thread() == instance()->thread();
+  bool isGuiThread = thread() == qApp->thread();
 
   if ( username.isEmpty() && password.isEmpty() && reply->request().hasRawHeader( "Authorization" ) )
   {
@@ -276,7 +276,7 @@ void QgsNetworkAccessManager::getProxyCredentials( const QNetworkProxy &proxy, Q
   QString realm = QString( "proxy %1:%2 [%3]" ).arg( proxy.hostName() ).arg( proxy.port() ).arg( auth->realm() );
   QString username = auth->user();
   QString password = auth->password();
-  bool isGuiThread = thread() == instance()->thread();
+  bool isGuiThread = thread() == qApp->thread();
 
   if ( QgsCredentials::instance()->get( realm, username, password, tr( "Proxy authentication required" ), isGuiThread ) )
   {
@@ -374,14 +374,6 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 
   if ( smMainNAM != this )
   {
-    connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             smMainNAM, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             Qt::BlockingQueuedConnection );
-
-    connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             smMainNAM, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             Qt::BlockingQueuedConnection );
-
     connect( this, SIGNAL( requestTimedOut( QUrl ) ),
              smMainNAM, SIGNAL( requestTimedOut( QUrl ) ) );
 
@@ -392,13 +384,10 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
 #endif
     connect( smMainNAM, SIGNAL( cookieAdded( QByteArray, QUrl ) ), this, SLOT( addCookie( QByteArray, QUrl ) ) );
   }
-  else
-  {
-    connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
-             this, SLOT( getCredentials( QNetworkReply, QAuthenticator* ) ) );
-    connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
-             this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
-  }
+  connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
+           this, SLOT( getCredentials( QNetworkReply, QAuthenticator* ) ) );
+  connect( this, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy &, QAuthenticator * ) ),
+           this, SLOT( getProxyCredentials( QNetworkProxy, QAuthenticator* ) ) );
 
   // check if proxy is enabled
   QNetworkProxy proxy;
