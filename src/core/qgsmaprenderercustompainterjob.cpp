@@ -126,7 +126,10 @@ void QgsMapRendererCustomPainterJob::cancel()
   QTime t;
   t.start();
 
-  mFutureWatcher.waitForFinished();
+  // Instead of dangerous mFutureWatcher.waitForFinished
+  QEventLoop loop;
+  connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+  loop.exec();
 
   QgsDebugMsg( QString( "QPAINER cancel waited %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
@@ -145,7 +148,10 @@ void QgsMapRendererCustomPainterJob::waitForFinished()
   QTime t;
   t.start();
 
-  mFutureWatcher.waitForFinished();
+  // Instead of dangerous mFutureWatcher.waitForFinished
+  QEventLoop loop;
+  connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
+  loop.exec();
 
   QgsDebugMsg( QString( "waitForFinished: %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
