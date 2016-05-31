@@ -12,7 +12,7 @@ class QgsMilXItem
     static bool validateMssString(const QString& mssString, QString &adjustedMssString /Out/, QString& messages /Out/);
 
     QgsMilXItem();
-    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS );
+    void initialize(const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, ControlPointState controlPointState );
     const QString& mssString() const;
     const QString& militaryName() const;
     const QList<QgsPoint>& points() const;

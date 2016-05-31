@@ -63,7 +63,7 @@ class GUI_EXPORT QgsSourceSelectDialog : public QDialog, protected Ui::QgsSource
   private:
     void populateConnectionList();
 
-    /**Returns the best suited CRS from a set of authority ids
+    /** Returns the best suited CRS from a set of authority ids
        1. project CRS if contained in the set
        2. WGS84 if contained in the set
        3. the first entry in the set else
@@ -74,7 +74,7 @@ class GUI_EXPORT QgsSourceSelectDialog : public QDialog, protected Ui::QgsSource
     void addEntryToServerList();
     void deleteEntryOfServerList();
     void modifyEntryOfServerList();
-    void on_btnAdd_clicked();
+    void addButtonClicked();
     void buildQueryButtonClicked();
     void changeCRS();
     void changeCRSFilter();

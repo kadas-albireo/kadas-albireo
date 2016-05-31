@@ -572,9 +572,9 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     void addWfsLayer( QString uri, QString typeName );
 
-    void addAfsLayer( QString uri, QString typeName );
+    void addAfsLayer( const QString& uri, const QString& typeName );
 
-    void addAmsLayer( QString uri, QString typeName );
+    void addAmsLayer( const QString& uri, const QString& typeName );
 
     void versionReplyFinished();
 

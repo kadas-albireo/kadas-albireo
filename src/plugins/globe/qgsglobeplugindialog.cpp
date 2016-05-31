@@ -94,6 +94,7 @@ QgsGlobePluginDialog::QgsGlobePluginDialog( QWidget* parent, Qt::WFlags fl )
   connect( buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked( bool ) ), this, SLOT( apply() ) );
 
   restoreSavedSettings();
+  readProjectSettings();
 }
 
 void QgsGlobePluginDialog::restoreSavedSettings()

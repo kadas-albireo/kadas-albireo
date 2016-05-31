@@ -48,7 +48,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
 
       mItem = new QgsMilXAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
-      mItem->setSymbolXml( mSymbolXml, mSymbolMilitaryName, mMinNPoints > 1 );
+      mItem->setSymbolXml( mSymbolXml, mSymbolMilitaryName );
       mItem->setSelected( true );
       setCursor( Qt::CrossCursor );
       mNPressedPoints = 1;
@@ -122,6 +122,7 @@ QgsMilXEditTool::QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, Qgs
   mItem = new QgsMilXAnnotationItem( canvas );
   mItem->fromMilxItem( item );
   mItem->setSelected( true );
+  connect( mItem.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( deactivateTool() ) );
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), mItem.data(), SLOT( deleteLater() ) );
   // Ensure editing is terminated if layers change (i.e. also if the visibility of the milx layer changes)
   connect( canvas, SIGNAL( layersChanged() ), this, SLOT( deleteLater() ) );
@@ -145,4 +146,9 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
   {
     mCanvas->unsetMapTool( this );
   }
+}
+
+void QgsMilXEditTool::deactivateTool()
+{
+  mCanvas->unsetMapTool( this );
 }

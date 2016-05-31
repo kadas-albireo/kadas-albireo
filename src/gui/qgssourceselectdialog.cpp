@@ -27,7 +27,6 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsmanageconnectionsdialog.h"
-#include "qgscontexthelp.h"
 
 #include <QItemDelegate>
 #include <QListWidgetItem>
@@ -54,7 +53,7 @@ QgsSourceSelectDialog::QgsSourceSelectDialog( const QString& serviceName, Servic
 
   mAddButton = buttonBox->addButton( tr( "&Add" ), QDialogButtonBox::ActionRole );
   mAddButton->setEnabled( false );
-  connect( mAddButton, SIGNAL( clicked() ), this, SLOT( on_btnAdd_clicked() ) );
+  connect( mAddButton, SIGNAL( clicked() ), this, SLOT( addButtonClicked() ) );
 
   if ( mServiceType == FeatureService )
   {
@@ -124,9 +123,11 @@ void QgsSourceSelectDialog::setCurrentExtentAndCrs( const QgsRectangle& canvasEx
 
 void QgsSourceSelectDialog::populateImageEncodings( const QStringList& availableEncodings )
 {
-  while ( gbImageEncoding->layout()->count() > 0 )
+  QLayoutItem* item;
+  while (( item = gbImageEncoding->layout()->takeAt( 0 ) ) != nullptr )
   {
-    delete gbImageEncoding->layout()->takeAt( 0 );
+    delete item->widget();
+    delete item;
   }
   bool first = true;
   QList<QByteArray> supportedFormats = QImageReader::supportedImageFormats();
@@ -300,7 +301,7 @@ void QgsSourceSelectDialog::connectToServer()
   btnChangeSpatialRefSys->setEnabled( haveLayers );
 }
 
-void QgsSourceSelectDialog::on_btnAdd_clicked()
+void QgsSourceSelectDialog::addButtonClicked()
 {
   if ( treeView->selectionModel()->selectedRows().isEmpty() )
   {
@@ -316,9 +317,16 @@ void QgsSourceSelectDialog::on_btnAdd_clicked()
   //does canvas have "on the fly" reprojection set?
   if ( pCrs.isValid() && mCanvasCrs.isValid() )
   {
-    extent = QgsCoordinateTransform( mCanvasCrs, pCrs ).transform( extent );
-    QgsDebugMsg( QString( "canvas transform: Canvas CRS=%1, Provider CRS=%2, BBOX=%3" )
-                 .arg( mCanvasCrs.authid(), pCrs.authid(), extent.asWktCoordinates() ) );
+    try
+    {
+      extent = QgsCoordinateTransform( mCanvasCrs, pCrs ).transform( extent );
+      QgsDebugMsg( QString( "canvas transform: Canvas CRS=%1, Provider CRS=%2, BBOX=%3" )
+                   .arg( mCanvasCrs.authid(), pCrs.authid(), extent.asWktCoordinates() ) );
+    }
+    catch ( const QgsCsException& )
+    {
+      // Extent is not in range for specified CRS, leave extent empty.
+    }
   }
 
   //create layers that user selected from this feature source
