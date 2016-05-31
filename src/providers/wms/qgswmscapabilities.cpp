@@ -6,6 +6,7 @@
 #include <QDir>
 
 #include "qgscoordinatetransform.h"
+#include "qgscrscache.h"
 #include "qgsdatasourceuri.h"
 #include "qgslogger.h"
 #include "qgsmessagelog.h"
@@ -1276,8 +1277,7 @@ void QgsWmsCapabilities::parseWMTSContents( QDomElement const &e )
 
     QString supportedCRS = e0.firstChildElement( "ows:SupportedCRS" ).text();
 
-    QgsCoordinateReferenceSystem crs;
-    crs.createFromOgcWmsCrs( supportedCRS );
+    QgsCoordinateReferenceSystem crs = QgsCRSCache::instance()->crsByOgcWms( supportedCRS );
 
     s.wkScaleSet = e0.firstChildElement( "WellKnownScaleSet" ).text();
 

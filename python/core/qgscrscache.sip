@@ -26,6 +26,8 @@ class QgsCRSCache
     /**Returns the CRS for authid, e.g. 'EPSG:4326' (or an invalid CRS in case of error)*/
     const QgsCoordinateReferenceSystem& crsByAuthId( const QString& authid );
     const QgsCoordinateReferenceSystem& crsByEpsgId( long epsg );
+    const QgsCoordinateReferenceSystem& crsByProj4( const QString& proj4 );
+    const QgsCoordinateReferenceSystem& crsByOgcWms( const QString& ogcwms );
 
     void updateCRSCache( const QString &authid );
 
