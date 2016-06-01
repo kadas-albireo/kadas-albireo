@@ -48,12 +48,10 @@ class CORE_EXPORT QgsRasterDrawer
       @param topLeftRow Top position relative to top border of viewport
       @param mapToPixel map to device coordinate transformation info
              (not available in python bindings) */
-    void drawImage( QPainter* p, QgsRasterViewPort* viewPort, const QImage& img, int topLeftCol, int topLeftRow, double scaleFactor, const QgsMapToPixel* mapToPixel = 0 ) const;
+    void drawImage( QPainter* p, QgsRasterViewPort* viewPort, const QImage& img, int topLeftCol, int topLeftRow, const QgsMapToPixel* mapToPixel = 0 ) const;
 
   private:
     QgsRasterIterator* mIterator;
-
-    static bool isWMTSLayer( const QgsRasterInterface* iface );
 };
 
 #endif // QGSRASTERDRAWER_H

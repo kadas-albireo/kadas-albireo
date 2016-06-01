@@ -43,8 +43,6 @@ QgsProjectTemplateSelectionDialog::QgsProjectTemplateSelectionDialog( QWidget *p
   connect( mTreeView, SIGNAL( clicked( QModelIndex ) ), this, SLOT( itemClicked( QModelIndex ) ) );
   connect( mTreeView, SIGNAL( doubleClicked( QModelIndex ) ), this, SLOT( itemDoubleClicked( QModelIndex ) ) );
 
-  connect( mRadioButtonGroup, SIGNAL( buttonClicked( int ) ), this, SLOT( radioChanged() ) );
-
   mCreateButton = mButtonBox->addButton( tr( "Create" ), QDialogButtonBox::AcceptRole );
   mCreateButton->setEnabled( false );
   connect( mCreateButton, SIGNAL( clicked() ), this, SLOT( createProject() ) );
@@ -65,32 +63,10 @@ void QgsProjectTemplateSelectionDialog::itemDoubleClicked( const QModelIndex& in
 
 void QgsProjectTemplateSelectionDialog::createProject()
 {
-  if ( mProjectFromTemplateRadio->isChecked() )
+  QString filename = mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
+  if ( !filename.isEmpty() )
   {
-    QString filename = mModel->fileInfo( mTreeView->currentIndex() ).absoluteFilePath();
-    if ( !filename.isEmpty() )
-    {
-      QgisApp::instance()->fileNewFromTemplate( filename );
-      accept();
-    }
-  }
-  else
-  {
-    QgisApp::instance()->fileNew( true );
+    QgisApp::instance()->fileNewFromTemplate( filename );
     accept();
-  }
-}
-
-void QgsProjectTemplateSelectionDialog::radioChanged()
-{
-  if ( mRadioButtonGroup->checkedButton() == mProjectFromTemplateRadio )
-  {
-    mCreateButton->setEnabled( mModel->fileInfo( mTreeView->currentIndex() ).isFile() );
-    mTreeView->setEnabled( true );
-  }
-  else
-  {
-    mCreateButton->setEnabled( true );
-    mTreeView->setEnabled( false );
   }
 }
