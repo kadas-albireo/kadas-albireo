@@ -159,7 +159,7 @@ QgsMilXLibrary::~QgsMilXLibrary()
   if ( mLoader )
   {
     mLoader->abort();
-    while ( !mLoader->isFinished() )
+    while ( mLoader && !mLoader->isFinished() )
     {
       QApplication::instance()->processEvents( QEventLoop::ExcludeUserInputEvents );
     }
@@ -204,7 +204,7 @@ void QgsMilXLibrary::updateLayers()
 
 void QgsMilXLibrary::loaderFinished()
 {
-  delete mLoader;
+  mLoader->deleteLater();
   mLoader = 0;
   mTreeView->setModel( mFilterProxyModel );
   unsetCursor();
