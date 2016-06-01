@@ -32,6 +32,7 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
   public:
     QgsMilXAnnotationItem( QgsMapCanvas* canvas );
+    ~QgsMilXAnnotationItem();
     QgsMilXAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsMilXAnnotationItem( canvas, this ); }
 
     void fromMilxItem( QgsMilXItem* item );
