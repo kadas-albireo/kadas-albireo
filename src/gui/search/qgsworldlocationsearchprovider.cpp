@@ -45,7 +45,17 @@ QgsWorldLocationSearchProvider::QgsWorldLocationSearchProvider( QgsMapCanvas* ma
 
 void QgsWorldLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( QSettings().value( "search/worldlocationsearchurl", "https://npe.lt.admin.ch/MGDIServices/SearchServer.svc/Search" ).toString() );
+  QString serviceUrl;
+  if ( QSettings().value( "/qgis/isOffline" ).toBool() )
+  {
+    serviceUrl = QSettings().value( "search/worldlocationofflinesearchurl", "http://localhost:5000/SearchServerWld" ).toString();
+  }
+  else
+  {
+    serviceUrl = QSettings().value( "search/worldlocationsearchurl", "https://npe.lt.admin.ch/MGDIServices/SearchServer.svc/Search" ).toString();
+  }
+
+  QUrl url( serviceUrl );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );

@@ -17047,6 +17047,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsProvider</name>
+    <message>
+        <source>getLayerInfo failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not retreive layer extent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not parse spatial reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to determine geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>getObjectIds failed: %1 - %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to determine objectIdFieldName and/or objectIds</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsAfsRootItem</name>
     <message>
         <source>New Connection...</source>
@@ -17071,6 +17098,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Failed to query some layers:
 %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer %1: %2 - %3</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17099,6 +17130,10 @@ p, li { white-space: pre-wrap; }
         <source>Layer Info</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Could not parse spatial reference</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsAmsRootItem</name>
@@ -17125,6 +17160,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Failed to query some layers:
 %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer %1: unable to parse spatial reference</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -25306,7 +25345,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Enable grid</source>
-        <translation>Aktifkan grid</translation>
+        <translation type="obsolete">Aktifkan grid</translation>
     </message>
     <message>
         <source>Interval X</source>
@@ -25394,6 +25433,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Draw annotations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable &amp;grid</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -37069,14 +37112,6 @@ Ini mungkin masalah dalam koneksi jaringan anda atau pada server WMS.</numerusfo
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Compressed MilX Layer [%1] (*.milxlyz)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MilX Layer [%1] (*.milxly)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select Output</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37130,6 +37165,14 @@ Ini mungkin masalah dalam koneksi jaringan anda atau pada server WMS.</numerusfo
     </message>
     <message>
         <source>The following messages were emitted while importing:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compressed MilX Layer (*.milxlyz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MilX Layer (*.milxly)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -40680,6 +40723,38 @@ Selalau jaringan: selalu memuat dari jaringan dan tidak memeriksa apakah cache m
         <source>Online mode test URL:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Default resampling method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoomed in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nearest neighbour</source>
+        <translation type="unfinished">Tetangga terdekat</translation>
+    </message>
+    <message>
+        <source>Biliniear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cubic</source>
+        <translation type="unfinished">Kubik</translation>
+    </message>
+    <message>
+        <source>Zoomed out:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation type="unfinished">Rata-rata</translation>
+    </message>
+    <message>
+        <source>Use optimal WTMS scales if possible</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsOptionsDialogBase</name>
@@ -44214,11 +44289,7 @@ Diproses?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create a new pro&amp;ject from a template</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Create a new blan&amp;k project</source>
+        <source>Select a template for the new project:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

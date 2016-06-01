@@ -50,7 +50,18 @@ QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
 
 void QgsLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
-  QUrl url( QSettings().value( "search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
+  QString serviceUrl;
+  if ( QSettings().value( "/qgis/isOffline" ).toBool() )
+  {
+    serviceUrl = QSettings().value( "search/locationofflinesearchurl", "http://localhost:5000/SearchServerCh" ).toString();
+  }
+  else
+  {
+    serviceUrl = QSettings().value( "search/locationsearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString();
+  }
+  QgsDebugMsg( serviceUrl );
+
+  QUrl url( serviceUrl );
   url.addQueryItem( "type", "locations" );
   url.addQueryItem( "searchText", searchtext );
   url.addQueryItem( "limit", QString::number( sResultCountLimit ) );
