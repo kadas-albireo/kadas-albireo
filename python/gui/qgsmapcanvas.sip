@@ -133,7 +133,7 @@ class QgsMapCanvas : QGraphicsView
     QgsRectangle fullExtent() const;
 
     //! Set the extent of the map canvas
-    void setExtent( const QgsRectangle &r );
+    void setExtent( const QgsRectangle &r, bool adjustForOptimalScale );
 
     //! Get the current map canvas rotation in clockwise degrees
     //! @note added in 2.8

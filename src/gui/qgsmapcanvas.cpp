@@ -862,7 +862,7 @@ QgsRectangle QgsMapCanvas::fullExtent() const
 } // extent
 
 
-void QgsMapCanvas::setExtent( QgsRectangle const & r )
+void QgsMapCanvas::setExtent( QgsRectangle const & r, bool adjustForOptimalScale )
 {
   QgsRectangle current = extent();
 
@@ -885,6 +885,23 @@ void QgsMapCanvas::setExtent( QgsRectangle const & r )
   else
   {
     mSettings.setExtent( r );
+
+    if ( adjustForOptimalScale && QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
+    {
+
+      QList<double> resolutions = wmtsResolutions();
+      if ( !resolutions.isEmpty() )
+      {
+        int zoomLevel = nextWMTSZoomLevel( resolutions, false );
+        if ( zoomLevel != -1 )
+        {
+          double scaleFactor = resolutions.at( zoomLevel ) / mapUnitsPerPixel();
+          QgsRectangle scaledRect = r;
+          scaledRect.scale( scaleFactor );
+          mSettings.setExtent( scaledRect );
+        }
+      }
+    }
   }
   emit extentsChanged();
   updateScale();

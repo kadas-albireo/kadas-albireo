@@ -444,7 +444,7 @@ void QgsSearchBox::resultActivated()
       const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( result.crs, mMapCanvas->mapSettings().destinationCrs().authid() );
       zoomExtent = t->transform( result.bbox );
     }
-    mMapCanvas->setExtent( zoomExtent );
+    mMapCanvas->setExtent( zoomExtent, true );
     mMapCanvas->refresh();
     mSearchBox->blockSignals( true );
     mSearchBox->setText( result.text );
