@@ -286,7 +286,7 @@ void QgsOgrProvider::close()
     OGR_DS_ReleaseResultSet( ogrDataSource, ogrLayer );
   }
 
-  QgsOgrConnPool::instance()->unref( mFilePath );
+  QgsOgrConnPool::instance()->unref( dataSourceUri() );
   repack();
 
   if ( ogrDataSource )
@@ -480,7 +480,7 @@ QgsOgrProvider::QgsOgrProvider( QString const & uri )
     << QgsVectorDataProvider::NativeType( tr( "Date & Time" ), "datetime", QVariant::DateTime );
   }
 
-  QgsOgrConnPool::instance()->ref( mFilePath );
+  QgsOgrConnPool::instance()->ref( dataSourceUri() );
 }
 
 QgsOgrProvider::~QgsOgrProvider()
@@ -758,7 +758,7 @@ OGRwkbGeometryType QgsOgrProvider::getOgrGeomType( OGRLayerH ogrLayer )
 
 void QgsOgrProvider::loadFields()
 {
-  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
+  QgsOgrConnPool::instance()->invalidateConnections( dataSourceUri() );
   //the attribute fields need to be read again when the encoding changes
   mAttributeFields.clear();
 
@@ -1300,7 +1300,7 @@ bool QgsOgrProvider::changeAttributeValues( const QgsChangedAttributesMap &attr_
   {
     pushError( tr( "OGR error syncing to disk: %1" ).arg( CPLGetLastErrorMsg() ) );
   }
-  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
+  QgsOgrConnPool::instance()->invalidateConnections( dataSourceUri() );
   return true;
 }
 
@@ -1364,7 +1364,7 @@ bool QgsOgrProvider::changeGeometryValues( QgsGeometryMap & geometry_map )
 
     OGR_F_Destroy( theOGRFeature );
   }
-  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
+  QgsOgrConnPool::instance()->invalidateConnections( dataSourceUri() );
   return syncToDisc();
 }
 
@@ -2469,7 +2469,7 @@ QByteArray QgsOgrUtils::quotedIdentifier( QByteArray field, const QString& ogrDr
 
 bool QgsOgrProvider::syncToDisc()
 {
-  QgsOgrConnPool::instance()->unref( mFilePath );
+  QgsOgrConnPool::instance()->unref( dataSourceUri() );
 
   //for shapefiles, remove spatial index files and create a new index
   bool shapeIndex = false;
@@ -2486,7 +2486,7 @@ bool QgsOgrProvider::syncToDisc()
     {
       shapeIndex = true;
       close();
-      QgsOgrConnPool::instance()->invalidateConnections( mFilePath );
+      QgsOgrConnPool::instance()->invalidateConnections( dataSourceUri() );
       QFile::remove( sbnIndexFile );
       open();
     }
@@ -2498,7 +2498,7 @@ bool QgsOgrProvider::syncToDisc()
   }
 
   mDataModified = true;
-  QgsOgrConnPool::instance()->ref( mFilePath );
+  QgsOgrConnPool::instance()->ref( dataSourceUri() );
   if ( shapeIndex )
   {
     return createSpatialIndex();
@@ -2548,7 +2548,7 @@ void QgsOgrProvider::recalculateFeatureCount()
     OGR_L_SetSpatialFilter( ogrLayer, filter );
   }
 
-  QgsOgrConnPool::instance()->invalidateConnections( filePath() );
+  QgsOgrConnPool::instance()->invalidateConnections( dataSourceUri() );
 }
 
 bool QgsOgrProvider::doesStrictFeatureTypeCheck() const
