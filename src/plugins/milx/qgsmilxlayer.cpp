@@ -391,7 +391,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
-      QgsBillBoardRegistry::instance()->addItem( this, graphic.graphic, item->points().front(), id() );
+      QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), id() );
     }
   }
 }
