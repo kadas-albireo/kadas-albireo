@@ -37,7 +37,6 @@ class APP_EXPORT QgsProjectTemplateSelectionDialog : public QDialog, Ui::QgsProj
   private slots:
     void itemClicked( const QModelIndex& index );
     void itemDoubleClicked( const QModelIndex& index );
-    void radioChanged();
     void createProject();
 
 };
