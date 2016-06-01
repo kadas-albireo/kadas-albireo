@@ -17,7 +17,6 @@
 
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
-#include "qgsbillboardregistry.h"
 #include "qgscrscache.h"
 #include "MilXClient.hpp"
 #include "qgsmapcanvas.h"
@@ -45,11 +44,6 @@ QgsMilXAnnotationItem::QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnot
   mFinalized = source->mFinalized;
   updateSymbol( false );
   connect( canvas, SIGNAL( extentsChanged() ), this, SLOT( updateSymbol() ) );
-}
-
-QgsMilXAnnotationItem::~QgsMilXAnnotationItem()
-{
-  QgsBillBoardRegistry::instance()->removeItem(this);
 }
 
 void QgsMilXAnnotationItem::fromMilxItem( QgsMilXItem* item )
@@ -264,10 +258,6 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
   {
     updateSymbol( false );
   }
-  else
-  {
-	QgsBillBoardRegistry::instance()->addItem(this, mGraphic.toImage(), QgsCoordinateTransformCache::instance()->transform(mGeoPosCrs.authid(), "EPSG:4326")->transform(mGeoPos));
-  }
 }
 
 void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
@@ -331,10 +321,6 @@ int QgsMilXAnnotationItem::absolutePointIdx( int regularIdx ) const
 void QgsMilXAnnotationItem::setGraphic( MilXClient::NPointSymbolGraphic &result, bool updatePoints )
 {
   mGraphic = QPixmap::fromImage( result.graphic );
-  if(!isMultiPoint())
-  {
-    QgsBillBoardRegistry::instance()->addItem(this, result.graphic, QgsCoordinateTransformCache::instance()->transform(mGeoPosCrs.authid(), "EPSG:4326")->transform(mGeoPos));
-  }
   setFrameSize( mGraphic.size() );
   mOffsetFromReferencePoint += result.offset - mRenderOffset;
   mRenderOffset = result.offset;
