@@ -31,6 +31,7 @@
 QgsGlobeWidget::QgsGlobeWidget( QgisInterface* iface, QWidget *parent )
     : QDockWidget( tr( "Globe" ), parent ), mQgisIface( iface )
 {
+  setObjectName( "dockWidgetGlobe" );
   setWindowTitle( tr( "Globe" ) );
 
   QToolButton* layerSelectionButton = new QToolButton( this );
