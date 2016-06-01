@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "qgslogger.h"
-#include "qgsrasterdataprovider.h"
 #include "qgsrasterdrawer.h"
 #include "qgsrasteriterator.h"
 #include "qgsrasterviewport.h"
@@ -42,22 +41,9 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
     return;
   }
 
-  int width = viewPort->mWidth;
-  int height = viewPort->mHeight;
-  QgsMapToPixel mapToPixel( *theQgsMapToPixel );
-  double scaleFactor = 1.0;
-
-  if ( ctx != 0 && isWMTSLayer( mIterator->input() ) ) //wmts case, comply with standard pixel size of 0.28mm from specification
-  {
-    scaleFactor = ( 1.0 / 0.28 * 25.4 ) / p->device()->logicalDpiX();
-    width = width * scaleFactor;
-    height = height * scaleFactor;
-    mapToPixel.setParameters( ctx->extent().width() / width, ctx->extent().xMinimum(), ctx->extent().yMinimum(), height );
-  }
-
   // last pipe filter has only 1 band
   int bandNumber = 1;
-  mIterator->startRasterRead( bandNumber, width, height, viewPort->mDrawnExtent );
+  mIterator->startRasterRead( bandNumber, viewPort->mWidth, viewPort->mHeight, viewPort->mDrawnExtent );
 
   //number of cols/rows in output pixels
   int nCols = 0;
@@ -104,7 +90,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
       }
     }
 
-    drawImage( p, viewPort, img, topLeftCol, topLeftRow, scaleFactor, &mapToPixel );
+    drawImage( p, viewPort, img, topLeftCol, topLeftRow, theQgsMapToPixel );
     QgsDebugMsg( "Block drawn" );
 
     delete block;
@@ -112,7 +98,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
   }
 }
 
-void QgsRasterDrawer::drawImage( QPainter* p, QgsRasterViewPort* viewPort, const QImage& img, int topLeftCol, int topLeftRow, double scaleFactor, const QgsMapToPixel* theQgsMapToPixel ) const
+void QgsRasterDrawer::drawImage( QPainter* p, QgsRasterViewPort* viewPort, const QImage& img, int topLeftCol, int topLeftRow, const QgsMapToPixel* theQgsMapToPixel ) const
 {
   if ( !p || !viewPort )
   {
@@ -146,9 +132,7 @@ void QgsRasterDrawer::drawImage( QPainter* p, QgsRasterViewPort* viewPort, const
     }
   }
 
-  QRect source( 0, 0, img.width(), img.height() );
-  QRect target( tlPoint.x(), tlPoint.y(), img.width() / scaleFactor, img.height() / scaleFactor );
-  p->drawImage( target, img, source );
+  p->drawImage( tlPoint, img );
 
 #if 0
   // For debugging:
@@ -169,19 +153,5 @@ void QgsRasterDrawer::drawImage( QPainter* p, QgsRasterViewPort* viewPort, const
 #endif
 
   p->restore();
-}
-
-bool QgsRasterDrawer::isWMTSLayer( const QgsRasterInterface* iface )
-{
-  if ( iface && iface->srcInput() )
-  {
-    const QgsRasterDataProvider* provider  = dynamic_cast<const QgsRasterDataProvider*>( iface->srcInput() );
-    QVariant resolutions = provider->property( "resolutions" );
-    if ( provider->name() == "wms" && !resolutions.isNull() )
-    {
-      return true;
-    }
-  }
-  return false;
 }
 
