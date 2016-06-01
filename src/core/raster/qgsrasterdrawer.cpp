@@ -47,7 +47,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
   QgsMapToPixel mapToPixel( *theQgsMapToPixel );
   double scaleFactor = 1.0;
 
-  if ( ctx != 0 && isWMTSLayer( mIterator->input() ) ) //wmts case, comply with standard pixel size of 0.28mm from specification
+  if ( isWMTSLayer( mIterator->input() ) ) //wmts case, comply with standard pixel size of 0.28mm from specification
   {
     scaleFactor = ( 1.0 / 0.28 * 25.4 ) / p->device()->logicalDpiX();
     width = width * scaleFactor;
