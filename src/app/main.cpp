@@ -966,6 +966,9 @@ int main( int argc, char *argv[] )
     );
   }
 
+  // By default, assume offline. If online check succeeds below, set online
+  mySettings.value( "/qgis/isOffline", true );
+
   //open default online/offline project if no project on command line and online test url is set
   QString templatePath;
   if ( myProjectFileName.isEmpty() )
@@ -989,6 +992,7 @@ int main( int argc, char *argv[] )
         {
           templatePath = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
         }
+        mySettings.value( "/qgis/isOffline", false );
       }
       else
       {
