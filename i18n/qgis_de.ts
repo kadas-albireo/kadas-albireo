@@ -17126,6 +17126,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QgsAfsProvider</name>
+    <message>
+        <source>getLayerInfo failed</source>
+        <translation>getLayerInfo fehlgeschlagen</translation>
+    </message>
+    <message>
+        <source>Could not retreive layer extent</source>
+        <translation>Konnte Ebenenausdehnung nicht ermitteln</translation>
+    </message>
+    <message>
+        <source>Could not parse spatial reference</source>
+        <translation>Konnte KBS Definition nicht parsen</translation>
+    </message>
+    <message>
+        <source>Failed to determine geometry type</source>
+        <translation>Konnte Geometrietyp nicht ermitteln</translation>
+    </message>
+    <message>
+        <source>getObjectIds failed: %1 - %2</source>
+        <translation>getObjectIds fehlgeschlagen: %1 - %2</translation>
+    </message>
+    <message>
+        <source>Failed to determine objectIdFieldName and/or objectIds</source>
+        <translation>Konnte objectIdFiledName und/oder objectIds nicht ermitteln</translation>
+    </message>
+</context>
+<context>
     <name>QgsAfsRootItem</name>
     <message>
         <source>New Connection...</source>
@@ -17154,6 +17181,10 @@ p, li { white-space: pre-wrap; }
         <translation>Einige Ebenen konnte nicht abgefragt werden:
 %1</translation>
     </message>
+    <message>
+        <source>Layer %1: %2 - %3</source>
+        <translation>Ebene %1: %2 - %3</translation>
+    </message>
 </context>
 <context>
     <name>QgsAmsConnectionItem</name>
@@ -17179,6 +17210,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Layer Info</source>
         <translation>Layerinformation</translation>
+    </message>
+    <message>
+        <source>Could not parse spatial reference</source>
+        <translation>Konnte KBS Definition nicht parsen</translation>
     </message>
 </context>
 <context>
@@ -17209,6 +17244,10 @@ p, li { white-space: pre-wrap; }
 %1</source>
         <translation>Einige Ebenen konnte nicht abgefragt werden:
 %1</translation>
+    </message>
+    <message>
+        <source>Layer %1: unable to parse spatial reference</source>
+        <translation>Ebene %1: konnte KBS Definition nicht parsen</translation>
     </message>
 </context>
 <context>
@@ -25494,7 +25533,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Enable grid</source>
-        <translation>Aktiviere Gitter</translation>
+        <translation type="obsolete">Aktiviere Gitter</translation>
     </message>
     <message>
         <source>Interval X</source>
@@ -25583,6 +25622,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Draw annotations</source>
         <translation>Annotationen zeichnen</translation>
+    </message>
+    <message>
+        <source>Enable &amp;grid</source>
+        <translation>Gitter aktivieren</translation>
     </message>
 </context>
 <context>
@@ -36995,7 +37038,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Lock with main view</source>
-        <translation type="unfinished">Mit Hauptansicht synchronisieren</translation>
+        <translation>Mit Hauptansicht synchronisieren</translation>
     </message>
     <message>
         <source>Close</source>
@@ -37409,11 +37452,11 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Compressed MilX Layer [%1] (*.milxlyz)</source>
-        <translation>Komprimierte MilX Ebene [%1] (*.milxlyz)</translation>
+        <translation type="obsolete">Komprimierte MilX Ebene [%1] (*.milxlyz)</translation>
     </message>
     <message>
         <source>MilX Layer [%1] (*.milxly)</source>
-        <translation>MilX Ebene [%1] (*.milxly)</translation>
+        <translation type="obsolete">MilX Ebene [%1] (*.milxly)</translation>
     </message>
     <message>
         <source>Select Output</source>
@@ -37470,6 +37513,14 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>The following messages were emitted while importing:</source>
         <translation>Die folgende Meldungen wurden während des Imports ausgesendet:</translation>
+    </message>
+    <message>
+        <source>Compressed MilX Layer (*.milxlyz)</source>
+        <translation>Komprimierte MilX Ebene (*.milxlyz)</translation>
+    </message>
+    <message>
+        <source>MilX Layer (*.milxly)</source>
+        <translation>MilX Ebene (*.milxly)</translation>
     </message>
 </context>
 <context>
@@ -41023,6 +41074,38 @@ Immer Netzwerk: immer aus dem Netzwerk laden und nicht prüfen, ob im Cache ein 
         <source>Online mode test URL:</source>
         <translation>Test-URL für Online-Modus:</translation>
     </message>
+    <message>
+        <source>Default resampling method</source>
+        <translation>Standard Abtastmethode</translation>
+    </message>
+    <message>
+        <source>Zoomed in:</source>
+        <translation>Hineinzoomen</translation>
+    </message>
+    <message>
+        <source>Nearest neighbour</source>
+        <translation>Nächster Nachbar</translation>
+    </message>
+    <message>
+        <source>Biliniear</source>
+        <translation>Bilinear</translation>
+    </message>
+    <message>
+        <source>Cubic</source>
+        <translation>Kubisch</translation>
+    </message>
+    <message>
+        <source>Zoomed out:</source>
+        <translation>Hinauszoomen</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation>Gemittelt</translation>
+    </message>
+    <message>
+        <source>Use optimal WTMS scales if possible</source>
+        <translation>Falls möglich optimale WMTS Massstäbe verwenden</translation>
+    </message>
 </context>
 <context>
     <name>QgsOptionsDialogBase</name>
@@ -44551,11 +44634,15 @@ Fortfahren?</translation>
     </message>
     <message>
         <source>Create a new pro&amp;ject from a template</source>
-        <translation>Neues Projet aus einer Vorlage erstellen</translation>
+        <translation type="obsolete">Neues Projet aus einer Vorlage erstellen</translation>
     </message>
     <message>
         <source>Create a new blan&amp;k project</source>
-        <translation>Neues leeres Projekt erstellen</translation>
+        <translation type="obsolete">Neues leeres Projekt erstellen</translation>
+    </message>
+    <message>
+        <source>Select a template for the new project:</source>
+        <translation>Vorlage für das neue Projekt auswählen:</translation>
     </message>
 </context>
 <context>
