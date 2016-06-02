@@ -509,6 +509,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
   int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
   QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
+  if ( crs.isEmpty() )
+  {
+    errorMsg = tr( "The file is corrupt" );
+    return false;
+  }
   QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
   const QgsCoordinateTransform* crst = 0;
   if ( crs == "SwissLv03" )
