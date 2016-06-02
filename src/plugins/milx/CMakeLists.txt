@@ -1,8 +1,5 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
-IF(MSVC)
-ENDIF(MSVC)
-
 SET(RSVGRENDERER_INCLUDE_DIR "" CACHE PATH "Path to rsvgrenderer header")
 SET(RSVGRENDERER_LIBRARY "rsvgrenderer" CACHE FILEPATH "Path to rsvgrenderer library")
 
