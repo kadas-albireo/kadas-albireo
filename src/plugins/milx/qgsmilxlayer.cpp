@@ -187,7 +187,7 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
         if ( mAttributes[i].first != MilXClient::AttributeAttutide )
           attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second / screenDist * ellipsoidDist ) ) );
         else
-          attrValueEl.appendChild( doc.createTextNode( QString::number( -attributeValues[i].second ) ) ); // -1: Attitudes seem inverted in the milxly file?
+          attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second ) ) );
         attribEl.appendChild( attrValueEl );
       }
     }
@@ -237,10 +237,11 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
   {
     // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
     double scale = 100000.;
-    QList<QPoint> screenPoints = QList<QPoint>();
-    for ( int i = 0, n = points.size(); i < n; ++i )
+    QPoint origin = QPoint( points[0].x() * scale, points[0].y() * scale );
+    QList<QPoint> screenPoints = QList<QPoint>() << QPoint( 0, 0 );
+    for ( int i = 1, n = points.size(); i < n; ++i )
     {
-      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) );
+      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) - origin );
     }
 
     // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
@@ -258,14 +259,11 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
 
     for ( int i = 0, n = attributes.size(); i < n; ++i )
     {
-      if ( attributes[i].first != MilXClient::AttributeAttutide )
-        attributes[i].second *= screenDist / ellipsoidDist;
-      else
-        attributes[i].second *= -1; // -1: Attitudes seem inverted in the milxly file?
+      attributes[i].second *= screenDist / ellipsoidDist;
     }
 
     QList< QPair<int, QPoint> > attributeScreenPoints;
-    if ( MilXClient::getAttributePoints( symbolXml, screenPoints, attributes, attributeScreenPoints ) )
+    if ( MilXClient::getAttributePoints( mMssString, screenPoints, attributes, attributeScreenPoints ) )
     {
       for ( int i = 0, n = attributeScreenPoints.size(); i < n; ++i )
       {

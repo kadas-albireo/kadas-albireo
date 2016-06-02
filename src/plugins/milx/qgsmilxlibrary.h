@@ -79,7 +79,7 @@ class QgsMilXLibraryLoader : public QThread
 {
     Q_OBJECT
   public:
-    QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mAborted( false ), mLibrary( library ) {}
+    QgsMilXLibraryLoader( QgsMilXLibrary* library, QObject* parent = 0 ) : QThread( parent ), mLibrary( library ), mAborted( false ) {}
     void abort() { mAborted = true; }
 
   private:

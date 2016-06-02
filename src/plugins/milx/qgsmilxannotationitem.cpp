@@ -49,7 +49,7 @@ QgsMilXAnnotationItem::QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnot
 
 QgsMilXAnnotationItem::~QgsMilXAnnotationItem()
 {
-  QgsBillBoardRegistry::instance()->removeItem( this );
+  QgsBillBoardRegistry::instance()->removeItem(this);
 }
 
 void QgsMilXAnnotationItem::fromMilxItem( QgsMilXItem* item )
@@ -266,7 +266,7 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
   }
   else
   {
-    QgsBillBoardRegistry::instance()->addItem( this, mGraphic.toImage(), QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ) );
+	QgsBillBoardRegistry::instance()->addItem(this, mGraphic.toImage(), QgsCoordinateTransformCache::instance()->transform(mGeoPosCrs.authid(), "EPSG:4326")->transform(mGeoPos));
   }
 }
 
@@ -331,9 +331,9 @@ int QgsMilXAnnotationItem::absolutePointIdx( int regularIdx ) const
 void QgsMilXAnnotationItem::setGraphic( MilXClient::NPointSymbolGraphic &result, bool updatePoints )
 {
   mGraphic = QPixmap::fromImage( result.graphic );
-  if ( !isMultiPoint() )
+  if(!isMultiPoint())
   {
-    QgsBillBoardRegistry::instance()->addItem( this, result.graphic, QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ) );
+    QgsBillBoardRegistry::instance()->addItem(this, result.graphic, QgsCoordinateTransformCache::instance()->transform(mGeoPosCrs.authid(), "EPSG:4326")->transform(mGeoPos));
   }
   setFrameSize( mGraphic.size() );
   mOffsetFromReferencePoint += result.offset - mRenderOffset;
@@ -461,18 +461,8 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
   {
     return true;
   }
-  // First, check against attribute points, controlpoints and regular points
-  QList< QPair<int, QPoint> > screenAttrPoints = screenAttributePoints();
-  typedef QPair<int, QPoint> Attrib_t;
-  foreach ( const Attrib_t& attrib, screenAttrPoints )
-  {
-    if (( screenPos - attrib.second ).manhattanLength() < 15 )
-    {
-      return true;
-    }
-  }
-
   QList<QPoint> screenPts = screenPoints();
+  // First, check against pos/control points
   foreach ( const QPoint& screenPt, screenPts )
   {
     if (( screenPos - screenPt ).manhattanLength() < 15 )
