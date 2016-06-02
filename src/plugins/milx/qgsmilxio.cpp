@@ -56,16 +56,16 @@ bool QgsMilXIO::save( QgisInterface* iface )
     }
   }
   layout->addWidget( layerListWidget, 1, 0, 1, 2 );
-  layout->addWidget(new QLabel("MilX version:"), 2, 0, 1, 1);
+  layout->addWidget( new QLabel( "MilX version:" ), 2, 0, 1, 1 );
   QComboBox* combo = new QComboBox();
   QStringList versionTags, versionNames;
   MilXClient::getSupportedLibraryVersionTags( versionTags, versionNames );
-  for(int i = 0, n = versionTags.size(); i < n; ++i)
+  for ( int i = 0, n = versionTags.size(); i < n; ++i )
   {
-    combo->addItem(versionNames[i], versionTags[i] );
+    combo->addItem( versionNames[i], versionTags[i] );
   }
-  combo->setCurrentIndex(0);
-  layout->addWidget(combo, 2, 1, 1, 1);
+  combo->setCurrentIndex( 0 );
+  layout->addWidget( combo, 2, 1, 1, 1 );
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
   layout->addWidget( bbox, 3, 0, 1, 2 );
   connect( bbox, SIGNAL( accepted() ), &layerSelectionDialog, SLOT( accept() ) );
@@ -106,7 +106,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   {
     filename += ".milxly";
   }
-  QString versionTag = combo->itemData(combo->currentIndex()).toString();
+  QString versionTag = combo->itemData( combo->currentIndex() ).toString();
 
   QIODevice* dev = 0;
   QuaZip* zip = 0;
@@ -177,7 +177,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
   QIODevice* dev = 0;
   if ( filename.endsWith( ".milxlyz", Qt::CaseInsensitive ) )
   {
-    dev = new QuaZipFile( filename, "Layer.milxly" );
+    dev = new QuaZipFile( filename, "Layer.milxly", QuaZip::csInsensitive );
   }
   else
   {
