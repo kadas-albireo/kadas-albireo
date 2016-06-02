@@ -59,7 +59,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     }
     else
     {
-      addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Attributes" ), this, SLOT( featureAttributes() ) );
+      addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( featureAttributes() ) );
     }
     addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
   }
