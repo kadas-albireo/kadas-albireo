@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "MilXClient.hpp"
-#include "Server/MilXCommands.hpp"
+#include "MilXCommands.hpp"
 #include <QApplication>
 #include <QDataStream>
 #include <QEventLoop>
