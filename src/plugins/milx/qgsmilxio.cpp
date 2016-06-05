@@ -194,6 +194,13 @@ bool QgsMilXIO::load( QgisInterface* iface )
   doc.setContent( dev->readAll() );
   delete dev;
 
+  if ( doc.isNull() )
+  {
+    QString errorMsg = tr( "The file could not be parsed." );
+    iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
+    return false;
+  }
+
   QDomElement milxDocumentEl = doc.firstChildElement( "MilXDocument_Layer" );
   QDomElement milxVersionEl = milxDocumentEl.firstChildElement( "MssLibraryVersionTag" );
   QString fileMssVer = milxVersionEl.text();

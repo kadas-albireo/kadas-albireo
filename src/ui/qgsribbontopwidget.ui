@@ -1736,8 +1736,8 @@ Sight</string>
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
-              <height>0</height>
+              <width>0</width>
+              <height>80</height>
              </size>
             </property>
             <property name="maximumSize">

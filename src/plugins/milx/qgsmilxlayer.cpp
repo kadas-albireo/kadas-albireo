@@ -187,7 +187,7 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
         if ( mAttributes[i].first != MilXClient::AttributeAttutide )
           attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second / screenDist * ellipsoidDist ) ) );
         else
-          attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second ) ) );
+          attrValueEl.appendChild( doc.createTextNode( QString::number( -attributeValues[i].second ) ) ); // -1: Attitudes seem inverted in the milxly file?
         attribEl.appendChild( attrValueEl );
       }
     }
@@ -237,11 +237,10 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
   {
     // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
     double scale = 100000.;
-    QPoint origin = QPoint( points[0].x() * scale, points[0].y() * scale );
-    QList<QPoint> screenPoints = QList<QPoint>() << QPoint( 0, 0 );
-    for ( int i = 1, n = points.size(); i < n; ++i )
+    QList<QPoint> screenPoints = QList<QPoint>();
+    for ( int i = 0, n = points.size(); i < n; ++i )
     {
-      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) - origin );
+      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) );
     }
 
     // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
@@ -259,11 +258,14 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
 
     for ( int i = 0, n = attributes.size(); i < n; ++i )
     {
-      attributes[i].second *= screenDist / ellipsoidDist;
+      if ( attributes[i].first != MilXClient::AttributeAttutide )
+        attributes[i].second *= screenDist / ellipsoidDist;
+      else
+        attributes[i].second *= -1; // -1: Attitudes seem inverted in the milxly file?
     }
 
     QList< QPair<int, QPoint> > attributeScreenPoints;
-    if ( MilXClient::getAttributePoints( mMssString, screenPoints, attributes, attributeScreenPoints ) )
+    if ( MilXClient::getAttributePoints( symbolXml, screenPoints, attributes, attributeScreenPoints ) )
     {
       for ( int i = 0, n = attributeScreenPoints.size(); i < n; ++i )
       {
@@ -509,6 +511,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
   int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
   QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
+  if ( crs.isEmpty() )
+  {
+    errorMsg = tr( "The file is corrupt" );
+    return false;
+  }
   QString utmZone = milxLayerEl.firstChildElement( "CoordSystemUtmZone" ).text();
   const QgsCoordinateTransform* crst = 0;
   if ( crs == "SwissLv03" )
