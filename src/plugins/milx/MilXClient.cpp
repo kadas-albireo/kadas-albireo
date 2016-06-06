@@ -380,7 +380,6 @@ bool MilXClient::appendPoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
   ostream >> result.attributes;
-  ostream >> result.attributePoints;
   return true;
 }
 
@@ -404,7 +403,6 @@ bool MilXClient::insertPoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
   ostream >> result.attributes;
-  ostream >> result.attributePoints;
   return true;
 }
 
@@ -428,31 +426,6 @@ bool MilXClient::movePoint( const QRect &visibleExtent, const NPointSymbol& symb
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
   ostream >> result.attributes;
-  ostream >> result.attributePoints;
-  return true;
-}
-
-bool MilXClient::moveAttributePoint( const QRect &visibleExtent, const NPointSymbol& symbol, int attr, const QPoint& newPos, NPointSymbolGraphic& result )
-{
-  QByteArray request;
-  QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_MOVE_ATTRIBUTE_POINT << visibleExtent << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << attr << newPos;
-
-  QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_MOVE_ATTRIBUTE_POINT ) )
-  {
-    return false;
-  }
-
-  QDataStream ostream( &response, QIODevice::ReadOnly );
-  MilXServerReply replycmd = 0; ostream >> replycmd;
-  QByteArray svgxml; ostream >> svgxml;
-  result.graphic = renderSvg( svgxml );
-  ostream >> result.offset;
-  ostream >> result.adjustedPoints;
-  ostream >> result.controlPoints;
-  ostream >> result.attributes;
-  ostream >> result.attributePoints;
   return true;
 }
 
@@ -494,7 +467,6 @@ bool MilXClient::deletePoint( const QRect &visibleExtent, const NPointSymbol& sy
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
   ostream >> result.attributes;
-  ostream >> result.attributePoints;
   return true;
 }
 
@@ -520,7 +492,6 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& sym
   ostream >> result.adjustedPoints;
   ostream >> result.controlPoints;
   ostream >> result.attributes;
-  ostream >> result.attributePoints;
   return true;
 }
 
@@ -548,7 +519,6 @@ bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& s
     ostream >> result.adjustedPoints;
     ostream >> result.controlPoints;
     ostream >> result.attributes;
-    ostream >> result.attributePoints;
   }
   return true;
 }
@@ -667,6 +637,40 @@ bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& c
   QDataStream ostream( &response, QIODevice::ReadOnly );
   MilXServerReply replycmd = 0; ostream >> replycmd;
   ostream >> selectedSymbol;
+  return true;
+}
+
+bool MilXClient::getAttributeValues( const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, QPoint> >& attributes, QList< QPair<int, double> >& attributeValues )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_GET_ATTRIBUTE_VALUES << symbolXml << points << attributes;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_ATTRIBUTE_VALUES ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> attributeValues;
+  return true;
+}
+
+bool MilXClient::getAttributePoints( const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, double> >& attributes, QList< QPair<int, QPoint> >& attributePoints )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_GET_ATTRIBUTE_POINTS << symbolXml << points << attributes;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_GET_ATTRIBUTE_POINTS ) )
+  {
+    return false;
+  }
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> attributePoints;
   return true;
 }
 

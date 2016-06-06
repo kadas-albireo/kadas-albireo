@@ -70,13 +70,13 @@ public:
   };
 
   struct NPointSymbol {
-    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, const QList< QPair<int, double> >& _attributes, bool _finalized, bool _colored)
+    NPointSymbol(const QString& _xml, const QList<QPoint>& _points, const QList<int>& _controlPoints, const QList< QPair<int, QPoint> >& _attributes, bool _finalized, bool _colored)
       : xml(_xml), points(_points), controlPoints(_controlPoints), attributes(_attributes), finalized(_finalized), colored(_colored) {}
 
     QString xml;
     QList<QPoint> points;
     QList<int> controlPoints;
-    QList< QPair<int, double> > attributes;
+    QList< QPair<int, QPoint> > attributes;
     bool finalized;
     bool colored;
   };
@@ -86,8 +86,7 @@ public:
     QPoint offset;
     QList<QPoint> adjustedPoints;
     QList<int> controlPoints;
-    QList< QPair<int, double> > attributes;
-    QList< QPair<int, QPoint> > attributePoints;
+    QList< QPair<int, QPoint> > attributes;
   };
 
   enum AttributeTypes {
@@ -116,7 +115,6 @@ public:
   static bool appendPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
   static bool insertPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
   static bool movePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result);
-  static bool moveAttributePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int attr, const QPoint& newPos, NPointSymbolGraphic& result);
   static bool canDeletePoint(const NPointSymbol& symbol, int index, bool& canDelete);
   static bool deletePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result);
   static bool editSymbol(const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result);
@@ -131,6 +129,9 @@ public:
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
   static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
+
+  static bool getAttributeValues(const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, QPoint> >& attributes, QList< QPair<int, double> >& attributeValues);
+  static bool getAttributePoints(const QString& symbolXml, const QList<QPoint>& points, const QList< QPair<int, double> >& attributes, QList< QPair<int, QPoint> >& attributePoints );
 
 private:
   MilXClientWorker mWorker;
