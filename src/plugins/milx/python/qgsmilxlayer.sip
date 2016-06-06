@@ -41,8 +41,8 @@ class QgsMilXLayer : public QgsPluginLayer
     QgsMilXItem* takeItem( int idx );
     const QList<QgsMilXItem*>& items() const;
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize );
-    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
-    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
+    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, int dpi, QStringList& exportMessages );
+    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, int dpi, QString &errorMsg, QStringList& importMessages );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const;
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ );
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext );

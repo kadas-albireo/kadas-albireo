@@ -25,7 +25,9 @@
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
 #include "layertree/qgslayertreeview.h"
+#include <QApplication>
 #include <QComboBox>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QDomDocument>
 #include <QFileDialog>
@@ -131,6 +133,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   }
 
   QStringList exportMessages;
+  int dpi = QApplication::desktop()->logicalDpiX();
 
   QDomDocument doc;
   doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
@@ -148,7 +151,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, exportMessages );
+      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, dpi, exportMessages );
     }
   }
   dev->write( doc.toString().toUtf8() );
@@ -213,6 +216,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
     iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
     return false;
   }
+  int dpi = QApplication::desktop()->logicalDpiX();
 
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
   QStringList importMessages;
@@ -222,7 +226,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
   {
     QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
     QgsMilXLayer* layer = new QgsMilXLayer( iface->layerTreeView()->menuProvider() );
-    if ( !layer->importMilxly( milxLayerEl, fileMssVer, errorMsg, importMessages ) )
+    if ( !layer->importMilxly( milxLayerEl, fileMssVer, dpi, errorMsg, importMessages ) )
     {
       break;
     }

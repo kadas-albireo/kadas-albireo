@@ -25,6 +25,7 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
+#include <QApplication>
 #include <QVector2D>
 
 bool QgsMilXItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
@@ -464,7 +465,7 @@ void QgsMilXLayer::deleteItems( const QVariantList &items )
   }
 }
 
-void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
+void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, int dpi, QStringList& exportMessages )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
 
@@ -497,7 +498,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( crsEl );
 
   QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number( MilXClient::getSymbolSize() ) ) );
+  symbolSizeEl.appendChild( doc.createTextNode( QString::number(( MilXClient::getSymbolSize() * 25.4 ) / dpi ) ) );
   milxLayerEl.appendChild( symbolSizeEl );
 
   QDomElement bwEl = doc.createElement( "DisplayBW" );
@@ -505,11 +506,12 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( bwEl );
 }
 
-bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, QString& errorMsg, QStringList& importMessages )
+bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, int dpi, QString& errorMsg, QStringList& importMessages )
 {
   setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
-  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
+  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt(); // This is in mm
+  symbolSize = ( symbolSize * dpi ) / 25.4; // mm to px
   QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
   if ( crs.isEmpty() )
   {
@@ -585,7 +587,7 @@ bool QgsMilXLayer::readXml( const QDomNode& layer_node )
   {
     QString errMsg;
     QStringList messages;
-    return importMilxly( milxLayerEl, verTag, errMsg, messages );
+    return importMilxly( milxLayerEl, verTag, 96, errMsg, messages );
   }
   return true;
 }
@@ -598,7 +600,7 @@ bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ 
 
   QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QStringList messages;
-  exportToMilxly( layerElement, verTag, messages );
+  exportToMilxly( layerElement, verTag, 96, messages );
   return true;
 }
 
