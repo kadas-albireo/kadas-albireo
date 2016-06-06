@@ -82,8 +82,8 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     void setApproved( bool approved ) { mIsApproved = approved; }
     bool isApproved() const { return mIsApproved; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
-    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, int dpi, QStringList& exportMessages );
-    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, int dpi, QString &errorMsg, QStringList& importMessages );
+    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
+    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;
