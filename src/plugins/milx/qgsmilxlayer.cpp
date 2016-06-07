@@ -184,7 +184,7 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
   offsetEl.appendChild( factorXEl );
 
   QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
+  factorYEl.appendChild( doc.createTextNode( QString::number( -mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorYEl );
 }
 
@@ -215,9 +215,8 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
     QDomElement attribEl = attribEls.at( iAttr ).toElement();
     attributes.append( qMakePair( MilXClient::attributeIdx( attribEl.firstChildElement( "AttrType" ).text() ), attribEl.firstChildElement( "Value" ).text().toDouble() ) );
   }
-
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
-  double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
+  double offsetY = -1. * ( graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize );
   initialize( symbolXml, militaryName, points, QList<int>(), attributes, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
 }
 
