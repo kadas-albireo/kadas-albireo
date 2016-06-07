@@ -98,7 +98,7 @@ void QgsMilXPlugin::initGui()
 
   mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mapCanvas() );
 
-  connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( connectPickHandlers() ) );
+  connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged( QStringList ) ), this, SLOT( connectPickHandlers() ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( stopEditing() ) );
   connectPickHandlers();
 
