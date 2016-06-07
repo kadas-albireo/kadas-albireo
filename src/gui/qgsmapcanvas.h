@@ -522,7 +522,7 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     void renderStarting();
 
     //! Emitted when a new set of layers has been received
-    void layersChanged( const QStringList& prevLayers );
+    void layersChanged();
 
     //! Emit key press event
     void keyPressed( QKeyEvent * e );

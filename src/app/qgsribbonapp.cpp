@@ -173,7 +173,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mFavoriteButton3, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
   connect( mFavoriteButton4, SIGNAL( contextMenuRequested( QPoint ) ), this, SLOT( showFavoriteContextMenu( QPoint ) ) );
 
-  connect( mMapCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( checkOnTheFlyProjection( QStringList ) ) );
+  connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( checkOnTheFlyProjection() ) );
   connect( mMapCanvas, SIGNAL( scaleChanged( double ) ), this, SLOT( showScale( double ) ) );
   connect( mMapCanvas, SIGNAL( mapToolSet( QgsMapTool* ) ), this, SLOT( switchToTabForTool( QgsMapTool* ) ) );
@@ -515,7 +515,7 @@ void QgsRibbonApp::on_mLayerTreeViewButton_clicked()
   }
 }
 
-void QgsRibbonApp::checkOnTheFlyProjection( const QStringList& prevLayers )
+void QgsRibbonApp::checkOnTheFlyProjection( )
 {
   mInfoBar->popWidget( mReprojMsgItem.data() );
   QString destAuthId = mMapCanvas->mapSettings().destinationCrs().authid();
@@ -524,7 +524,7 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QStringList& prevLayers )
   // the user can actually see
   foreach ( QgsMapLayer* layer, mMapCanvas->layers() )
   {
-    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->type() != QgsMapLayer::PluginLayer && layer->crs().authid() != destAuthId && !prevLayers.contains( layer->id() ) )
+    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->type() != QgsMapLayer::PluginLayer && layer->crs().authid() != destAuthId )
     {
       reprojLayers.append( layer->name() );
     }
