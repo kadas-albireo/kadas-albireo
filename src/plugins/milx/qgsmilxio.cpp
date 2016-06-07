@@ -108,8 +108,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   {
     filename += ".milxly";
   }
-  QString targetVersionTag = combo->itemData( combo->currentIndex() ).toString();
-  QString currentVersionTag; MilXClient::getCurrentLibraryVersionTag( currentVersionTag );
+  QString versionTag = combo->itemData( combo->currentIndex() ).toString();
 
   QIODevice* dev = 0;
   QuaZip* zip = 0;
@@ -144,7 +143,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   doc.appendChild( milxDocumentEl );
 
   QDomElement milxVersionEl = doc.createElement( "MssLibraryVersionTag" );
-  milxVersionEl.appendChild( doc.createTextNode( currentVersionTag ) );
+  milxVersionEl.appendChild( doc.createTextNode( versionTag ) );
   milxDocumentEl.appendChild( milxVersionEl );
 
   foreach ( const QString& layerId, exportLayers )
@@ -152,40 +151,18 @@ bool QgsMilXIO::save( QgisInterface* iface )
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, dpi );
+      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, versionTag, dpi, exportMessages );
     }
   }
-  QString inputXml = doc.toString();
-  QString outputXml;
-  bool valid = false;
-  QString messages;
-  if ( !MilXClient::downgradeMilXFile( inputXml, outputXml, targetVersionTag, valid, messages ) )
-  {
-    delete dev;
-    delete zip;
-    iface->messageBar()->pushMessage( tr( "Export Failed" ), tr( "Failed to write output." ), QgsMessageBar::CRITICAL, 5 );
-    return false;
-  }
-  if ( valid )
-  {
-    dev->write( outputXml.toUtf8() );
-    iface->messageBar()->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
-    if ( !messages.isEmpty() )
-    {
-      showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), messages );
-    }
-  }
-  else
-  {
-    iface->messageBar()->pushMessage( tr( "Export Failed" ), "", QgsMessageBar::CRITICAL, 5 );
-    if ( !messages.isEmpty() )
-    {
-      showMessageDialog( tr( "Export Failed" ), tr( "The export failed:" ), messages );
-    }
-  }
+  dev->write( doc.toString().toUtf8() );
 
   delete dev;
   delete zip;
+  iface->messageBar()->pushMessage( tr( "Export Completed" ), "", QgsMessageBar::INFO, 5 );
+  if ( !exportMessages.isEmpty() )
+  {
+    showMessageDialog( tr( "Export Messages" ), tr( "The following messages were emitted while exporting:" ), exportMessages.join( "\n" ) );
+  }
   return true;
 }
 
@@ -215,28 +192,10 @@ bool QgsMilXIO::load( QgisInterface* iface )
     iface->messageBar()->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
-  QString inputXml = QString::fromUtf8( dev->readAll().data() );
-  delete dev;
-  QString outputXml;
-  bool valid = false;
-  QString messages;
-  if ( !MilXClient::upgradeMilXFile( inputXml, outputXml, valid, messages ) )
-  {
-    iface->messageBar()->pushMessage( tr( "Import Failed" ), tr( "Failed to read input." ), QgsMessageBar::CRITICAL, 5 );
-    return false;
-  }
-  if ( !valid )
-  {
-    iface->messageBar()->pushMessage( tr( "Import Failed" ), "", QgsMessageBar::CRITICAL, 5 );
-    if ( !messages.isEmpty() )
-    {
-      showMessageDialog( tr( "Import Failed" ), tr( "The import failed:" ), messages );
-    }
-    return false;
-  }
 
   QDomDocument doc;
-  doc.setContent( outputXml );
+  doc.setContent( dev->readAll() );
+  delete dev;
 
   if ( doc.isNull() )
   {
@@ -251,22 +210,23 @@ bool QgsMilXIO::load( QgisInterface* iface )
 
   QString verTag;
   MilXClient::getCurrentLibraryVersionTag( verTag );
-  if ( fileMssVer != verTag )
+  if ( fileMssVer > verTag )
   {
-    QString errorMsg = tr( "Unexpected MSS library version tag." );
+    QString errorMsg = tr( "The file was created by a newer MSS library version." );
     iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
     return false;
   }
   int dpi = QApplication::desktop()->logicalDpiX();
 
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
+  QStringList importMessages;
   QString errorMsg;
   QList<QgsMilXLayer*> importedLayers;
   for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
   {
     QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
     QgsMilXLayer* layer = new QgsMilXLayer( iface->layerTreeView()->menuProvider() );
-    if ( !layer->importMilxly( milxLayerEl, dpi, errorMsg ) )
+    if ( !layer->importMilxly( milxLayerEl, fileMssVer, dpi, errorMsg, importMessages ) )
     {
       break;
     }
@@ -280,9 +240,9 @@ bool QgsMilXIO::load( QgisInterface* iface )
       QgsMapLayerRegistry::instance()->addMapLayer( layer );
     }
     iface->messageBar()->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
-    if ( !messages.isEmpty() )
+    if ( !importMessages.isEmpty() )
     {
-      showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), messages );
+      showMessageDialog( tr( "Import Messages" ), tr( "The following messages were emitted while importing:" ), importMessages.join( "\n" ) );
     }
   }
   else

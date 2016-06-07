@@ -21,8 +21,8 @@ class QgsMilXItem
     const QPoint& userOffset() const;
     bool isMultiPoint() const;
 
-    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
-    void readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform *crst, int symbolSize );
+    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString &versionTag, QString &messages ) const;
+    void readMilx( const QDomElement& graphicEl, const QString &symbolXml, const QgsCoordinateTransform *crst, int symbolSize );
 };
 
 class QgsMilXLayer : public QgsPluginLayer
@@ -41,8 +41,8 @@ class QgsMilXLayer : public QgsPluginLayer
     QgsMilXItem* takeItem( int idx );
     const QList<QgsMilXItem*>& items() const;
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize );
-    void exportToMilxly(QDomElement &milxDocumentEl, int dpi);
-    bool importMilxly(QDomElement &milxLayerEl, int dpi, QString& errorMsg);
+    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, int dpi, QStringList& exportMessages );
+    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, int dpi, QString &errorMsg, QStringList& importMessages );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const;
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ );
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext );
