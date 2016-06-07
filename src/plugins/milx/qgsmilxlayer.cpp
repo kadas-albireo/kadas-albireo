@@ -43,7 +43,7 @@ QgsMilXItem::~QgsMilXItem()
   }
 }
 
-void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QList< QPair<int, double> > &attributes, const QPoint &userOffset, ControlPointState controlPointState , bool isCorridor )
+void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QList< QPair<int, double> > &attributes, const QPoint &userOffset, ControlPointState controlPointState )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
@@ -53,7 +53,7 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
   mUserOffset = userOffset;
   if ( mPoints.size() > 1 )
   {
-    if ( isCorridor || controlPointState == NEED_CONTROL_POINTS_AND_INDICES )
+    if ( controlPointState == NEED_CONTROL_POINTS_AND_INDICES )
     {
       // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
       double scale = 100000.;
@@ -63,26 +63,7 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
       {
         screenPoints.append( QPoint( mPoints[i].x() * scale, mPoints[i].y() * scale ) - origin );
       }
-      QList< QPair<int, double> > screenAttributes;
-      if ( !mAttributes.isEmpty() )
-      {
-        QgsDistanceArea da;
-        da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-        da.setEllipsoid( "WGS84" );
-        da.setEllipsoidalMode( true );
-        QGis::UnitType measureUnit = QGis::Degrees;
-        QgsPoint otherPoint( mPoints[0].x() + 0.001, mPoints[0].y() );
-        QPointF otherScreenPoint = QPointF( otherPoint.x() * scale, otherPoint.y() * scale ) - origin;
-        double ellipsoidDist = da.measureLine( mPoints[0], otherPoint );
-        da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
-        double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
-        for ( int i = 0, n = mAttributes.size(); i < n; ++i )
-        {
-          screenAttributes.append( qMakePair( mAttributes[i].first, mAttributes[i].second / ellipsoidDist * screenDist ) );
-        }
-        mAttributes.clear();
-      }
-      if ( MilXClient::getControlPoints( mMssString, screenPoints, screenAttributes, mControlPoints, isCorridor ) )
+      if ( MilXClient::getControlPoints( mMssString, screenPoints, mControlPoints ) )
       {
         mPoints.clear();
         for ( int i = 0, n = screenPoints.size(); i < n; ++i )
@@ -210,7 +191,6 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
 void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
 {
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
-  bool isCorridor = graphicEl.firstChildElement( "IsMIPCorridorPointList" ).text().toInt();
   QList<QgsPoint> points;
 
   QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
@@ -237,7 +217,7 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
   }
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
   double offsetY = -1. * ( graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize );
-  initialize( symbolXml, militaryName, points, QList<int>(), attributes, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES, isCorridor );
+  initialize( symbolXml, militaryName, points, QList<int>(), attributes, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

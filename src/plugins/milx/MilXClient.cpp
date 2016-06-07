@@ -726,11 +726,11 @@ bool MilXClient::getControlPointIndices( const QString& symbolXml, int nPoints, 
   return true;
 }
 
-bool MilXClient::getControlPoints( const QString &symbolXml, QList<QPoint> &points, const QList< QPair<int, double> >& attributes, QList<int> &controlPoints, bool isCorridor )
+bool MilXClient::getControlPoints( const QString &symbolXml, QList<QPoint> &points, QList<int> &controlPoints )
 {
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_GET_CONTROL_POINTS << symbolXml << points << attributes << isCorridor;
+  istream << MILX_REQUEST_GET_CONTROL_POINTS << symbolXml << points;
 
   QByteArray response;
   if ( !instance()->processRequest( request, response, MILX_REPLY_GET_CONTROL_POINTS ) )
