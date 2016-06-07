@@ -455,7 +455,7 @@ void QgsMapCanvas::setLayerSet( QList<QgsMapCanvasLayer> &layers )
     updateDatumTransformEntries();
 
     QgsDebugMsg( "Layers have changed, refreshing" );
-    emit layersChanged();
+    emit layersChanged( layerSetOld );
 
     refresh();
   }
