@@ -38,29 +38,29 @@ class QGS_MILX_EXPORT QgsMilXItem
     static bool validateMssString( const QString& mssString, QString &adjustedMssString, QString& messages );
 
     ~QgsMilXItem();
-    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QList<QPair<int, QgsPoint> > &attributes = QList< QPair<int, QgsPoint> >(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS );
+    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QList<QPair<int, double> > &attributes = QList< QPair<int, double> >(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS, bool isCorridor = false );
     void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, ControlPointState controlPointState )
     {
-      initialize( mssString, militaryName, points, QList<int>(), QList<QPair<int, QgsPoint> >(), QPoint(), controlPointState );
+      initialize( mssString, militaryName, points, QList<int>(), QList<QPair<int, double> >(), QPoint(), controlPointState, false );
     }
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
     const QList<QgsPoint>& points() const { return mPoints; }
     QList<QPoint> screenPoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
-    QList< QPair<int, QPoint> > screenAttributePoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
+    QList< QPair<int, double> > screenAttributes( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const;
     const QList<int>& controlPoints() const { return mControlPoints; }
-    const QList< QPair<int, QgsPoint> >& attributes() const { return mAttributes; }
+    const QList< QPair<int, double> >& attributes() const { return mAttributes; }
     const QPoint& userOffset() const { return mUserOffset; }
     bool isMultiPoint() const { return mPoints.size() > 1 || !mAttributes.isEmpty(); }
 
-    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString &versionTag, QString &messages ) const;
-    void readMilx( const QDomElement& graphicEl, const QString &symbolXml, const QgsCoordinateTransform *crst, int symbolSize );
+    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
+    void readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform *crst, int symbolSize );
 
   private:
     QString mMssString;
     QString mMilitaryName;
     QList<QgsPoint> mPoints; // Points as WGS84 coordinates
-    QList< QPair<int, QgsPoint> > mAttributes; // Attribute points as WGS84 coordinates
+    QList< QPair<int, double> > mAttributes; // Attribute points as WGS84 coordinates
     QList<int> mControlPoints;
     QPoint mUserOffset; // In pixels
 };
@@ -82,8 +82,8 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     void setApproved( bool approved ) { mIsApproved = approved; }
     bool isApproved() const { return mIsApproved; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
-    void exportToMilxly( QDomElement &milxDocumentEl, const QString &versionTag, QStringList& exportMessages );
-    bool importMilxly( QDomElement &milxLayerEl, const QString &fileMssVer, QString &errorMsg, QStringList& importMessages );
+    void exportToMilxly( QDomElement &milxDocumentEl, int dpi );
+    bool importMilxly( QDomElement &milxLayerEl, int dpi, QString &errorMsg );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;

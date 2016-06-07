@@ -25,6 +25,7 @@
 #include "qgslogger.h"
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
+#include <QApplication>
 #include <QVector2D>
 
 bool QgsMilXItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
@@ -42,7 +43,7 @@ QgsMilXItem::~QgsMilXItem()
   }
 }
 
-void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QList< QPair<int, QgsPoint> > &attributes, const QPoint &userOffset, ControlPointState controlPointState )
+void QgsMilXItem::initialize( const QString &mssString, const QString &militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints, const QList< QPair<int, double> > &attributes, const QPoint &userOffset, ControlPointState controlPointState , bool isCorridor )
 {
   mMssString = mssString;
   mMilitaryName = militaryName;
@@ -52,7 +53,7 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
   mUserOffset = userOffset;
   if ( mPoints.size() > 1 )
   {
-    if ( controlPointState == NEED_CONTROL_POINTS_AND_INDICES )
+    if ( isCorridor || controlPointState == NEED_CONTROL_POINTS_AND_INDICES )
     {
       // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
       double scale = 100000.;
@@ -62,7 +63,26 @@ void QgsMilXItem::initialize( const QString &mssString, const QString &militaryN
       {
         screenPoints.append( QPoint( mPoints[i].x() * scale, mPoints[i].y() * scale ) - origin );
       }
-      if ( MilXClient::getControlPoints( mMssString, screenPoints, mControlPoints ) )
+      QList< QPair<int, double> > screenAttributes;
+      if ( !mAttributes.isEmpty() )
+      {
+        QgsDistanceArea da;
+        da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
+        da.setEllipsoid( "WGS84" );
+        da.setEllipsoidalMode( true );
+        QGis::UnitType measureUnit = QGis::Degrees;
+        QgsPoint otherPoint( mPoints[0].x() + 0.001, mPoints[0].y() );
+        QPointF otherScreenPoint = QPointF( otherPoint.x() * scale, otherPoint.y() * scale ) - origin;
+        double ellipsoidDist = da.measureLine( mPoints[0], otherPoint );
+        da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
+        double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
+        for ( int i = 0, n = mAttributes.size(); i < n; ++i )
+        {
+          screenAttributes.append( qMakePair( mAttributes[i].first, mAttributes[i].second / ellipsoidDist * screenDist ) );
+        }
+        mAttributes.clear();
+      }
+      if ( MilXClient::getControlPoints( mMssString, screenPoints, screenAttributes, mControlPoints, isCorridor ) )
       {
         mPoints.clear();
         for ( int i = 0, n = screenPoints.size(); i < n; ++i )
@@ -94,32 +114,41 @@ QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const 
   return points;
 }
 
-QList< QPair<int, QPoint> > QgsMilXItem::screenAttributePoints( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const
+QList<QPair<int, double> > QgsMilXItem::screenAttributes( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const
 {
-  QList< QPair<int, QPoint> > points;
-  typedef QPair<int, QgsPoint> AttribPt_t;
+  QgsDistanceArea da;
+  da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
+  da.setEllipsoid( "WGS84" );
+  da.setEllipsoidalMode( true );
+  QGis::UnitType measureUnit = QGis::Degrees;
+  QgsPoint otherPoint( mPoints[0].x() + 0.001, mPoints[0].y() );
+  QPointF screenPoint = mapToPixel.transform( crst ? crst->transform( mPoints[0] ) : mPoints[0] ).toQPointF();
+  QPointF otherScreenPoint = mapToPixel.transform( crst ? crst->transform( otherPoint ) : otherPoint ).toQPointF();
+  double ellipsoidDist = da.measureLine( mPoints[0], otherPoint );
+  da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
+  double screenDist = QVector2D( screenPoint - otherScreenPoint ).length();
+
+  QList< QPair<int, double> > screenAttribs;
+  typedef QPair<int, double> AttribPt_t;
   foreach ( const AttribPt_t& attrib, mAttributes )
   {
-    points.append( qMakePair( attrib.first, mapToPixel.transform( crst ? crst->transform( attrib.second ) : attrib.second ).toQPointF().toPoint() ) );
+    double value = attrib.second;
+    if ( attrib.first != MilXClient::AttributeAttutide )
+    {
+      value = value / ellipsoidDist * screenDist;
+    }
+    screenAttribs.append( qMakePair( attrib.first, value ) );
   }
-  return points;
+  return screenAttribs;
 }
 
-void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
+void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const
 {
-  bool valid = false;
-  QString symbolXml;
-  MilXClient::downgradeSymbolXml( mMssString, versionTag, symbolXml, valid, messages );
-  if ( !valid )
-  {
-    return;
-  }
-
   QDomElement graphicEl = doc.createElement( "MilXGraphic" );
   graphicListEl.appendChild( graphicEl );
 
   QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
-  stringXmlEl.appendChild( doc.createTextNode( symbolXml ) );
+  stringXmlEl.appendChild( doc.createTextNode( mMssString ) );
   graphicEl.appendChild( stringXmlEl );
 
   QDomElement nameEl = doc.createElement( "Name" );
@@ -141,55 +170,20 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
     pYEl.appendChild( doc.createTextNode( QString::number( p.y(), 'f', 6 ) ) );
     pEl.appendChild( pYEl );
   }
-  if ( !mAttributes.isEmpty() && !mPoints.isEmpty() )
+  if ( !mAttributes.isEmpty() )
   {
-    QList< QPair<int, double> > attributeValues;
-    // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
-    double scale = 100000.;
-    QList<QPoint> screenPoints;
-    foreach ( const QgsPoint& point, mPoints )
-    {
-      screenPoints.append( QPoint( point.x() * scale, point.y() * scale ) );
-    }
-    QList< QPair<int, QPoint> > screenAttributePoints;
+    QDomElement attribListEl = doc.createElement( "LocationAttributeList" );
+    graphicEl.appendChild( attribListEl );
     for ( int i = 0, n = mAttributes.size(); i < n; ++i )
     {
-      QPoint p = QPoint( mAttributes[i].second.x() * scale, mAttributes[i].second.y() * scale );
-      screenAttributePoints.append( qMakePair( mAttributes[i].first, p ) );
-    }
-    if ( MilXClient::getAttributeValues( mMssString, screenPoints, screenAttributePoints, attributeValues ) )
-    {
-      // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
-      // Since we possibly only have one single point, use another random point nearby for measuring
-      QgsDistanceArea da;
-      da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-      da.setEllipsoid( "WGS84" );
-      da.setEllipsoidalMode( true );
-      QGis::UnitType measureUnit = QGis::Degrees;
-      QgsPoint otherPoint( mPoints[0].x() + 0.001, mPoints[0].y() );
-      QPoint otherScreenPoint( otherPoint.x() * scale, otherPoint.y() * scale );
-      double ellipsoidDist = da.measureLine( mPoints[0], otherPoint );
-      da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
-      double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
-
-      QDomElement attribListEl = doc.createElement( "LocationAttributeList" );
-      graphicEl.appendChild( attribListEl );
-      for ( int i = 0, n = mAttributes.size(); i < n; ++i )
-      {
-        QDomElement attribEl = doc.createElement( "LocationAttribute" );
-        attribListEl.appendChild( attribEl );
-
-        QDomElement attrTypeEl = doc.createElement( "AttrType" );
-        attrTypeEl.appendChild( doc.createTextNode( MilXClient::attributeName( mAttributes[i].first ) ) );
-        attribEl.appendChild( attrTypeEl );
-        QDomElement attrValueEl = doc.createElement( "Value" );
-
-        if ( mAttributes[i].first != MilXClient::AttributeAttutide )
-          attrValueEl.appendChild( doc.createTextNode( QString::number( attributeValues[i].second / screenDist * ellipsoidDist ) ) );
-        else
-          attrValueEl.appendChild( doc.createTextNode( QString::number( -attributeValues[i].second ) ) ); // -1: Attitudes seem inverted in the milxly file?
-        attribEl.appendChild( attrValueEl );
-      }
+      QDomElement attrTypeEl = doc.createElement( "AttrType" );
+      attrTypeEl.appendChild( doc.createTextNode( MilXClient::attributeName( mAttributes[i].first ) ) );
+      QDomElement attrValueEl = doc.createElement( "Value" );
+      attrValueEl.appendChild( doc.createTextNode( QString::number( mAttributes[i].second ) ) );
+      QDomElement attribEl = doc.createElement( "LocationAttribute" );
+      attribEl.appendChild( attrTypeEl );
+      attribEl.appendChild( attrValueEl );
+      attribListEl.appendChild( attribEl );
     }
   }
 
@@ -201,13 +195,15 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
   offsetEl.appendChild( factorXEl );
 
   QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
+  factorYEl.appendChild( doc.createTextNode( QString::number( -mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorYEl );
 }
 
-void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
+void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize )
 {
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
+  bool isCorridor = graphicEl.firstChildElement( "IsMIPCorridorPointList" ).text().toInt();
+  QString symbolXml = graphicEl.firstChildElement( "MssStringXML" ).text();
   QList<QgsPoint> points;
 
   QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
@@ -232,52 +228,9 @@ void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolX
     QDomElement attribEl = attribEls.at( iAttr ).toElement();
     attributes.append( qMakePair( MilXClient::attributeIdx( attribEl.firstChildElement( "AttrType" ).text() ), attribEl.firstChildElement( "Value" ).text().toDouble() ) );
   }
-  QList< QPair<int, QgsPoint> > attributePoints;
-  if ( !attributes.isEmpty() && !points.isEmpty() )
-  {
-    // Do some fake geo -> screen transform, since here we have no idea about screen coordinates
-    double scale = 100000.;
-    QList<QPoint> screenPoints = QList<QPoint>();
-    for ( int i = 0, n = points.size(); i < n; ++i )
-    {
-      screenPoints.append( QPoint( points[i].x() * scale, points[i].y() * scale ) );
-    }
-
-    // Compute ratio between ellipsoid distance and screen distance to appropriately scale attribute value
-    // Since we possibly only have one single point, use another random point nearby for measuring
-    QgsDistanceArea da;
-    da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-    da.setEllipsoid( "WGS84" );
-    da.setEllipsoidalMode( true );
-    QGis::UnitType measureUnit = QGis::Degrees;
-    QgsPoint otherPoint( points[0].x() + 0.001, points[0].y() );
-    QPoint otherScreenPoint( otherPoint.x() * scale, otherPoint.y() * scale );
-    double ellipsoidDist = da.measureLine( points[0], otherPoint );
-    da.convertMeasurement( ellipsoidDist, measureUnit, QGis::Meters, false );
-    double screenDist = QVector2D( screenPoints[0] - otherScreenPoint ).length();
-
-    for ( int i = 0, n = attributes.size(); i < n; ++i )
-    {
-      if ( attributes[i].first != MilXClient::AttributeAttutide )
-        attributes[i].second *= screenDist / ellipsoidDist;
-      else
-        attributes[i].second *= -1; // -1: Attitudes seem inverted in the milxly file?
-    }
-
-    QList< QPair<int, QPoint> > attributeScreenPoints;
-    if ( MilXClient::getAttributePoints( symbolXml, screenPoints, attributes, attributeScreenPoints ) )
-    {
-      for ( int i = 0, n = attributeScreenPoints.size(); i < n; ++i )
-      {
-        const QPoint& attrp = attributeScreenPoints[i].second;
-        attributePoints.append( qMakePair( attributeScreenPoints[i].first, QgsPoint( attrp.x() / scale, attrp.y() / scale ) ) );
-      }
-    }
-  }
-
   double offsetX = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorX" ).text().toDouble() * symbolSize;
-  double offsetY = graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize;
-  initialize( symbolXml, militaryName, points, QList<int>(), attributePoints, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES );
+  double offsetY = -1. * ( graphicEl.firstChildElement( "Offset" ).firstChildElement( "FactorY" ).text().toDouble() * symbolSize );
+  initialize( symbolXml, militaryName, points, QList<int>(), attributes, QPoint( offsetX, offsetY ), QgsMilXItem::NEED_CONTROL_POINT_INDICES, isCorridor );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -307,9 +260,9 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         if ( points.isEmpty() )
           continue;
-        QList< QPair<int, QPoint> > attribPoints = items[i]->screenAttributePoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
+        QList< QPair<int, double> > screenAttribs = items[i]->screenAttributes( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
         itemOrigins.append( points.front() );
-        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), attribPoints, true, !mLayer->mIsApproved ) );
+        symbols.append( MilXClient::NPointSymbol( items[i]->mssString(), points, items[i]->controlPoints(), screenAttribs, true, !mLayer->mIsApproved ) );
       }
       if ( symbols.isEmpty() )
       {
@@ -389,7 +342,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
   if ( !item->isMultiPoint() && !item->points().isEmpty() )
   {
     int symbolSize = MilXClient::getSymbolSize();
-    MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, QPoint> >(), true, true );
+    MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, double> >(), true, true );
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
@@ -410,8 +363,8 @@ bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSe
     {
       points[j] += mItems[i]->userOffset();
     }
-    QList< QPair<int, QPoint> > attribPoints = mItems[i]->screenAttributePoints( mapSettings.mapToPixel(), crst );
-    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), attribPoints, true, true ) );
+    QList< QPair<int, double> > screenAttribs = mItems[i]->screenAttributes( mapSettings.mapToPixel(), crst );
+    symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), screenAttribs, true, true ) );
   }
   int selectedSymbol = -1;
   if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
@@ -464,7 +417,7 @@ void QgsMilXLayer::deleteItems( const QVariantList &items )
   }
 }
 
-void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, QStringList& exportMessages )
+void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, int dpi )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
 
@@ -484,12 +437,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
 
   foreach ( const QgsMilXItem* item, mItems )
   {
-    QString messages;
-    item->writeMilx( doc, graphicListEl, versionTag, messages );
-    if ( !messages.isEmpty() )
-    {
-      exportMessages.append( QString( "%1:\n%2\n" ).arg( item->mssString() ).arg( messages ) );
-    }
+    item->writeMilx( doc, graphicListEl );
   }
 
   QDomElement crsEl = doc.createElement( "CoordSystemType" );
@@ -497,7 +445,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( crsEl );
 
   QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number( MilXClient::getSymbolSize() ) ) );
+  symbolSizeEl.appendChild( doc.createTextNode( QString::number(( MilXClient::getSymbolSize() * 25.4 ) / dpi ) ) );
   milxLayerEl.appendChild( symbolSizeEl );
 
   QDomElement bwEl = doc.createElement( "DisplayBW" );
@@ -505,11 +453,12 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( bwEl );
 }
 
-bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, QString& errorMsg, QStringList& importMessages )
+bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, int dpi, QString& errorMsg )
 {
   setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
-  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt();
+  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt(); // This is in mm
+  symbolSize = ( symbolSize * dpi ) / 25.4; // mm to px
   QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
   if ( crs.isEmpty() )
   {
@@ -539,39 +488,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
   mIsApproved = milxLayerEl.firstChildElement( "DisplayBW" ).text().toInt();
 
   QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
-
-  // Dry run to validate
-  QStringList validationErrors;
-  QStringList adjustedSymbolXmls;
   for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
   {
     QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-    QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
-    QString adjustedSymbolXml;
-    bool valid = false;
-    QString messages;
-    MilXClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
-    adjustedSymbolXmls.append( adjustedSymbolXml );
-    if ( !valid )
-    {
-      validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-    }
-    else if ( !messages.isEmpty() )
-    {
-      importMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-    }
-  }
-  if ( !validationErrors.isEmpty() )
-  {
-    errorMsg = tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) );
-    return false;
-  }
-  for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-  {
-    QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-
     QgsMilXItem* item = new QgsMilXItem();
-    item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
+    item->readMilx( graphicEl, crst, symbolSize );
     addItem( item );
   }
   return true;
@@ -579,13 +500,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
 
 bool QgsMilXLayer::readXml( const QDomNode& layer_node )
 {
-  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxLayerEl = layer_node.firstChildElement( "MilXLayer" );
   if ( !milxLayerEl.isNull() )
   {
-    QString errMsg;
-    QStringList messages;
-    return importMilxly( milxLayerEl, verTag, errMsg, messages );
+    QString errorMsg;
+    return importMilxly( milxLayerEl, 96, errorMsg );
   }
   return true;
 }
@@ -595,10 +514,7 @@ bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ 
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
-
-  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
-  QStringList messages;
-  exportToMilxly( layerElement, verTag, messages );
+  exportToMilxly( layerElement, 96 );
   return true;
 }
 

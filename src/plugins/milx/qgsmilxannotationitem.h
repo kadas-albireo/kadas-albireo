@@ -42,7 +42,9 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
     void appendPoint( const QPoint &newPoint );
     void movePoint( int index, const QPoint &newPos );
+    void moveAttributePoint( int attr, const QPoint& newPos );
     QList<QPoint> screenPoints() const;
+    QList< QPair<int, double> > screenAttributes() const;
     QList< QPair<int, QPoint> > screenAttributePoints() const;
     int absolutePointIdx( int regularIdx ) const;
     void setGraphic( MilXClient::NPointSymbolGraphic& result, bool updatePoints );
@@ -71,10 +73,12 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     QList<QgsPoint> mAdditionalPoints;
     QPoint mRenderOffset;
     QList<int> mControlPoints;
-    QList< QPair<int, QgsPoint> > mAttributes;
+    QList< QPair<int, double> > mAttributes;
+    QList< QPair<int, QgsPoint> > mAttributePoints;
     bool mFinalized;
 
     void _showItemEditor() override;
+    double metersToPixels() const;
 
   private slots:
     void updateSymbol( bool updatePoints = false );
