@@ -153,7 +153,6 @@ bool MilXClientWorker::initialize()
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   istream << MILX_REQUEST_INIT;
   istream << lang;
-  istream << MILX_INTERFACE_VERSION;
   QByteArray response;
   if ( !processRequest( request, response, MILX_REPLY_INIT_OK ) )
   {
