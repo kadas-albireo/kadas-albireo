@@ -112,7 +112,7 @@ QgsMapCanvasRendererSync::QgsMapCanvasRendererSync( QgsMapCanvas* canvas, QgsMap
   connect( mCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( onDestCrsC2R() ) );
   connect( mRenderer, SIGNAL( destinationSrsChanged() ), this, SLOT( onDestCrsR2C() ) );
 
-  connect( mCanvas, SIGNAL( layersChanged() ), this, SLOT( onLayersC2R() ) );
+  connect( mCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( onLayersC2R() ) );
   // TODO: layers R2C ? (should not happen!)
 
 }
@@ -455,7 +455,7 @@ void QgsMapCanvas::setLayerSet( QList<QgsMapCanvasLayer> &layers )
     updateDatumTransformEntries();
 
     QgsDebugMsg( "Layers have changed, refreshing" );
-    emit layersChanged();
+    emit layersChanged( layerSetOld );
 
     refresh();
   }

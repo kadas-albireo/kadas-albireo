@@ -336,7 +336,7 @@ void GlobePlugin::run()
 
   mDockWidget = new QgsGlobeWidget( mQGisIface, mQGisIface->mainWindow() );
   connect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
-  connect( mDockWidget, SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
+  connect( mDockWidget, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateLayers() ) );
   connect( mDockWidget, SIGNAL( showSettings() ), this, SLOT( showSettings() ) );
   connect( mDockWidget, SIGNAL( refresh() ), this, SLOT( updateLayers() ) );
   connect( mDockWidget, SIGNAL( syncExtent() ), this, SLOT( syncExtent() ) );

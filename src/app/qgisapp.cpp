@@ -1106,7 +1106,7 @@ void QgisApp::setupConnections()
            this, SLOT( selectionChanged( QgsMapLayer * ) ) );
   connect( mapCanvas(), SIGNAL( extentsChanged() ),
            this, SLOT( markDirty() ) );
-  connect( mapCanvas(), SIGNAL( layersChanged() ),
+  connect( mapCanvas(), SIGNAL( layersChanged( QStringList ) ),
            this, SLOT( markDirty() ) );
 
   // connect MapCanvas keyPress event so we can check if selected feature collection must be deleted

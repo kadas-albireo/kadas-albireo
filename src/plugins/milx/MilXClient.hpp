@@ -111,7 +111,7 @@ public:
   static bool getSymbolsMetadata(const QStringList& symbolIds, QList<SymbolDesc>& result);
   static bool getMilitaryName(const QString& symbolXml, QString& militaryName);
   static bool getControlPointIndices(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
-  static bool getControlPoints(const QString& symbolXml, QList<QPoint>& points, QList<int>& controlPoints);
+  static bool getControlPoints(const QString& symbolXml, QList<QPoint>& points, const QList<QPair<int, double> > &attributes, QList<int>& controlPoints, bool isCorridor);
 
   static bool appendPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
   static bool insertPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
@@ -129,8 +129,9 @@ public:
 
   static bool getCurrentLibraryVersionTag(QString& versionTag);
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
+  static bool upgradeMilXFile(const QString& inputXml, QString& outputXml, bool& valid, QString& messages);
+  static bool downgradeMilXFile(const QString& inputXml, QString& outputXml, const QString &mssVersion, bool& valid, QString& messages);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
-  static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
 
 private:
   MilXClientWorker mWorker;

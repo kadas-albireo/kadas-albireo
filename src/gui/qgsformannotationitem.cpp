@@ -47,7 +47,7 @@ QgsFormAnnotationItem::QgsFormAnnotationItem( QgsMapCanvas* canvas, QgsVectorLay
     mDesignerForm = mVectorLayer->annotationForm();
     connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
     connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
-    connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+    connect( mMapCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateVisibility() ) );
   }
 
   setFeatureForMapPosition();
@@ -66,7 +66,7 @@ QgsFormAnnotationItem::QgsFormAnnotationItem( QgsMapCanvas *canvas, QgsFormAnnot
   {
     connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
     connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
-    connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+    connect( mMapCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateVisibility() ) );
   }
 }
 
@@ -218,7 +218,7 @@ void QgsFormAnnotationItem::readXML( const QDomDocument& doc, const QDomElement&
     {
       connect( mVectorLayer, SIGNAL( layerModified() ), this, SLOT( setFeatureForMapPosition() ) );
       connect( mMapCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( setFeatureForMapPosition() ) );
-      connect( mMapCanvas, SIGNAL( layersChanged() ), this, SLOT( updateVisibility() ) );
+      connect( mMapCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateVisibility() ) );
     }
   }
   mHasAssociatedFeature = itemElem.attribute( "hasFeature", "0" ).toInt();

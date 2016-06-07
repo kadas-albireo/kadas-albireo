@@ -14,7 +14,9 @@
 
 typedef quint8 MilXServerRequest;
 
-MilXServerRequest MILX_REQUEST_INIT = 1; // {MILX_REQUEST_INIT, Lang:QString}
+quint64 MILX_INTERFACE_VERSION = 201606071444;
+
+MilXServerRequest MILX_REQUEST_INIT = 1; // {MILX_REQUEST_INIT, Lang:QString, InterfaceVersion:int64}
 MilXServerRequest MILX_REQUEST_SET_SYMBOL_OPTIONS = 2; // {MILX_REQUEST_SYMBOL_OPTIONS, SymbolSize:int, LineWidth:int, WorkMode:int}
 
 MilXServerRequest MILX_REQUEST_GET_SYMBOL_METADATA = 10; // {MILX_REQUEST_GET_SYMBOL_METADATA, SymbolXml:QString}
@@ -38,8 +40,9 @@ MilXServerRequest MILX_REQUEST_HIT_TEST = 40; // {MILX_REQUEST_HIT_TEST, SymbolX
 MilXServerRequest MILX_REQUEST_PICK_SYMBOL = 41; // {MILX_REQUEST_PICK_SYMBOL, ClickPos:QPoint, nSymbols:int, SymbolXml1:QString, Points1:QList<QPoint>, ControlPoints1:QList<int>, Attributes1:QList<QPair<int,double>>, finalized1:bool, colored1:bool, SymbolXml2:QString, Points2:QList<QPoint>, ControlPoints2:QList<int>, Attributes2:QList<QPair<int,double>>, finalized2:bool, colored2:bool, ...}
 
 MilXServerRequest MILX_REQUEST_GET_LIBRARY_VERSION_TAGS = 50; // {MILX_REQUEST_GET_LIBRARY_VERSION_TAGS}
-MilXServerRequest MILX_REQUEST_VALIDATE_SYMBOLXML = 51; // {MILX_REQUEST_VALIDATE_SYMBOLXML, SymbolXml:QString, MssVersion:QString}
-MilXServerRequest MILX_REQUEST_DOWNGRADE_SYMBOLXML = 52; // {MILX_REQUEST_VALIDATE_SYMBOLXML, SymbolXml:QString, MssVersion:QString}
+MilXServerRequest MILX_REQUEST_UPGRADE_MILXLY = 51; // {MILX_REQUEST_UPGRADE_MILXLY, InputXml:QString}
+MilXServerRequest MILX_REQUEST_DOWNGRADE_MILXLY = 52; // {MILX_REQUEST_DOWNGRADE_MILXLY, InputXml:QString, MssVersion:QString}
+MilXServerRequest MILX_REQUEST_VALIDATE_SYMBOLXML = 53; // {MILX_REQUEST_VALIDATE_SYMBOLXML, SymbolXml:QString, MssVersion:QString}
 
 typedef quint8 MilXServerReply;
 
@@ -68,7 +71,8 @@ MilXServerReply MILX_REPLY_HIT_TEST = 140; // {MILX_REPLY_HIT_TEST, hitTestResul
 MilXServerReply MILX_REPLY_PICK_SYMBOL = 141; // {MILX_REPLY_PICK_SYMBOL, SelectedSymbol:int}
 
 MilXServerReply MILX_REPLY_GET_LIBRARY_VERSION_TAGS = 150; // {MILX_REPLY_GET_LIBRARY_VERSION_TAGS, versionTags:QStringList, versionNames:QStringList}
-MilXServerReply MILX_REPLY_VALIDATE_SYMBOLXML = 151; // {MILX_REPLY_VALIDATE_SYMBOLXML, AdjustedSymbolXml:QString, valid:bool, messages:QString}
-MilXServerReply MILX_REPLY_DOWNGRADE_SYMBOLXML = 152; // {MILX_REPLY_DOWNGRADE_SYMBOLXML, AdjustedSymbolXml:QString, valid:bool, messages:QString}
+MilXServerReply MILX_REPLY_UPGRADE_MILXLY = 151; // {MILX_REPLY_UPGRADE_MILXLY, OutputXml:QString, valid:bool, messages:QString}
+MilXServerReply MILX_REPLY_DOWNGRADE_MILXLY = 152; // {MILX_REPLY_DOWNGRADE_MILXLY, OutputXml:QString, valid:bool, messages:QString}
+MilXServerReply MILX_REPLY_VALIDATE_SYMBOLXML = 153; // {MILX_REPLY_VALIDATE_SYMBOLXML, AdjustedSymbolXml:QString, valid:bool, messages:QString}
 
 #endif // MILX_SERVER_COMMANDS_HPP

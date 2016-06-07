@@ -86,7 +86,7 @@ QgsGlobeWidget::QgsGlobeWidget( QgisInterface* iface, QWidget *parent )
   setMinimumSize( 128, 128 );
   setAttribute( Qt::WA_DeleteOnClose );
 
-  connect( mQgisIface->mapCanvas(), SIGNAL( layersChanged() ), this, SLOT( updateLayerSelectionMenu() ) );
+  connect( mQgisIface->mapCanvas(), SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayerSelectionMenu() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerRemoved( QString ) ), this, SLOT( updateLayerSelectionMenu() ) );
 
