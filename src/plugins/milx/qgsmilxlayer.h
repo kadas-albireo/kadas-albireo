@@ -38,10 +38,10 @@ class QGS_MILX_EXPORT QgsMilXItem
     static bool validateMssString( const QString& mssString, QString &adjustedMssString, QString& messages );
 
     ~QgsMilXItem();
-    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QList<QPair<int, double> > &attributes = QList< QPair<int, double> >(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS );
+    void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, const QList<int>& controlPoints = QList<int>(), const QList<QPair<int, double> > &attributes = QList< QPair<int, double> >(), const QPoint& userOffset = QPoint(), ControlPointState controlPointState = HAVE_CONTROL_POINTS, bool isCorridor = false );
     void initialize( const QString& mssString, const QString& militaryName, const QList<QgsPoint> &points, ControlPointState controlPointState )
     {
-      initialize( mssString, militaryName, points, QList<int>(), QList<QPair<int, double> >(), QPoint(), controlPointState );
+      initialize( mssString, militaryName, points, QList<int>(), QList<QPair<int, double> >(), QPoint(), controlPointState, false );
     }
     const QString& mssString() const { return mMssString; }
     const QString& militaryName() const { return mMilitaryName; }
