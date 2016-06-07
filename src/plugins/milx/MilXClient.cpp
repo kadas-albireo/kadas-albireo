@@ -591,6 +591,44 @@ bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSy
   return true;
 }
 
+bool MilXClient::upgradeMilXFile( const QString& inputXml, QString& outputXml, bool& valid, QString& messages )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_UPGRADE_MILXLY;
+  istream << inputXml;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_UPGRADE_MILXLY ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> outputXml >> valid >> messages;
+  return true;
+}
+
+bool MilXClient::downgradeMilXFile( const QString& inputXml, QString& outputXml, const QString &mssVersion, bool& valid, QString& messages )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_DOWNGRADE_MILXLY;
+  istream << inputXml << mssVersion;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_DOWNGRADE_MILXLY ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  ostream >> outputXml >> valid >> messages;
+  return true;
+}
+
 bool MilXClient::validateSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
 {
   QByteArray request;
@@ -610,24 +648,6 @@ bool MilXClient::validateSymbolXml( const QString& symbolXml, const QString& mss
   return true;
 }
 
-bool MilXClient::downgradeSymbolXml( const QString& symbolXml, const QString& mssVersion, QString& adjustedSymbolXml, bool& valid, QString& messages )
-{
-  QByteArray request;
-  QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_DOWNGRADE_SYMBOLXML;
-  istream << symbolXml << mssVersion;
-
-  QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_DOWNGRADE_SYMBOLXML ) )
-  {
-    return false;
-  }
-
-  QDataStream ostream( &response, QIODevice::ReadOnly );
-  MilXServerReply replycmd = 0; ostream >> replycmd;
-  ostream >> adjustedSymbolXml >> valid >> messages;
-  return true;
-}
 
 bool MilXClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult )
 {

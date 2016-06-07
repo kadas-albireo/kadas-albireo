@@ -142,21 +142,13 @@ QList<QPair<int, double> > QgsMilXItem::screenAttributes( const QgsMapToPixel& m
   return screenAttribs;
 }
 
-void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, const QString& versionTag, QString& messages ) const
+void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const
 {
-  bool valid = false;
-  QString symbolXml;
-  MilXClient::downgradeSymbolXml( mMssString, versionTag, symbolXml, valid, messages );
-  if ( !valid )
-  {
-    return;
-  }
-
   QDomElement graphicEl = doc.createElement( "MilXGraphic" );
   graphicListEl.appendChild( graphicEl );
 
   QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
-  stringXmlEl.appendChild( doc.createTextNode( symbolXml ) );
+  stringXmlEl.appendChild( doc.createTextNode( mMssString ) );
   graphicEl.appendChild( stringXmlEl );
 
   QDomElement nameEl = doc.createElement( "Name" );
@@ -207,10 +199,11 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl, cons
   offsetEl.appendChild( factorYEl );
 }
 
-void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QString& symbolXml, const QgsCoordinateTransform* crst, int symbolSize )
+void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize )
 {
   QString militaryName = graphicEl.firstChildElement( "Name" ).text();
   bool isCorridor = graphicEl.firstChildElement( "IsMIPCorridorPointList" ).text().toInt();
+  QString symbolXml = graphicEl.firstChildElement( "MssStringXML" ).text();
   QList<QgsPoint> points;
 
   QDomNodeList pointEls = graphicEl.firstChildElement( "PointList" ).elementsByTagName( "Point" );
@@ -424,7 +417,7 @@ void QgsMilXLayer::deleteItems( const QVariantList &items )
   }
 }
 
-void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& versionTag, int dpi, QStringList& exportMessages )
+void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, int dpi )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
 
@@ -444,12 +437,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
 
   foreach ( const QgsMilXItem* item, mItems )
   {
-    QString messages;
-    item->writeMilx( doc, graphicListEl, versionTag, messages );
-    if ( !messages.isEmpty() )
-    {
-      exportMessages.append( QString( "%1:\n%2\n" ).arg( item->mssString() ).arg( messages ) );
-    }
+    item->writeMilx( doc, graphicListEl );
   }
 
   QDomElement crsEl = doc.createElement( "CoordSystemType" );
@@ -465,7 +453,7 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, const QString& v
   milxLayerEl.appendChild( bwEl );
 }
 
-bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMssVer, int dpi, QString& errorMsg, QStringList& importMessages )
+bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, int dpi, QString& errorMsg )
 {
   setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
@@ -500,39 +488,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
   mIsApproved = milxLayerEl.firstChildElement( "DisplayBW" ).text().toInt();
 
   QDomNodeList graphicEls = milxLayerEl.firstChildElement( "GraphicList" ).elementsByTagName( "MilXGraphic" );
-
-  // Dry run to validate
-  QStringList validationErrors;
-  QStringList adjustedSymbolXmls;
   for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
   {
     QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-    QString mssStringXml = graphicEl.firstChildElement( "MssStringXML" ).text();
-    QString adjustedSymbolXml;
-    bool valid = false;
-    QString messages;
-    MilXClient::validateSymbolXml( mssStringXml, fileMssVer, adjustedSymbolXml, valid, messages );
-    adjustedSymbolXmls.append( adjustedSymbolXml );
-    if ( !valid )
-    {
-      validationErrors.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-    }
-    else if ( !messages.isEmpty() )
-    {
-      importMessages.append( QString( "%1:\n%2\n" ).arg( mssStringXml ).arg( messages ) );
-    }
-  }
-  if ( !validationErrors.isEmpty() )
-  {
-    errorMsg = tr( "The following validation errors occured:\n%1" ).arg( validationErrors.join( "\n" ) );
-    return false;
-  }
-  for ( int iGraphic = 0, nGraphics = graphicEls.count(); iGraphic < nGraphics; ++iGraphic )
-  {
-    QDomElement graphicEl = graphicEls.at( iGraphic ).toElement();
-
     QgsMilXItem* item = new QgsMilXItem();
-    item->readMilx( graphicEl, adjustedSymbolXmls[iGraphic], crst, symbolSize );
+    item->readMilx( graphicEl, crst, symbolSize );
     addItem( item );
   }
   return true;
@@ -540,13 +500,11 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, const QString& fileMs
 
 bool QgsMilXLayer::readXml( const QDomNode& layer_node )
 {
-  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
   QDomElement milxLayerEl = layer_node.firstChildElement( "MilXLayer" );
   if ( !milxLayerEl.isNull() )
   {
-    QString errMsg;
-    QStringList messages;
-    return importMilxly( milxLayerEl, verTag, 96, errMsg, messages );
+    QString errorMsg;
+    return importMilxly( milxLayerEl, 96, errorMsg );
   }
   return true;
 }
@@ -556,10 +514,7 @@ bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ 
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
-
-  QString verTag; MilXClient::getCurrentLibraryVersionTag( verTag );
-  QStringList messages;
-  exportToMilxly( layerElement, verTag, 96, messages );
+  exportToMilxly( layerElement, 96 );
   return true;
 }
 

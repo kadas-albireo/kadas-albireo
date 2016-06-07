@@ -129,8 +129,9 @@ public:
 
   static bool getCurrentLibraryVersionTag(QString& versionTag);
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);
+  static bool upgradeMilXFile(const QString& inputXml, QString& outputXml, bool& valid, QString& messages);
+  static bool downgradeMilXFile(const QString& inputXml, QString& outputXml, const QString &mssVersion, bool& valid, QString& messages);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
-  static bool downgradeSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
 
 private:
   MilXClientWorker mWorker;
