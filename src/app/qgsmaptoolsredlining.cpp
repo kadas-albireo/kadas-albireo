@@ -129,7 +129,7 @@ void QgsRedliningCircleMapTool::onFinished()
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLayer *layer , QgsRedliningAttributeEditor *editor )
-    : QgsMapToolPan( canvas ), mLayer( layer ), mEditor( editor ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
+    : QgsMapTool( canvas ), mLayer( layer ), mEditor( editor ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
 {
   connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
 }
@@ -184,14 +184,9 @@ void QgsRedliningEditTool::canvasPressEvent( QMouseEvent *e )
     }
   }
 
-  // Else, quit
+  // Else, quit or start anew
   if ( mUnsetOnMiss )
   {
-    delete mRubberBand;
-    mRubberBand = 0;
-    delete mCurrentFeature;
-    mCurrentFeature = 0;
-    QgsMapToolPan::canvasPressEvent( e );
     canvas()->unsetMapTool( this );
     return;
   }

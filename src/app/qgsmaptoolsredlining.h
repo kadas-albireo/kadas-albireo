@@ -20,7 +20,6 @@
 #include <QPointer>
 #include "qgsfeature.h"
 #include "qgsmaptooldrawshape.h"
-#include "qgsmaptoolpan.h"
 #include "qgsmaprenderer.h"
 
 class QgsRubberBand;
@@ -83,7 +82,7 @@ class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
     void onFinished();
 };
 
-class QgsRedliningEditTool : public QgsMapToolPan
+class QgsRedliningEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
