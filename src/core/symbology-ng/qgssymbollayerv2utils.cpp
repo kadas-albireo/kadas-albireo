@@ -3249,7 +3249,7 @@ double QgsSymbolLayerV2Utils::lineWidthScaleFactor( const QgsRenderContext& c, Q
 {
   if ( c.customRenderFlags().split( ";" ).contains( "globe" ) )
   {
-    return qMin( 2., 30000. / c.rendererScale() );
+    return 5. * qMin( 1., 100000. / c.rendererScale() );
   }
   if ( u == QgsSymbolV2::MM )
   {
