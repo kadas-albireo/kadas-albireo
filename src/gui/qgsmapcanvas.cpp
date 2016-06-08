@@ -1509,6 +1509,8 @@ void QgsMapCanvas::setMapTool( QgsMapTool* tool )
   if ( !tool )
     return;
 
+  QgsMapTool* oldTool = mMapTool;
+
   if ( mMapTool )
   {
     disconnect( mMapTool, SIGNAL( destroyed() ), this, SLOT( mapToolDestroyed() ) );
@@ -1528,8 +1530,6 @@ void QgsMapCanvas::setMapTool( QgsMapTool* tool )
   {
     mLastNonZoomMapTool = NULL;
   }
-
-  QgsMapTool* oldTool = mMapTool;
 
   // set new map tool and activate it
   mMapTool = tool;
