@@ -1179,6 +1179,12 @@ void QgisApp::createCanvasTools()
   mMapTools.mZoomIn = new QgsMapToolZoom( mapCanvas(), false /* zoomIn */ );
   mMapTools.mZoomOut = new QgsMapToolZoom( mapCanvas(), true /* zoomOut */ );
   mMapTools.mPan = new QgsMapToolPan( mapCanvas() );
+  connect( mMapTools.mPan, SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ),
+           this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
+  connect( mMapTools.mPan, SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ),
+           this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
+  connect( mMapTools.mPan, SIGNAL( labelPicked( QgsLabelPosition ) ),
+           this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
   mMapTools.mIdentify = new QgsMapToolIdentifyAction( mapCanvas() );
   connect( mMapTools.mIdentify, SIGNAL( copyToClipboard( QgsFeatureStore & ) ),
            this, SLOT( copyFeatures( QgsFeatureStore & ) ) );
@@ -7193,12 +7199,6 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     disconnect( oldTool, SIGNAL( messageEmitted( QString ) ), this, SLOT( displayMapToolMessage( QString ) ) );
     disconnect( oldTool, SIGNAL( messageEmitted( QString, QgsMessageBar::MessageLevel ) ), this, SLOT( displayMapToolMessage( QString, QgsMessageBar::MessageLevel ) ) );
     disconnect( oldTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
-    if ( dynamic_cast<QgsMapToolPan*>( oldTool ) )
-    {
-      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( labelPicked( QgsLabelPosition ) ), this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
-      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ), this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
-      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ), this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
-    }
   }
   // Automatically return to pan tool if no tool is active
   if ( !newTool && oldTool != mMapTools.mPan )
@@ -7212,12 +7212,6 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     connect( newTool, SIGNAL( messageEmitted( QString ) ), this, SLOT( displayMapToolMessage( QString ) ) );
     connect( newTool, SIGNAL( messageEmitted( QString, QgsMessageBar::MessageLevel ) ), this, SLOT( displayMapToolMessage( QString, QgsMessageBar::MessageLevel ) ) );
     connect( newTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
-    if ( dynamic_cast<QgsMapToolPan*>( newTool ) )
-    {
-      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( labelPicked( QgsLabelPosition ) ), this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
-      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ), this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
-      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ), this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
-    }
   }
 }
 
