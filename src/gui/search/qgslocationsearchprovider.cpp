@@ -41,6 +41,7 @@ QgsLocationSearchProvider::QgsLocationSearchProvider( QgsMapCanvas* mapCanvas )
   mCategoryMap.insert( "sn25", qMakePair( tr( "Places" ), 23 ) );
   mCategoryMap.insert( "zipcode", qMakePair( tr( "Zip Codes" ), 24 ) );
   mCategoryMap.insert( "address", qMakePair( tr( "Address" ), 25 ) );
+  mCategoryMap.insert( "gazetteer", qMakePair( tr( "General place name directory" ), 26 ) );
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
