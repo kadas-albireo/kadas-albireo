@@ -25,6 +25,7 @@
 #include "qgsgeometryrubberband.h"
 #include "qgsgpsrouteeditor.h"
 #include "qgisinterface.h"
+#include "qgslinestringv2.h"
 #include "qgsfeature.h"
 #include "qgsfeaturepicker.h"
 #include "qgsmapcanvas.h"
@@ -51,6 +52,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     mSelectedLayer = static_cast<QgsVectorLayer*>( pickResult.layer );
     QgsCoordinateTransform ct( pickResult.layer->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
     mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pickResult.feature.geometry()->type() );
+    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
     mRubberBand->setGeometry( pickResult.feature.geometry()->geometry()->transformed( ct ) );
     if ( pickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
@@ -66,6 +68,15 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   else if ( !mLabelPositions.isEmpty() )
   {
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editLabel() ) );
+    mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), QGis::Line );
+    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
+    QgsLineStringV2* lineString = new QgsLineStringV2();
+    foreach ( const QgsPoint& p, mLabelPositions.first().cornerPoints )
+    {
+      lineString->addVertex( QgsPointV2( p.x(), p.y() ) );
+    }
+    lineString->addVertex( lineString->vertexAt( QgsVertexId( 0, 0, 0 ) ) );
+    mRubberBand->setGeometry( lineString );
   }
   if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
   {
@@ -87,20 +98,26 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     addAction( QIcon( ":/images/themes/default/mIconSelectRemove.svg" ), tr( "Delete items" ), this, SLOT( deleteItems() ) );
   }
   addSeparator();
-  QMenu* measureMenu = new QMenu();
-  addAction( tr( "Measure" ) )->setMenu( measureMenu );
-  measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Length" ), this, SLOT( measureLine() ) );
-  measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureArea.png" ), tr( "Area" ), this, SLOT( measurePolygon() ) );
-  measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureCircle.png" ), tr( "Circle" ), this, SLOT( measureCircle() ) );
-  measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
-  measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
+  if ( mLabelPositions.isEmpty() )
+  {
+    QMenu* measureMenu = new QMenu();
+    addAction( tr( "Measure" ) )->setMenu( measureMenu );
+    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Length" ), this, SLOT( measureLine() ) );
+    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureArea.png" ), tr( "Area" ), this, SLOT( measurePolygon() ) );
+    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureCircle.png" ), tr( "Circle" ), this, SLOT( measureCircle() ) );
+    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
+    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
+  }
 
-  QMenu* analysisMenu = new QMenu();
-  addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );
-  analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
-  analysisMenu->addAction( QIcon( ":/images/themes/default/hillshade.svg" ), tr( "Hillshade" ), this, SLOT( terrainHillshade() ) );
-  analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
-  analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
+  if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
+  {
+    QMenu* analysisMenu = new QMenu();
+    addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );
+    analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
+    analysisMenu->addAction( QIcon( ":/images/themes/default/hillshade.svg" ), tr( "Hillshade" ), this, SLOT( terrainHillshade() ) );
+    analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
+    analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
+  }
 
   addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
   addAction( QIcon( ":/images/themes/default/mActionSaveMapToClipboard.png" ), tr( "Copy map" ), this, SLOT( copyMap() ) );

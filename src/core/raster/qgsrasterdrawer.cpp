@@ -47,19 +47,12 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
   QgsMapToPixel mapToPixel( *theQgsMapToPixel );
   double scaleFactor = 1.0;
 
-  if ( ctx && isWMTSLayer( mIterator->input() ) ) //wmts case, comply with standard pixel size of 0.28mm from specification
+  if ( ctx && ctx->customRenderFlags().split( ";" ).contains( "composer" ) && isWMTSLayer( mIterator->input() ) ) //wmts case, comply with standard pixel size of 0.28mm from specification
   {
     scaleFactor = ( 1.0 / 0.28 * 25.4 ) / p->device()->logicalDpiX();
-    if ( scaleFactor < 0.4 )
-    {
-      width = width * scaleFactor;
-      height = height * scaleFactor;
-      mapToPixel.setParameters( ctx->extent().width() / width, ctx->extent().xMinimum(), ctx->extent().yMinimum(), height );
-    }
-    else
-    {
-      scaleFactor = 1.0;
-    }
+    width = width * scaleFactor;
+    height = height * scaleFactor;
+    mapToPixel.setParameters( ctx->extent().width() / width, ctx->extent().xMinimum(), ctx->extent().yMinimum(), height );
   }
 
   // last pipe filter has only 1 band

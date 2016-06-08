@@ -23,28 +23,20 @@ QTreeView::indicator {
     frame: 1px #9a9a9a
 }
 
-QTreeView::indicator::checked {
+QTreeView::indicator::checked,
+QListView::indicator::checked,
+QCheckBox::indicator:checked,
+QGroupBox::indicator:checked
+{
   image: url(:/images/ribbon/checked.png);
 }
 
-QTreeView::indicator::unchecked {
+QTreeView::indicator::unchecked,
+QListView::indicator::unchecked,
+QCheckBox::indicator:unchecked,
+QGroupBox::indicator:unchecked
+{
   image: url(:/images/ribbon/unchecked.png);
-}
-
-QListView::indicator::checked {
-  image: url(:/images/ribbon/checked.png);
-}
-
-QListView::indicator::unchecked {
-  image: url(:/images/ribbon/unchecked.png);
-}
-
-QCheckBox::indicator:checked {
-  image: url(:/images/ribbon/checked.png);
-}
-
-QCheckBox::indicator:unchecked {
-    image: url(:/images/ribbon/unchecked.png);
 }
 
 QMenu, QComboBox QAbstractItemView  {
