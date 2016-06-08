@@ -203,6 +203,7 @@ QgsMapSettings QgsComposerMap::mapSettings( const QgsRectangle& extent, const QS
   jobMapSettings.setBackgroundColor( Qt::transparent );
   jobMapSettings.setOutputImageFormat( ms.outputImageFormat() );
   jobMapSettings.setRotation( mEvaluatedMapRotation );
+  jobMapSettings.setCustomRenderFlags( "composer" );
 
   //set layers to render
   QStringList theLayerSet = layersToRender();
