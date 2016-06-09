@@ -136,15 +136,12 @@ QStringList QgsMimeDataUtils::decode( const QString& encoded )
   bool inEscape = false;
   foreach ( const QChar& c, encoded )
   {
-    if ( c == '\\' && inEscape )
-    {
-      item += c;
-    }
-    else if ( c == '\\' )
+    if ( c == '\\' && !inEscape )
     {
       inEscape = true;
+      continue;
     }
-    else if ( c == ':' && !inEscape )
+    if ( c == ':' && !inEscape )
     {
       items.append( item );
       item = "";
@@ -152,8 +149,8 @@ QStringList QgsMimeDataUtils::decode( const QString& encoded )
     else
     {
       item += c;
-      inEscape = false;
     }
+    inEscape = false;
   }
   items.append( item );
   return items;
