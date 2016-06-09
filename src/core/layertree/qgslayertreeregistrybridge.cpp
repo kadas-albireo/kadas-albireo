@@ -70,9 +70,21 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
 
   int addMode = QSettings().value( "/qgis/layerLegendAddMode", 0 ).toInt();
   int ins = addMode == 0 ? 0 : mInsertionPointIndex;
+  QgsLayerTreeGroup* group = addMode == 0 ? mRoot : mInsertionPointGroup;
 
-  // Modify insertion point to the first possible slot below any redlining and plugin layer
-  QList<QgsLayerTreeNode*> childNodes = mInsertionPointGroup->children();
+  // Don't add layers into mutually exclusive groups or disabled groups
+  while ( group != mRoot && ( group->isMutuallyExclusive() || group->isVisible() != Qt::Checked ) )
+  {
+    QgsLayerTreeNode* parent = group->parent();
+    if ( !QgsLayerTree::isGroup( parent ) )
+    {
+      break;
+    }
+    group = QgsLayerTree::toGroup( parent );
+  }
+
+  // Modify insertion point to the first possible slot below any redlining
+  QList<QgsLayerTreeNode*> childNodes = group->children();
   for ( int i = childNodes.size() - 1; i >= ins; --i )
   {
     if ( childNodes[i]->nodeType() == QgsLayerTreeNode::NodeLayer )
@@ -87,7 +99,7 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
   }
 
   // add new layers to the right place
-  mInsertionPointGroup->insertChildNodes( ins, nodes );
+  group->insertChildNodes( ins, nodes );
 
   // tell other components that layers have been added - this signal is used in QGIS to auto-select the first layer
   emit addedLayersToLayerTree( layers );

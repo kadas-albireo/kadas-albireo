@@ -1122,6 +1122,8 @@ void QgisApp::setupConnections()
   // connect legend signals
   connect( layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer * ) ),
            this, SLOT( activateDeactivateLayerRelatedActions( QgsMapLayer * ) ) );
+  connect( layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ),
+           this, SLOT( updateNewLayerInsertionPoint() ) );
   connect( layerTreeView()->layerTreeModel()->rootGroup(), SIGNAL( addedChildren( QgsLayerTreeNode*, int, int ) ),
            this, SLOT( markDirty() ) );
   connect( layerTreeView()->layerTreeModel()->rootGroup(), SIGNAL( addedChildren( QgsLayerTreeNode*, int, int ) ),
@@ -1339,7 +1341,7 @@ void QgisApp::updateNewLayerInsertionPoint()
     if ( QgsLayerTreeNode* currentNode = layerTreeView()->currentNode() )
     {
       // if the insertion point is actually a group, insert new layers into the group
-      if ( QgsLayerTree::isGroup( currentNode ) && ! QgsLayerTree::toGroup( currentNode )->isMutuallyExclusive() )
+      if ( QgsLayerTree::isGroup( currentNode ) )
       {
         QgsProject::instance()->layerTreeRegistryBridge()->setLayerInsertionPoint( QgsLayerTree::toGroup( currentNode ), 0 );
         return;

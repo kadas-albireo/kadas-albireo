@@ -151,8 +151,21 @@ void QgsLocalDataSearchCrawler::run()
 
 void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVectorLayer* layer )
 {
+  // Get the string which matched the search term
+  const QgsFields& fields = layer->pendingFields();
+  QString matchText = mSearchText;
+  for ( int idx = 0, nFields = fields.count(); idx < nFields; ++idx )
+  {
+    QString attribute = feature.attribute( idx ).toString();
+    if ( attribute.contains( mSearchText, Qt::CaseInsensitive ) )
+    {
+      matchText = attribute;
+      break;
+    }
+  }
+
   QgsSearchProvider::SearchResult result;
-  result.pos = feature.geometry()->boundingBox().center();
+  result.bbox = feature.geometry()->boundingBox();
   result.category = tr( "Local Data Features" );
   result.categoryPrecedence = 10;
   result.crs = layer->crs().authid();
@@ -168,7 +181,7 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
   {
     result.pos = result.bbox.center();
   }
-  result.text = tr( "%1: Layer %2, feature %3" ).arg( mSearchText ).arg( layer->name() ).arg( feature.id() );
+  result.text = tr( "%1: Layer %2, feature %3" ).arg( matchText ).arg( layer->name() ).arg( feature.id() );
   emit searchResultFound( result );
 }
 
