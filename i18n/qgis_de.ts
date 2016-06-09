@@ -30918,7 +30918,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Date / Time (UTC):</source>
-        <translation>Datum / Zeit (UTC):</translation>
+        <translation type="obsolete">Datum / Zeit (UTC):</translation>
     </message>
     <message>
         <source>Ambient lighting</source>
@@ -30959,6 +30959,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Enable frustum highlighting</source>
         <translation>Frustumanzeige aktivieren</translation>
+    </message>
+    <message>
+        <source>Override Date / Time (UTC):</source>
+        <translation>Benutzerdefinierte Zeit/ Datum (UTC):</translation>
     </message>
 </context>
 <context>
@@ -35858,6 +35862,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Address</source>
         <translation>Adressen</translation>
     </message>
+    <message>
+        <source>General place name directory</source>
+        <translation>Allgemeines Ortsnamenverzeichniss</translation>
+    </message>
 </context>
 <context>
     <name>QgsManageConnectionsDialog</name>
@@ -35990,7 +35998,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Attributes</source>
-        <translation>Attribute</translation>
+        <translation type="obsolete">Attribute</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -36099,6 +36107,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>Delete items</source>
         <translation>Objekte löschen</translation>
+    </message>
+    <message>
+        <source>Identify</source>
+        <translation>Abfragen</translation>
     </message>
 </context>
 <context>
@@ -37500,7 +37512,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>The file was created by a newer MSS library version.</source>
-        <translation>Die Datei wurde von einer neueren MSS Bibliothekversion erstellt.</translation>
+        <translation type="obsolete">Die Datei wurde von einer neueren MSS Bibliothekversion erstellt.</translation>
     </message>
     <message>
         <source>Import Completed</source>
@@ -37522,14 +37534,42 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>MilX Layer (*.milxly)</source>
         <translation>MilX Ebene (*.milxly)</translation>
     </message>
+    <message>
+        <source>Failed to write output.</source>
+        <translation>Ausgabe konnte nicht geschrieben werden.</translation>
+    </message>
+    <message>
+        <source>The export failed:</source>
+        <translation>Export fehlgeschlagen:</translation>
+    </message>
+    <message>
+        <source>Failed to read input.</source>
+        <translation>Eingabe konnte nicht gelesen werden.</translation>
+    </message>
+    <message>
+        <source>The import failed:</source>
+        <translation>Import fehlgeschlagen:</translation>
+    </message>
+    <message>
+        <source>The file could not be parsed.</source>
+        <translation>Die Datei konnte nicht gelesen werden.</translation>
+    </message>
+    <message>
+        <source>Unexpected MSS library version tag.</source>
+        <translation>Unerwarteter MSS Bibliotek Versions-Tag.</translation>
+    </message>
 </context>
 <context>
     <name>QgsMilXLayer</name>
     <message>
         <source>The following validation errors occured:
 %1</source>
-        <translation>Folgende Validierungsfehler sind aufgetreten:
+        <translation type="obsolete">Folgende Validierungsfehler sind aufgetreten:
 %1</translation>
+    </message>
+    <message>
+        <source>The file is corrupt</source>
+        <translation>Die Datei ist Korrupt</translation>
     </message>
 </context>
 <context>
