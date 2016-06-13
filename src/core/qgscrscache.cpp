@@ -131,6 +131,24 @@ const QgsCoordinateReferenceSystem& QgsCRSCache::crsByEpsgId( long epsg )
   return crsByAuthId( "EPSG:" + QString::number( epsg ) );
 }
 
+const QgsCoordinateReferenceSystem& QgsCRSCache::crsBySrsId( long srsid )
+{
+  QHash< long, QgsCoordinateReferenceSystem >::const_iterator crsIt = mCRSSrsId.find( srsid );
+  if ( crsIt == mCRSSrsId.constEnd() )
+  {
+    QgsCoordinateReferenceSystem s;
+    if ( ! s.createFromSrsId( srsid ) )
+    {
+      return mCRSSrsId.insert( srsid, mInvalidCRS ).value();
+    }
+    return mCRSSrsId.insert( srsid, s ).value();
+  }
+  else
+  {
+    return crsIt.value();
+  }
+}
+
 const QgsCoordinateReferenceSystem& QgsCRSCache::crsByProj4( const QString& proj4 )
 {
   QHash< QString, QgsCoordinateReferenceSystem >::const_iterator crsIt = mCRSProj4.find( proj4 );
