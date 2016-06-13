@@ -16,14 +16,11 @@
  ***************************************************************************/
 
 #include "qgscatalogbrowser.h"
-#include "qgscoordinatereferencesystem.h"
 #include "qgsvbscatalogprovider.h"
 #include "qgsnetworkaccessmanager.h"
-#include "qgsmimedatautils.h"
 
 #include <QDomDocument>
 #include <QDomNode>
-#include <QImageReader>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
@@ -56,7 +53,6 @@ void QgsVBSCatalogProvider::replyFinished()
   QJson::Parser parser;
   QMap<QString, EntryMap> wmtsLayers;
   QMap<QString, EntryMap> wmsLayers;
-  QMap<QString, EntryMap> amsLayers;
   QVariantMap listData = parser.parse( reply->readAll() ).toMap();
   foreach ( const QVariant& resultData, listData["results"].toList() )
   {
@@ -69,10 +65,6 @@ void QgsVBSCatalogProvider::replyFinished()
     {
       wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
     }
-    else if ( resultMap["type"].toString() == "ams" )
-    {
-      amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
-    }
   }
 
   mPendingTasks += 1;
@@ -84,11 +76,6 @@ void QgsVBSCatalogProvider::replyFinished()
   {
     readWMSCapabilities( wmsUrl, wmsLayers[wmsUrl] );
   }
-  foreach ( const QString& amsUrl, amsLayers.keys() )
-  {
-    readAMSCapabilities( amsUrl, amsLayers[amsUrl] );
-  }
-
   endTask();
 }
 
@@ -170,73 +157,6 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
       {
         break;
       }
-    }
-  }
-
-  delete entries;
-  endTask();
-}
-
-void QgsVBSCatalogProvider::readAMSCapabilities( const QString& amsUrl, const EntryMap& entries )
-{
-  mPendingTasks += 1;
-  QNetworkRequest req( QUrl( amsUrl + "?f=json" ) );
-  QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
-  reply->setProperty( "url", amsUrl );
-  reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
-  connect( reply, SIGNAL( finished() ), this, SLOT( readAMSCapabilitiesDo() ) );
-}
-
-void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
-{
-  QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
-  reply->deleteLater();
-  EntryMap* entries = reinterpret_cast<EntryMap*>( reply->property( "entries" ).value<void*>() );
-  QString url = reply->property( "url" ).toString();
-
-  if ( reply->error() == QNetworkReply::NoError )
-  {
-    QJson::Parser parser;
-    QVariantMap serviceInfoMap = parser.parse( reply->readAll() ).toMap();
-
-    // Parse spatial reference
-    QVariantMap spatialReferenceMap = serviceInfoMap["spatialReference"].toMap();
-    QString spatialReference = spatialReferenceMap["latestWkid"].toString();
-    if ( spatialReference.isEmpty() )
-      spatialReference = spatialReferenceMap["wkid"].toString();
-    if ( spatialReference.isEmpty() )
-      spatialReference = spatialReferenceMap["wkt"].toString();
-    else
-      spatialReference = QString( "EPSG:%1" ).arg( spatialReference );
-    QgsCoordinateReferenceSystem crs;
-    crs.createFromString( spatialReference );
-    if ( crs.authid().startsWith( "USER:" ) )
-      crs.createFromString( "EPSG:4326" ); // If we can't recognize the SRS, fall back to WGS84
-
-    // Parse formats
-    QSet<QString> filteredEncodings;
-    QList<QByteArray> supportedFormats = QImageReader::supportedImageFormats();
-    foreach ( const QString& encoding, serviceInfoMap["supportedImageFormatTypes"].toString().split( "," ) )
-    {
-      foreach ( const QByteArray& fmt, supportedFormats )
-      {
-        if ( encoding.startsWith( fmt, Qt::CaseInsensitive ) )
-        {
-          filteredEncodings.insert( encoding.toLower() );
-        }
-      }
-    }
-
-    foreach ( const QString& layerName, entries->keys() )
-    {
-      QgsMimeDataUtils::Uri mimeDataUri;
-      mimeDataUri.layerType = "raster";
-      mimeDataUri.providerKey = "arcgismapserver";
-      mimeDataUri.name = entries->value( layerName ).title;
-      QString format = filteredEncodings.contains( "jpg" ) ? "jpg" : filteredEncodings.toList().front();
-      mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
-      QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
-      mBrowser->addItem( getCategoryItem( entries->value( layerName ).category.split( "/" ) ), mimeDataUri.name, true, mimeData );
     }
   }
 
