@@ -30793,10 +30793,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Date / Time (UTC):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ambient lighting</source>
         <translation type="unfinished"></translation>
     </message>
@@ -30834,6 +30830,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Enable frustum highlighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Override Date / Time (UTC):</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -35634,6 +35634,10 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Address</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>General place name directory</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsManageConnectionsDialog</name>
@@ -35766,7 +35770,7 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Attributes</source>
-        <translation type="unfinished">属性</translation>
+        <translation type="obsolete">属性</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -35874,6 +35878,10 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Delete items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Identify</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -37263,10 +37271,6 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The file was created by a newer MSS library version.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Import Completed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37286,12 +37290,35 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>MilX Layer (*.milxly)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Failed to write output.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The export failed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to read input.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The import failed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file could not be parsed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected MSS library version tag.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMilXLayer</name>
     <message>
-        <source>The following validation errors occured:
-%1</source>
+        <source>The file is corrupt</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

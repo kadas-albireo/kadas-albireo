@@ -52,6 +52,7 @@ class CORE_EXPORT QgsCRSCache
     /**Returns the CRS for authid, e.g. 'EPSG:4326' (or an invalid CRS in case of error)*/
     const QgsCoordinateReferenceSystem& crsByAuthId( const QString& authid );
     const QgsCoordinateReferenceSystem& crsByEpsgId( long epsg );
+    const QgsCoordinateReferenceSystem& crsBySrsId( long srsid );
     const QgsCoordinateReferenceSystem& crsByProj4( const QString& proj4 );
     const QgsCoordinateReferenceSystem& crsByOgcWms( const QString& ogcwms );
 
@@ -62,6 +63,7 @@ class CORE_EXPORT QgsCRSCache
 
   private:
     QHash< QString, QgsCoordinateReferenceSystem > mCRS;
+    QHash< long, QgsCoordinateReferenceSystem > mCRSSrsId;
     QHash< QString, QgsCoordinateReferenceSystem > mCRSProj4;
     QHash< QString, QgsCoordinateReferenceSystem > mCRSOgcWms;
     /**CRS that is not initialised (returned in case of error)*/

@@ -246,7 +246,8 @@ void QgsCatalogBrowser::itemDoubleClicked( const QModelIndex &index )
     QgsMimeDataUtils::UriList uriList = QgsMimeDataUtils::decodeUriList( data );
     if ( !uriList.isEmpty() && !uriList[0].uri.isEmpty() )
     {
-      QgisApp::instance()->addRasterLayer( uriList[0].uri, uriList[0].name, QString( "wms" ) );
+      QString uri = QgisApp::instance()->crsAndFormatAdjustedLayerUri( uriList[0].uri, uriList[0].supportedCrs, uriList[0].supportedFormats );
+      QgisApp::instance()->addRasterLayer( uri, uriList[0].name, uriList[0].providerKey );
     }
     delete data;
   }
