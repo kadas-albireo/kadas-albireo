@@ -187,17 +187,8 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
         QSize canvasSize = mCanvas->mapSettings().outputSize();
         double sfx = ( double )zoomRectSize.width() / canvasSize.width();
         double sfy = ( double )zoomRectSize.height() / canvasSize.height();
-        double scaleFactor = qMax( sfx, sfy );
-
-        QgsPoint c = mCanvas->getCoordinateTransform()->toMapCoordinates( mExtentRect.center() );
-        QgsRectangle oe = mCanvas->mapSettings().extent();
-        QgsRectangle e(
-          c.x() - oe.width() / 2.0, c.y() - oe.height() / 2.0,
-          c.x() + oe.width() / 2.0, c.y() + oe.height() / 2.0
-        );
-        e.scale( scaleFactor, &c );
-        mCanvas->setExtent( e, true );
-        mCanvas->refresh();
+        mCanvas->setCenter( mCanvas->getCoordinateTransform()->toMapCoordinates( mExtentRect.center() ) );
+        mCanvas->zoomByFactor( qMax( sfx, sfy ) );
       }
       else if ( e->modifiers() == Qt::ControlModifier )
       {
