@@ -138,7 +138,7 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   for ( int i = 0, n = filterRegion.size(); i < n; ++i )
   {
     QgsPoint p = ct.transform( filterRegion[i] );
-    filterPoly.append( QPoint( geoToPixelX( gtrans, p.x(), p.y() ), geoToPixelY( gtrans, p.x(), p.y() ) ) );
+    filterPoly.append( QPoint( qRound( geoToPixelX( gtrans, p.x(), p.y() ) ), qRound( geoToPixelY( gtrans, p.x(), p.y() ) ) ) );
   }
 
 
@@ -276,7 +276,9 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       }
 
       if ( p[0] < colStart || p[0] > colEnd || p[1] < rowStart || p[1] > rowEnd )
+      {
         break;
+      }
 
       //Is the point in the outside of the viewshed area?
       double dx = qAbs( p[0] - obs[0] ), dy = qAbs( p[1] - obs[1] );
@@ -286,7 +288,7 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
       }
       if ( !filterPoly.isEmpty() && !filterPoly.containsPoint( QPoint( p[0], p[1] ), Qt::OddEvenFill ) )
       {
-        break;
+        continue;
       }
 
       float pElev = heightmap[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )];
