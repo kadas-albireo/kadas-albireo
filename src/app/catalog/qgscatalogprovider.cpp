@@ -75,7 +75,7 @@ void QgsCatalogProvider::parseWMTSLayerCapabilities( const QDomNode& layerItem, 
   mimeDataUri.supportedCrs.append( supportedCrs );
   mimeDataUri.supportedFormats.append( imgFormat );
   mimeDataUri.uri = QString(
-                      "contextualWMSLegend=0&featureCount=10&dpiMode=7&smoothPixmapTransform=1"
+                      "contextualWMSLegend=0&featureCount=10&dpiMode=7&SmoothPixmapTransform=1"
                       "&layers=%1&crs=%2&format=%3&tileMatrixSet=%4"
                       "&styles=%5&url=%6%7"
                     ).arg( layerid ).arg( supportedCrs ).arg( imgFormat ).arg( tileMatrixSet ).arg( styleId ).arg( url ).arg( extraParams );
