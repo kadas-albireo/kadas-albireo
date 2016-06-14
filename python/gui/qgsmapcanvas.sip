@@ -387,6 +387,9 @@ class QgsMapCanvas : QGraphicsView
     //! Zoom out with fixed factor
     void zoomOut();
 
+    //! Returns wmts resolution list of the topmost wmts layer in the map. Returns empty list if no wmts layer
+    QList<double> wmtsResolutions() const;
+
   signals:
     /** Let the owner know how far we are with render operations */
     //! @deprecated since 2.4 - already unused in 2.0 anyway

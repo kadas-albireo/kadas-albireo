@@ -78,6 +78,7 @@ QgsCompositionWidget::QgsCompositionWidget( QWidget* parent, QgsComposition* c )
     // Connect to addition / removal of maps
     connect( mComposition, SIGNAL( composerMapAdded( QgsComposerMap* ) ), this, SLOT( onComposerMapAdded( QgsComposerMap* ) ) );
     connect( mComposition, SIGNAL( itemRemoved( QgsComposerItem* ) ), this, SLOT( onItemRemoved( QgsComposerItem* ) ) );
+    connect( mComposition, SIGNAL( printResolutionChanged() ), this, SLOT( updatePrintResolution() ) );
 
     mSnapToleranceSpinBox->setValue( mComposition->snapTolerance() );
 
@@ -168,6 +169,16 @@ void QgsCompositionWidget::populateDataDefinedButtons()
   mPaperHeightDDBtn->blockSignals( false );
   mNumPagesDDBtn->blockSignals( false );
   mPaperOrientationDDBtn->blockSignals( false );
+}
+
+void QgsCompositionWidget::updatePrintResolution()
+{
+  if ( mComposition )
+  {
+    mResolutionSpinBox->blockSignals( true );
+    mResolutionSpinBox->setValue( mComposition->printResolution() );
+    mResolutionSpinBox->blockSignals( false );
+  }
 }
 
 void QgsCompositionWidget::setDataDefinedProperty( const QgsDataDefinedButton* ddBtn, QgsComposerObject::DataDefinedProperty property )

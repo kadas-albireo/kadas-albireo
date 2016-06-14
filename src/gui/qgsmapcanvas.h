@@ -470,6 +470,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! Zoom out with fixed factor
     void zoomOut();
 
+    //! Returns wmts resolution list of the topmost wmts layer in the map. Returns empty list if no wmts layer
+    QList<double> wmtsResolutions() const;
+
   private slots:
     //! called when current maptool is destroyed
     void mapToolDestroyed();
@@ -708,9 +711,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     QgsSnappingUtils* mSnappingUtils;
 
-
-    /**Returns wmts resolution list of the topmost wmts layer in the map. Returns empty list if no wmts layer*/
-    QList<double> wmtsResolutions() const;
 
     int nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn = true ) const;
     double zoomInFactor() const;
