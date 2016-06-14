@@ -99,7 +99,7 @@ void QgsDistanceArea::setEllipsoidalMode( bool flag )
 
 void QgsDistanceArea::setSourceCrs( long srsid )
 {
-  QgsCoordinateReferenceSystem srcCRS = QgsCRSCache::instance()->crsByEpsgId( srsid );
+  QgsCoordinateReferenceSystem srcCRS = QgsCRSCache::instance()->crsBySrsId( srsid );
   mCoordTransform->setSourceCrs( srcCRS );
   if ( mEllipsoid == GEO_NONE )
   {
