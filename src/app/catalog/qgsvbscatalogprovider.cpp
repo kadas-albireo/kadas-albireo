@@ -38,10 +38,7 @@ QgsVBSCatalogProvider::QgsVBSCatalogProvider( const QString &baseUrl, QgsCatalog
 void QgsVBSCatalogProvider::load()
 {
   mPendingTasks = 0;
-  QUrl url( mBaseUrl );
-  QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
-  url.addQueryItem( "lang", lang );
-  QNetworkRequest req( url );
+  QNetworkRequest req( mBaseUrl );
   req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
