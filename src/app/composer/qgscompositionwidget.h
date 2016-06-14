@@ -83,9 +83,6 @@ class QgsCompositionWidget: public QWidget, private Ui::QgsCompositionWidgetBase
     /**Initializes data defined buttons to current atlas coverage layer*/
     void populateDataDefinedButtons();
 
-    /**Sync print resolution UI */
-    void updatePrintResolution();
-
   private:
     QgsComposition* mComposition;
     QMap<QString, QgsCompositionPaper> mPaperMap;
