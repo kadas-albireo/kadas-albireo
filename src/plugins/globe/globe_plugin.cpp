@@ -920,6 +920,9 @@ void GlobePlugin::updateLayers()
     }
     mLayerExtents.clear();
 
+    QStringList drapedLayers;
+    QStringList selectedLayers = mDockWidget->getSelectedLayers();
+
     // Disconnect any previous repaintRequested signals
     foreach ( const QString& layerId, mTileSource->layerSet() )
     {
@@ -927,7 +930,7 @@ void GlobePlugin::updateLayers()
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
-        connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
+        disconnect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
     }
     osgEarth::ModelLayerVector modelLayers;
     mMapNode->getMap()->getModelLayers( modelLayers );
@@ -937,11 +940,10 @@ void GlobePlugin::updateLayers()
       if ( mapLayer )
         disconnect( mapLayer, SIGNAL( repaintRequested() ), this, SLOT( layerChanged() ) );
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
-        connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
+        disconnect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
+      if ( !selectedLayers.contains( QString::fromStdString( modelLayer->getName() ) ) )
+        mMapNode->getMap()->removeModelLayer( modelLayer );
     }
-
-    QStringList drapedLayers;
-    QStringList selectedLayers = mDockWidget->getSelectedLayers();
 
     Q_FOREACH ( const QString& layerId, selectedLayers )
     {
@@ -957,8 +959,8 @@ void GlobePlugin::updateLayers()
 
       if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
       {
-        mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
-        addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
+        if ( !mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) )
+          addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
       }
       else
       {
