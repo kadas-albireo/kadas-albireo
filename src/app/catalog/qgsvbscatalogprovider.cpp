@@ -236,7 +236,7 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
       mimeDataUri.layerType = "raster";
       mimeDataUri.providerKey = "arcgismapserver";
       mimeDataUri.name = entries->value( layerName ).title;
-      QString format = filteredEncodings.contains( "jpg" ) ? "jpg" : filteredEncodings.toList().front();
+      QString format = filteredEncodings.contains( "png" ) ? "png" : filteredEncodings.toList().front();
       mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
       QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
       mBrowser->addItem( getCategoryItem( entries->value( layerName ).category.split( "/" ) ), mimeDataUri.name, true, mimeData );
