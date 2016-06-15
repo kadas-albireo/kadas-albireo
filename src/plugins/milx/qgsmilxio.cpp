@@ -212,7 +212,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
   if ( !dev->open( QIODevice::ReadOnly ) )
   {
     delete dev;
-    iface->messageBar()->pushMessage( tr( "Import Failed" ), tr( "Failed to open the output file for reading." ), QgsMessageBar::CRITICAL, 5 );
+    iface->messageBar()->pushMessage( tr( "Import Failed" ), tr( "Failed to open the input file for reading." ), QgsMessageBar::CRITICAL, 5 );
     return false;
   }
   QString inputXml = QString::fromUtf8( dev->readAll().data() );

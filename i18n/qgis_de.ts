@@ -30745,6 +30745,10 @@ p, li { white-space: pre-wrap; }
         <source>Add Raster Elevation</source>
         <translation>Raster Hohenmodell hinzufügen</translation>
     </message>
+    <message>
+        <source>world.tif</source>
+        <translation>world.tif</translation>
+    </message>
 </context>
 <context>
     <name>QgsGlobePluginDialogGuiBase</name>
@@ -37508,7 +37512,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Failed to open the output file for reading.</source>
-        <translation>Die Ausgabedatei konnte nicht zum Lesen geöffnet werden.</translation>
+        <translation type="obsolete">Die Ausgabedatei konnte nicht zum Lesen geöffnet werden.</translation>
     </message>
     <message>
         <source>The file was created by a newer MSS library version.</source>
@@ -37557,6 +37561,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>Unexpected MSS library version tag.</source>
         <translation>Unerwarteter MSS Bibliotek Versions-Tag.</translation>
+    </message>
+    <message>
+        <source>Failed to open the input file for reading.</source>
+        <translation>Die Eingabedatei konnte nicht gelesen werden.</translation>
     </message>
 </context>
 <context>
