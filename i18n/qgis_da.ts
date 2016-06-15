@@ -30643,6 +30643,10 @@ p, li { white-space: pre-wrap; }
         <source>Add Raster Elevation</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>world.tif</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsGlobePluginDialogGuiBase</name>
@@ -37295,10 +37299,6 @@ Der er måske et problem med din netværksforbindelse, eller på WMS-serveren.</
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed to open the output file for reading.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Import Completed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37340,6 +37340,10 @@ Der er måske et problem med din netværksforbindelse, eller på WMS-serveren.</
     </message>
     <message>
         <source>Unexpected MSS library version tag.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to open the input file for reading.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
