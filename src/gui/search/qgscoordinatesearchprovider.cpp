@@ -28,11 +28,11 @@ QgsCoordinateSearchProvider::QgsCoordinateSearchProvider( QgsMapCanvas* mapCanva
   QString minChars = QString( "'%1%2%3" ).arg( QChar( 0x2032 ) ).arg( QChar( 0x02BC ) ).arg( QChar( 0x2019 ) );
   QString secChars = QString( "\"%1%2" ).arg( QChar( 0x2019 ) ).arg( QChar( 0x2033 ) );
 
-  mPatLVDD = QRegExp( QString( "^([\\d']+\\.?\\d*)(%1)?[,\\s]\\s*([\\d']+\\.?\\d*)(%1)?$" ).arg( degChar ) );
+  mPatLVDD = QRegExp( QString( "^(\\d+\\.?\\d*)(%1)?[,\\s]\\s*(\\d+\\.?\\d*)(%1)?$" ).arg( degChar ) );
   mPatDM = QRegExp( QString( "^(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw]),?[\\s]*(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ) );
   mPatDMS = QRegExp( QString( "^(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw]),?[\\s]*(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ).arg( secChars ) );
-  mPatUTM = QRegExp( "^([\\d']+\\.?\\d*)[,\\s]\\s*([\\d']+\\.?\\d*)\\s*\\(\\w+\\s+(\\d+)([A-Za-z])\\)$" );
-  mPatUTM2 = QRegExp( "^(\\d+)\\s*([A-Za-z])\\s+([\\d']+\\.?\\d*)[,\\s]\\s*([\\d']+\\.?\\d*)$" );
+  mPatUTM = QRegExp( "^(\\d+\\.?\\d*)[,\\s]\\s*(\\d+\\.?\\d*)\\s*\\(\\w+\\s+(\\d+)([A-Za-z])\\)$" );
+  mPatUTM2 = QRegExp( "^(\\d+)\\s*([A-Za-z])\\s+(\\d+\\.?\\d*)[,\\s]\\s*(\\d+\\.?\\d*)$" );
   mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
 }
 
@@ -43,42 +43,33 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
   searchResult.category = sCategoryName;
   searchResult.categoryPrecedence = 1;
   searchResult.showPin = true;
+  bool valid = true;
 
   if ( mPatLVDD.exactMatch( searchtext ) )
   {
     // LV03, LV93 or decimal degrees
-    double lon = mPatLVDD.cap( 1 ).replace( "'", "" ).toDouble();
-    double lat = mPatLVDD.cap( 3 ).replace( "'", "" ).toDouble();
+    double lon = mPatLVDD.cap( 1 ).toDouble();
+    double lat = mPatLVDD.cap( 3 ).toDouble();
     searchResult.pos = QgsPoint( lon, lat );
     bool haveDeg = !mPatLVDD.cap( 2 ).isEmpty() && mPatLVDD.cap( 4 ).isEmpty();
     if (( lon >= -180. && lon <= 180. ) && ( lat >= -90. && lat <= 90. ) )
     {
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
       searchResult.crs = "EPSG:4326";
-      emit searchResultFound( searchResult );
-
-      // Also list the variant with northing first
-      SearchResult searchResult;
-      searchResult.zoomScale = 1000;
-      searchResult.category = sCategoryName;
-      searchResult.categoryPrecedence = 1;
-      searchResult.showPin = true;
-      searchResult.pos = QgsPoint( lat, lon );
-      searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
-      searchResult.crs = "EPSG:4326";
-      emit searchResultFound( searchResult );
     }
     else if ( !haveDeg && (( lon >= 470000. && lon <= 850000. ) && ( lat >= 60000. && lat <= 310000. ) ) )
     {
       searchResult.text = searchResult.pos.toString() + " (LV03)";
       searchResult.crs = "EPSG:21781";
-      emit searchResultFound( searchResult );
     }
     else if ( !haveDeg && ( lon >= 2450000. && lon <= 2850000. ) && ( lat >= 1050000. && lat <= 1300000. ) )
     {
       searchResult.text = searchResult.pos.toString() + " (LV95)";
       searchResult.crs = "EPSG:2056";
-      emit searchResultFound( searchResult );
+    }
+    else
+    {
+      valid = false;
     }
   }
   else if ( mPatDM.exactMatch( searchtext ) )
@@ -94,7 +85,6 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       searchResult.crs = "EPSG:4326";
       searchResult.pos = QgsPoint( lon, lat );
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
-      emit searchResultFound( searchResult );
     }
   }
   else if ( mPatDMS.exactMatch( searchtext ) )
@@ -110,64 +100,79 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       searchResult.crs = "EPSG:4326";
       searchResult.pos = QgsPoint( lon, lat );
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
-      emit searchResultFound( searchResult );
     }
   }
   else if ( mPatUTM.exactMatch( searchtext ) )
   {
     QgsLatLonToUTM::UTMCoo utm;
-    utm.easting = mPatUTM.cap( 1 ).replace( "'", "" ).toInt();
-    utm.northing = mPatUTM.cap( 2 ).replace( "'", "" ).toInt();
+    utm.easting = mPatUTM.cap( 1 ).toInt();
+    utm.northing = mPatUTM.cap( 2 ).toInt();
     utm.zoneNumber = mPatUTM.cap( 3 ).toInt();
     utm.zoneLetter = mPatUTM.cap( 4 );
     bool ok = false;
     searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
-    if ( ok )
+    if ( !ok )
     {
-      searchResult.crs = "EPSG:4326";
-      searchResult.text = QString( "%1, %2 (%3 %4%5)" )
-                          .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
-      emit searchResultFound( searchResult );
+      valid = false;
     }
+    searchResult.crs = "EPSG:4326";
+    searchResult.text = QString( "%1, %2 (%3 %4%5)" )
+                        .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
   }
   else if ( mPatUTM2.exactMatch( searchtext ) )
   {
     QgsLatLonToUTM::UTMCoo utm;
-    utm.easting = mPatUTM2.cap( 3 ).replace( "'", "" ).toInt();
-    utm.northing = mPatUTM2.cap( 4 ).replace( "'", "" ).toInt();
+    utm.easting = mPatUTM2.cap( 3 ).toInt();
+    utm.northing = mPatUTM2.cap( 4 ).toInt();
     utm.zoneNumber = mPatUTM2.cap( 1 ).toInt();
     utm.zoneLetter = mPatUTM2.cap( 2 );
     bool ok = false;
     searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
-    if ( ok )
+    if ( !ok )
     {
-      searchResult.crs = "EPSG:4326";
-      searchResult.text = QString( "%1, %2 (%3 %4%5)" )
-                          .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
-      emit searchResultFound( searchResult );
+      valid = false;
     }
+    searchResult.crs = "EPSG:4326";
+    searchResult.text = QString( "%1, %2 (%3 %4%5)" )
+                        .arg( utm.easting ).arg( utm.northing ).arg( tr( "zone" ) ).arg( utm.zoneNumber ).arg( utm.zoneLetter );
   }
   else if ( mPatMGRS.exactMatch( searchtext ) )
   {
     QgsLatLonToUTM::MGRSCoo mgrs;
-    mgrs.easting = mPatMGRS.cap( 4 ).replace( "'", "" ).toInt();
-    mgrs.northing = mPatMGRS.cap( 5 ).replace( "'", "" ).toInt();
+    mgrs.easting = mPatMGRS.cap( 4 ).toInt();
+    mgrs.northing = mPatMGRS.cap( 5 ).toInt();
     mgrs.zoneNumber = mPatMGRS.cap( 1 ).toInt();
     mgrs.zoneLetter = mPatMGRS.cap( 2 );
     mgrs.letter100kID = mPatMGRS.cap( 3 );
     bool ok = false;
     QgsLatLonToUTM::UTMCoo utm = QgsLatLonToUTM::MGRS2UTM( mgrs, ok );
-    if ( ok )
+    if ( !ok )
+    {
+      valid = false;
+    }
+    else
     {
       searchResult.pos = QgsLatLonToUTM::UTM2LL( utm, ok );
-      if ( ok )
+      if ( !ok )
+      {
+        valid = false;
+      }
+      else
       {
         searchResult.crs = "EPSG:4326";
         searchResult.text = QString( "%1%2%3 %4 %5" )
                             .arg( mgrs.zoneNumber ).arg( mgrs.zoneLetter ).arg( mgrs.letter100kID ).arg( mgrs.easting ).arg( mgrs.northing );
-        emit searchResultFound( searchResult );
       }
     }
+  }
+  else
+  {
+    valid = false;
+  }
+
+  if ( valid )
+  {
+    emit searchResultFound( searchResult );
   }
   emit searchFinished();
   return;
