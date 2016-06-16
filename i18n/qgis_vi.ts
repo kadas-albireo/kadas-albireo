@@ -35556,11 +35556,11 @@ This may be a problem in your network connection or at the WMS server.</source>
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Local Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Lớp %1</translation>
     </message>
     <message>
-        <source>%1: Layer %2, feature %3</source>
+        <source>%1 (feature %2)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -46917,8 +46917,8 @@ standard deviation ×</source>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Remote Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Lớp %1</translation>
     </message>
 </context>
 <context>

@@ -51,6 +51,7 @@ QgsRemoteDataSearchProvider::QgsRemoteDataSearchProvider( QgsMapCanvas* mapCanva
 void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
   QStringList remoteLayers;
+  QMap<QString, QVariant> layerIdMap;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
     if ( layer->type() != QgsMapLayer::RasterLayer )
@@ -59,10 +60,10 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
     }
     QgsRasterLayer* rasterLayer = static_cast<QgsRasterLayer*>( layer );
     QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
-    if ( url.queryItemValue( "url" ).contains( "wmts.geo.admin.ch" ) ||
-         url.queryItemValue( "url" ).contains( "wms.geo.admin.ch" ) )
+    if ( url.queryItemValue( "url" ).contains( "geo.admin.ch" ) )
     {
       remoteLayers.append( url.queryItemValue( "layers" ).split( "," ) );
+      layerIdMap.insert( remoteLayers.back(), rasterLayer->name() );
     }
   }
 
@@ -91,6 +92,7 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
   QNetworkRequest req( url );
   req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
   mNetReply = QgsNetworkAccessManager::instance()->get( req );
+  mNetReply->setProperty( "idMap", layerIdMap );
   connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );
 }
@@ -123,6 +125,7 @@ void QgsRemoteDataSearchProvider::replyFinished()
     emit searchFinished();
     return;
   }
+  QMap<QString, QVariant> idMap = mNetReply->property( "idMap" ).value< QMap<QString, QVariant> >();
   QStringList bboxStr = mNetReply->request().url().queryItemValue( "bbox" ).split( "," );
   QgsRectangle bbox;
   if ( bboxStr.size() == 4 )
@@ -166,10 +169,10 @@ void QgsRemoteDataSearchProvider::replyFinished()
     {
       continue;
     }
+    QString layerId = itemAttrsMap["layer"].toString();
 
     searchResult.zoomScale = 1000;
-
-    searchResult.category = tr( "Remote Data Features" );
+    searchResult.category = tr( "Layer %1" ).arg( idMap.value( layerId, layerId ).toString() );
     searchResult.categoryPrecedence = 11;
     searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags

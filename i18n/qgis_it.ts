@@ -35671,11 +35671,19 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     <name>QgsLocalDataSearchCrawler</name>
     <message>
         <source>Local Data Features</source>
-        <translation>Elementi locali</translation>
+        <translation type="obsolete">Elementi locali</translation>
     </message>
     <message>
         <source>%1: Layer %2, feature %3</source>
-        <translation>%1: Layer %2, elemento %3</translation>
+        <translation type="obsolete">%1: Layer %2, elemento %3</translation>
+    </message>
+    <message>
+        <source>Layer %1</source>
+        <translation>Layer %1</translation>
+    </message>
+    <message>
+        <source>%1 (feature %2)</source>
+        <translation>%1 (elemento %2)</translation>
     </message>
 </context>
 <context>
@@ -47063,7 +47071,11 @@ deviazione standard ×</translation>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
         <source>Remote Data Features</source>
-        <translation>Elementi remoti</translation>
+        <translation type="obsolete">Elementi remoti</translation>
+    </message>
+    <message>
+        <source>Layer %1</source>
+        <translation>Layer %1</translation>
     </message>
 </context>
 <context>

@@ -35681,11 +35681,11 @@ Tämä voi johtua ongelmasta verkkoyhteydessä, tai WMS palvelimesta. </numerusf
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Local Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Taso %1</translation>
     </message>
     <message>
-        <source>%1: Layer %2, feature %3</source>
+        <source>%1 (feature %2)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47058,8 +47058,8 @@ keskihajonta ×</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Remote Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Taso %1</translation>
     </message>
 </context>
 <context>

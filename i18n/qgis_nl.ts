@@ -35641,11 +35641,11 @@ Er kan een probleem zijn met uw netwerkverbinding, of bij de WMS-server.</numeru
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Local Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Laag %1</translation>
     </message>
     <message>
-        <source>%1: Layer %2, feature %3</source>
+        <source>%1 (feature %2)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47015,8 +47015,8 @@ standaarddeviatie x</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Remote Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">Laag %1</translation>
     </message>
 </context>
 <context>
