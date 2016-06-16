@@ -10103,11 +10103,11 @@ Funktioniert auf allen ändernbaren Layern</translation>
     </message>
     <message>
         <source>Mea&amp;sure Azimuth</source>
-        <translation>Azimuth messen</translation>
+        <translation>Azimut messen</translation>
     </message>
     <message>
         <source>Measure Azimuth</source>
-        <translation>Azimuth messen</translation>
+        <translation>Azimut messen</translation>
     </message>
     <message>
         <source>QGIS Enterprise Homepage</source>
@@ -35750,7 +35750,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Use as heightmap</source>
-        <translation>Heightmap auswählen</translation>
+        <translation>Als Höhenmodell verwenden</translation>
     </message>
     <message>
         <source>Mutually Exclusive Group</source>
@@ -35833,11 +35833,19 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <name>QgsLocalDataSearchCrawler</name>
     <message>
         <source>Local Data Features</source>
-        <translation>Lokale Objekte</translation>
+        <translation type="obsolete">Lokale Objekte</translation>
     </message>
     <message>
         <source>%1: Layer %2, feature %3</source>
-        <translation>%1: Ebene %2, Objekt %3</translation>
+        <translation type="obsolete">%1: Ebene %2, Objekt %3</translation>
+    </message>
+    <message>
+        <source>Layer %1</source>
+        <translation>Ebene %1</translation>
+    </message>
+    <message>
+        <source>%1 (feature %2)</source>
+        <translation>%1 (Objekt %2)</translation>
     </message>
 </context>
 <context>
@@ -46778,7 +46786,7 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Azimuth (horizontal angle)</source>
-        <translation>Azimuth (horizontaler Winkel)</translation>
+        <translation>Azimut (horizontaler Winkel)</translation>
     </message>
     <message>
         <source>Vertical angle</source>
@@ -47218,7 +47226,11 @@ standard deviation ×</source>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
         <source>Remote Data Features</source>
-        <translation>Remote Objekte</translation>
+        <translation type="obsolete">Remote Objekte</translation>
+    </message>
+    <message>
+        <source>Layer %1</source>
+        <translation>Ebene %1</translation>
     </message>
 </context>
 <context>

@@ -35651,11 +35651,11 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Local Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">%1 geruza</translation>
     </message>
     <message>
-        <source>%1: Layer %2, feature %3</source>
+        <source>%1 (feature %2)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47019,8 +47019,8 @@ desbiderapen estandarra ×</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Remote Data Features</source>
-        <translation type="unfinished"></translation>
+        <source>Layer %1</source>
+        <translation type="unfinished">%1 geruza</translation>
     </message>
 </context>
 <context>
