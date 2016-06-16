@@ -166,7 +166,7 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
 
   QgsSearchProvider::SearchResult result;
   result.bbox = feature.geometry()->boundingBox();
-  result.category = tr( "Local Data Features" );
+  result.category = tr( "Layer %1" ).arg( layer->name() );
   result.categoryPrecedence = 10;
   result.crs = layer->crs().authid();
   result.zoomScale = 1000;
@@ -181,7 +181,7 @@ void QgsLocalDataSearchCrawler::buildResult( const QgsFeature &feature, QgsVecto
   {
     result.pos = result.bbox.center();
   }
-  result.text = tr( "%1: Layer %2, feature %3" ).arg( matchText ).arg( layer->name() ).arg( feature.id() );
+  result.text = tr( "%1 (feature %2)" ).arg( matchText ).arg( feature.id() );
   emit searchResultFound( result );
 }
 
