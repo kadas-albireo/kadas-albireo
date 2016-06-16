@@ -42656,7 +42656,7 @@ Fehler: %2</translation>
     <name>QgsPinAnnotationItem</name>
     <message>
         <source>Copy position</source>
-        <translation>Position kompieren</translation>
+        <translation>Position kopieren</translation>
     </message>
     <message>
         <source>Remove</source>
