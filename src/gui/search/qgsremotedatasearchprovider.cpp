@@ -59,8 +59,7 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
     }
     QgsRasterLayer* rasterLayer = static_cast<QgsRasterLayer*>( layer );
     QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
-    if ( url.queryItemValue( "url" ).contains( "wmts.geo.admin.ch" ) ||
-         url.queryItemValue( "url" ).contains( "wms.geo.admin.ch" ) )
+    if ( url.queryItemValue( "url" ).contains( "geo.admin.ch" ) )
     {
       remoteLayers.append( url.queryItemValue( "layers" ).split( "," ) );
     }
