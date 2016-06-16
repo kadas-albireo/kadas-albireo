@@ -47554,7 +47554,7 @@ Sight</source>
     </message>
     <message>
         <source>Import OVL</source>
-        <translation>importér OVL</translation>
+        <translation>Importér OVL</translation>
     </message>
     <message>
         <source>Settings</source>
