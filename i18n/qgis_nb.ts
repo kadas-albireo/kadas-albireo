@@ -35681,11 +35681,11 @@ Dette kan være et problem med din nettverkstilkobling eller på WMS-serveren.</
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Lag %1</translation>
+        <source>Local Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 (feature %2)</source>
+        <source>%1: Layer %2, feature %3</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47064,8 +47064,8 @@ standardavvik ×</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Lag %1</translation>
+        <source>Remote Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

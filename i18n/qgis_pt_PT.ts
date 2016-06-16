@@ -35628,11 +35628,11 @@ Isto pode ser um problema em sua conexão ou no servidor WMS.</numerusform>
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Camada %1</translation>
+        <source>Local Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 (feature %2)</source>
+        <source>%1: Layer %2, feature %3</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47004,8 +47004,8 @@ desvio padrão ×</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Camada %1</translation>
+        <source>Remote Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

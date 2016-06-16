@@ -35157,11 +35157,11 @@ Môže byť problém vo Vašom sieťovom pripojení alebo na strane WMS servera.
 <context>
     <name>QgsLocalDataSearchCrawler</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Vrstva %1</translation>
+        <source>Local Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 (feature %2)</source>
+        <source>%1: Layer %2, feature %3</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -46437,8 +46437,8 @@ smerodajnej odchýlky ×</translation>
 <context>
     <name>QgsRemoteDataSearchProvider</name>
     <message>
-        <source>Layer %1</source>
-        <translation type="unfinished">Vrstva %1</translation>
+        <source>Remote Data Features</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
