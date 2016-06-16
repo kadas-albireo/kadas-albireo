@@ -296,7 +296,7 @@ void QgsSearchBox::startSearch()
   mTreeWidget->clear();
   mTreeWidget->blockSignals( false );
 
-  QString searchtext = mSearchBox->text();
+  QString searchtext = mSearchBox->text().trimmed();
   if ( searchtext.size() < 3 )
     return;
 
