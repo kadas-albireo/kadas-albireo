@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr">
+<TS version="2.1" language="fr">
 <context>
     <name>@default</name>
     <message>
@@ -84,11 +84,11 @@
     <name>AbstractTool</name>
     <message>
         <source>The requested feature does not exist</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;entité demandé n&apos;existe pas</translation>
     </message>
     <message>
         <source>The feature geometry could not be fetched</source>
-        <translation type="unfinished"></translation>
+        <translation>La géométrie de l&apos;entité demandé n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 <context>
@@ -416,7 +416,7 @@ Ouvrez la fenêtre de résultats pour la vérifier.</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le répertoire</translation>
     </message>
 </context>
 <context>
@@ -654,7 +654,7 @@ Ouvrez la fenêtre de résultats pour la vérifier.</translation>
     </message>
     <message>
         <source>Clipped</source>
-        <translation type="unfinished">Découpé</translation>
+        <translation>Découpé</translation>
     </message>
 </context>
 <context>
@@ -762,7 +762,7 @@ Ouvrez la fenêtre de résultats pour la vérifier.</translation>
     </message>
     <message>
         <source>Color relief</source>
-        <translation type="unfinished">Relief en couleur</translation>
+        <translation>Relief en couleur</translation>
     </message>
 </context>
 <context>
@@ -3191,7 +3191,7 @@ Are you sure you want to proceed?</source>
     </message>
     <message>
         <source>Weight Path Grid</source>
-        <translation>Grill de poids de chemin</translation>
+        <translation>Grille de poids de chemin</translation>
     </message>
     <message>
         <source>Statistical Method</source>
@@ -3218,39 +3218,39 @@ Are you sure you want to proceed?</source>
     <name>DinfDistDownMulti</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
-        <translation type="unfinished">Grille de Direction de Flux D-Infinity</translation>
+        <translation>Grille de Direction de Flux D-Infinity</translation>
     </message>
     <message>
         <source>Pit Filled Elevation Grid</source>
-        <translation type="unfinished">Grille d&apos;élévation de remplissage de fosse</translation>
+        <translation>Grille d&apos;élévation de remplissage de fosse</translation>
     </message>
     <message>
         <source>Stream Raster Grid</source>
-        <translation type="unfinished">Grille raster de flux</translation>
+        <translation>Grille raster de flux</translation>
     </message>
     <message>
         <source>Weight Path Grid</source>
-        <translation type="unfinished">Grill de poids de chemin</translation>
+        <translation>Grille de poids de chemin</translation>
     </message>
     <message>
         <source>Statistical Method</source>
-        <translation type="unfinished">Méthode statistique</translation>
+        <translation>Méthode statistique</translation>
     </message>
     <message>
         <source>Distance Method</source>
-        <translation type="unfinished">Méthode Distance</translation>
+        <translation>Méthode Distance</translation>
     </message>
     <message>
         <source>Check for edge contamination</source>
-        <translation type="unfinished">Vérifier la contamination des arcs</translation>
+        <translation>Vérifier la contamination des arcs</translation>
     </message>
     <message>
         <source>D-Infinity Drop to Stream Grid</source>
-        <translation type="unfinished">Grille D-Infinity Drop to Stream</translation>
+        <translation>Grille D-Infinity Drop to Stream</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -3296,39 +3296,39 @@ Are you sure you want to proceed?</source>
     <name>DinfDistUpMulti</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
-        <translation type="unfinished">Grille de Direction de Flux D-Infinity</translation>
+        <translation>Grille de Direction de Flux D-Infinity</translation>
     </message>
     <message>
         <source>Pit Filled Elevation Grid</source>
-        <translation type="unfinished">Grille d&apos;élévation de remplissage de fosse</translation>
+        <translation>Grille d&apos;élévation de remplissage de fosse</translation>
     </message>
     <message>
         <source>Slope Grid</source>
-        <translation type="unfinished">Grille de pentes</translation>
+        <translation>Grille de pentes</translation>
     </message>
     <message>
         <source>Statistical Method</source>
-        <translation type="unfinished">Méthode statistique</translation>
+        <translation>Méthode statistique</translation>
     </message>
     <message>
         <source>Distance Method</source>
-        <translation type="unfinished">Méthode Distance</translation>
+        <translation>Méthode Distance</translation>
     </message>
     <message>
         <source>Proportion Threshold</source>
-        <translation type="unfinished">Seuil de Proportion</translation>
+        <translation>Seuil de Proportion</translation>
     </message>
     <message>
         <source>Check for edge contamination</source>
-        <translation type="unfinished">Vérifier la contamination des arcs</translation>
+        <translation>Vérifier la contamination des arcs</translation>
     </message>
     <message>
         <source>D-Infinity Distance Up</source>
-        <translation type="unfinished">D-Infinity Distance Up</translation>
+        <translation>D-Infinity Distance Up</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -3413,78 +3413,78 @@ Are you sure you want to proceed?</source>
     <name>DinfTransLimAccum2Multi</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
-        <translation type="unfinished">Grille de Direction de Flux D-Infinity</translation>
+        <translation>Grille de Direction de Flux D-Infinity</translation>
     </message>
     <message>
         <source>Supply Grid</source>
-        <translation type="unfinished">Fournir une grille</translation>
+        <translation>Fournir une grille</translation>
     </message>
     <message>
         <source>Transport Capacity Grid</source>
-        <translation type="unfinished">Grille de capacité de transport</translation>
+        <translation>Grille de capacité de transport</translation>
     </message>
     <message>
         <source>Input Concentration Grid</source>
-        <translation type="unfinished">Grille de concentration en entrée</translation>
+        <translation>Grille de concentration en entrée</translation>
     </message>
     <message>
         <source>Outlets Shapefile</source>
-        <translation type="unfinished">Shapefile des exutoires</translation>
+        <translation>Shapefile des exutoires</translation>
     </message>
     <message>
         <source>Check for edge contamination</source>
-        <translation type="unfinished">Vérifier la contamination des arcs</translation>
+        <translation>Vérifier la contamination des arcs</translation>
     </message>
     <message>
         <source>Transport Limited Accumulation Grid</source>
-        <translation type="unfinished">Grille d&apos;accumulation limitée de transport</translation>
+        <translation>Grille d&apos;accumulation limitée de transport</translation>
     </message>
     <message>
         <source>Deposition Grid</source>
-        <translation type="unfinished">Grille de déposition</translation>
+        <translation>Grille de déposition</translation>
     </message>
     <message>
         <source>Output Concentration Grid</source>
-        <translation type="unfinished">Grille de concentration de sortie</translation>
+        <translation>Grille de concentration de sortie</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
     <name>DinfTransLimAccumMulti</name>
     <message>
         <source>D-Infinity Flow Direction Grid</source>
-        <translation type="unfinished">Grille de Direction de Flux D-Infinity</translation>
+        <translation>Grille de Direction de Flux D-Infinity</translation>
     </message>
     <message>
         <source>Supply Grid</source>
-        <translation type="unfinished">Fournir une grille</translation>
+        <translation>Fournir une grille</translation>
     </message>
     <message>
         <source>Transport Capacity Grid</source>
-        <translation type="unfinished">Grille de capacité de transport</translation>
+        <translation>Grille de capacité de transport</translation>
     </message>
     <message>
         <source>Outlets Shapefile</source>
-        <translation type="unfinished">Shapefile des exutoires</translation>
+        <translation>Shapefile des exutoires</translation>
     </message>
     <message>
         <source>Check for edge contamination</source>
-        <translation type="unfinished">Vérifier la contamination des arcs</translation>
+        <translation>Vérifier la contamination des arcs</translation>
     </message>
     <message>
         <source>Transport Limited Accumulation Grid</source>
-        <translation type="unfinished">Grille d&apos;accumulation limitée de transport</translation>
+        <translation>Grille d&apos;accumulation limitée de transport</translation>
     </message>
     <message>
         <source>Deposition Grid</source>
-        <translation type="unfinished">Grille de déposition</translation>
+        <translation>Grille de déposition</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -4111,7 +4111,7 @@ colonne géométrique - colonne avec des entiers uniques</translation>
     </message>
     <message>
         <source>Spacing for Threshold Values</source>
-        <translation>Espace des valeurs de seuil</translation>
+        <translation>Espace entre les valeurs de seuil</translation>
     </message>
     <message>
         <source>D-Infinity Drop to Stream Grid</source>
@@ -4126,47 +4126,47 @@ colonne géométrique - colonne avec des entiers uniques</translation>
     <name>DropAnalysisMulti</name>
     <message>
         <source>D8 Contributing Area Grid</source>
-        <translation type="unfinished">Grille de surface contributive D8</translation>
+        <translation>Grille de surface contributive D8</translation>
     </message>
     <message>
         <source>D8 Flow Direction Grid</source>
-        <translation type="unfinished">Grille de Direction de Flux D8</translation>
+        <translation>Grille de Direction de Flux D8</translation>
     </message>
     <message>
         <source>Pit Filled Elevation Grid</source>
-        <translation type="unfinished">Grille d&apos;élévation de remplissage de fosse</translation>
+        <translation>Grille d&apos;élévation de remplissage de fosse</translation>
     </message>
     <message>
         <source>Accumulated Stream Source Grid</source>
-        <translation type="unfinished">Grille de Flux Source Accumulé</translation>
+        <translation>Grille de Flux Source Accumulé</translation>
     </message>
     <message>
         <source>Outlets Shapefile</source>
-        <translation type="unfinished">Shapefile des exutoires</translation>
+        <translation>Shapefile des exutoires</translation>
     </message>
     <message>
         <source>Minimum Threshold</source>
-        <translation type="unfinished">Seuil minimal</translation>
+        <translation>Seuil minimal</translation>
     </message>
     <message>
         <source>Maximum Threshold</source>
-        <translation type="unfinished">Seuil maximal</translation>
+        <translation>Seuil maximal</translation>
     </message>
     <message>
         <source>Number of Threshold Values</source>
-        <translation type="unfinished">Nombre de valeurs de seuil</translation>
+        <translation>Nombre de valeurs de seuil</translation>
     </message>
     <message>
         <source>Spacing for Threshold Values</source>
-        <translation type="unfinished">Espace des valeurs de seuil</translation>
+        <translation>Espace entre les valeurs de seuil</translation>
     </message>
     <message>
         <source>D-Infinity Drop to Stream Grid</source>
-        <translation type="unfinished">Grille D-Infinity Drop to Stream</translation>
+        <translation>Grille D-Infinity Drop to Stream</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -5588,9 +5588,9 @@ and python executables.
 
 MacOS users usually need to set it to something like
 /Library/Frameworks/GDAL.framework/Versions/1.8/Programs</source>
-        <translation type="unfinished">Une liste de chemins séparés (GNU/Linux et MacOS) 
-par des caractères deux points ou des points virgules
-(Windows) et qui indiquent l&apos;emplacement des binaires
+        <translation>Une liste de chemins séparés (GNU/Linux et MacOS) 
+par des caractères deux-points ou des points-virgules
+(Windows) indiquant l&apos;emplacement des binaires
 et exécutables Python.
 
 Les utilisateurs MacOS indiquent généralement:
@@ -5599,14 +5599,14 @@ Les utilisateurs MacOS indiquent généralement:
     <message>
         <source>A list of colon-separated (Linux and MacOS) or
 semicolon-separated (Windows) paths to python modules.</source>
-        <translation type="unfinished">Une liste de chemins, séparés par des caractères deux-points
-(Linux et MacOS) ou point-virgule (Windows) vers les modules Python.</translation>
+        <translation>Une liste de chemins, séparés par des caractères deux-points
+(Linux et MacOS) ou point-virgule (Windows) indiquant l&apos;emplacement des modules Python.</translation>
     </message>
     <message>
         <source>Useful to open local GDAL documentation instead of online help
 when pressing on the tool dialog&apos;s Help button.</source>
-        <translation type="unfinished">Il est plus pratique de consulter la documentation GDAL locale
-plutôt que l&apos;aide en ligne. Appuyez sur le bouton d&apos;aide.</translation>
+        <translation>Utile pour consulter la documentation GDAL locale
+plutôt que l&apos;aide en ligne quand on appuie sur le bouton d&apos;aide.</translation>
     </message>
     <message>
         <source>Select directory with GDAL executables</source>
@@ -6325,7 +6325,7 @@ La valeur &quot;gris&apos; permet d&apos;étendre un raster avec une palette de 
     <name>GenericGeoprocessingToolDialog</name>
     <message>
         <source>Invalid input</source>
-        <translation type="unfinished"></translation>
+        <translation>input non valide</translation>
     </message>
 </context>
 <context>
@@ -6554,178 +6554,178 @@ Veuillez essayer un autre champ...</translation>
     <name>Geoprocessing::AbstractBinaryToolDialog</name>
     <message>
         <source>Only selected features</source>
-        <translation type="unfinished">Uniquement les entités sélectionnées</translation>
+        <translation>Uniquement les entités sélectionnées</translation>
     </message>
     <message>
         <source>Operator layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche d&apos;opérateurs</translation>
     </message>
     <message>
         <source>Input layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche en entrée</translation>
     </message>
     <message>
         <source>Combine</source>
-        <translation type="unfinished"></translation>
+        <translation>Combiner</translation>
     </message>
     <message>
         <source>Output layer fields:</source>
-        <translation type="unfinished"></translation>
+        <translation>Champs de couche de sortie:</translation>
     </message>
     <message>
         <source>Output layer CRS:</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche de sortie CRS:</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::BufferToolDialog</name>
     <message>
         <source>Buffer</source>
-        <translation type="unfinished">Tampon</translation>
+        <translation>Tampon</translation>
     </message>
     <message>
         <source>Buffer distance value:</source>
-        <translation type="unfinished"></translation>
+        <translation>Valeur de distance-tampon:</translation>
     </message>
     <message>
         <source>Buffer distance field:</source>
-        <translation type="unfinished"></translation>
+        <translation>Champs de distance-tampon:</translation>
     </message>
     <message>
         <source>Round</source>
-        <translation type="unfinished">Rond</translation>
+        <translation>Rond</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished">Plat</translation>
+        <translation>Plat</translation>
     </message>
     <message>
         <source>Square</source>
-        <translation type="unfinished">Carré</translation>
+        <translation>Carré</translation>
     </message>
     <message>
         <source>Mitre</source>
-        <translation type="unfinished">Angle droit</translation>
+        <translation>Angle droit</translation>
     </message>
     <message>
         <source>Bevel</source>
-        <translation type="unfinished">Oblique</translation>
+        <translation>Oblique</translation>
     </message>
     <message>
         <source>Single sided</source>
-        <translation type="unfinished"></translation>
+        <translation>un seul côté</translation>
     </message>
     <message>
         <source>Dissolve buffer results</source>
-        <translation type="unfinished">Union des résultats du tampon</translation>
+        <translation>Union des résultats du tampon</translation>
     </message>
     <message>
         <source>Allow multi-part features</source>
-        <translation type="unfinished"></translation>
+        <translation>Permettre des entités avec plusieurs morceaux</translation>
     </message>
     <message>
         <source>Curve Segments:</source>
-        <translation type="unfinished"></translation>
+        <translation>Segments de Courbe:</translation>
     </message>
     <message>
         <source>Cap style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Style d&apos;extrémité:</translation>
     </message>
     <message>
         <source>Join style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Style de jointure:</translation>
     </message>
     <message>
         <source>Mitre limit:</source>
-        <translation type="unfinished"></translation>
+        <translation>bord d&apos;angle:</translation>
     </message>
     <message>
         <source>Dissolve</source>
-        <translation type="unfinished">Regrouper</translation>
+        <translation>Regrouper</translation>
     </message>
     <message>
         <source>Invalid input</source>
-        <translation type="unfinished"></translation>
+        <translation>input non valide</translation>
     </message>
     <message>
         <source>Distance must be non-zero for polygon layers.</source>
-        <translation type="unfinished"></translation>
+        <translation>La distance ne doit pas être zero pour les couches de polygones.</translation>
     </message>
     <message>
         <source>Distance must be positive for point and line layers.</source>
-        <translation type="unfinished"></translation>
+        <translation>La distance doit être positive pour les couches de points et de lignes.</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::ConvexHullToolDialog</name>
     <message>
         <source>Convex Hull</source>
-        <translation type="unfinished"></translation>
+        <translation>Enveloppe Convexe</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::DissolveToolDialog</name>
     <message>
         <source>Dissolve</source>
-        <translation type="unfinished">Regrouper</translation>
+        <translation>Regrouper</translation>
     </message>
     <message>
         <source>Allow multi-part features</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Invalid input</source>
-        <translation type="unfinished"></translation>
+        <translation>input non valide</translation>
     </message>
     <message>
         <source>Input and operator layers must both be polygon layers.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les couches d&apos;entrée et d&apos;opérateurs doivent être des couches de polygones.</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::GeoprocessingErrorDialog</name>
     <message>
         <source>Select faulty features</source>
-        <translation type="unfinished"></translation>
+        <translation>Selectionner entités fautives</translation>
     </message>
     <message>
         <source>Missing/incomplete features</source>
-        <translation type="unfinished"></translation>
+        <translation>Entités manquantes/incomplètes</translation>
     </message>
     <message>
         <source>Geometry errors</source>
-        <translation type="unfinished">Erreurs de géométrie</translation>
+        <translation>Erreurs de géométrie</translation>
     </message>
     <message>
         <source>%1 features could not be written</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 entités ont failli à être écrites</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::GeoprocessingToolDialog</name>
     <message>
         <source>Run</source>
-        <translation type="unfinished"></translation>
+        <translation>Lancer</translation>
     </message>
     <message>
         <source>&lt;b&gt;Ready&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;prêt&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Canceled&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Annulé&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Completed&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Terminé&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Select Output File</source>
-        <translation type="unfinished"></translation>
+        <translation>Selectionner Fichier de Sortie</translation>
     </message>
     <message>
         <source>%p% (Step %1/%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%p% (Pas %1/%2)</translation>
     </message>
 </context>
 <context>
@@ -6736,59 +6736,60 @@ Veuillez essayer un autre champ...</translation>
     </message>
     <message>
         <source>Largest area</source>
-        <translation type="unfinished"></translation>
+        <translation>Surface la plus grande</translation>
     </message>
     <message>
         <source>Longest shared boundary</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordure commune la plus longe</translation>
     </message>
     <message>
         <source>Merge method:</source>
-        <translation type="unfinished"></translation>
+        <translation>Méthode de fusion:</translation>
     </message>
     <message>
         <source>Threshold (map units sqr.):</source>
-        <translation type="unfinished"></translation>
+        <translation>Seuil (en unités de carte au caré):</translation>
     </message>
     <message>
         <source>Invalid input</source>
-        <translation type="unfinished"></translation>
+        <translation>input non valide</translation>
     </message>
     <message>
         <source>Layer must be a polygon layer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche doit être une couche de polygones.</translation>
     </message>
 </context>
 <context>
     <name>Geoprocessing::Utils::GroupUI</name>
     <message>
         <source>%1 all</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 tous</translation>
     </message>
     <message>
         <source>%1 by attribute:</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 par attribut:</translation>
     </message>
     <message>
         <source>%1 by expression:</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 par expression:</translation>
     </message>
     <message>
         <source>Invalid Expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Expression Invalide</translation>
     </message>
     <message>
         <source>Invalid expression:
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Expression invalide:
+%1</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Tout</translation>
     </message>
     <message>
         <source>Group</source>
-        <translation type="unfinished">Groupe</translation>
+        <translation>Groupe</translation>
     </message>
 </context>
 <context>
@@ -6799,11 +6800,11 @@ Veuillez essayer un autre champ...</translation>
     </message>
     <message>
         <source>Last</source>
-        <translation type="unfinished"></translation>
+        <translation>Dernier</translation>
     </message>
     <message>
         <source>Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Compte</translation>
     </message>
     <message>
         <source>Sum</source>
@@ -6827,19 +6828,19 @@ Veuillez essayer un autre champ...</translation>
     </message>
     <message>
         <source>StdDev</source>
-        <translation type="unfinished"></translation>
+        <translation>Écart-type</translation>
     </message>
     <message>
         <source>Null</source>
-        <translation type="unfinished">Null</translation>
+        <translation>Null</translation>
     </message>
     <message>
         <source>Summarize numeric attributes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Combiner attributs numériques:</translation>
     </message>
     <message>
         <source>Summarize non-numeric attributes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Combiner attributs non-numériques:</translation>
     </message>
 </context>
 <context>
@@ -7011,11 +7012,11 @@ GEOS geoprocessing error: One or more input features have invalid geometry.</sou
     </message>
     <message>
         <source>Errors occurred while executing the process:</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreurs rencontrées lors de l&apos;exécution du processus:</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt; You can check for geometry errors via &lt;span style=&quot; font-style:italic;&quot;&gt;Vector-&amp;gt;Geometry Tools-&amp;gt;Check geometry validity&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Suggestion:&lt;/span&gt; Vous pouvez examiner les erreurs dans la géométrie par &lt;span style=&quot; font-style:italic;&quot;&gt;Vecteur-&amp;gt;Outils de géométrie-&amp;gt;Vérifier la validité de la géométrie&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -7026,31 +7027,31 @@ GEOS geoprocessing error: One or more input features have invalid geometry.</sou
     </message>
     <message>
         <source>&lt;b&gt;Ready&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Prêt&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Input vector layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche vectorielle en entrée</translation>
     </message>
     <message>
         <source>Only selected features</source>
-        <translation type="unfinished">Uniquement les entités sélectionnées</translation>
+        <translation>Uniquement les entités sélectionnées</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortie</translation>
     </message>
     <message>
         <source>Add result to canvas</source>
-        <translation type="unfinished">Ajouter le résultat au canevas</translation>
+        <translation>Ajouter le résultat au canevas</translation>
     </message>
     <message>
         <source>Browse</source>
-        <translation type="unfinished">Parcourir</translation>
+        <translation>Parcourir</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Options</translation>
+        <translation>Options</translation>
     </message>
 </context>
 <context>
@@ -7397,7 +7398,7 @@ Merci de l&apos;installer avant de lancer les algorithmes GRASS.</translation>
     </message>
     <message>
         <source>Grid</source>
-        <translation type="unfinished">Grille</translation>
+        <translation>Grille</translation>
     </message>
 </context>
 <context>
@@ -7440,7 +7441,7 @@ Merci de l&apos;installer avant de lancer les algorithmes GRASS.</translation>
     </message>
     <message>
         <source>Average</source>
-        <translation type="unfinished">Moyenne</translation>
+        <translation>Moyenne</translation>
     </message>
 </context>
 <context>
@@ -7694,7 +7695,7 @@ Merci de l&apos;installer avant de lancer les algorithmes GRASS.</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -8571,7 +8572,7 @@ Veuillez le configurer avant d&apos;exécuter les algorithmes LAStools.</transla
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -11781,7 +11782,7 @@ Merci de vérifier la configuration dans la boîte de dialogue des paramètres d
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -12968,11 +12969,11 @@ Erreur(%2): %3</translation>
         <source>Caught a coordinate system exception while trying to transform a point. Unable to calculate polygon area.</source>
         <translation>Une erreur de système de coordonnée a été signalée lors de la transformation d&apos;un point. Impossbile de calculer la surface du polygone.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> m²</source>
         <translation> m²</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> km²</source>
         <translation> km²</translation>
     </message>
@@ -21560,7 +21561,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>Rotation</source>
         <translation>Rotation</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -22782,7 +22783,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>X </source>
         <translation>X</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -23235,7 +23236,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>Sync with map</source>
         <translation>Synchroniser avec la carte</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -25394,7 +25395,7 @@ et le fichier actuel est [%3]</translation>
         <source>&amp;Enter your copyright label here:</source>
         <translation>&amp;Entrez ici le nom de l&apos;auteur :</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -34513,7 +34514,7 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Angle (deg)</source>
         <translation>Angle (deg) :</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>°</source>
         <translation>°</translation>
     </message>
@@ -35305,7 +35306,7 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Use global shadow</source>
         <translation>Utilise une ombre globale</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>˚</source>
         <translation>˚</translation>
     </message>
@@ -46402,7 +46403,7 @@ count cut</source>
         <translation>Bornes d&apos;exclusion
 des valeurs extrêmes</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Mean +/-
 standard deviation ×</source>
         <translation>Moyenne +/- écart-type ×</translation>
@@ -55540,7 +55541,7 @@ Problème à la ligne : %d</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -55707,7 +55708,7 @@ Problème à la ligne : %d</translation>
         <source>Advanced</source>
         <translation>Avancé</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -55821,7 +55822,7 @@ Problème à la ligne : %d</translation>
     </message>
     <message>
         <source>Wrong number of MPI processes used. Please set correct number before running TauDEM algorithms.</source>
-        <translation type="unfinished">Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
+        <translation>Mauvais nombre de processus MPI. Merci d&apos;indiquer un nombre correct avant de lancer les algorithmes TauDEM.</translation>
     </message>
 </context>
 <context>
@@ -56376,7 +56377,7 @@ Problème à la ligne : %d</translation>
         <source>Symbol height</source>
         <translation>Hauteur du symbole </translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56439,7 +56440,7 @@ Problème à la ligne : %d</translation>
         <source>Font family</source>
         <translation>Famille de Police</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56526,7 +56527,7 @@ Problème à la ligne : %d</translation>
         <source>Angle</source>
         <translation>Angle</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56561,7 +56562,7 @@ Problème à la ligne : %d</translation>
         <source>Offset</source>
         <translation>Décalage</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56694,7 +56695,7 @@ Problème à la ligne : %d</translation>
         <source>Offset X,Y</source>
         <translation>Décalage X,Y</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56741,7 +56742,7 @@ Problème à la ligne : %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56949,7 +56950,7 @@ Problème à la ligne : %d</translation>
         <source>Angle</source>
         <translation>Angle</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57036,7 +57037,7 @@ Problème à la ligne : %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -60608,7 +60609,7 @@ p, li { white-space: pre-wrap; }
         <source>Database Host</source>
         <translation>Hôte de la base de données</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enter the database host. If the database resides on your desktop you should enter ¨localhost¨. If you selected ¨MSAccess¨ as the database type this option will not be available. </source>
         <translation>Saisissez l&apos;hôte de la base de données. Si la base est sur votre poste de travail, vous devez entrer &apos;localhost&apos;. Si vous avez sélectionné &apos;MSAccess&apos; comme type de base, cette option ne sera pas disponible.</translation>
     </message>
@@ -60797,7 +60798,7 @@ p, li { white-space: pre-wrap; }
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>All of the attribute information for the point associated with the photo being viewed is displayed here. If the file type being referenced in the displayed record is not an image but is of a file type defined in the “Configure External Applications” tab then when you double-click on the value of the field containing the path to the file the application to open the file will be launched to view or hear the contents of the file. If the file extension is recognized the attribute data will be displayed in green.</source>
         <translation>Toutes les informations pour le point associé à la photo visualisée sont affichées ici. Si le type de fichier n&apos;est pas une image mais un type défini dans le panneau &quot;Configuer les applications externes&quot;, il faut alors double-cliquer sur le champ pour définir le chemin de l&apos;application à utiliser. Si l&apos;extension du fichier est reconnue, les données attributaires seront affichées en vert.</translation>
     </message>
@@ -60829,7 +60830,7 @@ p, li { white-space: pre-wrap; }
         <source>Use the drop-down list to select the field containing a directory path to the image. This can be an absolute or relative path.</source>
         <translation>Utilisez la liste déroulante pour sélectionner le champs contenant le chemin du répertoire de l&apos;image.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>If checked the path to the image will be defined appending the attribute in the field selected from the “Attribute Containing Path to Image” drop-down list to the “Base Path” defined below.</source>
         <translation>Si cochée, le chemin vers l&apos;image sera défini selon l&apos;attribut du champs sélectionné depuis la liste &quot;Attribut contenant le chemin vers le fichier&quot; vers le chemin basique définit ci-dessous.</translation>
     </message>
@@ -60921,7 +60922,7 @@ p, li { white-space: pre-wrap; }
         <source>Relative paths</source>
         <translation>Chemins relatifs</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>The base path or url from which images and documents can be “relative”</source>
         <translation>Le chemin de base ou l&apos;url peut être &quot;relatif&quot;</translation>
     </message>
@@ -60937,7 +60938,7 @@ p, li { white-space: pre-wrap; }
         <source>If checked, the Base Path will be saved for the next session.</source>
         <translation>Si cochée, le chemin de base sera enregistré pour la prochaine session.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enters the default “Base Path” which is the path to the directory of the vector layer containing the image information.</source>
         <translation>Saisissez le chemin de base par défaut qui est le chemin vers le répertoire de la couche vecteur contenant les informations sur l&apos;image.</translation>
     </message>
@@ -60966,7 +60967,7 @@ Base Path (i.e. keep only filename from attribute)</source>
         <source>Apply Path to Image rules when loading docs in external applications</source>
         <translation>Appliquer la règle du chemin vers l&apos;image lors du chargement de documents dans des applications externes</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Clicking on Save will save the settings without closing the Options pane. Clicking on Restore Defaults will reset all of the fields to their default settings. It has the same effect as clicking all of the “Reset to default” buttons. </source>
         <translation>Cliquer sur Enregistrer enregistrera les paramètres sans fermer la fenêtre d&apos;options. Cliquer sur Restaurer remettre tout les champs à leurs paramètres par défaut.</translation>
     </message>
