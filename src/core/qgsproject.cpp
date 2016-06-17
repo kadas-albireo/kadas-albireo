@@ -1497,11 +1497,6 @@ QString QgsProject::readPath( QString src ) const
 // return the absolute or relative path to write it to the project file
 QString QgsProject::writePath( QString src, QString relativeBasePath ) const
 {
-  if ( readBoolEntry( "Paths", "/Absolute", false ) || src.isEmpty() )
-  {
-    return src;
-  }
-
   QString proj = relativeBasePath.isNull() ? fileName() : relativeBasePath;
 
   QFileInfo srcFileInfo( src );
@@ -1510,6 +1505,18 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
   QString projPath = projFileInfo.exists() ? projFileInfo.canonicalFilePath() : proj;
 
   if ( projPath.isEmpty() )
+  {
+    return src;
+  }
+
+  // If in a <projectname>_files folder, return relative path
+  int pos = src.indexOf( projFileInfo.baseName() + "_files" );
+  if ( pos != -1 )
+  {
+    return "./" + src.mid( pos );
+  }
+
+  if ( readBoolEntry( "Paths", "/Absolute", false ) || src.isEmpty() )
   {
     return src;
   }
