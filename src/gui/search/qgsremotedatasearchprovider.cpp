@@ -39,19 +39,16 @@ const int QgsRemoteDataSearchProvider::sResultCountLimit = 100;
 QgsRemoteDataSearchProvider::QgsRemoteDataSearchProvider( QgsMapCanvas* mapCanvas )
     : QgsSearchProvider( mapCanvas )
 {
-  mNetReply = 0;
   mReplyFilter = 0;
 
   mPatBox = QRegExp( "^BOX\\s*\\(\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*,\\s*(\\d+\\.?\\d*)\\s*(\\d+\\.?\\d*)\\s*\\)$" );
 
   mTimeoutTimer.setSingleShot( true );
-  connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( replyFinished() ) );
+  connect( &mTimeoutTimer, SIGNAL( timeout() ), this, SLOT( searchTimeout() ) );
 }
 
 void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
-  QStringList remoteLayers;
-  QMap<QString, QVariant> layerIdMap;
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
     if ( layer->type() != QgsMapLayer::RasterLayer )
@@ -62,127 +59,126 @@ void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const 
     QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
     if ( url.queryItemValue( "url" ).contains( "geo.admin.ch" ) )
     {
-      remoteLayers.append( url.queryItemValue( "layers" ).split( "," ) );
-      layerIdMap.insert( remoteLayers.back(), rasterLayer->name() );
+      foreach ( const QString& layerId, url.queryItemValue( "layers" ).split( "," ) )
+      {
+        QUrl url( QSettings().value( "search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
+        url.addQueryItem( "type", "featuresearch" );
+        url.addQueryItem( "searchText", searchtext );
+        url.addQueryItem( "features", layerId );
+        if ( !searchRegion.polygon.isEmpty() )
+        {
+          QgsRectangle rect;
+          rect.setMinimal();
+          QgsLineStringV2* exterior = new QgsLineStringV2();
+          const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( searchRegion.crs, "EPSG:21781" );
+          foreach ( const QgsPoint& p, searchRegion.polygon )
+          {
+            QgsPoint pt = ct->transform( p );
+            rect.include( pt );
+            exterior->addVertex( QgsPointV2( pt ) );
+          }
+          url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( rect.xMinimum() ).arg( rect.yMinimum() ).arg( rect.xMaximum() ).arg( rect.yMaximum() ) );
+          QgsPolygonV2* poly = new QgsPolygonV2();
+          poly->setExteriorRing( exterior );
+          mReplyFilter = new QgsGeometry( poly );
+        }
+
+        QNetworkRequest req( url );
+        req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
+        QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
+        reply->setProperty( "layerName", rasterLayer->name() );
+        connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
+        mNetReplies.append( reply );
+      }
     }
   }
-
-  QUrl url( QSettings().value( "search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
-  url.addQueryItem( "type", "featuresearch" );
-  url.addQueryItem( "searchText", searchtext );
-  url.addQueryItem( "features", remoteLayers.join( "," ) );
-  if ( !searchRegion.polygon.isEmpty() )
-  {
-    QgsRectangle rect;
-    rect.setMinimal();
-    QgsLineStringV2* exterior = new QgsLineStringV2();
-    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( searchRegion.crs, "EPSG:21781" );
-    foreach ( const QgsPoint& p, searchRegion.polygon )
-    {
-      QgsPoint pt = ct->transform( p );
-      rect.include( pt );
-      exterior->addVertex( QgsPointV2( pt ) );
-    }
-    url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( rect.xMinimum() ).arg( rect.yMinimum() ).arg( rect.xMaximum() ).arg( rect.yMaximum() ) );
-    QgsPolygonV2* poly = new QgsPolygonV2();
-    poly->setExteriorRing( exterior );
-    mReplyFilter = new QgsGeometry( poly );
-  }
-
-  QNetworkRequest req( url );
-  req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
-  mNetReply = QgsNetworkAccessManager::instance()->get( req );
-  mNetReply->setProperty( "idMap", layerIdMap );
-  connect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
   mTimeoutTimer.start( sSearchTimeout );
 }
 
 void QgsRemoteDataSearchProvider::cancelSearch()
 {
-  if ( mNetReply )
+  mTimeoutTimer.stop();
+  while ( !mNetReplies.isEmpty() )
   {
-    mTimeoutTimer.stop();
-    disconnect( mNetReply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
-    mNetReply->close();
-    mNetReply->deleteLater();
-    mNetReply = 0;
-    delete mReplyFilter;
-    mReplyFilter = 0;
+    QNetworkReply* reply = mNetReplies.front();
+    disconnect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
+    reply->close();
+    mNetReplies.removeAll( reply );
+    reply->deleteLater();
   }
+  delete mReplyFilter;
+  mReplyFilter = 0;
 }
 
 void QgsRemoteDataSearchProvider::replyFinished()
 {
-  if ( !mNetReply )
+  QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  if ( !reply )
     return;
 
-  if ( mNetReply->error() != QNetworkReply::NoError || !mTimeoutTimer.isActive() )
+  if ( reply->error() == QNetworkReply::NoError )
   {
-    mNetReply->deleteLater();
-    mNetReply = 0;
+    QString layerName = reply->property( "layerName" ).toString();
+    QStringList bboxStr = reply->request().url().queryItemValue( "bbox" ).split( "," );
+    QgsRectangle bbox;
+    if ( bboxStr.size() == 4 )
+    {
+      bbox.setXMinimum( bboxStr[0].toDouble() );
+      bbox.setYMinimum( bboxStr[1].toDouble() );
+      bbox.setXMaximum( bboxStr[2].toDouble() );
+      bbox.setYMaximum( bboxStr[3].toDouble() );
+    }
+
+    QByteArray replyText = reply->readAll();
+    QgsDebugMsg( replyText );
+    QJson::Parser parser;
+    QVariant result = parser.parse( replyText );
+    if ( result.isNull() )
+    {
+      QgsDebugMsg( QString( "Error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
+    }
+    foreach ( const QVariant& item, result.toMap()["results"].toList() )
+    {
+      QVariantMap itemMap = item.toMap();
+      QVariantMap itemAttrsMap = itemMap["attrs"].toMap();
+
+      if ( !mPatBox.exactMatch( itemAttrsMap["geom_st_box2d"].toString() ) )
+      {
+        QgsDebugMsg( "Box RegEx did not match " + itemAttrsMap["geom_st_box2d"].toString() );
+        continue;
+      }
+
+      SearchResult searchResult;
+      searchResult.bbox = QgsRectangle( mPatBox.cap( 1 ).toDouble(), mPatBox.cap( 2 ).toDouble(),
+                                        mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
+      // When bbox is empty, fallback to pos + zoomScale is used
+      searchResult.pos = QgsPoint( itemAttrsMap["lon"].toDouble(), itemAttrsMap["lat"].toDouble() );
+      searchResult.pos = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:21781" )->transform( searchResult.pos );
+      if ( !bbox.isEmpty() && !bbox.contains( searchResult.pos ) )
+      {
+        continue;
+      }
+      if ( mReplyFilter && !mReplyFilter->contains( &searchResult.pos ) )
+      {
+        continue;
+      }
+
+      searchResult.zoomScale = 1000;
+      searchResult.category = tr( "Layer %1" ).arg( layerName );
+      searchResult.categoryPrecedence = 11;
+      searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
+      searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
+      searchResult.crs = "EPSG:21781";
+      searchResult.showPin = true;
+      emit searchResultFound( searchResult );
+    }
+  }
+  reply->deleteLater();
+  mNetReplies.removeAll( reply );
+  if ( mNetReplies.isEmpty() )
+  {
     delete mReplyFilter;
     mReplyFilter = 0;
     emit searchFinished();
-    return;
   }
-  QMap<QString, QVariant> idMap = mNetReply->property( "idMap" ).value< QMap<QString, QVariant> >();
-  QStringList bboxStr = mNetReply->request().url().queryItemValue( "bbox" ).split( "," );
-  QgsRectangle bbox;
-  if ( bboxStr.size() == 4 )
-  {
-    bbox.setXMinimum( bboxStr[0].toDouble() );
-    bbox.setYMinimum( bboxStr[1].toDouble() );
-    bbox.setXMaximum( bboxStr[2].toDouble() );
-    bbox.setYMaximum( bboxStr[3].toDouble() );
-  }
-
-  QByteArray replyText = mNetReply->readAll();
-  QgsDebugMsg( replyText );
-  QJson::Parser parser;
-  QVariant result = parser.parse( replyText );
-  if ( result.isNull() )
-  {
-    QgsDebugMsg( QString( "Error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
-  }
-  foreach ( const QVariant& item, result.toMap()["results"].toList() )
-  {
-    QVariantMap itemMap = item.toMap();
-    QVariantMap itemAttrsMap = itemMap["attrs"].toMap();
-
-    if ( !mPatBox.exactMatch( itemAttrsMap["geom_st_box2d"].toString() ) )
-    {
-      QgsDebugMsg( "Box RegEx did not match " + itemAttrsMap["geom_st_box2d"].toString() );
-      continue;
-    }
-
-    SearchResult searchResult;
-    searchResult.bbox = QgsRectangle( mPatBox.cap( 1 ).toDouble(), mPatBox.cap( 2 ).toDouble(),
-                                      mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
-    // When bbox is empty, fallback to pos + zoomScale is used
-    searchResult.pos = QgsPoint( itemAttrsMap["lon"].toDouble(), itemAttrsMap["lat"].toDouble() );
-    searchResult.pos = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:21781" )->transform( searchResult.pos );
-    if ( !bbox.isEmpty() && !bbox.contains( searchResult.pos ) )
-    {
-      continue;
-    }
-    if ( mReplyFilter && !mReplyFilter->contains( &searchResult.pos ) )
-    {
-      continue;
-    }
-    QString layerId = itemAttrsMap["layer"].toString();
-
-    searchResult.zoomScale = 1000;
-    searchResult.category = tr( "Layer %1" ).arg( idMap.value( layerId, layerId ).toString() );
-    searchResult.categoryPrecedence = 11;
-    searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
-    searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
-    searchResult.crs = "EPSG:21781";
-    searchResult.showPin = true;
-    emit searchResultFound( searchResult );
-  }
-  mNetReply->deleteLater();
-  mNetReply = 0;
-  delete mReplyFilter;
-  mReplyFilter = 0;
-  emit searchFinished();
 }

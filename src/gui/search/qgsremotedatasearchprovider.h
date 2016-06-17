@@ -40,13 +40,14 @@ class GUI_EXPORT QgsRemoteDataSearchProvider : public QgsSearchProvider
     static const int sResultCountLimit;
     static const QByteArray sGeoAdminUrl;
 
-    QNetworkReply* mNetReply;
+    QList<QNetworkReply*> mNetReplies;
     QgsGeometry* mReplyFilter;
     QRegExp mPatBox;
     QTimer mTimeoutTimer;
 
   private slots:
     void replyFinished();
+    void searchTimeout() { cancelSearch(); }
 };
 
 #endif // QGSREMOTEDATASEARCHPROVIDER_HPP
