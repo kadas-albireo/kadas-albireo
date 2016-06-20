@@ -59,7 +59,6 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   mTitleStackedWidget->addWidget( mTitleLabel );
 
   mTitleLineEdit = new QLineEdit( title, this );
-  connect( mTitleLineEdit, SIGNAL( textChanged( QString ) ), this, SLOT( setWindowTitle( QString ) ) );
   mTitleStackedWidget->addWidget( mTitleLineEdit );
 
   mTitleLabel->installEventFilter( this );
@@ -277,12 +276,25 @@ bool QgsMapWidget::eventFilter( QObject *obj, QEvent *ev )
   if ( obj == mTitleLabel && ev->type() == QEvent::MouseButtonPress )
   {
     mTitleStackedWidget->setCurrentWidget( mTitleLineEdit );
+    mTitleLineEdit->setText( mTitleLabel->text() );
     mTitleLineEdit->setFocus();
     mTitleLineEdit->selectAll();
     return true;
   }
   else if ( obj == mTitleLineEdit && ev->type() == QEvent::FocusOut )
   {
+    setWindowTitle( mTitleLineEdit->text() );
+    mTitleLabel->setText( mTitleLineEdit->text() );
+    mTitleStackedWidget->setCurrentWidget( mTitleLabel );
+    return true;
+  }
+  else if ( obj == mTitleLineEdit && ev->type() == QEvent::KeyPress && (
+              static_cast<QKeyEvent*>( ev )->key() == Qt::Key_Enter ||
+              static_cast<QKeyEvent*>( ev )->key() == Qt::Key_Return ||
+              static_cast<QKeyEvent*>( ev )->key() == Qt::Key_Escape ) )
+  {
+    setWindowTitle( mTitleLineEdit->text() );
+    mTitleLabel->setText( mTitleLineEdit->text() );
     mTitleStackedWidget->setCurrentWidget( mTitleLabel );
     return true;
   }
