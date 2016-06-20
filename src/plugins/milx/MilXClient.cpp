@@ -255,11 +255,8 @@ void MilXClientWorker::handleSocketError()
 
 MilXClient::MilXClient()
 {
-  start();
-  QEventLoop loop;
-  connect( this, SIGNAL( started() ), &loop, SLOT( quit() ) );
-  loop.exec( QEventLoop::ExcludeUserInputEvents );
   mWorker.moveToThread( this );
+  start();
 }
 
 MilXClient::~MilXClient()
