@@ -173,6 +173,11 @@ QgsDecorationGridDialog::~QgsDecorationGridDialog()
     delete mMarkerSymbol;
 }
 
+void QgsDecorationGridDialog::on_buttonBox_helpRequested()
+{
+  QgsContextHelp::run( metaObject()->className() );
+}
+
 void QgsDecorationGridDialog::on_buttonBox_accepted()
 {
   updateDecoFromGui();
