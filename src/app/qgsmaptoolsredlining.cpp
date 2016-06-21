@@ -474,6 +474,10 @@ void QgsRedliningEditTool::keyPressEvent( QKeyEvent *e )
       e->ignore();
     }
   }
+  else if ( e->key() == Qt::Key_Escape )
+  {
+    canvas()->unsetMapTool( this );
+  }
 }
 
 void QgsRedliningEditTool::addVertex( const QPoint &pos )

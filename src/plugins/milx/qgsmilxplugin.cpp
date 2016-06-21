@@ -206,7 +206,6 @@ void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
   }
   QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface->mapCanvas(), layer, layer->items()[symbolIdx] );
   delete layer->takeItem( symbolIdx );
-  connect( tool, SIGNAL( deactivated() ), tool, SLOT( deleteLater() ) );
   mQGisIface->mapCanvas()->setMapTool( tool );
   layer->triggerRepaint();
   mActiveEditTool = tool;
