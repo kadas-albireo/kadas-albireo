@@ -12815,48 +12815,16 @@ Error (%2): %3</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> sq ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> acres</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq mile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> foot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source> feet</source>
-        <translation>peus</translation>
-    </message>
-    <message>
-        <source> mile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq. NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq.deg.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">peus</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>grau</translation>
+        <translation type="obsolete">grau</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>graus</translation>
+        <translation type="obsolete">graus</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15197,6 +15165,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versió 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36558,6 +36562,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Tanca</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
