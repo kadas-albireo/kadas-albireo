@@ -114,14 +114,6 @@ void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
   }
 }
 
-void QgsMilXCreateTool::keyReleaseEvent(QKeyEvent *e)
-{
-  if ( e->key() == Qt::Key_Escape )
-  {
-    deleteLater(); // quit tool
-  }
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXEditTool::QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, QgsMilXItem* item )
@@ -153,14 +145,6 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
   if ( mCanvas->selectedAnnotationItem() != mItem )
   {
     mCanvas->unsetMapTool( this );
-  }
-}
-
-void QgsMilXEditTool::keyReleaseEvent(QKeyEvent *e)
-{
-  if ( e->key() == Qt::Key_Escape )
-  {
-    deleteLater(); // quit tool
   }
 }
 

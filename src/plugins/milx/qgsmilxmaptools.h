@@ -32,7 +32,6 @@ class QgsMilXCreateTool : public QgsMapTool
     ~QgsMilXCreateTool();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
-    void keyReleaseEvent( QKeyEvent *e ) override;
 
   private:
     QString mSymbolXml;
@@ -50,8 +49,7 @@ class QgsMilXEditTool : public QgsMapToolPan
   public:
     QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, QgsMilXItem* item );
     ~QgsMilXEditTool();
-    void canvasReleaseEvent( QMouseEvent * e ) override;
-    void keyReleaseEvent( QKeyEvent *e ) override;
+    void canvasReleaseEvent( QMouseEvent * e );
 
   private slots:
     void deactivateTool();
