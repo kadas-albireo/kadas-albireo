@@ -133,9 +133,8 @@ bool QgsMilXIO::save( QgisInterface* iface )
     return false;
   }
 
+  QStringList exportMessages;
   int dpi = QApplication::desktop()->logicalDpiX();
-  if ( dpi == 0 )
-    dpi = 96;
 
   QDomDocument doc;
   doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
@@ -259,8 +258,6 @@ bool QgsMilXIO::load( QgisInterface* iface )
     return false;
   }
   int dpi = QApplication::desktop()->logicalDpiX();
-  if ( dpi == 0 )
-    dpi = 96;
 
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
   QString errorMsg;
