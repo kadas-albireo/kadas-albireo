@@ -41,10 +41,10 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   mUnitComboBox = new QComboBox();
   if ( !measureAngle )
   {
-    mUnitComboBox->addItem( tr( "Metric" ), static_cast<int>( QGis::Meters ) );
-    mUnitComboBox->addItem( tr( "Imperial" ), static_cast<int>( QGis::Feet ) );
+    mUnitComboBox->addItem( QGis::tr( QGis::Meters ), static_cast<int>( QGis::Meters ) );
+    mUnitComboBox->addItem( QGis::tr( QGis::Feet ), static_cast<int>( QGis::Feet ) );
 //    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
-    mUnitComboBox->addItem( tr( "Nautical" ), static_cast<int>( QGis::NauticalMiles ) );
+    mUnitComboBox->addItem( QGis::tr( QGis::NauticalMiles ), static_cast<int>( QGis::NauticalMiles ) );
     int defUnit = QSettings().value( "/qgis/measure/last_measure_unit", QGis::Meters ).toInt();
     mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
   }
