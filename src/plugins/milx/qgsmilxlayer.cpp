@@ -191,11 +191,11 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) con
   graphicEl.appendChild( offsetEl );
 
   QDomElement factorXEl = doc.createElement( "FactorX" );
-  factorXEl.appendChild( doc.createTextNode( QString::number( mUserOffset.x() / MilXClient::getSymbolSize() ) ) );
+  factorXEl.appendChild( doc.createTextNode( QString::number( double( mUserOffset.x() ) / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorXEl );
 
   QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( -mUserOffset.y() / MilXClient::getSymbolSize() ) ) );
+  factorYEl.appendChild( doc.createTextNode( QString::number( -double( mUserOffset.y() ) / MilXClient::getSymbolSize() ) ) );
   offsetEl.appendChild( factorYEl );
 }
 
@@ -457,7 +457,7 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, int dpi, QString& err
 {
   setLayerName( milxLayerEl.firstChildElement( "Name" ).text() );
   //    QString layerType = milxLayerEl.firstChildElement( "LayerType" ).text(); // TODO
-  int symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toInt(); // This is in mm
+  float symbolSize = milxLayerEl.firstChildElement( "SymbolSize" ).text().toFloat(); // This is in mm
   symbolSize = ( symbolSize * dpi ) / 25.4; // mm to px
   QString crs = milxLayerEl.firstChildElement( "CoordSystemType" ).text();
   if ( crs.isEmpty() )
