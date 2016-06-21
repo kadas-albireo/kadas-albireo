@@ -187,14 +187,6 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
 
 
   // Read input heightmap
-  // Allow at most 1GB allocated
-  if ( hmapWidth * hmapHeight * sizeof( float ) > 1073741824 )
-  {
-    GDALClose( inputDataset );
-    GDALClose( outputDataset );
-    QgsDebugMsg( "Too much memory required" );
-    return false;
-  }
   QVector<float> heightmap( hmapWidth * hmapHeight, noDataValue );
   CPLErr err = GDALRasterIO( inputBand, GF_Read, colStart, rowStart, hmapWidth, hmapHeight, heightmap.data(), hmapWidth, hmapHeight, GDT_Float32, 0, 0 );
   if ( err != CE_None )
