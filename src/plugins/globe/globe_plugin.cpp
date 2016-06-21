@@ -1147,6 +1147,7 @@ void GlobePlugin::unload()
     delete mDockWidget;
     reset();
   }
+  mAnnotations.clear();
   mQGisIface->removePluginMenu( tr( "&Globe" ), mActionToggleGlobe );
   mQGisIface->removeToolBarIcon( mActionToggleGlobe );
   mQGisIface->unregisterMapLayerPropertiesFactory( mLayerPropertiesFactory );
