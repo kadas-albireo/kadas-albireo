@@ -180,7 +180,6 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );
   mDrawTool->setShowNodes( true );
   mDrawTool->setSnapPoints( true );
-  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   mMeasureWidget = 0;
   connect( mDrawTool, SIGNAL( geometryChanged() ), this, SLOT( updateTotal() ) );
 }
@@ -206,6 +205,8 @@ void QgsMeasureToolV2::activate()
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
   setCursor( Qt::ArrowCursor );
   mDrawTool->getRubberBand()->setVisible( true );
+  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  mDrawTool->activate();
   QgsMapTool::activate();
 }
 
@@ -213,8 +214,8 @@ void QgsMeasureToolV2::deactivate()
 {
   delete mMeasureWidget;
   mMeasureWidget = 0;
-  mDrawTool->reset();
   mDrawTool->getRubberBand()->setVisible( false );
+  mDrawTool->deactivate();
   QgsMapTool::deactivate();
 }
 
