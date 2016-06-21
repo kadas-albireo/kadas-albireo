@@ -12960,47 +12960,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>平方フィート</translation>
+        <translation type="obsolete">平方フィート</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>エーカー</translation>
+        <translation type="obsolete">エーカー</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation>平方マイル</translation>
+        <translation type="obsolete">平方マイル</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>フィート</translation>
+        <translation type="obsolete">フィート</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>フィート</translation>
+        <translation type="obsolete">フィート</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>マイル</translation>
+        <translation type="obsolete">マイル</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation> 平方海里</translation>
+        <translation type="obsolete"> 平方海里</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> 海里</translation>
+        <translation type="obsolete"> 海里</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation>平方度</translation>
+        <translation type="obsolete">平方度</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>度</translation>
+        <translation type="obsolete">度</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>度</translation>
+        <translation type="obsolete">度</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15361,6 +15361,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Version 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37046,6 +37082,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">閉じる</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

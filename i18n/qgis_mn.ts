@@ -12636,47 +12636,35 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>кв фт</translation>
+        <translation type="obsolete">кв фт</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>акр</translation>
+        <translation type="obsolete">акр</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation>кв бээр</translation>
+        <translation type="obsolete">кв бээр</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>фут</translation>
+        <translation type="obsolete">фут</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>фут</translation>
+        <translation type="obsolete">фут</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>мил</translation>
-    </message>
-    <message>
-        <source> sq. NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq.deg.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">мил</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>градус</translation>
+        <translation type="obsolete">градус</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>градус</translation>
+        <translation type="obsolete">градус</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15012,6 +15000,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Хувилбар 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36207,6 +36231,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Хаах</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

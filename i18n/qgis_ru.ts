@@ -12963,47 +12963,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation> кв. футов</translation>
+        <translation type="obsolete"> кв. футов</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation> акров</translation>
+        <translation type="obsolete"> акров</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> кв. миль</translation>
+        <translation type="obsolete"> кв. миль</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation> фут</translation>
+        <translation type="obsolete"> фут</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation> футов</translation>
+        <translation type="obsolete"> футов</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation> миль</translation>
+        <translation type="obsolete"> миль</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation>кв. NM</translation>
+        <translation type="obsolete">кв. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> NM</translation>
+        <translation type="obsolete"> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation> кв. град.</translation>
+        <translation type="obsolete"> кв. град.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation> градус</translation>
+        <translation type="obsolete"> градус</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation> градусов</translation>
+        <translation type="obsolete"> градусов</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15369,6 +15369,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Версия 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37041,6 +37077,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Закрыть</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

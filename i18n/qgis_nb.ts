@@ -12999,47 +12999,47 @@ Feil(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>kvadratfot</translation>
+        <translation type="obsolete">kvadratfot</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>acres</translation>
+        <translation type="obsolete">acres</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation>kvadratmile</translation>
+        <translation type="obsolete">kvadratmile</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>fot</translation>
+        <translation type="obsolete">fot</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>fot</translation>
+        <translation type="obsolete">fot</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>eng. mil</translation>
+        <translation type="obsolete">eng. mil</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation>kvadrat NM</translation>
+        <translation type="obsolete">kvadrat NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation>NM</translation>
+        <translation type="obsolete">NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation>kvadratgrad.</translation>
+        <translation type="obsolete">kvadratgrad.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>grad</translation>
+        <translation type="obsolete">grad</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>grader</translation>
+        <translation type="obsolete">grader</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15405,6 +15405,42 @@ Svaret var:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versjon 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37138,6 +37174,18 @@ Dette kan være et problem med din nettverkstilkobling eller på WMS-serveren.</
     <message>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

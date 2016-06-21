@@ -12996,47 +12996,47 @@ Virhe(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation> sq ft</translation>
+        <translation type="obsolete"> sq ft</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>.aari</translation>
+        <translation type="obsolete">.aari</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> sq mile</translation>
+        <translation type="obsolete"> sq mile</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation> jalkaa</translation>
+        <translation type="obsolete"> jalkaa</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation> jalka</translation>
+        <translation type="obsolete"> jalka</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation> maili</translation>
+        <translation type="obsolete"> maili</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation>neliö mpk</translation>
+        <translation type="obsolete">neliö mpk</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation>mpk</translation>
+        <translation type="obsolete">mpk</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation> sq.deg.</translation>
+        <translation type="obsolete"> sq.deg.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation> aste</translation>
+        <translation type="obsolete"> aste</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation> astetta</translation>
+        <translation type="obsolete"> astetta</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15402,6 +15402,42 @@ Vastaus oli:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versio 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37134,6 +37170,18 @@ Tämä voi johtua ongelmasta verkkoyhteydessä, tai WMS palvelimesta. </numerusf
     <message>
         <source>Close</source>
         <translation type="unfinished">Sulje</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

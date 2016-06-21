@@ -41,10 +41,10 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   mUnitComboBox = new QComboBox();
   if ( !measureAngle )
   {
-    mUnitComboBox->addItem( QGis::tr( QGis::Meters ), static_cast<int>( QGis::Meters ) );
-    mUnitComboBox->addItem( QGis::tr( QGis::Feet ), static_cast<int>( QGis::Feet ) );
+    mUnitComboBox->addItem( tr( "Metric" ), static_cast<int>( QGis::Meters ) );
+    mUnitComboBox->addItem( tr( "Imperial" ), static_cast<int>( QGis::Feet ) );
 //    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
-    mUnitComboBox->addItem( QGis::tr( QGis::NauticalMiles ), static_cast<int>( QGis::NauticalMiles ) );
+    mUnitComboBox->addItem( tr( "Nautical" ), static_cast<int>( QGis::NauticalMiles ) );
     int defUnit = QSettings().value( "/qgis/measure/last_measure_unit", QGis::Meters ).toInt();
     mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
   }
@@ -205,6 +205,8 @@ void QgsMeasureToolV2::activate()
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
   setCursor( Qt::ArrowCursor );
   mDrawTool->getRubberBand()->setVisible( true );
+  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  mDrawTool->activate();
   QgsMapTool::activate();
 }
 
@@ -212,8 +214,8 @@ void QgsMeasureToolV2::deactivate()
 {
   delete mMeasureWidget;
   mMeasureWidget = 0;
-  mDrawTool->reset();
   mDrawTool->getRubberBand()->setVisible( false );
+  mDrawTool->deactivate();
   QgsMapTool::deactivate();
 }
 

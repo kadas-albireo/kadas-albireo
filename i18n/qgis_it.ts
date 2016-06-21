@@ -13299,7 +13299,7 @@ Errore(%2): %3</translation>
     </message>
     <message>
         <source>W</source>
-        <translation>O</translation>
+        <translation>W</translation>
     </message>
     <message>
         <source>E</source>
@@ -37135,6 +37135,18 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     <message>
         <source>Close</source>
         <translation>Chiudere</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation>Metrico</translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation>Imperiale</translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation>Nautico</translation>
     </message>
 </context>
 <context>

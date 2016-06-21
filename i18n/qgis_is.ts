@@ -12788,48 +12788,24 @@ Error(%2): %3</source>
         <translation>cm</translation>
     </message>
     <message>
-        <source> sq ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> acres</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq mile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source> foot</source>
-        <translation>fet</translation>
+        <translation type="obsolete">fet</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>fet</translation>
+        <translation type="obsolete">fet</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>míla</translation>
-    </message>
-    <message>
-        <source> sq. NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> sq.deg.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">míla</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>gráða</translation>
+        <translation type="obsolete">gráða</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>gráður</translation>
+        <translation type="obsolete">gráður</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15168,6 +15144,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Útgáfa 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36333,6 +36345,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Loka</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

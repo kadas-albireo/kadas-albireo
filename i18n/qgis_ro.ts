@@ -12988,47 +12988,47 @@ Eroare(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>ft²</translation>
+        <translation type="obsolete">ft²</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation> acri</translation>
+        <translation type="obsolete"> acri</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> mile²</translation>
+        <translation type="obsolete"> mile²</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>picior</translation>
+        <translation type="obsolete">picior</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>picioare</translation>
+        <translation type="obsolete">picioare</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>milă</translation>
+        <translation type="obsolete">milă</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation> sq. NM</translation>
+        <translation type="obsolete"> sq. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> NM</translation>
+        <translation type="obsolete"> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation>deg²</translation>
+        <translation type="obsolete">deg²</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>grad</translation>
+        <translation type="obsolete">grad</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>grade</translation>
+        <translation type="obsolete">grade</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15399,6 +15399,42 @@ Răspunsul a fost:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versiunea 0,001 {1.0?}</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37107,6 +37143,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

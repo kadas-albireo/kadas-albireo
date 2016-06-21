@@ -998,18 +998,18 @@ QString QgsDistanceArea::textUnit( double value, int decimals, QGis::UnitType u,
         if ( keepBaseUnit  || qAbs( value ) <= 0.5*43560.0 )
         {
           // < 0.5 acre show sq ft
-          unitLabel = QObject::tr( " sq ft" );
+          unitLabel = QObject::trUtf8( " ft²" );
         }
         else if ( qAbs( value ) <= 0.5*5280.0*5280.0 )
         {
           // < 0.5 sq mile show acre
-          unitLabel = QObject::tr( " acres" );
+          unitLabel = QObject::tr( " ac" );
           value /= 43560.0;
         }
         else
         {
           // above 0.5 acre show sq mi
-          unitLabel = QObject::tr( " sq mile" );
+          unitLabel = QObject::trUtf8( " mi²" );
           value /= 5280.0 * 5280.0;
         }
       }
@@ -1019,16 +1019,16 @@ QString QgsDistanceArea::textUnit( double value, int decimals, QGis::UnitType u,
         {
           if ( qAbs( value ) == 1.0 )
           {
-            unitLabel = QObject::tr( " foot" );
+            unitLabel = QObject::tr( " ft" );
           }
           else
           {
-            unitLabel = QObject::tr( " feet" );
+            unitLabel = QObject::tr( " ft" );
           }
         }
         else
         {
-          unitLabel = QObject::tr( " mile" );
+          unitLabel = QObject::tr( " mi" );
           value /= 5280.0;
         }
       }
@@ -1036,24 +1036,24 @@ QString QgsDistanceArea::textUnit( double value, int decimals, QGis::UnitType u,
     case QGis::NauticalMiles:
       if ( isArea )
       {
-        unitLabel = QObject::tr( " sq. NM" );
+        unitLabel = QObject::trUtf8( " nm²" );
       }
       else
       {
-        unitLabel = QObject::tr( " NM" );
+        unitLabel = QObject::tr( " nm" );
       }
       break;
     case QGis::Degrees:
       if ( isArea )
       {
-        unitLabel = QObject::tr( " sq.deg." );
+        unitLabel = QObject::trUtf8( " deg²" );
       }
       else
       {
         if ( qAbs( value ) == 1.0 )
-          unitLabel = QObject::tr( " degree" );
+          unitLabel = QObject::tr( " deg" );
         else
-          unitLabel = QObject::tr( " degrees" );
+          unitLabel = QObject::tr( " deg" );
       }
       break;
     case QGis::UnknownUnit:
