@@ -28,7 +28,6 @@
 #include "qgssinglebandpseudocolorrenderer.h"
 #include "qgshillshadefilter.h"
 
-#include <QApplication>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QDoubleSpinBox>
@@ -108,9 +107,7 @@ void QgsMapToolHillshade::drawFinished()
   QgsHillshadeFilter hillshade( layer->source(), outputFile, "GTiff", spinHorAngle->value(), spinVerAngle->value(), rect, rectCrs );
   QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
-  QApplication::setOverrideCursor( Qt::WaitCursor );
   hillshade.processRaster( &p );
-  QApplication::restoreOverrideCursor();
   if ( !p.wasCanceled() )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );

@@ -27,7 +27,6 @@
 #include "qgssinglebandpseudocolorrenderer.h"
 #include "qgsslopefilter.h"
 
-#include <QApplication>
 #include <QDir>
 #include <QProgressDialog>
 
@@ -73,9 +72,7 @@ void QgsMapToolSlope::drawFinished()
   QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", rect, rectCrs );
   QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
-  QApplication::setOverrideCursor( Qt::WaitCursor );
   slope.processRaster( &p );
-  QApplication::restoreOverrideCursor();
   if ( !p.wasCanceled() )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );

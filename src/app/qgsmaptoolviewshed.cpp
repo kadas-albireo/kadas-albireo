@@ -35,7 +35,6 @@
 #include "qgsviewshed.h"
 #include "qgspinannotationitem.h"
 
-#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -192,9 +191,7 @@ void QgsMapToolViewshed::drawFinished()
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
-  QApplication::setOverrideCursor( Qt::WaitCursor );
   bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
-  QApplication::restoreOverrideCursor();
   if ( success )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
