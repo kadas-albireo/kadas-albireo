@@ -180,6 +180,7 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );
   mDrawTool->setShowNodes( true );
   mDrawTool->setSnapPoints( true );
+  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   mMeasureWidget = 0;
   connect( mDrawTool, SIGNAL( geometryChanged() ), this, SLOT( updateTotal() ) );
 }
