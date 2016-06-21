@@ -12964,47 +12964,39 @@ Hiba (%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>láb2</translation>
+        <translation type="obsolete">láb2</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation> hold</translation>
+        <translation type="obsolete"> hold</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation>mérföld2</translation>
+        <translation type="obsolete">mérföld2</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>láb</translation>
+        <translation type="obsolete">láb</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>láb</translation>
+        <translation type="obsolete">láb</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>mérföld</translation>
-    </message>
-    <message>
-        <source> sq. NM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> NM</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">mérföld</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation> fok2</translation>
+        <translation type="obsolete"> fok2</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>fok</translation>
+        <translation type="obsolete">fok</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>fok</translation>
+        <translation type="obsolete">fok</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15361,6 +15353,42 @@ A válasz:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Verzió 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37039,6 +37067,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Lezár</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

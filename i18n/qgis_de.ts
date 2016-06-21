@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de">
+<TS version="2.1" language="de">
 <context>
     <name>@default</name>
     <message>
@@ -13279,7 +13279,7 @@ Fehler(%2): %3</translation>
     </message>
     <message>
         <source>E</source>
-        <translation>O</translation>
+        <translation>E</translation>
     </message>
     <message>
         <source>S</source>
@@ -31009,7 +31009,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
-        <translation>Auflösung für die Gelandeabtastung</translation>
+        <translation type="unfinished">Auflösung für die Geländeabtastung</translation>
     </message>
     <message>
         <source>Resolution</source>
@@ -37286,6 +37286,18 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
+    <message>
+        <source>Metric</source>
+        <translation>Metrisch</translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation>Imperial</translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation>Nautisch</translation>
+    </message>
 </context>
 <context>
     <name>QgsMemoryProvider</name>
@@ -42664,7 +42676,7 @@ Fehler: %2</translation>
     <name>QgsPinAnnotationItem</name>
     <message>
         <source>Copy position</source>
-        <translation>Position kopieren</translation>
+        <translation>Position kompieren</translation>
     </message>
     <message>
         <source>Remove</source>

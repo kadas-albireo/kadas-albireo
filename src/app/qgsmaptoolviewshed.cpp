@@ -35,12 +35,14 @@
 #include "qgsviewshed.h"
 #include "qgspinannotationitem.h"
 
+#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QMessageBox>
 #include <QProgressDialog>
 
 QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
@@ -76,7 +78,7 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
 
   heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 3, 0, 1, 1 );
   QDoubleSpinBox* spinRadius = new QDoubleSpinBox();
-  spinRadius->setRange( 1, 100000 );
+  spinRadius->setRange( 1, 1000000000 );
   spinRadius->setDecimals( 0 );
   spinRadius->setValue( radius );
   spinRadius->setSuffix( " m" );
@@ -190,7 +192,9 @@ void QgsMapToolViewshed::drawFinished()
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
+  QApplication::setOverrideCursor( Qt::WaitCursor );
   bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
+  QApplication::restoreOverrideCursor();
   if ( success )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Viewshed [%1]" ).arg( center.toString() ) );
@@ -214,6 +218,10 @@ void QgsMapToolViewshed::drawFinished()
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas() );
     pin->setMapPosition( center, canvasCrs );
+  }
+  else
+  {
+    QMessageBox::critical( 0, tr( "Error" ), tr( "Failed to compute viewshed." ) );
   }
   reset();
 }

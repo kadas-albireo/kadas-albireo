@@ -12954,47 +12954,47 @@ Lỗi (%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation>bộ vuông</translation>
+        <translation type="obsolete">bộ vuông</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation> mẫu anh</translation>
+        <translation type="obsolete"> mẫu anh</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation>dặm vuông</translation>
+        <translation type="obsolete">dặm vuông</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation>bộ Anh</translation>
+        <translation type="obsolete">bộ Anh</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation>bộ Anh</translation>
+        <translation type="obsolete">bộ Anh</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation>dặm</translation>
+        <translation type="obsolete">dặm</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation> hải lý vuông</translation>
+        <translation type="obsolete"> hải lý vuông</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> hải lý</translation>
+        <translation type="obsolete"> hải lý</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation>độ vuông.</translation>
+        <translation type="obsolete">độ vuông.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation>độ</translation>
+        <translation type="obsolete">độ</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation>độ</translation>
+        <translation type="obsolete">độ</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15359,6 +15359,42 @@ Phản hồi là:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Phiên bản 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37013,6 +37049,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">Đóng</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

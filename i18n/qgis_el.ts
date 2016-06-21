@@ -12799,47 +12799,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation> τετραγ. πόδια</translation>
+        <translation type="obsolete"> τετραγ. πόδια</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation> έικρ (acres)</translation>
+        <translation type="obsolete"> έικρ (acres)</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> τετραγ. μίλια</translation>
+        <translation type="obsolete"> τετραγ. μίλια</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation> πόδι</translation>
+        <translation type="obsolete"> πόδι</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation> πόδια</translation>
+        <translation type="obsolete"> πόδια</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation> μίλι</translation>
+        <translation type="obsolete"> μίλι</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation>τετραγ. ναυτ. μίλια</translation>
+        <translation type="obsolete">τετραγ. ναυτ. μίλια</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation>ναυτικά μίλια</translation>
+        <translation type="obsolete">ναυτικά μίλια</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation>sq.deg.</translation>
+        <translation type="obsolete">sq.deg.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation> μοίρες</translation>
+        <translation type="obsolete"> μοίρες</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation> μοίρες</translation>
+        <translation type="obsolete"> μοίρες</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15177,6 +15177,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Έκδοση 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36496,6 +36532,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -12968,47 +12968,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation> 평방 피트</translation>
+        <translation type="obsolete"> 평방 피트</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>에이커</translation>
+        <translation type="obsolete">에이커</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> 평방 마일</translation>
+        <translation type="obsolete"> 평방 마일</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation> 피트</translation>
+        <translation type="obsolete"> 피트</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation> 피트</translation>
+        <translation type="obsolete"> 피트</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation> 마일</translation>
+        <translation type="obsolete"> 마일</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation> 평방 NM</translation>
+        <translation type="obsolete"> 평방 NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> NM</translation>
+        <translation type="obsolete"> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation> 평방도</translation>
+        <translation type="obsolete"> 평방도</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation> 도</translation>
+        <translation type="obsolete"> 도</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation> 도</translation>
+        <translation type="obsolete"> 도</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15374,6 +15374,42 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">버전 1.0</translation>
+    </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37054,6 +37090,18 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <source>Close</source>
         <translation type="unfinished">닫기</translation>
+    </message>
+    <message>
+        <source>Metric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imperial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nautical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
