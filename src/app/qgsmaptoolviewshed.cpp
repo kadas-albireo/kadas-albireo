@@ -41,6 +41,7 @@
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QMessageBox>
 #include <QProgressDialog>
 
 QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
@@ -76,7 +77,7 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
 
   heightDialogLayout->addWidget( new QLabel( tr( "Radius:" ) ), 3, 0, 1, 1 );
   QDoubleSpinBox* spinRadius = new QDoubleSpinBox();
-  spinRadius->setRange( 1, 100000 );
+  spinRadius->setRange( 1, 1000000000 );
   spinRadius->setDecimals( 0 );
   spinRadius->setValue( radius );
   spinRadius->setSuffix( " m" );
@@ -214,6 +215,10 @@ void QgsMapToolViewshed::drawFinished()
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas() );
     pin->setMapPosition( center, canvasCrs );
+  }
+  else
+  {
+    QMessageBox::critical( 0, tr( "Error" ), tr( "Failed to compute viewshed." ) );
   }
   reset();
 }
