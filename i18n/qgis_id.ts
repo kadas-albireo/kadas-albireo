@@ -12925,47 +12925,47 @@ Eror(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete"> sq.ft</translation>
+        <translation> sq.ft</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> hektar</translation>
+        <translation> hektar</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete"> sq mile</translation>
+        <translation> sq mile</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> kaki</translation>
+        <translation> kaki</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> kaki</translation>
+        <translation> kaki</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete"> mil</translation>
+        <translation> mil</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete"> sq. NM</translation>
+        <translation> sq. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete"> NM</translation>
+        <translation> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> sq.deg.</translation>
+        <translation> sq.deg.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete">Derajat</translation>
+        <translation>Derajat</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete">derajat</translation>
+        <translation>derajat</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15327,42 +15327,6 @@ Responnya:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versi 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36967,18 +36931,6 @@ Ini mungkin masalah dalam koneksi jaringan anda atau pada server WMS.</numerusfo
     <message>
         <source>Close</source>
         <translation type="unfinished">Tutup</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

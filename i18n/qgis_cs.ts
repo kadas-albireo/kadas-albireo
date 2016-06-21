@@ -12974,47 +12974,47 @@ Chyba(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete">čtvereční stopy</translation>
+        <translation>čtvereční stopy</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> akrů</translation>
+        <translation> akrů</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete">čtvereční míle</translation>
+        <translation>čtvereční míle</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> stopa</translation>
+        <translation> stopa</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete">stopy</translation>
+        <translation>stopy</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete">míle</translation>
+        <translation>míle</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete">čtver. NM</translation>
+        <translation>čtver. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete"> NM</translation>
+        <translation> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete">čtver. stup.</translation>
+        <translation>čtver. stup.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> stupeň</translation>
+        <translation> stupeň</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete">stupně</translation>
+        <translation>stupně</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15370,42 +15370,6 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Verze 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37056,18 +37020,6 @@ To může být problém vašeho síťového nastavení nebo WMS serveru.</numeru
     <message>
         <source>Close</source>
         <translation type="unfinished">Zavřít</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

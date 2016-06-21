@@ -12915,39 +12915,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete">kv. pēda</translation>
+        <translation>kv. pēda</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete">akri</translation>
+        <translation>akri</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete">kv. jūdze</translation>
+        <translation>kv. jūdze</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> pēdas</translation>
+        <translation> pēdas</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> pēdas</translation>
+        <translation> pēdas</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete">jūdze</translation>
+        <translation>jūdze</translation>
+    </message>
+    <message>
+        <source> sq. NM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> NM</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> kv. grādi.</translation>
+        <translation> kv. grādi.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> grāds</translation>
+        <translation> grāds</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete"> grādi</translation>
+        <translation> grādi</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15288,42 +15296,6 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versija 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36829,18 +36801,6 @@ Tā varētu būt problēma ar jūsu tīkla savienojumu vai arī ar WMS serveri.<
     <message>
         <source>Close</source>
         <translation type="unfinished">Aizvērt</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

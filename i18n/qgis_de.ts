@@ -13279,7 +13279,7 @@ Fehler(%2): %3</translation>
     </message>
     <message>
         <source>E</source>
-        <translation>E</translation>
+        <translation>O</translation>
     </message>
     <message>
         <source>S</source>
@@ -37285,18 +37285,6 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>Close</source>
         <translation>Schließen</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation>Metrisch</translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation>Imperial</translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation>Nautisch</translation>
     </message>
 </context>
 <context>

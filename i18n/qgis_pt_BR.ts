@@ -12985,47 +12985,47 @@ Erro(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete"> pés2</translation>
+        <translation> pés2</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> acres</translation>
+        <translation> acres</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete"> milhas2</translation>
+        <translation> milhas2</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> pés</translation>
+        <translation> pés</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> pés</translation>
+        <translation> pés</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete"> milha</translation>
+        <translation> milha</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete"> sq. NM</translation>
+        <translation> sq. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete"> NM</translation>
+        <translation> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> graus2.</translation>
+        <translation> graus2.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> graus</translation>
+        <translation> graus</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete"> graus</translation>
+        <translation> graus</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15390,42 +15390,6 @@ Resposta foi:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versão 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37136,18 +37100,6 @@ Isto pode ser um problema em sua conexão ou no servidor WMS.</numerusform>
     <message>
         <source>Close</source>
         <translation type="unfinished">Fechar</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

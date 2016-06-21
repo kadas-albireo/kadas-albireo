@@ -12676,35 +12676,47 @@ Error(%2): %3</source>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete"> sq ft</translation>
+        <translation> sq ft</translation>
+    </message>
+    <message>
+        <source> acres</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete"> sq mile</translation>
+        <translation> sq mile</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete">stopa</translation>
+        <translation>stopa</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete">stope</translation>
+        <translation>stope</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete">milja</translation>
+        <translation>milja</translation>
+    </message>
+    <message>
+        <source> sq. NM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> NM</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> sq.deg.</translation>
+        <translation> sq.deg.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete">stepen</translation>
+        <translation>stepen</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete">stepeni</translation>
+        <translation>stepeni</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15045,42 +15057,6 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Verzija 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36430,18 +36406,6 @@ Ovo može biti problem u vašoj mrežnoj vezi ili na WMS serveru.</numerusform>
     <message>
         <source>Close</source>
         <translation type="unfinished">Zatvori</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

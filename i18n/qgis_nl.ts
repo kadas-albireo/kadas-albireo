@@ -13000,47 +13000,47 @@ Fout(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete">voet in het vierkant</translation>
+        <translation>voet in het vierkant</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete">acres</translation>
+        <translation>acres</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete">vierkante mijl</translation>
+        <translation>vierkante mijl</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> voet</translation>
+        <translation> voet</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> voet</translation>
+        <translation> voet</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete">mijl</translation>
+        <translation>mijl</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete"> NM 2</translation>
+        <translation> NM 2</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete"> NM</translation>
+        <translation> NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete">graden in het vierkant.</translation>
+        <translation>graden in het vierkant.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> graad</translation>
+        <translation> graad</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete">graden</translation>
+        <translation>graden</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15409,42 +15409,6 @@ Antwoord was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versie 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37140,18 +37104,6 @@ eigenschappen
     <message>
         <source>Close</source>
         <translation type="unfinished">Sluiten</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

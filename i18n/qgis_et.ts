@@ -12860,39 +12860,47 @@ Viga(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete">ruutjalga</translation>
+        <translation>ruutjalga</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> aakrit</translation>
+        <translation> aakrit</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete">ruutmiili</translation>
+        <translation>ruutmiili</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> jalg</translation>
+        <translation> jalg</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> jalga</translation>
+        <translation> jalga</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete">miili</translation>
+        <translation>miili</translation>
+    </message>
+    <message>
+        <source> sq. NM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> NM</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete">ruutkr.</translation>
+        <translation>ruutkr.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete">kraad</translation>
+        <translation>kraad</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete">kraadi</translation>
+        <translation>kraadi</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15242,42 +15250,6 @@ Response was:
     <message>
         <source>Version 1.0</source>
         <translation type="unfinished">Versioon 1.0</translation>
-    </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36788,18 +36760,6 @@ Kaardus</translation>
     <message>
         <source>Close</source>
         <translation type="unfinished">Sulge</translation>
-    </message>
-    <message>
-        <source>Metric</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Imperial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nautical</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
