@@ -78,16 +78,16 @@ void QgsMapToolSlope::drawFinished()
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
-        << QgsColorRampShader::ColorRampItem( 0, QColor( 43, 131, 186 ), QString::fromUtf8( "0°" ) )
-        << QgsColorRampShader::ColorRampItem( 5, QColor( 99, 171, 176 ), QString::fromUtf8( "5°" ) )
-        << QgsColorRampShader::ColorRampItem( 10, QColor( 156, 211, 166 ), QString::fromUtf8( "10°" ) )
-        << QgsColorRampShader::ColorRampItem( 15, QColor( 199, 232, 173 ), QString::fromUtf8( "15°" ) )
-        << QgsColorRampShader::ColorRampItem( 20, QColor( 236, 247, 185 ), QString::fromUtf8( "20°" ) )
-        << QgsColorRampShader::ColorRampItem( 25, QColor( 254, 237, 170 ), QString::fromUtf8( "25°" ) )
-        << QgsColorRampShader::ColorRampItem( 30, QColor( 253, 201, 128 ), QString::fromUtf8( "30°" ) )
-        << QgsColorRampShader::ColorRampItem( 35, QColor( 248, 157, 89 ), QString::fromUtf8( "35°" ) )
-        << QgsColorRampShader::ColorRampItem( 40, QColor( 231, 91, 58 ), QString::fromUtf8( "40°" ) )
-        << QgsColorRampShader::ColorRampItem( 45, QColor( 215, 25, 28 ), QString::fromUtf8( "45°" ) );
+        << QgsColorRampShader::ColorRampItem( 0, QColor( 43, 131, 186 ), "0%" )
+        << QgsColorRampShader::ColorRampItem( 5, QColor( 99, 171, 176 ), "5%" )
+        << QgsColorRampShader::ColorRampItem( 10, QColor( 156, 211, 166 ), "10%" )
+        << QgsColorRampShader::ColorRampItem( 15, QColor( 199, 232, 173 ), "15%" )
+        << QgsColorRampShader::ColorRampItem( 20, QColor( 236, 247, 185 ), "20%" )
+        << QgsColorRampShader::ColorRampItem( 25, QColor( 254, 237, 170 ), "25%" )
+        << QgsColorRampShader::ColorRampItem( 30, QColor( 253, 201, 128 ), "30%" )
+        << QgsColorRampShader::ColorRampItem( 35, QColor( 248, 157, 89 ), "35%" )
+        << QgsColorRampShader::ColorRampItem( 40, QColor( 231, 91, 58 ), "40%" )
+        << QgsColorRampShader::ColorRampItem( 45, QColor( 215, 25, 28 ), "45%" );
     rampShader->setColorRampItemList( colorRampItems );
     QgsRasterShader* shader = new QgsRasterShader();
     shader->setRasterShaderFunction( rampShader );
