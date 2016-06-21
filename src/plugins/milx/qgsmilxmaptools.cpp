@@ -25,6 +25,9 @@ QgsMilXCreateTool::QgsMilXCreateTool( QgsMapCanvas* canvas, QgsMilXLayer* layer,
     : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mItem( 0 ), mLayer( layer )
 {
   setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
+  // If layer is deleted or layers are changed, quit tool
+  connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
+  connect( canvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( deleteLater() ) );
 }
 
 QgsMilXCreateTool::~QgsMilXCreateTool()
@@ -76,10 +79,8 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
       mNPressedPoints = 0;
-      mCanvas->unsetMapTool( this );
       // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
-      mItem = 0;
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( deleteLater() ) );
       mLayer->triggerRepaint();
     }
   }
@@ -90,18 +91,14 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Done with N point symbol, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
-      mCanvas->unsetMapTool( this );
       // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
-      mItem = 0;
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( deleteLater() ) );
       mLayer->triggerRepaint();
     }
     else if ( mNPressedPoints + 1 < mMinNPoints )
     {
       // premature stop
-      delete mItem.data();
-      mItem = 0;
-      mCanvas->unsetMapTool( this );
+      deleteLater();
     }
   }
 }
@@ -114,7 +111,7 @@ void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
   }
 }
 
-void QgsMilXCreateTool::keyReleaseEvent(QKeyEvent *e)
+void QgsMilXCreateTool::keyReleaseEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
@@ -130,9 +127,8 @@ QgsMilXEditTool::QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, Qgs
   mItem = new QgsMilXAnnotationItem( canvas );
   mItem->fromMilxItem( item );
   mItem->setSelected( true );
-  connect( mItem.data(), SIGNAL( destroyed( QObject* ) ), this, SLOT( deactivateTool() ) );
-  connect( mLayer, SIGNAL( destroyed( QObject* ) ), mItem.data(), SLOT( deleteLater() ) );
-  // Ensure editing is terminated if layers change (i.e. also if the visibility of the milx layer changes)
+  // If layer is deleted or layers are changed, quit tool
+  connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
   connect( canvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( deleteLater() ) );
 }
 
@@ -140,10 +136,17 @@ QgsMilXEditTool::~QgsMilXEditTool()
 {
   if ( !mItem.isNull() )
   {
-    mLayer->addItem( mItem->toMilxItem() );
-    // Delay delete until after refresh, to avoid flickering
-    connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem.data(), SLOT( deleteLater() ) );
-    mLayer->triggerRepaint();
+    if ( mLayer )
+    {
+      mLayer->addItem( mItem->toMilxItem() );
+      // Delay delete until after refresh, to avoid flickering
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem.data(), SLOT( deleteLater() ) );
+      mLayer->triggerRepaint();
+    }
+    else
+    {
+      delete mItem.data();
+    }
   }
 }
 
@@ -152,19 +155,14 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
   QgsMapToolPan::canvasReleaseEvent( e );
   if ( mCanvas->selectedAnnotationItem() != mItem )
   {
-    mCanvas->unsetMapTool( this );
+    deleteLater(); // quit tool
   }
 }
 
-void QgsMilXEditTool::keyReleaseEvent(QKeyEvent *e)
+void QgsMilXEditTool::keyReleaseEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
     deleteLater(); // quit tool
   }
-}
-
-void QgsMilXEditTool::deactivateTool()
-{
-  mCanvas->unsetMapTool( this );
 }
