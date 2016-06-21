@@ -132,7 +132,6 @@ QgsRedliningEditTool::QgsRedliningEditTool( QgsMapCanvas* canvas , QgsVectorLaye
     : QgsMapToolPan( canvas ), mLayer( layer ), mEditor( editor ), mMode( NoSelection ), mRubberBand( 0 ), mCurrentFeature( 0 ), mCurrentVertex( -1 ), mIsRectangle( false ), mUnsetOnMiss( false )
 {
   connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( updateLabelBoundingBox() ) );
-  setCursor( Qt::CrossCursor );
 }
 
 QgsRedliningEditTool::~QgsRedliningEditTool()
