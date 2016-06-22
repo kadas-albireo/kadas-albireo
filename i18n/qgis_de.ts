@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de">
+<TS version="2.0" language="de">
 <context>
     <name>@default</name>
     <message>
@@ -31009,7 +31009,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
-        <translation type="unfinished">Auflösung für die Geländeabtastung</translation>
+        <translation>Auflösung für die Geländeabtastung</translation>
     </message>
     <message>
         <source>Resolution</source>
@@ -42676,7 +42676,7 @@ Fehler: %2</translation>
     <name>QgsPinAnnotationItem</name>
     <message>
         <source>Copy position</source>
-        <translation>Position kompieren</translation>
+        <translation>Position kopieren</translation>
     </message>
     <message>
         <source>Remove</source>

@@ -244,6 +244,7 @@ GlobePlugin::GlobePlugin( QgisInterface* theQgisInterface )
     , mSelectedLon( 0. )
     , mSelectedElevation( 0. )
     , mLayerPropertiesFactory( 0 )
+    , mAnnotationsGroup( 0 )
 {
 #ifdef Q_OS_MACX
   // update path to osg plugins on Mac OS X
@@ -290,7 +291,6 @@ void GlobePlugin::initGui()
   mQGisIface->registerMapLayerPropertiesFactory( mLayerPropertiesFactory );
 
   connect( mActionToggleGlobe, SIGNAL( triggered( bool ) ), this, SLOT( setGlobeEnabled( bool ) ) );
-//  connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemAdded( QgsBillBoardItem* ) ), this, SLOT( addBillboard( QgsBillBoardItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemRemoved( QgsBillBoardItem* ) ), this, SLOT( removeBillboard( QgsBillBoardItem* ) ) );
   connect( mLayerPropertiesFactory, SIGNAL( layerSettingsChanged( QgsMapLayer* ) ), this, SLOT( layerChanged( QgsMapLayer* ) ) );
@@ -338,7 +338,7 @@ void GlobePlugin::run()
   connect( mDockWidget, SIGNAL( destroyed( QObject* ) ), this, SLOT( reset() ) );
   connect( mDockWidget, SIGNAL( layersChanged() ), this, SLOT( updateLayers() ) );
   connect( mDockWidget, SIGNAL( showSettings() ), this, SLOT( showSettings() ) );
-  connect( mDockWidget, SIGNAL( refresh() ), this, SLOT( updateLayers() ) );
+  connect( mDockWidget, SIGNAL( refresh() ), this, SLOT( rebuildQGISLayer() ) );
   connect( mDockWidget, SIGNAL( syncExtent() ), this, SLOT( syncExtent() ) );
   mQGisIface->addDockWidget( Qt::RightDockWidgetArea, mDockWidget );
 
@@ -1057,9 +1057,30 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
   }
 }
 
+void GlobePlugin::rebuildQGISLayer()
+{
+  if ( mMapNode )
+  {
+    mMapNode->getMap()->removeImageLayer( mQgisMapLayer );
+    mLayerExtents.clear();
+
+    osgEarth::TileSourceOptions opts;
+    opts.L2CacheSize() = 0;
+    opts.tileSize() = 128;
+    mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
+
+    osgEarth::ImageLayerOptions options( "QGIS" );
+    options.driver()->L2CacheSize() = 0;
+    options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
+    mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+    mMapNode->getMap()->addImageLayer( mQgisMapLayer );
+    updateLayers();
+  }
+}
+
 void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 {
-  if ( mOsgViewer )
+  if ( mAnnotationsGroup )
   {
     if ( mAnnotations.contains( item->layerId ) )
     {
@@ -1088,7 +1109,7 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 
 void GlobePlugin::removeBillboard( QgsBillBoardItem* item )
 {
-  if ( mOsgViewer && mAnnotations.contains( item->layerId ) )
+  if ( mAnnotationsGroup && mAnnotations.contains( item->layerId ) )
   {
     mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
     mAnnotations[item->layerId].take( item ) = 0;
@@ -1113,6 +1134,7 @@ void GlobePlugin::reset()
   mActionToggleGlobe->blockSignals( true );
   mActionToggleGlobe->setChecked( false );
   mActionToggleGlobe->blockSignals( false );
+  mMapNode->getMap()->removeImageLayer( mQgisMapLayer ); // abort any rendering
   mOsgViewer = 0;
   mMapNode = 0;
   mRootNode = 0;
@@ -1133,6 +1155,7 @@ void GlobePlugin::reset()
   mAnnotationsGroup = 0;
   mImagerySources.clear();
   mElevationSources.clear();
+  mLayerExtents.clear();
 #ifdef GLOBE_SHOW_TILE_STATS
   disconnect( QgsGlobeTileStatistics::instance(), SIGNAL( changed( int, int ) ), this, SLOT( updateTileStats( int, int ) ) );
   delete QgsGlobeTileStatistics::instance();
