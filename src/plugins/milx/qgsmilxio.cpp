@@ -133,7 +133,6 @@ bool QgsMilXIO::save( QgisInterface* iface )
     return false;
   }
 
-  QStringList exportMessages;
   int dpi = QApplication::desktop()->logicalDpiX();
 
   QDomDocument doc;
