@@ -175,7 +175,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     void applySettings();
     void layerChanged( QgsMapLayer* mapLayer = 0 );
     void addBillboard( QgsBillBoardItem* item );
-    void rebuildQGISLayer();
     void removeBillboard( QgsBillBoardItem* item );
     void refreshQGISMapLayer( QgsRectangle rect = QgsRectangle() );
     void updateTileStats( int queued, int tot );
