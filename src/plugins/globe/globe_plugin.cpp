@@ -244,6 +244,7 @@ GlobePlugin::GlobePlugin( QgisInterface* theQgisInterface )
     , mSelectedLon( 0. )
     , mSelectedElevation( 0. )
     , mLayerPropertiesFactory( 0 )
+    , mAnnotationsGroup( 0 )
 {
 #ifdef Q_OS_MACX
   // update path to osg plugins on Mac OS X
@@ -290,7 +291,6 @@ void GlobePlugin::initGui()
   mQGisIface->registerMapLayerPropertiesFactory( mLayerPropertiesFactory );
 
   connect( mActionToggleGlobe, SIGNAL( triggered( bool ) ), this, SLOT( setGlobeEnabled( bool ) ) );
-//  connect( mQGisIface->mapCanvas(), SIGNAL( annotationItemChanged( QgsAnnotationItem* ) ), this, SLOT( updateAnnotationItem( QgsAnnotationItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemAdded( QgsBillBoardItem* ) ), this, SLOT( addBillboard( QgsBillBoardItem* ) ) );
   connect( QgsBillBoardRegistry::instance(), SIGNAL( itemRemoved( QgsBillBoardItem* ) ), this, SLOT( removeBillboard( QgsBillBoardItem* ) ) );
   connect( mLayerPropertiesFactory, SIGNAL( layerSettingsChanged( QgsMapLayer* ) ), this, SLOT( layerChanged( QgsMapLayer* ) ) );
@@ -1059,7 +1059,7 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
 
 void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 {
-  if ( mOsgViewer )
+  if ( mAnnotationsGroup )
   {
     if ( mAnnotations.contains( item->layerId ) )
     {
@@ -1088,7 +1088,7 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 
 void GlobePlugin::removeBillboard( QgsBillBoardItem* item )
 {
-  if ( mOsgViewer && mAnnotations.contains( item->layerId ) )
+  if ( mAnnotationsGroup && mAnnotations.contains( item->layerId ) )
   {
     mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
     mAnnotations[item->layerId].take( item ) = 0;
