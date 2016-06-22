@@ -127,6 +127,7 @@ QgsMilXEditTool::QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, Qgs
   mItem = new QgsMilXAnnotationItem( canvas );
   mItem->fromMilxItem( item );
   mItem->setSelected( true );
+  connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   // If layer is deleted or layers are changed, quit tool
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
   connect( canvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( deleteLater() ) );
