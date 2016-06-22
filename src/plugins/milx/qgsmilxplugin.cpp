@@ -143,7 +143,6 @@ void QgsMilXPlugin::setMilXSymbolSize( int value )
   {
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      static_cast<QgsMilXLayer*>( layer )->invalidateBillboards();
       layer->triggerRepaint();
     }
   }

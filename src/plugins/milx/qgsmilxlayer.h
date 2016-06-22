@@ -95,8 +95,6 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     QVariantList getItems( const QgsRectangle& extent ) const override;
     void deleteItems( const QVariantList& items ) override;
 
-    void invalidateBillboards();
-
   signals:
     void symbolPicked( int symbolIdx );
 
