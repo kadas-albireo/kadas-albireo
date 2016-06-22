@@ -417,6 +417,23 @@ void QgsMilXLayer::deleteItems( const QVariantList &items )
   }
 }
 
+void QgsMilXLayer::invalidateBillboards()
+{
+  foreach ( QgsMilXItem* item, mItems )
+  {
+    if ( !item->isMultiPoint() && !item->points().isEmpty() )
+    {
+      int symbolSize = MilXClient::getSymbolSize();
+      MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, double> >(), true, true );
+      MilXClient::NPointSymbolGraphic graphic;
+      if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+      {
+        QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), id() );
+      }
+    }
+  }
+}
+
 void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, int dpi )
 {
   QDomDocument doc = milxDocumentEl.ownerDocument();
