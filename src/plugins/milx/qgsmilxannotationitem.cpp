@@ -513,12 +513,10 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
 
 bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
 {
-  QPoint offset;
   if ( !isMultiPoint() )
   {
-    offset = mOffsetFromReferencePoint.toPoint() - mRenderOffset;
+    return true;
   }
-  QTextStream( stdout ) << ( screenPos - offset ).x() << " " << ( screenPos - offset ).y() << endl;
   // First, check against attribute points, controlpoints and regular points
   QList< QPair<int, QPoint> > screenAttrPoints = screenAttributePoints();
   typedef QPair<int, QPoint> Attrib_t;
@@ -541,7 +539,7 @@ bool QgsMilXAnnotationItem::hitTest( const QPoint& screenPos ) const
   // Do the full hit test
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPts, mControlPoints, screenAttributes(), mFinalized, true );
   bool hitTestResult = false;
-  MilXClient::hitTest( symbol, screenPos - offset, hitTestResult );
+  MilXClient::hitTest( symbol, screenPos, hitTestResult );
   return hitTestResult;
 }
 
