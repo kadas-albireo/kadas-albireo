@@ -346,7 +346,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
-      QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), id() );
+      QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
     }
   }
 }
@@ -428,7 +428,7 @@ void QgsMilXLayer::invalidateBillboards()
       MilXClient::NPointSymbolGraphic graphic;
       if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
       {
-        QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), id() );
+        QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
       }
     }
   }
