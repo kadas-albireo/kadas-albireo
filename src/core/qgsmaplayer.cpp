@@ -379,6 +379,17 @@ bool QgsMapLayer::readLayerXML( const QDomElement& layerElement )
   mCRS->validate();
   savedCRS = *mCRS;
 
+  // set ID
+  mnl = layerElement.namedItem( "id" );
+  if ( ! mnl.isNull() )
+  {
+    mne = mnl.toElement();
+    if ( ! mne.isNull() && mne.text().length() > 10 ) // should be at least 17 (yyyyMMddhhmmsszzz)
+    {
+      mID = mne.text();
+    }
+  }
+
   // Do not validate any projections in children, they will be overwritten anyway.
   // No need to ask the user for a projections when it is overwritten, is there?
   savedValidation = QgsCoordinateReferenceSystem::customSrsValidation();
@@ -402,17 +413,6 @@ bool QgsMapLayer::readLayerXML( const QDomElement& layerElement )
   // the internal name is just the data source basename
   //QFileInfo dataSourceFileInfo( mDataSource );
   //internalName = dataSourceFileInfo.baseName();
-
-  // set ID
-  mnl = layerElement.namedItem( "id" );
-  if ( ! mnl.isNull() )
-  {
-    mne = mnl.toElement();
-    if ( ! mne.isNull() && mne.text().length() > 10 ) // should be at least 17 (yyyyMMddhhmmsszzz)
-    {
-      mID = mne.text();
-    }
-  }
 
   // use scale dependent visibility flag
   setScaleBasedVisibility( layerElement.attribute( "hasScaleBasedVisibilityFlag" ).toInt() == 1 );
