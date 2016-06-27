@@ -206,6 +206,11 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   loadingItem->setEnabled( false );
   mLoadingModel->appendRow( loadingItem );
 
+  mOfflineModel = new QStandardItemModel( this );
+  QStandardItem* offlineItem = new QStandardItem( tr( "Offline" ) );
+  offlineItem->setEnabled( false );
+  mOfflineModel->appendRow( offlineItem );
+
   QStringList catalogUris = QSettings().value( "/qgis/geodatacatalogs" ).toString().split( ";;" );
   foreach ( const QString& catalogUri, catalogUris )
   {
@@ -248,9 +253,16 @@ void QgsCatalogBrowser::providerFinished()
   mFinishedProviders += 1;
   if ( mFinishedProviders == mProviders.size() )
   {
-    mCatalogModel->invisibleRootItem()->sortChildren( 0 );
-    mFilterProxyModel->setSourceModel( mCatalogModel );
-    mTreeView->setModel( mFilterProxyModel );
+    if ( mCatalogModel->rowCount() > 0 )
+    {
+      mCatalogModel->invisibleRootItem()->sortChildren( 0 );
+      mFilterProxyModel->setSourceModel( mCatalogModel );
+      mTreeView->setModel( mFilterProxyModel );
+    }
+    else
+    {
+      mTreeView->setModel( mOfflineModel );
+    }
   }
 }
 
