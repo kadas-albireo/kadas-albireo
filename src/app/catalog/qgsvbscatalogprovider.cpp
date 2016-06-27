@@ -37,7 +37,7 @@ QgsVBSCatalogProvider::QgsVBSCatalogProvider( const QString &baseUrl, QgsCatalog
 
 void QgsVBSCatalogProvider::load()
 {
-  mPendingTasks = 0;
+  mPendingTasks = 1;
   QUrl url( mBaseUrl );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   url.addQueryItem( "lang", lang );
@@ -50,48 +50,44 @@ void QgsVBSCatalogProvider::load()
 void QgsVBSCatalogProvider::replyFinished()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
+  if ( reply->error() == QNetworkReply::NoError )
+  {
+    QJson::Parser parser;
+    QMap<QString, EntryMap> wmtsLayers;
+    QMap<QString, EntryMap> wmsLayers;
+    QMap<QString, EntryMap> amsLayers;
+    QVariantMap listData = parser.parse( reply->readAll() ).toMap();
+    foreach ( const QVariant& resultData, listData["results"].toList() )
+    {
+      QVariantMap resultMap = resultData.toMap();
+      if ( resultMap["type"].toString() == "wmts" )
+      {
+        wmtsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
+      }
+      else if ( resultMap["type"].toString() == "wms" )
+      {
+        wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
+      }
+      else if ( resultMap["type"].toString() == "ams" )
+      {
+        amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
+      }
+    }
+
+    foreach ( const QString& wmtsUrl, wmtsLayers.keys() )
+    {
+      readWMTSCapabilities( wmtsUrl, wmtsLayers[wmtsUrl] );
+    }
+    foreach ( const QString& wmsUrl, wmsLayers.keys() )
+    {
+      readWMSCapabilities( wmsUrl, wmsLayers[wmsUrl] );
+    }
+    foreach ( const QString& amsUrl, amsLayers.keys() )
+    {
+      readAMSCapabilities( amsUrl, amsLayers[amsUrl] );
+    }
+  }
   reply->deleteLater();
-  if ( reply->error() != QNetworkReply::NoError )
-  {
-    return;
-  }
-
-  QJson::Parser parser;
-  QMap<QString, EntryMap> wmtsLayers;
-  QMap<QString, EntryMap> wmsLayers;
-  QMap<QString, EntryMap> amsLayers;
-  QVariantMap listData = parser.parse( reply->readAll() ).toMap();
-  foreach ( const QVariant& resultData, listData["results"].toList() )
-  {
-    QVariantMap resultMap = resultData.toMap();
-    if ( resultMap["type"].toString() == "wmts" )
-    {
-      wmtsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
-    }
-    else if ( resultMap["type"].toString() == "wms" )
-    {
-      wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
-    }
-    else if ( resultMap["type"].toString() == "ams" )
-    {
-      amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString() ) );
-    }
-  }
-
-  mPendingTasks += 1;
-  foreach ( const QString& wmtsUrl, wmtsLayers.keys() )
-  {
-    readWMTSCapabilities( wmtsUrl, wmtsLayers[wmtsUrl] );
-  }
-  foreach ( const QString& wmsUrl, wmsLayers.keys() )
-  {
-    readWMSCapabilities( wmsUrl, wmsLayers[wmsUrl] );
-  }
-  foreach ( const QString& amsUrl, amsLayers.keys() )
-  {
-    readAMSCapabilities( amsUrl, amsLayers[amsUrl] );
-  }
-
   endTask();
 }
 
@@ -135,7 +131,9 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
           QString title;
           QMimeData* mimeData;
           parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
-          mBrowser->addItem( getCategoryItem(( *entries )[layerid].category.split( "/" ) ), ( *entries )[layerid].title, true, mimeData );
+          const ResultEntry& entry = ( *entries )[layerid];
+          QStringList sortIndices = entry.sortIndices.split("/");
+          mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entry.title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
         }
       }
     }
@@ -239,7 +237,9 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
       QString format = filteredEncodings.contains( "png" ) ? "png" : filteredEncodings.toList().front();
       mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
       QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
-      mBrowser->addItem( getCategoryItem( entries->value( layerName ).category.split( "/" ) ), mimeDataUri.name, true, mimeData );
+      const ResultEntry& entry = ( *entries )[layerName];
+      QStringList sortIndices = entry.sortIndices.split("/");
+      mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), mimeDataUri.name, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
     }
   }
 
@@ -255,8 +255,9 @@ bool QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, c
     QString title;
     QMimeData* mimeData;
     parseWMSLayerCapabilities( layerItem, imgFormats, url, title, mimeData );
-    mBrowser->addItem( getCategoryItem( entries[layerid].category.split( "/" ) ), entries[layerid].title, true, mimeData );
-    return true;
+    const ResultEntry& entry = entries[layerid];
+    QStringList sortIndices = entry.sortIndices.split("/");
+    mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entries[layerid].title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
   }
   else
   {

@@ -31,6 +31,31 @@
 #include <QTextStream>
 #include <QUrl>
 
+
+class QgsCatalogBrowser::CatalogItem : public QStandardItem
+{
+  public:
+    CatalogItem() : QStandardItem() {}
+    CatalogItem( const QString &text ) : QStandardItem( text ) {}
+    CatalogItem( const QIcon &icon, const QString &text ) : QStandardItem( icon, text ) {}
+    explicit CatalogItem( int rows, int columns = 1 ) : QStandardItem( rows, columns ) {}
+
+    bool operator<( const QStandardItem &other ) const
+    {
+      int i1 = data( s_sortIndexRole ).toInt();
+      int i2 = other.data( s_sortIndexRole ).toInt();
+      return i1 >= 0 && i2 >= 0 ? i1 < i2 : QStandardItem::operator <( other );
+    }
+
+    static const int s_uriRole;
+    static const int s_sortIndexRole;
+};
+
+
+const int QgsCatalogBrowser::CatalogItem::s_uriRole = Qt::UserRole + 1;
+const int QgsCatalogBrowser::CatalogItem::s_sortIndexRole = Qt::UserRole + 2;
+
+
 class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
 {
   public:
@@ -38,7 +63,7 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
     {
     }
 
-    QStandardItem* addItem( QStandardItem* parent, const QString& value, bool isLeaf, QMimeData* mimeData )
+    QStandardItem* addItem( QStandardItem* parent, const QString& value, int sortIndex, bool isLeaf, QMimeData* mimeData )
     {
       if ( !parent )
       {
@@ -58,7 +83,8 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
         }
         if ( !groupItem )
         {
-          groupItem = new QStandardItem( value );
+          groupItem = new CatalogItem( value );
+          groupItem->setData( sortIndex, CatalogItem::s_sortIndexRole );
           groupItem->setDragEnabled( false );
           groupItem->setToolTip( value );
           parent->setChild( parent->rowCount(), groupItem );
@@ -67,10 +93,11 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
       }
       else
       {
-        QStandardItem* item = new QStandardItem( value );
+        QStandardItem* item = new CatalogItem( value );
         parent->setChild( parent->rowCount(), item );
+        item->setData( sortIndex, CatalogItem::s_sortIndexRole );
         item->setToolTip( value );
-        item->setData( QgsMimeDataUtils::decodeUriList( mimeData ).front().data() );
+        item->setData( QgsMimeDataUtils::decodeUriList( mimeData ).front().data(), CatalogItem::s_uriRole );
         return item;
       }
     }
@@ -93,7 +120,7 @@ class QgsCatalogBrowser::CatalogModel : public QStandardItemModel
         {
           item = item->child( indexStack[i].row() );
         }
-        QgsMimeDataUtils::Uri uri( item->data().toString() );
+        QgsMimeDataUtils::Uri uri( item->data( CatalogItem::s_uriRole ).toString() );
 
         QMimeData* data = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << uri );
         return data;
@@ -253,7 +280,7 @@ void QgsCatalogBrowser::itemDoubleClicked( const QModelIndex &index )
   }
 }
 
-QStandardItem *QgsCatalogBrowser::addItem( QStandardItem *parent, QString text, bool isLeaf, QMimeData *mimeData )
+QStandardItem *QgsCatalogBrowser::addItem( QStandardItem *parent, QString text, int sortIndex, bool isLeaf, QMimeData *mimeData )
 {
-  return mCatalogModel->addItem( parent, text, isLeaf, mimeData );
+  return mCatalogModel->addItem( parent, text, sortIndex, isLeaf, mimeData );
 }

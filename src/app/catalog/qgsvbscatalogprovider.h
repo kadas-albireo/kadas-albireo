@@ -34,12 +34,13 @@ class APP_EXPORT QgsVBSCatalogProvider : public QgsCatalogProvider
     struct ResultEntry
     {
       ResultEntry() {}
-      ResultEntry( const QString& _category, const QString& _title )
-          : category( _category ), title( _title ) {}
+      ResultEntry( const QString& _category, const QString& _title, const QString& _sortIndices )
+          : category( _category ), title( _title ), sortIndices( _sortIndices ) {}
       ResultEntry( const ResultEntry& entry )
-          : category( entry.category ), title( entry.title ) {}
+          : category( entry.category ), title( entry.title ), sortIndices( entry.sortIndices ) {}
       QString category;
       QString title;
+      QString sortIndices;
     };
     typedef QMap< QString, ResultEntry > EntryMap;
 
