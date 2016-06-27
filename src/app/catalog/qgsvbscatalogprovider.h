@@ -52,7 +52,7 @@ class APP_EXPORT QgsVBSCatalogProvider : public QgsCatalogProvider
     void readWMTSCapabilities( const QString& wmtsUrl, const EntryMap &entries );
     void readWMSCapabilities( const QString& wmsUrl, const EntryMap &entries );
     void readAMSCapabilities( const QString& amsUrl, const EntryMap& entries );
-    void searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString &url, const QStringList &imgFormats );
+    bool searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString &url, const QStringList &imgFormats );
 
   private slots:
     void readWMTSCapabilitiesDo();

@@ -132,7 +132,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
           QMimeData* mimeData;
           parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
           const ResultEntry& entry = ( *entries )[layerid];
-          QStringList sortIndices = entry.sortIndices.split( "/" );
+          QStringList sortIndices = entry.sortIndices.split("/");
           mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entry.title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
         }
       }
@@ -146,7 +146,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
 void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
-  QNetworkRequest req( QUrl( wmsUrl + "?SERVICE=WMS&REQUEST=GetCapabilities" ) );
+  QNetworkRequest req( QUrl( wmsUrl + "?request=GetCapabilities&service=WMS" ) );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   reply->setProperty( "url", wmsUrl );
   reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
@@ -167,7 +167,10 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
     QStringList imgFormats = parseWMSFormats( doc );
     foreach ( const QDomNode& layerItem, childrenByTagName( doc.firstChildElement( "WMS_Capabilities" ).firstChildElement( "Capability" ), "Layer" ) )
     {
-      searchMatchingWMSLayer( layerItem, *entries, url, imgFormats );
+      if ( searchMatchingWMSLayer( layerItem, *entries, url, imgFormats ) )
+      {
+        break;
+      }
     }
   }
 
@@ -235,7 +238,7 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
       mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
       QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
       const ResultEntry& entry = ( *entries )[layerName];
-      QStringList sortIndices = entry.sortIndices.split( "/" );
+      QStringList sortIndices = entry.sortIndices.split("/");
       mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), mimeDataUri.name, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
     }
   }
@@ -244,7 +247,7 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
   endTask();
 }
 
-void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString& url, const QStringList& imgFormats )
+bool QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString& url, const QStringList& imgFormats )
 {
   QString layerid = layerItem.firstChildElement( "Name" ).text();
   if ( entries.contains( layerid ) )
@@ -253,11 +256,18 @@ void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, c
     QMimeData* mimeData;
     parseWMSLayerCapabilities( layerItem, imgFormats, url, title, mimeData );
     const ResultEntry& entry = entries[layerid];
-    QStringList sortIndices = entry.sortIndices.split( "/" );
+    QStringList sortIndices = entry.sortIndices.split("/");
     mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entries[layerid].title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
   }
-  foreach ( const QDomNode& subLayerItem, childrenByTagName( layerItem.toElement(), "Layer" ) )
+  else
   {
-    searchMatchingWMSLayer( subLayerItem, entries, url, imgFormats );
+    foreach ( const QDomNode& subLayerItem, childrenByTagName( layerItem.toElement(), "Layer" ) )
+    {
+      if ( searchMatchingWMSLayer( subLayerItem, entries, url, imgFormats ) )
+      {
+        return true;
+      }
+    }
   }
+  return false;
 }
