@@ -46,6 +46,7 @@ class APP_EXPORT QgsCatalogBrowser : public QWidget
     QTreeView* mTreeView;
     CatalogModel* mCatalogModel;
     QStandardItemModel* mLoadingModel;
+    QStandardItemModel* mOfflineModel;
     TreeFilterProxyModel* mFilterProxyModel;
     QList<QgsCatalogProvider*> mProviders;
     int mFinishedProviders;
