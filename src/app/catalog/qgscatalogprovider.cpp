@@ -144,12 +144,14 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
   mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
 }
 
-QStandardItem* QgsCatalogProvider::getCategoryItem( const QStringList& titles )
+QStandardItem* QgsCatalogProvider::getCategoryItem( const QStringList& titles, const QStringList& sortIndices )
 {
   QStandardItem* cat = 0;
-  foreach ( const QString& title, titles )
+  int n = titles.size();
+  int m = sortIndices.size();
+  for ( int i = 0; i < n; ++i )
   {
-    cat = mBrowser->addItem( cat, title );
+    cat = mBrowser->addItem( cat, titles[i], i < m ? sortIndices[i].toInt() : -1 );
   }
   return cat;
 }

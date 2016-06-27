@@ -47,7 +47,7 @@ class APP_EXPORT QgsCatalogProvider : public QObject
     QStringList parseWMSFormats( const QDomDocument& doc ) const;
     QString parseWMSNestedLayer( const QDomNode& layerItem ) const;
     void parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, QString& title, QMimeData*& mimeData ) const;
-    QStandardItem* getCategoryItem( const QStringList& titles );
+    QStandardItem* getCategoryItem( const QStringList& titles , const QStringList &sortIndices );
 };
 
 #endif // QGSCATALOGPROVIDER_H

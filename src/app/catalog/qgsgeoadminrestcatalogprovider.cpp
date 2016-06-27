@@ -39,7 +39,7 @@ void QgsGeoAdminRestCatalogProvider::load()
 
 void QgsGeoAdminRestCatalogProvider::parseTheme( QStandardItem *parent, const QDomElement& theme, QMap<QString, QStandardItem*>& layerParentMap )
 {
-  parent = mBrowser->addItem( parent, theme.firstChildElement( "ows:Title" ).text() );
+  parent = mBrowser->addItem( parent, theme.firstChildElement( "ows:Title" ).text(), -1 );
   QDomNodeList layerRefs = theme.toElement().elementsByTagName( "LayerRef" );
   for ( int iLayerRef = 0, nLayerRefs = layerRefs.count(); iLayerRef < nLayerRefs; ++iLayerRef )
   {
@@ -59,6 +59,7 @@ void QgsGeoAdminRestCatalogProvider::replyFinished()
   reply->deleteLater();
   if ( reply->error() != QNetworkReply::NoError )
   {
+    emit finished();
     return;
   }
   QDomDocument doc;
@@ -66,6 +67,7 @@ void QgsGeoAdminRestCatalogProvider::replyFinished()
 
   if ( doc.isNull() )
   {
+    emit finished();
     return;
   }
 
@@ -98,7 +100,7 @@ void QgsGeoAdminRestCatalogProvider::replyFinished()
     }
     else
     {
-      parent = mBrowser->addItem( 0, tr( "Uncategorized" ) );
+      parent = mBrowser->addItem( 0, tr( "Uncategorized" ), -1 );
     }
     mBrowser->addItem( parent, title, true, mimeData );
   }
