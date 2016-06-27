@@ -881,13 +881,18 @@ int main( int argc, char *argv[] )
      * the About, Preferences and Quit items to the Mac Application menu.
      * These items must be translated identically in both qt_ and qgis_ files.
      */
-    if ( qttor.load( QString( "qt_" ) + myTranslationCode, QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) )
+#ifdef Q_OS_WIN
+    QString translationsPath = QDir(qgetenv("OSGEO4W_ROOT")).absoluteFilePath("apps/Qt4/translations");
+#else
+    QString translationsPath = QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+#endif
+    if ( qttor.load( QString( "qt_" ) + myTranslationCode, translationsPath ) )
     {
       myApp.installTranslator( &qttor );
     }
     else
     {
-      qWarning( "loading of qt translation failed [%s]", QString( "%1/qt_%2" ).arg( QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ).arg( myTranslationCode ).toLocal8Bit().constData() );
+      qWarning( "loading of qt translation failed [%s]", QString( "%1/qt_%2" ).arg( translationsPath ).arg( myTranslationCode ).toLocal8Bit().constData() );
     }
   }
   else
