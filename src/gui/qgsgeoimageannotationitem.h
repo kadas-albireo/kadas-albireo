@@ -49,7 +49,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
 
   private:
-    mutable QString mFilePath;
+    QString mFilePath;
     QImage mImage;
 
     static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos , QString *errMsg = 0 );

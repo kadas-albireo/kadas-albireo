@@ -185,12 +185,6 @@ void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const
   }
 
   QDomElement geoImageAnnotationElem = doc.createElement( "GeoImageAnnotationItem" );
-  QString dataDir = QgsProject::instance()->projectDataDir( true );
-  QString newFilePath = QDir( dataDir ).absoluteFilePath( QFileInfo( mFilePath ).fileName() );
-  if ( !dataDir.isEmpty() && QFile( mFilePath ).copy( newFilePath ) )
-  {
-    mFilePath = newFilePath;
-  }
   geoImageAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
   _writeXML( doc, geoImageAnnotationElem );
   documentElem.appendChild( geoImageAnnotationElem );

@@ -411,18 +411,6 @@ QString QgsProject::fileName() const
   return imp_->file.fileName();
 } // QString QgsProject::fileName() const
 
-QString QgsProject::projectDataDir( bool create ) const
-{
-  if ( fileName().isEmpty() )
-    return "";
-  QDir projectDir = QFileInfo( fileName() ).absoluteDir();
-  QString dataDirName = QFileInfo( fileName() ).baseName() + "_files";
-  QString projectDataDirPath = projectDir.absoluteFilePath( dataDirName );
-  if ( !QDir( projectDataDirPath ).exists() && create )
-    projectDir.mkdir( dataDirName );
-  return QDir( projectDataDirPath ).exists() ? projectDataDirPath : "";
-}
-
 void QgsProject::clear()
 {
   imp_->clear();
