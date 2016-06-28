@@ -116,10 +116,6 @@ QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const 
 
 QList<QPair<int, double> > QgsMilXItem::screenAttributes( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const
 {
-  if ( mAttributes.isEmpty() )
-  {
-    return QList<QPair<int, double> >();
-  }
   QgsDistanceArea da;
   da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
   da.setEllipsoid( "WGS84" );
