@@ -120,6 +120,11 @@ class CORE_EXPORT QgsProject : public QObject
     QString fileName() const;
     //@}
 
+    /** Returns the path to the <projectname>_files directory.
+     *  If create is true, the directory will be created if it does not exist.
+     *  If the project filename is empty or creation failed, an empty path is returned.*/
+    QString projectDataDir( bool create ) const;
+
     /** Clear the project
      * @note added in 2.4
      */
