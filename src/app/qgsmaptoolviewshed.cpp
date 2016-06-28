@@ -190,6 +190,7 @@ void QgsMapToolViewshed::drawFinished()
   double heightConv = QGis::fromUnitToUnitFactor( QgsCoordinateFormat::instance()->getHeightDisplayUnit(), QGis::Meters );
 
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
+  p.setWindowTitle( tr( "Viewshed" ) );
   p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
   QApplication::setOverrideCursor( Qt::WaitCursor );
