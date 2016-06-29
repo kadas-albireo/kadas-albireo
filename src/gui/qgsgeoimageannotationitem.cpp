@@ -162,7 +162,7 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
   }
 }
 
@@ -172,7 +172,7 @@ void QgsGeoImageAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCo
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
   }
 }
 
