@@ -308,7 +308,11 @@ void QgsSearchBox::startSearch()
   QgsSearchProvider::SearchRegion searchRegion;
   if ( mFilterTool )
   {
-    QgsPolygon poly = QgsGeometry( mFilterTool->getRubberBand()->geometry()->clone() ).asPolygon();
+    QgsPolygon poly;
+    if ( mFilterTool->getRubberBand()->geometry() )
+    {
+      poly = QgsGeometry( mFilterTool->getRubberBand()->geometry()->clone() ).asPolygon();
+    }
     if ( !poly.isEmpty() )
     {
       searchRegion.polygon = poly.front();
