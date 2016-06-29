@@ -17,9 +17,6 @@
 
 #include "qgscrscache.h"
 #include "qgscoordinatetransform.h"
-#include "qgsapplication.h"
-#include "qgsmessagelog.h"
-#include <sqlite3.h>
 
 QgsCoordinateTransformCache::~QgsCoordinateTransformCache()
 {
@@ -186,57 +183,4 @@ const QgsCoordinateReferenceSystem& QgsCRSCache::crsByOgcWms( const QString& ogc
   {
     return crsIt.value();
   }
-}
-
-QgsEllipsoidCache* QgsEllipsoidCache::instance()
-{
-  static QgsEllipsoidCache sInstance;
-  return &sInstance;
-}
-
-const QgsEllipsoidCache::Params& QgsEllipsoidCache::getParams( const QString& ellipsoid )
-{
-  QMap<QString, Params>::iterator it = mParams.find( ellipsoid );
-  if ( it != mParams.end() )
-  {
-    return it.value();
-  }
-
-  Params params;
-  //
-  // SQLITE3 stuff - get parameters for selected ellipsoid
-  //
-  sqlite3      *myDatabase;
-  const char   *myTail;
-  sqlite3_stmt *myPreparedStatement;
-  int           myResult;
-
-  // Continue with PROJ.4 list of ellipsoids.
-
-  //check the db is available
-  myResult = sqlite3_open_v2( QgsApplication::srsDbFilePath().toUtf8().data(), &myDatabase, SQLITE_OPEN_READONLY, NULL );
-  if ( myResult )
-  {
-    QgsMessageLog::logMessage( QObject::tr( "Can't open database: %1" ).arg( sqlite3_errmsg( myDatabase ) ) );
-    // XXX This will likely never happen since on open, sqlite creates the
-    //     database if it does not exist.
-    return mParams.insert( ellipsoid, params ).value();
-  }
-  // Set up the query to retrieve the projection information needed to populate the ELLIPSOID list
-  QString mySql = "select radius, parameter2 from tbl_ellipsoid where acronym='" + ellipsoid + "'";
-  myResult = sqlite3_prepare( myDatabase, mySql.toUtf8(), mySql.toUtf8().length(), &myPreparedStatement, &myTail );
-  // XXX Need to free memory from the error msg if one is set
-  if ( myResult == SQLITE_OK )
-  {
-    if ( sqlite3_step( myPreparedStatement ) == SQLITE_ROW )
-    {
-      params.radius = QString(( char * )sqlite3_column_text( myPreparedStatement, 0 ) );
-      params.parameter2 = QString(( char * )sqlite3_column_text( myPreparedStatement, 1 ) );
-    }
-  }
-  // close the sqlite3 statement
-  sqlite3_finalize( myPreparedStatement );
-  sqlite3_close( myDatabase );
-
-  return mParams.insert( ellipsoid, params ).value();
 }
