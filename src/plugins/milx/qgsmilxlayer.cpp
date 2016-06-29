@@ -253,13 +253,12 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       const QList<QgsMilXItem*>& items = mLayer->mItems;
       QList<QPoint> itemOrigins;
       QList<MilXClient::NPointSymbol> symbols;
-      QStringList flags = mRendererContext.customRenderFlags().split( ";" );
-      bool omitSinglePoint = flags.contains( "globe" ) || flags.contains( "kml" );
+      bool isGlobe = mRendererContext.customRenderFlags().split( ";" ).contains( "globe" );
       for ( int i = 0, n = items.size(); i < n; ++i )
       {
-        if ( omitSinglePoint && !items[i]->isMultiPoint() )
+        if ( isGlobe && !items[i]->isMultiPoint() )
         {
-          // Don't render single-point symbols
+          // Only render multipoint symbols in globe
           continue;
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );

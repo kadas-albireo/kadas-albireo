@@ -1,8 +1,6 @@
 #include "qgskmlexport.h"
 #include "qgsabstractgeometryv2.h"
 #include "qgsannotationitem.h"
-#include "qgsbillboardregistry.h"
-#include "qgscrscache.h"
 #include "qgsgeometry.h"
 #include "qgskmlpallabeling.h"
 #include "qgsmaplayerrenderer.h"
@@ -20,7 +18,6 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <quazip/quazipfile.h>
-#include <QUuid>
 
 QgsKMLExport::QgsKMLExport()
 {
@@ -32,7 +29,7 @@ QgsKMLExport::~QgsKMLExport()
 
 }
 
-int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, QStringList& usedTemporaryFiles, QList<QgsMapLayer*>& superOverlayLayers )
+int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles, QList<QgsMapLayer*>& superOverlayLayers )
 {
   if ( !d )
   {
@@ -72,8 +69,6 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, Q
       continue;
     }
 
-    QgsRectangle layerWgs84Extent = wgs84LayerExtent( ml );
-
     if ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer )
     {
       QgsVectorLayer* vl = dynamic_cast<QgsVectorLayer*>( ml );
@@ -86,79 +81,66 @@ int QgsKMLExport::writeToDevice( QIODevice *d, const QgsMapSettings& settings, Q
       }
 
       bool labelLayer = labeling.prepareLayer( vl, attributes, labelingRc ) != 0;
-
-      outStream << "<Folder>" << "\n";
-      outStream << "<name>" << vl->name() << "</name>" << "\n";
-      writeBillboards( vl->id(), outStream, usedTemporaryFiles );
-      writeVectorLayerFeatures( vl, outStream, labelLayer, labeling, rc );
-      outStream << "</Folder>" << "\n";
+      QgsRectangle filterRect;
+      if ( visibleExtentOnly )
+      {
+        filterRect = QgsCoordinateTransform( settings.destinationCrs(), vl->crs() ).transform( settings.extent() );
+      }
+      writeVectorLayerFeatures( vl, outStream, filterRect, labelLayer, labeling, rc );
     }
     else if ( ml->type() == QgsMapLayer::PluginLayer )
     {
       QgsPluginLayer* pl = static_cast<QgsPluginLayer*>( ml );
       if ( pl && pl->pluginLayerType() == "MilX_Layer" )
       {
-        outStream << "<Folder>" << "\n";
-        outStream << "<name>" << pl->name() << "</name>" << "\n";
-        writeBillboards( pl->id(), outStream, usedTemporaryFiles );
-
-        //reference to start kml (start with quadratic extent 256x256)
-        QgsRectangle overlayStartExtent = superOverlayStartExtent( layerWgs84Extent );
-
-        writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
-        superOverlayLayers.append( ml );
-
-        outStream << "</Folder>" << "\n";
-      }
-    }
-    else if ( ml->type() == QgsMapLayer::RasterLayer )
-    {
-#if 0
-      //wms layer?
-      QgsRasterLayer* rl = dynamic_cast<QgsRasterLayer*>( ml );
-      if ( rl && rl->providerType() == "wms" )
-      {
-        QString wmsString = rl->source();
-        QStringList wmsParamsList = wmsString.split( "&" );
-        QStringList::const_iterator paramIt = wmsParamsList.constBegin();
-        QMap<QString, QString> parameterMap;
-        for ( ; paramIt != wmsParamsList.constEnd(); ++paramIt )
-        {
-          QStringList eqSplit = paramIt->split( "=" );
-          if ( eqSplit.size() >= 2 )
-          {
-            parameterMap.insert( eqSplit.at( 0 ).toUpper(), eqSplit.at( 1 ) );
-          }
-        }
-        writeWMSOverlay( outStream, wgs84LayerExtent( ml ), parameterMap.value( "URL" ) , parameterMap.value( "VERSION" ), parameterMap.value( "FORMAT" ), parameterMap.value( "LAYERS" ), parameterMap.value( "STYLES" ) );
-      }
-      else //normal raster layer
-      {
-#endif
-        outStream << "<Folder>" << "\n";
-        outStream << "<name>" << ml->name() << "</name>" << "\n";
-        writeBillboards( ml->id(), outStream, usedTemporaryFiles );
-
         //reference to start kml (start with quadratic extent 256x256)
         QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
 
         writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
         superOverlayLayers.append( ml );
-        outStream << "</Folder>" << "\n";
-#if 0
       }
-#endif
+
+#if 0
+      else if ( ml->type() == QgsMapLayer::RasterLayer || ( ml->type() == QgsMapLayer::PluginLayer && ml->originalName() == "MilX_Layer" ) )
+      {
+        //wms layer?
+        QgsRasterLayer* rl = dynamic_cast<QgsRasterLayer*>( ml );
+        if ( rl && rl->providerType() == "wms" )
+        {
+          QString wmsString = rl->source();
+          QStringList wmsParamsList = wmsString.split( "&" );
+          QStringList::const_iterator paramIt = wmsParamsList.constBegin();
+          QMap<QString, QString> parameterMap;
+          for ( ; paramIt != wmsParamsList.constEnd(); ++paramIt )
+          {
+            QStringList eqSplit = paramIt->split( "=" );
+            if ( eqSplit.size() >= 2 )
+            {
+              parameterMap.insert( eqSplit.at( 0 ).toUpper(), eqSplit.at( 1 ) );
+            }
+          }
+          writeWMSOverlay( outStream, wgs84LayerExtent( ml ), parameterMap.value( "URL" ) , parameterMap.value( "VERSION" ), parameterMap.value( "FORMAT" ), parameterMap.value( "LAYERS" ), parameterMap.value( "STYLES" ) );
+        }
+        else //normal raster layer
+        {
+          //reference to start kml (start with quadratic extent 256x256)
+          QgsRectangle overlayStartExtent = superOverlayStartExtent( wgs84LayerExtent( ml ) );
+
+          writeNetworkLink( outStream, overlayStartExtent, ml->id() + "_0" + ".kml" );
+          superOverlayLayers.append( ml );
+        }
+      }
+#endif //0
     }
   }
 
   labeling.drawLabeling( labelingRc );
 
-  if ( mExportAnnotations )
+  //write annotation items
+  QList<QgsAnnotationItem*>::iterator itemIt = mAnnotationItems.begin();
+  for ( ; itemIt != mAnnotationItems.end(); ++itemIt )
   {
-    outStream << "<Folder>" << "\n";
-    outStream << "<name>" << "Annotations" << "</name>" << "\n";
-    writeBillboards( "", outStream, usedTemporaryFiles );
-    outStream << "</Folder>" << "\n";
+    writeAnnotationItem( *itemIt, outStream, usedLocalFiles );
   }
 
   outStream << "</Document>" << "\n";
@@ -176,7 +158,8 @@ bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, 
 
   int currentTileNumber = -1; //kml files and .png tiles are named <layerid>_<currentTileNumber>.kml / png
 
-  QgsRectangle mapCRSRect = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), mapCRS.authid() )->transformBoundingBox( mapLayer->extent() );
+  QgsCoordinateTransform ct( mapLayer->crs(), mapCRS );
+  QgsRectangle mapCRSRect = ct.transformBoundingBox( mapLayer->extent() );
 
   //add margin
   double extension = mapUnitsPerPixel * mapLayer->margin();
@@ -186,7 +169,11 @@ bool QgsKMLExport::addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, 
   mapCRSRect.setYMaximum( mapCRSRect.yMaximum() + extension );
 
   //transform back to wgs84
-  QgsRectangle overlayStartExtent = QgsCoordinateTransformCache::instance()->transform( mapCRS.authid(), "EPSG:4326" )->transformBoundingBox( mapCRSRect );
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform ct2( mapCRS, wgs84 );
+
+  QgsRectangle overlayStartExtent = ct2.transformBoundingBox( mapCRSRect );
 
   //start extent needs to be a square
   QgsPoint centerPoint = overlayStartExtent.center();
@@ -209,14 +196,15 @@ void QgsKMLExport::addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer
   QPainter p( &img );
   context.setPainter( &p );
 
-  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), "EPSG:4326" );
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform ct( mapLayer->crs(), wgs84 );
 
-  context.setCoordinateTransform( crst );
+  context.setCoordinateTransform( &ct );
   QgsPoint centerPoint = extent.center();
   QgsMapToPixel mtp( extent.width() / 256.0, centerPoint.x(), centerPoint.y(), 256, 256, 0.0 );
   context.setMapToPixel( mtp );
-  context.setExtent( crst->transformBoundingBox( extent, QgsCoordinateTransform::ReverseTransform ) );
-  context.setCustomRenderFlags( "kml" );
+  context.setExtent( ct.transformBoundingBox( extent, QgsCoordinateTransform::ReverseTransform ) );
   QgsMapLayerRenderer* layerRenderer = mapLayer->createMapRenderer( context );
   if ( !layerRenderer || !layerRenderer->render() )
   {
@@ -319,7 +307,7 @@ void QgsKMLExport::writeSchemas( QTextStream& outStream )
   }
 }
 
-bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc )
+bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, const QgsRectangle& filterExtent, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc )
 {
   if ( !vl )
   {
@@ -333,9 +321,16 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
   }
   renderer->startRender( rc, vl->pendingFields() );
 
-  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( vl->crs().authid(), "EPSG:4326" );
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform ct( vl->crs(), wgs84 );
 
-  QgsFeatureIterator it = vl->getFeatures( );
+  QgsFeatureRequest req;
+  if ( !filterExtent.isNull() )
+  {
+    req.setFilterRect( filterExtent );
+  }
+  QgsFeatureIterator it = vl->getFeatures( req );
   QgsFeature f;
   while ( it.nextFeature( f ) )
   {
@@ -347,12 +342,8 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
            !vl->customProperty( "labeling/fieldName" ).isNull() )
       {
         QString expr = QString( "\"%1\"" ).arg( vl->customProperty( "labeling/fieldName" ).toString() );
-        outStream << QString( "<name>%1</name>\n" )
+        outStream << QString( "<name>%1</name>" )
         .arg( QgsExpression( expr ).evaluate( f ).toString() );
-      }
-      else
-      {
-        outStream << QString( "<name>Feature %1</name>\n" ).arg( f.id() );
       }
 
       //style
@@ -379,7 +370,7 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
       QgsAbstractGeometryV2* geom = f.geometry()->geometry()->segmentize();
       if ( geom )
       {
-        geom->transform( *ct ); //KML must be WGS84
+        geom->transform( ct ); //KML must be WGS84
         outStream << geom->asKML( 6 );
       }
       delete geom;
@@ -396,51 +387,58 @@ bool QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
   return true;
 }
 
-void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStream, QStringList& usedTemporaryFiles )
+bool QgsKMLExport::writeAnnotationItem( QgsAnnotationItem* item, QTextStream& outStream, QStringList& usedLocalFiles )
 {
-  //write billboards
-  foreach ( QgsBillBoardItem* item, QgsBillBoardRegistry::instance()->items() )
+  if ( !item )
   {
-    if ( item->layerId == layerId )
-    {
-      QTemporaryFile tfile( QDir::temp().absoluteFilePath( "XXXXXX.png" ) );
-      tfile.setAutoRemove( false );
-      if ( !item->image.save( &tfile ) )
-      {
-        continue;
-      }
-      usedTemporaryFiles << tfile.fileName();
-      QString id = QUuid().toString();
-      id = id.mid( 1, id.length() - 2 );
-      outStream << QString( "<StyleMap id=\"%1\">\n" ).arg( id );
-      outStream << "  <Pair>\n";
-      outStream << "    <key>normal</key>\n";
-      outStream << "    <Style>\n";
-      outStream << "      <IconStyle>\n";
-      outStream << "        <scale>1.1</scale>\n";
-      outStream << QString( "        <Icon><href>%1</href></Icon>\n" ).arg( QFileInfo( tfile ).fileName() );
-      outStream << "      </IconStyle>\n";
-      outStream << "    </Style>\n";
-      outStream << "  </Pair>\n";
-      outStream << "  <Pair>\n";
-      outStream << "    <key>highlight</key>\n";
-      outStream << "    <Style>\n";
-      outStream << "      <IconStyle>\n";
-      outStream << "        <scale>1.1</scale>\n";
-      outStream << QString( "        <Icon><href>%1</href></Icon>\n" ).arg( QFileInfo( tfile ).fileName() );
-      outStream << "      </IconStyle>\n";
-      outStream << "    </Style>\n";
-      outStream << "  </Pair>\n";
-      outStream << "</StyleMap>\n";
-      outStream << "<Placemark>\n";
-      outStream << QString( "  <name>%1</name>\n" ).arg( item->name );
-      outStream << QString( "  <styleUrl>#%1</styleUrl>\n" ).arg( id );
-      outStream << "  <Point>\n";
-      outStream << QString( "    <coordinates>%1,%2,0</coordinates>\n" ).arg( item->worldPos.x(), 0, 'f', 10 ).arg( item->worldPos.y(), 0, 'f', 10 );
-      outStream << "  </Point>\n";
-      outStream << "</Placemark>\n";
-    }
+    return false;
   }
+
+  //position in WGS84
+  QgsPoint pos = item->mapPosition();
+  QgsCoordinateReferenceSystem itemCrs = item->mapGeoPosCrs();
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform coordTransform( itemCrs, wgs84 );
+  QgsPoint wgs84Pos = coordTransform.transform( pos );
+  QgsPointV2 wgs84PosV2( wgs84Pos.x(), wgs84Pos.y() );
+
+  //todo: description depends on item type
+  QString description;
+
+  //switch on item type
+
+  //QgsTextAnnotationItem
+  QgsTextAnnotationItem* textItem = dynamic_cast<QgsTextAnnotationItem*>( item );
+  if ( textItem )
+  {
+    //description = textItem->toHtml();
+    description.append( "<![CDATA[" );
+    description.append( textItem->asHtml() );
+    description.append( "]]>" );
+  }
+
+  //QgsGeoImageAnnotationItem
+  QgsGeoImageAnnotationItem* geoImageItem = dynamic_cast<QgsGeoImageAnnotationItem*>( item );
+  if ( geoImageItem )
+  {
+    QFileInfo fi( geoImageItem->filePath() );
+    description.append( "<![CDATA[<img src=\"" );
+    description.append( fi.fileName() );
+    description.append( "\"/>]]>" );
+    usedLocalFiles.append( geoImageItem->filePath() );
+  }
+
+  outStream << "<Placemark>\n";
+  outStream << "<visibility>1</visibility>\n";
+  outStream << "<description>";
+  outStream << description;
+  outStream << "</description>\n";
+  outStream << wgs84PosV2.asKML( 6 );
+  outStream << "\n";
+  outStream << "</Placemark>\n";
+
+  return true;
 }
 
 void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc )
@@ -548,7 +546,11 @@ QgsRectangle QgsKMLExport::wgs84LayerExtent( QgsMapLayer* ml )
   {
     return QgsRectangle();
   }
-  return QgsCoordinateTransformCache::instance()->transform( ml->crs().authid(), "EPSG:4326" )->transformBoundingBox( ml->extent() );
+  QgsCoordinateReferenceSystem wgs84;
+  wgs84.createFromId( 4326 );
+  QgsCoordinateTransform ct( ml->crs(), wgs84 );
+
+  return ct.transformBoundingBox( ml->extent() );
 }
 
 QgsRectangle QgsKMLExport::superOverlayStartExtent( const QgsRectangle& wgs84Extent )
@@ -591,7 +593,6 @@ void QgsKMLExport::writeRectangle( QTextStream& outStream, const QgsRectangle& r
 void QgsKMLExport::writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link )
 {
   outStream << "<NetworkLink>" << "\n";
-  outStream << "<name>Tiles</name>" << "\n";
   outStream << "<Region>" << "\n";
   outStream << "<LatLonAltBox>" << "\n";
   writeRectangle( outStream, rect );

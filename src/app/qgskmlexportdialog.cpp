@@ -2,7 +2,6 @@
 #include "qgsmaplayerregistry.h"
 #include "qgspluginlayer.h"
 #include "qgsvectorlayer.h"
-#include "qgsrasterlayer.h"
 #include <QFileDialog>
 #include <QSettings>
 
@@ -58,9 +57,9 @@ QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
   return layerList;
 }
 
-bool QgsKMLExportDialog::exportAnnotations() const
+bool QgsKMLExportDialog::visibleExtentOnly() const
 {
-  return mAnnotationsCheckBox->isChecked();
+  return mMapExtentCheckBox->isChecked();
 }
 
 void QgsKMLExportDialog::insertAvailableLayers()
@@ -71,16 +70,14 @@ void QgsKMLExportDialog::insertAvailableLayers()
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
     QgsVectorLayer* vLayer = dynamic_cast<QgsVectorLayer*>( layer );
-    QgsRasterLayer* rLayer = dynamic_cast<QgsRasterLayer*>( layer );
     QgsPluginLayer* pLayer = dynamic_cast<QgsPluginLayer*>( layer );
-    if ( !vLayer && !rLayer && ( !pLayer || pLayer->pluginLayerType() != "MilX_Layer" ) )
+    if ( !vLayer && ( !pLayer || !( pLayer->pluginLayerType() == "MilX_Layer" ) ) )
     {
       continue;
     }
-    Qt::CheckState checked = rLayer && rLayer->source().contains( "url=http" ) ? Qt::Unchecked : Qt::Checked;
 
     QListWidgetItem* item = new QListWidgetItem( layer->name() );
-    item->setCheckState( checked );
+    item->setCheckState( Qt::Checked );
     item->setData( Qt::UserRole, *it );
     mLayerListWidget->addItem( item );
   }
@@ -110,14 +107,11 @@ void QgsKMLExportDialog::on_mFormatComboBox_currentIndexChanged( const QString& 
 {
   if ( text == "KML" )
   {
-    deactivateNonVectorLayers();
-    mAnnotationsCheckBox->setChecked( false );
-    mAnnotationsCheckBox->setEnabled( false );
+    deactivatePluginLayers();
   }
   else
   {
     activateAllLayers();
-    mAnnotationsCheckBox->setEnabled( true );
   }
 }
 
@@ -133,17 +127,16 @@ QgsKMLExportDialog::ExportFormat QgsKMLExportDialog::exportFormat() const
   }
 }
 
-void QgsKMLExportDialog::deactivateNonVectorLayers()
+void QgsKMLExportDialog::deactivatePluginLayers()
 {
   int rowCount = mLayerListWidget->count();
   for ( int i = 0; i < rowCount; ++i )
   {
     QString layerId = mLayerListWidget->item( i )->data( Qt::UserRole ).toString();
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
-    if ( layer && layer->type() != QgsMapLayer::VectorLayer )
+    if ( layer && layer->type() == QgsMapLayer::PluginLayer )
     {
       mLayerListWidget->item( i )->setFlags( Qt::NoItemFlags );
-      mLayerListWidget->item( i )->setCheckState( Qt::Unchecked );
     }
   }
 }

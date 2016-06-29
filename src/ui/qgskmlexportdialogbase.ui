@@ -7,30 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>263</height>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>KML export</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0" colspan="3">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="mSaveAsLabel">
      <property name="text">
@@ -38,7 +21,14 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
+   <item row="5" column="0" colspan="3">
+    <widget class="QCheckBox" name="mMapExtentCheckBox">
+     <property name="text">
+      <string>Only export features intersecting the current map extent</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Select layers to export:</string>
@@ -61,10 +51,10 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="3">
+   <item row="3" column="0" colspan="3">
     <widget class="QListWidget" name="mLayerListWidget"/>
    </item>
-   <item row="9" column="0" colspan="3">
+   <item row="6" column="0" colspan="3">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -93,26 +83,6 @@
        <string>KMZ</string>
       </property>
      </item>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="3">
-    <widget class="QCheckBox" name="mAnnotationsCheckBox">
-     <property name="text">
-      <string>Export annotations (pins, pictures)</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
     </widget>
    </item>
   </layout>
