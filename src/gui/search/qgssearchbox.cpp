@@ -210,7 +210,6 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
     mTreeWidget->resize( mSearchBox->width(), 200 );
     mTreeWidget->move( mSearchBox->mapToGlobal( QPoint( 0, mSearchBox->height() ) ) );
     mTreeWidget->show();
-    mMapCanvas->setMapTool( mFilterTool );
     if ( !mClearButton->isVisible() )
       resultSelected();
     if ( mFilterTool )
@@ -250,7 +249,6 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
   else if ( obj == mTreeWidget && ev->type() == QEvent::MouseButtonPress )
   {
     mTreeWidget->close();
-    mMapCanvas->unsetMapTool( mFilterTool );
     return true;
   }
   else if ( obj == mTreeWidget && ev->type() == QEvent::KeyPress )
@@ -259,7 +257,6 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
     if ( key == Qt::Key_Escape )
     {
       mTreeWidget->close();
-      mMapCanvas->unsetMapTool( mFilterTool );
       return true;
     }
     else if ( key == Qt::Key_Enter || key == Qt::Key_Return )
@@ -332,7 +329,6 @@ void QgsSearchBox::clearSearch()
     mPin = 0;
   }
   mTreeWidget->close();
-  mMapCanvas->unsetMapTool( mFilterTool );
   mTreeWidget->blockSignals( true );
   mTreeWidget->clear();
   mTreeWidget->blockSignals( false );
@@ -456,7 +452,6 @@ void QgsSearchBox::resultActivated()
     mSearchButton->setVisible( false );
     mClearButton->setVisible( true );
     mTreeWidget->close();
-    mMapCanvas->unsetMapTool( mFilterTool );
   }
 }
 
@@ -508,14 +503,10 @@ void QgsSearchBox::setFilterTool()
     case FilterCircle:
       mFilterTool = new QgsMapToolDrawCircle( mMapCanvas ); break;
   }
-  if ( mFilterTool )
-  {
-    mFilterTool->setResetOnDeactivate( false );
-    mMapCanvas->setMapTool( mFilterTool );
-    action->setCheckable( true );
-    action->setChecked( true );
-    connect( mFilterTool, SIGNAL( finished() ), this, SLOT( filterToolFinished() ) );
-  }
+  mMapCanvas->setMapTool( mFilterTool );
+  action->setCheckable( true );
+  action->setChecked( true );
+  connect( mFilterTool, SIGNAL( finished() ), this, SLOT( filterToolFinished() ) );
 }
 
 void QgsSearchBox::filterToolFinished()
