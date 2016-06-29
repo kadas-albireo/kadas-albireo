@@ -260,7 +260,7 @@ void QgsMilXAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordi
   }
   else
   {
-    QgsBillBoardRegistry::instance()->addItem( this, mGraphic.toImage(), QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ), mRenderOffset.x() + mGraphic.width() / 2 );
+    QgsBillBoardRegistry::instance()->addItem( this, mSymbolMilitaryName, mGraphic.toImage(), QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ), mRenderOffset.x() + mGraphic.width() / 2 );
   }
 }
 
@@ -374,7 +374,7 @@ void QgsMilXAnnotationItem::setGraphic( MilXClient::NPointSymbolGraphic &result,
   mGraphic = QPixmap::fromImage( result.graphic );
   if ( !isMultiPoint() )
   {
-    QgsBillBoardRegistry::instance()->addItem( this, result.graphic, QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ), result.offset.x() + mGraphic.width() / 2 );
+    QgsBillBoardRegistry::instance()->addItem( this, mSymbolMilitaryName, result.graphic, QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos ), result.offset.x() + mGraphic.width() / 2 );
   }
   setFrameSize( mGraphic.size() );
   mOffsetFromReferencePoint += result.offset - mRenderOffset;
