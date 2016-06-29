@@ -6,6 +6,7 @@
 #include <QList>
 
 class QgsAnnotationItem;
+class QgsBillBoardItem;
 class QgsFeature;
 class QgsFeatureRendererV2;
 class QgsKMLPalLabeling;
@@ -23,13 +24,8 @@ class GUI_EXPORT QgsKMLExport
     ~QgsKMLExport();
 
     void setLayers( const QList<QgsMapLayer*>& layers ) { mLayers = layers; }
-    void setAnnotationItems( const QList<QgsAnnotationItem*>& items ) { mAnnotationItems = items; }
-    /**Writes KML file to device
-        @param d output device
-        @param settings mapSettings
-        @param visibleExtentOnly exports all data from mLayers if false
-        @param usedLocalFiles out: files referenced in the KML document (e.g. photos). Needs to be added to the kmz*/
-    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, bool visibleExtentOnly, QStringList& usedLocalFiles, QList<QgsMapLayer*>& superOverlayLayers );
+    void setExportAnnotatons( bool exportAnnotations ) { mExportAnnotations = exportAnnotations; }
+    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, QStringList& usedTemporaryFiles, QList<QgsMapLayer*>& superOverlayLayers );
 
     bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder,
                                const QgsCoordinateReferenceSystem& mapCRS, double mapUnitsPerPixel );
@@ -38,11 +34,12 @@ class GUI_EXPORT QgsKMLExport
 
   private:
     QList<QgsMapLayer*> mLayers;
+    bool mExportAnnotations;
     QList<QgsAnnotationItem*> mAnnotationItems;
 
     void writeSchemas( QTextStream& outStream );
-    bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, const QgsRectangle &filterExtent, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
-    bool writeAnnotationItem( QgsAnnotationItem* item, QTextStream& outStream, QStringList& usedLocalFiles );
+    bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
+    void writeBillboards( const QString &layerId, QTextStream& outStream, QStringList& usedTemporaryFiles );
     void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
     /**Return WGS84 bbox from layer set*/
     QgsRectangle bboxFromLayers();

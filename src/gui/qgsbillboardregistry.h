@@ -27,6 +27,7 @@ class QgsMapCanvasItem;
 class GUI_EXPORT QgsBillBoardItem
 {
   public:
+    QString name;
     QImage image;
     QgsPoint worldPos;
     QString layerId;
@@ -37,7 +38,7 @@ class GUI_EXPORT QgsBillBoardRegistry : public QObject
     Q_OBJECT
   public:
     static QgsBillBoardRegistry* instance();
-    void addItem( void* parent, const QImage& image, const QgsPoint& worldPos, int xoffset = 0, const QString& layerId = QString() );
+    void addItem( void* parent, const QString& name, const QImage& image, const QgsPoint& worldPos, int xoffset = 0, const QString& layerId = QString() );
     void removeItem( void* parent );
     QList<QgsBillBoardItem*> items() const;
 

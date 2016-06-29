@@ -21,7 +21,7 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
 
     QString saveFile() const;
     QList<QgsMapLayer*> selectedLayers() const;
-    bool visibleExtentOnly() const;
+    bool exportAnnotations() const;
 
     QgsKMLExportDialog::ExportFormat exportFormat() const;
 
@@ -32,7 +32,7 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
   private:
     QgsKMLExportDialog();
     void insertAvailableLayers();
-    void deactivatePluginLayers();
+    void deactivateNonVectorLayers();
     void activateAllLayers();
 
     QStringList mLayerIds;

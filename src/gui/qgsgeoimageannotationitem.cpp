@@ -162,7 +162,7 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
   }
 }
 
@@ -172,7 +172,7 @@ void QgsGeoImageAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCo
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
   }
 }
 
@@ -185,6 +185,12 @@ void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const
   }
 
   QDomElement geoImageAnnotationElem = doc.createElement( "GeoImageAnnotationItem" );
+  QString dataDir = QgsProject::instance()->projectDataDir( true );
+  QString newFilePath = QDir( dataDir ).absoluteFilePath( QFileInfo( mFilePath ).fileName() );
+  if ( !dataDir.isEmpty() && QFile( mFilePath ).copy( newFilePath ) )
+  {
+    mFilePath = newFilePath;
+  }
   geoImageAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
   _writeXML( doc, geoImageAnnotationElem );
   documentElem.appendChild( geoImageAnnotationElem );

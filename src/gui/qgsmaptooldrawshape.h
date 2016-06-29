@@ -37,6 +37,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void setAllowMultipart( bool multipart ) { mMultipart = multipart; }
     void setSnapPoints( bool snapPoints ) { mSnapPoints = snapPoints; }
     void setShowInputWidget( bool showInput ) { mShowInput = showInput; }
+    void setResetOnDeactivate( bool resetOnDeactivate ) { mResetOnDeactivate = resetOnDeactivate; }
     void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
     State getState() const { return mState; }
@@ -65,6 +66,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     bool mSnapPoints;
     bool mShowInput;
     bool mIgnoreNextMoveEvent;
+    bool mResetOnDeactivate;
     QPointer<QgsGeometryRubberBand> mRubberBand;
     QgsMapToolDrawShapeInputWidget* mInputWidget;
 

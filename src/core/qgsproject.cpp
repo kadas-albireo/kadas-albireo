@@ -411,6 +411,18 @@ QString QgsProject::fileName() const
   return imp_->file.fileName();
 } // QString QgsProject::fileName() const
 
+QString QgsProject::projectDataDir( bool create ) const
+{
+  if ( fileName().isEmpty() )
+    return "";
+  QDir projectDir = QFileInfo( fileName() ).absoluteDir();
+  QString dataDirName = QFileInfo( fileName() ).baseName() + "_files";
+  QString projectDataDirPath = projectDir.absoluteFilePath( dataDirName );
+  if ( !QDir( projectDataDirPath ).exists() && create )
+    projectDir.mkdir( dataDirName );
+  return QDir( projectDataDirPath ).exists() ? projectDataDirPath : "";
+}
+
 void QgsProject::clear()
 {
   imp_->clear();
@@ -1383,11 +1395,6 @@ void QgsProject::dumpProperties() const
 // return the absolute path from a filename read from project file
 QString QgsProject::readPath( QString src ) const
 {
-  if ( readBoolEntry( "Paths", "/Absolute", false ) )
-  {
-    return src;
-  }
-
   // if this is a VSIFILE, remove the VSI prefix and append to final result
   QString vsiPrefix = qgsVsiPrefix( src );
   if ( ! vsiPrefix.isEmpty() )

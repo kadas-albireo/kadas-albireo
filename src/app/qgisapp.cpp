@@ -95,6 +95,7 @@
 #include "qgsconfigureshortcutsdialog.h"
 #include "qgscoordinatetransform.h"
 #include "qgscredentialdialog.h"
+#include "qgscrscache.h"
 #include "qgscursors.h"
 #include "qgscustomization.h"
 #include "qgscustomprojectiondialog.h"
@@ -3141,7 +3142,7 @@ void QgisApp::kmlExport()
   {
     QgsKMLExport kmlExport;
     kmlExport.setLayers( d.selectedLayers() );
-    kmlExport.setAnnotationItems( annotationItems() );
+    kmlExport.setExportAnnotatons( d.exportAnnotations() );
 
     QString fileName = d.saveFile();
     QFileInfo fi( fileName );
@@ -3165,30 +3166,32 @@ void QgisApp::kmlExport()
       static_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) );
     }
 
-    QStringList usedLocalFiles;
+    QStringList usedTemporaryFiles;
     QList<QgsMapLayer*> superOverlayLayers;
 
     QApplication::setOverrideCursor( Qt::BusyCursor );
-    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), d.visibleExtentOnly(), usedLocalFiles, superOverlayLayers ) == 0 );
+    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), usedTemporaryFiles, superOverlayLayers ) == 0 );
     outputDevice->close();
     delete outputDevice;
 
     if ( success && d.exportFormat() == QgsKMLExportDialog::KMZ )
     {
-      QStringList::const_iterator localFileIt = usedLocalFiles.constBegin();
-      for ( ; localFileIt != usedLocalFiles.constEnd(); ++localFileIt )
+      foreach ( const QString& fileName, usedTemporaryFiles )
       {
-        QFileInfo fi( *localFileIt );
-        QGis::addFileToZip( quaZip, *localFileIt, fi.fileName() );
+        QFileInfo fi( fileName );
+        QGis::addFileToZip( quaZip, fileName, fi.fileName() );
       }
+    }
+    foreach ( const QString& fileName, usedTemporaryFiles )
+    {
+      QFile( fileName ).remove();
     }
 
     //write super overlays
-    QList<QgsMapLayer*>::iterator overlayIt = superOverlayLayers.begin();
     int drawingOrder = 0;
-    for ( ; overlayIt != superOverlayLayers.end(); ++overlayIt )
+    foreach ( QgsMapLayer* mapLayer, superOverlayLayers )
     {
-      kmlExport.addSuperOverlayLayer( *overlayIt, quaZip, fi.absolutePath(), drawingOrder, mapCanvas()->mapSettings().destinationCrs(),
+      kmlExport.addSuperOverlayLayer( mapLayer, quaZip, fi.absolutePath(), drawingOrder, mapCanvas()->mapSettings().destinationCrs(),
                                       mapCanvas()->mapSettings().mapUnitsPerPixel() );
       ++drawingOrder;
     }

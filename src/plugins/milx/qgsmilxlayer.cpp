@@ -116,6 +116,10 @@ QList<QPoint> QgsMilXItem::screenPoints( const QgsMapToPixel& mapToPixel, const 
 
 QList<QPair<int, double> > QgsMilXItem::screenAttributes( const QgsMapToPixel& mapToPixel, const QgsCoordinateTransform *crst ) const
 {
+  if ( mAttributes.isEmpty() )
+  {
+    return QList<QPair<int, double> >();
+  }
   QgsDistanceArea da;
   da.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
   da.setEllipsoid( "WGS84" );
@@ -249,12 +253,13 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       const QList<QgsMilXItem*>& items = mLayer->mItems;
       QList<QPoint> itemOrigins;
       QList<MilXClient::NPointSymbol> symbols;
-      bool isGlobe = mRendererContext.customRenderFlags().split( ";" ).contains( "globe" );
+      QStringList flags = mRendererContext.customRenderFlags().split( ";" );
+      bool omitSinglePoint = flags.contains( "globe" ) || flags.contains( "kml" );
       for ( int i = 0, n = items.size(); i < n; ++i )
       {
-        if ( isGlobe && !items[i]->isMultiPoint() )
+        if ( omitSinglePoint && !items[i]->isMultiPoint() )
         {
-          // Only render multipoint symbols in globe
+          // Don't render single-point symbols
           continue;
         }
         QList<QPoint> points = items[i]->screenPoints( mRendererContext.mapToPixel(), mRendererContext.coordinateTransform() );
@@ -346,7 +351,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
     MilXClient::NPointSymbolGraphic graphic;
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
     {
-      QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
+      QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
     }
   }
 }
@@ -428,7 +433,7 @@ void QgsMilXLayer::invalidateBillboards()
       MilXClient::NPointSymbolGraphic graphic;
       if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
       {
-        QgsBillBoardRegistry::instance()->addItem( item, graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
+        QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
       }
     }
   }

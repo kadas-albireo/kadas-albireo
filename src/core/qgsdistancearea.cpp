@@ -129,15 +129,6 @@ void QgsDistanceArea::setSourceAuthId( QString authId )
 
 bool QgsDistanceArea::setEllipsoid( const QString& ellipsoid )
 {
-  QString radius, parameter2;
-  //
-  // SQLITE3 stuff - get parameters for selected ellipsoid
-  //
-  sqlite3      *myDatabase;
-  const char   *myTail;
-  sqlite3_stmt *myPreparedStatement;
-  int           myResult;
-
   // Shortcut if ellipsoid is none.
   if ( ellipsoid == GEO_NONE )
   {
@@ -166,64 +157,40 @@ bool QgsDistanceArea::setEllipsoid( const QString& ellipsoid )
   }
 
   // Continue with PROJ.4 list of ellipsoids.
-
-  //check the db is available
-  myResult = sqlite3_open_v2( QgsApplication::srsDbFilePath().toUtf8().data(), &myDatabase, SQLITE_OPEN_READONLY, NULL );
-  if ( myResult )
-  {
-    QgsMessageLog::logMessage( QObject::tr( "Can't open database: %1" ).arg( sqlite3_errmsg( myDatabase ) ) );
-    // XXX This will likely never happen since on open, sqlite creates the
-    //     database if it does not exist.
-    return false;
-  }
-  // Set up the query to retrieve the projection information needed to populate the ELLIPSOID list
-  QString mySql = "select radius, parameter2 from tbl_ellipsoid where acronym='" + ellipsoid + "'";
-  myResult = sqlite3_prepare( myDatabase, mySql.toUtf8(), mySql.toUtf8().length(), &myPreparedStatement, &myTail );
-  // XXX Need to free memory from the error msg if one is set
-  if ( myResult == SQLITE_OK )
-  {
-    if ( sqlite3_step( myPreparedStatement ) == SQLITE_ROW )
-    {
-      radius = QString(( char * )sqlite3_column_text( myPreparedStatement, 0 ) );
-      parameter2 = QString(( char * )sqlite3_column_text( myPreparedStatement, 1 ) );
-    }
-  }
-  // close the sqlite3 statement
-  sqlite3_finalize( myPreparedStatement );
-  sqlite3_close( myDatabase );
+  QgsEllipsoidCache::Params params = QgsEllipsoidCache::instance()->getParams( ellipsoid );
 
   // row for this ellipsoid wasn't found?
-  if ( radius.isEmpty() || parameter2.isEmpty() )
+  if ( params.radius.isEmpty() || params.parameter2.isEmpty() )
   {
     QgsDebugMsg( QString( "setEllipsoid: no row in tbl_ellipsoid for acronym '%1'" ).arg( ellipsoid ) );
     return false;
   }
 
   // get major semiaxis
-  if ( radius.left( 2 ) == "a=" )
-    mSemiMajor = radius.mid( 2 ).toDouble();
+  if ( params.radius.left( 2 ) == "a=" )
+    mSemiMajor = params.radius.mid( 2 ).toDouble();
   else
   {
-    QgsDebugMsg( QString( "setEllipsoid: wrong format of radius field: '%1'" ).arg( radius ) );
+    QgsDebugMsg( QString( "setEllipsoid: wrong format of radius field: '%1'" ).arg( params.radius ) );
     return false;
   }
 
   // get second parameter
   // one of values 'b' or 'f' is in field parameter2
   // second one must be computed using formula: invf = a/(a-b)
-  if ( parameter2.left( 2 ) == "b=" )
+  if ( params.parameter2.left( 2 ) == "b=" )
   {
-    mSemiMinor = parameter2.mid( 2 ).toDouble();
+    mSemiMinor = params.parameter2.mid( 2 ).toDouble();
     mInvFlattening = mSemiMajor / ( mSemiMajor - mSemiMinor );
   }
-  else if ( parameter2.left( 3 ) == "rf=" )
+  else if ( params.parameter2.left( 3 ) == "rf=" )
   {
-    mInvFlattening = parameter2.mid( 3 ).toDouble();
+    mInvFlattening = params.parameter2.mid( 3 ).toDouble();
     mSemiMinor = mSemiMajor - ( mSemiMajor / mInvFlattening );
   }
   else
   {
-    QgsDebugMsg( QString( "setEllipsoid: wrong format of parameter2 field: '%1'" ).arg( parameter2 ) );
+    QgsDebugMsg( QString( "setEllipsoid: wrong format of parameter2 field: '%1'" ).arg( params.parameter2 ) );
     return false;
   }
 
