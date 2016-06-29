@@ -1395,6 +1395,11 @@ void QgsProject::dumpProperties() const
 // return the absolute path from a filename read from project file
 QString QgsProject::readPath( QString src ) const
 {
+  if ( readBoolEntry( "Paths", "/Absolute", false ) )
+  {
+    return src;
+  }
+
   // if this is a VSIFILE, remove the VSI prefix and append to final result
   QString vsiPrefix = qgsVsiPrefix( src );
   if ( ! vsiPrefix.isEmpty() )
