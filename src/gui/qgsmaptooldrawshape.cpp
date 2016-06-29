@@ -37,7 +37,7 @@
 #include <qmath.h>
 
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
-    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mIgnoreNextMoveEvent( false ), mInputWidget( 0 )
+    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mResetOnDeactivate( true ), mIgnoreNextMoveEvent( false ), mInputWidget( 0 )
 {
   setCursor( Qt::CrossCursor );
 
@@ -78,7 +78,8 @@ void QgsMapToolDrawShape::activate()
 void QgsMapToolDrawShape::deactivate()
 {
   QgsMapTool::deactivate();
-  reset();
+  if ( mResetOnDeactivate )
+    reset();
   delete mInputWidget;
   mInputWidget = 0;
 }
