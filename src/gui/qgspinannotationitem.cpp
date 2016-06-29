@@ -140,7 +140,7 @@ void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordin
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos );
   }
 }
 
@@ -182,7 +182,7 @@ void QgsPinAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& 
   }
   updateToolTip();
   QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-  QgsBillBoardRegistry::instance()->addItem( this, getImage(), worldPos );
+  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos );
 }
 
 
