@@ -70,4 +70,21 @@ class CORE_EXPORT QgsCRSCache
     QgsCoordinateReferenceSystem mInvalidCRS;
 };
 
+class CORE_EXPORT QgsEllipsoidCache
+{
+  public:
+    struct Params
+    {
+      QString radius, parameter2;
+    };
+    static QgsEllipsoidCache* instance();
+    const Params& getParams( const QString& ellipsoid );
+
+  protected:
+    QgsEllipsoidCache() {}
+
+  private:
+    QMap<QString, Params> mParams;
+};
+
 #endif // QGSCRSCACHE_H

@@ -34,3 +34,21 @@ class QgsCRSCache
   protected:
     QgsCRSCache();
 };
+
+class QgsEllipsoidCache
+{
+%TypeHeaderCode
+#include <qgscrscache.h>
+%End
+
+public:
+  struct Params {
+    QString radius;
+    QString parameter2;
+  };
+  static QgsEllipsoidCache* instance();
+  const Params& getParams(const QString& ellipsoid);
+
+protected:
+  QgsEllipsoidCache();
+};
