@@ -191,7 +191,6 @@ void QgsMilXLibrary::updateLayers()
   {
     if ( dynamic_cast<QgsMilXLayer*>( layer ) )
     {
-      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( updateLayers() ), Qt::UniqueConnection );
       mLayersCombo->addItem( layer->name(), layer->id() );
       if ( mIface->mapCanvas()->currentLayer() == layer )
       {
