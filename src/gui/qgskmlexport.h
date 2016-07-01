@@ -1,56 +1,62 @@
-/***************************************************************************
- *  qgskmlexportdialog.h                                                   *
- *  -----------                                                            *
- *  begin                : October 2015                                    *
- *  copyright            : (C) 2015 by Marco Hugentobler / Sourcepole AG   *
- *  email                : marco@sourcepole.ch                             *
- *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
- *  email                : smani@sourcepole.ch                             *
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
 #ifndef QGSKMLEXPORT_H
 #define QGSKMLEXPORT_H
 
+#include "qgis.h"
+#include "qgsmapsettings.h"
 #include <QList>
-#include <QObject>
 
+class QgsAnnotationItem;
+class QgsBillBoardItem;
 class QgsFeature;
 class QgsFeatureRendererV2;
 class QgsKMLPalLabeling;
 class QgsMapLayer;
-class QgsMapSettings;
+class QgsVectorLayer;
 class QgsRectangle;
 class QgsRenderContext;
-class QgsVectorLayer;
-class QColor;
-class QImage;
-class QProgressDialog;
+class QIODevice;
 class QTextStream;
-class QuaZip;
 
-class GUI_EXPORT QgsKMLExport : public QObject
+class GUI_EXPORT QgsKMLExport
 {
   public:
-    bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, bool exportAnnotations, const QgsMapSettings& settings );
+    QgsKMLExport();
+    ~QgsKMLExport();
+
+    void setLayers( const QList<QgsMapLayer*>& layers ) { mLayers = layers; }
+    void setExportAnnotatons( bool exportAnnotations ) { mExportAnnotations = exportAnnotations; }
+    int writeToDevice( QIODevice *d, const QgsMapSettings& settings, QStringList& usedTemporaryFiles, QList<QgsMapLayer*>& superOverlayLayers );
+
+    bool addSuperOverlayLayer( QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int drawingOrder,
+                               const QgsCoordinateReferenceSystem& mapCRS, double mapUnitsPerPixel );
+
     static QString convertColor( const QColor& c );
 
   private:
-    void writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
-    void writeTiles( QgsMapLayer* mapLayer, const QgsRectangle &layerExtent, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog *progress );
-    void writeGroundOverlay( QTextStream& outStream, const QString& name, const QString& href, const QgsRectangle& latLongBox, int drawingOrder );
-    void writeBillboards( const QString& layerId, QTextStream& outStream, QuaZip* quaZip );
-    void renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer );
-    void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
+    QList<QgsMapLayer*> mLayers;
+    bool mExportAnnotations;
+    QList<QgsAnnotationItem*> mAnnotationItems;
 
+    void writeSchemas( QTextStream& outStream );
+    bool writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
+    void writeBillboards( const QString &layerId, QTextStream& outStream, QStringList& usedTemporaryFiles );
+    void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
+    /**Return WGS84 bbox from layer set*/
+    QgsRectangle bboxFromLayers();
+    /**Returns wgs84 bbox for layer*/
+    static QgsRectangle wgs84LayerExtent( QgsMapLayer* ml );
+    static QgsRectangle superOverlayStartExtent( const QgsRectangle& wgs84Extent );
+    static QString convertToHexValue( int value );
+    static void writeRectangle( QTextStream& outStream, const QgsRectangle& rect );
+    static void writeNetworkLink( QTextStream& outStream, const QgsRectangle& rect, const QString& link );
+    static void writeWMSOverlay( QTextStream& outStream, const QgsRectangle& latLongBox, const QString& baseUrl, const QString& version, const QString& format, const QString& layers, const QString& styles );
+    static void writeGroundOverlay( QTextStream& outStream, const QString& href, const QgsRectangle& latLongBox, int drawingOrder = -1 );
+    static int levelsToGo( double resolution, double minResolution );
+    static int offset( int nLevelsToGo );
+
+
+    void addOverlay( const QgsRectangle& extent, QgsMapLayer* mapLayer, QuaZip* quaZip, const QString& filePath, int& currentTileNumber, int drawingOrder );
+    QIODevice* openDeviceForNewFile( const QString& fileName, QuaZip* quaZip, const QString& filePath );
 };
 
 #endif // QGSKMLEXPORT_H

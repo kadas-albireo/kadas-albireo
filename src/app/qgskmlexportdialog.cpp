@@ -1,122 +1,158 @@
-/***************************************************************************
- *  qgskmlexportdialog.h                                                   *
- *  -----------                                                            *
- *  begin                : October 2015                                    *
- *  copyright            : (C) 2015 by Marco Hugentobler / Sourcepole AG   *
- *  email                : marco@sourcepole.ch                             *
- *  copyright            : (C) 2016 by Sandro Mani / Sourcepole AG         *
- *  email                : smani@sourcepole.ch                             *
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
-#include "layertree/qgslayertreegroup.h"
-#include "layertree/qgslayertreelayer.h"
 #include "qgskmlexportdialog.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsproject.h"
-
-#include <QPushButton>
+#include "qgspluginlayer.h"
+#include "qgsvectorlayer.h"
+#include "qgsrasterlayer.h"
 #include <QFileDialog>
 #include <QSettings>
 
-QgsKMLExportDialog::QgsKMLExportDialog( const QList<QgsMapLayer*> &activeLayers, QWidget *parent, Qt::WindowFlags f )
-    : QDialog( parent, f )
+QgsKMLExportDialog::QgsKMLExportDialog( const QStringList layerIds, QWidget * parent, Qt::WindowFlags f ): QDialog( parent, f ), mLayerIds( layerIds )
 {
   setupUi( this );
-
-  // Use layerTreeRoot to get layers ordered as in the layer tree
-  foreach ( QgsLayerTreeLayer* layerTreeLayer, QgsProject::instance()->layerTreeRoot()->findLayers() )
-  {
-    QgsMapLayer* layer = layerTreeLayer->layer();
-    if ( !layer )
-      continue;
-    QListWidgetItem* item = new QListWidgetItem( layer->name() );
-    item->setCheckState( layer->source().contains( "url=http" ) || !activeLayers.contains( layer ) ? Qt::Unchecked : Qt::Checked );
-    item->setData( Qt::UserRole, layer->id() );
-    mLayerListWidget->addItem( item );
-  }
-  mButtonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
-
-  connect( mFileSelectionButton, SIGNAL( clicked() ), this, SLOT( selectFile() ) );
+  insertAvailableLayers();
+  mFormatComboBox->setCurrentIndex( 1 );
+  on_mFormatComboBox_currentIndexChanged( mFormatComboBox->currentText() );
 }
 
-void QgsKMLExportDialog::selectFile()
+QgsKMLExportDialog::QgsKMLExportDialog(): QDialog()
 {
-  QStringList filters;
-  filters.append( tr( "KMZ File (*.kmz)" ) );
-  filters.append( tr( "KML File (*.kml)" ) );
-
-  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
-  QString selectedFilter;
-
-  QString filename = QFileDialog::getSaveFileName( 0, tr( "Select Output" ), lastDir, filters.join( ";;" ), &selectedFilter );
-  if ( filename.isEmpty() )
-  {
-    return;
-  }
-  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
-  if ( selectedFilter == filters[0] && !filename.endsWith( ".kmz", Qt::CaseInsensitive ) )
-  {
-    filename += ".kmz";
-  }
-  else if ( selectedFilter == filters[1] && !filename.endsWith( ".kml", Qt::CaseInsensitive ) )
-  {
-    filename += ".kml";
-  }
-  mFileLineEdit->setText( filename );
-  mButtonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
-
-  // Toggle sensitivity of layers depending on whether KML or KMZ is selected
-  if ( selectedFilter == filters[0] )
-  {
-    // KMZ, enable all layers
-    for ( int i = 0, n = mLayerListWidget->count(); i < n; ++i )
-    {
-      mLayerListWidget->item( i )->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
-    }
-    mAnnotationsCheckBox->setEnabled( true );
-  }
-  else if ( selectedFilter == filters[1] )
-  {
-    // KML, disable non-vector layers and annotations
-    for ( int i = 0, n = mLayerListWidget->count(); i < n; ++i )
-    {
-      QString layerId = mLayerListWidget->item( i )->data( Qt::UserRole ).toString();
-      QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
-      if ( layer && layer->type() != QgsMapLayer::VectorLayer )
-      {
-        mLayerListWidget->item( i )->setFlags( Qt::NoItemFlags );
-        mLayerListWidget->item( i )->setCheckState( Qt::Unchecked );
-      }
-    }
-    mAnnotationsCheckBox->setChecked( false );
-    mAnnotationsCheckBox->setEnabled( false );
-  }
 }
 
-QList<QgsMapLayer*> QgsKMLExportDialog::getSelectedLayers() const
+QgsKMLExportDialog::~QgsKMLExportDialog()
+{
+}
+
+QString QgsKMLExportDialog::saveFile() const
+{
+  //Add file ending if not already there...
+  QString fileName = mFileLineEdit->text();
+  if ( exportFormat() == QgsKMLExportDialog::KML && !fileName.endsWith( ".kml", Qt::CaseInsensitive ) )
+  {
+    fileName.append( ".kml" );
+  }
+  else if ( exportFormat() == QgsKMLExportDialog::KMZ && !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
+  {
+    fileName.append( ".kmz" );
+  }
+  return fileName;
+}
+
+QList<QgsMapLayer*> QgsKMLExportDialog::selectedLayers() const
 {
   QList<QgsMapLayer*> layerList;
-  for ( int i = 0, n = mLayerListWidget->count(); i < n; ++i )
+
+  int nItems = mLayerListWidget->count();
+  for ( int i = 0; i < nItems; ++i )
   {
     QListWidgetItem* item = mLayerListWidget->item( i );
-    if (( item->flags() & Qt::ItemIsEnabled ) && item->checkState() == Qt::Checked )
+    if ( item && ( item->flags() & Qt::ItemIsEnabled ) && item->checkState() == Qt::Checked )
     {
       QString id = item->data( Qt::UserRole ).toString();
       QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( id );
       if ( layer )
       {
-        layerList.append( layer );
+        layerList.prepend( layer );
       }
     }
   }
   return layerList;
+}
+
+bool QgsKMLExportDialog::exportAnnotations() const
+{
+  return mAnnotationsCheckBox->isChecked();
+}
+
+void QgsKMLExportDialog::insertAvailableLayers()
+{
+  mLayerListWidget->clear();
+  QStringList::const_iterator it = mLayerIds.constBegin();
+  for ( ; it != mLayerIds.constEnd(); ++it )
+  {
+    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( *it );
+    QgsVectorLayer* vLayer = dynamic_cast<QgsVectorLayer*>( layer );
+    QgsRasterLayer* rLayer = dynamic_cast<QgsRasterLayer*>( layer );
+    QgsPluginLayer* pLayer = dynamic_cast<QgsPluginLayer*>( layer );
+    if ( !vLayer && !rLayer && ( !pLayer || pLayer->pluginLayerType() != "MilX_Layer" ) )
+    {
+      continue;
+    }
+    Qt::CheckState checked = rLayer && rLayer->source().contains( "url=http" ) ? Qt::Unchecked : Qt::Checked;
+
+    QListWidgetItem* item = new QListWidgetItem( layer->name() );
+    item->setCheckState( checked );
+    item->setData( Qt::UserRole, *it );
+    mLayerListWidget->addItem( item );
+  }
+}
+
+void QgsKMLExportDialog::on_mFileSelectionButton_clicked()
+{
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+  QString filter = exportFormat() == QgsKMLExportDialog::KML ? "KML (*.kml);;" : "KMZ (*.kmz);;";
+  QString fileName = QFileDialog::getSaveFileName( 0, tr( "Save KML file" ), lastDir, filter );
+  if ( !fileName.isEmpty() )
+  {
+    QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( fileName ).absolutePath() );
+    if ( exportFormat() == QgsKMLExportDialog::KML && !fileName.endsWith( ".kml", Qt::CaseInsensitive ) )
+    {
+      fileName.append( ".kml" );
+    }
+    else if ( exportFormat() == QgsKMLExportDialog::KMZ && !fileName.endsWith( ".kmz", Qt::CaseInsensitive ) ) //KMZ
+    {
+      fileName.append( ".kmz" );
+    }
+    mFileLineEdit->setText( fileName );
+  }
+}
+
+void QgsKMLExportDialog::on_mFormatComboBox_currentIndexChanged( const QString& text )
+{
+  if ( text == "KML" )
+  {
+    deactivateNonVectorLayers();
+    mAnnotationsCheckBox->setChecked( false );
+    mAnnotationsCheckBox->setEnabled( false );
+  }
+  else
+  {
+    activateAllLayers();
+    mAnnotationsCheckBox->setEnabled( true );
+  }
+}
+
+QgsKMLExportDialog::ExportFormat QgsKMLExportDialog::exportFormat() const
+{
+  if ( QString::compare( mFormatComboBox->currentText(), "KMZ", Qt::CaseInsensitive ) == 0 )
+  {
+    return QgsKMLExportDialog::KMZ;
+  }
+  else
+  {
+    return QgsKMLExportDialog::KML;
+  }
+}
+
+void QgsKMLExportDialog::deactivateNonVectorLayers()
+{
+  int rowCount = mLayerListWidget->count();
+  for ( int i = 0; i < rowCount; ++i )
+  {
+    QString layerId = mLayerListWidget->item( i )->data( Qt::UserRole ).toString();
+    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+    if ( layer && layer->type() != QgsMapLayer::VectorLayer )
+    {
+      mLayerListWidget->item( i )->setFlags( Qt::NoItemFlags );
+      mLayerListWidget->item( i )->setCheckState( Qt::Unchecked );
+    }
+  }
+}
+
+void QgsKMLExportDialog::activateAllLayers()
+{
+  int rowCount = mLayerListWidget->count();
+  for ( int i = 0; i < rowCount; ++i )
+  {
+    mLayerListWidget->item( i )->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
+  }
 }
