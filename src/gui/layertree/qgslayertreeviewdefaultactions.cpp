@@ -66,7 +66,7 @@ QAction* QgsLayerTreeViewDefaultActions::actionShowInOverview( QObject* parent )
 
 QAction* QgsLayerTreeViewDefaultActions::actionRenameGroupOrLayer( QObject* parent )
 {
-  QAction* a = new QAction( tr( "Re&name" ), parent );
+  QAction* a = new QAction( QgsApplication::getThemeIcon( "/mActionRename.png" ), tr( "Re&name" ), parent );
   connect( a, SIGNAL( triggered() ), this, SLOT( renameGroupOrLayer() ) );
   return a;
 }

@@ -47,6 +47,8 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
       {
         menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
       }
+      menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
+      menu->addAction( actions->actionRenameGroupOrLayer( menu ) );
     }
     else if ( QgsLayerTree::isGroup( node ) )
     {
@@ -58,7 +60,6 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
       addCustomLayerActions( menu, layer );
-      menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
       if ( layer->type() == QgsMapLayer::RasterLayer )
       {
         menu->addAction( actions->actionUseAsHightMap( mMainWidget->mapCanvas() ) );
