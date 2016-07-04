@@ -330,7 +330,7 @@ class QTreeWidgetItem;
   */
 static void setTitleBarText_( QWidget & qgisApp )
 {
-  QString caption = QgisApp::tr( QGis::QGIS_FULL_RELEASE_NAME );
+  QString caption = QgisApp::tr( "KADAS Albireo" );
 
   if ( QgsProject::instance()->title().isEmpty() )
   {
