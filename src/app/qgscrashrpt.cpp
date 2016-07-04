@@ -62,7 +62,7 @@ bool QgsCrashRpt::install()
   CR_INSTALL_INFO info;
   memset( &info, 0, sizeof( CR_INSTALL_INFO ) );
   info.cb = sizeof( CR_INSTALL_INFO );
-  info.pszAppName = _strdup( QString( "QGIS %1" ).arg( QGis::QGIS_RELEASE_NAME ).toLocal8Bit().data() );
+  info.pszAppName = _strdup( QString( "%1" ).arg( QGis::QGIS_FULL_RELEASE_NAME ).toLocal8Bit().data() );
   info.pszAppVersion = _strdup( QString( "%1 (%2)" ).arg( QGis::QGIS_BUILD_DATE ).arg( QGis::QGIS_DEV_VERSION ).toLocal8Bit().data() );
   info.pszUrl = _strdup( submitUrl.toLocal8Bit().data() );
   info.dwFlags = 0;
