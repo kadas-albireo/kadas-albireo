@@ -252,30 +252,6 @@ QString QgsWmsProvider::getLegendGraphicUrl() const
     url = mCaps.mCapabilities.capability.request.getLegendGraphic.dcpType.front().http.get.onlineResource.xlinkHref;
   }
 
-  if ( url.isEmpty() )
-  {
-    foreach ( const QgsWmtsTileLayer& l, mCaps.mTileLayersSupported )
-    {
-      if ( l.identifier != mSettings.mActiveSubLayers[0] )
-        continue;
-
-      QHash<QString, QgsWmtsStyle>::const_iterator it = l.styles.find( mSettings.mActiveSubStyles[0] );
-      if ( it == l.styles.end() )
-        continue;
-
-      foreach ( const QgsWmtsLegendURL& u, it.value().legendURLs )
-      {
-        if ( u.format == mSettings.mImageMimeType )
-          url = u.href;
-      }
-      if ( url.isEmpty() && !it.value().legendURLs.isEmpty() )
-        url = it.value().legendURLs.front().href;
-
-      if ( !url.isEmpty() )
-        break;
-    }
-  }
-
   return url.isEmpty() ? url : prepareUri( url );
 }
 
@@ -2967,12 +2943,6 @@ QUrl QgsWmsProvider::getLegendGraphicFullURL( double scale, const QgsRectangle& 
   QgsDebugMsg( QString( "visibleExtent is %1" ).arg( visibleExtent.toString() ) );
 
   QUrl url( lurl );
-
-  if ( dataSourceUri().contains( "SERVICE=WMTS" ) || dataSourceUri().contains( "/WMTSCapabilities.xml" ) )
-  {
-    QgsDebugMsg( QString( "getlegendgraphicrequest: %1" ).arg( url.toString() ) );
-    return url;
-  }
 
   if ( !url.hasQueryItem( "SERVICE" ) )
     setQueryItem( url, "SERVICE", "WMS" );
