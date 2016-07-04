@@ -121,11 +121,6 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
   {
     reset();
   }
-  if ( mState == StateReady && e->button() == Qt::RightButton && canvas()->mapTool() == this )
-  {
-    canvas()->unsetMapTool( this ); // unset
-    return;
-  }
   mState = buttonEvent( transformPoint( e->pos() ), true, e->button() );
   if ( mShowInput )
   {
