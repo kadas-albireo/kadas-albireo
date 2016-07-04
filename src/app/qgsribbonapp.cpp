@@ -184,6 +184,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mRibbonWidget, SIGNAL( currentChanged( int ) ), this, SLOT( pan() ) ); // Change to pan tool when changing active ribbon tab
   connect( mZoomInButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomIn() ) );
   connect( mZoomOutButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomOut() ) );
+  connect( mHomeButton, SIGNAL( clicked( bool ) ), this, SLOT( zoomFull() ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -256,6 +257,8 @@ void QgsRibbonApp::updateWidgetPositions()
   int distanceToRightBorder = 9;
   int distanceToTop = 20;
   mZoomInOutFrame->move( mMapCanvas->width() - distanceToRightBorder - mZoomInOutFrame->width(), distanceToTop );
+
+  mHomeButton->move( mMapCanvas->width() - distanceToRightBorder - mHomeButton->height(), distanceToTop + 90 );
 
   // Resize mLayersWidget and mLayerTreeViewButton
   int distanceToTopBottom = 40;

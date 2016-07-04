@@ -209,7 +209,6 @@
 #include "qgsosmimportdialog.h"
 #include "qgsosmexportdialog.h"
 
-#include <quazip/quazipfile.h>
 
 #ifdef ENABLE_MODELTEST
 #include "modeltest.h"
@@ -331,7 +330,7 @@ class QTreeWidgetItem;
   */
 static void setTitleBarText_( QWidget & qgisApp )
 {
-  QString caption = QgisApp::tr( "KADAS Albireo" );
+  QString caption = QgisApp::tr( QGis::QGIS_FULL_RELEASE_NAME );
 
   if ( QgsProject::instance()->title().isEmpty() )
   {
@@ -3137,70 +3136,22 @@ void QgisApp::dxfExport()
 
 void QgisApp::kmlExport()
 {
-  QgsKMLExportDialog d( mapCanvas()->mapSettings().layers() );
-  if ( d.exec() == QDialog::Accepted )
+  QgsKMLExportDialog d( mapCanvas()->layers() );
+  if ( d.exec() != QDialog::Accepted )
   {
-    QgsKMLExport kmlExport;
-    kmlExport.setLayers( d.selectedLayers() );
-    kmlExport.setExportAnnotatons( d.exportAnnotations() );
-
-    QString fileName = d.saveFile();
-    QFileInfo fi( fileName );
-
-    QIODevice* outputDevice = 0;
-    QuaZip* quaZip = 0;
-    if ( d.exportFormat() == QgsKMLExportDialog::KML )
-    {
-      outputDevice = new QFile( fileName );
-    }
-    else //KMZ
-    {
-      quaZip = new QuaZip( fileName );
-      if ( !quaZip->open( QuaZip::mdCreate ) )
-      {
-        delete quaZip;
-        return;
-      }
-      outputDevice = new QuaZipFile( quaZip );
-      //quazip files need to be opened with special methods
-      static_cast<QuaZipFile*>( outputDevice )->open( QIODevice::WriteOnly, QuaZipNewInfo( fi.baseName() + ".kml" ) );
-    }
-
-    QStringList usedTemporaryFiles;
-    QList<QgsMapLayer*> superOverlayLayers;
-
-    QApplication::setOverrideCursor( Qt::BusyCursor );
-    bool success = ( kmlExport.writeToDevice( outputDevice, mapCanvas()->mapSettings(), usedTemporaryFiles, superOverlayLayers ) == 0 );
-    outputDevice->close();
-    delete outputDevice;
-
-    if ( success && d.exportFormat() == QgsKMLExportDialog::KMZ )
-    {
-      foreach ( const QString& fileName, usedTemporaryFiles )
-      {
-        QFileInfo fi( fileName );
-        QGis::addFileToZip( quaZip, fileName, fi.fileName() );
-      }
-    }
-    foreach ( const QString& fileName, usedTemporaryFiles )
-    {
-      QFile( fileName ).remove();
-    }
-
-    //write super overlays
-    int drawingOrder = 0;
-    foreach ( QgsMapLayer* mapLayer, superOverlayLayers )
-    {
-      kmlExport.addSuperOverlayLayer( mapLayer, quaZip, fi.absolutePath(), drawingOrder, mapCanvas()->mapSettings().destinationCrs(),
-                                      mapCanvas()->mapSettings().mapUnitsPerPixel() );
-      ++drawingOrder;
-    }
-
-    messageBar()->pushMessage( success ? tr( "KML export completed" ) : tr( "KML export failed" ), success ? QgsMessageBar::INFO : QgsMessageBar::CRITICAL, 4 );
-
-    delete quaZip;
-    QApplication::restoreOverrideCursor();
+    return;
   }
+  QApplication::setOverrideCursor( Qt::BusyCursor );
+  QgsKMLExport kmlExport;
+  if ( kmlExport.exportToFile( d.getFilename(), d.getSelectedLayers(), d.getExportAnnotations(), mapCanvas()->mapSettings() ) )
+  {
+    messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
+  }
+  else
+  {
+    messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
+  }
+  QApplication::restoreOverrideCursor();
 }
 
 void QgisApp::openLayerDefinition( const QString & path )

@@ -499,6 +499,38 @@
         <string>Loading...</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="mHomeButton">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>120</y>
+         <width>40</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="icon">
+        <iconset resource="../../images/images.qrc">
+         <normaloff>:/images/ribbon/home.png</normaloff>:/images/ribbon/home.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>38</width>
+         <height>38</height>
+        </size>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

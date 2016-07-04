@@ -340,8 +340,16 @@ QPushButton#mZoomOutButton {
   border-width: 0;
 }
 
+QPushButton#mHomeButton {
+  background-color: #263B4E;
+  color: #FFFFFF;
+  border: 1px solid #737373;
+  border-radius: 2px;
+}
+
 QPushButton#mZoomInButton:pressed,
-QPushButton#mZoomOutButton:pressed {
+QPushButton#mZoomOutButton:pressed,
+QPushButton#mHomeButton:pressed {
   background-color: #16232f;
 }
 

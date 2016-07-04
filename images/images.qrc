@@ -570,6 +570,7 @@
         <file>ribbon/login.png</file>
         <file>ribbon/loeschen.png</file>
         <file>themes/default/mActionRename.png</file>
+        <file>ribbon/home.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>
