@@ -1457,6 +1457,20 @@ void QgsWmsCapabilities::parseWMTSContents( QDomElement const &e )
 
         s.legendURLs << u;
       }
+      QDomElement e2 = e1.firstChildElement( "LegendURL" );
+      if ( !e2.isNull() )
+      {
+        QgsWmtsLegendURL u;
+
+        u.format   = e2.attribute( "format" );
+        u.minScale = e2.attribute( "minScale" ).toDouble();
+        u.maxScale = e2.attribute( "maxScale" ).toDouble();
+        u.href     = e2.attribute( "xlink:href" );
+        u.width    = e2.attribute( "width" ).toInt();
+        u.height   = e2.attribute( "height" ).toInt();
+
+        s.legendURLs << u;
+      }
 
       s.isDefault = e1.attribute( "isDefault" ) == "true";
 
