@@ -94,13 +94,12 @@ QVector<QgsDataItem*> QgsAfsConnectionItem::createChildren()
   {
     return layers;
   }
-  QString authid = QgsArcGisRestUtils::parseSpatialReference( serviceData["spatialReference"].toMap() ).authid();
 
   foreach ( const QVariant& layerInfo, serviceData["layers"].toList() )
   {
     QVariantMap layerInfoMap = layerInfo.toMap();
     QString id = layerInfoMap["id"].toString();
-    QgsAfsLayerItem* layer = new QgsAfsLayerItem( this, mName, mUrl + "/" + id, layerInfoMap["name"].toString(), authid );
+    QgsAfsLayerItem* layer = new QgsAfsLayerItem( this, mName, mUrl + "/" + id, layerInfoMap["name"].toString() );
     layers.append( layer );
   }
 
@@ -147,10 +146,10 @@ void QgsAfsConnectionItem::deleteConnection()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsAfsLayerItem::QgsAfsLayerItem( QgsDataItem* parent, const QString &name, const QString &url, const QString &title, const QString& authid )
+QgsAfsLayerItem::QgsAfsLayerItem( QgsDataItem* parent, const QString &name, const QString &url, const QString &title )
     : QgsLayerItem( parent, title, parent->path() + "/" + name, QString(), QgsLayerItem::Vector, "arcgisfeatureserver" )
 {
-  mUri = QString( "crs='%1' url='%2'" ).arg( authid ).arg( url );
+  mUri = url;
   setState( Populated );
   mIconName = "mIconConnect.png";
 }
