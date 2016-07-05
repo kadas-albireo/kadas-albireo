@@ -49,6 +49,7 @@ class GUI_EXPORT QgsLayerTreeViewDefaultActions : public QObject
     QAction* actionZoomToGroup( QgsMapCanvas* canvas, QObject* parent = 0 );
     QAction* actionTransparency( QgsMapCanvas *canvas, QObject *parent = 0 );
     QAction* actionUseAsHightMap( QObject *parent = 0 );
+    QAction* actionShowLayerInfo( QObject* parent = 0 );
     // TODO: zoom to selected
 
     QAction* actionMakeTopLevel( QObject* parent = 0 );
@@ -72,6 +73,7 @@ class GUI_EXPORT QgsLayerTreeViewDefaultActions : public QObject
     void zoomToGroup();
     void setLayerTransparency();
     void setHeightMapLayer( bool active );
+    void showLayerInfo();
     void makeTopLevel();
     void groupSelected();
     //! Slot to enable/disable mutually exclusive group flag

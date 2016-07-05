@@ -939,13 +939,18 @@ void QgisApp::dropEvent( QDropEvent *event )
     {
       QString uri = crsAndFormatAdjustedLayerUri( u.uri, u.supportedCrs, u.supportedFormats );
 
+      QgsMapLayer* layer = 0;
       if ( u.layerType == "vector" )
       {
-        addVectorLayer( uri, u.name, u.providerKey );
+        layer = addVectorLayer( uri, u.name, u.providerKey );
       }
       else if ( u.layerType == "raster" )
       {
-        addRasterLayer( uri, u.name, u.providerKey );
+        layer = addRasterLayer( uri, u.name, u.providerKey );
+      }
+      if ( layer )
+      {
+        layer->setInfoUrl( u.layerInfoUrl );
       }
     }
   }

@@ -56,26 +56,24 @@ QgsMimeDataUtils::Uri::Uri( const QString& encData )
   name = decoded[2];
   uri = decoded[3];
 
-  if ( layerType == "raster" && decoded.size() == 6 )
+  if ( decoded.size() >= 6 )
   {
     supportedCrs = decode( decoded[4] );
     supportedFormats = decode( decoded[5] );
   }
-  else
-  {
-    supportedCrs.clear();
-    supportedFormats.clear();
-  }
+  if ( decoded.size() >= 7 )
+    layerInfoUrl = decoded[6];
 
-  QgsDebugMsg( QString( "type:%1 key:%2 name:%3 uri:%4 supportedCRS:%5 supportedFormats:%6" )
+  QgsDebugMsg( QString( "type:%1 key:%2 name:%3 uri:%4 supportedCRS:%5 supportedFormats:%6 metadataUrl:%7" )
                .arg( layerType ).arg( providerKey ).arg( name ).arg( uri )
                .arg( supportedCrs.join( ", " ) )
-               .arg( supportedFormats.join( ", " ) ) );
+               .arg( supportedFormats.join( ", " ) )
+               .arg( layerInfoUrl ) );
 }
 
 QString QgsMimeDataUtils::Uri::data() const
 {
-  return encode( QStringList() << layerType << providerKey << name << uri << encode( supportedCrs ) << encode( supportedFormats ) );
+  return encode( QStringList() << layerType << providerKey << name << uri << encode( supportedCrs ) << encode( supportedFormats ) << layerInfoUrl );
 }
 
 // -----

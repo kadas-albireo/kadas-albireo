@@ -23,6 +23,7 @@
 #include "qgsvbscatalogprovider.h"
 #include "qgsfilterlineedit.h"
 #include "qgsmimedatautils.h"
+#include "qgsrasterlayer.h"
 #include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStandardItem>
@@ -286,7 +287,9 @@ void QgsCatalogBrowser::itemDoubleClicked( const QModelIndex &index )
     if ( !uriList.isEmpty() && !uriList[0].uri.isEmpty() )
     {
       QString uri = QgisApp::instance()->crsAndFormatAdjustedLayerUri( uriList[0].uri, uriList[0].supportedCrs, uriList[0].supportedFormats );
-      QgisApp::instance()->addRasterLayer( uri, uriList[0].name, uriList[0].providerKey );
+      QgsRasterLayer* layer = QgisApp::instance()->addRasterLayer( uri, uriList[0].name, uriList[0].providerKey );
+      if ( layer )
+        layer->setInfoUrl( uriList[0].layerInfoUrl );
     }
     delete data;
   }

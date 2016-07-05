@@ -19,6 +19,7 @@ class QgsMimeDataUtils
       QString uri;
       QStringList supportedCrs;
       QStringList supportedFormats;
+      QString layerInfoUrl;
     };
     typedef QList<QgsMimeDataUtils::Uri> UriList;
 

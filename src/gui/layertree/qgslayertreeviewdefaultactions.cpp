@@ -26,6 +26,7 @@
 #include "qgsvectorlayer.h"
 
 #include <QAction>
+#include <QDesktopServices>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSlider>
@@ -151,6 +152,17 @@ QAction* QgsLayerTreeViewDefaultActions::actionUseAsHightMap( QObject *parent )
   heightmapAction->setProperty( "layerid", layer->id() );
   connect( heightmapAction, SIGNAL( toggled( bool ) ), this, SLOT( setHeightMapLayer( bool ) ) );
   return heightmapAction;
+}
+
+QAction* QgsLayerTreeViewDefaultActions::actionShowLayerInfo( QObject *parent )
+{
+  QgsMapLayer* layer = mView->currentLayer();
+  if ( !layer )
+    return 0;
+  QAction* layerInfoAction = new QAction( QgsApplication::getThemeIcon( "/mActionInfo.svg" ), tr( "Show layer info" ), parent );
+  layerInfoAction->setProperty( "layerid", layer->id() );
+  connect( layerInfoAction, SIGNAL( triggered() ), this, SLOT( showLayerInfo( ) ) );
+  return layerInfoAction;
 }
 
 QAction* QgsLayerTreeViewDefaultActions::actionMakeTopLevel( QObject* parent )
@@ -288,6 +300,14 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
 void QgsLayerTreeViewDefaultActions::setHeightMapLayer( bool active )
 {
   QgsProject::instance()->writeEntry( "Heightmap", "layer", active ? QObject::sender()->property( "layerid" ).toString() : "" );
+}
+
+void QgsLayerTreeViewDefaultActions::showLayerInfo()
+{
+  QString layerId = QObject::sender()->property( "layerid" ).toString();
+  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
+  if ( layer && !layer->infoUrl().isEmpty() )
+    QDesktopServices::openUrl( layer->infoUrl() );
 }
 
 void QgsLayerTreeViewDefaultActions::zoomToLayers( QgsMapCanvas* canvas, const QList<QgsMapLayer*>& layers )
