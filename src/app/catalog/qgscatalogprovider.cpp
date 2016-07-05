@@ -51,7 +51,7 @@ QMap<QString, QString> QgsCatalogProvider::parseWMTSTileMatrixSets( const QDomDo
   return tileMatrixSetMap;
 }
 
-void QgsCatalogProvider::parseWMTSLayerCapabilities( const QDomNode& layerItem, const QMap<QString, QString>& tileMatrixSetMap, const QString& url, const QString& extraParams, QString& title, QString& layerid, QMimeData*& mimeData ) const
+void QgsCatalogProvider::parseWMTSLayerCapabilities( const QDomNode& layerItem, const QMap<QString, QString>& tileMatrixSetMap, const QString& url, const QString& layerInfoUrl, const QString& extraParams, QString& title, QString& layerid, QMimeData*& mimeData ) const
 {
   title = layerItem.firstChildElement( "ows:Title" ).text();
   layerid = layerItem.firstChildElement( "ows:Identifier" ).text();
@@ -80,6 +80,7 @@ void QgsCatalogProvider::parseWMTSLayerCapabilities( const QDomNode& layerItem, 
                       "&styles=%5&url=%6%7"
                     ).arg( layerid ).arg( supportedCrs ).arg( imgFormat ).arg( tileMatrixSet ).arg( styleId ).arg( url ).arg( extraParams );
   mimeDataUri.uri += "&tileDimensions=" + dimensionParams; // Add this last because it contains % (from %3D) which confuses .arg
+  mimeDataUri.layerInfoUrl = layerInfoUrl;
   mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
 }
 
@@ -110,7 +111,7 @@ QString QgsCatalogProvider::parseWMSNestedLayer( const QDomNode& layerItem ) con
   return subLayerParams;
 }
 
-void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, QString& title, QMimeData*& mimeData ) const
+void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, const QString& layerInfoUrl, QString& title, QMimeData*& mimeData ) const
 {
   title = layerItem.firstChildElement( "Title" ).text();
   QString layerid = layerItem.firstChildElement( "Name" ).text();
@@ -141,6 +142,7 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
                       "contextualWMSLegend=0&featureCount=10&dpiMode=7"
                       "&crs=%1&format=%2"
                       "%3&url=%4" ).arg( supportedCrs[0] ).arg( imgFormat ).arg( subLayerParams ).arg( url );
+  mimeDataUri.layerInfoUrl = layerInfoUrl;
   mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
 }
 
