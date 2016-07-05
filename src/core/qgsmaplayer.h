@@ -97,9 +97,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
     void setAbstract( const QString& abstract ) { mAbstract = abstract; }
     const QString& abstract() const { return mAbstract; }
 
-    void setInfoUrl( const QString infoUrl ) { mInfoUrl = infoUrl; }
-    const QString& infoUrl() const { return mInfoUrl; }
-
     void setWMSPublishLegend( bool enable ) { mWMSPublishLegend = enable; }
     bool wmsPublishLegend() const { return mWMSPublishLegend; }
 
@@ -607,7 +604,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /**Description of the layer*/
     QString mAbstract;
     QString mKeywordList;
-    QString mInfoUrl;
 
     /**DataUrl of the layer*/
     QString mDataUrl;

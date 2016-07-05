@@ -90,7 +90,7 @@ void QgsGeoAdminRestCatalogProvider::replyFinished()
   {
     QString title, layerid;
     QMimeData* mimeData;
-    parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, mBaseUrl, "", QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
+    parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, mBaseUrl, QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
 
     // Determine paren
     QStandardItem* parent = 0;

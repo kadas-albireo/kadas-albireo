@@ -162,7 +162,7 @@ void QgsArcGisRestCatalogProvider::parseWMTSDo()
       {
         QString title, layerid;
         QMimeData* mimeData;
-        parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, url, "", "", title, layerid, mimeData );
+        parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, url, "", title, layerid, mimeData );
         mBrowser->addItem( getCategoryItem( catTitles, QStringList() ), title, -1, true, mimeData );
       }
     }
@@ -187,6 +187,7 @@ void QgsArcGisRestCatalogProvider::parseWMSDo()
 {
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   reply->deleteLater();
+  QString path = reply->property( "path" ).toString();
   QStringList catTitles = reply->property( "catTitles" ).toStringList();
   QString url = reply->property( "url" ).toString();
 
@@ -199,7 +200,7 @@ void QgsArcGisRestCatalogProvider::parseWMSDo()
     {
       QString title;
       QMimeData* mimeData;
-      parseWMSLayerCapabilities( layerItem, imgFormats, url, "", title, mimeData );
+      parseWMSLayerCapabilities( layerItem, imgFormats, url, title, mimeData );
       mBrowser->addItem( getCategoryItem( catTitles, QStringList() ), title, -1, mimeData );
     }
   }

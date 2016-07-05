@@ -38,7 +38,6 @@ class CORE_EXPORT QgsMimeDataUtils
       QString uri;
       QStringList supportedCrs;
       QStringList supportedFormats;
-      QString layerInfoUrl;
     };
     typedef QList<Uri> UriList;
 

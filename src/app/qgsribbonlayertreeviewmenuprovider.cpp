@@ -69,10 +69,6 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
 //        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
 //                         QgisApp::instance(), SLOT( attributeTable() ) );
       }
-      if ( !layer->infoUrl().isEmpty() )
-      {
-        menu->addAction( actions->actionShowLayerInfo( menu ) );
-      }
       if ( layer->type() == QgsMapLayer::PluginLayer )
       {
         QgsPluginLayerType* plt = QgsPluginLayerRegistry::instance()->pluginLayerType( static_cast<QgsPluginLayer*>( layer )->pluginLayerType() );

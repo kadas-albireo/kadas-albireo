@@ -62,15 +62,15 @@ void QgsVBSCatalogProvider::replyFinished()
       QVariantMap resultMap = resultData.toMap();
       if ( resultMap["type"].toString() == "wmts" )
       {
-        wmtsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        wmtsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
       }
       else if ( resultMap["type"].toString() == "wms" )
       {
-        wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
       }
       else if ( resultMap["type"].toString() == "ams" )
       {
-        amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString() ) );
       }
     }
 
@@ -130,8 +130,8 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
         {
           QString title;
           QMimeData* mimeData;
+          parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
           const ResultEntry& entry = ( *entries )[layerid];
-          parseWMTSLayerCapabilities( layerItem, tileMatrixSetMap, reply->request().url().toString(), entry.metadataUrl, QString( "&referer=%1" ).arg( referer ), title, layerid, mimeData );
           QStringList sortIndices = entry.sortIndices.split( "/" );
           mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entry.title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
         }
@@ -230,12 +230,11 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
       QgsMimeDataUtils::Uri mimeDataUri;
       mimeDataUri.layerType = "raster";
       mimeDataUri.providerKey = "arcgismapserver";
-      const ResultEntry& entry = ( *entries )[layerName];
-      mimeDataUri.name = entry.title;
+      mimeDataUri.name = entries->value( layerName ).title;
       QString format = filteredEncodings.contains( "png" ) ? "png" : filteredEncodings.toList().front();
       mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
-      mimeDataUri.layerInfoUrl = entry.metadataUrl;
       QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
+      const ResultEntry& entry = ( *entries )[layerName];
       QStringList sortIndices = entry.sortIndices.split( "/" );
       mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), mimeDataUri.name, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
     }
@@ -252,8 +251,8 @@ void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, c
   {
     QString title;
     QMimeData* mimeData;
+    parseWMSLayerCapabilities( layerItem, imgFormats, url, title, mimeData );
     const ResultEntry& entry = entries[layerid];
-    parseWMSLayerCapabilities( layerItem, imgFormats, url, entry.metadataUrl, title, mimeData );
     QStringList sortIndices = entry.sortIndices.split( "/" );
     mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entries[layerid].title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
   }
