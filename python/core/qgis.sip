@@ -33,6 +33,8 @@ class QGis
     static const int QGIS_VERSION_INT;
     // Release name
     static const char* QGIS_RELEASE_NAME;
+    // Full release name
+    static const char* QGIS_FULL_RELEASE_NAME;
     // The development version
     static const char* QGIS_DEV_VERSION;
     // The build date

@@ -17,6 +17,7 @@
 #include "qgisapp.h"
 #include "qgscoordinatetransform.h"
 #include "qgscoordinateformat.h"
+#include "qgsdistancearea.h"
 #include "qgsimageannotationitem.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
@@ -63,7 +64,7 @@ class QgsMeasureHeightProfileDialog::ScaleDraw : public QwtScaleDraw
 
 
 QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool *tool, QWidget *parent, Qt::WindowFlags f )
-    : QDialog( parent, f ), mTool( tool ), mLineOfSightMarker( 0 ), mNSamples( 300 )
+    : QDialog( parent, f ), mTool( tool ), mLineOfSightMarker( 0 ), mNSamples( 1000 )
 {
   setWindowTitle( tr( "Height profile" ) );
   setAttribute( Qt::WA_ShowWithoutActivating );
@@ -167,9 +168,13 @@ void QgsMeasureHeightProfileDialog::setPoints( const QList<QgsPoint>& points, co
   mPointsCrs = crs;
   mTotLength = 0;
   mSegmentLengths.clear();
+  QgsDistanceArea da;
+  da.setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
+  da.setEllipsoidalMode( true );
+  da.setSourceCrs( crs );
   for ( int i = 0, n = mPoints.size() - 1; i < n; ++i )
   {
-    mSegmentLengths.append( qSqrt( mPoints[i + 1].sqrDist( mPoints[i] ) ) );
+    mSegmentLengths.append( da.measureLine( mPoints[i + 1], mPoints[i] ) );
     mTotLength += mSegmentLengths.back();
   }
   mLineOfSightGroupBoxgroupBox->setEnabled( points.size() == 2 );
@@ -379,37 +384,43 @@ void QgsMeasureHeightProfileDialog::updateLineOfSight( )
 
   QVector< QVector<QPointF> > losSampleSet;
   losSampleSet.append( QVector<QPointF>() );
+  double targetHeight = mTargetHeightSpinBox->value();
   bool heightRelToGround = static_cast<HeightMode>( mHeightModeCombo->itemData( mHeightModeCombo->currentIndex() ).toInt() ) == HeightRelToGround;
 
-  double obsHeight = mObserverHeightSpinBox->value();
-  if ( heightRelToGround )
-    obsHeight += samples.front().y();
-  QPointF p1( samples.front().x(), obsHeight );
-
+  QVector<double> pX; pX.reserve( nSamples );
+  QVector<double> pY; pY.reserve( nSamples );
+  double earthRadius = 6370000;
   double meterToDisplayUnit = QGis::fromUnitToUnitFactor( QGis::Meters, QgsCoordinateFormat::instance()->getHeightDisplayUnit() );
-
-  for ( int i = 0; i < nSamples - 1; ++i )
+  foreach ( const QPointF& p, samples )
   {
-    // Curvature correction
-    double distFromObserver = samples[i].x() / mNSamples * mTotLength;
-    double earthRadius = 6370000;
-    double hCorr = 0.87 * distFromObserver * distFromObserver / ( 2 * earthRadius ) * meterToDisplayUnit;
+    pX.append( p.x() / mNSamples * mTotLength );
+    double hCorr = 0.87 * pX.last() * pX.last() / ( 2 * earthRadius ) * meterToDisplayUnit;
+    pY.append( p.y() - hCorr );
+  }
 
-    double targetHeight = mTargetHeightSpinBox->value();
-    if ( heightRelToGround )
-    {
-      targetHeight += samples[i].y();
-    }
-    QPointF p2( samples[i].x(), targetHeight - hCorr );
+  // Visibility of first point
+  double y = pY.front() + targetHeight - ( heightRelToGround ? 0 : samples.front().y() );
+  if ( y > pY.front() )
+    losSampleSet.back().append( samples.front() );
+  else
+    losSampleSet.append( QVector<QPointF>() );
+
+  QPointF p1( pX.front(), ( heightRelToGround ? pY.front() : 0 ) + mObserverHeightSpinBox->value() );
+  for ( int i = 1; i < nSamples; ++i )
+  {
+    QPointF p2( pX[i], pY[i] + targetHeight );
+    if ( !heightRelToGround )
+      p2.ry() -= samples[i].y();
+    // For each sample position along line [p1, p2], check if y is below terrain
     // X = p1.x() + d * (p2.x() - p1.x())
     // Y = p1.y() + d * (p2.y() - p1.y())
     // => d = (X - p1.x()) / (p2.x() - p1.x())
     // => Y = p1.y() + (X - p1.x()) / (p2.x() - p1.x()) * (p2.y() - p1.y())
     bool visible = true;
-    for ( int j = 0; j < i; ++j )
+    for ( int j = 1; j < i; ++j )
     {
-      double Y = p1.y() + ( samples[j].x() - p1.x() ) / ( p2.x() - p1.x() ) * ( p2.y() - p1.y() );
-      if ( Y < samples[j].y() )
+      double Y = p1.y() + ( pX[j] - p1.x() ) / ( p2.x() - p1.x() ) * ( p2.y() - p1.y() );
+      if ( Y < pY[j] )
       {
         visible = false;
         break;
