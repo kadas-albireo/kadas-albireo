@@ -278,7 +278,6 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       {
         return false;
       }
-      mLayer->mMargin = 0;
       for ( int i = 0, n = result.size(); i < n; ++i )
       {
         QPoint renderPos = itemOrigins[i] + result[i].offset + items[i]->userOffset();
@@ -288,7 +287,6 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
           mRendererContext.painter()->drawLine( itemOrigins[i], itemOrigins[i] + items[i]->userOffset() );
         }
         mRendererContext.painter()->drawImage( renderPos, result[i].graphic );
-        mLayer->mMargin = qMax( mLayer->mMargin, qMax( result[i].graphic.width() + items[i]->userOffset().x(), result[i].graphic.height() + items[i]->userOffset().y() ) );
       }
       return true;
     }
@@ -315,7 +313,7 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXLayer::QgsMilXLayer( QgsLayerTreeViewMenuProvider* menuProvider , const QString &name )
-    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( menuProvider ), mMargin( 0 ), mIsApproved( false )
+    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( menuProvider ), mMargin( 50 ), mIsApproved( false )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
@@ -325,7 +323,7 @@ QgsMilXLayer::QgsMilXLayer( QgsLayerTreeViewMenuProvider* menuProvider , const Q
 }
 
 QgsMilXLayer::QgsMilXLayer( QgisInterface* iface, const QString &name )
-    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( iface->layerTreeView()->menuProvider() ), mMargin( 0 ), mIsApproved( false )
+    : QgsPluginLayer( layerTypeKey(), name ), mMenuProvider( iface->layerTreeView()->menuProvider() ), mMargin( 50 ), mIsApproved( false )
 {
   mValid = true;
   setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
