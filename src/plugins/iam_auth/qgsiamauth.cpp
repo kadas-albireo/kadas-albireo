@@ -133,7 +133,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
         page->setNetworkAccessManager( QgsNetworkAccessManager::instance() );
         view->setPage( page );
         QNetworkRequest req;
-        req.setUrl( QUrl( "https://npe.adr.admin.ch/arcgis/sharing/rest/search" ) );
+        req.setUrl( QUrl( "https://np.adr.admin.ch/arcgis/sharing/rest/search" ) );
         QSslConfiguration conf = req.sslConfiguration();
         conf.setPeerVerifyMode( QSslSocket::VerifyNone );
         req.setSslConfiguration( conf );
