@@ -146,7 +146,7 @@ void QgsVBSCatalogProvider::readWMTSCapabilitiesDo()
 void QgsVBSCatalogProvider::readWMSCapabilities( const QString& wmsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
-  QNetworkRequest req( QUrl( wmsUrl + "?SERVICE=WMS&REQUEST=GetCapabilities" ) );
+  QNetworkRequest req( QUrl( wmsUrl + "?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0" ) );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   reply->setProperty( "url", wmsUrl );
   reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
