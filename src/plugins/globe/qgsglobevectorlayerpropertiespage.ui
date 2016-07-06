@@ -36,7 +36,7 @@
              <string>Terrain following behaviour</string>
             </property>
             <property name="text">
-             <string>Altitude</string>
+             <string>Clamping</string>
             </property>
            </widget>
           </item>
@@ -57,20 +57,50 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="comboBoxAltitudeTechnique">
-            <property name="toolTip">
-             <string>Terrain following technique</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="labelAltitudeBinding">
             <property name="toolTip">
              <string>Granulatiry at which to sample the terrain</string>
             </property>
             <property name="text">
-             <string>Granularity</string>
+             <string>Binding</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="labelAltitudeResolution">
+            <property name="toolTip">
+             <string>Elevation data resolution at which to sample terrain height</string>
+            </property>
+            <property name="text">
+             <string>Resolution</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="labelAltitudeOffset">
+            <property name="toolTip">
+             <string>Vertical offset to apply to geometry Z</string>
+            </property>
+            <property name="text">
+             <string>Offset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelAltitudeScale">
+            <property name="toolTip">
+             <string>Scale factor to apply to geometry Z</string>
+            </property>
+            <property name="text">
+             <string>Scale</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBoxAltitudeTechnique">
+            <property name="toolTip">
+             <string>Terrain following technique</string>
             </property>
            </widget>
           </item>
@@ -81,16 +111,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="labelAltitudeResolution">
-            <property name="toolTip">
-             <string>Elevation data resolution at which to sample terrain height</string>
-            </property>
-            <property name="text">
-             <string>Sampling resolution</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="spinBoxAltitudeResolution">
             <property name="toolTip">
@@ -98,30 +118,10 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="labelAltitudeOffset">
-            <property name="toolTip">
-             <string>Vertical offset to apply to geometry Z</string>
-            </property>
-            <property name="text">
-             <string>Z Offset</string>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="1">
            <widget class="QDoubleSpinBox" name="spinBoxAltitudeOffset">
             <property name="toolTip">
              <string>Vertical offset to apply to geometry Z</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="labelAltitudeScale">
-            <property name="toolTip">
-             <string>Scale factor to apply to geometry Z</string>
-            </property>
-            <property name="text">
-             <string>Z Scale</string>
             </property>
            </widget>
           </item>

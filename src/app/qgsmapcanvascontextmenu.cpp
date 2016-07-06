@@ -35,7 +35,6 @@
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
 #include "qgsvectorlayer.h"
-#include "qgsvbsrasteridentify.h"
 
 QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     : mMapPos( mapPos ), mSelectedLayer( 0 ), mSelectedFeature( 0 )
@@ -81,9 +80,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   }
   if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
   {
-    addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( rasterAttributes() ) );
-    addSeparator();
-
     if ( QgisApp::instance()->editCanPaste() )
     {
       addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( pasteFeature() ) );
@@ -284,11 +280,6 @@ void QgsMapCanvasContextMenu::measureHeightProfile()
   {
     static_cast<QgsMeasureHeightProfileTool*>( QgisApp::instance()->mapTools()->mMeasureHeightProfile )->setGeometry( mSelectedFeature.geometry(), mSelectedLayer );
   }
-}
-
-void QgsMapCanvasContextMenu::rasterAttributes()
-{
-  QgsVBSRasterIdentify::identify( QgisApp::instance()->mapCanvas(), mMapPos );
 }
 
 void QgsMapCanvasContextMenu::terrainSlope()

@@ -60,7 +60,6 @@ SET(QGIS_CORE_SRCS
 
   qgis.cpp
   qgsapplication.cpp
-  qgsarcgisrestutils.cpp
   qgsattributeaction.cpp
   qgsbrowsermodel.cpp
   qgscachedfeatureiterator.cpp
@@ -369,7 +368,6 @@ ADD_BISON_FILES(QGIS_CORE_SRCS qgsexpressionparser.yy)
 SET(QGIS_CORE_MOC_HDRS
 
   qgsapplication.h
-  qgsarcgisrestutils.h
   qgsbrowsermodel.h
   qgscontexthelp.h
   qgscoordinateformat.h
@@ -710,7 +708,6 @@ INCLUDE_DIRECTORIES(
   ${SQLITE3_INCLUDE_DIR}
   ${SPATIALITE_INCLUDE_DIR}
   ${QUAZIP_INCLUDE_DIR}
-  ${QJSON_INCLUDE_DIR}
 )
 
 
@@ -806,7 +803,6 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${SQLITE3_LIBRARY}
   ${SPATIALITE_LIBRARY}
   ${QUAZIP_LIBRARIES}
-  ${QJSON_LIBRARIES}
 )
 
 

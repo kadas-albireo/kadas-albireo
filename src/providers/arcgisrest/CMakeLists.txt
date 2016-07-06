@@ -15,6 +15,7 @@ INCLUDE_DIRECTORIES(
 ###############################################################################
 
 SET (AFS_SRCS
+  qgsarcgisrestutils.cpp
   qgsafsdataitems.cpp
   qgsafsfeatureiterator.cpp
   qgsafsprovider.cpp
@@ -22,6 +23,7 @@ SET (AFS_SRCS
   qgsafssourceselect.cpp
 )
 SET (AFS_MOC_HDRS
+  qgsarcgisrestutils.h
   qgsafsdataitems.h
   qgsafsfeatureiterator.h
   qgsafsprovider.h
@@ -36,6 +38,7 @@ TARGET_LINK_LIBRARIES(arcgisfeatureserverprovider
   qgis_core
   qgis_gui
   ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES}
 )
 
 INSTALL (TARGETS arcgisfeatureserverprovider
@@ -45,12 +48,14 @@ INSTALL (TARGETS arcgisfeatureserverprovider
 ###############################################################################
 
 SET (AMS_SRCS
+  qgsarcgisrestutils.cpp
   qgsamsdataitems.cpp
   qgsamsprovider.cpp
   qgsamsproviderextern.cpp
   qgsamssourceselect.cpp
 )
 SET (AMS_MOC_HDRS
+  qgsarcgisrestutils.h
   qgsamsdataitems.h
   qgsamsprovider.h
   qgsamssourceselect.h

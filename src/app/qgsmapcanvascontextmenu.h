@@ -54,7 +54,6 @@ class QgsMapCanvasContextMenu : public QMenu
     void measureCircle();
     void measureAngle();
     void measureHeightProfile();
-    void rasterAttributes();
     void terrainSlope();
     void terrainHillshade();
     void terrainViewshed();
