@@ -117,7 +117,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
         mLoginDialog->deleteLater();
         mLoginDialog = 0;
         QNetworkCookieJar* jar = QgsNetworkAccessManager::instance()->cookieJar();
-        QStringList cookieUrls = QSettings().value( "iamauth/cookieurls", QString( "https://npe.adr.admin.ch/;https://npi.adr.admin.ch/;https://np.adr.admin.ch/;https://npags.adr.admin.ch/" ) ).toString().split( ";" );
+        QStringList cookieUrls = QSettings().value( "iamauth/cookieurls", QString( "https://npe.adr.admin.ch/;https://npi.adr.admin.ch/;https://np.adr.admin.ch/" ) ).toString().split( ";" );
         foreach ( const QString& url, cookieUrls )
         {
           jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), url );
