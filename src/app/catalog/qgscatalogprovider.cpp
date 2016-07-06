@@ -121,15 +121,26 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
   {
     supportedCrs.append( crsItem.toElement().text() );
   }
-  QString imgFormat = imgFormats[0];
-  // Prefer jpeg or png
-  if ( imgFormats.contains( "image/jpeg" ) )
+  QDomElement srsElement = layerItem.firstChildElement( "SRS" );
+  if ( !srsElement.isNull() )
   {
-    imgFormat = "image/jpeg";
+    foreach ( const QString& authId, srsElement.text().split( "", QString::SkipEmptyParts ) )
+    {
+      supportedCrs.append( authId );
+    }
   }
-  else if ( imgFormats.contains( "image/png" ) )
+  if ( supportedCrs.isEmpty() )
+    supportedCrs.append( "EPSG:4326" );
+
+  QString imgFormat = imgFormats[0];
+  // Prefer png or jpeg
+  if ( imgFormats.contains( "image/png" ) )
   {
     imgFormat = "image/png";
+  }
+  else if ( imgFormats.contains( "image/jpeg" ) )
+  {
+    imgFormat = "image/jpeg";
   }
 
   QgsMimeDataUtils::Uri mimeDataUri;
