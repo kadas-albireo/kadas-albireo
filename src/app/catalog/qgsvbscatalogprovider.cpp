@@ -197,6 +197,14 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
     QJson::Parser parser;
     QVariantMap serviceInfoMap = parser.parse( reply->readAll() ).toMap();
 
+    if(!serviceInfoMap["error"].isNull())
+    {
+      // Something went wrong
+      delete entries;
+      endTask();
+	  return;
+    }
+
     // Parse spatial reference
     QVariantMap spatialReferenceMap = serviceInfoMap["spatialReference"].toMap();
     QString spatialReference = spatialReferenceMap["latestWkid"].toString();
@@ -232,7 +240,7 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
       mimeDataUri.providerKey = "arcgismapserver";
       const ResultEntry& entry = ( *entries )[layerName];
       mimeDataUri.name = entry.title;
-      QString format = filteredEncodings.contains( "png" ) ? "png" : filteredEncodings.toList().front();
+      QString format = filteredEncodings.isEmpty() || filteredEncodings.contains( "png" ) ? "png" : filteredEncodings.toList().front();
       mimeDataUri.uri = QString( "crs='%1' format='%2' url='%3' layer='%4'" ).arg( crs.authid() ).arg( format ).arg( url ).arg( layerName );
       mimeDataUri.layerInfoUrl = entry.metadataUrl;
       QMimeData* mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
