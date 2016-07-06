@@ -28,6 +28,7 @@
 #include <QNetworkCookieJar>
 #include <QSslConfiguration>
 #include <QStackedLayout>
+#include <QSettings>
 #include <QToolButton>
 #include <QUuid>
 #include <QWebView>
@@ -86,7 +87,7 @@ void QgsIAMAuth::performLogin()
 
   WebAxWidget* webWidget = new WebAxWidget();
   webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
-  webWidget->dynamicCall( "Navigate(const QString&)", QString( "https://npe.adr.admin.ch/arcgis/home/signin.html" ) );
+  webWidget->dynamicCall( "Navigate(const QString&)", QSettings().value( "iamauth/loginurl", QString( "https://np.adr.admin.ch/arcgis/home/signin.html" ) ).toString() );
   connect( webWidget, SIGNAL( NavigateComplete( QString ) ), this, SLOT( checkLoginComplete( QString ) ) );
   connect( webWidget, SIGNAL( NewWindow3( IDispatch**, bool&, uint, QString, QString ) ), this, SLOT( handleNewWindow( IDispatch**, bool&, uint, QString, QString ) ) );
   connect( webWidget, SIGNAL( WindowClosing( bool, bool& ) ), this, SLOT( handleWindowClose( bool, bool& ) ) );
@@ -111,14 +112,19 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
       if ( !pair.isEmpty() && pair.first() == "esri_auth" )
       {
 //        QMessageBox::information( mLoginDialog, tr( "Authentication successful" ), QString( "Url: %1\nCookie: %2" ).arg( baseUrl.toString() ).arg( cookie ) );
-        mQGisIface->messageBar()->pushMessage(tr("Authentication successful"), QgsMessageBar::INFO, 5);
+        mQGisIface->messageBar()->pushMessage( tr( "Authentication successful" ), QgsMessageBar::INFO, 5 );
         mLoginDialog->accept();
         mLoginDialog->deleteLater();
         mLoginDialog = 0;
         QNetworkCookieJar* jar = QgsNetworkAccessManager::instance()->cookieJar();
-        jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), baseUrl );
-        QToolButton* loginButton = qobject_cast<QToolButton*>(mQGisIface->findObject("mRefreshCatalogButton"));
-        if(loginButton) {
+        QStringList cookieUrls = QSettings().value( "iamauth/cookieurls", QString( "https://npe.adr.admin.ch/;https://npi.adr.admin.ch/;https://np.adr.admin.ch/" ) ).toString().split( ";" );
+        foreach ( const QString& url, cookieUrls )
+        {
+          jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), url );
+        }
+        QToolButton* loginButton = qobject_cast<QToolButton*>( mQGisIface->findObject( "mRefreshCatalogButton" ) );
+        if ( loginButton )
+        {
           loginButton->click();
         }
         /*
