@@ -16822,10 +16822,6 @@ Ignorera alltid dessa fel?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>KADAS Albireo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Map saved to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -18749,6 +18745,10 @@ Databas: %2</translation>
     <message>
         <source>Loading...</source>
         <translation type="unfinished">Laddar...</translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -25563,15 +25563,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Update Interval / Offset from</source>
-        <translation>Uppdatera intervall / offset från</translation>
+        <translation type="obsolete">Uppdatera intervall / offset från</translation>
     </message>
     <message>
         <source>Canvas Extents</source>
-        <translation>Bladets utsträckning</translation>
+        <translation type="obsolete">Bladets utsträckning</translation>
     </message>
     <message>
         <source>Active Raster Layer</source>
-        <translation>Aktivt rasterlager</translation>
+        <translation type="obsolete">Aktivt rasterlager</translation>
     </message>
     <message>
         <source>Line</source>
@@ -30955,10 +30955,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Höjd</translation>
     </message>
     <message>
-        <source>Clamping</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Terrain following behavior</source>
         <translation type="unfinished"></translation>
     </message>
@@ -30975,16 +30971,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Elevation data resolution at which to sample terrain height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Resolution</source>
-        <translation type="unfinished">Upplösning</translation>
+        <translation type="obsolete">Upplösning</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -30992,7 +30984,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation type="unfinished">Offset</translation>
+        <translation type="obsolete">Offset</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -31000,7 +30992,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation type="unfinished">Skala</translation>
+        <translation type="obsolete">Skala</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31076,35 +31068,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">Ingen</translation>
-    </message>
-    <message>
-        <source>Terrain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Relative</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Absolute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Ingen</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31139,23 +31103,67 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Vertex</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Centroid</source>
-        <translation type="unfinished">Centroid</translation>
-    </message>
-    <message>
-        <source>Clamp every vertex independently</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clamp to the centroid of the entire geometry</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Centroid</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Granularity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sampling resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is absolute height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is relative to terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use terrain height as feature Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At each vertex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At centroid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at each vertex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at the centroid only.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -34169,9 +34177,40 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
 </context>
 <context>
+    <name>QgsKMLExport</name>
+    <message>
+        <source>Plase wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rendering layer %1...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rendering annotations...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QgsKMLExportDialog</name>
     <message>
-        <source>Save KML file</source>
+        <source>KMZ File (*.kmz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KML File (*.kml)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Output</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -34198,10 +34237,6 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Only export features intersecting the current map extent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select layers to export:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -34211,14 +34246,18 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
     <message>
         <source>Format</source>
-        <translation type="unfinished">Format</translation>
+        <translation type="obsolete">Format</translation>
     </message>
     <message>
-        <source>KML</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>KMZ</source>
+        <source>Export annotations (pins, pictures)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -35627,6 +35666,10 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
         <source>Mutually Exclusive Group</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show layer info</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -36482,6 +36525,10 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
         <source>Hillshade [%1]</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Hillshade</source>
+        <translation type="unfinished">Terrängskuggning</translation>
+    </message>
 </context>
 <context>
     <name>QgsMapToolIdentify</name>
@@ -36769,6 +36816,10 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
         <source>Slope [%1]</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Slope</source>
+        <translation type="unfinished">Lutning</translation>
+    </message>
 </context>
 <context>
     <name>QgsMapToolSplitFeatures</name>
@@ -36888,6 +36939,18 @@ Detta kan vara ett problem med din nätverksanslutning eller WMS-servern.</numer
     </message>
     <message>
         <source>Invisible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Fel</translation>
+    </message>
+    <message>
+        <source>Failed to compute viewshed.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -51295,6 +51358,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Remove</source>
         <translation type="obsolete">Ta bort</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRasterIdentify</name>
+    <message>
+        <source>Identify failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The request timed out or failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRasterIdentifyResultDialog</name>
+    <message>
+        <source>Identify results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attribute</source>
+        <translation type="unfinished">Attribut</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Värde</translation>
     </message>
 </context>
 <context>
