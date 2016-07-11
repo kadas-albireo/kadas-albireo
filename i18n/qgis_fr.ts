@@ -12999,47 +12999,47 @@ Erreur(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation> pied carré</translation>
+        <translation type="obsolete"> pied carré</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation>.acres</translation>
+        <translation type="obsolete">.acres</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation> mille carré</translation>
+        <translation type="obsolete"> mille carré</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation> pied</translation>
+        <translation type="obsolete"> pied</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation> pieds</translation>
+        <translation type="obsolete"> pieds</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation> mille</translation>
+        <translation type="obsolete"> mille</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation>MN carré</translation>
+        <translation type="obsolete">MN carré</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation> MN</translation>
+        <translation type="obsolete"> MN</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation> degré carré.</translation>
+        <translation type="obsolete"> degré carré.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation> degrés</translation>
+        <translation type="obsolete"> degrés</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation> degrés</translation>
+        <translation type="obsolete"> degrés</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15406,6 +15406,42 @@ La réponse est :
         <source>Version 1.0</source>
         <translation>Version 1.0</translation>
     </message>
+    <message utf8="true">
+        <source> ft²</source>
+        <translation> ft²</translation>
+    </message>
+    <message>
+        <source> ac</source>
+        <translation> ac</translation>
+    </message>
+    <message utf8="true">
+        <source> mi²</source>
+        <translation> mi²</translation>
+    </message>
+    <message>
+        <source> ft</source>
+        <translation> ft</translation>
+    </message>
+    <message>
+        <source> mi</source>
+        <translation> mi</translation>
+    </message>
+    <message utf8="true">
+        <source> nm²</source>
+        <translation> nm²</translation>
+    </message>
+    <message>
+        <source> nm</source>
+        <translation> nm</translation>
+    </message>
+    <message utf8="true">
+        <source> deg²</source>
+        <translation> deg²</translation>
+    </message>
+    <message>
+        <source> deg</source>
+        <translation> deg</translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -16793,7 +16829,7 @@ Toujours ignorer ces erreurs ?</translation>
     </message>
     <message>
         <source>KADAS Albireo</source>
-        <translation>KADAS Albireo</translation>
+        <translation type="obsolete">KADAS Albireo</translation>
     </message>
     <message>
         <source>Map saved to clipboard</source>
@@ -18721,6 +18757,10 @@ Base de données: %2</translation>
     <message>
         <source>Loading...</source>
         <translation>Chargement...</translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation>Hors ligne</translation>
     </message>
 </context>
 <context>
@@ -25531,15 +25571,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Update Interval / Offset from</source>
-        <translation>Mettre à jour l&apos;intervale/décalage depuis</translation>
+        <translation type="obsolete">Mettre à jour l&apos;intervale/décalage depuis</translation>
     </message>
     <message>
         <source>Canvas Extents</source>
-        <translation>Emprise du canevas</translation>
+        <translation type="obsolete">Emprise du canevas</translation>
     </message>
     <message>
         <source>Active Raster Layer</source>
-        <translation>Couche raster active</translation>
+        <translation type="obsolete">Couche raster active</translation>
     </message>
     <message>
         <source>Line</source>
@@ -29540,7 +29580,7 @@ Veuillez sélectionner un fichier valide.</translation>
     </message>
     <message>
         <source>Select Output File</source>
-        <translation >Selectionner Fichier de Sortie</translation>
+        <translation>Selectionner Fichier de Sortie</translation>
     </message>
     <message>
         <source>Invalid Output Layer</source>
@@ -30924,7 +30964,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamping</source>
-        <translation>Clamping</translation>
+        <translation type="obsolete">Clamping</translation>
     </message>
     <message>
         <source>Terrain following behavior</source>
@@ -30944,7 +30984,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Binding</source>
-        <translation>Liaison</translation>
+        <translation type="obsolete">Liaison</translation>
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
@@ -30952,7 +30992,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation>Résolution</translation>
+        <translation type="obsolete">Résolution</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -30960,7 +31000,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation>Décalage</translation>
+        <translation type="obsolete">Décalage</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -30968,7 +31008,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation>Échelle </translation>
+        <translation type="obsolete">Échelle </translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31044,35 +31084,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation>Aucun</translation>
+        <translation type="obsolete">Aucun</translation>
     </message>
     <message>
         <source>Terrain</source>
-        <translation>Terrain</translation>
+        <translation type="obsolete">Terrain</translation>
     </message>
     <message>
         <source>Relative</source>
-        <translation>Relatif</translation>
+        <translation type="obsolete">Relatif</translation>
     </message>
     <message>
         <source>Absolute</source>
-        <translation>Absolu</translation>
+        <translation type="obsolete">Absolu</translation>
     </message>
     <message>
         <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation>Ne pas clamper des valeur Z au terrain (mais appliquer le décalage de même, si applicable)</translation>
+        <translation type="obsolete">Ne pas clamper des valeur Z au terrain (mais appliquer le décalage de même, si applicable)</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation>Mesurer le terrain sous le point et assigner l&apos;altitude du terrain à la coordonnée Z de l&apos;entité en ignorant sa valeur Z originale</translation>
+        <translation type="obsolete">Mesurer le terrain sous le point et assigner l&apos;altitude du terrain à la coordonnée Z de l&apos;entité en ignorant sa valeur Z originale</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation>Mesurer le terrain sous le point et ajouter l&apos;altitude du terrain à la valeur originale de la coordonnée Z de l&apos;entité</translation>
+        <translation type="obsolete">Mesurer le terrain sous le point et ajouter l&apos;altitude du terrain à la valeur originale de la coordonnée Z de l&apos;entité</translation>
     </message>
     <message>
         <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation>La valeur Z de l&apos;entité décrit son altitude au-dessus &quot;l&apos;altitude zéro&quot; (typiquement l&apos;ellipsoïde ou le niveau de la mer)</translation>
+        <translation type="obsolete">La valeur Z de l&apos;entité décrit son altitude au-dessus &quot;l&apos;altitude zéro&quot; (typiquement l&apos;ellipsoïde ou le niveau de la mer)</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31108,23 +31148,79 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Vertex</source>
-        <translation>Sommet</translation>
+        <translation type="obsolete">Sommet</translation>
     </message>
     <message>
         <source>Centroid</source>
-        <translation>Centroïde</translation>
+        <translation type="obsolete">Centroïde</translation>
     </message>
     <message>
         <source>Clamp every vertex independently</source>
-        <translation>Clamper chaque sommet indépendamment</translation>
+        <translation type="obsolete">Clamper chaque sommet indépendamment</translation>
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
-        <translation>Clamper au centroïde de la géometrie entière</translation>
+        <translation type="obsolete">Clamper au centroïde de la géometrie entière</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation>Comportement du suivi du térrain</translation>
+    </message>
+    <message>
+        <source>Granularity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sampling resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is absolute height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is relative to terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use terrain height as feature Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At each vertex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At centroid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at each vertex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at the centroid only.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34138,10 +34234,45 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
     </message>
 </context>
 <context>
+    <name>QgsKMLExport</name>
+    <message>
+        <source>Plase wait...</source>
+        <translation>Attendez...</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>KML Export</source>
+        <translation>Export KML</translation>
+    </message>
+    <message>
+        <source>Rendering layer %1...</source>
+        <translation>Exportation de la couche %1...</translation>
+    </message>
+    <message>
+        <source>Rendering annotations...</source>
+        <translation>Exportation des annotations...</translation>
+    </message>
+</context>
+<context>
     <name>QgsKMLExportDialog</name>
     <message>
         <source>Save KML file</source>
-        <translation>Enregistrer le fichier KML</translation>
+        <translation type="obsolete">Enregistrer le fichier KML</translation>
+    </message>
+    <message>
+        <source>KMZ File (*.kmz)</source>
+        <translation>Fichier KMZ (*.kmz)</translation>
+    </message>
+    <message>
+        <source>KML File (*.kml)</source>
+        <translation>Fichier KML (*.kml)</translation>
+    </message>
+    <message>
+        <source>Select Output</source>
+        <translation>Sélectionner le fichier de sortie</translation>
     </message>
 </context>
 <context>
@@ -34168,7 +34299,7 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
     </message>
     <message>
         <source>Only export features intersecting the current map extent</source>
-        <translation>Exporter seulement les entités visibles sur l&apos;emprise de la carte</translation>
+        <translation type="obsolete">Exporter seulement les entités visibles sur l&apos;emprise de la carte</translation>
     </message>
     <message>
         <source>Select layers to export:</source>
@@ -34180,15 +34311,27 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
     </message>
     <message>
         <source>Format</source>
-        <translation>Format</translation>
+        <translation type="obsolete">Format</translation>
     </message>
     <message>
         <source>KML</source>
-        <translation>KML</translation>
+        <translation type="obsolete">KML</translation>
     </message>
     <message>
         <source>KMZ</source>
-        <translation>KMZ</translation>
+        <translation type="obsolete">KMZ</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Remarque: L&apos;exportation des couches raster distantes (désactivée par défaut) est lente.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Export annotations (pins, pictures)</source>
+        <translation>Exporter les annotations (Épingles, Photos)</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Remarque: les couches raster et les annotations  peuvent être seulement exporté vers KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -35596,6 +35739,10 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Mutually Exclusive Group</source>
         <translation>Froupe mutuellement exclusif</translation>
     </message>
+    <message>
+        <source>Show layer info</source>
+        <translation>informations de couche</translation>
+    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -36451,6 +36598,10 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Hillshade [%1]</source>
         <translation>Ombrage [%1]</translation>
     </message>
+    <message>
+        <source>Hillshade</source>
+        <translation>Ombrage</translation>
+    </message>
 </context>
 <context>
     <name>QgsMapToolIdentify</name>
@@ -36738,6 +36889,10 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Slope [%1]</source>
         <translation>Pente [%1]</translation>
     </message>
+    <message>
+        <source>Slope</source>
+        <translation>Pente</translation>
+    </message>
 </context>
 <context>
     <name>QgsMapToolSplitFeatures</name>
@@ -36858,6 +37013,18 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
     <message>
         <source>Invisible</source>
         <translation>Invisible</translation>
+    </message>
+    <message>
+        <source>Viewshed</source>
+        <translation>Bassin visuel</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Failed to compute viewshed.</source>
+        <translation>Impossible de calculer le bassin visuel</translation>
     </message>
 </context>
 <context>
@@ -51257,6 +51424,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Remove</source>
         <translation type="obsolete">Supprimer</translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRasterIdentify</name>
+    <message>
+        <source>Identify failed</source>
+        <translation>Identification pas réussi</translation>
+    </message>
+    <message>
+        <source>The request timed out or failed.</source>
+        <translation>La requête a échoué ou a été abandonné </translation>
+    </message>
+</context>
+<context>
+    <name>QgsVBSRasterIdentifyResultDialog</name>
+    <message>
+        <source>Identify results</source>
+        <translation>Résultats identification</translation>
+    </message>
+    <message>
+        <source>Attribute</source>
+        <translation>Attribut</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Valeur</translation>
     </message>
 </context>
 <context>
