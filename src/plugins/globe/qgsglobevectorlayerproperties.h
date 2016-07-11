@@ -91,6 +91,7 @@ class QgsGlobeVectorLayerPropertiesPage : public QgsVectorLayerPropertiesPage, p
 
   private slots:
     void onAltitudeClampingChanged( int index );
+    void onAltituteTechniqueChanged( int index );
     void showRenderingModeWidget( int index );
 
   signals:
