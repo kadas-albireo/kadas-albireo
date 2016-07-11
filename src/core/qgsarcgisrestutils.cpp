@@ -347,6 +347,13 @@ QgsCoordinateReferenceSystem QgsArcGisRestUtils::parseSpatialReference( const QV
   return crs;
 }
 
+QgsRectangle QgsArcGisRestUtils::parseBBox( const QVariantList& bboxList)
+{
+  if(bboxList.size() == 4)
+    return QgsRectangle(bboxList[0].toDouble(), bboxList[1].toDouble(), bboxList[2].toDouble(), bboxList[3].toDouble());
+  else
+    return QgsRectangle();
+}
 
 QVariantMap QgsArcGisRestUtils::getServiceInfo( const QString& baseurl, QString& errorTitle, QString& errorText )
 {
