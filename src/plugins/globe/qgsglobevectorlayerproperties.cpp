@@ -48,14 +48,12 @@ QgsGlobeVectorLayerPropertiesPage::QgsGlobeVectorLayerPropertiesPage( QgsVectorL
   comboBoxRenderingMode->setItemData( 1, tr( "Render the layer features as models" ), Qt::ToolTipRole );
   comboBoxRenderingMode->setCurrentIndex( -1 );
 
-  comboBoxAltitudeClamping->addItem( tr( "None" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_NONE ) );
-  comboBoxAltitudeClamping->addItem( tr( "Terrain" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN ) );
-  comboBoxAltitudeClamping->addItem( tr( "Relative" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_RELATIVE_TO_TERRAIN ) );
-  comboBoxAltitudeClamping->addItem( tr( "Absolute" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_ABSOLUTE ) );
-  comboBoxAltitudeClamping->setItemData( 0, tr( "Do not clamp Z values to the terrain (but still apply the offset, if applicable)" ), Qt::ToolTipRole );
-  comboBoxAltitudeClamping->setItemData( 1, tr( "Sample the terrain under the point, and set the feature's Z to the terrain height, ignoring the feature's original Z value" ), Qt::ToolTipRole );
-  comboBoxAltitudeClamping->setItemData( 2, tr( "Sample the terrain under the point, and add the terrain height to the feature's original Z value" ), Qt::ToolTipRole );
-  comboBoxAltitudeClamping->setItemData( 3, tr( "The feature's Z value describes its height above \"height zero\", which is typically the ellipsoid or MSL" ), Qt::ToolTipRole );
+  comboBoxAltitudeClamping->addItem( tr( "Feature Z is absolute height" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_NONE ) );
+  comboBoxAltitudeClamping->addItem( tr( "Feature Z is relative to terrain" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_RELATIVE_TO_TERRAIN ) );
+  comboBoxAltitudeClamping->addItem( tr( "Use terrain height as feature Z" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN ) );
+  comboBoxAltitudeClamping->setItemData( 0, tr( "Interpret the feature's Z coordinate as an absolute height (above MSL)." ), Qt::ToolTipRole );
+  comboBoxAltitudeClamping->setItemData( 1, tr( "Interpret the feature's Z coordinate as a height above terrain." ), Qt::ToolTipRole );
+  comboBoxAltitudeClamping->setItemData( 2, tr( "Discard the feature's Z coordinate and use the terrain height." ), Qt::ToolTipRole );
   comboBoxAltitudeClamping->setCurrentIndex( -1 );
 
   comboBoxAltitudeTechnique->addItem( tr( "Map" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_MAP ) );
@@ -68,16 +66,15 @@ QgsGlobeVectorLayerPropertiesPage::QgsGlobeVectorLayerPropertiesPage( QgsVectorL
   comboBoxAltitudeTechnique->setItemData( 3, tr( "Clamp geometry at draw time using projective texturing" ), Qt::ToolTipRole );
   comboBoxAltitudeTechnique->setCurrentIndex( -1 );
 
-  comboBoxAltitudeBinding->addItem( tr( "Vertex" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::BINDING_VERTEX ) );
-  comboBoxAltitudeBinding->addItem( tr( "Centroid" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::BINDING_CENTROID ) );
-  comboBoxAltitudeBinding->setItemData( 0, tr( "Clamp every vertex independently" ), Qt::ToolTipRole );
-  comboBoxAltitudeBinding->setItemData( 1, tr( "Clamp to the centroid of the entire geometry" ), Qt::ToolTipRole );
+  comboBoxAltitudeBinding->addItem( tr( "At each vertex" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::BINDING_VERTEX ) );
+  comboBoxAltitudeBinding->addItem( tr( "At centroid" ), static_cast<int>( osgEarth::Symbology::AltitudeSymbol::BINDING_CENTROID ) );
+  comboBoxAltitudeBinding->setItemData( 0, tr( "Sample the terrain height at each vertex." ), Qt::ToolTipRole );
+  comboBoxAltitudeBinding->setItemData( 1, tr( "Sample the terrain height at the centroid only." ), Qt::ToolTipRole );
   comboBoxAltitudeBinding->setCurrentIndex( -1 );
 
   // Connect signals (setCurrentIndex(-1) above ensures the signal is called when the current values are set below)
   connect( comboBoxRenderingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( showRenderingModeWidget( int ) ) );
   connect( comboBoxAltitudeClamping, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAltitudeClampingChanged( int ) ) );
-  connect( comboBoxAltitudeTechnique, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAltituteTechniqueChanged( int ) ) );
 
   // Set values
   QgsGlobeVectorLayerConfig* layerConfig = QgsGlobeVectorLayerConfig::getConfig( mLayer );
@@ -136,45 +133,34 @@ void QgsGlobeVectorLayerPropertiesPage::apply()
 
   emit layerSettingsChanged( mLayer );
 }
-
+#include <QTextStream>
 void QgsGlobeVectorLayerPropertiesPage::onAltitudeClampingChanged( int index )
 {
   osgEarth::Symbology::AltitudeSymbol::Clamping clamping = static_cast<osgEarth::Symbology::AltitudeSymbol::Clamping>( comboBoxAltitudeClamping->itemData( index ).toInt() );
 
-  bool terrainClamping = clamping == osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN;
-  labelAltitudeTechnique->setVisible( terrainClamping );
-  comboBoxAltitudeTechnique->setVisible( terrainClamping );
-  onAltituteTechniqueChanged( comboBoxAltitudeTechnique->currentIndex() );
-}
-
-void QgsGlobeVectorLayerPropertiesPage::onAltituteTechniqueChanged( int index )
-{
-  osgEarth::Symbology::AltitudeSymbol::Clamping clamping = static_cast<osgEarth::Symbology::AltitudeSymbol::Clamping>( comboBoxAltitudeClamping->itemData( comboBoxAltitudeClamping->currentIndex() ).toInt() );
-  osgEarth::Symbology::AltitudeSymbol::Technique technique = static_cast<osgEarth::Symbology::AltitudeSymbol::Technique>( comboBoxAltitudeTechnique->itemData( index ).toInt() );
-
-  bool mapTechnique = technique == osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_MAP && clamping == osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN;
-  labelAltitudeBinding->setVisible( mapTechnique );
-  comboBoxAltitudeBinding->setVisible( mapTechnique );
-  labelAltitudeResolution->setVisible( mapTechnique );
-  spinBoxAltitudeResolution->setVisible( mapTechnique );
+  bool terrainClamping = clamping == osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN || clamping == osgEarth::Symbology::AltitudeSymbol::CLAMP_RELATIVE_TO_TERRAIN;
+  bool advanced = comboBoxRenderingMode->currentIndex() == 2;
+  labelAltitudeTechnique->setVisible( terrainClamping && advanced );
+  comboBoxAltitudeTechnique->setVisible( terrainClamping && advanced );
+  labelAltitudeBinding->setVisible( terrainClamping );
+  comboBoxAltitudeBinding->setVisible( terrainClamping );
+  labelAltitudeResolution->setVisible( terrainClamping && advanced );
+  spinBoxAltitudeResolution->setVisible( terrainClamping && advanced );
 }
 
 void QgsGlobeVectorLayerPropertiesPage::showRenderingModeWidget( int index )
 {
   stackedWidgetRenderingMode->setCurrentIndex( index != 0 );
   bool advanced = index == 2;
-  groupBoxAltitude->setVisible( advanced );
   checkBoxLighting->setVisible( advanced );
   checkBoxExtrusionFlatten->setVisible( advanced );
   if ( !advanced )
   {
-    comboBoxAltitudeClamping->setCurrentIndex( comboBoxAltitudeClamping->findData( static_cast<int>( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN ) ) );
     comboBoxAltitudeTechnique->setCurrentIndex( comboBoxAltitudeTechnique->findData( static_cast<int>( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_GPU ) ) );
     spinBoxAltitudeResolution->setValue( 0 );
-    spinBoxAltitudeOffset->setValue( 0 );
-    spinBoxAltitudeScale->setValue( 0 );
     checkBoxExtrusionFlatten->setChecked( false );
   }
+  onAltitudeClampingChanged( comboBoxAltitudeClamping->currentIndex() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
