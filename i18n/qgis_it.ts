@@ -12988,47 +12988,47 @@ Errore(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete"> piedi quadrati</translation>
+        <translation> piedi quadrati</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> acri</translation>
+        <translation> acri</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete"> miglia quadrate</translation>
+        <translation> miglia quadrate</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> piede</translation>
+        <translation> piede</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> piedi</translation>
+        <translation> piedi</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete"> miglio</translation>
+        <translation> miglio</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete"> sq. NM</translation>
+        <translation> sq. NM</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete">NM</translation>
+        <translation>NM</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> gradi quadr.</translation>
+        <translation> gradi quadr.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> grado</translation>
+        <translation> grado</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete"> gradi</translation>
+        <translation> gradi</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15399,42 +15399,6 @@ La risposta è stata:
         <source>Version 1.0</source>
         <translation>Versione 1.0</translation>
     </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation> ft²</translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation> ac</translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation> mi²</translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation> ft</translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation> mi</translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation> nm²</translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation> nm</translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation> deg²</translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation> deg</translation>
-    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -16823,7 +16787,7 @@ Ignora sempre questi errori?</translation>
     </message>
     <message>
         <source>KADAS Albireo</source>
-        <translation type="obsolete">KADAS Albireo</translation>
+        <translation>KADAS Albireo</translation>
     </message>
     <message>
         <source>Map saved to clipboard</source>
@@ -18755,10 +18719,6 @@ Database: %2</translation>
     <message>
         <source>Loading...</source>
         <translation>Caricamento...</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Disconnesso</translation>
     </message>
 </context>
 <context>
@@ -25572,15 +25532,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Update Interval / Offset from</source>
-        <translation type="obsolete">Aggiorna intervallo / offset da</translation>
+        <translation>Aggiorna intervallo / offset da</translation>
     </message>
     <message>
         <source>Canvas Extents</source>
-        <translation type="obsolete">Estensione della mappa</translation>
+        <translation>Estensione della mappa</translation>
     </message>
     <message>
         <source>Active Raster Layer</source>
-        <translation type="obsolete">Raster attivo</translation>
+        <translation>Raster attivo</translation>
     </message>
     <message>
         <source>Line</source>
@@ -30966,7 +30926,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamping</source>
-        <translation type="obsolete">Clamping</translation>
+        <translation>Clamping</translation>
     </message>
     <message>
         <source>Terrain following behavior</source>
@@ -30986,7 +30946,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Binding</source>
-        <translation type="obsolete">Binding</translation>
+        <translation>Binding</translation>
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
@@ -30994,7 +30954,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation type="obsolete">Risoluzione</translation>
+        <translation>Risoluzione</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -31002,7 +30962,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation type="obsolete">Offset</translation>
+        <translation>Offset</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -31010,7 +30970,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation type="obsolete">Scala</translation>
+        <translation>Scala</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31086,35 +31046,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Nessuno</translation>
+        <translation>Nessuno</translation>
     </message>
     <message>
         <source>Terrain</source>
-        <translation type="obsolete">Terreno</translation>
+        <translation>Terreno</translation>
     </message>
     <message>
         <source>Relative</source>
-        <translation type="obsolete">Relativo</translation>
+        <translation>Relativo</translation>
     </message>
     <message>
         <source>Absolute</source>
-        <translation type="obsolete">Assoluto</translation>
+        <translation>Assoluto</translation>
     </message>
     <message>
         <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation type="obsolete">Non confinare valori Z al terreno (applicare comunque l&apos;offset, se applicabile)</translation>
+        <translation>Non confinare valori Z al terreno (applicare comunque l&apos;offset, se applicabile)</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation type="obsolete">Campionare il terreno sotto il punto, e usare l&apos;altezza del terreno come coordinata Z della geometria, ignorando il valore Z originale</translation>
+        <translation>Campionare il terreno sotto il punto, e usare l&apos;altezza del terreno come coordinata Z della geometria, ignorando il valore Z originale</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation type="obsolete">Campionare il terreno sotto il punto, e addizionare l&apos;altezza del terreno al valore Z originale della geometria</translation>
+        <translation>Campionare il terreno sotto il punto, e addizionare l&apos;altezza del terreno al valore Z originale della geometria</translation>
     </message>
     <message>
         <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation type="obsolete">Il valore Z della geometria indica l&apos;altezza sopra l&apos;&quot;altezza zero&quot;, ossia l&apos;ellissoide oppure il livello del mare medio</translation>
+        <translation>Il valore Z della geometria indica l&apos;altezza sopra l&apos;&quot;altezza zero&quot;, ossia l&apos;ellissoide oppure il livello del mare medio</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31150,79 +31110,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Vertex</source>
-        <translation type="obsolete">Vertice</translation>
+        <translation>Vertice</translation>
     </message>
     <message>
         <source>Centroid</source>
-        <translation type="obsolete">Centroide</translation>
+        <translation>Centroide</translation>
     </message>
     <message>
         <source>Clamp every vertex independently</source>
-        <translation type="obsolete">Confinare i vertici indipendentemente</translation>
+        <translation>Confinare i vertici indipendentemente</translation>
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
-        <translation type="obsolete">Confinare il centroide di tutta la geometria</translation>
+        <translation>Confinare il centroide di tutta la geometria</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation>Comportamento di seguimento del terreno</translation>
-    </message>
-    <message>
-        <source>Granularity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sampling resolution</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Offset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is absolute height</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is relative to terrain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use terrain height as feature Z</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At each vertex</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At centroid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at each vertex.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at the centroid only.</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34248,45 +34152,10 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     </message>
 </context>
 <context>
-    <name>QgsKMLExport</name>
-    <message>
-        <source>Plase wait...</source>
-        <translation>Attendere...</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>KML Export</source>
-        <translation>Esportazione KML</translation>
-    </message>
-    <message>
-        <source>Rendering layer %1...</source>
-        <translation>Esportazione del layer %1...</translation>
-    </message>
-    <message>
-        <source>Rendering annotations...</source>
-        <translation>Esportazione delle annotazioni...</translation>
-    </message>
-</context>
-<context>
     <name>QgsKMLExportDialog</name>
     <message>
         <source>Save KML file</source>
-        <translation type="obsolete">Salvare file KML</translation>
-    </message>
-    <message>
-        <source>KMZ File (*.kmz)</source>
-        <translation>File KMZ (*.kmz)</translation>
-    </message>
-    <message>
-        <source>KML File (*.kml)</source>
-        <translation>File KML (*.kml)</translation>
-    </message>
-    <message>
-        <source>Select Output</source>
-        <translation>Selezionare output</translation>
+        <translation>Salvare file KML</translation>
     </message>
 </context>
 <context>
@@ -34313,7 +34182,7 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     </message>
     <message>
         <source>Only export features intersecting the current map extent</source>
-        <translation type="obsolete">Esportare solo gli elementi che intersecano l&apos;estensione corrente della mappa</translation>
+        <translation>Esportare solo gli elementi che intersecano l&apos;estensione corrente della mappa</translation>
     </message>
     <message>
         <source>Select layers to export:</source>
@@ -34325,27 +34194,15 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     </message>
     <message>
         <source>Format</source>
-        <translation type="obsolete">Formato</translation>
+        <translation>Formato</translation>
     </message>
     <message>
         <source>KML</source>
-        <translation type="obsolete">KML</translation>
+        <translation>KML</translation>
     </message>
     <message>
         <source>KMZ</source>
-        <translation type="obsolete">KMZ</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Nota: L&apos;esportazione di layer raster remoti (disattivata per impostazione predefinita) è lenta.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Export annotations (pins, pictures)</source>
-        <translation>Exportare annotazioni (Spilli, Fotografie)</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Nota: Layer raster e annotazioni possono solamente venir esportati in KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>KMZ</translation>
     </message>
 </context>
 <context>
@@ -35737,10 +35594,6 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
         <source>Mutually Exclusive Group</source>
         <translation>Gruppo mutualmente esclusivo</translation>
     </message>
-    <message>
-        <source>Show layer info</source>
-        <translation>Informazioni layer</translation>
-    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -36604,10 +36457,6 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
         <source>Hillshade [%1]</source>
         <translation>Ombreggiatura [%1]</translation>
     </message>
-    <message>
-        <source>Hillshade</source>
-        <translation>Hillshade</translation>
-    </message>
 </context>
 <context>
     <name>QgsMapToolIdentify</name>
@@ -36895,10 +36744,6 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
         <source>Slope [%1]</source>
         <translation>Pendenze [%1]</translation>
     </message>
-    <message>
-        <source>Slope</source>
-        <translation>Pendenza</translation>
-    </message>
 </context>
 <context>
     <name>QgsMapToolSplitFeatures</name>
@@ -37019,18 +36864,6 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     <message>
         <source>Invisible</source>
         <translation>Invisibile</translation>
-    </message>
-    <message>
-        <source>Viewshed</source>
-        <translation>Bacino visuale</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Errore</translation>
-    </message>
-    <message>
-        <source>Failed to compute viewshed.</source>
-        <translation>Errore durante il calcolo del bacino visuale</translation>
     </message>
 </context>
 <context>
@@ -51505,32 +51338,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Remove</source>
         <translation type="obsolete">Rimuovi</translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSRasterIdentify</name>
-    <message>
-        <source>Identify failed</source>
-        <translation>Identificazione non riuscita</translation>
-    </message>
-    <message>
-        <source>The request timed out or failed.</source>
-        <translation>La richiesta è fallita oppura è andata in timeout.</translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSRasterIdentifyResultDialog</name>
-    <message>
-        <source>Identify results</source>
-        <translation>Risultati identificazione</translation>
-    </message>
-    <message>
-        <source>Attribute</source>
-        <translation>Attributo</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation>Valore</translation>
     </message>
 </context>
 <context>

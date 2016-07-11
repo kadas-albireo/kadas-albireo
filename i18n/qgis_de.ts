@@ -12964,47 +12964,47 @@ Fehler(%2): %3</translation>
     </message>
     <message>
         <source> sq ft</source>
-        <translation type="obsolete"> Quadratfuß</translation>
+        <translation> Quadratfuß</translation>
     </message>
     <message>
         <source> acres</source>
-        <translation type="obsolete"> Morgen</translation>
+        <translation> Morgen</translation>
     </message>
     <message>
         <source> sq mile</source>
-        <translation type="obsolete"> Quadratmeile</translation>
+        <translation> Quadratmeile</translation>
     </message>
     <message>
         <source> foot</source>
-        <translation type="obsolete"> Fuß</translation>
+        <translation> Fuß</translation>
     </message>
     <message>
         <source> feet</source>
-        <translation type="obsolete"> Fuß</translation>
+        <translation> Fuß</translation>
     </message>
     <message>
         <source> mile</source>
-        <translation type="obsolete"> Meilen</translation>
+        <translation> Meilen</translation>
     </message>
     <message>
         <source> sq. NM</source>
-        <translation type="obsolete"> Quadratseemeilen</translation>
+        <translation> Quadratseemeilen</translation>
     </message>
     <message>
         <source> NM</source>
-        <translation type="obsolete"> sm</translation>
+        <translation> sm</translation>
     </message>
     <message>
         <source> sq.deg.</source>
-        <translation type="obsolete"> sq.deg.</translation>
+        <translation> sq.deg.</translation>
     </message>
     <message>
         <source> degree</source>
-        <translation type="obsolete"> Grad</translation>
+        <translation> Grad</translation>
     </message>
     <message>
         <source> degrees</source>
-        <translation type="obsolete"> Grad</translation>
+        <translation> Grad</translation>
     </message>
     <message>
         <source> unknown</source>
@@ -15366,42 +15366,6 @@ Antwort war:
         <source>Version 1.0</source>
         <translation>Version 1.0</translation>
     </message>
-    <message utf8="true">
-        <source> ft²</source>
-        <translation> ft²</translation>
-    </message>
-    <message>
-        <source> ac</source>
-        <translation> ac</translation>
-    </message>
-    <message utf8="true">
-        <source> mi²</source>
-        <translation> mi²</translation>
-    </message>
-    <message>
-        <source> ft</source>
-        <translation> ft</translation>
-    </message>
-    <message>
-        <source> mi</source>
-        <translation> mi</translation>
-    </message>
-    <message utf8="true">
-        <source> nm²</source>
-        <translation> nm²</translation>
-    </message>
-    <message>
-        <source> nm</source>
-        <translation> nm</translation>
-    </message>
-    <message utf8="true">
-        <source> deg²</source>
-        <translation> deg²</translation>
-    </message>
-    <message>
-        <source> deg</source>
-        <translation> deg</translation>
-    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -16790,7 +16754,7 @@ Diese Fehler immer ignorieren?</translation>
     </message>
     <message>
         <source>KADAS Albireo</source>
-        <translation type="obsolete">KADAS Albireo</translation>
+        <translation>KADAS Albireo</translation>
     </message>
     <message>
         <source>Map saved to clipboard</source>
@@ -18718,10 +18682,6 @@ Datenbank: %2</translation>
     <message>
         <source>Loading...</source>
         <translation>Laden...</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
     </message>
 </context>
 <context>
@@ -25625,15 +25585,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Update Interval / Offset from</source>
-        <translation type="obsolete">Interval-/Versatz aktualisieren aus</translation>
+        <translation>Interval-/Versatz aktualisieren aus</translation>
     </message>
     <message>
         <source>Canvas Extents</source>
-        <translation type="obsolete">Anzeigegrenzen</translation>
+        <translation>Anzeigegrenzen</translation>
     </message>
     <message>
         <source>Active Raster Layer</source>
-        <translation type="obsolete">Aktiver Rasterlayer</translation>
+        <translation>Aktiver Rasterlayer</translation>
     </message>
     <message>
         <source>Line</source>
@@ -31025,7 +30985,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamping</source>
-        <translation type="obsolete">Clamping</translation>
+        <translation>Clamping</translation>
     </message>
     <message>
         <source>Terrain following behavior</source>
@@ -31045,7 +31005,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Binding</source>
-        <translation type="obsolete">Bindung</translation>
+        <translation>Bindung</translation>
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
@@ -31053,7 +31013,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation type="obsolete">Auflösung</translation>
+        <translation>Auflösung</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -31061,7 +31021,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation type="obsolete">Versatz</translation>
+        <translation>Versatz</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -31069,7 +31029,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation type="obsolete">Skalierung</translation>
+        <translation>Skalierung</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31145,35 +31105,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Keine</translation>
+        <translation>Keine</translation>
     </message>
     <message>
         <source>Terrain</source>
-        <translation type="obsolete">Gelände</translation>
+        <translation>Gelände</translation>
     </message>
     <message>
         <source>Relative</source>
-        <translation type="obsolete">Relativ</translation>
+        <translation>Relativ</translation>
     </message>
     <message>
         <source>Absolute</source>
-        <translation type="obsolete">Absolut</translation>
+        <translation>Absolut</translation>
     </message>
     <message>
         <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation type="obsolete">Z-Werte nicht auf das Gelände clampen (aber den Versatz ggf trotzdem anwenden)</translation>
+        <translation>Z-Werte nicht auf das Gelände clampen (aber den Versatz ggf trotzdem anwenden)</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation type="obsolete">Gelände under dem Punkt messen, und die Z Koordinate des Objektes auf den Wert des Gelände setzten; der ursprüngliche Z Wert wird ignoriert</translation>
+        <translation>Gelände under dem Punkt messen, und die Z Koordinate des Objektes auf den Wert des Gelände setzten; der ursprüngliche Z Wert wird ignoriert</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation type="obsolete">Gelände under dem Punkt messen, und diesen Wert der Z Koordinate des Objektes hinzufügen</translation>
+        <translation>Gelände under dem Punkt messen, und diesen Wert der Z Koordinate des Objektes hinzufügen</translation>
     </message>
     <message>
         <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation type="obsolete">Die Z-Koordinate des Objektes beschreibt die Höhe oberhalb der &quot;Null-Höhe&quot;, welche typischerweise das Ellipsoid oder die Meereshöhe ist</translation>
+        <translation>Die Z-Koordinate des Objektes beschreibt die Höhe oberhalb der &quot;Null-Höhe&quot;, welche typischerweise das Ellipsoid oder die Meereshöhe ist</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31209,79 +31169,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Vertex</source>
-        <translation type="obsolete">Vertex</translation>
+        <translation>Vertex</translation>
     </message>
     <message>
         <source>Centroid</source>
-        <translation type="obsolete">Zentroid</translation>
+        <translation>Zentroid</translation>
     </message>
     <message>
         <source>Clamp every vertex independently</source>
-        <translation type="obsolete">Jeder Vertex individuell clampen</translation>
+        <translation>Jeder Vertex individuell clampen</translation>
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
-        <translation type="obsolete">Den Zentroid der gesamten Geometrie clampen</translation>
+        <translation>Den Zentroid der gesamten Geometrie clampen</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation>Geländefolgung</translation>
-    </message>
-    <message>
-        <source>Granularity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sampling resolution</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Offset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is absolute height</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is relative to terrain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use terrain height as feature Z</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At each vertex</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At centroid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at each vertex.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at the centroid only.</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34306,45 +34210,10 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
 </context>
 <context>
-    <name>QgsKMLExport</name>
-    <message>
-        <source>Plase wait...</source>
-        <translation>Bitte warten...</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>KML Export</source>
-        <translation>KML Export</translation>
-    </message>
-    <message>
-        <source>Rendering layer %1...</source>
-        <translation>Layer %1 wird exportiert...</translation>
-    </message>
-    <message>
-        <source>Rendering annotations...</source>
-        <translation>Annotationen werden exportiert...</translation>
-    </message>
-</context>
-<context>
     <name>QgsKMLExportDialog</name>
     <message>
         <source>Save KML file</source>
-        <translation type="obsolete">KML Datei speichern</translation>
-    </message>
-    <message>
-        <source>KMZ File (*.kmz)</source>
-        <translation>KMZ Datei (*.kmz)</translation>
-    </message>
-    <message>
-        <source>KML File (*.kml)</source>
-        <translation>KML Datei (*.kml)</translation>
-    </message>
-    <message>
-        <source>Select Output</source>
-        <translation>Ausgabe auswählen</translation>
+        <translation>KML Datei speichern</translation>
     </message>
 </context>
 <context>
@@ -34367,7 +34236,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Only export features intersecting the current map extent</source>
-        <translation type="obsolete">Nur Objekte exportieren, die im aktuellen Kartenauschnitt sichtbar sind</translation>
+        <translation>Nur Objekte exportieren, die im aktuellen Kartenauschnitt sichtbar sind</translation>
     </message>
     <message>
         <source>Select layers to export:</source>
@@ -34379,27 +34248,15 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Format</source>
-        <translation type="obsolete">Format</translation>
+        <translation>Format</translation>
     </message>
     <message>
         <source>KML</source>
-        <translation type="obsolete">KML</translation>
+        <translation>KML</translation>
     </message>
     <message>
         <source>KMZ</source>
-        <translation type="obsolete">KMZ</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Hinweis: Der Export von nicht-lokalen Rasterebenen (standardmässig deaktiviert) ist langsam.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Export annotations (pins, pictures)</source>
-        <translation>Annotationen (Stecknadeln, Kamerabilder) exportieren</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Hinweis: Rasterebenen und Annotationen können nur nach KMZ exportiert werden.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>KMZ</translation>
     </message>
 </context>
 <context>
@@ -35899,10 +35756,6 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Mutually Exclusive Group</source>
         <translation>Gegenseitig ausschliessende Gruppe</translation>
     </message>
-    <message>
-        <source>Show layer info</source>
-        <translation>Ebeneninformationen</translation>
-    </message>
 </context>
 <context>
     <name>QgsLegendGroupPropertiesBase</name>
@@ -36766,10 +36619,6 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Hillshade [%1]</source>
         <translation>Schummerung [%1]</translation>
     </message>
-    <message>
-        <source>Hillshade</source>
-        <translation>Schummerung</translation>
-    </message>
 </context>
 <context>
     <name>QgsMapToolIdentify</name>
@@ -37057,10 +36906,6 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Slope [%1]</source>
         <translation>Neigung [%1]</translation>
     </message>
-    <message>
-        <source>Slope</source>
-        <translation>Neigung</translation>
-    </message>
 </context>
 <context>
     <name>QgsMapToolSplitFeatures</name>
@@ -37181,18 +37026,6 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>Invisible</source>
         <translation>Unsichtbar</translation>
-    </message>
-    <message>
-        <source>Viewshed</source>
-        <translation>Einsehbarkeit</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Fehler</translation>
-    </message>
-    <message>
-        <source>Failed to compute viewshed.</source>
-        <translation>Die Einsehbarkeit konnte nicht berechnet werden</translation>
     </message>
 </context>
 <context>
@@ -37389,7 +37222,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>Target height:</source>
-        <translation>Zielhöhe:</translation>
+        <translation>Zeilhöhe:</translation>
     </message>
     <message>
         <source>Heights relative to:</source>
@@ -51627,32 +51460,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>QgsVBSRasterIdentify</name>
-    <message>
-        <source>Identify failed</source>
-        <translation>Identifizieren fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>The request timed out or failed.</source>
-        <translation>Die Anfrage schlug fehl oder dauerte zu lange.</translation>
-    </message>
-</context>
-<context>
-    <name>QgsVBSRasterIdentifyResultDialog</name>
-    <message>
-        <source>Identify results</source>
-        <translation>Identifikationsergebnis</translation>
-    </message>
-    <message>
-        <source>Attribute</source>
-        <translation>Attribut</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation>Wert</translation>
-    </message>
-</context>
-<context>
     <name>QgsVBSRemoteDataSearchProvider</name>
     <message>
         <source>Feature</source>
@@ -52793,7 +52600,7 @@ Datenanbieterfehler:</translation>
     </message>
     <message>
         <source>Target height:</source>
-        <translation>Zielhöhe:</translation>
+        <translation>Zeilhöhe:</translation>
     </message>
     <message>
         <source>Heights relative to:</source>
