@@ -27,6 +27,7 @@ class QgsGeometryRubberBand;
 class QgsMapCanvas;
 class QgsPinAnnotationItem;
 class QgsPoint;
+class QgsVBSRasterIdentifyResultDialog;
 
 class APP_EXPORT QgsVBSRasterIdentify : public QObject
 {
@@ -40,6 +41,7 @@ class APP_EXPORT QgsVBSRasterIdentify : public QObject
     static QgsVBSRasterIdentify* instance();
     QNetworkReply* mIdentifyReply;
     QTimer* mTimeoutTimer;
+    QPointer<QgsVBSRasterIdentifyResultDialog> mDialog;
 
   private slots:
     void replyFinished();

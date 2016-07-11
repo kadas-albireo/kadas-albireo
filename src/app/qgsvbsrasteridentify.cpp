@@ -88,8 +88,7 @@ void QgsVBSRasterIdentify::identify( const QgsMapCanvas *canvas, const QgsPoint 
     return;
   }
 
-//  QUrl identifyUrl(QSettings().value("vbs/identifyurl", "https://np.adr.admin.ch/MGDIServices/Identification.svc/Identify").toString());
-  QUrl identifyUrl( QSettings().value( "vbs/identifyurl", "http://127.0.0.1/Identify.txt" ).toString() );
+  QUrl identifyUrl(QSettings().value("vbs/identifyurl", "https://np.adr.admin.ch/MGDIServices/Identification.svc/Identify").toString());
   identifyUrl.addQueryItem( "geometryType", "esriGeometryPoint" );
   identifyUrl.addQueryItem( "geometry", QString( "%1,%2" ).arg( worldPos.x(), 0, 'f', 10 ).arg( worldPos.y(), 0, 'f', 10 ) );
   identifyUrl.addQueryItem( "imageDisplay", QString( "%1,%2,%3" ).arg( canvas->width() ).arg( canvas->height() ).arg( canvas->mapSettings().outputDpi() ) );
@@ -97,7 +96,7 @@ void QgsVBSRasterIdentify::identify( const QgsMapCanvas *canvas, const QgsPoint 
                             .arg( worldExtent.yMinimum(), 0, 'f', 10 )
                             .arg( worldExtent.xMaximum(), 0, 'f', 10 )
                             .arg( worldExtent.yMaximum(), 0, 'f', 10 ) );
-  identifyUrl.addQueryItem( "tolerance", "5" );
+  identifyUrl.addQueryItem( "tolerance", "15" );
   identifyUrl.addQueryItem( "layers", layerIds.join( "," ) );
 
   QNetworkRequest req( identifyUrl );
@@ -107,7 +106,7 @@ void QgsVBSRasterIdentify::identify( const QgsMapCanvas *canvas, const QgsPoint 
   instance()->mTimeoutTimer->setSingleShot( true );
   connect( instance()->mIdentifyReply, SIGNAL( finished() ), instance(), SLOT( replyFinished() ) );
   connect( instance()->mTimeoutTimer, SIGNAL( timeout() ), instance(), SLOT( replyFinished() ) );
-  instance()->mTimeoutTimer->start( 200 );
+  instance()->mTimeoutTimer->start( 4000 );
 }
 
 void QgsVBSRasterIdentify::replyFinished()
@@ -117,13 +116,20 @@ void QgsVBSRasterIdentify::replyFinished()
     return;
   }
 
+  if(mDialog)
+    mDialog->close();
+
+  QVariantList results;
   if ( mIdentifyReply->error() == QNetworkReply::NoError && mTimeoutTimer->isActive() )
   {
-    QVariantList results = QJson::Parser().parse( mIdentifyReply->readAll() ).toMap()["results"].toList();
-    QMap<QString, QVariant> layerMap = mIdentifyReply->property( "layerMap" ).toMap();
-    QgsVBSRasterIdentifyResultDialog* resultsDialog = new QgsVBSRasterIdentifyResultDialog( results, layerMap );
-    resultsDialog->show();
+    results = QJson::Parser().parse( mIdentifyReply->readAll() ).toMap()["results"].toList();
+  } else {
+    QgisApp::instance()->messageBar()->pushCritical(tr("Identify failed"), tr("The request timed out or failed."));
   }
+
+  QMap<QString, QVariant> layerMap = mIdentifyReply->property( "layerMap" ).toMap();
+  mDialog = new QgsVBSRasterIdentifyResultDialog( results, layerMap );
+  mDialog->show();
 
   mIdentifyReply->deleteLater();
   mIdentifyReply = 0;
@@ -146,6 +152,7 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
   setWindowTitle( tr( "Identify results" ) );
   setAttribute( Qt::WA_DeleteOnClose );
   setLayout( new QVBoxLayout() );
+  resize(480, 480);
 
   QTreeWidget* treeWidget = new QTreeWidget( this );
   treeWidget->setColumnCount( 2 );
@@ -210,6 +217,7 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
     }
     parent->addChild( resultItem );
   }
+  treeWidget->expandAll();
 }
 
 QgsVBSRasterIdentifyResultDialog::~QgsVBSRasterIdentifyResultDialog()

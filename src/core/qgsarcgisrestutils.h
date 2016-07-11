@@ -26,7 +26,7 @@ class QgsRectangle;
 class QgsAbstractGeometryV2;
 class QgsCoordinateReferenceSystem;
 
-class QgsArcGisRestUtils
+class CORE_EXPORT QgsArcGisRestUtils
 {
   public:
     static QVariant::Type mapEsriFieldType( const QString& esriFieldType );
@@ -45,7 +45,7 @@ class QgsArcGisRestUtils
     static QVariantMap queryServiceJSON( const QUrl& url, QString &errorTitle, QString &errorText );
 };
 
-class QgsArcGisAsyncQuery : public QObject
+class CORE_EXPORT QgsArcGisAsyncQuery : public QObject
 {
     Q_OBJECT
   public:
@@ -62,7 +62,7 @@ class QgsArcGisAsyncQuery : public QObject
     QByteArray* mResult;
 };
 
-class QgsArcGisAsyncParallelQuery : public QObject
+class CORE_EXPORT QgsArcGisAsyncParallelQuery : public QObject
 {
     Q_OBJECT
   public:
