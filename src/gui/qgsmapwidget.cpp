@@ -49,7 +49,7 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   mLockViewButton->setAutoRaise( true );
   mLockViewButton->setToolTip( tr( "Lock with main view" ) );
   mLockViewButton->setCheckable( true );
-  mLockViewButton->setIcon( QIcon( ":/images/themes/default/locked.svg" ) );
+  mLockViewButton->setIcon( QIcon( ":/images/themes/default/unlocked.svg" ) );
   mLockViewButton->setIconSize( QSize( 12, 12 ) );
   connect( mLockViewButton, SIGNAL( toggled( bool ) ), this, SLOT( setCanvasLocked( bool ) ) );
 
@@ -165,6 +165,10 @@ void QgsMapWidget::setLocked( bool locked )
 
 void QgsMapWidget::setCanvasLocked( bool locked )
 {
+  if ( locked )
+    mLockViewButton->setIcon( QIcon( ":/images/themes/default/locked.svg" ) );
+  else
+    mLockViewButton->setIcon( QIcon( ":/images/themes/default/unlocked.svg" ) );
   if ( locked )
   {
     mMapCanvas->setEnabled( false );

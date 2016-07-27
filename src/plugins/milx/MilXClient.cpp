@@ -522,6 +522,26 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, const NPointSymbol& sym
   return true;
 }
 
+bool MilXClient::createSymbol( QString& symbolId, SymbolDesc& result )
+{
+  QByteArray request;
+  QDataStream istream( &request, QIODevice::WriteOnly );
+  istream << MILX_REQUEST_CREATE_SYMBOL;
+
+  QByteArray response;
+  if ( !instance()->processRequest( request, response, MILX_REPLY_CREATE_SYMBOL ) )
+  {
+    return false;
+  }
+
+  QDataStream ostream( &response, QIODevice::ReadOnly );
+  MilXServerReply replycmd = 0; ostream >> replycmd;
+  QByteArray svgxml;
+  ostream >> symbolId >> result.name >> result.militaryName >> svgxml >> result.hasVariablePoints >> result.minNumPoints;
+  result.icon = renderSvg( svgxml );
+  return true;
+}
+
 bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints )
 {
   QByteArray request;
