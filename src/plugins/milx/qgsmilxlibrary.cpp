@@ -246,6 +246,7 @@ void QgsMilXLibrary::itemClicked( QModelIndex index )
     QString symbolInfo = item->data( SymbolMilitaryNameRole ).toString();
     int pointCount = item->data( SymbolPointCountRole ).toInt();
     bool hasVariablePoints = item->data( SymbolVariablePointsRole ).toInt();
+    QPixmap pixmap = item->icon().pixmap( item->icon().actualSize( QSize( 32, 32 ) ) );
     if ( !symbolXml.isEmpty() )
     {
       QgsMilXLayer* layer = static_cast<QgsMilXLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( mLayersCombo->currentIndex() ).toString() ) );
@@ -259,8 +260,20 @@ void QgsMilXLibrary::itemClicked( QModelIndex index )
       }
       else
       {
+        if ( symbolXml == "<custom>" )
+        {
+          MilXClient::SymbolDesc desc;
+          if ( !MilXClient::createSymbol( symbolXml, desc ) )
+          {
+            return;
+          }
+          symbolInfo = desc.militaryName;
+          pointCount = desc.minNumPoints;
+          hasVariablePoints = desc.hasVariablePoints;
+          pixmap = QPixmap::fromImage( desc.icon ).scaled( 32, 32, Qt::KeepAspectRatio );
+        }
         mIface->layerTreeView()->setLayerVisible( layer, true );
-        QgsMilXCreateTool* tool = new QgsMilXCreateTool( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, item->icon().pixmap( item->icon().actualSize( QSize( 128, 128 ) ) ) );
+        QgsMilXCreateTool* tool = new QgsMilXCreateTool( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, pixmap );
         mIface->mapCanvas()->setMapTool( tool );
       }
     }
@@ -430,6 +443,7 @@ void QgsMilXLibraryLoader::run()
       }
     }
   }
+  addItem( 0, tr( "More Symbols..." ), QImage( ":/images/themes/default/mActionAdd.svg" ), true, "<custom>", tr( "More Symbols..." ) );
 }
 
 QStandardItem* QgsMilXLibraryLoader::addItem( QStandardItem* parent, const QString& value, const QImage& image, bool isLeaf, const QString& symbolXml, const QString& symbolMilitaryName, int symbolPointCount, bool hasVariablePoints )
