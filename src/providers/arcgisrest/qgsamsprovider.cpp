@@ -30,7 +30,6 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QPainter>
-#include <QSettings>
 #include <qmath.h>
 
 QgsAmsLegendFetcher::QgsAmsLegendFetcher( QgsAmsProvider *provider )
@@ -129,8 +128,7 @@ QgsAmsProvider::QgsAmsProvider( const QString & uri )
   mServiceInfo = QgsArcGisRestUtils::getServiceInfo( dataSource.param( "url" ), mErrorTitle, mError );
   mLayerInfo = QgsArcGisRestUtils::getLayerInfo( dataSource.param( "url" ) + "/" + dataSource.param( "layer" ), mErrorTitle, mError );
 
-  bool useServiceExtent = QSettings().value( "/qgis/amsUseServiceExtent", false ).toBool();
-  QVariantMap extentData = useServiceExtent ? mServiceInfo["fullExtent"].toMap() : mLayerInfo["extent"].toMap();
+  QVariantMap extentData = mLayerInfo["extent"].toMap();
   mExtent.setXMinimum( extentData["xmin"].toDouble() );
   mExtent.setYMinimum( extentData["ymin"].toDouble() );
   mExtent.setXMaximum( extentData["xmax"].toDouble() );
