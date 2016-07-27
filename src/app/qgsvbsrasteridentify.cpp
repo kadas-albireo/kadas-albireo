@@ -88,7 +88,7 @@ void QgsVBSRasterIdentify::identify( const QgsMapCanvas *canvas, const QgsPoint 
     return;
   }
 
-  QUrl identifyUrl( QSettings().value( "vbs/identifyurl", "https://np.adr.admin.ch/MGDIServices/Identification.svc/Identify" ).toString() );
+  QUrl identifyUrl(QSettings().value("vbs/identifyurl", "https://np.adr.admin.ch/MGDIServices/Identification.svc/Identify").toString());
   identifyUrl.addQueryItem( "geometryType", "esriGeometryPoint" );
   identifyUrl.addQueryItem( "geometry", QString( "%1,%2" ).arg( worldPos.x(), 0, 'f', 10 ).arg( worldPos.y(), 0, 'f', 10 ) );
   identifyUrl.addQueryItem( "imageDisplay", QString( "%1,%2,%3" ).arg( canvas->width() ).arg( canvas->height() ).arg( canvas->mapSettings().outputDpi() ) );
@@ -116,17 +116,15 @@ void QgsVBSRasterIdentify::replyFinished()
     return;
   }
 
-  if ( mDialog )
+  if(mDialog)
     mDialog->close();
 
   QVariantList results;
   if ( mIdentifyReply->error() == QNetworkReply::NoError && mTimeoutTimer->isActive() )
   {
     results = QJson::Parser().parse( mIdentifyReply->readAll() ).toMap()["results"].toList();
-  }
-  else
-  {
-    QgisApp::instance()->messageBar()->pushCritical( tr( "Identify failed" ), tr( "The request timed out or failed." ) );
+  } else {
+    QgisApp::instance()->messageBar()->pushCritical(tr("Identify failed"), tr("The request timed out or failed."));
   }
 
   QMap<QString, QVariant> layerMap = mIdentifyReply->property( "layerMap" ).toMap();
@@ -154,7 +152,7 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
   setWindowTitle( tr( "Identify results" ) );
   setAttribute( Qt::WA_DeleteOnClose );
   setLayout( new QVBoxLayout() );
-  resize( 480, 480 );
+  resize(480, 480);
 
   QTreeWidget* treeWidget = new QTreeWidget( this );
   treeWidget->setColumnCount( 2 );
@@ -169,7 +167,6 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
   layout()->addWidget( bbox );
 
-  QList<QString> layersWithResults;
   QMap<QString, QTreeWidgetItem*> layerTreeItemMap;
   for ( int i = 0, n = results.size(); i < n; ++i )
   {
@@ -179,7 +176,6 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
     {
       continue;
     }
-    layersWithResults.append( layerId );
     QString qgisLayerId = layerMap[layerId].toString();
     if ( !layerTreeItemMap.contains( layerId ) )
     {
@@ -221,23 +217,6 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
     }
     parent->addChild( resultItem );
   }
-  foreach ( const QString& layerId, layerMap.keys() )
-  {
-    QString qgisLayerId = layerMap[layerId].toString();
-    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( qgisLayerId );
-    if ( !layersWithResults.contains( layerId ) )
-    {
-      QTreeWidgetItem* item = new QTreeWidgetItem( QStringList() << layer->name() );
-      item->setFirstColumnSpanned( true );
-      QFont font = item->font( 0 );
-      font.setBold( true );
-      item->setFont( 0, font );
-      layerTreeItemMap.insert( layerId, item );
-      treeWidget->invisibleRootItem()->addChild( item );
-      item->addChild( new QTreeWidgetItem( QStringList() << tr( "No results" ) ) );
-    }
-  }
-
   treeWidget->expandAll();
 }
 
