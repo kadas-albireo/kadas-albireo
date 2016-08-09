@@ -431,7 +431,7 @@ QByteArray QgsArcGisRestUtils::queryService( QUrl url, QString& errorTitle, QStr
   QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
   foreach ( const QNetworkCookie& cookie, cookies )
   {
-    QByteArray data = cookie.toRawForm();
+	QByteArray data = QUrl::fromPercentEncoding(cookie.toRawForm()).toLocal8Bit();
     if ( data.startsWith( "esri_auth=" ) )
     {
       QJson::Parser parser;
