@@ -347,10 +347,10 @@ QgsCoordinateReferenceSystem QgsArcGisRestUtils::parseSpatialReference( const QV
   return crs;
 }
 
-QgsRectangle QgsArcGisRestUtils::parseBBox( const QVariantList& bboxList)
+QgsRectangle QgsArcGisRestUtils::parseBBox( const QVariantList& bboxList )
 {
-  if(bboxList.size() == 4)
-    return QgsRectangle(bboxList[0].toDouble(), bboxList[1].toDouble(), bboxList[2].toDouble(), bboxList[3].toDouble());
+  if ( bboxList.size() == 4 )
+    return QgsRectangle( bboxList[0].toDouble(), bboxList[1].toDouble(), bboxList[2].toDouble(), bboxList[3].toDouble() );
   else
     return QgsRectangle();
 }
@@ -422,13 +422,32 @@ QVariantMap QgsArcGisRestUtils::getObjects( const QString& layerurl, const QList
   return queryServiceJSON( queryUrl, errorTitle, errorText );
 }
 
-QByteArray QgsArcGisRestUtils::queryService( const QUrl& url, QString& errorTitle, QString& errorText )
+QByteArray QgsArcGisRestUtils::queryService( QUrl url, QString& errorTitle, QString& errorText )
 {
   QEventLoop loop;
+  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
+
+  // Extract the token from the esri_auth cookie, if such cookie exists in the pool
+  QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
+  foreach ( const QNetworkCookie& cookie, cookies )
+  {
+    QByteArray data = cookie.toRawForm();
+    if ( data.startsWith( "esri_auth=" ) )
+    {
+      QJson::Parser parser;
+      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
+      QString token = map["token"].toString();
+      if ( !token.isEmpty() )
+      {
+        url.addQueryItem( "token", token );
+        break;
+      }
+    }
+  }
+
 
   QNetworkRequest request( url );
   QNetworkReply* reply = 0;
-  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
 
   // Request data, handling redirects
   while ( true )

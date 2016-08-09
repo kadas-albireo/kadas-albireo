@@ -33,7 +33,7 @@ class CORE_EXPORT QgsArcGisRestUtils
     static QgsWKBTypes::Type mapEsriGeometryType( const QString& esriGeometryType );
     static QgsAbstractGeometryV2* parseEsriGeoJSON( const QVariantMap& geometryData, const QString& esriGeometryType, bool readM, bool readZ, QgsCoordinateReferenceSystem *crs = 0 );
     static QgsCoordinateReferenceSystem parseSpatialReference( const QVariantMap& spatialReferenceMap );
-    static QgsRectangle parseBBox(const QVariantList &bboxList );
+    static QgsRectangle parseBBox( const QVariantList &bboxList );
 
     static QVariantMap getServiceInfo( const QString& baseurl, QString &errorTitle, QString &errorText );
     static QVariantMap getLayerInfo( const QString& layerurl, QString &errorTitle, QString &errorText );
@@ -41,7 +41,7 @@ class CORE_EXPORT QgsArcGisRestUtils
     static QVariantMap getObjects( const QString& layerurl, const QList<quint32> &objectIds, const QString& crs,
                                    bool fetchGeometry, const QStringList &fetchAttributes, bool fetchM, bool fetchZ,
                                    const QgsRectangle& filterRect , QString &errorTitle, QString &errorText );
-    static QByteArray queryService( const QUrl& url, QString &errorTitle, QString &errorText );
+    static QByteArray queryService( QUrl url, QString &errorTitle, QString &errorText );
     static QVariantMap queryServiceJSON( const QUrl& url, QString &errorTitle, QString &errorText );
 };
 
