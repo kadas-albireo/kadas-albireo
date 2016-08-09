@@ -66,25 +66,33 @@ bool MilXClientWorker::initialize()
 #ifdef Q_OS_WIN
   int port;
   QHostAddress addr( QHostAddress::LocalHost );
-  mProcess = new QProcess( this );
-  connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
+  if(!qgetenv("MILIX_SERVER_PORT").isEmpty() && !qgetenv("MILIX_SERVER_ADDR").isEmpty())
   {
-    mProcess->start( "milxserver" );
-    mProcess->waitForReadyRead( 5000 );
-    QByteArray out = mProcess->readAllStandardOutput();
-    if ( !mProcess->isOpen() )
-    {
-      cleanup();
-      mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
-      return false;
-    }
-    else if ( out.isEmpty() )
-    {
-      cleanup();
-      mLastError = tr( "Could not determine process port" );
-      return false;
-    }
-    port = QString( out ).toInt();
+	port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
+    addr = QHostAddress( QString( qgetenv( "MILIX_SERVER_ADDR" ) ) );
+  }
+  else
+  {
+    mProcess = new QProcess( this );
+    connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
+	{
+	  mProcess->start( "milxserver" );
+	  mProcess->waitForReadyRead( 5000 );
+	  QByteArray out = mProcess->readAllStandardOutput();
+	  if ( !mProcess->isOpen() )
+	  {
+	    cleanup();
+	    mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
+	    return false;
+	  }
+	  else if ( out.isEmpty() )
+	  {
+	    cleanup();
+	    mLastError = tr( "Could not determine process port" );
+	    return false;
+	  }
+	  port = QString( out ).toInt();
+	}
   }
 #else
   int port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
