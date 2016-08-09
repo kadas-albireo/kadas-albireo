@@ -31025,7 +31025,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamping</source>
-        <translation type="obsolete">Clamping</translation>
+        <translation>Clamping</translation>
     </message>
     <message>
         <source>Terrain following behavior</source>
@@ -31045,7 +31045,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Binding</source>
-        <translation type="obsolete">Bindung</translation>
+        <translation>Bindung</translation>
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
@@ -31053,7 +31053,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation type="obsolete">Auflösung</translation>
+        <translation>Auflösung</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -31061,7 +31061,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation type="obsolete">Versatz</translation>
+        <translation>Versatz</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -31069,7 +31069,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation type="obsolete">Skalierung</translation>
+        <translation>Skalierung</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31145,35 +31145,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Keine</translation>
+        <translation>Keine</translation>
     </message>
     <message>
         <source>Terrain</source>
-        <translation type="obsolete">Gelände</translation>
+        <translation>Gelände</translation>
     </message>
     <message>
         <source>Relative</source>
-        <translation type="obsolete">Relativ</translation>
+        <translation>Relativ</translation>
     </message>
     <message>
         <source>Absolute</source>
-        <translation type="obsolete">Absolut</translation>
+        <translation>Absolut</translation>
     </message>
     <message>
         <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation type="obsolete">Z-Werte nicht auf das Gelände clampen (aber den Versatz ggf trotzdem anwenden)</translation>
+        <translation>Z-Werte nicht auf das Gelände clampen (aber den Versatz ggf trotzdem anwenden)</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation type="obsolete">Gelände under dem Punkt messen, und die Z Koordinate des Objektes auf den Wert des Gelände setzten; der ursprüngliche Z Wert wird ignoriert</translation>
+        <translation>Gelände under dem Punkt messen, und die Z Koordinate des Objektes auf den Wert des Gelände setzten; der ursprüngliche Z Wert wird ignoriert</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation type="obsolete">Gelände under dem Punkt messen, und diesen Wert der Z Koordinate des Objektes hinzufügen</translation>
+        <translation>Gelände under dem Punkt messen, und diesen Wert der Z Koordinate des Objektes hinzufügen</translation>
     </message>
     <message>
         <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation type="obsolete">Die Z-Koordinate des Objektes beschreibt die Höhe oberhalb der &quot;Null-Höhe&quot;, welche typischerweise das Ellipsoid oder die Meereshöhe ist</translation>
+        <translation>Die Z-Koordinate des Objektes beschreibt die Höhe oberhalb der &quot;Null-Höhe&quot;, welche typischerweise das Ellipsoid oder die Meereshöhe ist</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31209,79 +31209,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Vertex</source>
-        <translation type="obsolete">Vertex</translation>
+        <translation>Vertex</translation>
     </message>
     <message>
         <source>Centroid</source>
-        <translation type="obsolete">Zentroid</translation>
+        <translation>Zentroid</translation>
     </message>
     <message>
         <source>Clamp every vertex independently</source>
-        <translation type="obsolete">Jeder Vertex individuell clampen</translation>
+        <translation>Jeder Vertex individuell clampen</translation>
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
-        <translation type="obsolete">Den Zentroid der gesamten Geometrie clampen</translation>
+        <translation>Den Zentroid der gesamten Geometrie clampen</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation>Geländefolgung</translation>
-    </message>
-    <message>
-        <source>Granularity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sampling resolution</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Offset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is absolute height</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Feature Z is relative to terrain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use terrain height as feature Z</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At each vertex</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>At centroid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at each vertex.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sample the terrain height at the centroid only.</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -34399,7 +34343,7 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Raster layers and annotations can only be exported to KMZ.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Hinweis: Rasterebenen und Annotationen können nur nach KMZ exportiert werden.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Hinweis: Rasterebenen und Annotationen können nur nach KMZ exportiert werden.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -37808,6 +37752,13 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
     <message>
         <source>MSS Symbol Gallery</source>
         <translation>MSS Symbolgalerie</translation>
+    </message>
+</context>
+<context>
+    <name>QgsMilXLibraryLoader</name>
+    <message>
+        <source>More Symbols...</source>
+        <translation>Mehr Symbole...</translation>
     </message>
 </context>
 <context>
@@ -48000,6 +47951,22 @@ Sicht</translation>
         <source>Add MSS Symbol</source>
         <translation>Symbol hinzufügen</translation>
     </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Strg+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Strg+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation>Strg+O</translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
+        <translation>Strg+S</translation>
+    </message>
 </context>
 <context>
     <name>QgsRibbonWindowBase</name>
@@ -51650,6 +51617,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Value</source>
         <translation>Wert</translation>
+    </message>
+    <message>
+        <source>No results</source>
+        <translation>Keine Resultate</translation>
     </message>
 </context>
 <context>
