@@ -157,12 +157,6 @@ bool MilXClientWorker::initialize()
   istream << MILX_REQUEST_INIT;
   istream << lang;
   istream << MILX_INTERFACE_VERSION;
-#ifdef Q_OS_WIN32
-  qlonglong wid = HandleToLong(QApplication::topLevelWidgets().front()->effectiveWinId());
-#else
-  qlonglong wid = 0;
-#endif
-  istream << wid;
   QByteArray response;
   if ( !processRequest( request, response, MILX_REPLY_INIT_OK ) )
   {
