@@ -30909,7 +30909,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation type="unfinished">解像度</translation>
+        <translation type="obsolete">解像度</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -30917,7 +30917,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation type="unfinished">オフセット</translation>
+        <translation type="obsolete">オフセット</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -30925,7 +30925,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation type="unfinished">縮尺</translation>
+        <translation type="obsolete">縮尺</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31001,7 +31001,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">なし</translation>
+        <translation type="obsolete">なし</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31037,58 +31037,66 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Centroid</source>
-        <translation type="unfinished">中心点</translation>
+        <translation type="obsolete">中心点</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clamping</source>
+        <source>Granularity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binding</source>
+        <source>Sampling resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Terrain</source>
+        <source>Z Offset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Relative</source>
+        <source>Z Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Absolute</source>
+        <source>Feature Z is absolute height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
+        <source>Feature Z is relative to terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
+        <source>Use terrain height as feature Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
+        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
+        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Vertex</source>
+        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clamp every vertex independently</source>
+        <source>At each vertex</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clamp to the centroid of the entire geometry</source>
+        <source>At centroid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at each vertex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at the centroid only.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -37465,13 +37473,6 @@ This may be a problem in your network connection or at the WMS server.</source>
     </message>
     <message>
         <source>MSS Symbol Gallery</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QgsMilXLibraryLoader</name>
-    <message>
-        <source>More Symbols...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -47628,22 +47629,6 @@ Sight</source>
         <source>Add MSS Symbol</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Ctrl+P</source>
-        <translation type="unfinished">Ctrl+P</translation>
-    </message>
-    <message>
-        <source>Ctrl+N</source>
-        <translation type="unfinished">Ctrl+N</translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation type="unfinished">Ctrl+O</translation>
-    </message>
-    <message>
-        <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QgsRibbonWindowBase</name>
@@ -51283,10 +51268,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Value</source>
         <translation type="unfinished">値</translation>
-    </message>
-    <message>
-        <source>No results</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

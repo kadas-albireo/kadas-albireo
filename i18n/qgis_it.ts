@@ -30966,7 +30966,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Clamping</source>
-        <translation>Clamping</translation>
+        <translation type="obsolete">Clamping</translation>
     </message>
     <message>
         <source>Terrain following behavior</source>
@@ -30986,7 +30986,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Binding</source>
-        <translation>Binding</translation>
+        <translation type="obsolete">Binding</translation>
     </message>
     <message>
         <source>Elevation data resolution at which to sample terrain height</source>
@@ -30994,7 +30994,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Resolution</source>
-        <translation>Risoluzione</translation>
+        <translation type="obsolete">Risoluzione</translation>
     </message>
     <message>
         <source>Vertical offset to apply to geometry Z</source>
@@ -31002,7 +31002,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Offset</source>
-        <translation>Offset</translation>
+        <translation type="obsolete">Offset</translation>
     </message>
     <message>
         <source>Scale factor to apply to geometry Z</source>
@@ -31010,7 +31010,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scale</source>
-        <translation>Scala</translation>
+        <translation type="obsolete">Scala</translation>
     </message>
     <message>
         <source>E&amp;xtrusion</source>
@@ -31086,35 +31086,35 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>None</source>
-        <translation>Nessuno</translation>
+        <translation type="obsolete">Nessuno</translation>
     </message>
     <message>
         <source>Terrain</source>
-        <translation>Terreno</translation>
+        <translation type="obsolete">Terreno</translation>
     </message>
     <message>
         <source>Relative</source>
-        <translation>Relativo</translation>
+        <translation type="obsolete">Relativo</translation>
     </message>
     <message>
         <source>Absolute</source>
-        <translation>Assoluto</translation>
+        <translation type="obsolete">Assoluto</translation>
     </message>
     <message>
         <source>Do not clamp Z values to the terrain (but still apply the offset, if applicable)</source>
-        <translation>Non confinare valori Z al terreno (applicare comunque l&apos;offset, se applicabile)</translation>
+        <translation type="obsolete">Non confinare valori Z al terreno (applicare comunque l&apos;offset, se applicabile)</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and set the feature&apos;s Z to the terrain height, ignoring the feature&apos;s original Z value</source>
-        <translation>Campionare il terreno sotto il punto, e usare l&apos;altezza del terreno come coordinata Z della geometria, ignorando il valore Z originale</translation>
+        <translation type="obsolete">Campionare il terreno sotto il punto, e usare l&apos;altezza del terreno come coordinata Z della geometria, ignorando il valore Z originale</translation>
     </message>
     <message>
         <source>Sample the terrain under the point, and add the terrain height to the feature&apos;s original Z value</source>
-        <translation>Campionare il terreno sotto il punto, e addizionare l&apos;altezza del terreno al valore Z originale della geometria</translation>
+        <translation type="obsolete">Campionare il terreno sotto il punto, e addizionare l&apos;altezza del terreno al valore Z originale della geometria</translation>
     </message>
     <message>
         <source>The feature&apos;s Z value describes its height above &quot;height zero&quot;, which is typically the ellipsoid or MSL</source>
-        <translation>Il valore Z della geometria indica l&apos;altezza sopra l&apos;&quot;altezza zero&quot;, ossia l&apos;ellissoide oppure il livello del mare medio</translation>
+        <translation type="obsolete">Il valore Z della geometria indica l&apos;altezza sopra l&apos;&quot;altezza zero&quot;, ossia l&apos;ellissoide oppure il livello del mare medio</translation>
     </message>
     <message>
         <source>Map</source>
@@ -31150,23 +31150,79 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Vertex</source>
-        <translation>Vertice</translation>
+        <translation type="obsolete">Vertice</translation>
     </message>
     <message>
         <source>Centroid</source>
-        <translation>Centroide</translation>
+        <translation type="obsolete">Centroide</translation>
     </message>
     <message>
         <source>Clamp every vertex independently</source>
-        <translation>Confinare i vertici indipendentemente</translation>
+        <translation type="obsolete">Confinare i vertici indipendentemente</translation>
     </message>
     <message>
         <source>Clamp to the centroid of the entire geometry</source>
-        <translation>Confinare il centroide di tutta la geometria</translation>
+        <translation type="obsolete">Confinare il centroide di tutta la geometria</translation>
     </message>
     <message>
         <source>Terrain following behaviour</source>
         <translation>Comportamento di seguimento del terreno</translation>
+    </message>
+    <message>
+        <source>Granularity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sampling resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is absolute height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature Z is relative to terrain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use terrain height as feature Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as an absolute height (above MSL).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interpret the feature&apos;s Z coordinate as a height above terrain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard the feature&apos;s Z coordinate and use the terrain height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At each vertex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At centroid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at each vertex.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample the terrain height at the centroid only.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37580,13 +37636,6 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     <message>
         <source>MSS Symbol Gallery</source>
         <translation>Galleria simboli MSS</translation>
-    </message>
-</context>
-<context>
-    <name>QgsMilXLibraryLoader</name>
-    <message>
-        <source>More Symbols...</source>
-        <translation>Altri simboli...</translation>
     </message>
 </context>
 <context>
@@ -47794,22 +47843,6 @@ Sight</source>
         <source>Add MSS Symbol</source>
         <translation>Aggiungi simbolo MSS</translation>
     </message>
-    <message>
-        <source>Ctrl+P</source>
-        <translation>Ctrl+P</translation>
-    </message>
-    <message>
-        <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
-    </message>
-    <message>
-        <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
-    </message>
 </context>
 <context>
     <name>QgsRibbonWindowBase</name>
@@ -51498,10 +51531,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Value</source>
         <translation>Valore</translation>
-    </message>
-    <message>
-        <source>No results</source>
-        <translation>Nessun risultato</translation>
     </message>
 </context>
 <context>
