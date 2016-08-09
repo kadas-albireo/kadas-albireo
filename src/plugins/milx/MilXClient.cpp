@@ -31,6 +31,9 @@
 #include <QTimer>
 #include <QWidget>
 #include <rsvgrenderer.h>
+#ifdef Q_OS_WIN32
+#include <windows.h>
+#endif
 
 MilXClientWorker::MilXClientWorker( QObject* parent )
     : QObject( parent ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
@@ -193,7 +196,23 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
   qint32 len = request.size();
   mTcpSocket->write( reinterpret_cast<char*>( &len ), sizeof( quint32 ) );
   mTcpSocket->write( request );
+  mTcpSocket->flush();
 
+#ifdef Q_OS_WIN32
+  // Attempt to bring editor window in foreground
+  if(expectedReply == MILX_REPLY_EDIT_SYMBOL || expectedReply == MILX_REPLY_CREATE_SYMBOL)
+  {
+	  for(int i = 0; i < 10; ++i)
+	  {
+		Sleep(100);
+		HWND hWnd = FindWindow(NULL, "MSS Symbol Editor");
+		if(hWnd) {
+			SetForegroundWindow(hWnd);
+			break;
+		}
+	  }
+  }
+#endif
   do
   {
     mTcpSocket->waitForReadyRead( 3600000 );
