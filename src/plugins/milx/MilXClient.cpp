@@ -66,25 +66,33 @@ bool MilXClientWorker::initialize()
 #ifdef Q_OS_WIN
   int port;
   QHostAddress addr( QHostAddress::LocalHost );
-  mProcess = new QProcess( this );
-  connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
+  if ( !qgetenv( "MILIX_SERVER_PORT" ).isEmpty() && !qgetenv( "MILIX_SERVER_ADDR" ).isEmpty() )
   {
-    mProcess->start( "milxserver" );
-    mProcess->waitForReadyRead( 5000 );
-    QByteArray out = mProcess->readAllStandardOutput();
-    if ( !mProcess->isOpen() )
+    port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
+    addr = QHostAddress( QString( qgetenv( "MILIX_SERVER_ADDR" ) ) );
+  }
+  else
+  {
+    mProcess = new QProcess( this );
+    connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
     {
-      cleanup();
-      mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
-      return false;
+      mProcess->start( "milxserver" );
+      mProcess->waitForReadyRead( 5000 );
+      QByteArray out = mProcess->readAllStandardOutput();
+      if ( !mProcess->isOpen() )
+      {
+        cleanup();
+        mLastError = tr( "Process failed to start: %1" ).arg( mProcess->errorString() );
+        return false;
+      }
+      else if ( out.isEmpty() )
+      {
+        cleanup();
+        mLastError = tr( "Could not determine process port" );
+        return false;
+      }
+      port = QString( out ).toInt();
     }
-    else if ( out.isEmpty() )
-    {
-      cleanup();
-      mLastError = tr( "Could not determine process port" );
-      return false;
-    }
-    port = QString( out ).toInt();
   }
 #else
   int port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
@@ -157,6 +165,12 @@ bool MilXClientWorker::initialize()
   istream << MILX_REQUEST_INIT;
   istream << lang;
   istream << MILX_INTERFACE_VERSION;
+#ifdef Q_OS_WIN32
+  qlonglong wid = HandleToLong( QApplication::topLevelWidgets().front()->effectiveWinId() );
+#else
+  qlonglong wid = 0;
+#endif
+  istream << wid;
   QByteArray response;
   if ( !processRequest( request, response, MILX_REPLY_INIT_OK ) )
   {
@@ -200,17 +214,18 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
 
 #ifdef Q_OS_WIN32
   // Attempt to bring editor window in foreground
-  if(expectedReply == MILX_REPLY_EDIT_SYMBOL || expectedReply == MILX_REPLY_CREATE_SYMBOL)
+  if ( expectedReply == MILX_REPLY_EDIT_SYMBOL || expectedReply == MILX_REPLY_CREATE_SYMBOL )
   {
-	  for(int i = 0; i < 10; ++i)
-	  {
-		Sleep(100);
-		HWND hWnd = FindWindow(NULL, "MSS Symbol Editor");
-		if(hWnd) {
-			SetForegroundWindow(hWnd);
-			break;
-		}
-	  }
+    for ( int i = 0; i < 10; ++i )
+    {
+      Sleep( 100 );
+      HWND hWnd = FindWindow( NULL, "MSS Symbol Editor" );
+      if ( hWnd )
+      {
+        SetForegroundWindow( hWnd );
+        break;
+      }
+    }
   }
 #endif
   do
