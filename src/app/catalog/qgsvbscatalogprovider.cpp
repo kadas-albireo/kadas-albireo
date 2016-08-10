@@ -178,8 +178,28 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
 void QgsVBSCatalogProvider::readAMSCapabilities( const QString& amsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
-  QNetworkRequest req( QUrl( amsUrl + "?f=json" ) );
-  QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
+  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
+  QUrl url( amsUrl + "?f=json" );
+  // Extract the token from the esri_auth cookie, if such cookie exists in the pool
+  QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
+  foreach ( const QNetworkCookie& cookie, cookies )
+  {
+	QByteArray data = QUrl::fromPercentEncoding(cookie.toRawForm()).toLocal8Bit();
+    if ( data.startsWith( "esri_auth=" ) )
+    {
+      QJson::Parser parser;
+      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
+      QString token = map["token"].toString();
+      if ( !token.isEmpty() )
+      {
+        url.addQueryItem( "token", token );
+        break;
+      }
+    }
+  }
+
+  QNetworkRequest req( url );
+  QNetworkReply* reply = nam->get( req );
   reply->setProperty( "url", amsUrl );
   reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
   connect( reply, SIGNAL( finished() ), this, SLOT( readAMSCapabilitiesDo() ) );
