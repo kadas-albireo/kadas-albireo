@@ -49,48 +49,69 @@ QgsRemoteDataSearchProvider::QgsRemoteDataSearchProvider( QgsMapCanvas* mapCanva
 
 void QgsRemoteDataSearchProvider::startSearch( const QString &searchtext, const SearchRegion &searchRegion )
 {
-  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
+  // List queryable rasters
+  typedef QPair<QString, QString> LayerIdName; // <layerid, layername>
+  QList< LayerIdName > queryableLayers;
+  foreach ( const QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
-    if ( layer->type() != QgsMapLayer::RasterLayer )
-    {
+    const QgsRasterLayer* rlayer = qobject_cast<const QgsRasterLayer*>( layer );
+    if ( !rlayer )
       continue;
-    }
-    QgsRasterLayer* rasterLayer = static_cast<QgsRasterLayer*>( layer );
-    QUrl url( QString( "?" ) + QgsDataSourceURI( rasterLayer->dataProvider()->dataSourceUri() ).uri() );
-    if ( url.queryItemValue( "url" ).contains( "geo.admin.ch" ) )
-    {
-      foreach ( const QString& layerId, url.queryItemValue( "layers" ).split( "," ) )
-      {
-        QUrl url( QSettings().value( "search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
-        url.addQueryItem( "type", "featuresearch" );
-        url.addQueryItem( "searchText", searchtext );
-        url.addQueryItem( "features", layerId );
-        if ( !searchRegion.polygon.isEmpty() )
-        {
-          QgsRectangle rect;
-          rect.setMinimal();
-          QgsLineStringV2* exterior = new QgsLineStringV2();
-          const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( searchRegion.crs, "EPSG:21781" );
-          foreach ( const QgsPoint& p, searchRegion.polygon )
-          {
-            QgsPoint pt = ct->transform( p );
-            rect.include( pt );
-            exterior->addVertex( QgsPointV2( pt ) );
-          }
-          url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( rect.xMinimum() ).arg( rect.yMinimum() ).arg( rect.xMaximum() ).arg( rect.yMaximum() ) );
-          QgsPolygonV2* poly = new QgsPolygonV2();
-          poly->setExteriorRing( exterior );
-          mReplyFilter = new QgsGeometry( poly );
-        }
 
-        QNetworkRequest req( url );
-        req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
-        QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
-        reply->setProperty( "layerName", rasterLayer->name() );
-        connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
-        mNetReplies.append( reply );
+    // Detect ArcGIS Rest MapServer layers
+    QgsDataSourceURI dataSource( rlayer->dataProvider()->dataSourceUri() );
+    QStringList urlParts = dataSource.param( "url" ).split( "/", QString::SkipEmptyParts );
+    int nParts = urlParts.size();
+    if ( nParts > 4 && urlParts[nParts - 1] == "MapServer" && urlParts[nParts - 4] == "services" )
+    {
+      queryableLayers.append( qMakePair( urlParts[nParts - 3] + ":" + urlParts[nParts - 2], rlayer->name() ) );
+    }
+
+    // Detect geo.admin.ch layers
+    dataSource.setEncodedUri( rlayer->dataProvider()->dataSourceUri() );
+    if ( dataSource.param( "url" ).contains( "geo.admin.ch" ) )
+    {
+      foreach ( const QString& id, dataSource.params( "layers" ) )
+      {
+        queryableLayers.append( qMakePair( id, rlayer->name() ) );
       }
     }
+  }
+  if ( queryableLayers.isEmpty() )
+  {
+    return;
+  }
+
+  foreach ( const LayerIdName& ql, queryableLayers )
+  {
+    QUrl url( QSettings().value( "search/remotedatasearchurl", "https://api3.geo.admin.ch/rest/services/api/SearchServer" ).toString() );
+    url.addQueryItem( "type", "featuresearch" );
+    url.addQueryItem( "searchText", searchtext );
+    url.addQueryItem( "features", ql.first );
+    if ( !searchRegion.polygon.isEmpty() )
+    {
+      QgsRectangle rect;
+      rect.setMinimal();
+      QgsLineStringV2* exterior = new QgsLineStringV2();
+      const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( searchRegion.crs, "EPSG:21781" );
+      foreach ( const QgsPoint& p, searchRegion.polygon )
+      {
+        QgsPoint pt = ct->transform( p );
+        rect.include( pt );
+        exterior->addVertex( QgsPointV2( pt ) );
+      }
+      url.addQueryItem( "bbox", QString( "%1,%2,%3,%4" ).arg( rect.xMinimum() ).arg( rect.yMinimum() ).arg( rect.xMaximum() ).arg( rect.yMaximum() ) );
+      QgsPolygonV2* poly = new QgsPolygonV2();
+      poly->setExteriorRing( exterior );
+      mReplyFilter = new QgsGeometry( poly );
+    }
+
+    QNetworkRequest req( url );
+    req.setRawHeader( "Referer", QSettings().value( "search/referer", "http://localhost" ).toByteArray() );
+    QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
+    reply->setProperty( "layerName", ql.second );
+    connect( reply, SIGNAL( finished() ), this, SLOT( replyFinished() ) );
+    mNetReplies.append( reply );
   }
   mTimeoutTimer.start( sSearchTimeout );
 }
