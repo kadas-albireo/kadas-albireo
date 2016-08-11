@@ -43,6 +43,8 @@ class CORE_EXPORT QgsArcGisRestUtils
                                    const QgsRectangle& filterRect , QString &errorTitle, QString &errorText );
     static QByteArray queryService( QUrl url, QString &errorTitle, QString &errorText );
     static QVariantMap queryServiceJSON( const QUrl& url, QString &errorTitle, QString &errorText );
+
+    static void addToken( QUrl& url );
 };
 
 class CORE_EXPORT QgsArcGisAsyncQuery : public QObject
@@ -50,7 +52,7 @@ class CORE_EXPORT QgsArcGisAsyncQuery : public QObject
     Q_OBJECT
   public:
     QgsArcGisAsyncQuery( QObject* parent = 0 );
-    void start( const QUrl& url, QByteArray* result, bool allowCache = false );
+    void start( QUrl url, QByteArray* result, bool allowCache = false );
   signals:
     void finished();
     void failed( QString errorTitle, QString errorName );

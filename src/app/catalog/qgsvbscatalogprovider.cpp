@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsarcgisrestutils.h"
 #include "qgscatalogbrowser.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgsvbscatalogprovider.h"
@@ -180,23 +181,8 @@ void QgsVBSCatalogProvider::readAMSCapabilities( const QString& amsUrl, const En
   mPendingTasks += 1;
   QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
   QUrl url( amsUrl + "?f=json" );
-  // Extract the token from the esri_auth cookie, if such cookie exists in the pool
-  QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
-  foreach ( const QNetworkCookie& cookie, cookies )
-  {
-	QByteArray data = QUrl::fromPercentEncoding(cookie.toRawForm()).toLocal8Bit();
-    if ( data.startsWith( "esri_auth=" ) )
-    {
-      QJson::Parser parser;
-      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
-      QString token = map["token"].toString();
-      if ( !token.isEmpty() )
-      {
-        url.addQueryItem( "token", token );
-        break;
-      }
-    }
-  }
+
+  QgsArcGisRestUtils::addToken( url );
 
   QNetworkRequest req( url );
   QNetworkReply* reply = nam->get( req );
@@ -217,12 +203,12 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
     QJson::Parser parser;
     QVariantMap serviceInfoMap = parser.parse( reply->readAll() ).toMap();
 
-    if(!serviceInfoMap["error"].isNull())
+    if ( !serviceInfoMap["error"].isNull() )
     {
       // Something went wrong
       delete entries;
       endTask();
-	  return;
+      return;
     }
 
     // Parse spatial reference

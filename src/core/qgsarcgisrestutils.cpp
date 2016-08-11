@@ -427,24 +427,7 @@ QByteArray QgsArcGisRestUtils::queryService( QUrl url, QString& errorTitle, QStr
   QEventLoop loop;
   QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
 
-  // Extract the token from the esri_auth cookie, if such cookie exists in the pool
-  QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
-  foreach ( const QNetworkCookie& cookie, cookies )
-  {
-	QByteArray data = QUrl::fromPercentEncoding(cookie.toRawForm()).toLocal8Bit();
-    if ( data.startsWith( "esri_auth=" ) )
-    {
-      QJson::Parser parser;
-      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
-      QString token = map["token"].toString();
-      if ( !token.isEmpty() )
-      {
-        url.addQueryItem( "token", token );
-        break;
-      }
-    }
-  }
-
+  addToken( url );
 
   QNetworkRequest request( url );
   QNetworkReply* reply = 0;
@@ -504,6 +487,29 @@ QVariantMap QgsArcGisRestUtils::queryServiceJSON( const QUrl &url, QString &erro
   return map;
 }
 
+void QgsArcGisRestUtils::addToken( QUrl &url )
+{
+  QgsNetworkAccessManager* nam = QgsNetworkAccessManager::instance();
+
+  // Extract the token from the esri_auth cookie, if such cookie exists in the pool
+  QList<QNetworkCookie> cookies = nam->cookieJar()->cookiesForUrl( url );
+  foreach ( const QNetworkCookie& cookie, cookies )
+  {
+    QByteArray data = QUrl::fromPercentEncoding( cookie.toRawForm() ).toLocal8Bit();
+    if ( data.startsWith( "esri_auth=" ) )
+    {
+      QJson::Parser parser;
+      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
+      QString token = map["token"].toString();
+      if ( !token.isEmpty() )
+      {
+        url.addQueryItem( "token", token );
+        break;
+      }
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsArcGisAsyncQuery::QgsArcGisAsyncQuery( QObject* parent )
@@ -511,8 +517,10 @@ QgsArcGisAsyncQuery::QgsArcGisAsyncQuery( QObject* parent )
 {
 }
 
-void QgsArcGisAsyncQuery::start( const QUrl &url, QByteArray *result, bool allowCache )
+void QgsArcGisAsyncQuery::start( QUrl url, QByteArray *result, bool allowCache )
 {
+  QgsArcGisRestUtils::addToken( url );
+
   mResult = result;
   QNetworkRequest request( url );
   if ( allowCache )
@@ -566,7 +574,10 @@ void QgsArcGisAsyncParallelQuery::start( const QVector<QUrl> &urls, QVector<QByt
   mPendingRequests = mResults->size();
   for ( int i = 0, n = urls.size(); i < n; ++i )
   {
-    QNetworkRequest request( urls[i] );
+    QUrl url = urls[i];
+    QgsArcGisRestUtils::addToken( url );
+
+    QNetworkRequest request( url );
     request.setAttribute( QNetworkRequest::HttpPipeliningAllowedAttribute, true );
     if ( allowCache )
     {
