@@ -191,16 +191,20 @@ void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) con
     }
   }
 
-  QDomElement offsetEl = doc.createElement( "Offset" );
-  graphicEl.appendChild( offsetEl );
 
-  QDomElement factorXEl = doc.createElement( "FactorX" );
-  factorXEl.appendChild( doc.createTextNode( QString::number( double( mUserOffset.x() ) / MilXClient::getSymbolSize() ) ) );
-  offsetEl.appendChild( factorXEl );
+  if ( !isMultiPoint() )
+  {
+    QDomElement offsetEl = doc.createElement( "Offset" );
+    graphicEl.appendChild( offsetEl );
 
-  QDomElement factorYEl = doc.createElement( "FactorY" );
-  factorYEl.appendChild( doc.createTextNode( QString::number( -double( mUserOffset.y() ) / MilXClient::getSymbolSize() ) ) );
-  offsetEl.appendChild( factorYEl );
+    QDomElement factorXEl = doc.createElement( "FactorX" );
+    factorXEl.appendChild( doc.createTextNode( QString::number( double( mUserOffset.x() ) / MilXClient::getSymbolSize() ) ) );
+    offsetEl.appendChild( factorXEl );
+
+    QDomElement factorYEl = doc.createElement( "FactorY" );
+    factorYEl.appendChild( doc.createTextNode( QString::number( -double( mUserOffset.y() ) / MilXClient::getSymbolSize() ) ) );
+    offsetEl.appendChild( factorYEl );
+  }
 }
 
 void QgsMilXItem::readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform* crst, int symbolSize )
