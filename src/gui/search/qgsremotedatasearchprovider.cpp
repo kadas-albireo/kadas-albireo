@@ -170,11 +170,12 @@ void QgsRemoteDataSearchProvider::replyFinished()
       }
 
       SearchResult searchResult;
+      searchResult.crs = itemAttrsMap["sr"].toString();
       searchResult.bbox = QgsRectangle( mPatBox.cap( 1 ).toDouble(), mPatBox.cap( 2 ).toDouble(),
                                         mPatBox.cap( 3 ).toDouble(), mPatBox.cap( 4 ).toDouble() );
       // When bbox is empty, fallback to pos + zoomScale is used
       searchResult.pos = QgsPoint( itemAttrsMap["lon"].toDouble(), itemAttrsMap["lat"].toDouble() );
-      searchResult.pos = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:21781" )->transform( searchResult.pos );
+      searchResult.pos = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", searchResult.crs )->transform( searchResult.pos );
       if ( !bbox.isEmpty() && !bbox.contains( searchResult.pos ) )
       {
         continue;
@@ -189,7 +190,6 @@ void QgsRemoteDataSearchProvider::replyFinished()
       searchResult.categoryPrecedence = 11;
       searchResult.text = itemAttrsMap["label"].toString() + " (" + itemAttrsMap["detail"].toString() + ")";
       searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
-      searchResult.crs = "EPSG:21781";
       searchResult.showPin = true;
       emit searchResultFound( searchResult );
     }
