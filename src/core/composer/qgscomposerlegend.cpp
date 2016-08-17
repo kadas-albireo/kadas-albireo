@@ -223,12 +223,6 @@ void QgsComposerLegend::setSymbolWidth( double w ) { mSettings.setSymbolSize( QS
 double QgsComposerLegend::symbolHeight() const { return mSettings.symbolSize().height(); }
 void QgsComposerLegend::setSymbolHeight( double h ) { mSettings.setSymbolSize( QSizeF( mSettings.symbolSize().width(), h ) ); }
 
-double QgsComposerLegend::wmsLegendWidth() const { return mSettings.wmsLegendSize().width(); }
-void QgsComposerLegend::setWmsLegendWidth( double w ) { mSettings.setWmsLegendSize( QSizeF( w, mSettings.wmsLegendSize().height() ) ); }
-
-double QgsComposerLegend::wmsLegendHeight() const {return mSettings.wmsLegendSize().height(); }
-void QgsComposerLegend::setWmsLegendHeight( double h ) { mSettings.setWmsLegendSize( QSizeF( mSettings.wmsLegendSize().width(), h ) ); }
-
 void QgsComposerLegend::setWrapChar( const QString& t ) { mSettings.setWrapChar( t ); }
 QString QgsComposerLegend::wrapChar() const {return mSettings.wrapChar(); }
 
@@ -279,8 +273,6 @@ bool QgsComposerLegend::writeXML( QDomElement& elem, QDomDocument & doc ) const
 
   composerLegendElem.setAttribute( "symbolWidth", QString::number( mSettings.symbolSize().width() ) );
   composerLegendElem.setAttribute( "symbolHeight", QString::number( mSettings.symbolSize().height() ) );
-  composerLegendElem.setAttribute( "wmsLegendWidth", QString::number( mSettings.wmsLegendSize().width() ) );
-  composerLegendElem.setAttribute( "wmsLegendHeight", QString::number( mSettings.wmsLegendSize().height() ) );
   composerLegendElem.setAttribute( "wrapChar", mSettings.wrapChar() );
   composerLegendElem.setAttribute( "fontColor", mSettings.fontColor().name() );
 
@@ -404,7 +396,6 @@ bool QgsComposerLegend::readXML( const QDomElement& itemElem, const QDomDocument
   mSettings.setColumnSpace( itemElem.attribute( "columnSpace", "2.0" ).toDouble() );
 
   mSettings.setSymbolSize( QSizeF( itemElem.attribute( "symbolWidth", "7.0" ).toDouble(), itemElem.attribute( "symbolHeight", "14.0" ).toDouble() ) );
-  mSettings.setWmsLegendSize( QSizeF( itemElem.attribute( "wmsLegendWidth", "50" ).toDouble(), itemElem.attribute( "wmsLegendHeight", "25" ).toDouble() ) );
 
   mSettings.setWrapChar( itemElem.attribute( "wrapChar" ) );
 

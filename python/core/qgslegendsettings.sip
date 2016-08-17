@@ -59,9 +59,6 @@ class QgsLegendSettings
     QSizeF symbolSize() const;
     void setSymbolSize( QSizeF s );
 
-    QSizeF wmsLegendSize() const;
-    void setWmsLegendSize( QSizeF s );
-
     double lineSpacing() const;
     void setLineSpacing( double s );
 
