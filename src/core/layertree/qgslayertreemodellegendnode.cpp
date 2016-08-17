@@ -816,7 +816,6 @@ QSizeF QgsWMSLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemCont
 {
   Q_UNUSED( itemHeight );
 
-  getLegendGraphic();
   double dpi = settings.dpi();
   double mmwidth = ( mImage.width() * 25.4 ) / dpi;
   double mmheight = ( mImage.height() * 25.4 ) / dpi;
