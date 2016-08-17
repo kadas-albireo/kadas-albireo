@@ -138,12 +138,6 @@ class CORE_EXPORT QgsComposerLegend : public QgsComposerItem
     double symbolHeight() const;
     void setSymbolHeight( double h );
 
-    double wmsLegendWidth() const;
-    void setWmsLegendWidth( double w );
-
-    double wmsLegendHeight() const;
-    void setWmsLegendHeight( double h );
-
     void setWrapChar( const QString& t );
     QString wrapChar() const;
 

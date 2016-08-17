@@ -82,9 +82,6 @@ class CORE_EXPORT QgsLegendSettings
     QSizeF symbolSize() const {return mSymbolSize;}
     void setSymbolSize( QSizeF s ) {mSymbolSize = s;}
 
-    QSizeF wmsLegendSize() const {return mWmsLegendSize;}
-    void setWmsLegendSize( QSizeF s ) {mWmsLegendSize = s;}
-
     double lineSpacing() const { return mLineSpacing; }
     void setLineSpacing( double s ) { mLineSpacing = s; }
 
@@ -158,9 +155,6 @@ class CORE_EXPORT QgsLegendSettings
 
     /** Width and height of symbol icon */
     QSizeF mSymbolSize;
-
-    /** Width and height of WMS legendGraphic pixmap */
-    QSizeF mWmsLegendSize;
 
     /** Spacing between lines when wrapped */
     double mLineSpacing;

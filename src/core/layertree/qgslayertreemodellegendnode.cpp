@@ -702,12 +702,19 @@ QSizeF QgsImageLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemCo
 {
   Q_UNUSED( itemHeight );
 
+  double dpi = settings.dpi();
+  double mmwidth = ( mImage.width() * 25.4 ) / dpi;
+  double mmheight = ( mImage.height() * 25.4 ) / dpi;
   if ( ctx )
   {
-    ctx->painter->drawImage( QRectF( ctx->point.x(), ctx->point.y(), settings.wmsLegendSize().width(), settings.wmsLegendSize().height() ),
+    ctx->painter->save();
+    ctx->painter->setRenderHint( QPainter::SmoothPixmapTransform, true );
+    ctx->painter->setRenderHint( QPainter::Antialiasing, true );
+    ctx->painter->drawImage( QRectF( ctx->point.x(), ctx->point.y(), mmwidth, mmheight ),
                              mImage, QRectF( 0, 0, mImage.width(), mImage.height() ) );
+    ctx->painter->restore();
   }
-  return settings.wmsLegendSize();
+  return QSizeF( mmwidth, mmheight );
 }
 
 // -------------------------------------------------------------------------
@@ -809,13 +816,21 @@ QSizeF QgsWMSLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemCont
 {
   Q_UNUSED( itemHeight );
 
+  getLegendGraphic();
+  double dpi = settings.dpi();
+  double mmwidth = ( mImage.width() * 25.4 ) / dpi;
+  double mmheight = ( mImage.height() * 25.4 ) / dpi;
   if ( ctx )
   {
-    ctx->painter->drawImage( QRectF( ctx->point, settings.wmsLegendSize() ),
+    ctx->painter->save();
+    ctx->painter->setRenderHint( QPainter::SmoothPixmapTransform, true );
+    ctx->painter->setRenderHint( QPainter::Antialiasing, true );
+    ctx->painter->drawImage( QRectF( ctx->point, QSizeF( mmwidth, mmheight ) ),
                              mImage,
                              QRectF( QPointF( 0, 0 ), mImage.size() ) );
+    ctx->painter->restore();
   }
-  return settings.wmsLegendSize();
+  return QSizeF( mmwidth, mmheight );
 }
 
 /* private */
