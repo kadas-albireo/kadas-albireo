@@ -47734,7 +47734,7 @@ Sight</source>
     </message>
     <message>
         <source>Export KML/KMZ</source>
-        <translation>Exporter KML/KMZ</translation>
+        <translation>Exportér KML/KMZ</translation>
     </message>
     <message>
         <source>Zoom to previous Extent</source>
