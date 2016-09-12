@@ -29,13 +29,16 @@
 #include "qgsnetworkdiskcache.h"
 
 #include <QAuthenticator>
+#include <QDir>
 #include <QUrl>
 #include <QSettings>
 #include <QTimer>
 #include <QNetworkReply>
 #include <QThreadStorage>
 #include <QSslError>
+#include <QSslSocket>
 #include <QMessageBox>
+#include <QSslConfiguration>
 
 QgsNetworkAccessManager *QgsNetworkAccessManager::smMainNAM = 0;
 
@@ -290,6 +293,7 @@ void QgsNetworkAccessManager::getProxyCredentials( const QNetworkProxy &proxy, Q
 #ifndef QT_NO_OPENSSL
 void QgsNetworkAccessManager::handleSSLErrors( QNetworkReply *reply, const QList<QSslError> &errors )
 {
+  QgsDebugMsg("Handling ssl errors");
   QgsSSLIgnoreList::lock();
   QList<QSslError> newErrors;
   foreach ( QSslError error, errors )
@@ -301,12 +305,11 @@ void QgsNetworkAccessManager::handleSSLErrors( QNetworkReply *reply, const QList
       newErrors.append( error );
     }
   }
-  bool isGuiThread = thread() == instance()->thread();
   if ( newErrors.isEmpty() )
   {
     reply->ignoreSslErrors();
   }
-  else if ( isGuiThread )
+  else
   {
     bool ok = false;
     emit sslErrorsConformationRequired( reply->url(), newErrors, &ok );
@@ -383,6 +386,29 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
              Qt::BlockingQueuedConnection );
 #endif
     connect( smMainNAM, SIGNAL( cookieAdded( QByteArray, QUrl ) ), this, SLOT( addCookie( QByteArray, QUrl ) ) );
+  }
+  else
+  {
+    // Look for certificates in <appDataDir>/certificates to add to the SSL socket CA certificate database
+    QDir certDir(QDir(QApplication::applicationDirPath()).absoluteFilePath("certificates"));
+    QgsDebugMsg(QString("Looking for certificates in %1").arg(certDir.absolutePath()));
+    foreach(const QString& certFilename, certDir.entryList(QStringList() << "*.pem", QDir::Files))
+    {
+      QFile certFile(certDir.absoluteFilePath(certFilename));
+      if(certFile.open(QIODevice::ReadOnly))
+      {
+        QgsDebugMsg(QString("Reading certificate file %1").arg(certFile.fileName()));
+        QByteArray pem = certFile.readAll();
+        QList<QSslCertificate> certs = QSslCertificate::fromData(pem, QSsl::Pem);
+        QgsDebugMsg(QString("Adding %1 certificates").arg(certs.size()));
+        foreach(const QSslCertificate& cert, certs)
+        {
+          QSslSocket::addDefaultCaCertificate(cert);
+        }
+      }
+    }
+
+    connect(this, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(handleSSLErrors(QNetworkReply*,QList<QSslError>)));
   }
   connect( this, SIGNAL( authenticationRequired( QNetworkReply *, QAuthenticator * ) ),
            this, SLOT( getCredentials( QNetworkReply*, QAuthenticator* ) ) );
@@ -495,14 +521,25 @@ QNetworkRequest QgsNetworkAccessManager::requestWithUserInfo( const QNetworkRequ
   // empty username and some random password (i.e. sso) as user info to fool
   // QNetworkAccessManager for NTLM SSO authorization, see
   // http://stackoverflow.com/questions/14706851/ntlmv2-authentication-in-qt
+  QNetworkRequest adjustedRequest( req );
   QUrl url = req.url();
+
   bool trySSO = QSettings().value( "/qgis/networkAndProxy/attemptSSO", false ).toBool();
   if ( trySSO && url.userInfo().isEmpty() && req.rawHeader( "Authorization" ).isEmpty() )
   {
     url.setUserInfo( ":sso" );
   }
-  QNetworkRequest adjustedRequest( req );
   adjustedRequest.setUrl( url );
+
+  bool disablePeerVerification = QSettings().value( "/qgis/networkAndProxy/disableSSLPeerVerification", false ).toBool();
+  if(disablePeerVerification)
+  {
+    QgsDebugMsg("Disabling SSL peer verification");
+    QSslConfiguration config = req.sslConfiguration();
+    config.setPeerVerifyMode(QSslSocket::VerifyNone);
+    adjustedRequest.setSslConfiguration(config);
+  }
+
   return adjustedRequest;
 }
 
