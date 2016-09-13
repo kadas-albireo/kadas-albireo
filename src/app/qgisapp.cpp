@@ -8041,7 +8041,7 @@ void QgisApp::namSetup()
 
 #ifndef QT_NO_OPENSSL
   connect( nam, SIGNAL( sslErrorsConformationRequired( QUrl, QList<QSslError>, bool* ) ),
-           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ) );
+           this, SLOT( namConfirmSslErrors( QUrl, QList<QSslError>, bool* ) ), Qt::DirectConnection );
 #endif
   connect( nam, SIGNAL( requestTimedOut( QUrl ) ),
            this, SLOT( namRequestTimedOut( QUrl ) ) );
