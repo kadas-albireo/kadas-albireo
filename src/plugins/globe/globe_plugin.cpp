@@ -455,6 +455,7 @@ void GlobePlugin::showSettings()
 
 void GlobePlugin::projectRead()
 {
+  setGlobeEnabled( false ); // Hide globe when new projects loaded, on some systems it is very slow loading a new project with globe enabled
   mSettingsDialog->readProjectSettings();
   applyProjectSettings();
 }
