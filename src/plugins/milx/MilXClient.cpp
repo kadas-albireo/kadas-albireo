@@ -77,7 +77,7 @@ bool MilXClientWorker::initialize()
     connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
     {
       mProcess->start( "milxserver" );
-      mProcess->waitForReadyRead( 5000 );
+      mProcess->waitForReadyRead( 10000 );
       QByteArray out = mProcess->readAllStandardOutput();
       if ( !mProcess->isOpen() )
       {
