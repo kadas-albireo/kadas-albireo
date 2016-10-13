@@ -87,7 +87,7 @@ void QgsIAMAuth::performLogin()
 
   WebAxWidget* webWidget = new WebAxWidget();
   webWidget->setControl( QString::fromUtf8( "{8856F961-340A-11D0-A96B-00C04FD705A2}" ) );
-  webWidget->dynamicCall( "Navigate(const QString&)", QSettings().value( "iamauth/loginurl", QString( "https://np.adr.admin.ch/arcgis/home/signin.html" ) ).toString() );
+  webWidget->dynamicCall( "Navigate(const QString&)", QSettings().value( "iamauth/loginurl", QString( "" ) ).toString() );
   connect( webWidget, SIGNAL( NavigateComplete( QString ) ), this, SLOT( checkLoginComplete( QString ) ) );
   connect( webWidget, SIGNAL( NewWindow3( IDispatch**, bool&, uint, QString, QString ) ), this, SLOT( handleNewWindow( IDispatch**, bool&, uint, QString, QString ) ) );
   connect( webWidget, SIGNAL( WindowClosing( bool, bool& ) ), this, SLOT( handleWindowClose( bool, bool& ) ) );
@@ -117,7 +117,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
         mLoginDialog->deleteLater();
         mLoginDialog = 0;
         QNetworkCookieJar* jar = QgsNetworkAccessManager::instance()->cookieJar();
-        QStringList cookieUrls = QSettings().value( "iamauth/cookieurls", QString( "https://npe.adr.admin.ch/;https://npi.adr.admin.ch/;https://np.adr.admin.ch/;https://npags.adr.admin.ch/" ) ).toString().split( ";" );
+        QStringList cookieUrls = QSettings().value( "iamauth/cookieurls", QString( "" ) ).toString().split( ";" );
         foreach ( const QString& url, cookieUrls )
         {
           jar->setCookiesFromUrl( QList<QNetworkCookie>() << QNetworkCookie( cookie.toLocal8Bit() ), url );
@@ -133,7 +133,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
         page->setNetworkAccessManager( QgsNetworkAccessManager::instance() );
         view->setPage( page );
         QNetworkRequest req;
-        req.setUrl( QUrl( "https://np.adr.admin.ch/arcgis/sharing/rest/search" ) );
+        req.setUrl( QUrl( "https://www.arcgis.com/sharing/rest/search" ) );
         QSslConfiguration conf = req.sslConfiguration();
         conf.setPeerVerifyMode( QSslSocket::VerifyNone );
         req.setSslConfiguration( conf );
