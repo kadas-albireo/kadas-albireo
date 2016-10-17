@@ -191,7 +191,7 @@ void QgsMapToolViewshed::drawFinished()
 
   QProgressDialog p( tr( "Calculating viewshed..." ), tr( "Abort" ), 0, 0 );
   p.setWindowTitle( tr( "Viewshed" ) );
-  p.setWindowModality( Qt::ApplicationModal );
+  p.setWindowModality( Qt::WindowModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
   QApplication::setOverrideCursor( Qt::WaitCursor );
   bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );

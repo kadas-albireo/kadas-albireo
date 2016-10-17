@@ -73,7 +73,7 @@ void QgsMapToolSlope::drawFinished()
   QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", rect, rectCrs );
   QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
   p.setWindowTitle( tr( "Slope" ) );
-  p.setWindowModality( Qt::ApplicationModal );
+  p.setWindowModality( Qt::WindowModal );
   QApplication::setOverrideCursor( Qt::WaitCursor );
   slope.processRaster( &p );
   QApplication::restoreOverrideCursor();
