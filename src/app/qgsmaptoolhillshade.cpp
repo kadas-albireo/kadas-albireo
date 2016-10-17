@@ -108,7 +108,7 @@ void QgsMapToolHillshade::drawFinished()
   QgsHillshadeFilter hillshade( layer->source(), outputFile, "GTiff", spinHorAngle->value(), spinVerAngle->value(), rect, rectCrs );
   QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
   p.setWindowTitle( tr( "Hillshade" ) );
-  p.setWindowModality( Qt::WindowModal );
+  p.setWindowModality( Qt::ApplicationModal );
   QApplication::setOverrideCursor( Qt::WaitCursor );
   hillshade.processRaster( &p );
   QApplication::restoreOverrideCursor();
