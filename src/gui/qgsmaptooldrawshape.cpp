@@ -388,10 +388,13 @@ QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& 
   {
     if ( mMultipart )
     {
-      mPoints.append( QList<QgsPoint>() );
-      return StateReady;
+      if ( !mIsArea || mPoints.back().size() > 2 )
+      {
+        mPoints.append( QList<QgsPoint>() );
+        return StateReady;
+      }
     }
-    else
+    else if ( !mIsArea || mPoints.back().size() > 2 )
     {
       return StateFinished;
     }

@@ -508,12 +508,20 @@ void QgsRedliningEditTool::addVertex( const QPoint &pos )
 
 void QgsRedliningEditTool::deleteCurrentVertex()
 {
-  if ( !mIsRectangle )
+  if ( !mCurrentFeature || !mCurrentFeature->geometry() )
+  {
+    return;
+  }
+  int minVertexCount = mCurrentFeature->geometry()->type() == QGis::Line ? 2 : 4;
+  if ( !mIsRectangle && mCurrentFeature->geometry() && mCurrentFeature->geometry()->geometry()->vertexCount() > minVertexCount )
   {
     mCurrentFeature->deleteSelectedVertexes();
     mCurrentVertex = -1;
     const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
-    mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
+    if ( mCurrentFeature->geometry() && mCurrentFeature->geometry()->geometry() )
+    {
+      mRubberBand->setGeometry( mCurrentFeature->geometry()->geometry()->transformed( *ct ) );
+    }
     mLayer->triggerRepaint();
   }
 }
