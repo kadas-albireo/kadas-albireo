@@ -395,7 +395,7 @@ void QgsRibbonApp::configureButtons()
   connect( mActionOpen, SIGNAL( triggered() ), this, SLOT( fileOpen() ) );
   setActionToButton( mActionOpen, mOpenButton );
 
-  connect( mActionSave, SIGNAL( triggered() ), this, SLOT( fileSave() ) );
+  connect( mActionSave, SIGNAL( triggered() ), this, SLOT( saveProject() ) );
   setActionToButton( mActionSave, mSaveButton );
 
   connect( mActionSaveAs, SIGNAL( triggered() ), this, SLOT( fileSaveAs() ) );
@@ -733,5 +733,13 @@ void QgsRibbonApp::showFavoriteContextMenu( const QPoint& pos )
     button->setDefaultAction( 0 );
     button->setIconSize( QSize( 16, 16 ) );
     button->setEnabled( false );
+  }
+}
+
+void QgsRibbonApp::saveProject()
+{
+  if ( fileSave() )
+  {
+    messageBar()->pushMessage( tr( "Project saved" ), "", QgsMessageBar::INFO, 3 );
   }
 }
