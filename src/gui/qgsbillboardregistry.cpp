@@ -51,8 +51,11 @@ void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QIm
 
 void QgsBillBoardRegistry::removeItem( void* parent )
 {
-  emit itemRemoved( mItems[parent] );
-  delete mItems.take( parent );
+  if ( mItems.contains( parent ) )
+  {
+    emit itemRemoved( mItems[parent] );
+    delete mItems.take( parent );
+  }
 }
 
 QList<QgsBillBoardItem*> QgsBillBoardRegistry::items() const
