@@ -88,7 +88,7 @@ void QgsVBSRasterIdentify::identify( const QgsMapCanvas *canvas, const QgsPoint 
     return;
   }
 
-  QUrl identifyUrl( QSettings().value( "vbs/identifyurl", "https://np.adr.admin.ch/MGDIServices/Identification.svc/Identify" ).toString() );
+  QUrl identifyUrl( QSettings().value( "vbs/identifyurl", "" ).toString() );
   identifyUrl.addQueryItem( "geometryType", "esriGeometryPoint" );
   identifyUrl.addQueryItem( "geometry", QString( "%1,%2" ).arg( worldPos.x(), 0, 'f', 10 ).arg( worldPos.y(), 0, 'f', 10 ) );
   identifyUrl.addQueryItem( "imageDisplay", QString( "%1,%2,%3" ).arg( canvas->width() ).arg( canvas->height() ).arg( canvas->mapSettings().outputDpi() ) );
