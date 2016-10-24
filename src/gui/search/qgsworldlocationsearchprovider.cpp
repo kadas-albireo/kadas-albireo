@@ -52,7 +52,7 @@ void QgsWorldLocationSearchProvider::startSearch( const QString &searchtext , co
   }
   else
   {
-    serviceUrl = QSettings().value( "search/worldlocationsearchurl", "https://np.adr.admin.ch/MGDIServices/SearchServer.svc/Search" ).toString();
+    serviceUrl = QSettings().value( "search/worldlocationsearchurl", "" ).toString();
   }
 
   QUrl url( serviceUrl );
