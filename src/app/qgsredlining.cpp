@@ -231,7 +231,10 @@ void QgsRedlining::clearLayer()
 {
   mLayer = 0;
   mLayerRefCount = 0;
-  deactivateTool();
+  if ( mRedliningTool )
+  {
+    mRedliningTool->deactivate();
+  }
 }
 
 void QgsRedlining::editObject()
