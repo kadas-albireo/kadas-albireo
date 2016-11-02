@@ -71,7 +71,7 @@ class QgsGlobeTileImage : public osg::Image
     static bool lodSort( const QgsGlobeTileImage* lhs, const QgsGlobeTileImage* rhs ) { return lhs->mLod > rhs->mLod; }
 
   private:
-    QgsGlobeTileSource* mTileSource;
+    osg::ref_ptr<QgsGlobeTileSource> mTileSource;
     QgsRectangle mTileExtent;
     int mTileSize;
     unsigned char* mTileData;
