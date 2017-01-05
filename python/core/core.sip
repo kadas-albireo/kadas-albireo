@@ -1,3 +1,4 @@
+
 %Module(name=qgis._core,
         version=0,
         keyword_arguments="Optional")
@@ -8,7 +9,6 @@
 %Import QtNetwork/QtNetworkmod.sip
 
 %Include conversions.sip
-%Include qgsexception.sip
 
 %Include qgis.sip
 
@@ -21,7 +21,6 @@
 %Include qgscolorschemeregistry.sip
 %Include qgscontexthelp.sip
 %Include qgscoordinatereferencesystem.sip
-%Include qgscoordinatetransform.sip
 %Include qgscredentials.sip
 %Include qgscrscache.sip
 %Include qgsdatadefined.sip
@@ -280,3 +279,6 @@
 %Include geometry/qgspolygonv2.sip
 %Include geometry/qgssurfacev2.sip
 %Include geometry/qgswkbtypes.sip
+
+%Include qgsexception.sip
+%Include qgscoordinatetransform.sip

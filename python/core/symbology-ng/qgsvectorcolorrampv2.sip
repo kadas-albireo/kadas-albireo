@@ -7,10 +7,10 @@ class QgsVectorColorRampV2
 %ConvertToSubClassCode
   if (sipCpp->type() == "gradient")
   {
-    sipClass = sipClass_QgsVectorGradientColorRampV2;
+    sipType = sipType_QgsVectorGradientColorRampV2;
   }
   else
-    sipClass = 0;
+    sipType = 0;
 %End
 
   public:
