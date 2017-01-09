@@ -141,6 +141,13 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
     filterPoly.append( QPoint( qRound( geoToPixelX( gtrans, p.x(), p.y() ) ), qRound( geoToPixelY( gtrans, p.x(), p.y() ) ) ) );
   }
 
+  if ( obs[0] < colStart || obs[0] > colEnd || obs[1] < rowStart || obs[1] > rowEnd )
+  {
+    GDALClose( inputDataset );
+    QgsDebugMsg( "Observer pos is outside vieweshed area, reprojection distortion?" );
+    return false;
+  }
+
 
   // Prepare output
   GDALDriverH outputDriver = GDALGetDriverByName( outputFormat.toLocal8Bit().data() );
