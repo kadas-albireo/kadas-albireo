@@ -115,8 +115,11 @@ void QgsMapToolHillshade::drawFinished()
   if ( !p.wasCanceled() )
   {
     QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
-    layer->renderer()->setOpacity( 0.6 );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    if ( layer->isValid() && layer->renderer() )
+    {
+      layer->renderer()->setOpacity( 0.6 );
+      QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    }
   }
   reset();
 }
