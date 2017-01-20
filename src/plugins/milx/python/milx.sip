@@ -1,5 +1,4 @@
 %Module(name=qgis._milx,
-        version=0,
         keyword_arguments="Optional")
 
 %Import QtCore/QtCoremod.sip

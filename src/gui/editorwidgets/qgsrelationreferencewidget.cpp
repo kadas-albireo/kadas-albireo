@@ -426,7 +426,7 @@ void QgsRelationReferenceWidget::init()
     {
       ValueRelationCache cache;
 
-      QgsFeatureId currentSelection;
+      QgsFeatureId currentSelection = 0;
 
       while ( fit.nextFeature( f ) )
       {

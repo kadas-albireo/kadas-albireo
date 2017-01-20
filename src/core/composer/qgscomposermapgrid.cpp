@@ -577,7 +577,7 @@ void QgsComposerMapGrid::drawGridUTM( QPainter* painter, QgsRenderContext &conte
   painter->setBrush( QColor( 102, 153, 255 ) );
   painter->setPen( QPen( QColor( 255, 255, 255, 127 ), 0.2 ) );
   double zoneFontSize;
-  double subZoneFontSize;
+  double subZoneFontSize = 0;
   double gridLabelSize = 5;
   if ( mapScale > 20000000 )
   {

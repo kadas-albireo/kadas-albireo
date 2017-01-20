@@ -170,7 +170,8 @@ void Heatmap::run()
   // Write the empty raster
   for ( int i = 0; i < rows ; i++ )
   {
-    poBand->RasterIO( GF_Write, 0, i, columns, 1, line, columns, 1, GDT_Float32, int( 0 ), int( 0 ) );
+    CPLErr err = poBand->RasterIO( GF_Write, 0, i, columns, 1, line, columns, 1, GDT_Float32, int( 0 ), int( 0 ) );
+    Q_UNUSED( err );
   }
 
   CPLFree( line );
@@ -298,8 +299,9 @@ void Heatmap::run()
 
       // get the data
       float *dataBuffer = ( float * ) CPLMalloc( sizeof( float ) * blockSize * blockSize );
-      poBand->RasterIO( GF_Read, xPosition, yPosition, blockSize, blockSize,
-                        dataBuffer, blockSize, blockSize, GDT_Float32, int( 0 ), int( 0 ) );
+      CPLErr err = poBand->RasterIO( GF_Read, xPosition, yPosition, blockSize, blockSize,
+                                     dataBuffer, blockSize, blockSize, GDT_Float32, int( 0 ), int( 0 ) );
+      Q_UNUSED( err );
 
       for ( int xp = 0; xp <= myBuffer; xp++ )
       {
@@ -340,8 +342,9 @@ void Heatmap::run()
           }
         }
       }
-      poBand->RasterIO( GF_Write, xPosition, yPosition, blockSize, blockSize,
-                        dataBuffer, blockSize, blockSize, GDT_Float32, int( 0 ), int( 0 ) );
+      err = poBand->RasterIO( GF_Write, xPosition, yPosition, blockSize, blockSize,
+                              dataBuffer, blockSize, blockSize, GDT_Float32, int( 0 ), int( 0 ) );
+      Q_UNUSED( err );
       CPLFree( dataBuffer );
     }
   }

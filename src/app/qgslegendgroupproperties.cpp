@@ -1,7 +1,7 @@
 #include "qgslegendgroupproperties.h"
 #include "qgslayertreegroup.h"
 
-QgsLegendGroupProperties::QgsLegendGroupProperties( QgsLayerTreeGroup* legendGroup, QWidget * parent, Qt::WindowFlags f ): mLegendGroup( legendGroup )
+QgsLegendGroupProperties::QgsLegendGroupProperties( QgsLayerTreeGroup* legendGroup, QWidget * parent, Qt::WindowFlags f ) : QDialog( parent, f ), mLegendGroup( legendGroup )
 {
   setupUi( this );
   if ( legendGroup )

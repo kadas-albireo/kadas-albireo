@@ -343,7 +343,8 @@ void QgsZonalStatistics::statisticsFromPreciseIntersection( void* band, QgsGeome
     double currentX = rasterBBox.xMinimum() + cellSizeX / 2.0 + pixelOffsetX * cellSizeX;
     for ( int col = 0; col < nCellsX; ++col )
     {
-      GDALRasterIO( band, GF_Read, pixelOffsetX + col, pixelOffsetY + row, nCellsX, 1, pixelData, 1, 1, GDT_Float32, 0, 0 );
+      CPLErr err = GDALRasterIO( band, GF_Read, pixelOffsetX + col, pixelOffsetY + row, nCellsX, 1, pixelData, 1, 1, GDT_Float32, 0, 0 );
+      Q_UNUSED( err );
       if ( !validPixel( *pixelData ) )
         continue;
 

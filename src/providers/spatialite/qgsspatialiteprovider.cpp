@@ -3512,6 +3512,10 @@ QString QgsSpatiaLiteProvider::geomParam() const
     case QGis::WKBMultiPolygon25D:
       forceMulti = true;
       break;
+
+    default:
+      forceMulti = false;
+      break;
   }
 
   // ST_Multi function is available from QGIS >= 2.4

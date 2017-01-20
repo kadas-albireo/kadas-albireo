@@ -104,7 +104,7 @@ void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
       QList<QgsPoint> points;
       mDrawTool->getPart( 0, points );
       double minDist = std::numeric_limits<double>::max();
-      int minIdx;
+      int minIdx = 0;
       QgsPoint minPos;
       for ( int i = 0, nPoints = points.size(); i < nPoints - 1; ++i )
       {

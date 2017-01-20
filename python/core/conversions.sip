@@ -743,7 +743,7 @@ template<TYPE>
 
 // QMap<qint64, TYPE> is implemented as a Python dictionary.
 template<TYPE>
-%MappedType QMap<qint64, TYPE> /DocType="dict-of-qint64-TYPE"/
+%MappedType QMap<qint64, TYPE>
 {
 %TypeHeaderCode
 #include <qmap.h>

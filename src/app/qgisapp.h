@@ -1230,6 +1230,10 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     QgsMapTool *mNonEditMapTool;
 
+#ifdef Q_OS_WIN
+    int mSkipNextContextMenuEvent; // ugly hack
+#endif
+
     //! Helper class that connects layer tree with map canvas
     QgsLayerTreeMapCanvasBridge *mLayerTreeCanvasBridge;
     //! Table of contents (legend) to order layers of the map
@@ -1317,10 +1321,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     QList<QgsDecorationItem*> mDecorationItems;
 
     int mLastComposerId;
-
-#ifdef Q_OS_WIN
-    int mSkipNextContextMenuEvent; // ugly hack
-#endif
 
     //! Persistent GPS toolbox
     QgsGPSInformationWidget *mpGpsWidget;

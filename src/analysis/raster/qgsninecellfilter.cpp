@@ -199,7 +199,8 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
       {
         scanLine1[a] = mInputNodataValue;
       }
-      GDALRasterIO( rasterBand, GF_Read, colStart, rowStart, xSize, 1, scanLine2, xSize, 1, GDT_Float32, 0, 0 );
+      CPLErr err = GDALRasterIO( rasterBand, GF_Read, colStart, rowStart, xSize, 1, scanLine2, xSize, 1, GDT_Float32, 0, 0 );
+      Q_UNUSED( err );
     }
     else
     {
@@ -219,7 +220,8 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
     }
     else
     {
-      GDALRasterIO( rasterBand, GF_Read, colStart, rowStart + i + 1, xSize, 1, scanLine3, xSize, 1, GDT_Float32, 0, 0 );
+      CPLErr err = GDALRasterIO( rasterBand, GF_Read, colStart, rowStart + i + 1, xSize, 1, scanLine3, xSize, 1, GDT_Float32, 0, 0 );
+      Q_UNUSED( err );
     }
 
 #pragma omp parallel for schedule(static)
@@ -242,7 +244,8 @@ int QgsNineCellFilter::processRaster( QProgressDialog* p )
       }
     }
 
-    GDALRasterIO( outputRasterBand, GF_Write, 0, i, xSize, 1, resultLine, xSize, 1, GDT_Float32, 0, 0 );
+    CPLErr err = GDALRasterIO( outputRasterBand, GF_Write, 0, i, xSize, 1, resultLine, xSize, 1, GDT_Float32, 0, 0 );
+    Q_UNUSED( err );
   }
 
   if ( p )

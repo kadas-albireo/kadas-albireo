@@ -642,7 +642,6 @@
          <zorder>mSaveButton</zorder>
          <zorder>mOpenButton</zorder>
          <zorder>mPrintButton</zorder>
-         <zorder>horizontalSpacer</zorder>
          <zorder>mNewButton</zorder>
          <zorder>mSaveMapExtentButton</zorder>
          <zorder>mExportKMLButton</zorder>

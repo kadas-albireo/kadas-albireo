@@ -310,7 +310,8 @@ void QgsRasterCalculator::readRasterPart( double* targetGeotransform, int xOffse
   //If dataset transform is the same as the requested transform, do a normal GDAL raster io
   if ( transformationsEqual( targetGeotransform, sourceTransform ) )
   {
-    GDALRasterIO( sourceBand, GF_Read, xOffset, yOffset, nCols, nRows, rasterBuffer, nCols, nRows, GDT_Float32, 0, 0 );
+    CPLErr err = GDALRasterIO( sourceBand, GF_Read, xOffset, yOffset, nCols, nRows, rasterBuffer, nCols, nRows, GDT_Float32, 0, 0 );
+    Q_UNUSED( err );
     return;
   }
 

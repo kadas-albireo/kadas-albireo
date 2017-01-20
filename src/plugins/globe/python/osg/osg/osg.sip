@@ -1,5 +1,4 @@
 %Module(name=osg.osg,
-        version=0,
         keyword_arguments="Optional")
 
 %Include Camera.sip

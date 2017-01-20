@@ -345,7 +345,7 @@ void QgsComposerLabel::adjustSizeToText()
   QStringList::const_iterator mlSplitIt = multiLineSplit.constBegin();
   for ( ; mlSplitIt != multiLineSplit.constEnd(); ++mlSplitIt )
   {
-    double currentTextWidth = textWidthMillimeters( mFont, *mlSplitIt );
+    double currentTextWidth = QgsComposerUtils::textWidthMM( mFont, *mlSplitIt );
     if ( currentTextWidth > maxTextWidth )
     {
       maxTextWidth = currentTextWidth;

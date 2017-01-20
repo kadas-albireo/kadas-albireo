@@ -245,7 +245,7 @@ void QgsGeometryValidator::run()
 
   QgsDebugMsg( "validation thread started." );
 
-  switch ( mG.wkbType() )
+  switch ( QGis::flatType( mG.wkbType() ) )
   {
     case QGis::WKBPoint:
     case QGis::WKBPoint25D:
@@ -323,6 +323,12 @@ void QgsGeometryValidator::run()
       emit errorFound( QgsGeometry::Error( QObject::tr( "Unknown geometry type %1" ).arg( mG.wkbType() ) ) );
       mErrorCount++;
       break;
+    default:
+      QgsDebugMsg( QObject::tr( "Unhandled geometry type" ) );
+      emit errorFound( QgsGeometry::Error( QObject::tr( "Unknown geometry type %1" ).arg( mG.wkbType() ) ) );
+      mErrorCount++;
+      break;
+
   }
 
   QgsDebugMsg( "validation finished." );

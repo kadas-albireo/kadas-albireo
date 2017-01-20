@@ -1279,11 +1279,11 @@ bool QgsGdalProvider::hasHistogram( int theBandNo,
   // get default histogram with force=false to see if there is a cached histo
   double myMinVal, myMaxVal;
   int myBinCount;
-  int *myHistogramArray = 0;
+  quint64 *myHistogramArray = 0;
 
   // TODO: GDALGetDefaultHistogram has no bIncludeOutOfRange and bApproxOK,
   //       consider consequences
-  CPLErr myError = GDALGetDefaultHistogram( myGdalBand, &myMinVal, &myMaxVal,
+  CPLErr myError = GDALGetDefaultHistogramEx( myGdalBand, &myMinVal, &myMaxVal,
                    &myBinCount, &myHistogramArray, false,
                    NULL, NULL );
 
@@ -1434,8 +1434,8 @@ QgsRasterHistogram QgsGdalProvider::histogram( int theBandNo,
   }
 #endif
 
-  int *myHistogramArray = new int[myHistogram.binCount];
-  CPLErr myError = GDALGetRasterHistogram( myGdalBand, myMinVal, myMaxVal,
+  quint64 *myHistogramArray = new quint64[myHistogram.binCount];
+  CPLErr myError = GDALGetRasterHistogramEx( myGdalBand, myMinVal, myMaxVal,
                    myHistogram.binCount, myHistogramArray,
                    theIncludeOutOfRange, bApproxOK, progressCallback,
                    &myProg ); //this is the arg for our custom gdal progress callback
@@ -1450,17 +1450,9 @@ QgsRasterHistogram QgsGdalProvider::histogram( int theBandNo,
 
   for ( int myBin = 0; myBin < myHistogram.binCount; myBin++ )
   {
-    if ( myHistogramArray[myBin] < 0 ) //can't have less than 0 pixels of any value
-    {
-      myHistogram.histogramVector.push_back( 0 );
-      // QgsDebugMsg( "Added 0 to histogram vector as freq was negative!" );
-    }
-    else
-    {
-      myHistogram.histogramVector.push_back( myHistogramArray[myBin] );
-      myHistogram.nonNullCount += myHistogramArray[myBin];
-      // QgsDebugMsg( "Added " + QString::number( myHistogramArray[myBin] ) + " to histogram vector" );
-    }
+    myHistogram.histogramVector.push_back( myHistogramArray[myBin] );
+    myHistogram.nonNullCount += myHistogramArray[myBin];
+    // QgsDebugMsg( "Added " + QString::number( myHistogramArray[myBin] ) + " to histogram vector" );
   }
 
   myHistogram.valid = true;

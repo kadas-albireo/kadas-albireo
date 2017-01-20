@@ -465,12 +465,6 @@ int main( int argc, char *argv[] )
   int mySnapshotWidth = 800;
   int mySnapshotHeight = 600;
 
-  bool myHideSplash = false;
-#if defined(ANDROID)
-  QgsDebugMsg( QString( "Android: Splash hidden" ) );
-  myHideSplash = true;
-#endif
-
   bool myRestoreDefaultWindowState = false;
   bool myRestorePlugins = true;
   bool myCustomization = true;
@@ -521,10 +515,6 @@ int main( int argc, char *argv[] )
       {
         usage( args[0].toStdString() );
         return 2;
-      }
-      else if ( arg == "--nologo" || arg == "-n" )
-      {
-        myHideSplash = true;
       }
       else if ( arg == "--noplugins" || arg == "-P" )
       {
@@ -882,7 +872,7 @@ int main( int argc, char *argv[] )
      * These items must be translated identically in both qt_ and qgis_ files.
      */
 #ifdef Q_OS_WIN
-    QString translationsPath = QDir(qgetenv("OSGEO4W_ROOT")).absoluteFilePath("apps/Qt4/translations");
+    QString translationsPath = QDir( qgetenv( "OSGEO4W_ROOT" ) ).absoluteFilePath( "apps/Qt4/translations" );
 #else
     QString translationsPath = QLibraryInfo::location( QLibraryInfo::TranslationsPath );
 #endif

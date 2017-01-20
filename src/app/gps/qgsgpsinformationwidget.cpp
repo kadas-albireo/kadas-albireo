@@ -1040,6 +1040,7 @@ void QgsGPSInformationWidget::updateCloseFeatureButton( QgsMapLayer * lyr )
       case QGis::WKBUnknown:
       case QGis::WKBNoGeometry:
       case QGis::WKBMixedGeometry:
+      default:
         ;
     }
     mBtnCloseFeature->setEnabled( enable );
@@ -1093,17 +1094,17 @@ void QgsGPSInformationWidget::on_mGroupShowMarker_toggled( bool show )
   mGPSDisplay.setShowMarker( show );
 }
 
-void QgsGPSInformationWidget::on_radRecenterMap_toggled( bool t )
+void QgsGPSInformationWidget::on_radRecenterMap_toggled( bool /*t*/ )
 {
   mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::Always );
 }
 
-void QgsGPSInformationWidget::on_radRecenterWhenNeeded_toggled( bool t )
+void QgsGPSInformationWidget::on_radRecenterWhenNeeded_toggled( bool /*t*/ )
 {
   mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::WhenNeeded );
 }
 
-void QgsGPSInformationWidget::on_radNeverRecenter_toggled( bool t )
+void QgsGPSInformationWidget::on_radNeverRecenter_toggled( bool /*t*/ )
 {
   mGPSDisplay.setRecenterMap( QgsMapCanvasGPSDisplay::Never );
 }

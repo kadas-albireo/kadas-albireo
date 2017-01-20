@@ -145,7 +145,7 @@ void QgsIAMAuth::checkLoginComplete( QString /*addr*/ )
   }
 }
 
-void QgsIAMAuth::handleNewWindow( IDispatch** ppDisp, bool& cancel, uint /*dwFlags*/, QString /*bstrUrlContext*/, QString /*bstrUrl*/ )
+void QgsIAMAuth::handleNewWindow( IDispatch** ppDisp, bool& /*cancel*/, uint /*dwFlags*/, QString /*bstrUrlContext*/, QString /*bstrUrl*/ )
 {
   if ( mLoginDialog )
   {

@@ -37,7 +37,7 @@ QgsKMLPalLabeling::~QgsKMLPalLabeling()
   delete mSettings;
 }
 
-void QgsKMLPalLabeling::drawLabel( pal::LabelPosition* label, QgsRenderContext& context, QgsPalLayerSettings& tmpLyr, DrawLabelType drawType, double dpiRatio )
+void QgsKMLPalLabeling::drawLabel( pal::LabelPosition* label, QgsRenderContext& /*context*/, QgsPalLayerSettings& tmpLyr, DrawLabelType /*drawType*/, double /*dpiRatio*/ )
 {
   if ( !mOutStream )
   {

@@ -193,7 +193,7 @@ QVariant QgsLayerTreeModel::data( const QModelIndex &index, int role ) const
         if ( testFlag( ShowRasterPreviewIcon ) )
         {
           QgsRasterLayer* rlayer = qobject_cast<QgsRasterLayer *>( layer );
-          return QIcon( rlayer->previewAsPixmap( QSize( 32, 32 ) ) );
+          return QIcon( QPixmap::fromImage( rlayer->previewAsImage( QSize( 32, 32 ) ) ) );
         }
         else
         {

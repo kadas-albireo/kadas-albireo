@@ -1573,6 +1573,10 @@ QString QgsPostgresProvider::geomParam( int offset ) const
       case QGis::WKBMultiPolygon25D:
         forceMulti = true;
         break;
+
+      default:
+        forceMulti = false;
+        break;
     }
   }
 

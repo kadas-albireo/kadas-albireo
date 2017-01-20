@@ -42,9 +42,9 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     enum TargetFormat { LV03, LV95, DMS, DM, DD, UTM, MGRS };
     QgsMapCanvas* mMapCanvas;
     QToolButton* mCRSSelectionButton;
+    QLineEdit* mCoordinateLineEdit;
     QComboBox* mHeightSelectionCombo;
     QLabel* mIconLabel;
-    QLineEdit* mCoordinateLineEdit;
     QAction* mActionDisplayLV03;
     QAction* mActionDisplayLV95;
     QAction* mActionDisplayDMS;

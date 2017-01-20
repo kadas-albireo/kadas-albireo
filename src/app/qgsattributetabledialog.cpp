@@ -895,7 +895,7 @@ QgsMapCanvas* QgsAttributeTableDialog::mapCanvas()
   return canvas;
 }
 
-void QgsAttributeTableDialog::viewWillShowContextMenu( QMenu* menu, QModelIndex atIndex )
+void QgsAttributeTableDialog::viewWillShowContextMenu( QMenu* menu, QModelIndex /*atIndex*/ )
 {
   if ( menu )
   {

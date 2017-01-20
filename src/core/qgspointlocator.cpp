@@ -242,7 +242,7 @@ struct _CohenSutherland
       {
         // failed both tests, so calculate the line segment to clip
         // from an outside point to an intersection with clip edge
-        double x, y;
+        double x = 0, y = 0;
 
         // At least one endpoint is outside the clip rectangle; pick it.
         OutCode outcodeOut = outcode0 ? outcode0 : outcode1;

@@ -1,14 +1,3 @@
-IF (WIN32)
-  IF (MSVC)
-    ADD_DEFINITIONS("-DPYTHON_EXPORT=${DLLEXPORT}")
-  ELSE (MSVC)
-    ADD_DEFINITIONS("\"-DPYTHON_EXPORT=${DLLEXPORT}\"")
-  ENDIF (MSVC)
-ELSE (WIN32)
-  # other compilers don't use that MSVC construct
-  ADD_DEFINITIONS(-DPYTHON_EXPORT=)
-ENDIF (WIN32)
-
 SET(QGISPYTHON_SRCS qgispython.cpp qgspythonutilsimpl.cpp)
 
 INCLUDE_DIRECTORIES(

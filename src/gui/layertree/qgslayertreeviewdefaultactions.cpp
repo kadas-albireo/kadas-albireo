@@ -278,7 +278,6 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
 {
   QSlider* slider = qobject_cast<QSlider*>( QObject::sender() );
   int value = slider->value();
-  QgsMapCanvas* canvas = reinterpret_cast<QgsMapCanvas*>( slider->property( "mapcanvas" ).value<void*>() );
   QgsMapLayer* layer = mView->currentLayer();
   if ( !layer )
     return;

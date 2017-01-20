@@ -667,7 +667,7 @@ QVariant QgsSimpleLegendNode::data( int role ) const
     return QVariant();
 }
 
-QSizeF QgsSimpleLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double itemHeight ) const
+QSizeF QgsSimpleLegendNode::drawSymbol( const QgsLegendSettings& settings, ItemContext* ctx, double /*itemHeight*/ ) const
 {
   if ( ctx && !mImage.isNull() )
   {
