@@ -154,19 +154,28 @@ void QgsApplication::init( QString customConfigPath )
     char *prefixPath = getenv( "QGIS_PREFIX_PATH" );
     if ( !prefixPath )
     {
-#if defined(Q_OS_MACX) || defined(Q_OS_WIN32) || defined(WIN32)
-      setPrefixPath( applicationDirPath(), true );
-#elif defined(ANDROID)
+#if defined(ANDROID)
       // this is  "/data/data/org.qgis.qgis" in android
       QDir myDir( QDir::homePath() );
       myDir.cdUp();
       QString myPrefix = myDir.absolutePath();
       setPrefixPath( myPrefix, true );
 #else
-      QDir myDir( applicationDirPath() );
-      myDir.cdUp();
-      QString myPrefix = myDir.absolutePath();
-      setPrefixPath( myPrefix, true );
+      QString appDirPath = applicationDirPath();
+      if ( appDirPath.endsWith( "/" ) )
+      {
+        appDirPath.chop( 1 );
+      }
+      QString binSubDir( QGIS_BIN_SUBDIR );
+      if ( binSubDir.endsWith( "/" ) )
+      {
+        appDirPath.chop( 1 );
+      }
+      if ( appDirPath.endsWith( binSubDir ) )
+      {
+        appDirPath.chop( binSubDir.length() );
+      }
+      setPrefixPath( QDir( appDirPath ).absolutePath(), true );
 #endif
     }
     else
