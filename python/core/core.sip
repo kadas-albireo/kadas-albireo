@@ -8,6 +8,10 @@
 %Import QtXml/QtXmlmod.sip
 %Import QtNetwork/QtNetworkmod.sip
 
+%If (WS_WIN)
+typedef void* XEvent;
+%End
+
 %Include conversions.sip
 
 %Include qgis.sip

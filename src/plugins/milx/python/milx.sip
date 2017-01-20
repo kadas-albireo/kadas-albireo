@@ -5,10 +5,6 @@
 %Import QtCore/QtCoremod.sip
 %Import QtGui/QtGuimod.sip
 
-%If (WS_WIN)
-typedef void XEvent;
-%End
-
 %Import gui/gui.sip
 %Import core/core.sip
 

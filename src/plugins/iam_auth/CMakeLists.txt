@@ -53,6 +53,10 @@ ELSE(WIN32)
     ADD_DEFINITIONS("-DQGS_IAM_EXPORT=")
 ENDIF(WIN32)
 
+IF(MINGW)
+    SET(QT_QAXCONTAINER_LIBRARY "-Wl,-Bstatic -lQAxContainer4 -Wl,-Bdynamic")
+ENDIF(MINGW)
+
 TARGET_LINK_LIBRARIES(iamauth
   qgis_core
   qgis_gui

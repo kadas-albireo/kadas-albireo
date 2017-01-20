@@ -44,13 +44,9 @@ else(EXISTS "${PYTHON_INCLUDE_PATH}" AND EXISTS "${PYTHON_LIBRARY}" AND EXISTS "
     endif("${PYTHON_CUSTOM_FRAMEWORK}" MATCHES "Python\\.framework")
   endif(APPLE AND PYTHON_CUSTOM_FRAMEWORK)
 
-  FIND_PACKAGE(PythonInterp)
-
   if(PYTHONINTERP_FOUND)
 
-    FIND_FILE(_find_lib_python_py FindLibPython.py PATHS ${CMAKE_MODULE_PATH})
-
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE}  ${_find_lib_python_py} OUTPUT_VARIABLE python_config)
+    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE}  ${CMAKE_MODULE_PATH}/FindLibPython.py OUTPUT_VARIABLE python_config)
     if(python_config)
       STRING(REGEX REPLACE ".*exec_prefix:([^\n]+).*$" "\\1" PYTHON_PREFIX ${python_config})
       STRING(REGEX REPLACE ".*\nshort_version:([^\n]+).*$" "\\1" PYTHON_SHORT_VERSION ${python_config})
