@@ -432,7 +432,7 @@ typedef unsigned long long qgssize;
 
 // FIXME: also in qgisinterface.h
 #ifndef QGISEXTERN
-#ifdef WIN32
+#ifdef _WIN32
 #  define QGISEXTERN extern "C" __declspec( dllexport )
 #  ifdef _MSC_VER
 // do not warn about C bindings returing QString

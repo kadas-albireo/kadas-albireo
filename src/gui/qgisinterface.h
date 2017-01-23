@@ -606,7 +606,7 @@ class GUI_EXPORT QgisInterface : public QObject
 
 // FIXME: also in core/qgis.h
 #ifndef QGISEXTERN
-#ifdef WIN32
+#ifdef _WIN32
 #  define QGISEXTERN extern "C" __declspec( dllexport )
 #else
 #  define QGISEXTERN extern "C"
