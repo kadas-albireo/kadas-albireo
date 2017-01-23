@@ -132,3 +132,12 @@ linkDep lib/qt4/plugins/imageformats/qjpeg4.dll bin/imageformats
 # Install locale files
 mkdir -p $installprefix/share/qt4/translations/
 cp -a $MINGWROOT/share/qt4/translations/qt_*.qm  $installprefix/share/qt4/translations
+
+# Install python libs
+(
+cd $MINGWROOT
+for file in $(find lib/python2.7 -type f); do
+    mkdir -p $p $installprefix/$(dirname $file)
+    ln -s $MINGWROOT/$file $installprefix/$file
+done
+)
