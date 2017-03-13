@@ -160,7 +160,7 @@ bool QgsAfsProvider::getFeature( const QgsFeatureId &id, QgsFeature &f, bool fet
   if ( it != mCache.end() )
   {
     f = it.value();
-    return filterRect.isNull() || f.geometry()->intersects( filterRect );
+    return filterRect.isNull() || ( f.geometry() && f.geometry()->intersects( filterRect ) );
   }
 
   // Determine attributes to fetch
