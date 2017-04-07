@@ -501,8 +501,9 @@ void QgsWcsProvider::setQueryItem( QUrl &url, QString item, QString value )
   url.addQueryItem( item, value );
 }
 
-void QgsWcsProvider::readBlock( int bandNo, QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight, void *block )
+void QgsWcsProvider::readBlock( int bandNo, QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight, void *block, QgsRasterBlockFeedback *feedback )
 {
+  Q_UNUSED( feedback );
   QgsDebugMsg( "Entered" );
 
   // TODO: set block to null values, move that to function and call only if fails

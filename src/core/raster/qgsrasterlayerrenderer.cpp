@@ -31,6 +31,7 @@ QgsRasterLayerRenderer::QgsRasterLayerRenderer( QgsRasterLayer* layer, QgsRender
   const QgsMapToPixel& theQgsMapToPixel = rendererContext.mapToPixel();
   mMapToPixel = &theQgsMapToPixel;
   mRenderContext = &rendererContext;
+  mFeedback = new Feedback( this );
 
   QgsMapToPixel mapToPixel = theQgsMapToPixel;
   if ( mapToPixel.mapRotation() )
@@ -178,6 +179,7 @@ QgsRasterLayerRenderer::QgsRasterLayerRenderer( QgsRasterLayer* layer, QgsRender
 
 QgsRasterLayerRenderer::~QgsRasterLayerRenderer()
 {
+  delete mFeedback;
   delete mRasterViewPort;
   delete mPipe;
 }
@@ -217,7 +219,7 @@ bool QgsRasterLayerRenderer::render()
     QObject::connect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
   }
 
-  drawer.draw( mPainter, mRasterViewPort, mMapToPixel, mRenderContext );
+  drawer.draw( mPainter, mRasterViewPort, mMapToPixel, mRenderContext, mFeedback );
 
   if ( provider )
   {
@@ -227,4 +229,44 @@ bool QgsRasterLayerRenderer::render()
   QgsDebugMsg( QString( "total raster draw time (ms):     %1" ).arg( time.elapsed(), 5 ) );
 
   return true;
+}
+
+QgsFeedback* QgsRasterLayerRenderer::feedback() const
+{
+  return mFeedback;
+}
+
+QgsRasterLayerRenderer::Feedback::Feedback( QgsRasterLayerRenderer *r )
+    : mR( r )
+    , mMinimalPreviewInterval( 250 )
+{
+  if ( r && r->mRenderContext )
+  {
+    setRenderPartialOutput( r->mRenderContext->renderPartialOutput() );
+  }
+}
+
+void QgsRasterLayerRenderer::Feedback::onNewData()
+{
+  if ( !renderPartialOutput() )
+    return;  // we were not asked for partial renders and we may not have a temporary image for overwriting...
+
+  // update only once upon a time
+  // (preview itself takes some time)
+  if ( mLastPreview.isValid() && mLastPreview.msecsTo( QTime::currentTime() ) < mMinimalPreviewInterval )
+    return;
+
+  // TODO: update only the area that got new data
+
+  QgsDebugMsg( QString( "new raster preview! %1" ).arg( mLastPreview.msecsTo( QTime::currentTime() ) ) );
+  QTime t;
+  t.start();
+  QgsRasterBlockFeedback feedback;
+  feedback.setPreviewOnly( true );
+  feedback.setRenderPartialOutput( true );
+  QgsRasterIterator iterator( mR->mPipe->last() );
+  QgsRasterDrawer drawer( &iterator );
+  drawer.draw( mR->mPainter, mR->mRasterViewPort, mR->mMapToPixel, 0, &feedback );
+  QgsDebugMsg( QString( "total raster preview time: %1 ms" ).arg( t.elapsed() ) );
+  mLastPreview = QTime::currentTime();
 }

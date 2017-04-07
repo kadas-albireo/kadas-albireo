@@ -23,11 +23,50 @@
 #include <QCoreApplication> // for tr()
 #include <QImage>
 
+#include "qgsfeedback.h"
 #include "qgslogger.h"
 #include "qgsrasterbandstats.h"
 #include "qgsrasterblock.h"
 #include "qgsrasterhistogram.h"
 #include "qgsrectangle.h"
+
+/** \ingroup core
+ * Feedback object tailored for raster block reading.
+ */
+class CORE_EXPORT QgsRasterBlockFeedback : public QgsFeedback
+{
+  public:
+    //! Construct a new raster block feedback object
+    QgsRasterBlockFeedback( QObject *parent = nullptr ) : QgsFeedback( parent ), mPreviewOnly( false ), mRenderPartialOutput( false ) {}
+
+    //! May be emitted by raster data provider to indicate that some partial data are available
+    //! and a new preview image may be produced
+    virtual void onNewData() {}
+
+    //! Whether the raster provider should return only data that are already available
+    //! without waiting for full result. By default this flag is not enabled.
+    //! @see setPreviewOnly()
+    bool isPreviewOnly() const { return mPreviewOnly; }
+    //! set flag whether the block request is for preview purposes only
+    //! @see isPreviewOnly()
+    void setPreviewOnly( bool preview ) { mPreviewOnly = preview; }
+
+    //! Whether our painter is drawing to a temporary image used just by this layer
+    //! @see setRenderPartialOutput()
+    bool renderPartialOutput() const { return mRenderPartialOutput; }
+    //! Set whether our painter is drawing to a temporary image used just by this layer
+    //! @see renderPartialOutput()
+    void setRenderPartialOutput( bool enable ) { mRenderPartialOutput = enable; }
+
+  private:
+    //! Whether the raster provider should return only data that are already available
+    //! without waiting for full result
+    bool mPreviewOnly;
+
+    //! Whether our painter is drawing to a temporary image used just by this layer
+    bool mRenderPartialOutput;
+};
+
 
 /** \ingroup core
  * Base class for processing filters like renderers, reprojector, resampler etc.
@@ -109,8 +148,9 @@ class CORE_EXPORT QgsRasterInterface
      * @param extent extent of block
      * @param width pixel width of block
      * @param height pixel height of block
+     * @param feedback optional raster feedback object for cancelation/preview
      */
-    virtual QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height ) = 0;
+    virtual QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback *feedback = nullptr ) = 0;
 
     /** Set input.
       * Returns true if set correctly, false if cannot use that input */

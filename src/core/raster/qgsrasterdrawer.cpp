@@ -34,7 +34,7 @@ QgsRasterDrawer::~QgsRasterDrawer()
 {
 }
 
-void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel, const QgsRenderContext* ctx )
+void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel, const QgsRenderContext* ctx, QgsRasterBlockFeedback* feedback )
 {
   QgsDebugMsg( "Entered" );
   if ( !p || !mIterator || !viewPort || !theQgsMapToPixel )
@@ -59,7 +59,7 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
 
   // last pipe filter has only 1 band
   int bandNumber = 1;
-  mIterator->startRasterRead( bandNumber, width, height, viewPort->mDrawnExtent );
+  mIterator->startRasterRead( bandNumber, width, height, viewPort->mDrawnExtent, feedback );
 
   //number of cols/rows in output pixels
   int nCols = 0;
@@ -106,11 +106,26 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
       }
     }
 
+    if ( feedback && feedback->renderPartialOutput() )
+    {
+      // there could have been partial preview written before
+      // so overwrite anything with the resulting image.
+      // (we are guaranteed to have a temporary image for this layer, see QgsMapRendererJob::needTemporaryImage)
+      p->setCompositionMode( QPainter::CompositionMode_Source );
+    }
+
     drawImage( p, viewPort, img, topLeftCol, topLeftRow, scaleFactor, &mapToPixel );
     QgsDebugMsg( "Block drawn" );
 
     delete block;
     if ( ctx && ctx->renderingStopped() ) { break; }
+
+    // ok this does not matter much anyway as the tile size quite big so most of the time
+    // there would be just one tile for the whole display area, but it won't hurt...
+    if ( feedback && feedback->isCanceled() )
+    {
+      break;
+    }
   }
 }
 

@@ -140,6 +140,7 @@ class CORE_EXPORT QgsMapSettings
       UseRenderingOptimization = 0x20, //!< Enable vector simplification and other rendering optimizations
       DrawSelection      = 0x40,  //!< Whether vector selections should be shown in the rendered map
       RenderMapTile = 0x80, //!< Draw map such that there are no problems between adjacent tiles
+      RenderPartialOutput      = 0x200, //!< Whether to make extra effort to update map image with partially rendered layers (better for interactive map canvas). Added in QGIS 3.0
       // TODO: ignore scale-based visibility (overview)
     };
     Q_DECLARE_FLAGS( Flags, Flag )

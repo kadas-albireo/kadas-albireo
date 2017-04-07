@@ -35,6 +35,7 @@ QgsRenderContext::QgsRenderContext()
     , mUseRenderingOptimization( true )
     , mRenderMapTile( false )
     , mGeometry( 0 )
+    , mRenderPartialOutput( false )
 {
   mVectorSimplifyMethod.setSimplifyHints( QgsVectorSimplifyMethod::NoSimplification );
 }
@@ -67,6 +68,7 @@ QgsRenderContext& QgsRenderContext::operator=( const QgsRenderContext & ct )
   mSelectionColor = ct.mSelectionColor;
   mCustomRenderFlags = ct.mCustomRenderFlags;
   mRenderMapTile = ct.mRenderMapTile;
+  mRenderPartialOutput = ct.mRenderPartialOutput;
   return *this;
 }
 
@@ -88,6 +90,7 @@ QgsRenderContext QgsRenderContext::fromMapSettings( const QgsMapSettings& mapSet
   ctx.setSelectionColor( mapSettings.selectionColor() );
   ctx.setCustomRenderFlags( mapSettings.customRenderFlags() );
   ctx.setRenderMapTile( mapSettings.testFlag( QgsMapSettings::RenderMapTile ) );
+  ctx.setRenderPartialOutput( mapSettings.testFlag( QgsMapSettings::RenderPartialOutput ) );
 
   //this flag is only for stopping during the current rendering progress,
   //so must be false at every new render operation

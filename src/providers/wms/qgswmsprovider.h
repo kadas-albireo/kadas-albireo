@@ -168,7 +168,7 @@ class QgsWmsProvider : public QgsRasterDataProvider
      */
     QImage *draw( QgsRectangle const &  viewExtent, int pixelWidth, int pixelHeight ) override;
 
-    void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, void *data ) override;
+    void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, void *data, QgsRasterBlockFeedback *feedback = nullptr ) override;
     //void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, QgsCoordinateReferenceSystem theSrcCRS, QgsCoordinateReferenceSystem theDestCRS, void *data );
 
 

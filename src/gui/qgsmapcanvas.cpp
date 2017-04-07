@@ -238,6 +238,7 @@ QgsMapCanvas::QgsMapCanvas( QWidget * parent, const char *name )
 
   mSettings.setFlag( QgsMapSettings::DrawEditingInfo );
   mSettings.setFlag( QgsMapSettings::UseRenderingOptimization );
+  mSettings.setFlag( QgsMapSettings::RenderPartialOutput );
 
   // class that will sync most of the changes between canvas and (legacy) map renderer
   // it is parented to map canvas, will be deleted automatically

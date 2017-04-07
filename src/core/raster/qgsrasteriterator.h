@@ -20,6 +20,7 @@
 
 class QgsMapToPixel;
 class QgsRasterBlock;
+class QgsRasterBlockFeedback;
 class QgsRasterInterface;
 class QgsRasterProjector;
 struct QgsRasterViewPort;
@@ -39,8 +40,9 @@ class CORE_EXPORT QgsRasterIterator
       @param nCols number of columns
       @param nRows number of rows
       @param extent area to read
+      @param feedback optional raster feedback object for cancelation/preview.
      */
-    void startRasterRead( int bandNumber, int nCols, int nRows, const QgsRectangle& extent );
+    void startRasterRead( int bandNumber, int nCols, int nRows, const QgsRectangle& extent, QgsRasterBlockFeedback *feedback = nullptr );
 
     /**Fetches next part of raster data, caller takes ownership of the block and
        caller should delete the block.
@@ -80,6 +82,7 @@ class CORE_EXPORT QgsRasterIterator
     QgsRasterInterface* mInput;
     QMap<int, RasterPartInfo> mRasterPartInfos;
     QgsRectangle mExtent;
+    QgsRasterBlockFeedback *mFeedback = nullptr;
 
     int mMaximumTileWidth;
     int mMaximumTileHeight;

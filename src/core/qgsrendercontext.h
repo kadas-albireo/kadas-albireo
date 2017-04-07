@@ -137,6 +137,9 @@ class CORE_EXPORT QgsRenderContext: public QObject
     //! Set custom rendering flags, separated by ';'. Layers might honour these to alter their rendering.
     void setCustomRenderFlags( const QString& customRenderFlags ) { mCustomRenderFlags = customRenderFlags; }
 
+    bool renderPartialOutput() const { return mRenderPartialOutput; }
+    void setRenderPartialOutput( bool enable ) { mRenderPartialOutput = enable; }
+
   signals:
     void renderingAborted();
 
@@ -194,6 +197,8 @@ class CORE_EXPORT QgsRenderContext: public QObject
     const QgsAbstractGeometryV2* mGeometry;
 
     QString mCustomRenderFlags;
+
+    bool mRenderPartialOutput;
 };
 
 #endif

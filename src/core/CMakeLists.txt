@@ -376,6 +376,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgscoordinatetransform.h
   qgsdataitem.h
   qgsdataprovider.h
+  qgsfeedback.h
   qgsgml.h
   qgsgmlschema.h
   qgsmaplayer.h
