@@ -166,7 +166,7 @@ class QgsWmsProvider : public QgsRasterDataProvider
      *  \warning A pointer to an QImage is used, as a plain QImage seems to have difficulty being
      *           shared across library boundaries
      */
-    QImage *draw( QgsRectangle const &  viewExtent, int pixelWidth, int pixelHeight ) override;
+    QImage *draw( QgsRectangle const &  viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) override;
 
     void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, void *data, QgsRasterBlockFeedback *feedback = nullptr ) override;
     //void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, QgsCoordinateReferenceSystem theSrcCRS, QgsCoordinateReferenceSystem theDestCRS, void *data );
@@ -356,6 +356,20 @@ class QgsWmsProvider : public QgsRasterDataProvider
      */
     static QString prepareUri( QString uri );
 
+    //! Helper struct for tile requests
+    struct TileRequest
+    {
+      TileRequest( const QUrl& u, const QRectF& r, int i )
+          : url( u )
+          , rect( r )
+          , index( i )
+      {}
+      QUrl url;
+      QRectF rect;
+      int index;
+    };
+    typedef QList<TileRequest> TileRequests;
+
   signals:
 
     /** \brief emit a signal to notify of a progress event */
@@ -373,6 +387,14 @@ class QgsWmsProvider : public QgsRasterDataProvider
     void getLegendGraphicReplyProgress( qint64, qint64 );
 
   private:
+
+    //! Helper structure to store a cached tile image with its rectangle
+    typedef struct TileImage
+    {
+      TileImage( QRectF r, QImage i ): rect( r ), img( i ) {}
+      QRectF rect; //!< destination rectangle for a tile (in screen coordinates)
+      QImage img;  //!< cached tile to be drawn
+    } TileImage;
 
     /**
      * Try to get best extent for the layer in given CRS. Returns true on success, false otherwise (layer not found, invalid CRS, transform failed)
@@ -613,7 +635,8 @@ class QgsWmsTiledImageDownloadHandler : public QObject
       int index;
     };
 
-    QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int reqNo, const QList<TileRequest>& requests, QImage* cachedImage, const QgsRectangle& cachedViewExtent, bool smoothPixmapTransform );
+    QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int reqNo, const QList<TileRequest>& requests, QImage* cachedImage, const QgsRectangle& cachedViewExtent,
+                                     bool smoothPixmapTransform, QgsRasterBlockFeedback* feedback );
     ~QgsWmsTiledImageDownloadHandler();
 
     void downloadBlocking();
@@ -650,6 +673,8 @@ class QgsWmsTiledImageDownloadHandler : public QObject
 
     //! Running tile requests
     QList<QNetworkReply*> mReplies;
+
+    QgsRasterBlockFeedback* mFeedback;
 };
 
 

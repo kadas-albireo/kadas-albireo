@@ -134,7 +134,7 @@ class QgsWcsProvider : public QgsRasterDataProvider, QgsGdalProviderBase
      *  \warning A pointer to an QImage is used, as a plain QImage seems to have difficulty being
      *           shared across library boundaries
      */
-    QImage *draw( QgsRectangle const &  viewExtent, int pixelWidth, int pixelHeight ) override;
+    QImage *draw( QgsRectangle const &  viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) override;
 
     void readBlock( int bandNo, QgsRectangle  const & viewExtent, int width, int height, void *data, QgsRasterBlockFeedback *feedback = nullptr ) override;
 

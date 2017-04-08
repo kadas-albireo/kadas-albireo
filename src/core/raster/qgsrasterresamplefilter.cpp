@@ -168,7 +168,7 @@ QgsRasterBlock * QgsRasterResampleFilter::block( int bandNo, QgsRectangle  const
   {
     QgsDebugMsg( "No oversampling." );
     delete outputBlock;
-    return mInput->block( bandNumber, extent, width, height );
+    return mInput->block( bandNumber, extent, width, height, feedback );
   }
 
   //effective oversampling factors are different to global one because of rounding

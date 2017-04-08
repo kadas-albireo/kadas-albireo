@@ -79,7 +79,7 @@ class QgsAmsProvider : public QgsRasterDataProvider
     QGis::DataType srcDataType( int /*bandNo*/ ) const override { return QGis::ARGB32; }
     QgsRasterInterface* clone() const override;
     QString metadata();
-    QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight ) override;
+    QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) override;
     bool supportsLegendGraphic() const override { return true; }
     QImage getLegendGraphic( double scale = 0, bool forceRefresh = false, const QgsRectangle * visibleExtent = 0 ) override;
     QgsImageFetcher* getLegendGraphicFetcher( const QgsMapSettings* mapSettings ) override;

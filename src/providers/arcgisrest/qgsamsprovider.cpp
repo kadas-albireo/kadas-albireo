@@ -239,8 +239,9 @@ QString QgsAmsProvider::metadata()
   return dumpVariantMap( mServiceInfo, tr( "Service Info" ) ) + dumpVariantMap( mLayerInfo, tr( "Layer Info" ) );
 }
 
-QImage* QgsAmsProvider::draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight )
+QImage* QgsAmsProvider::draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback )
 {
+  Q_UNUSED( feedback );
   if ( !mCachedImage.isNull() && mCachedImageExtent == viewExtent )
   {
     return &mCachedImage;

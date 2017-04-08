@@ -101,7 +101,7 @@ class CORE_EXPORT QgsRasterDataProvider : public QgsDataProvider, public QgsRast
        Temporarily disable render caching if you require the complete
        wms image in the first call.
       */
-    virtual QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight ) = 0;
+    virtual QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) = 0;
 
     /** Get the extent of the data source.
      * @return QgsRectangle containing the extent of the layer */

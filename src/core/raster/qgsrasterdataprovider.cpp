@@ -205,7 +205,7 @@ QgsRasterBlock * QgsRasterDataProvider::block( int theBandNo, QgsRectangle  cons
   }
   else
   {
-    readBlock( theBandNo, theExtent, theWidth, theHeight, block->bits() );
+    readBlock( theBandNo, theExtent, theWidth, theHeight, block->bits(), feedback );
   }
 
   // apply scale and offset

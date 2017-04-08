@@ -77,7 +77,7 @@ class QgsGdalProvider : public QgsRasterDataProvider, QgsGdalProviderBase
 
     /** \brief   Renders the layer as an image
      */
-    QImage* draw( QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight ) override;
+    QImage* draw( QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) override;
 
     /** return a provider name
 

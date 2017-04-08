@@ -43,6 +43,7 @@
 #include "qgsgml.h"
 #include "qgsgmlschema.h"
 #include "qgswmscapabilities.h"
+#include "qgstilecache.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -78,6 +79,21 @@ static QString WMS_DESCRIPTION = "OGC Web Map Service version 1.3 data provider"
 static QString DEFAULT_LATLON_CRS = "CRS:84";
 
 QMap<QString, QgsWmsStatistics::Stat> QgsWmsStatistics::sData;
+
+//! a helper class for ordering tile requests according to the distance from view center
+struct LessThanTileRequest
+{
+  QgsPoint center;
+  bool operator()( const QgsWmsTiledImageDownloadHandler::TileRequest &req1, const QgsWmsTiledImageDownloadHandler::TileRequest &req2 )
+  {
+    QPointF p1 = req1.rect.center();
+    QPointF p2 = req2.rect.center();
+    // using chessboard distance (loading order more natural than euclidean/manhattan distance)
+    double d1 = qMax( qAbs( center.x() - p1.x() ), qAbs( center.y() - p1.y() ) );
+    double d2 = qMax( qAbs( center.x() - p2.x() ), qAbs( center.y() - p2.y() ) );
+    return d1 < d2;
+  }
+};
 
 QgsWmsProvider::QgsWmsProvider( QString const& uri, const QgsWmsCapabilities* capabilities )
     : QgsRasterDataProvider( uri )
@@ -468,7 +484,7 @@ void QgsWmsProvider::setFormatQueryItem( QUrl &url )
     setQueryItem( url, "FORMAT", mSettings.mImageMimeType );
 }
 
-QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, int pixelHeight )
+QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback )
 {
   QgsDebugMsg( "Entering." );
 
@@ -830,19 +846,70 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
 
     emit statusChanged( tr( "Getting tiles." ) );
 
-    QgsWmsTiledImageDownloadHandler handler( dataSourceUri(), mSettings.authorization(), mTileReqNo, requests, mCachedImage, mCachedViewExtent, mSettings.mSmoothPixmapTransform );
-    QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
-    handler.downloadBlocking();
+    QList<TileImage> tileImages;  // in the correct resolution
+    QList<QRectF> missing;  // rectangles (in map coords) of missing tiles for this view
 
 
-#if 0
-    const QgsWmsStatistics::Stat& stat = QgsWmsStatistics::statForUri( dataSourceUri() );
-    emit statusChanged( tr( "%n tile requests in background", "tile request count", requests.count() )
-                        + tr( ", %n cache hits", "tile cache hits", stat.cacheHits )
-                        + tr( ", %n cache misses.", "tile cache missed", stat.cacheMisses )
-                        + tr( ", %n errors.", "errors", stat.errors )
-                      );
-#endif
+    QList<QgsWmsTiledImageDownloadHandler::TileRequest> requestsFinal;
+    QList<QgsWmsTiledImageDownloadHandler::TileRequest>::const_iterator rIt = requests.constBegin();
+    for ( ; rIt != requests.constEnd(); ++rIt )
+    {
+      QImage localImage;
+      if ( QgsTileCache::tile( rIt->url, localImage ) )
+      {
+        double cr = viewExtent.width() / mCachedImage->width();
+
+        QRectF dst(( rIt->rect.left() - viewExtent.xMinimum() ) / cr,
+                   ( viewExtent.yMaximum() - rIt->rect.bottom() ) / cr,
+                   rIt->rect.width() / cr,
+                   rIt->rect.height() / cr );
+        tileImages << TileImage( dst, localImage );
+      }
+      else
+      {
+        requestsFinal << *rIt;
+        missing << rIt->rect;
+      }
+    }
+
+    // draw other res tiles if preview
+    QPainter p( mCachedImage );
+    if ( feedback && feedback->isPreviewOnly() && missing.count() > 0 )
+    {
+      //todo...
+    }
+
+    // draw composite in this resolution
+    QList<TileImage>::const_iterator tileIt = tileImages.constBegin();
+    for ( ; tileIt != tileImages.constEnd(); ++tileIt )
+    {
+      if ( mSettings.mSmoothPixmapTransform )
+      {
+        p.setRenderHint( QPainter::SmoothPixmapTransform, true );
+      }
+      p.drawImage( tileIt->rect, tileIt->img );
+
+      /*if ( feedback && feedback->isPreviewOnly() )
+        _drawDebugRect( p, ti.rect, Qt::green );*/
+    }
+    p.end();
+
+    if ( !requestsFinal.isEmpty() && !( feedback && feedback->isPreviewOnly() ) )
+    {
+      // let the feedback object know about the tiles we have already
+      if ( feedback && feedback->renderPartialOutput() )
+      {
+        feedback->onNewData();
+      }
+
+      // order tile requests according to the distance from view center
+      LessThanTileRequest cmp;
+      cmp.center = viewExtent.center();
+      qSort( requestsFinal.begin(), requestsFinal.end(), cmp );
+
+      QgsWmsTiledImageDownloadHandler handler( dataSourceUri(), mSettings.authorization(), mTileReqNo, requestsFinal, mCachedImage, viewExtent, mSettings.mSmoothPixmapTransform, feedback );
+      handler.downloadBlocking();
+    }
   }
 
   return mCachedImage;
@@ -853,7 +920,7 @@ void QgsWmsProvider::readBlock( int bandNo, QgsRectangle  const & viewExtent, in
   Q_UNUSED( bandNo );
   QgsDebugMsg( "Entered" );
   // TODO: optimize to avoid writing to QImage
-  QImage *image = draw( viewExtent, pixelWidth, pixelHeight );
+  QImage *image = draw( viewExtent, pixelWidth, pixelHeight, feedback );
   if ( !image )   // should not happen
   {
     QgsMessageLog::logMessage( tr( "image is NULL" ), tr( "WMS" ) );
@@ -3327,7 +3394,8 @@ void QgsWmsImageDownloadHandler::cacheReplyProgress( qint64 bytesReceived, qint6
 // ----------
 
 
-QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int tileReqNo, const QList<QgsWmsTiledImageDownloadHandler::TileRequest>& requests, QImage* cachedImage, const QgsRectangle& cachedViewExtent, bool smoothPixmapTransform )
+QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int tileReqNo, const QList<QgsWmsTiledImageDownloadHandler::TileRequest>& requests,
+    QImage* cachedImage, const QgsRectangle& cachedViewExtent, bool smoothPixmapTransform, QgsRasterBlockFeedback* feedback )
     : mProviderUri( providerUri )
     , mAuth( auth )
     , mCachedImage( cachedImage )
@@ -3335,7 +3403,20 @@ QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString&
     , mEventLoop( new QEventLoop )
     , mTileReqNo( tileReqNo )
     , mSmoothPixmapTransform( smoothPixmapTransform )
+    , mFeedback( feedback )
 {
+  if ( feedback )
+  {
+    connect( feedback, SIGNAL( cancelled() ), this, SLOT( cancelled() ), Qt::QueuedConnection );
+
+    // rendering could have been cancelled before we started to listen to cancelled() signal
+    // so let's check before doing the download and maybe quit prematurely
+    if ( feedback->isCanceled() )
+    {
+      return;
+    }
+  }
+
   foreach ( const TileRequest& r, requests )
   {
     QNetworkRequest request( r.url );
@@ -3361,6 +3442,11 @@ QgsWmsTiledImageDownloadHandler::~QgsWmsTiledImageDownloadHandler()
 
 void QgsWmsTiledImageDownloadHandler::downloadBlocking()
 {
+  if ( mFeedback && mFeedback->isCanceled() )
+  {
+    return; // nothing to do
+  }
+
   QObject::connect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
   mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
   QObject::disconnect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
@@ -3546,13 +3632,22 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
                     .arg( r.right() ).arg( r.top() )
                     .arg( r.width() ).arg( r.height() ) );
 #endif
+        QgsTileCache::insertTile( reply->url(), myLocalImage );
+
+        if ( mFeedback )
+        {
+          mFeedback->onNewData();
+        }
       }
       else
       {
         QgsMessageLog::logMessage( tr( "Returned image is flawed [Content-Type:%1; URL: %2]" )
                                    .arg( contentType ).arg( reply->url().toString() ), tr( "WMS" ) );
 
-        repeatTileRequest( reply->request() );
+        if ( !( mFeedback && mFeedback->isPreviewOnly() ) )
+        {
+          repeatTileRequest( reply->request() );
+        }
       }
     }
     else

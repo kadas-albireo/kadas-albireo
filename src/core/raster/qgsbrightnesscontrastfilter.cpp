@@ -122,7 +122,7 @@ QgsRasterBlock * QgsBrightnessContrastFilter::block( int bandNo, QgsRectangle  c
 
   // At this moment we know that we read rendered image
   int bandNumber = 1;
-  QgsRasterBlock *inputBlock = mInput->block( bandNumber, extent, width, height );
+  QgsRasterBlock *inputBlock = mInput->block( bandNumber, extent, width, height, feedback );
   if ( !inputBlock || inputBlock->isEmpty() )
   {
     QgsDebugMsg( "No raster data!" );

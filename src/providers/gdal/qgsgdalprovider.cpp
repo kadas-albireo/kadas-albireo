@@ -363,8 +363,9 @@ QString QgsGdalProvider::metadata()
 
 
 // Not supported by GDAL
-QImage* QgsGdalProvider::draw( QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight )
+QImage* QgsGdalProvider::draw( QgsRectangle  const & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback )
 {
+  Q_UNUSED( feedback );
   Q_UNUSED( viewExtent );
   QgsDebugMsg( "pixelWidth = "  + QString::number( pixelWidth ) );
   QgsDebugMsg( "pixelHeight = "  + QString::number( pixelHeight ) );
