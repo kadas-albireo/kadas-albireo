@@ -370,6 +370,16 @@ class QgsWmsProvider : public QgsRasterDataProvider
     };
     typedef QList<TileRequest> TileRequests;
 
+    //! Tile identifier within a tile source
+    typedef struct TilePosition
+    {
+      TilePosition( int r, int c ): row( r ), col( c ) {}
+      bool operator==( const TilePosition& other ) const { return row == other.row && col == other.col; }
+      int row;
+      int col;
+    } TilePosition;
+    typedef QList<TilePosition> TilePositions;
+
   signals:
 
     /** \brief emit a signal to notify of a progress event */
@@ -388,6 +398,9 @@ class QgsWmsProvider : public QgsRasterDataProvider
 
   private:
 
+    void createTileRequestsWMSC( const QgsWmtsTileMatrix* tm, const QgsWmsProvider::TilePositions& tiles, QgsWmsProvider::TileRequests& requests );
+    void createTileRequestsWMTS( const QgsWmtsTileMatrix* tm, const QgsWmsProvider::TilePositions& tiles, QgsWmsProvider::TileRequests& requests );
+
     //! Helper structure to store a cached tile image with its rectangle
     typedef struct TileImage
     {
@@ -395,6 +408,9 @@ class QgsWmsProvider : public QgsRasterDataProvider
       QRectF rect; //!< destination rectangle for a tile (in screen coordinates)
       QImage img;  //!< cached tile to be drawn
     } TileImage;
+
+    //! Get tiles from a different resolution to cover the missing areas
+    void fetchOtherResTiles( QgsTileMode tileMode, const QgsRectangle& viewExtent, int imageWidth, QList<QRectF>& missing, double tres, int resOffset, QList<TileImage> &otherResTiles );
 
     /**
      * Try to get best extent for the layer in given CRS. Returns true on success, false otherwise (layer not found, invalid CRS, transform failed)
@@ -520,13 +536,6 @@ class QgsWmsProvider : public QgsRasterDataProvider
     QString mImageCrs;
 
     /**
-     * The previously retrieved image from the WMS server.
-     * This can be reused if draw() is called consecutively
-     * with the same parameters.
-     */
-    QImage *mCachedImage;
-
-    /**
      * The reply to the capabilities request
      */
     QNetworkReply *mIdentifyReply;
@@ -540,13 +549,6 @@ class QgsWmsProvider : public QgsRasterDataProvider
 
     // TODO: better
     QString mIdentifyResultXsd;
-
-    /**
-     * The previous parameters to draw().
-     */
-    QgsRectangle mCachedViewExtent;
-    int mCachedViewWidth;
-    int mCachedViewHeight;
 
     /**
      * The error caption associated with the last WMS error.
@@ -635,7 +637,7 @@ class QgsWmsTiledImageDownloadHandler : public QObject
       int index;
     };
 
-    QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int reqNo, const QList<TileRequest>& requests, QImage* cachedImage, const QgsRectangle& cachedViewExtent,
+    QgsWmsTiledImageDownloadHandler( const QString& providerUri, const QgsWmsAuthorization& auth, int reqNo, const QgsWmsProvider::TileRequests& requests, QImage* cachedImage, const QgsRectangle& cachedViewExtent,
                                      bool smoothPixmapTransform, QgsRasterBlockFeedback* feedback );
     ~QgsWmsTiledImageDownloadHandler();
 

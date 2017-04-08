@@ -293,6 +293,8 @@ struct QgsWmtsTheme
   ~QgsWmtsTheme() { delete subTheme; }
 };
 
+struct QgsWmtsTileMatrixLimits;
+
 struct QgsWmtsTileMatrix
 {
   QString identifier;
@@ -304,6 +306,19 @@ struct QgsWmtsTileMatrix
   int tileHeight;
   int matrixWidth;
   int matrixHeight;
+  double tres;       //!< pixel span in map units
+
+  //! Returns extent of a tile in map coordinates.
+  //! (same function as tileBBox() but returns QRectF instead of QgsRectangle)
+  QRectF tileRect( int col, int row ) const;
+
+  //! Returns extent of a tile in map coordinates
+  //! (same function as tileRect() but returns QgsRectangle instead of QRectF)
+  QgsRectangle tileBBox( int col, int row ) const;
+
+  //! Returns range of tiles that intersects with the view extent
+  //! (tml may be null)
+  void viewExtentIntersection( const QgsRectangle& viewExtent, const QgsWmtsTileMatrixLimits* tml, int& col0, int& row0, int& col1, int& row1 ) const;
 };
 
 struct QgsWmtsTileMatrixSet
@@ -314,6 +329,12 @@ struct QgsWmtsTileMatrixSet
   QString crs;
   QString wkScaleSet;
   QMap<double, QgsWmtsTileMatrix> tileMatrices;
+
+  //! Returns closest tile resolution to the requested one. (resolution = width [map units] / with [pixels])
+  const QgsWmtsTileMatrix* findNearestResolution( double vres ) const;
+
+  //! Return tile matrix for other near resolution from given tres (positive offset = lower resolution tiles)
+  const QgsWmtsTileMatrix* findOtherResolution( double tres, int offset ) const;
 };
 
 enum QgsTileMode { WMTS, WMSC };
