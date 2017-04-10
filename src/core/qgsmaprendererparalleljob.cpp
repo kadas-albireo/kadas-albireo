@@ -14,7 +14,7 @@
  ***************************************************************************/
 
 #include "qgsmaprendererparalleljob.h"
-
+#include "qgsfeedback.h"
 #include "qgslogger.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgspallabeling.h"
@@ -91,6 +91,10 @@ void QgsMapRendererParallelJob::cancel()
   for ( LayerRenderJobs::iterator it = mLayerJobs.begin(); it != mLayerJobs.end(); ++it )
   {
     it->context.setRenderingStopped( true );
+    if ( it->renderer && it->renderer->feedback() )
+    {
+      it->renderer->feedback()->cancel();
+    }
   }
 
   if ( mStatus == RenderingLayers )

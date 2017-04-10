@@ -643,7 +643,7 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
 
     emit statusChanged( tr( "Getting map via WMS." ) );
 
-    QgsWmsImageDownloadHandler handler( dataSourceUri(), url, mSettings.authorization(), image );
+    QgsWmsImageDownloadHandler handler( dataSourceUri(), url, mSettings.authorization(), image, feedback );
     QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
     handler.downloadBlocking();
   }
@@ -836,11 +836,6 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
       fetchOtherResTiles( tileMode, viewExtent, image->width(), missing, tm->tres, 1, lowerResTiles );
       fetchOtherResTiles( tileMode, viewExtent, image->width(), missing, tm->tres, 2, lowerResTiles2 );
       fetchOtherResTiles( tileMode, viewExtent, image->width(), missing, tm->tres, -1, higherResTiles );
-
-      if (( higherResTiles.size() + lowerResTiles.size() + lowerResTiles2.size() ) > 0 )
-      {
-        bool debug = true;
-      }
 
       // draw the cached tiles lowest to highest resolution
       Q_FOREACH ( const TileImage& ti, lowerResTiles2 )
@@ -3355,10 +3350,11 @@ QGISEXTERN bool isProvider()
 
 // -----------------
 
-QgsWmsImageDownloadHandler::QgsWmsImageDownloadHandler( const QString& providerUri, const QUrl& url, const QgsWmsAuthorization& auth, QImage* image )
+QgsWmsImageDownloadHandler::QgsWmsImageDownloadHandler( const QString& providerUri, const QUrl& url, const QgsWmsAuthorization& auth, QImage* image, QgsRasterBlockFeedback* feedback )
     : mProviderUri( providerUri )
     , mCachedImage( image )
     , mEventLoop( new QEventLoop )
+    , mFeedback( feedback )
 {
   QNetworkRequest request( url );
   auth.setAuthorization( request );
@@ -3378,6 +3374,11 @@ QgsWmsImageDownloadHandler::~QgsWmsImageDownloadHandler()
 
 void QgsWmsImageDownloadHandler::downloadBlocking()
 {
+  if ( mFeedback && mFeedback->isCanceled() )
+  {
+    return; // nothing to do
+  }
+
   QObject::connect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
   mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
   QObject::disconnect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );

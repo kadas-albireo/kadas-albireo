@@ -599,7 +599,7 @@ class QgsWmsImageDownloadHandler : public QObject
 {
     Q_OBJECT
   public:
-    QgsWmsImageDownloadHandler( const QString& providerUri, const QUrl& url, const QgsWmsAuthorization& auth, QImage* image );
+    QgsWmsImageDownloadHandler( const QString& providerUri, const QUrl& url, const QgsWmsAuthorization& auth, QImage* image, QgsRasterBlockFeedback* feedback );
     ~QgsWmsImageDownloadHandler();
 
     void downloadBlocking();
@@ -620,6 +620,8 @@ class QgsWmsImageDownloadHandler : public QObject
     QImage* mCachedImage;
 
     QEventLoop* mEventLoop;
+
+    QgsRasterBlockFeedback* mFeedback;
 };
 
 
