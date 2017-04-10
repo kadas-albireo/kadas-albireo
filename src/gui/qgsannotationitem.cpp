@@ -288,9 +288,9 @@ void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
   }
 
   QRectF frameRect( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mFrameSize.width(), mFrameSize.height() );
-  double handlerSize = 10;
-  p->setPen( Qt::NoPen );
-  p->setBrush( QColor( 200, 200, 210, 120 ) );
+  double handlerSize = 8;
+  p->setPen( QPen( Qt::red, 2 ) );
+  p->setBrush( Qt::white );
   p->drawRect( QRectF( frameRect.left(), frameRect.top(), handlerSize, handlerSize ) );
   p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.top(), handlerSize, handlerSize ) );
   p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.bottom() - handlerSize, handlerSize, handlerSize ) );
