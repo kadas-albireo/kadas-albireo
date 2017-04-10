@@ -213,18 +213,7 @@ bool QgsRasterLayerRenderer::render()
   QgsRasterIterator iterator( mPipe->last() );
   QgsRasterDrawer drawer( &iterator );
 
-  QgsRasterDataProvider* provider = mPipe->provider();
-  if ( provider )
-  {
-    QObject::connect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
-  }
-
   drawer.draw( mPainter, mRasterViewPort, mMapToPixel, mRenderContext, mFeedback );
-
-  if ( provider )
-  {
-    QObject::disconnect( mRenderContext, SIGNAL( renderingAborted() ), provider, SIGNAL( requestCanceled() ) );
-  }
 
   QgsDebugMsg( QString( "total raster draw time (ms):     %1" ).arg( time.elapsed(), 5 ) );
 

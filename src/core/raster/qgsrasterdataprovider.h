@@ -416,8 +416,6 @@ class CORE_EXPORT QgsRasterDataProvider : public QgsDataProvider, public QgsRast
       * Emitted theProgress is in percents (0.0-100.0) */
     void progress( int theType, double theProgress, QString theMessage );
     void progressUpdate( int theProgress );
-    /**Emitted in case readBlock should be canceled*/
-    void requestCanceled();
 
   protected:
     /** Read block of data

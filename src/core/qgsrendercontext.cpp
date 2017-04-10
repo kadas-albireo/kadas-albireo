@@ -21,7 +21,7 @@
 #include "qgsmapsettings.h"
 
 QgsRenderContext::QgsRenderContext()
-    : QObject( 0 ), mPainter( 0 )
+    : mPainter( 0 )
     , mCoordTransform( 0 )
     , mDrawEditingInformation( true )
     , mForceVectorOutput( false )
@@ -44,7 +44,7 @@ QgsRenderContext::~QgsRenderContext()
 {
 }
 
-QgsRenderContext::QgsRenderContext( const QgsRenderContext& ct ): QObject( 0 )
+QgsRenderContext::QgsRenderContext( const QgsRenderContext& ct )
 {
   *this = ct;
 }

@@ -644,7 +644,6 @@ QImage *QgsWmsProvider::draw( QgsRectangle const &viewExtent, int pixelWidth, in
     emit statusChanged( tr( "Getting map via WMS." ) );
 
     QgsWmsImageDownloadHandler handler( dataSourceUri(), url, mSettings.authorization(), image, feedback );
-    QObject::connect( this, SIGNAL( requestCanceled() ), &handler, SIGNAL( aborted() ) );
     handler.downloadBlocking();
   }
   else
@@ -3356,6 +3355,16 @@ QgsWmsImageDownloadHandler::QgsWmsImageDownloadHandler( const QString& providerU
     , mEventLoop( new QEventLoop )
     , mFeedback( feedback )
 {
+  if ( feedback )
+  {
+    connect( feedback, SIGNAL( canceled() ), this, SLOT( canceled() ), Qt::QueuedConnection );
+
+    // rendering could have been cancelled before we started to listen to cancelled() signal
+    // so let's check before doing the download and maybe quit prematurely
+    if ( feedback->isCanceled() )
+      return;
+  }
+
   QNetworkRequest request( url );
   auth.setAuthorization( request );
   request.setAttribute( QNetworkRequest::CacheSaveControlAttribute, true );
@@ -3379,9 +3388,7 @@ void QgsWmsImageDownloadHandler::downloadBlocking()
     return; // nothing to do
   }
 
-  QObject::connect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
   mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
-  QObject::disconnect( this, SIGNAL( aborted() ), mEventLoop, SLOT( quit() ) );
 
   if ( mCacheReply )
   {
@@ -3492,6 +3499,17 @@ void QgsWmsImageDownloadHandler::cacheReplyProgress( qint64 bytesReceived, qint6
 {
   QString msg = tr( "%1 of %2 bytes of map downloaded." ).arg( bytesReceived ).arg( bytesTotal < 0 ? QString( "unknown number of" ) : QString::number( bytesTotal ) );
   QgsDebugMsg( msg );
+}
+
+void QgsWmsImageDownloadHandler::canceled()
+{
+  QgsDebugMsg( "Caught cancelled() signal" );
+  if ( mCacheReply )
+  {
+    // abort the reply if it is still active
+    QgsDebugMsg( "Aborting WMS network request" );
+    mCacheReply->abort();
+  }
 }
 
 

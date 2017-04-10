@@ -400,7 +400,6 @@ SET(QGIS_CORE_MOC_HDRS
   qgspointlocator.h
   qgsproject.h
   qgsredlininglayer.h
-  qgsrendercontext.h
   qgsrunprocess.h
   qgsrelationmanager.h
   qgssnappingutils.h

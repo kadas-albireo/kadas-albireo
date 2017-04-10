@@ -18,7 +18,6 @@
 #ifndef QGSRENDERCONTEXT_H
 #define QGSRENDERCONTEXT_H
 
-#include <QObject>
 #include <QColor>
 
 #include "qgscoordinatetransform.h"
@@ -38,9 +37,8 @@ class QgsMapSettings;
  * the conversion ratio between screen and map units, the extents /
  * bounding box to be rendered etc.
  **/
-class CORE_EXPORT QgsRenderContext: public QObject
+class CORE_EXPORT QgsRenderContext
 {
-    Q_OBJECT
   public:
     QgsRenderContext();
     ~QgsRenderContext();
@@ -99,7 +97,7 @@ class CORE_EXPORT QgsRenderContext: public QObject
     void setMapToPixel( const QgsMapToPixel& mtp ) {mMapToPixel = mtp;}
     void setExtent( const QgsRectangle& extent ) {mExtent = extent;}
     void setDrawEditingInformation( bool b ) {mDrawEditingInformation = b;}
-    void setRenderingStopped( bool stopped ) {mRenderingStopped = stopped; emit renderingAborted(); }
+    void setRenderingStopped( bool stopped ) {mRenderingStopped = stopped;}
     void setScaleFactor( double factor ) {mScaleFactor = factor;}
     void setRasterScaleFactor( double factor ) {mRasterScaleFactor = factor;}
     void setRendererScale( double scale ) {mRendererScale = scale;}
@@ -139,9 +137,6 @@ class CORE_EXPORT QgsRenderContext: public QObject
 
     bool renderPartialOutput() const { return mRenderPartialOutput; }
     void setRenderPartialOutput( bool enable ) { mRenderPartialOutput = enable; }
-
-  signals:
-    void renderingAborted();
 
   private:
 
