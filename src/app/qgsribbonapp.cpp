@@ -287,7 +287,7 @@ void QgsRibbonApp::initLayerTreeView()
   model->setFlag( QgsLayerTreeModel::AllowNodeRename );
   model->setFlag( QgsLayerTreeModel::AllowNodeChangeVisibility );
   model->setFlag( QgsLayerTreeModel::ShowLegendAsTree );
-  model->setAutoCollapseLegendNodes( 10 );
+  model->setAutoCollapseLegendNodes( 1 );
   model->setLayerTooltipMode( QgsLayerTreeModel::TOOLTIP_NAME );
 
   mLayerTreeView->setModel( model );

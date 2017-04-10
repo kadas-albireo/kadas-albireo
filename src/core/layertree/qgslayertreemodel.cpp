@@ -729,7 +729,8 @@ void QgsLayerTreeModel::legendNodeDataChanged()
     return;
 
   QModelIndex index = legendNode2index( legendNode );
-  if ( index.isValid() ) {
+  if ( index.isValid() )
+  {
     emit dataChanged( index, index );
     emit layoutChanged();
   }
@@ -754,11 +755,8 @@ void QgsLayerTreeModel::connectToLayer( QgsLayerTreeLayer* nodeLayer )
     addLegendToLayer( nodeLayer );
 
     // automatic collapse of legend nodes - useful if a layer has many legend nodes
-    if ( !mRootNode->customProperty( "loading" ).toBool() )
-    {
-      if ( mAutoCollapseLegendNodesCount != -1 && rowCount( node2index( nodeLayer ) )  >= mAutoCollapseLegendNodesCount )
-        nodeLayer->setExpanded( false );
-    }
+    if ( mAutoCollapseLegendNodesCount != -1 && rowCount( node2index( nodeLayer ) )  >= mAutoCollapseLegendNodesCount )
+      nodeLayer->setExpanded( false );
   }
 
   QgsMapLayer* layer = nodeLayer->layer();
