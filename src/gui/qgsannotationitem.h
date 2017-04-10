@@ -75,6 +75,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     virtual QgsAnnotationItem* clone( QgsMapCanvas* /*canvas*/ ) = 0;
 
+    const QString& id() const { return mId; }
+
     void updatePosition() override;
 
     QRectF boundingRect() const override;
@@ -207,6 +209,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     double scaledSymbolSize() const;
 
   private:
+    QString mId;
     virtual void _showItemEditor() = 0;
     void notifyItemUpdated();
 

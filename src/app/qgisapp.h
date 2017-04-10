@@ -50,6 +50,7 @@ class QgsGeometry;
 class QgsGPSInformationWidget;
 class QgsGPSRouteEditor;
 class QgsFeature;
+class QgsItemCouplingManager;
 class QgsLabelPosition;
 class QgsLayerTreeMapCanvasBridge;
 class QgsLayerTreeView;
@@ -599,6 +600,11 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Create a new file from a template project
     bool fileNewFromTemplate( QString fileName );
 
+    QgsItemCouplingManager* itemCouplingManager() { return mItemCouplingManager; }
+
+    /**Returns all annotation items in the canvas*/
+    QList<QgsAnnotationItem*> annotationItems();
+
   protected:
 
     //! Handle state changes (WindowTitleChange)
@@ -1007,6 +1013,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void showStyleManagerV2();
 
     void writeAnnotationItemsToProject( QDomDocument& doc );
+    void writeItemCouplingsToProject( QDomDocument& doc );
 
     /**Creates the composer instances in a project file and adds them to the menu*/
     bool loadComposersFromProject( const QDomDocument& doc );
@@ -1015,6 +1022,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void preparePrintComposersMenu();
 
     bool loadAnnotationItemsFromProject( const QDomDocument& doc );
+    void loadItemCouplingsFromProject( const QDomDocument& doc );
 
     //! Toggles whether to show pinned labels
     void showPinnedLabels( bool show );
@@ -1187,8 +1195,6 @@ class APP_EXPORT QgisApp : public QMainWindow
      */
     QgsVectorLayer * pasteToNewMemoryVector();
 
-    /**Returns all annotation items in the canvas*/
-    QList<QgsAnnotationItem*> annotationItems();
     /**Removes annotation items in the canvas*/
     void removeAnnotationItems();
 
@@ -1354,6 +1360,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     QString mWindowStateSuffix;
 
     QList<QgsMapLayerPropertiesFactory*> mMapLayerPropertiesFactories;
+
+    QgsItemCouplingManager* mItemCouplingManager;
 
     bool gestureEvent( QGestureEvent *event );
 

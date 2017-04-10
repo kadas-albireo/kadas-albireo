@@ -32,6 +32,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
     , mOffsetFromReferencePoint( QPointF( 50, -50 ) )
     , mBalloonSegment( -1 )
     , mIsClone( false )
+    , mId( QUuid::createUuid().toString() )
 {
   setFlag( QGraphicsItem::ItemIsSelectable, true );
   mMarkerSymbol = new QgsMarkerSymbolV2();
@@ -526,6 +527,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
     return;
   }
   QDomElement annotationElem = doc.createElement( "AnnotationItem" );
+  annotationElem.setAttribute( "id", mId );
   annotationElem.setAttribute( "mapPositionFixed", mMapPositionFixed );
   annotationElem.setAttribute( "mapPosX", qgsDoubleToString( mMapPosition.x() ) );
   annotationElem.setAttribute( "mapPosY", qgsDoubleToString( mMapPosition.y() ) );
@@ -564,6 +566,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   {
     return;
   }
+  mId = annotationElem.attribute( "id", "" );
   QPointF pos;
   pos.setX( annotationElem.attribute( "canvasPosX", "0" ).toDouble() );
   pos.setY( annotationElem.attribute( "canvasPosY", "0" ).toDouble() );

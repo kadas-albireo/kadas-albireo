@@ -18,6 +18,7 @@
 #include "qgisapp.h"
 #include "qgsmaptoolviewshed.h"
 #include "qgisinterface.h"
+#include "qgsitemcouplingmanager.h"
 #include "qgscircularstringv2.h"
 #include "qgscoordinateformat.h"
 #include "qgscurvepolygonv2.h"
@@ -219,6 +220,7 @@ void QgsMapToolViewshed::drawFinished()
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas() );
     pin->setMapPosition( center, canvasCrs );
+    QgisApp::instance()->itemCouplingManager()->addCoupling( layer, pin );
   }
   else
   {

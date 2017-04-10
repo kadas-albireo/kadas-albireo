@@ -120,6 +120,7 @@
 #include "qgsgpsrouteeditor.h"
 #include "qgsguivectorlayertools.h"
 #include "qgshtmlannotationitem.h"
+#include "qgsitemcouplingmanager.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
 #include "qgslabelinggui.h"
@@ -744,6 +745,8 @@ void QgisApp::init( bool restorePlugins )
   mapCanvas()->clearExtentHistory(); // reset zoomnext/zoomlast
   mLastComposerId = 0;
 
+  mItemCouplingManager = new QgsItemCouplingManager( this );
+
   // Show a nice tip of the day
   /*if ( settings.value( QString( "/qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() )
   {
@@ -1034,6 +1037,11 @@ void QgisApp::writeAnnotationItemsToProject( QDomDocument& doc )
   }
 }
 
+void QgisApp::writeItemCouplingsToProject( QDomDocument &doc )
+{
+  mItemCouplingManager->writeXml( doc );
+}
+
 void QgisApp::showPythonDialog()
 {
   if ( !mPythonUtils || !mPythonUtils->isEnabled() )
@@ -1166,9 +1174,12 @@ void QgisApp::setupConnections()
            this, SLOT( writeProject( QDomDocument & ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ),
            this, SLOT( writeAnnotationItemsToProject( QDomDocument& ) ) );
+  connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ),
+           this, SLOT( writeItemCouplingsToProject( QDomDocument& ) ) );
 
   connect( QgsProject::instance(), SIGNAL( readProject( const QDomDocument & ) ), this, SLOT( loadComposersFromProject( const QDomDocument& ) ) );
   connect( QgsProject::instance(), SIGNAL( readProject( const QDomDocument & ) ), this, SLOT( loadAnnotationItemsFromProject( const QDomDocument& ) ) );
+  connect( QgsProject::instance(), SIGNAL( readProject( const QDomDocument & ) ), this, SLOT( loadItemCouplingsFromProject( const QDomDocument& ) ) );
 
   connect( this, SIGNAL( projectRead() ),
            this, SLOT( fileOpenedOKAfterLaunch() ) );
@@ -4735,6 +4746,11 @@ bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
   return true;
 }
 
+void QgisApp::loadItemCouplingsFromProject( const QDomDocument& doc )
+{
+  mItemCouplingManager->readXml( doc );
+}
+
 void QgisApp::showPinnedLabels( bool show )
 {
   qobject_cast<QgsMapToolPinLabels*>( mMapTools.mPinLabels )->showPinnedLabels( show );
@@ -7066,6 +7082,8 @@ bool QgisApp::saveDirty()
 
 void QgisApp::closeProject()
 {
+  mItemCouplingManager->clear();
+
   // unload the project macros before changing anything
   if ( mTrustedMacros )
   {

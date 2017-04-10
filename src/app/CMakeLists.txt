@@ -44,6 +44,7 @@ SET(QGIS_APP_SRCS
   qgsidentifyresultsdialog.cpp
   qgsfeatureaction.cpp
   qgsgpsrouteeditor.cpp
+  qgsitemcouplingmanager.cpp
   qgsribbonlayertreeviewmenuprovider.cpp
   qgsribbonapp.cpp
   qgskmlexportdialog.cpp
@@ -226,6 +227,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsfieldsproperties.h
   qgsgpsrouteeditor.h
   qgsguivectorlayertools.h
+  qgsitemcouplingmanager.h
   qgscoordinatedisplayer.h
   qgscrsselection.h
   qgsmapcanvascontextmenu.h
