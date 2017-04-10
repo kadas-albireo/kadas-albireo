@@ -25,7 +25,7 @@ export MINGW64_CFLAGS="$optflags"
 export MINGW64_CXXFLAGS="$optflags"
 
 srcdir="$(readlink -f "$(dirname "$(readlink -f "$0")")/..")"
-builddir="$srcdir/build_mingw"
+builddir="$srcdir/build_mingw$bits"
 installroot="$builddir/dist"
 installprefix="$installroot/usr/$arch-w64-mingw32/sys-root/mingw"
 
