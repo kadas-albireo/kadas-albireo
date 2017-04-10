@@ -18,6 +18,7 @@
 #ifndef QGSCOORDINATEDISPAYER_H
 #define QGSCOORDINATEDISPAYER_H
 
+#include <QTimer>
 #include <QWidget>
 #include <qgspoint.h>
 #include "qgscoordinateformat.h"
@@ -33,7 +34,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
 {
     Q_OBJECT
   public:
-    QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QComboBox *heightCombo, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
+    QgsCoordinateDisplayer( QToolButton *crsButton, QLineEdit* coordLineEdit, QLineEdit *heightLineEdit, QComboBox *heightCombo, QgsMapCanvas* mapCanvas, QWidget* parent = 0 );
     void getCoordinateDisplayFormat( QgsCoordinateFormat::Format &format, QString& epsg );
     QString getDisplayString( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs );
     double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs , QGis::UnitType unit );
@@ -43,11 +44,14 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     QgsMapCanvas* mMapCanvas;
     QToolButton* mCRSSelectionButton;
     QLineEdit* mCoordinateLineEdit;
+    QLineEdit* mHeightLineEdit;
     QComboBox* mHeightSelectionCombo;
     QLabel* mIconLabel;
     QAction* mActionDisplayLV03;
     QAction* mActionDisplayLV95;
     QAction* mActionDisplayDMS;
+    QgsPoint mLastPos;
+    QTimer mHeightTimer;
 
   private slots:
     void displayCoordinates( const QgsPoint& p );
@@ -55,6 +59,7 @@ class APP_EXPORT QgsCoordinateDisplayer : public QWidget
     void displayFormatChanged( QAction* action );
     void heightUnitChanged( int idx );
     void readProjectSettings();
+    void updateHeight();
 };
 
 #endif // QGSCOORDINATEDISPAYER_H

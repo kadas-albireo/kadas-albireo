@@ -268,7 +268,24 @@ QPushButton#mLayerTreeViewButton:pressed
   color: #FFFFFF;
 }
 
+#mStatusWidget #mCoordinateFrame {
+  border: 1px solid black;
+  border-radius: 2px;
+  background-color: #16171B;
+  color: white;
+}
+
 #mStatusWidget #mCoordinateLineEdit,
+#mStatusWidget #mHeightLineEdit {
+  border: 0;
+  background-color: #16171B;
+  color: white;
+}
+
+#mStatusWidget #mCoordinateLineEdit {
+  border-right: 1px solid black;
+}
+
 #mStatusWidget #mDisplayCRSButton,
 #mStatusWidget #mScaleComboBox,
 #mStatusWidget #mCRSSelectionButton,

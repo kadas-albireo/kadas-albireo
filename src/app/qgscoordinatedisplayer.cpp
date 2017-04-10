@@ -27,13 +27,19 @@
 #include <QMenu>
 #include <QToolButton>
 
-QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdit* coordLineEdit, QComboBox* heightCombo, QgsMapCanvas* mapCanvas,
-    QWidget *parent ) : QWidget( parent ), mMapCanvas( mapCanvas ),
-    mCRSSelectionButton( crsButton ), mCoordinateLineEdit( coordLineEdit ), mHeightSelectionCombo( heightCombo )
+QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdit* coordLineEdit, QLineEdit* heightLineEdit, QComboBox* heightCombo, QgsMapCanvas* mapCanvas, QWidget *parent )
+    : QWidget( parent )
+    , mMapCanvas( mapCanvas )
+    , mCRSSelectionButton( crsButton )
+    , mCoordinateLineEdit( coordLineEdit )
+    , mHeightLineEdit( heightLineEdit )
+    , mHeightSelectionCombo( heightCombo )
 {
   setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   mIconLabel = new QLabel( this );
+  mHeightTimer.setSingleShot( true );
+  connect( &mHeightTimer, SIGNAL( timeout() ), this, SLOT( updateHeight() ) );
 
 
   QMenu* crsSelectionMenu = new QMenu();
@@ -56,6 +62,11 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   mCoordinateLineEdit->setReadOnly( true );
   mCoordinateLineEdit->setAlignment( Qt::AlignCenter );
   mCoordinateLineEdit->setFixedWidth( 200 );
+
+  mHeightLineEdit->setFont( font );
+  mHeightLineEdit->setReadOnly( true );
+  mHeightLineEdit->setAlignment( Qt::AlignCenter );
+  mHeightLineEdit->setFixedWidth( 75 );
 
   mHeightSelectionCombo->addItem( tr( "Meters" ), static_cast<int>( QGis::Meters ) );
   mHeightSelectionCombo->addItem( tr( "Feet" ), static_cast<int>( QGis::Feet ) );
@@ -134,6 +145,14 @@ QString QgsCoordinateDisplayer::getDisplayString( const QgsPoint& p, const QgsCo
 void QgsCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 {
   mCoordinateLineEdit->setText( getDisplayString( p, mMapCanvas->mapSettings().destinationCrs() ) );
+  mHeightTimer.start( 100 );
+  mLastPos = p;
+}
+
+void QgsCoordinateDisplayer::updateHeight()
+{
+  double height = QgsCoordinateFormat::instance()->getHeightAtPos( mLastPos, mMapCanvas->mapSettings().destinationCrs() );
+  mHeightLineEdit->setText( QString::number( height, 'f', 1 ) );
 }
 
 void QgsCoordinateDisplayer::syncProjectCrs()
@@ -168,6 +187,7 @@ void QgsCoordinateDisplayer::heightUnitChanged( int idx )
 {
   QSettings().setValue( "/qgis/heightUnit", idx );
   QgsCoordinateFormat::instance()->setHeightDisplayUnit( static_cast<QGis::UnitType>( mHeightSelectionCombo->itemData( idx ).toInt() ) );
+  updateHeight();
 }
 
 void QgsCoordinateDisplayer::readProjectSettings()
