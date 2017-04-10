@@ -14,7 +14,7 @@ class QgsRasterIterator
       @param nRows number of rows
       @param extent area to read
      */
-    void startRasterRead( int bandNumber, int nCols, int nRows, const QgsRectangle& extent );
+    void startRasterRead( int bandNumber, int nCols, int nRows, const QgsRectangle& extent, QgsRasterBlockFeedback* feedback = nullptr );
 
     /**Fetches next part of raster data, caller takes ownership of the block and
        caller should delete the block.

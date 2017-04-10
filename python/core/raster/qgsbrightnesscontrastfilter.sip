@@ -15,7 +15,7 @@ class QgsBrightnessContrastFilter : QgsRasterInterface
 
     bool setInput( QgsRasterInterface* input );
 
-    QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height );
+    QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback* feedback = nullptr );
 
     void setBrightness( int brightness );
     int brightness() const;

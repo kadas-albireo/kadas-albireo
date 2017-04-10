@@ -57,7 +57,7 @@ class QgsRasterDataProvider : QgsDataProvider, QgsRasterInterface
        Temporarily disable render caching if you require the complete
        wms image in the first call.
       */
-    virtual QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight ) = 0;
+    virtual QImage* draw( const QgsRectangle & viewExtent, int pixelWidth, int pixelHeight, QgsRasterBlockFeedback* feedback = nullptr ) = 0;
 
     /** Get the extent of the data source.
      * @return QgsRectangle containing the extent of the layer */
@@ -96,7 +96,7 @@ class QgsRasterDataProvider : QgsDataProvider, QgsRasterInterface
     virtual int ySize() const;
 
     /** Read block of data using given extent and size. */
-    virtual QgsRasterBlock *block( int theBandNo, const QgsRectangle &theExtent, int theWidth, int theHeight ) / Factory /;
+    virtual QgsRasterBlock *block( int theBandNo, const QgsRectangle &theExtent, int theWidth, int theHeight, QgsRasterBlockFeedback* feedback = nullptr ) / Factory /;
 
     /* Return true if source band has no data value */
     virtual bool srcHasNoDataValue( int bandNo ) const;

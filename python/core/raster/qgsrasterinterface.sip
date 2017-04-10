@@ -1,4 +1,40 @@
 
+/** \ingroup core
+ * Feedback object tailored for raster block reading.
+ *
+ * @note added in QGIS 2.18
+ */
+class QgsRasterBlockFeedback : QgsFeedback
+{
+%TypeHeaderCode
+#include <qgsrasterinterface.h>
+%End
+
+  public:
+    //! Construct a new raster block feedback object
+    QgsRasterBlockFeedback( QObject* parent = nullptr );
+
+    //! May be emitted by raster data provider to indicate that some partial data are available
+    //! and a new preview image may be produced
+    virtual void onNewData();
+
+    //! Whether the raster provider should return only data that are already available
+    //! without waiting for full result. By default this flag is not enabled.
+    //! @see setPreviewOnly()
+    bool isPreviewOnly() const;
+    //! set flag whether the block request is for preview purposes only
+    //! @see isPreviewOnly()
+    void setPreviewOnly( bool preview );
+
+    //! Whether our painter is drawing to a temporary image used just by this layer
+    //! @see setRenderPartialOutput()
+    bool renderPartialOutput() const;
+    //! Set whether our painter is drawing to a temporary image used just by this layer
+    //! @see renderPartialOutput()
+    void setRenderPartialOutput( bool enable );
+
+};
+
 /**  Base class for processing modules.
  *
  */
@@ -130,7 +166,7 @@ class QgsRasterInterface
      * @param width pixel width of block
      * @param height pixel height of block
      */
-    virtual QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height ) = 0 /Factory/;
+    virtual QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback* feedback = nullptr ) = 0 /Factory/;
 
     /** Set input.
       * Returns true if set correctly, false if cannot use that input */

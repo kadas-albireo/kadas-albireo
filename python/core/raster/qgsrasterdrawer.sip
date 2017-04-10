@@ -7,7 +7,7 @@ class QgsRasterDrawer
     QgsRasterDrawer( QgsRasterIterator *iterator );
     ~QgsRasterDrawer();
 
-    void draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel );
+    void draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsMapToPixel* theQgsMapToPixel, const QgsRenderContext *ctx = 0, QgsRasterBlockFeedback* feedback = nullptr );
 
   protected:
     /**Draws raster part
