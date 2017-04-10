@@ -319,7 +319,7 @@ QString qgsInsertLinkAnchors( const QString& text )
   while ( emailRegEx.indexIn( value, offset ) != -1 )
   {
     QString email = emailRegEx.cap( 1 );
-    QString anchor = QString( "<a href=\"mailto:%1\">%1</a>" ).arg( Qt::escape( email ) ).arg( Qt::escape( email ) );
+    QString anchor = QString( "<a href=\"mailto:%1\">%1</a>" ).arg( Qt::escape( email ) );
     value.replace( emailRegEx.pos( 1 ), email.length(), anchor );
     offset = emailRegEx.pos( 1 ) + anchor.length();
   }
