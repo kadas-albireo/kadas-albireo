@@ -80,7 +80,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
   mPlot->enableAxis( QwtPlot::xBottom );
-  mPlot->setAxisTitle( QwtPlot::yLeft, heightDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
+  mPlot->setAxisTitle( QwtPlot::yLeft, heightDisplayUnit == QGis::Feet ? tr( "Height [ft AMSL]" ) : tr( "Height [m AMSL]" ) );
   mPlot->setAxisTitle( QwtPlot::xBottom, tr( "Distance [m]" ) );
   vboxLayout->addWidget( mPlot );
 

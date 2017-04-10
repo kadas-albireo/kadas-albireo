@@ -66,7 +66,7 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   mHeightLineEdit->setFont( font );
   mHeightLineEdit->setReadOnly( true );
   mHeightLineEdit->setAlignment( Qt::AlignCenter );
-  mHeightLineEdit->setFixedWidth( 75 );
+  mHeightLineEdit->setFixedWidth( 100 );
 
   mHeightSelectionCombo->addItem( tr( "Meters" ), static_cast<int>( QGis::Meters ) );
   mHeightSelectionCombo->addItem( tr( "Feet" ), static_cast<int>( QGis::Feet ) );
@@ -152,7 +152,8 @@ void QgsCoordinateDisplayer::displayCoordinates( const QgsPoint &p )
 void QgsCoordinateDisplayer::updateHeight()
 {
   double height = QgsCoordinateFormat::instance()->getHeightAtPos( mLastPos, mMapCanvas->mapSettings().destinationCrs() );
-  mHeightLineEdit->setText( QString::number( height, 'f', 1 ) );
+  QString unit = QgsCoordinateFormat::instance()->getHeightDisplayUnit() == QGis::Feet ? tr( "ft AMSL" ) : tr( "m AMSL" );
+  mHeightLineEdit->setText( QString::number( height, 'f', 1 ) + " " + unit );
 }
 
 void QgsCoordinateDisplayer::syncProjectCrs()
