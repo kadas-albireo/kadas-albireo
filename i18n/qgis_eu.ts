@@ -15420,6 +15420,10 @@ Erantzuna hau izan da:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17166,7 +17170,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Ezabatu</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17204,7 +17208,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Konexio berria...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17240,7 +17244,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Ezabatu</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17266,7 +17270,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Konexio berria...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21847,11 +21851,11 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>WMS legendaren zabalera</translation>
+        <translation type="obsolete">WMS legendaren zabalera</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>WMS legendaren altuera</translation>
+        <translation type="obsolete">WMS legendaren altuera</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22090,15 +22094,15 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS legendaren grafikoa</translation>
+        <translation type="obsolete">WMS legendaren grafikoa</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Legendaren zabalera</translation>
+        <translation type="obsolete">Legendaren zabalera</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Legendaren altuera</translation>
+        <translation type="obsolete">Legendaren altuera</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24493,6 +24497,14 @@ Saiatu bereizmen txikiagoarekin edo paper-tamaina txikiagoarekin</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Oinak</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37153,6 +37165,14 @@ Zure sare-konexioaren arazo bat izan daiteke, edo WMS zerbitzariarena.</numerusf
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47398,6 +47418,10 @@ desbiderapen estandarra ×</translation>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -15411,6 +15411,10 @@ Response was:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17154,7 +17158,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">삭제</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17192,7 +17196,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">새 연결...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17228,7 +17232,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">삭제</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17254,7 +17258,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">새 연결...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21835,11 +21839,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>WMS 범례 폭</translation>
+        <translation type="obsolete">WMS 범례 폭</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>WMS 범례 높이</translation>
+        <translation type="obsolete">WMS 범례 높이</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22078,15 +22082,15 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS LegendGraphic</translation>
+        <translation type="obsolete">WMS LegendGraphic</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>범례 폭</translation>
+        <translation type="obsolete">범례 폭</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>범례 높이</translation>
+        <translation type="obsolete">범례 높이</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24481,6 +24485,14 @@ Please try a lower resolution or a smaller papersize</source>
     <message>
         <source>Feet</source>
         <translation type="unfinished">피트</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37100,6 +37112,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47352,6 +47372,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -15446,6 +15446,10 @@ Antwoord was:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17195,7 +17199,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Verwijderen</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17233,7 +17237,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nieuwe verbinding...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17269,7 +17273,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Verwijderen</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17295,7 +17299,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nieuwe verbinding...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21878,11 +21882,11 @@ Probeer alstublieft een lagere resolutie of een kleiner papiergrootte</translati
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Breedte WMS legenda</translation>
+        <translation type="obsolete">Breedte WMS legenda</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Hoogte WMS legenda</translation>
+        <translation type="obsolete">Hoogte WMS legenda</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22121,15 +22125,15 @@ Probeer alstublieft een lagere resolutie of een kleiner papiergrootte</translati
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS LegendGraphic</translation>
+        <translation type="obsolete">WMS LegendGraphic</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Legenda breedte</translation>
+        <translation type="obsolete">Legenda breedte</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Legenda hoogte</translation>
+        <translation type="obsolete">Legenda hoogte</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24524,6 +24528,14 @@ Probeer alstublieft een lagere resolutie of een kleiner papiergrootte</translati
     <message>
         <source>Feet</source>
         <translation type="unfinished">Voet</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37148,6 +37160,14 @@ Er kan een probleem zijn met uw netwerkverbinding, of bij de WMS-server.</numeru
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47398,6 +47418,10 @@ standaarddeviatie x</translation>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

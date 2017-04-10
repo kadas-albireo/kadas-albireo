@@ -15441,6 +15441,10 @@ Odpowiedź:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17195,7 +17199,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Usuń</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17233,7 +17237,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nowe połączenie...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17269,7 +17273,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Usuń</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17295,7 +17299,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nowe połączenie...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21880,11 +21884,11 @@ Zmniejsz rozdzielczość lub rozmiar papieru.</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>szerokość legendy WMS</translation>
+        <translation type="obsolete">szerokość legendy WMS</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>wysokość legendy WMS</translation>
+        <translation type="obsolete">wysokość legendy WMS</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22123,15 +22127,15 @@ Zmniejsz rozdzielczość lub rozmiar papieru.</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>Legenda graficzna WMS</translation>
+        <translation type="obsolete">Legenda graficzna WMS</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Szerokość legendy</translation>
+        <translation type="obsolete">Szerokość legendy</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Wysokość legendy</translation>
+        <translation type="obsolete">Wysokość legendy</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24526,6 +24530,14 @@ Zmniejsz rozdzielczość lub rozmiar papieru.</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">stopy</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37178,6 +37190,14 @@ Może to być spowodowane problemem w sieci lokalnej lub problemem serwera WMS.<
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47426,6 +47446,10 @@ od średniej +/-</translation>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

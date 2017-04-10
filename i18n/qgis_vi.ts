@@ -15396,6 +15396,10 @@ Phản hồi là:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17113,7 +17117,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Xóa</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17151,7 +17155,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Kết nối mới...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17187,7 +17191,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Xóa</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17213,7 +17217,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Kết nối mới...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21793,11 +21797,11 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Chiều rộng chú giải Wms</translation>
+        <translation type="obsolete">Chiều rộng chú giải Wms</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Chiều cao chú giải wms</translation>
+        <translation type="obsolete">Chiều cao chú giải wms</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22036,15 +22040,15 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>Đồ họa chú giải WMS</translation>
+        <translation type="obsolete">Đồ họa chú giải WMS</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Chiều rộng chú giải</translation>
+        <translation type="obsolete">Chiều rộng chú giải</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Chiều cao chú giải</translation>
+        <translation type="obsolete">Chiều cao chú giải</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24439,6 +24443,14 @@ Vui lòng thử độ phân giải thấp hơn hoặc kích thước giấy nh�
     <message>
         <source>Feet</source>
         <translation type="unfinished">Bộ Anh</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37063,6 +37075,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47299,6 +47319,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

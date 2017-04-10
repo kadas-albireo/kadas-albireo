@@ -15415,6 +15415,10 @@ Atsakas buvo:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17171,7 +17175,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Naikinti</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17209,7 +17213,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17245,7 +17249,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Naikinti</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17271,7 +17275,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21854,11 +21858,11 @@ Prašome pabandyti mažesnę raišką arba mažesnį lapą</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Wms sutartinių ženklų plotis</translation>
+        <translation type="obsolete">Wms sutartinių ženklų plotis</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Wms sutartinių ženklų aukštis</translation>
+        <translation type="obsolete">Wms sutartinių ženklų aukštis</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22097,15 +22101,15 @@ Prašome pabandyti mažesnę raišką arba mažesnį lapą</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS LegendGraphic</translation>
+        <translation type="obsolete">WMS LegendGraphic</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Legendos plotis</translation>
+        <translation type="obsolete">Legendos plotis</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Legendos aukštis</translation>
+        <translation type="obsolete">Legendos aukštis</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24500,6 +24504,14 @@ Prašome pabandyti mažesnę raišką arba mažesnį lapą</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Pėdos</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37106,6 +37118,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47309,6 +47329,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

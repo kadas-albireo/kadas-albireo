@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it">
+<TS version="2.1" language="it">
 <context>
     <name>@default</name>
     <message>
@@ -12958,11 +12958,11 @@ Errore(%2): %3</translation>
         <source>Caught a coordinate system exception while trying to transform a point. Unable to calculate polygon area.</source>
         <translation>Ho riscontrato un errore nella trasformazione delle coordinate del punto secondo il sistema di riferimento. Non riesco a calcolare l&apos;area del poligono.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> m²</source>
         <translation> m²</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> km²</source>
         <translation> km²</translation>
     </message>
@@ -15399,7 +15399,7 @@ La risposta è stata:
         <source>Version 1.0</source>
         <translation>Versione 1.0</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> ft²</source>
         <translation> ft²</translation>
     </message>
@@ -15407,7 +15407,7 @@ La risposta è stata:
         <source> ac</source>
         <translation> ac</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> mi²</source>
         <translation> mi²</translation>
     </message>
@@ -15419,7 +15419,7 @@ La risposta è stata:
         <source> mi</source>
         <translation> mi</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> nm²</source>
         <translation> nm²</translation>
     </message>
@@ -15427,13 +15427,17 @@ La risposta è stata:
         <source> nm</source>
         <translation> nm</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> deg²</source>
         <translation> deg²</translation>
     </message>
     <message>
         <source> deg</source>
         <translation> deg</translation>
+    </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation>Geometria sconoscita</translation>
     </message>
 </context>
 <context>
@@ -17191,7 +17195,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Modify AFS connection</source>
-        <translation>Modifica connessione AFS</translation>
+        <translation type="obsolete">Modifica connessione AFS</translation>
+    </message>
+    <message>
+        <source>Modify ArcGISFeatureServer connection</source>
+        <translation>Modifica connessione ArcGISFeatureServer</translation>
     </message>
 </context>
 <context>
@@ -17229,7 +17237,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Create a new AFS connection</source>
-        <translation>Creare nuova connessione AFS</translation>
+        <translation type="obsolete">Creare nuova connessione AFS</translation>
+    </message>
+    <message>
+        <source>Create a new ArcGISFeatureServer connection</source>
+        <translation>Crea una nuova connessione ArcGISFeatureServer</translation>
     </message>
 </context>
 <context>
@@ -17267,7 +17279,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Modify AMS connection</source>
-        <translation>Modifica connessione AMS</translation>
+        <translation type="obsolete">Modifica connessione AMS</translation>
+    </message>
+    <message>
+        <source>Modify ArcGisMapServer connection</source>
+        <translation>Modifica connessione ArcGisMapServer</translation>
     </message>
 </context>
 <context>
@@ -17293,7 +17309,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Create a new AMS connection</source>
-        <translation>Creare nuova connessione AMS</translation>
+        <translation type="obsolete">Creare nuova connessione AMS</translation>
+    </message>
+    <message>
+        <source>Create a new ArcGisMapServer connection</source>
+        <translation>Crea una nuova connessione ArcGisMapServer</translation>
     </message>
 </context>
 <context>
@@ -21598,7 +21618,7 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
         <source>Rotation</source>
         <translation>Rotazione</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -21876,11 +21896,11 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Larghezza legenda WMS</translation>
+        <translation type="obsolete">Larghezza legenda WMS</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Altezza legenda WMS</translation>
+        <translation type="obsolete">Altezza legenda WMS</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22119,15 +22139,15 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>Legenda WMS</translation>
+        <translation type="obsolete">Legenda WMS</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Larghezza legenda</translation>
+        <translation type="obsolete">Larghezza legenda</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Altezza legenda</translation>
+        <translation type="obsolete">Altezza legenda</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -22820,7 +22840,7 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
         <source>X </source>
         <translation>X </translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -23273,7 +23293,7 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
         <source>Sync with map</source>
         <translation>Sincronizza con la mappa</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -24523,6 +24543,14 @@ Prova una risoluzione minore o una minor dimensione di stampa</translation>
         <source>Feet</source>
         <translation>Piedi</translation>
     </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation>ft s.l.m.</translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation>m s.l.m.</translation>
+    </message>
 </context>
 <context>
     <name>QgsCoordinateFormat</name>
@@ -25436,7 +25464,7 @@ ed il file attuale è [%3]</translation>
         <source>&amp;Enter your copyright label here:</source>
         <translation>Ins&amp;erisci la tua etichetta di copyright qui:</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -34599,7 +34627,7 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
         <source>Angle (deg)</source>
         <translation>Angolo (gradi)</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>°</source>
         <translation>°</translation>
     </message>
@@ -35391,7 +35419,7 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
         <source>Use global shadow</source>
         <translation>Usa ombreggiatura globale</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>˚</source>
         <translation>˚</translation>
     </message>
@@ -37204,6 +37232,14 @@ Può essere o un problema della propria connessione di rete o sul lato del serve
     <message>
         <source>Add to map</source>
         <translation>Aggiungi alla mappa</translation>
+    </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation>Altezza [ft s.l.m.]</translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation>Altezza [m s.l.m.]</translation>
     </message>
 </context>
 <context>
@@ -46568,7 +46604,7 @@ count cut</source>
         <translation>Cumulative
 count cut</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Mean +/-
 standard deviation ×</source>
         <translation>Media +/-
@@ -47478,6 +47514,10 @@ deviazione standard ×</translation>
     <message>
         <source>Favorite</source>
         <translation>Preferito</translation>
+    </message>
+    <message>
+        <source>Project saved</source>
+        <translation>Progetto salvato</translation>
     </message>
 </context>
 <context>
@@ -55977,7 +56017,7 @@ Problema con la riga: %d</translation>
         <source>Advanced</source>
         <translation>Avanzato</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56647,7 +56687,7 @@ Problema con la riga: %d</translation>
         <source>Symbol height</source>
         <translation>Altezza simbolo</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56710,7 +56750,7 @@ Problema con la riga: %d</translation>
         <source>Font family</source>
         <translation>Famiglia del carattere</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56797,7 +56837,7 @@ Problema con la riga: %d</translation>
         <source>Angle</source>
         <translation>Angolo</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56832,7 +56872,7 @@ Problema con la riga: %d</translation>
         <source>Offset</source>
         <translation>Offset</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56965,7 +57005,7 @@ Problema con la riga: %d</translation>
         <source>Offset X,Y</source>
         <translation>Offset X,Y</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57012,7 +57052,7 @@ Problema con la riga: %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57220,7 +57260,7 @@ Problema con la riga: %d</translation>
         <source>Angle</source>
         <translation>Angolo</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57307,7 +57347,7 @@ Problema con la riga: %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -61026,7 +61066,7 @@ p, li { white-space: pre-wrap; }
         <source>Database Host</source>
         <translation>Host Database</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enter the database host. If the database resides on your desktop you should enter ¨localhost¨. If you selected ¨MSAccess¨ as the database type this option will not be available. </source>
         <translation>Inserire l&apos;host del database. Se il database risiede sul proprio computer inserire &quot;localhost&quot;. Se si seleziona ¨MSAccess&quot;come tipo di database questa opzione non sarà disponibile. </translation>
     </message>
@@ -61215,7 +61255,7 @@ p, li { white-space: pre-wrap; }
         <source>Next</source>
         <translation>Avanti</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>All of the attribute information for the point associated with the photo being viewed is displayed here. If the file type being referenced in the displayed record is not an image but is of a file type defined in the “Configure External Applications” tab then when you double-click on the value of the field containing the path to the file the application to open the file will be launched to view or hear the contents of the file. If the file extension is recognized the attribute data will be displayed in green.</source>
         <translation>Tutte le informazioni associate al punto saranno qui visualizzate insieme alla foto. Se il tipo di file associato al record da visualizzare non è una immagine ma uno definito nella scheda &quot;Configura Applicazioni Esterne&quot; allora il doppio clic sul valore riportato nel campo conterrà il percorso dell´applicazione da eseguire per visualizzare o ascoltare il contenuto del file. Se l&apos;estensione del tipo di file è nota allora sarà evidenziata in verde.</translation>
     </message>
@@ -61247,7 +61287,7 @@ p, li { white-space: pre-wrap; }
         <source>Use the drop-down list to select the field containing a directory path to the image. This can be an absolute or relative path.</source>
         <translation>Usa il menu a tendina per scegliere il campo contenente il percorso della cartella dell´immagine. Può essere un percorso assoluto o relativo.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>If checked the path to the image will be defined appending the attribute in the field selected from the “Attribute Containing Path to Image” drop-down list to the “Base Path” defined below.</source>
         <translation>Se selezionato il percorso dell´immagine sarà definito dai valori presenti nel campo selezionato nel menu a tendina &quot;Attributo con percorso immagine&quot; del &quot;Percorso base&quot; definito qui.</translation>
     </message>
@@ -61339,7 +61379,7 @@ p, li { white-space: pre-wrap; }
         <source>Relative paths</source>
         <translation>Percorsi relativi</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>The base path or url from which images and documents can be “relative”</source>
         <translation>Il percorso base o l&apos;URL a cui immagini e documenti sono &quot;relativi&quot;</translation>
     </message>
@@ -61355,7 +61395,7 @@ p, li { white-space: pre-wrap; }
         <source>If checked, the Base Path will be saved for the next session.</source>
         <translation>Se selezionato, il Percorso base sarà salvato per la prossima sessione.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enters the default “Base Path” which is the path to the directory of the vector layer containing the image information.</source>
         <translation>Inserisce il valore di &quot;Percorso base&quot; che è il percorso della cartella del vettore che contiene le informazioni dell&apos;immagine.</translation>
     </message>
@@ -61385,7 +61425,7 @@ Percorso base (es. prende solo il nome del file dall´attributo)</translation>
         <source>Apply Path to Image rules when loading docs in external applications</source>
         <translation>Applica il percoso dell&apos;immagine quando i documenti sono caricati da applicazioni esterne</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Clicking on Save will save the settings without closing the Options pane. Clicking on Restore Defaults will reset all of the fields to their default settings. It has the same effect as clicking all of the “Reset to default” buttons. </source>
         <translation>Con un clic su Salva tutti i parametri saranno salvati senza chiudere il pannello di Opzioni. Clic su Recupera Predefiniti ripristina tutti i campi ai valori predefiniti. Questo ha lo stesso effetto di un clic sui bottoni &quot;Ripristina i valori predefiniti&quot;.</translation>
     </message>

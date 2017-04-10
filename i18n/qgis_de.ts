@@ -15402,6 +15402,10 @@ Antwort war:
         <source> deg</source>
         <translation> deg</translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation>Unbekannter Geometrietyp</translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17158,7 +17162,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Modify AFS connection</source>
-        <translation>AFS Verbindung bearbeiten</translation>
+        <translation type="obsolete">AFS Verbindung bearbeiten</translation>
+    </message>
+    <message>
+        <source>Modify ArcGISFeatureServer connection</source>
+        <translation>ArcGISFeatureServer Verbindung bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -17196,7 +17204,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Create a new AFS connection</source>
-        <translation>Neue AFS Verbindung erstellen</translation>
+        <translation type="obsolete">Neue AFS Verbindung erstellen</translation>
+    </message>
+    <message>
+        <source>Create a new ArcGISFeatureServer connection</source>
+        <translation>Neue ArcGISFeatureServer-Verbindung erzeugen</translation>
     </message>
 </context>
 <context>
@@ -17234,7 +17246,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Modify AMS connection</source>
-        <translation>AMS Verbindung bearbeiten</translation>
+        <translation type="obsolete">AMS Verbindung bearbeiten</translation>
+    </message>
+    <message>
+        <source>Modify ArcGisMapServer connection</source>
+        <translation>ArcGisMapServer Verbindung bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -17260,7 +17276,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Create a new AMS connection</source>
-        <translation>Neue AMS Verbindung erstellen</translation>
+        <translation type="obsolete">Neue AMS Verbindung erstellen</translation>
+    </message>
+    <message>
+        <source>Create a new ArcGisMapServer connection</source>
+        <translation>Neue ArcGisMapServer-Verbindung erzeugen</translation>
     </message>
 </context>
 <context>
@@ -21836,11 +21856,11 @@ Bitte versuchen Sie eine niedrigere Auflösung oder ein kleineres Papierformat</
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>WMS-Legendenbreite</translation>
+        <translation type="obsolete">WMS-Legendenbreite</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>WMS-Legendenhöhe</translation>
+        <translation type="obsolete">WMS-Legendenhöhe</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22079,15 +22099,15 @@ Bitte versuchen Sie eine niedrigere Auflösung oder ein kleineres Papierformat</
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS-LegendGraphic</translation>
+        <translation type="obsolete">WMS-LegendGraphic</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Legendenbreite</translation>
+        <translation type="obsolete">Legendenbreite</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Legendenhöhe</translation>
+        <translation type="obsolete">Legendenhöhe</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24482,6 +24502,14 @@ Bitte versuchen Sie eine niedrigere Auflösung oder ein kleineres Papierformat</
     <message>
         <source>Feet</source>
         <translation>Fuß</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation>ft ü.M.</translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation>m ü.M.</translation>
     </message>
 </context>
 <context>
@@ -37351,6 +37379,14 @@ Die könnte auf ein Netzwerkproblem oder ein Problem des WMS-Server hindeuten.</
         <source>Add to map</source>
         <translation>Zur Karte hinzufügen</translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation>Höhe [ft ü.M.]</translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation>Höhe [m ü.M.]</translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47634,6 +47670,10 @@ standard deviation ×</source>
     <message>
         <source>Favorite</source>
         <translation>Favorit</translation>
+    </message>
+    <message>
+        <source>Project saved</source>
+        <translation>Projekt gespeichert</translation>
     </message>
 </context>
 <context>

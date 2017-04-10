@@ -15415,6 +15415,10 @@ Svar var:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17156,7 +17160,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Slet</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17194,7 +17198,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Ny forbindelse...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17230,7 +17234,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Slet</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17256,7 +17260,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Ny forbindelse...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21837,11 +21841,11 @@ Prøv en lavere opløsning eller en mindre papirstørrelse</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Bredde af WMS tegnforklaring</translation>
+        <translation type="obsolete">Bredde af WMS tegnforklaring</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Højde af WMS tegnforklaring</translation>
+        <translation type="obsolete">Højde af WMS tegnforklaring</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22080,15 +22084,15 @@ Prøv en lavere opløsning eller en mindre papirstørrelse</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS tegnforklaring</translation>
+        <translation type="obsolete">WMS tegnforklaring</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Frkl. bredde</translation>
+        <translation type="obsolete">Frkl. bredde</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Frkl. højde</translation>
+        <translation type="obsolete">Frkl. højde</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24483,6 +24487,14 @@ Prøv en lavere opløsning eller en mindre papirstørrelse</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Fod</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37123,6 +37135,14 @@ Der er måske et problem med din netværksforbindelse, eller på WMS-serveren.</
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47383,6 +47403,10 @@ standardafvigelse ×</translation>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

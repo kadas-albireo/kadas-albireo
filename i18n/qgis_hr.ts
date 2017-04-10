@@ -15220,6 +15220,10 @@ Response was:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -16891,7 +16895,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -16929,7 +16933,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nova poveznica...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -16965,7 +16969,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -16991,7 +16995,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nova poveznica...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21549,11 +21553,11 @@ Pokušajte s nižom rezolucijom ili manjom veličinom papira</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Širina WMS kazala</translation>
+        <translation type="obsolete">Širina WMS kazala</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Visina WMS kazala</translation>
+        <translation type="obsolete">Visina WMS kazala</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -21791,16 +21795,12 @@ Pokušajte s nižom rezolucijom ili manjom veličinom papira</translation>
         <translation>Visina simbola</translation>
     </message>
     <message>
-        <source>WMS LegendGraphic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Legend width</source>
-        <translation>Širina kazala</translation>
+        <translation type="obsolete">Širina kazala</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Visina kazala</translation>
+        <translation type="obsolete">Visina kazala</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24187,6 +24187,14 @@ Pokušajte s nižom rezolucijom ili manjom veličinom papira</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Stope</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36691,6 +36699,14 @@ Ovo može biti problem u vašoj mrežnoj vezi ili na WMS serveru.</numerusform>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -46797,6 +46813,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

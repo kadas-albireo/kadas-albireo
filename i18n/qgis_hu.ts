@@ -15390,6 +15390,10 @@ A válasz:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17122,7 +17126,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17160,7 +17164,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Új kapcsolat...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17196,7 +17200,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17222,7 +17226,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Új kapcsolat...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21802,11 +21806,11 @@ Próbálj kisebb felbontást vagy kisebb papírméretet használni</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>WMS jelkulcs szélesség</translation>
+        <translation type="obsolete">WMS jelkulcs szélesség</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>WMS jelkulcs magasság</translation>
+        <translation type="obsolete">WMS jelkulcs magasság</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22045,15 +22049,15 @@ Próbálj kisebb felbontást vagy kisebb papírméretet használni</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS jelmagyarázat</translation>
+        <translation type="obsolete">WMS jelmagyarázat</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Jelmagyarázat szélesség</translation>
+        <translation type="obsolete">Jelmagyarázat szélesség</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Jelmagyarázat magasság</translation>
+        <translation type="obsolete">Jelmagyarázat magasság</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24448,6 +24452,14 @@ Próbálj kisebb felbontást vagy kisebb papírméretet használni</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Láb</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37081,6 +37093,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47312,6 +47332,10 @@ szórás ×</translation>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -15287,6 +15287,10 @@ Response was:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17000,7 +17004,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17038,7 +17042,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nova povezava...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17074,7 +17078,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17100,7 +17104,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Nova povezava...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21683,11 +21687,11 @@ Prosim zmanjšate ločljivost ali velikost slike</translation>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Wms širina legende</translation>
+        <translation type="obsolete">Wms širina legende</translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Wms višina legende</translation>
+        <translation type="obsolete">Wms višina legende</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -21926,15 +21930,15 @@ Prosim zmanjšate ločljivost ali velikost slike</translation>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS podoba legende</translation>
+        <translation type="obsolete">WMS podoba legende</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>Širina legende</translation>
+        <translation type="obsolete">Širina legende</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>Višina legende</translation>
+        <translation type="obsolete">Višina legende</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24322,6 +24326,14 @@ Prosim zmanjšate ločljivost ali velikost slike</translation>
     <message>
         <source>Feet</source>
         <translation type="unfinished">Čevlji</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -36908,6 +36920,14 @@ Verjetno je problem v vaši mrežni povezavi ali pa je napaka pri WMS strežniku
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47042,6 +47062,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

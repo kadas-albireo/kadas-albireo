@@ -15401,6 +15401,10 @@ Response was:
         <source> deg</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhandled geometry type</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QSpatiaLiteDriver</name>
@@ -17122,7 +17126,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">मिटायें</translation>
     </message>
     <message>
-        <source>Modify AFS connection</source>
+        <source>Modify ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17160,7 +17164,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">नया संपर्क...</translation>
     </message>
     <message>
-        <source>Create a new AFS connection</source>
+        <source>Create a new ArcGISFeatureServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17196,7 +17200,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">मिटायें</translation>
     </message>
     <message>
-        <source>Modify AMS connection</source>
+        <source>Modify ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17222,7 +17226,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">नया संपर्क...</translation>
     </message>
     <message>
-        <source>Create a new AMS connection</source>
+        <source>Create a new ArcGisMapServer connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -21793,11 +21797,11 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>Wms Legend width</source>
-        <translation>Wms लिजेंड चौडाई </translation>
+        <translation type="obsolete">Wms लिजेंड चौडाई </translation>
     </message>
     <message>
         <source>Wms Legend height</source>
-        <translation>Wms लिजेंड ऊंचाई</translation>
+        <translation type="obsolete">Wms लिजेंड ऊंचाई</translation>
     </message>
     <message>
         <source>Legend title space bottom</source>
@@ -22036,15 +22040,15 @@ Please try a lower resolution or a smaller papersize</source>
     </message>
     <message>
         <source>WMS LegendGraphic</source>
-        <translation>WMS लिजेंडचित्रात्मक</translation>
+        <translation type="obsolete">WMS लिजेंडचित्रात्मक</translation>
     </message>
     <message>
         <source>Legend width</source>
-        <translation>लिजेंड चौडाई</translation>
+        <translation type="obsolete">लिजेंड चौडाई</translation>
     </message>
     <message>
         <source>Legend height</source>
-        <translation>लिजेंड ऊंचाई</translation>
+        <translation type="obsolete">लिजेंड ऊंचाई</translation>
     </message>
     <message>
         <source>Space above text using group style.</source>
@@ -24439,6 +24443,14 @@ Please try a lower resolution or a smaller papersize</source>
     <message>
         <source>Feet</source>
         <translation type="unfinished">फीट</translation>
+    </message>
+    <message>
+        <source>ft AMSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>m AMSL</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37060,6 +37072,14 @@ This may be a problem in your network connection or at the WMS server.</source>
         <source>Add to map</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Height [ft AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height [m AMSL]</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QgsMeasureTool</name>
@@ -47272,6 +47292,10 @@ standard deviation ×</source>
     </message>
     <message>
         <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
