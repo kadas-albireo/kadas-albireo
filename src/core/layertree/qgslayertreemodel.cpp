@@ -729,8 +729,10 @@ void QgsLayerTreeModel::legendNodeDataChanged()
     return;
 
   QModelIndex index = legendNode2index( legendNode );
-  if ( index.isValid() )
+  if ( index.isValid() ) {
     emit dataChanged( index, index );
+    emit layoutChanged();
+  }
 }
 
 
