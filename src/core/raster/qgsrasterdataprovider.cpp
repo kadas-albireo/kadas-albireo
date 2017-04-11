@@ -43,7 +43,12 @@ void QgsRasterDataProvider::setUseSrcNoDataValue( int bandNo, bool use )
   mUseSrcNoDataValue[bandNo-1] = use;
 }
 
-QgsRasterBlock * QgsRasterDataProvider::block( int theBandNo, QgsRectangle  const & theExtent, int theWidth, int theHeight, QgsRasterBlockFeedback *feedback )
+QgsRasterBlock* QgsRasterDataProvider::block( int theBandNo, const QgsRectangle &theExtent, int theWidth, int theHeight )
+{
+  return block2( theBandNo, theExtent, theWidth, theHeight );
+}
+
+QgsRasterBlock * QgsRasterDataProvider::block2( int theBandNo, QgsRectangle  const & theExtent, int theWidth, int theHeight, QgsRasterBlockFeedback *feedback )
 {
   QgsDebugMsg( QString( "theBandNo = %1 theWidth = %2 theHeight = %3" ).arg( theBandNo ).arg( theWidth ).arg( theHeight ) );
   QgsDebugMsg( QString( "theExtent = %1" ).arg( theExtent.toString() ) );

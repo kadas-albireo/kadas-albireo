@@ -150,7 +150,19 @@ class CORE_EXPORT QgsRasterInterface
      * @param height pixel height of block
      * @param feedback optional raster feedback object for cancelation/preview
      */
-    virtual QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback *feedback = nullptr ) = 0;
+    virtual QgsRasterBlock* block( int bandNo, const QgsRectangle &extent, int width, int height ) = 0;
+
+    /** Read block of data using given extent and size.
+     *  Returns pointer to data.
+     *  Caller is responsible to free the memory returned.
+     * @param bandNo band number
+     * @param extent extent of block
+     * @param width pixel width of block
+     * @param height pixel height of block
+     * @param feedback optional raster feedback object for cancelation/preview
+     */
+    virtual QgsRasterBlock* block2( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback *feedback = nullptr )
+    { Q_UNUSED( feedback ); return block( bandNo, extent, width, height ); }
 
     /** Set input.
       * Returns true if set correctly, false if cannot use that input */

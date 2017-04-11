@@ -63,5 +63,6 @@ class QgsRasterProjector : QgsRasterInterface
     /** \brief set maximum source resolution */
     void setMaxSrcRes( double theMaxSrcXRes, double theMaxSrcYRes );
 
-    QgsRasterBlock *block( int bandNo, const QgsRectangle & extent, int width, int height, QgsRasterBlockFeedback* feedback = nullptr ) / Factory /;
+    QgsRasterBlock* block( int bandNo, const QgsRectangle & extent, int width, int height ) / Factory /;
+    QgsRasterBlock* block2( int bandNo, const QgsRectangle & extent, int width, int height, QgsRasterBlockFeedback* feedback = nullptr ) / Factory /;
 };
