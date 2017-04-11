@@ -84,6 +84,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void toggleLayersSpacer();
     void showProjectSelectionWidget();
     void onLanguageChanged( int idx );
+    void onDecimalPlacesChanged( int idx );
     void onNumericInputCheckboxToggled( bool checked );
     void showFavoriteContextMenu( const QPoint& pos );
     void saveProject();

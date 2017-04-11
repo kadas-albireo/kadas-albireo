@@ -1940,7 +1940,7 @@ Sight</string>
           </property>
           <item>
            <layout class="QGridLayout" name="mGridLayoutSettings">
-            <item row="2" column="0" colspan="2">
+            <item row="3" column="0" colspan="2">
              <widget class="QCheckBox" name="mNumericInputCheckbox">
               <property name="text">
                <string>Show numeric input box when drawing</string>
@@ -1964,8 +1964,22 @@ Sight</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="mLabelDecimalPlaces">
+              <property name="text">
+               <string>Measurement decimal places:</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QComboBox" name="mHeightUnitCombo"/>
+            </item>
+            <item row="0" column="3">
+             <widget class="QSpinBox" name="mSpinBoxDecimalPlaces">
+              <property name="maximum">
+               <number>4</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

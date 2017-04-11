@@ -110,6 +110,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
     }
   }
   connect( mLanguageCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onLanguageChanged( int ) ) );
+  mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces" ).toInt() );
+  connect( mSpinBoxDecimalPlaces, SIGNAL( valueChanged( int ) ), this, SLOT( onDecimalPlacesChanged( int ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
@@ -643,6 +645,11 @@ void QgsRibbonApp::onLanguageChanged( int idx )
     QSettings().setValue( "/locale/userLocale", locale );
   }
   QMessageBox::information( this, tr( "Language Changed" ), tr( "The language will be changed at the next program launch." ) );
+}
+
+void QgsRibbonApp::onDecimalPlacesChanged( int places )
+{
+  QSettings().setValue( "/qgis/measure/decimalplaces", places );
 }
 
 void QgsRibbonApp::onNumericInputCheckboxToggled( bool checked )
