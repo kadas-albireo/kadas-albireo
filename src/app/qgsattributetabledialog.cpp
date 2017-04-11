@@ -61,22 +61,17 @@ class QgsAttributeTableDock : public QDockWidget
     }
 };
 
-QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsRibbonApp* mainWidget,
+QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, bool readOnly,
     QWidget *parent, Qt::WindowFlags flags )
     : QDialog( parent, flags )
     , mDock( 0 )
     , mLayer( theLayer )
     , mRubberBand( 0 )
-    , mMainWidget( mainWidget )
 {
   setupUi( this );
 
   // Fix selection color on loosing focus (Windows)
-  if ( mMainWidget )
-  {
-    //?
-  }
-  else if ( QgisApp::instance() )
+  if ( QgisApp::instance() )
   {
     setStyleSheet( QgisApp::instance()->styleSheet() );
   }
@@ -97,14 +92,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsR
   myDa->setEllipsoid( QgsProject::instance()->readEntry( "Measure", "/Ellipsoid", GEO_NONE ) );
 
   context.setDistanceArea( *myDa );
-  if ( mMainWidget )
-  {
-    context.setVectorLayerTools( mMainWidget->vectorLayerTools() );
-  }
-  else
-  {
-    context.setVectorLayerTools( QgisApp::instance()->vectorLayerTools() );
-  }
+  context.setVectorLayerTools( QgisApp::instance()->vectorLayerTools() );
 
   QgsFeatureRequest r;
   if ( mLayer->geometryType() != QGis::NoGeometry &&
@@ -161,17 +149,10 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsR
   connect( mMainView, SIGNAL( filterChanged() ), this, SLOT( updateTitle() ) );
 
   // info from table to application
-  if ( mMainWidget )
-  {
-    connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), mMainWidget, SLOT( saveEdits( QgsMapLayer * ) ) );
-  }
-  else
-  {
-    connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), QgisApp::instance(), SLOT( saveEdits( QgsMapLayer * ) ) );
-  }
+  connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), QgisApp::instance(), SLOT( saveEdits( QgsMapLayer * ) ) );
 
   bool myDockFlag = settings.value( "/qgis/dockAttributeTable", false ).toBool();
-  if ( myDockFlag && !mMainWidget ) //not supported in ribbon gui
+  if ( myDockFlag ) //not supported in ribbon gui
   {
     mDock = new QgsAttributeTableDock( tr( "Attribute table - %1 (%n Feature(s))", "feature count", mMainView->featureCount() ).arg( mLayer->name() ), QgisApp::instance() );
     mDock->setAllowedAreas( Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea );
@@ -255,6 +236,22 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsR
 
   QObject::connect( mMainView->tableView(), SIGNAL( willShowContextMenu( QMenu*, QModelIndex ) ), this, SLOT( viewWillShowContextMenu( QMenu*, QModelIndex ) ) );
 
+  if ( readOnly )
+  {
+    mToggleEditingButton->setHidden( true );
+    mSaveEditsButton->setHidden( true );
+    line->setHidden( true );
+    mAddFeature->setHidden( true );
+    mDeleteSelectedButton->setHidden( true );
+    line_2->setHidden( true );
+    mCopySelectedRowsButton->setHidden( true );
+    line_3->setHidden( true );
+    mRemoveAttribute->setHidden( true );
+    mAddAttribute->setHidden( true );
+    mOpenFieldCalculator->setHidden( true );
+
+  }
+
 }
 
 QgsAttributeTableDialog::~QgsAttributeTableDialog()
@@ -306,14 +303,7 @@ void QgsAttributeTableDialog::keyPressEvent( QKeyEvent* event )
 
   if (( event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete ) && mDeleteSelectedButton->isEnabled() )
   {
-    if ( mMainWidget )
-    {
-
-    }
-    else
-    {
-      QgisApp::instance()->deleteSelected( mLayer, this );
-    }
+    QgisApp::instance()->deleteSelected( mLayer, this );
   }
 }
 
@@ -541,14 +531,7 @@ void QgsAttributeTableDialog::on_mOpenFieldCalculator_clicked()
 
 void QgsAttributeTableDialog::on_mSaveEditsButton_clicked()
 {
-  if ( mMainWidget )
-  {
-    mMainWidget->saveEdits( mLayer, true, true );
-  }
-  else if ( QgisApp::instance() )
-  {
-    QgisApp::instance()->saveEdits( mLayer, true, true );
-  }
+  QgisApp::instance()->saveEdits( mLayer, true, true );
 }
 
 void QgsAttributeTableDialog::on_mAddFeature_clicked()
@@ -575,14 +558,7 @@ void QgsAttributeTableDialog::on_mExpressionSelectButton_clicked()
 
 void QgsAttributeTableDialog::on_mCopySelectedRowsButton_clicked()
 {
-  if ( mMainWidget )
-  {
-    mMainWidget->editCopy( mLayer );
-  }
-  else
-  {
-    QgisApp::instance()->editCopy( mLayer );
-  }
+  QgisApp::instance()->editCopy( mLayer );
 }
 
 void QgsAttributeTableDialog::on_mZoomMapToSelectedRowsButton_clicked()
@@ -607,14 +583,7 @@ void QgsAttributeTableDialog::on_mRemoveSelectionButton_clicked()
 
 void QgsAttributeTableDialog::on_mDeleteSelectedButton_clicked()
 {
-  if ( mMainWidget )
-  {
-    mMainWidget->deleteSelected( mLayer, this );
-  }
-  else
-  {
-    QgisApp::instance()->deleteSelected( mLayer, this );
-  }
+  QgisApp::instance()->deleteSelected( mLayer, this );
 }
 
 void QgsAttributeTableDialog::on_mMainView_currentChanged( int viewMode )
@@ -626,20 +595,10 @@ void QgsAttributeTableDialog::on_mToggleEditingButton_toggled()
 {
   if ( !mLayer )
     return;
-  if ( mMainWidget )
+  if ( !QgisApp::instance()->toggleEditing( mLayer ) )
   {
-    if ( !mMainWidget->toggleEditing( mLayer ) )
-    {
-      editingToggled();
-    }
-  }
-  else if ( QgisApp::instance() )
-  {
-    if ( !QgisApp::instance()->toggleEditing( mLayer ) )
-    {
-      // restore gui state if toggling was canceled or layer commit/rollback failed
-      editingToggled();
-    }
+    // restore gui state if toggling was canceled or layer commit/rollback failed
+    editingToggled();
   }
 }
 
@@ -718,14 +677,7 @@ void QgsAttributeTableDialog::on_mRemoveAttribute_clicked()
     }
     else
     {
-      if ( mMainWidget )
-      {
-        mMainWidget->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
-      }
-      else if ( QgisApp::instance() )
-      {
-        QgisApp::instance()->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
-      }
+      QgisApp::instance()->messageBar()->pushMessage( tr( "Attribute error" ), tr( "The attribute(s) could not be deleted" ), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
       mLayer->destroyEditCommand();
     }
     // update model - a field has been added or updated
@@ -813,27 +765,13 @@ void QgsAttributeTableDialog::setFilterExpression( QString filterString )
   QgsExpression filterExpression( filterString );
   if ( filterExpression.hasParserError() )
   {
-    if ( mMainWidget )
-    {
-      mMainWidget->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
-    }
-    else if ( QgisApp::instance() )
-    {
-      QgisApp::instance()->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
-    }
+    QgisApp::instance()->messageBar()->pushMessage( tr( "Parsing error" ), filterExpression.parserErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
     return;
   }
 
   if ( ! filterExpression.prepare( mLayer->pendingFields() ) )
   {
-    if ( mMainWidget )
-    {
-      mMainWidget->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
-    }
-    else if ( QgisApp::instance() )
-    {
-      QgisApp::instance()->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
-    }
+    QgisApp::instance()->messageBar()->pushMessage( tr( "Evaluation error" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
   }
 
   bool fetchGeom = filterExpression.needsGeometry();
@@ -869,30 +807,14 @@ void QgsAttributeTableDialog::setFilterExpression( QString filterString )
 
   if ( filterExpression.hasEvalError() )
   {
-    if ( mMainWidget )
-    {
-      mMainWidget->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, mMainWidget->messageTimeout() );
-    }
-    else
-    {
-      QgisApp::instance()->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
-    }
+    QgisApp::instance()->messageBar()->pushMessage( tr( "Error filtering" ), filterExpression.evalErrorString(), QgsMessageBar::WARNING, QgisApp::instance()->messageTimeout() );
     return;
   }
 }
 
 QgsMapCanvas* QgsAttributeTableDialog::mapCanvas()
 {
-  QgsMapCanvas* canvas = 0;
-  if ( mMainWidget )
-  {
-    canvas = mMainWidget->mapCanvas();
-  }
-  else if ( QgisApp::instance() )
-  {
-    canvas = QgisApp::instance()->mapCanvas();
-  }
-  return canvas;
+  return QgisApp::instance()->mapCanvas();
 }
 
 void QgsAttributeTableDialog::viewWillShowContextMenu( QMenu* menu, QModelIndex /*atIndex*/ )

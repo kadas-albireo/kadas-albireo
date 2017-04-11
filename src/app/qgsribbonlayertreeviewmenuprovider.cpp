@@ -66,8 +66,8 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
       }
       else if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
       {
-//        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
-//                         QgisApp::instance(), SLOT( attributeTable() ) );
+        menu->addAction( QgsApplication::getThemeIcon( "/mActionOpenTable.png" ), tr( "&Open Attribute Table" ),
+                         QgisApp::instance(), SLOT( attributeTable() ) );
       }
       if ( !layer->infoUrl().isEmpty() )
       {

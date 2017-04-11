@@ -40,7 +40,6 @@ class QSignalMapper;
 
 class QgsAttributeTableModel;
 class QgsAttributeTableFilterModel;
-class QgsRibbonApp;
 class QgsRubberBand;
 
 class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttributeTableDialog
@@ -54,7 +53,7 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
      * @param parent parent object
      * @param flags window flags
      */
-    QgsAttributeTableDialog( QgsVectorLayer *theLayer, QgsRibbonApp* mainWidget = 0, QWidget *parent = 0, Qt::WindowFlags flags = Qt::Window );
+    QgsAttributeTableDialog( QgsVectorLayer *theLayer, bool readOnly = false, QWidget *parent = 0, Qt::WindowFlags flags = Qt::Window );
     ~QgsAttributeTableDialog();
 
     /**
@@ -208,8 +207,6 @@ class APP_EXPORT QgsAttributeTableDialog : public QDialog, private Ui::QgsAttrib
     QgsFieldModel* mFieldModel;
 
     QgsRubberBand *mRubberBand;
-
-    QgsRibbonApp* mMainWidget;
 
     QgsMapCanvas* mapCanvas();
 };

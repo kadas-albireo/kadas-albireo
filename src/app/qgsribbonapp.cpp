@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsribbonapp.h"
+#include "qgsattributetabledialog.h"
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
 #include "qgsdecorationgrid.h"
@@ -498,6 +499,17 @@ void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsM
   {
     tool->setAction( action );
     button->setCheckable( true );
+  }
+}
+
+void QgsRibbonApp::attributeTable()
+{
+  QgsVectorLayer *layer = qobject_cast<QgsVectorLayer *>( activeLayer() );
+  if ( layer )
+  {
+    QgsAttributeTableDialog *dialog = new QgsAttributeTableDialog( layer, true );
+    dialog->show();
+    // the dialog will be deleted by itself on close
   }
 }
 

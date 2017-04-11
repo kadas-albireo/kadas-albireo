@@ -452,7 +452,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void groupProperties();
 
     //! show the attribute table for the currently selected layer
-    void attributeTable();
+    virtual void attributeTable();
 
     void fieldCalculator();
 

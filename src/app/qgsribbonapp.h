@@ -69,6 +69,9 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     QMenu *featureActionMenu() const override { return mFeatureActionMenu; }
     void setTheme( QString themeName ) override;
 
+  public slots:
+    virtual void attributeTable();
+
   private slots:
     void activateDeactivateLayerRelatedActions( QgsMapLayer */*layer*/ ) override {}
     void updateLayerModifiedActions() override {}
