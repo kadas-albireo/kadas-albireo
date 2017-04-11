@@ -918,7 +918,7 @@ void QgsWmsProvider::readBlock( int bandNo, QgsRectangle  const & viewExtent, in
     memcpy( block, ptr, myExpectedSize );
   }
   // do not delete the image, it is handled by draw()
-  //delete image;
+  delete image;
 }
 
 void QgsWmsProvider::createTileRequestsWMSC( const QgsWmtsTileMatrix* tm, const QgsWmsProvider::TilePositions& tiles, QgsWmsProvider::TileRequests& requests )
