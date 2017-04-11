@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr">
+<TS version="2.1" language="fr">
 <context>
     <name>@default</name>
     <message>
@@ -12969,11 +12969,11 @@ Erreur(%2): %3</translation>
         <source>Caught a coordinate system exception while trying to transform a point. Unable to calculate polygon area.</source>
         <translation>Une erreur de système de coordonnée a été signalée lors de la transformation d&apos;un point. Impossbile de calculer la surface du polygone.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> m²</source>
         <translation> m²</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> km²</source>
         <translation> km²</translation>
     </message>
@@ -15406,7 +15406,7 @@ La réponse est :
         <source>Version 1.0</source>
         <translation>Version 1.0</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> ft²</source>
         <translation> ft²</translation>
     </message>
@@ -15414,7 +15414,7 @@ La réponse est :
         <source> ac</source>
         <translation> ac</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> mi²</source>
         <translation> mi²</translation>
     </message>
@@ -15426,7 +15426,7 @@ La réponse est :
         <source> mi</source>
         <translation> mi</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> nm²</source>
         <translation> nm²</translation>
     </message>
@@ -15434,7 +15434,7 @@ La réponse est :
         <source> nm</source>
         <translation> nm</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> deg²</source>
         <translation> deg²</translation>
     </message>
@@ -21621,7 +21621,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>Rotation</source>
         <translation>Rotation</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -22843,7 +22843,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>X </source>
         <translation>X</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -23296,7 +23296,7 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
         <source>Sync with map</source>
         <translation>Synchroniser avec la carte</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -24548,11 +24548,11 @@ Essayez une résolution ou une taille de papier inférieur.</translation>
     </message>
     <message>
         <source>ft AMSL</source>
-        <translation type="unfinished"> </translation>
+        <translation>ft AMSL</translation>
     </message>
     <message>
         <source>m AMSL</source>
-        <translation type="unfinished"></translation>
+        <translation>m AMSL</translation>
     </message>
 </context>
 <context>
@@ -25463,7 +25463,7 @@ et le fichier actuel est [%3]</translation>
         <source>&amp;Enter your copyright label here:</source>
         <translation>&amp;Entrez ici le nom de l&apos;auteur :</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -34629,7 +34629,7 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Angle (deg)</source>
         <translation>Angle (deg) :</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>°</source>
         <translation>°</translation>
     </message>
@@ -35421,7 +35421,7 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
         <source>Use global shadow</source>
         <translation>Utilise une ombre globale</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>˚</source>
         <translation>˚</translation>
     </message>
@@ -37229,11 +37229,11 @@ Ceci est peut-être dû à votre connexion ou celle du serveur WMS.</numerusform
     </message>
     <message>
         <source>Height [ft AMSL]</source>
-        <translation type="unfinished"></translation>
+        <translation>Altitude [ft AMSL]</translation>
     </message>
     <message>
         <source>Height [m AMSL]</source>
-        <translation type="unfinished"></translation>
+        <translation>Altitude [m AMSL]</translation>
     </message>
 </context>
 <context>
@@ -46571,7 +46571,7 @@ count cut</source>
         <translation>Bornes d&apos;exclusion
 des valeurs extrêmes</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Mean +/-
 standard deviation ×</source>
         <translation>Moyenne +/- écart-type ×</translation>
@@ -55926,7 +55926,7 @@ Problème à la ligne : %d</translation>
         <source>Advanced</source>
         <translation>Avancé</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56595,7 +56595,7 @@ Problème à la ligne : %d</translation>
         <source>Symbol height</source>
         <translation>Hauteur du symbole </translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56658,7 +56658,7 @@ Problème à la ligne : %d</translation>
         <source>Font family</source>
         <translation>Famille de Police</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56745,7 +56745,7 @@ Problème à la ligne : %d</translation>
         <source>Angle</source>
         <translation>Angle</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56780,7 +56780,7 @@ Problème à la ligne : %d</translation>
         <source>Offset</source>
         <translation>Décalage</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56913,7 +56913,7 @@ Problème à la ligne : %d</translation>
         <source>Offset X,Y</source>
         <translation>Décalage X,Y</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -56960,7 +56960,7 @@ Problème à la ligne : %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57168,7 +57168,7 @@ Problème à la ligne : %d</translation>
         <source>Angle</source>
         <translation>Angle</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -57255,7 +57255,7 @@ Problème à la ligne : %d</translation>
         <source>...</source>
         <translation>...</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source> °</source>
         <translation> °</translation>
     </message>
@@ -60827,7 +60827,7 @@ p, li { white-space: pre-wrap; }
         <source>Database Host</source>
         <translation>Hôte de la base de données</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enter the database host. If the database resides on your desktop you should enter ¨localhost¨. If you selected ¨MSAccess¨ as the database type this option will not be available. </source>
         <translation>Saisissez l&apos;hôte de la base de données. Si la base est sur votre poste de travail, vous devez entrer &apos;localhost&apos;. Si vous avez sélectionné &apos;MSAccess&apos; comme type de base, cette option ne sera pas disponible.</translation>
     </message>
@@ -61016,7 +61016,7 @@ p, li { white-space: pre-wrap; }
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>All of the attribute information for the point associated with the photo being viewed is displayed here. If the file type being referenced in the displayed record is not an image but is of a file type defined in the “Configure External Applications” tab then when you double-click on the value of the field containing the path to the file the application to open the file will be launched to view or hear the contents of the file. If the file extension is recognized the attribute data will be displayed in green.</source>
         <translation>Toutes les informations pour le point associé à la photo visualisée sont affichées ici. Si le type de fichier n&apos;est pas une image mais un type défini dans le panneau &quot;Configuer les applications externes&quot;, il faut alors double-cliquer sur le champ pour définir le chemin de l&apos;application à utiliser. Si l&apos;extension du fichier est reconnue, les données attributaires seront affichées en vert.</translation>
     </message>
@@ -61048,7 +61048,7 @@ p, li { white-space: pre-wrap; }
         <source>Use the drop-down list to select the field containing a directory path to the image. This can be an absolute or relative path.</source>
         <translation>Utilisez la liste déroulante pour sélectionner le champs contenant le chemin du répertoire de l&apos;image.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>If checked the path to the image will be defined appending the attribute in the field selected from the “Attribute Containing Path to Image” drop-down list to the “Base Path” defined below.</source>
         <translation>Si cochée, le chemin vers l&apos;image sera défini selon l&apos;attribut du champs sélectionné depuis la liste &quot;Attribut contenant le chemin vers le fichier&quot; vers le chemin basique définit ci-dessous.</translation>
     </message>
@@ -61140,7 +61140,7 @@ p, li { white-space: pre-wrap; }
         <source>Relative paths</source>
         <translation>Chemins relatifs</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>The base path or url from which images and documents can be “relative”</source>
         <translation>Le chemin de base ou l&apos;url peut être &quot;relatif&quot;</translation>
     </message>
@@ -61156,7 +61156,7 @@ p, li { white-space: pre-wrap; }
         <source>If checked, the Base Path will be saved for the next session.</source>
         <translation>Si cochée, le chemin de base sera enregistré pour la prochaine session.</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Enters the default “Base Path” which is the path to the directory of the vector layer containing the image information.</source>
         <translation>Saisissez le chemin de base par défaut qui est le chemin vers le répertoire de la couche vecteur contenant les informations sur l&apos;image.</translation>
     </message>
@@ -61185,7 +61185,7 @@ Base Path (i.e. keep only filename from attribute)</source>
         <source>Apply Path to Image rules when loading docs in external applications</source>
         <translation>Appliquer la règle du chemin vers l&apos;image lors du chargement de documents dans des applications externes</translation>
     </message>
-    <message utf8="true">
+    <message>
         <source>Clicking on Save will save the settings without closing the Options pane. Clicking on Restore Defaults will reset all of the fields to their default settings. It has the same effect as clicking all of the “Reset to default” buttons. </source>
         <translation>Cliquer sur Enregistrer enregistrera les paramètres sans fermer la fenêtre d&apos;options. Cliquer sur Restaurer remettre tout les champs à leurs paramètres par défaut.</translation>
     </message>
