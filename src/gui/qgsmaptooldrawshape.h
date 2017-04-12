@@ -179,19 +179,23 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
 {
     Q_OBJECT
   public:
-    QgsMapToolDrawCircle( QgsMapCanvas* canvas );
+    QgsMapToolDrawCircle( QgsMapCanvas* canvas, bool geodesic = false );
     int getPartCount() const override { return mCenters.size(); }
-    void getPart( int part, QgsPoint& center, double& radius ) const { center = mCenters[part]; radius = mRadii[part]; }
-    void setPart( int part, const QgsPoint& center, double radius ) { mCenters[part] = center; mRadii[part] = radius; }
+    void getPart( int part, QgsPoint& center, double& radius ) const;
+    void setPart( int part, const QgsPoint& center, double radius ) { mCenters[part] = center; mRingPos[part] = QgsPoint( center.x() + radius, center.y() ); }
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
+    friend class GeodesicCircleMeasurer;
+    bool mGeodesic;
+    QgsDistanceArea mDa;
     QList<QgsPoint> mCenters;
-    QList<double> mRadii;
+    QList<QgsPoint> mRingPos;
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
     QPointer<QgsMapToolDrawShapeInputField> mREdit;
+    mutable QVector<int> mPartMap;
 
     State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
     void moveEvent( const QgsPoint& pos ) override;

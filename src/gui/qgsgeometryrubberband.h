@@ -79,7 +79,6 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       ANGLE_GRADIANS,
       ANGLE_MIL
     };
-
     QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType = QGis::Line );
     ~QgsGeometryRubberBand();
 
@@ -102,6 +101,23 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void setIconSize( int iconSize ) { mIconSize = iconSize; }
     void setIconFillColor( const QColor& c ) { mIconFill = c; }
     void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
+
+    // Custom measurement handler for cases where default measurement method does not work
+    class Measurer
+    {
+      public:
+        virtual ~Measurer() {}
+        struct Measurement
+        {
+          enum Type {Length, Area, Angle} type;
+          QString label;
+          double value;
+        };
+        virtual QList<Measurement> measure( MeasurementMode measurementMode, int part, const QgsAbstractGeometryV2* geometry, QList<double>& partMeasurements ) = 0;
+    };
+    // Ownership transferred
+    void setMeasurer( Measurer* measurer ) { mMeasurer = measurer; }
+
     QString getTotalMeasurement() const;
 
   protected:
@@ -122,10 +138,11 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     AngleUnit mAngleUnit;
     QList<double> mPartMeasurements;
     QList<QGraphicsTextItem*> mMeasurementLabels;
+    Measurer* mMeasurer;
 
     void drawVertex( QPainter* p, double x, double y );
     QgsRectangle rubberBandRectangle() const;
-    void measureGeometry( QgsAbstractGeometryV2* geometry );
+    void measureGeometry( QgsAbstractGeometryV2* geometry , int part );
     QString formatMeasurement( double value, bool isArea ) const;
     QString formatAngle( double value ) const;
     void addMeasurements( const QStringList& measurements, const QgsPointV2 &mapPos );

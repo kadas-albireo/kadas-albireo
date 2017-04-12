@@ -715,6 +715,54 @@ double QgsDistanceArea::computeDistanceBearing(
   return s;
 }
 
+QgsPoint QgsDistanceArea::computeDestination( const QgsPoint& p, double distance, double bearingDeg ) const
+{
+  double a = mSemiMajor;
+  double b = mSemiMinor;
+  double f = 1 / mInvFlattening;
+
+  double lon1 = p.x();
+  double lat1 = p.y();
+
+  double s = distance;
+  double alpha1 = bearingDeg * M_PI / 180.;
+  double sinAlpha1 = sin( alpha1 );
+  double cosAlpha1 = cos( alpha1 );
+
+  double tanU1 = ( 1. - f ) * tan( lat1 * M_PI / 180. );
+  double cosU1 = 1. / sqrt(( 1. + tanU1 * tanU1 ) );
+  double sinU1 = tanU1 * cosU1;
+  double sigma1 = atan2( tanU1, cosAlpha1 );
+  double sinAlpha = cosU1 * sinAlpha1;
+  double cosSqAlpha = 1. - sinAlpha * sinAlpha;
+  double uSq = cosSqAlpha * ( a * a - b * b ) / ( b * b );
+  double A = 1. + uSq / 16384. * ( 4096. + uSq * ( -768. + uSq * ( 320. - 175. * uSq ) ) );
+  double B = uSq / 1024. * ( 256. + uSq * ( -128. + uSq * ( 74. - 47. * uSq ) ) );
+
+  double sigma = s / ( b * A );
+  double sigmaP = 2. * M_PI;
+  while ( abs( sigma - sigmaP ) > 1E-12 )
+  {
+    double cos2SigmaM = cos( 2. * sigma1 + sigma );
+    double sinSigma = sin( sigma );
+    double cosSigma = cos( sigma );
+    double deltaSigma = B * sinSigma * ( cos2SigmaM + 0.25 * B * ( cosSigma * ( -1. + 2. * cos2SigmaM * cos2SigmaM ) -
+                                         B / 6. * cos2SigmaM * ( -3. + 4. * sinSigma * sinSigma ) * ( -3. + 4. * cos2SigmaM * cos2SigmaM ) ) );
+    sigmaP = sigma;
+    sigma = s / ( b * A ) + deltaSigma;
+  }
+
+  double sinSigma = sin( sigma );
+  double cosSigma = cos( sigma );
+  double cos2SigmaM = cos( 2. * sigma1 + sigma );
+  double tmp = sinU1 * sinSigma - cosU1 * cosSigma * cosAlpha1;
+  double lat2 = atan2( sinU1 * cosSigma + cosU1 * sinSigma * cosAlpha1, ( 1. - f ) * sqrt( sinAlpha * sinAlpha + tmp * tmp ) );
+  double lambda = atan2( sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1 );
+  double C = f / 16. * cosSqAlpha * ( 4. + f * ( 4. - 3. * cosSqAlpha ) );
+  double L = lambda - ( 1. - C ) * f * sinAlpha * ( sigma + C * sinSigma * ( cos2SigmaM + C * cosSigma * ( -1. + 2. * cos2SigmaM * cos2SigmaM ) ) );
+  return QgsPoint( lon1 + L * 180. / M_PI, lat2 * 180. / M_PI );
+}
+
 double QgsDistanceArea::computeDistanceFlat( const QgsPoint& p1, const QgsPoint& p2 ) const
 {
   return sqrt(( p2.x() - p1.x() ) * ( p2.x() - p1.x() ) + ( p2.y() - p1.y() ) * ( p2.y() - p1.y() ) );

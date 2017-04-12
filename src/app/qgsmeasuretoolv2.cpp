@@ -170,7 +170,7 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   }
   else if ( mMeasureMode == MeasureCircle )
   {
-    mDrawTool = new QgsMapToolDrawCircle( canvas );
+    mDrawTool = new QgsMapToolDrawCircle( canvas, true );
   }
   else
   {
@@ -178,7 +178,7 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   }
   mDrawTool->setParent( this );
   mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );
-  mDrawTool->setShowNodes( true );
+  mDrawTool->setShowNodes( mMeasureMode != MeasureCircle );
   mDrawTool->setSnapPoints( true );
   mMeasureWidget = 0;
   connect( mDrawTool, SIGNAL( geometryChanged() ), this, SLOT( updateTotal() ) );

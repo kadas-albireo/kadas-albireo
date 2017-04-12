@@ -115,6 +115,9 @@ class CORE_EXPORT QgsDistanceArea
     //! compute bearing - in radians
     double bearing( const QgsPoint& p1, const QgsPoint& p2 ) const;
 
+    //! compute destination point given start point (in degrees), a distance (in meters), and a bearing for the destination point (in degrees)
+    QgsPoint computeDestination( const QgsPoint& p, double distance, double bearingDeg ) const;
+
     static QString textUnit( double value, int decimals, QGis::UnitType u, bool isArea, bool keepBaseUnit = false );
 
     //! Helper for conversion between physical units

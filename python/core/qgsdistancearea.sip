@@ -114,6 +114,8 @@ class QgsDistanceArea
     //! calculate distance with given coordinates (does not do a transform anymore)
     double computeDistance( const QList<QgsPoint>& points ) const;
 
+    QgsPoint computeDestination( const QgsPoint& p, double distance, double bearingDeg ) const;
+
     /**
      calculates area of polygon on ellipsoid
      algorithm has been taken from GRASS: gis/area_poly1.c

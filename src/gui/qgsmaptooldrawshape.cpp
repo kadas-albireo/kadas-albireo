@@ -86,9 +86,9 @@ void QgsMapToolDrawShape::deactivate()
 
 void QgsMapToolDrawShape::setShowNodes( bool showNodes )
 {
+  mRubberBand->setIconType( showNodes ? QgsGeometryRubberBand::ICON_CIRCLE : QgsGeometryRubberBand::ICON_NONE );
   if ( showNodes )
   {
-    mRubberBand->setIconType( showNodes ? QgsGeometryRubberBand::ICON_CIRCLE : QgsGeometryRubberBand::ICON_NONE );
     mRubberBand->setIconSize( 10 );
     mRubberBand->setIconFillColor( Qt::white );
   }
@@ -660,18 +660,55 @@ void QgsMapToolDrawRectangle::inputChanged()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas )
-    : QgsMapToolDrawShape( canvas, true ) {}
+class GeodesicCircleMeasurer : public QgsGeometryRubberBand::Measurer
+{
+  public:
+    GeodesicCircleMeasurer( QgsMapToolDrawCircle* tool ) : mTool( tool ) {}
+    QList<Measurement> measure( QgsGeometryRubberBand::MeasurementMode measurementMode, int part, const QgsAbstractGeometryV2* /*geometry*/, QList<double>& partMeasurements ) override
+    {
+      QList<Measurement> measurements;
+      if ( measurementMode == QgsGeometryRubberBand::MEASURE_CIRCLE )
+      {
+        const QgsPoint& c = mTool->mCenters[mTool->mPartMap[part]];
+        const QgsPoint& p = mTool->mRingPos[mTool->mPartMap[part]];
+        const QgsCoordinateTransform* t1 = QgsCoordinateTransformCache::instance()->transform( mTool->canvas()->mapSettings().destinationCrs().authid(), "EPSG:4326" );
+        double radius = mTool->mDa.measureLine( t1->transform( c ), t1->transform( p ) );
+
+        double area = radius * radius * M_PI;
+        partMeasurements.append( area );
+
+        Measurement areaMeasurement = {Measurement::Area, "", area};
+        measurements.append( areaMeasurement );
+        Measurement radiusMeasurement = {Measurement::Length, QApplication::translate( "GeodesicCircleMeasurer", "Radius" ), radius};
+        measurements.append( radiusMeasurement );
+      }
+      return measurements;
+    }
+  private:
+    QgsMapToolDrawCircle* mTool;
+};
+
+QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas , bool geodesic )
+    : QgsMapToolDrawShape( canvas, true ), mGeodesic( geodesic )
+{
+  if ( geodesic )
+  {
+    mDa.setEllipsoid( "WGS84" );
+    mDa.setEllipsoidalMode( true );
+    mDa.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
+    mRubberBand->setMeasurer( new GeodesicCircleMeasurer( this ) );
+  }
+}
 
 QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
 {
   if ( press && button == Qt::LeftButton && mState == StateReady )
   {
     mCenters.append( pos );
-    mRadii.append( 0. );
+    mRingPos.append( pos );
     return StateDrawing;
   }
-  else if ( !press && mState == StateDrawing && mRadii.back() > 0. )
+  else if ( !press && mState == StateDrawing && mCenters.back() != mRingPos.back() )
   {
     return mMultipart ? StateReady : StateFinished;
   }
@@ -680,23 +717,153 @@ QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &po
 
 void QgsMapToolDrawCircle::moveEvent( const QgsPoint &pos )
 {
-  mRadii.last() = qSqrt( mCenters.last().sqrDist( pos ) );
+  mRingPos.last() = pos;
+}
+
+void QgsMapToolDrawCircle::getPart( int part, QgsPoint &center, double &radius ) const
+{
+  center = mCenters[part];
+  radius = qSqrt( mCenters[part].sqrDist( mRingPos[part] ) );
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
-  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
+  mPartMap.clear();
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2();
   for ( int i = 0, n = mCenters.size(); i < n; ++i )
   {
-    QgsCircularStringV2* ring = new QgsCircularStringV2;
-    ring->setPoints( QList<QgsPointV2>()
-                     << QgsPointV2( t->transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) )
-                     << QgsPointV2( t->transform( mCenters[i].x(), mCenters[i].y() ) )
-                     << QgsPointV2( t->transform( mCenters[i].x() + mRadii[i], mCenters[i].y() ) ) );
-    QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
-    poly->setExteriorRing( ring );
-    multiGeom->addGeometry( poly );
+    // 1 deg segmentized circle around center
+    if ( mGeodesic )
+    {
+      const QgsCoordinateTransform* t1 = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), "EPSG:4326" );
+      const QgsCoordinateTransform* t2 = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", targetCrs.authid() );
+      QgsPoint p1 = t1->transform( mCenters[i].x(), mCenters[i].y() );
+      QgsPoint p2 = t1->transform( mRingPos[i].x(), mRingPos[i].y() );
+      double clampLatitude = targetCrs.authid() == "EPSG:3857" ? 85 : 90;
+      if ( p2.y() > 90 )
+      {
+        p2.setY( 90. - ( p2.y() - 90. ) );
+      }
+      if ( p2.y() < -90 )
+      {
+        p2.setY( -90. - ( p2.y() + 90. ) );
+      }
+      double radius = mDa.measureLine( p1, p2 );
+      QList<QgsPoint> wgsPoints;
+      for ( int a = 0; a < 360; ++a )
+      {
+        wgsPoints.append( mDa.computeDestination( p1, radius, a ) );
+      }
+      // Check if area would cross north or south pole
+      // -> Check if destination point at bearing 0 / 180 with given radius would flip longitude
+      // -> If crosses north/south pole, add points at lat 90 resp. -90 between points with max resp. min latitude
+      QgsPoint pn = mDa.computeDestination( p1, radius, 0 );
+      QgsPoint ps = mDa.computeDestination( p1, radius, 180 );
+      int shift = 0;
+      int nPoints = wgsPoints.size();
+      if ( qFuzzyCompare( qAbs( pn.x() - p1.x() ), 180 ) )   // crosses north pole
+      {
+        wgsPoints[nPoints-1].setX( p1.x() - 179.999 );
+        wgsPoints[1].setX( p1.x() + 179.999 );
+        wgsPoints.append( QgsPoint( p1.x() - 179.999, clampLatitude ) );
+        wgsPoints[0] = QgsPoint( p1.x() + 179.999, clampLatitude );
+        wgsPoints.prepend( QgsPoint( p1.x(), clampLatitude ) ); // Needed to ensure first point does not overflow in longitude below
+        wgsPoints.append( QgsPoint( p1.x(), clampLatitude ) ); // Needed to ensure last point does not overflow in longitude below
+        shift = 3;
+      }
+      if ( qFuzzyCompare( qAbs( ps.x() - p1.x() ), 180 ) )   // crosses south pole
+      {
+        wgsPoints[181 + shift].setX( p1.x() - 179.999 );
+        wgsPoints[179 + shift].setX( p1.x() + 179.999 );
+        wgsPoints[180 + shift] = QgsPoint( p1.x() - 179.999, -clampLatitude );
+        wgsPoints.insert( 180 + shift, QgsPoint( p1.x() + 179.999, -clampLatitude ) );
+      }
+      // Check if area overflows in longitude
+      // 0: left-overflow, 1: center, 2: right-overflow
+      QList<QgsPoint> poly[3];
+      int current = 1;
+      poly[1].append( wgsPoints[0] ); // First point is always in center region
+      nPoints = wgsPoints.size();
+      for ( int j = 1; j < nPoints; ++j )
+      {
+        const QgsPoint& p = wgsPoints[j];
+        if ( p.x() > 180. )
+        {
+          // Right-overflow
+          if ( current == 1 )
+          {
+            poly[1].append( QgsPoint( 180, 0.5 * ( poly[1].back().y() + p.y() ) ) );
+            poly[2].append( QgsPoint( -180, 0.5 * ( poly[1].back().y() + p.y() ) ) );
+            current = 2;
+          }
+          poly[2].append( QgsPoint( p.x() - 360., p.y() ) );
+        }
+        else if ( p.x() < -180 )
+        {
+          // Left-overflow
+          if ( current == 1 )
+          {
+            poly[1].append( QgsPoint( -180, 0.5 * ( poly[1].back().y() + p.y() ) ) );
+            poly[0].append( QgsPoint( 180, 0.5 * ( poly[1].back().y() + p.y() ) ) );
+            current = 0;
+          }
+          poly[0].append( QgsPoint( p.x() + 360., p.y() ) );
+        }
+        else
+        {
+          // No overflow
+          if ( current == 0 )
+          {
+            poly[0].append( QgsPoint( 180, 0.5 * ( poly[0].back().y() + p.y() ) ) );
+            poly[1].append( QgsPoint( -180, 0.5 * ( poly[0].back().y() + p.y() ) ) );
+            current = 1;
+          }
+          else if ( current == 2 )
+          {
+            poly[2].append( QgsPoint( -180, 0.5 * ( poly[2].back().y() + p.y() ) ) );
+            poly[1].append( QgsPoint( 180, 0.5 * ( poly[2].back().y() + p.y() ) ) );
+            current = 1;
+          }
+          poly[1].append( p );
+        }
+      }
+      for ( int j = 0; j < 3; ++j )
+      {
+        if ( !poly[j].isEmpty() )
+        {
+          QList<QgsPointV2> points;
+          for ( int k = 0, n = poly[j].size(); k < n; ++k )
+          {
+            poly[j][k].setY( qMin( clampLatitude, qMax( -clampLatitude, poly[j][k].y() ) ) );
+            try
+            {
+              points.append( QgsPointV2( t2->transform( poly[j][k] ) ) );
+            }
+            catch ( ... )
+              {}
+          }
+          QgsLineStringV2* ring = new QgsLineStringV2();
+          ring->setPoints( points );
+          QgsPolygonV2* poly = new QgsPolygonV2();
+          poly->setExteriorRing( ring );
+          multiGeom->addGeometry( poly );
+          mPartMap.append( i );
+        }
+      }
+    }
+    else
+    {
+      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
+      double radius = qSqrt( mCenters[i].sqrDist( mRingPos[i] ) );
+      QgsCircularStringV2* ring = new QgsCircularStringV2();
+      ring->setPoints( QList<QgsPointV2>()
+                       << QgsPointV2( t->transform( mCenters[i].x() + radius, mCenters[i].y() ) )
+                       << QgsPointV2( t->transform( mCenters[i].x(), mCenters[i].y() ) )
+                       << QgsPointV2( t->transform( mCenters[i].x() + radius, mCenters[i].y() ) ) );
+      QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
+      poly->setExteriorRing( ring );
+      multiGeom->addGeometry( poly );
+    }
   }
   if ( mMultipart )
   {
@@ -721,7 +888,7 @@ void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry,
       QgsPoint c = t.transform( bb.center() );
       QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
       mCenters.append( c );
-      mRadii.append( qSqrt( c.sqrDist( r ) ) );
+      mRingPos.append( r );
     }
   }
   else
@@ -730,14 +897,15 @@ void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry,
     QgsPoint c = t.transform( bb.center() );
     QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
     mCenters.append( c );
-    mRadii.append( qSqrt( c.sqrDist( r ) ) );
+    mRingPos.append( r );
   }
 }
 
 void QgsMapToolDrawCircle::clear()
 {
   mCenters.clear();
-  mRadii.clear();
+  mRingPos.clear();
+  mPartMap.clear();
 }
 
 void QgsMapToolDrawCircle::initInputWidget()
@@ -777,7 +945,7 @@ void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
   }
   else if ( mState == StateDrawing )
   {
-    mREdit->setText( QString::number( mRadii.last(), 'f', isDegrees ? 4 : 0 ) );
+    mREdit->setText( QString::number( qSqrt( mCenters.last().sqrDist( mRingPos.last() ) ), 'f', isDegrees ? 4 : 0 ) );
   }
   if ( mInputWidget->focusChild() )
     mInputWidget->focusChild()->selectAll();
@@ -792,14 +960,14 @@ QgsMapToolDrawShape::State QgsMapToolDrawCircle::inputAccepted()
   if ( mState == StateReady )
   {
     mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    mRingPos.append( QgsPoint( x + r, y ) );
     return StateDrawing;
   }
   else if ( mState == StateDrawing )
   {
     mREdit->setText( "0" );
     mCenters.back() = QgsPoint( x, y );
-    mRadii.back() = r;
+    mRingPos.back() = QgsPoint( x + r, y );
     return mMultipart ? StateReady : StateFinished;
   }
   return mState;
@@ -813,7 +981,7 @@ void QgsMapToolDrawCircle::centerInputChanged()
   if ( mState == StateReady )
   {
     mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    mRingPos.append( QgsPoint( x + r, y ) );
     mState = StateDrawing;
   }
   mCenters.back() = QgsPoint( x, y );
@@ -828,10 +996,10 @@ void QgsMapToolDrawCircle::radiusInputChanged()
   if ( mState == StateReady )
   {
     mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    mRingPos.append( QgsPoint( x + r, y ) );
     mState = StateDrawing;
   }
-  mRadii.back() = r;
+  mRingPos.back() = QgsPoint( x + r, y );
   moveMouseToPos( QgsPoint( x + r, y ) );
 }
 
