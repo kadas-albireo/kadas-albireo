@@ -413,7 +413,11 @@ double QgsDistanceArea::measureLine( const QList<QgsPoint> &points ) const
       if ( mEllipsoidalMode && ( mEllipsoid != GEO_NONE ) )
       {
         p2 = mCoordTransform->transform( *i );
-        total += computeDistanceBearing( p1, p2 );
+        // Mid-point: if longitude difference between points is more than 180deg, measurement would wrap around
+        // By taking mid-point, the the longitude difference between the measurement points will always be less than 180 deg, if the original points are valid
+        QgsPoint p12( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) );
+        total += computeDistanceBearing( p1, p12 );
+        total += computeDistanceBearing( p12, p2 );
       }
       else
       {
