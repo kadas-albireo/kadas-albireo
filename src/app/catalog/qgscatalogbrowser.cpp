@@ -235,7 +235,7 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
 
 void QgsCatalogBrowser::reload()
 {
-  if ( mProviders.size() > 0 )
+  if ( mTreeView->model() != mLoadingModel && mProviders.size() > 0 )
   {
     mCatalogModel->setRowCount( 0 );
     mTreeView->setModel( mLoadingModel );
