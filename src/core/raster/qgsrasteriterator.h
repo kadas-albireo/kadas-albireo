@@ -82,7 +82,7 @@ class CORE_EXPORT QgsRasterIterator
     QgsRasterInterface* mInput;
     QMap<int, RasterPartInfo> mRasterPartInfos;
     QgsRectangle mExtent;
-    QgsRasterBlockFeedback *mFeedback = nullptr;
+    QgsRasterBlockFeedback *mFeedback;
 
     int mMaximumTileWidth;
     int mMaximumTileHeight;

@@ -73,7 +73,7 @@ class QgsRasterLayerRenderer : public QgsMapLayerRenderer
     };
 
     //! feedback class for cancelation and preview generation
-    Feedback *mFeedback = nullptr;
+    Feedback *mFeedback;
 };
 
 #endif // QGSRASTERLAYERRENDERER_H

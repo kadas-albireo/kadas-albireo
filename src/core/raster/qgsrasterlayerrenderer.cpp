@@ -25,6 +25,7 @@ QgsRasterLayerRenderer::QgsRasterLayerRenderer( QgsRasterLayer* layer, QgsRender
     : QgsMapLayerRenderer( layer->id() )
     , mRasterViewPort( 0 )
     , mPipe( 0 )
+    , mFeedback( nullptr )
 {
 
   mPainter = rendererContext.painter();
