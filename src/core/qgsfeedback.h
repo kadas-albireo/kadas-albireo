@@ -45,6 +45,7 @@ class CORE_EXPORT QgsFeedback : public QObject
     QgsFeedback( QObject *parent = nullptr )
         : QObject( parent )
         , mCanceled( false )
+        , mProgress( 0.0 )
     {}
 
     //! Tells the internal routines that the current operation should be canceled. This should be run by the main thread
@@ -96,7 +97,7 @@ class CORE_EXPORT QgsFeedback : public QObject
     //! Whether the operation has been canceled already. False by default.
     bool mCanceled;
 
-    double mProgress = 0.0;
+    double mProgress;
 };
 
 #endif // QGSFEEDBACK_H
