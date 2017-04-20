@@ -168,7 +168,7 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
 #endif
 
   // initialize 'iface' object
-  runString( "qgis.utils.initInterface(" + QString::number(( std::intptr_t ) interface ) + ")" );
+  runString( "qgis.utils.initInterface(" + QString::number(( unsigned long ) interface ) + ")" );
 
   // import QGIS user
   error_msg = QObject::tr( "Couldn't load qgis.user." ) + "\n" + QObject::tr( "Python support will be disabled." );
