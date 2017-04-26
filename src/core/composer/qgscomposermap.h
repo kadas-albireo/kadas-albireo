@@ -37,6 +37,7 @@ class QPainter;
 class QgsFillSymbolV2;
 class QgsLineSymbolV2;
 class QgsVectorLayer;
+class QgsMapRendererCustomPainterJob;
 
 /** \ingroup MapComposer
  *  \class QgsComposerMap
@@ -901,6 +902,10 @@ class CORE_EXPORT QgsComposerMap : public QgsComposerItem
     /**Resets the item tooltip to reflect current map id*/
     void updateToolTip();
 
+    QPainter* mPainter;
+    QgsMapRendererCustomPainterJob* mPainterJob;
+    bool mPainterCancelWait;
+
     /**Returns a list of the layers to render for this map item*/
     QStringList layersToRender() const;
 
@@ -938,6 +943,9 @@ class CORE_EXPORT QgsComposerMap : public QgsComposerItem
     void refreshMapExtents();
 
     friend class QgsComposerMapOverview; //to access mXOffset, mYOffset
+
+  private slots:
+    void painterJobFinished();
 };
 Q_NOWARN_DEPRECATED_POP
 

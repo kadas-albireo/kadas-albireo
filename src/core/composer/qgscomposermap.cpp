@@ -58,6 +58,9 @@ QgsComposerMap::QgsComposerMap( QgsComposition *composition, int x, int y, int w
     , mAtlasDriven( false )
     , mAtlasScalingMode( Auto )
     , mAtlasMargin( 0.10 )
+    , mPainter( nullptr )
+    , mPainterJob( nullptr )
+    , mPainterCancelWait( false )
 {
   mComposition = composition;
 
@@ -103,6 +106,9 @@ QgsComposerMap::QgsComposerMap( QgsComposition *composition )
     , mAtlasDriven( false )
     , mAtlasScalingMode( Auto )
     , mAtlasMargin( 0.10 )
+    , mPainter( nullptr )
+    , mPainterJob( nullptr )
+    , mPainterCancelWait( false )
 {
   //Offset
   mXOffset = 0.0;
@@ -250,12 +256,20 @@ void QgsComposerMap::cache( void )
     return;
   }
 
-  if ( mDrawing )
+  if ( mPainterJob )
   {
-    return;
+    if ( mPainterCancelWait )
+    {
+      return; // Already waiting
+    }
+    QgsDebugMsg( "Aborting composer painter job" );
+    mPainterCancelWait = true;
+    mPainterJob->cancel();
+    mPainterCancelWait = false;
   }
 
-  mDrawing = true;
+  Q_ASSERT( mPainterJob == nullptr );
+  Q_ASSERT( mPainter == nullptr );
 
   double horizontalVScaleFactor = horizontalViewScaleFactor();
   if ( horizontalVScaleFactor < 0 )
@@ -304,13 +318,24 @@ void QgsComposerMap::cache( void )
     mCacheImage.fill( QColor( 255, 255, 255, 0 ).rgba() );
   }
 
-  QPainter p( &mCacheImage );
+  mPainter = new QPainter( &mCacheImage );
+  QgsMapSettings settings( mapSettings( ext, QSizeF( w, h ), mCacheImage.logicalDpiX() ) );
+  mPainterJob = new QgsMapRendererCustomPainterJob( settings, mPainter );
+  connect( mPainterJob, SIGNAL( finished() ), this, SLOT( painterJobFinished() ) );
+  QgsDebugMsg( "Starting new composer painter job" );
+  mPainterJob->start();
+}
 
-  draw( &p, ext, QSizeF( w, h ), mCacheImage.logicalDpiX() );
-  p.end();
+void QgsComposerMap::painterJobFinished()
+{
+  QgsDebugMsg( "Finished composer painter job" );
+  mPainter->end();
+  delete mPainterJob;
+  mPainterJob = nullptr;
+  delete mPainter;
+  mPainter = nullptr;
   mCacheUpdated = true;
-
-  mDrawing = false;
+  updateItem();
 }
 
 void QgsComposerMap::paint( QPainter* painter, const QStyleOptionGraphicsItem* itemStyle, QWidget* pWidget )
@@ -1066,8 +1091,10 @@ void QgsComposerMap::updateItem()
 
   if ( mPreviewMode != QgsComposerMap::Rectangle && !mCacheUpdated )
   {
+    QgsDebugMsg( "Requesting new cache image item" );
     cache();
   }
+  QgsDebugMsg( "Updating item" );
   QgsComposerItem::updateItem();
 }
 
