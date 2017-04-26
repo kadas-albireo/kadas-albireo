@@ -820,6 +820,7 @@ void QgsMapCanvas::saveAsImage( QString theFileName, QPixmap * theQPixmap, QStri
   else //use the map view
   {
     QPixmap pixmap( size() );
+    pixmap.fill( Qt::transparent );
     QPainter painter( &pixmap );
     render( &painter );
     pixmap.save( theFileName, theFormat.toLocal8Bit().data() );
