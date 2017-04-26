@@ -33,7 +33,7 @@
 #include <QPainter>
 #include <QPen>
 
-#define MAX_GRID_LINES 1000 //maximum number of horizontal or vertical grid lines to draw
+#define MAX_GRID_LINES 100 //maximum number of horizontal or vertical grid lines to draw
 
 QgsComposerMapGridStack::QgsComposerMapGridStack( QgsComposerMap* map )
     : QgsComposerMapItemStack( map )
