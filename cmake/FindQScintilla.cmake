@@ -33,7 +33,7 @@ ELSE(EXISTS QSCINTILLA_VERSION_STR)
     )
 
   FIND_LIBRARY(QSCINTILLA_LIBRARY
-    NAMES qscintilla2 libqscintilla2 libqscintilla2.dylib
+    NAMES qscintilla2 libqscintilla2 libqscintilla2.dylib libqscintilla2_qt4
     PATHS
       "${QT_LIBRARY_DIR}"
       /usr/local/lib
