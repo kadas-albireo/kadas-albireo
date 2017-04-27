@@ -1,4 +1,4 @@
-# Find QScintilla2 PyQt4 module
+# Find QScintilla2 PyQt module
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # QScintilla2 website: http://www.riverbankcomputing.co.uk/software/qscintilla/
@@ -24,21 +24,41 @@ IF(EXISTS QSCINTILLA_VERSION_STR)
   SET(QSCINTILLA_FOUND TRUE)
 ELSE(EXISTS QSCINTILLA_VERSION_STR)
 
-  FIND_PATH(QSCINTILLA_INCLUDE_DIR
-    NAMES Qsci/qsciglobal.h
-    PATHS
-      "${QT_INCLUDE_DIR}"
-      /usr/local/include
-      /usr/include
-    )
+  IF(ENABLE_QT5)
+    FIND_PATH(QSCINTILLA_INCLUDE_DIR
+      NAMES Qsci/qsciglobal.h
+      PATHS
+        "${QT_INCLUDE_DIR}"
+        /usr/local/include/qt5
+        /usr/include/qt5
+        /usr/local/include
+        /usr/include
+      )
 
-  FIND_LIBRARY(QSCINTILLA_LIBRARY
-    NAMES qscintilla2 libqscintilla2 libqscintilla2.dylib libqscintilla2_qt4
-    PATHS
-      "${QT_LIBRARY_DIR}"
-      /usr/local/lib
-      /usr/lib
-    )
+    FIND_LIBRARY(QSCINTILLA_LIBRARY
+      NAMES qscintilla2_qt5 qscintilla2
+      PATHS
+        "${QT_LIBRARY_DIR}"
+        /usr/local/lib
+        /usr/lib
+      )
+  ELSE(ENABLE_QT5)
+    FIND_PATH(QSCINTILLA_INCLUDE_DIR
+      NAMES Qsci/qsciglobal.h
+      PATHS
+        "${QT_INCLUDE_DIR}"
+        /usr/local/include
+        /usr/include
+      )
+
+    FIND_LIBRARY(QSCINTILLA_LIBRARY
+      NAMES qscintilla2 libqscintilla2 libqscintilla2.dylib libqscintilla2_qt4
+      PATHS
+        "${QT_LIBRARY_DIR}"
+        /usr/local/lib
+        /usr/lib
+      )
+  ENDIF(ENABLE_QT5)
 
   IF(QSCINTILLA_LIBRARY AND QSCINTILLA_INCLUDE_DIR)
     SET(QSCINTILLA_FOUND TRUE)
@@ -54,7 +74,7 @@ ELSE(EXISTS QSCINTILLA_VERSION_STR)
 
   IF(QSCINTILLA_INCLUDE_DIR AND NOT EXISTS QSCINTILLA_VERSION_STR)
     # get QScintilla2 version from header, is optinally retrieved via bindings
-    # with Qsci PyQt4 module
+    # with Qsci PyQt module
     FILE(READ ${QSCINTILLA_INCLUDE_DIR}/Qsci/qsciglobal.h qsci_header)
     STRING(REGEX REPLACE "^.*QSCINTILLA_VERSION_STR +\"([^\"]+)\".*$" "\\1" QSCINTILLA_VERSION_STR "${qsci_header}")
   ENDIF(QSCINTILLA_INCLUDE_DIR AND NOT EXISTS QSCINTILLA_VERSION_STR)

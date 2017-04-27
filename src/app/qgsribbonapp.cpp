@@ -35,6 +35,7 @@
 #include "qgsproject.h"
 #include "qgsundowidget.h"
 
+#include <QDrag>
 #include <QFileDialog>
 #include <QImageReader>
 #include <QMenu>

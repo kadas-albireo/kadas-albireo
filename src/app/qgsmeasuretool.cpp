@@ -264,7 +264,7 @@ void QgsMeasureTool::addPoint( const QgsPoint &point )
 void QgsMeasureTool::addPart( const QPoint &labelPos )
 {
   mDialog->addPart();
-  mTextLabels.append( new QGraphicsTextItem( "", 0, mCanvas->scene() ) );
+  mTextLabels.append( new QGraphicsTextItem( "", 0 ) );
   int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
   int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
   int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();

@@ -20,6 +20,7 @@
 #include <QStringList>
 
 class QFont;
+class QWidget;
 
 /** \ingroup gui
  * /namespace QgisGui

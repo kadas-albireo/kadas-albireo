@@ -19,7 +19,12 @@
 #include <QNetworkReply>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 
 #include "qgisapp.h"
 #include "qgsabstractgeometryv2.h"
@@ -122,7 +127,11 @@ void QgsVBSRasterIdentify::replyFinished()
   QVariantList results;
   if ( mIdentifyReply->error() == QNetworkReply::NoError && mTimeoutTimer->isActive() )
   {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     results = QJson::Parser().parse( mIdentifyReply->readAll() ).toMap()["results"].toList();
+#else
+    results = QJsonDocument::fromJson( mIdentifyReply->readAll() ).object().toVariantMap()["results"].toList();
+#endif
   }
   else
   {

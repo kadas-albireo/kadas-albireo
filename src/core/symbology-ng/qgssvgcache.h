@@ -22,6 +22,7 @@
 #include <QMap>
 #include <QMultiHash>
 #include <QMutex>
+#include <QObject>
 #include <QString>
 #include <QUrl>
 

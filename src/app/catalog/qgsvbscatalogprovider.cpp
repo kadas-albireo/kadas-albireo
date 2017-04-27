@@ -28,7 +28,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 
 
 QgsVBSCatalogProvider::QgsVBSCatalogProvider( const QString &baseUrl, QgsCatalogBrowser *browser )
@@ -53,11 +58,15 @@ void QgsVBSCatalogProvider::replyFinished()
   QNetworkReply* reply = qobject_cast<QNetworkReply*>( QObject::sender() );
   if ( reply->error() == QNetworkReply::NoError )
   {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QJson::Parser parser;
+    QVariantMap listData = parser.parse( reply->readAll() ).toMap();
+#else
+    QVariantMap listData = QJsonDocument::fromJson( reply->readAll() ).object().toVariantMap();
+#endif
     QMap<QString, EntryMap> wmtsLayers;
     QMap<QString, EntryMap> wmsLayers;
     QMap<QString, EntryMap> amsLayers;
-    QVariantMap listData = parser.parse( reply->readAll() ).toMap();
     foreach ( const QVariant& resultData, listData["results"].toList() )
     {
       QVariantMap resultMap = resultData.toMap();
@@ -200,8 +209,12 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
 
   if ( reply->error() == QNetworkReply::NoError )
   {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QJson::Parser parser;
     QVariantMap serviceInfoMap = parser.parse( reply->readAll() ).toMap();
+#else
+    QVariantMap serviceInfoMap = QJsonDocument::fromJson( reply->readAll() ).object().toVariantMap();
+#endif
 
     if ( !serviceInfoMap["error"].isNull() )
     {

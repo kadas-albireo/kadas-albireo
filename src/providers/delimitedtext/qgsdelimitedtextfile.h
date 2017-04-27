@@ -18,6 +18,7 @@
 #ifndef QGSDELIMITEDTEXTFILE_H
 #define QGSDELIMITEDTEXTFILE_H
 
+#include <QObject>
 #include <QStringList>
 #include <QRegExp>
 #include <QUrl>

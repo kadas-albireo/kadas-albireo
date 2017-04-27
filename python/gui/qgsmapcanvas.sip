@@ -512,7 +512,4 @@ class QgsMapCanvas : QGraphicsView
 
     //! called on resize or changed extent to notify canvas items to change their rectangle
     void updateCanvasItemPositions();
-
-private:
-    void connectNotify( const char * signal );
 }; // class QgsMapCanvas

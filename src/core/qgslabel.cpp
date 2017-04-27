@@ -574,10 +574,11 @@ const unsigned char* QgsLabel::labelPoint( labelpoint& point, const unsigned cha
   }
 
   QGis::WkbType wkbType;
-#ifndef QT_NO_DEBUG
   const unsigned char *geomend = geom + geomlen;
+#ifndef QT_NO_DEBUG
 #else
   Q_UNUSED( geomlen );
+  Q_UNUSED( geomend );
 #endif
   Q_ASSERT( geom + 1 + sizeof( wkbType ) <= geomend );
 

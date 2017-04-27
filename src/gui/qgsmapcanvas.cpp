@@ -21,6 +21,7 @@ email                : sherman at mrcc.com
 #include <QCursor>
 #include <QDir>
 #include <QFile>
+#include <QGestureEvent>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -1690,14 +1691,6 @@ void QgsMapCanvas::setRenderFlag( bool theFlag )
   else
     stopRendering();
 }
-
-#if 0
-void QgsMapCanvas::connectNotify( const char * signal )
-{
-  Q_UNUSED( signal );
-  QgsDebugMsg( "QgsMapCanvas connected to " + QString( signal ) );
-} //connectNotify
-#endif
 
 void QgsMapCanvas::updateDatumTransformEntries()
 {

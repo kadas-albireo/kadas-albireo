@@ -140,11 +140,11 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   connect( mUi.colorButtonOutlineColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
   mUi.comboOutlineStyle->setProperty( "settings_key", "outline_style" );
-  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), Qt::NoPen );
-  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), Qt::SolidLine );
-  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashLine ), QString(), Qt::DashLine );
-  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashDotLine ), QString(), Qt::DashDotLine );
-  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), Qt::DotLine );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::NoPen ), QString(), static_cast<int>( Qt::NoPen ) );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::SolidLine ), QString(), static_cast<int>( Qt::SolidLine ) );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashLine ), QString(), static_cast<int>( Qt::DashLine ) );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DashDotLine ), QString(), static_cast<int>( Qt::DashDotLine ) );
+  mUi.comboOutlineStyle->addItem( createOutlineStyleIcon( Qt::DotLine ), QString(), static_cast<int>( Qt::DotLine ) );
   mUi.comboOutlineStyle->setCurrentIndex( QSettings().value( "/Redlining/outline_style", "1" ).toInt() );
   connect( mUi.comboOutlineStyle, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
@@ -155,14 +155,14 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   connect( mUi.colorButtonFillColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( saveColor() ) );
 
   mUi.comboFillStyle->setProperty( "settings_key", "fill_style" );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), Qt::NoBrush );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), Qt::SolidPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::HorPattern ), QString(), Qt::HorPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::VerPattern ), QString(), Qt::VerPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::BDiagPattern ), QString(), Qt::BDiagPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::DiagCrossPattern ), QString(), Qt::DiagCrossPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::FDiagPattern ), QString(), Qt::FDiagPattern );
-  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), Qt::CrossPattern );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::NoBrush ), QString(), static_cast<int>( Qt::NoBrush ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::SolidPattern ), QString(), static_cast<int>( Qt::SolidPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::HorPattern ), QString(), static_cast<int>( Qt::HorPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::VerPattern ), QString(), static_cast<int>( Qt::VerPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::BDiagPattern ), QString(), static_cast<int>( Qt::BDiagPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::DiagCrossPattern ), QString(), static_cast<int>( Qt::DiagCrossPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::FDiagPattern ), QString(), static_cast<int>( Qt::FDiagPattern ) );
+  mUi.comboFillStyle->addItem( createFillStyleIcon( Qt::CrossPattern ), QString(), static_cast<int>( Qt::CrossPattern ) );
   mUi.comboFillStyle->setCurrentIndex( QSettings().value( "/Redlining/fill_style", "1" ).toInt() );
   connect( mUi.comboFillStyle, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveStyle() ) );
 
@@ -349,10 +349,10 @@ void QgsRedlining::syncStyleWidgets( const QgsFeature& feature )
   mUi.colorButtonFillColor->setColor( QgsSymbolLayerV2Utils::decodeColor( feature.attribute( "fill" ).toString() ) );
   mUi.colorButtonFillColor->blockSignals( false );
   mUi.comboOutlineStyle->blockSignals( true );
-  mUi.comboOutlineStyle->setCurrentIndex( mUi.comboOutlineStyle->findData( QgsSymbolLayerV2Utils::decodePenStyle( feature.attribute( "outline_style" ).toString() ) ) );
+  mUi.comboOutlineStyle->setCurrentIndex( mUi.comboOutlineStyle->findData( static_cast<int>( QgsSymbolLayerV2Utils::decodePenStyle( feature.attribute( "outline_style" ).toString() ) ) ) );
   mUi.comboOutlineStyle->blockSignals( false );
   mUi.comboFillStyle->blockSignals( true );
-  mUi.comboFillStyle->setCurrentIndex( mUi.comboFillStyle->findData( QgsSymbolLayerV2Utils::decodeBrushStyle( feature.attribute( "fill_style" ).toString() ) ) );
+  mUi.comboFillStyle->setCurrentIndex( mUi.comboFillStyle->findData( static_cast<int>( QgsSymbolLayerV2Utils::decodeBrushStyle( feature.attribute( "fill_style" ).toString() ) ) ) );
   mUi.comboFillStyle->blockSignals( false );
 }
 

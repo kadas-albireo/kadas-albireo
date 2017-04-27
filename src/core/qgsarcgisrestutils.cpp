@@ -33,7 +33,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QThread>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 
 
 QVariant::Type QgsArcGisRestUtils::mapEsriFieldType( const QString &esriFieldType )
@@ -474,6 +479,7 @@ QVariantMap QgsArcGisRestUtils::queryServiceJSON( const QUrl &url, QString &erro
   }
 
   // Parse data
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QJson::Parser parser;
   bool ok = false;
   QVariantMap map = parser.parse( reply, &ok ).toMap();
@@ -485,6 +491,18 @@ QVariantMap QgsArcGisRestUtils::queryServiceJSON( const QUrl &url, QString &erro
     return QVariantMap();
   }
   return map;
+#else
+  QJsonParseError err;
+  QJsonDocument doc = QJsonDocument::fromJson( reply, &err );
+  if ( doc.isNull() )
+  {
+    errorTitle = "Parsing error";
+    errorText = err.errorString();
+    QgsDebugMsg( QString( "Parsing error: %1" ).arg( err.errorString() ) );
+    return QVariantMap();
+  }
+  return doc.object().toVariantMap();
+#endif
 }
 
 void QgsArcGisRestUtils::addToken( QUrl &url )
@@ -498,8 +516,13 @@ void QgsArcGisRestUtils::addToken( QUrl &url )
     QByteArray data = QUrl::fromPercentEncoding( cookie.toRawForm() ).toLocal8Bit();
     if ( data.startsWith( "esri_auth=" ) )
     {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       QJson::Parser parser;
       QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
+#else
+      QJsonDocument doc = QJsonDocument::fromJson( data.mid( 10 ) );
+      QVariantMap map = doc.object().toVariantMap();
+#endif
       QString token = map["token"].toString();
       if ( !token.isEmpty() )
       {

@@ -22,7 +22,7 @@ class QgsComposerItem : QgsComposerObject, QGraphicsRectItem
 
 %ConvertToSubClassCode
   // the conversions have to be static, because they're using multiple inheritance
-  // (seen in PyQt4 .sip files for some QGraphicsItem classes)
+  // (seen in PyQt .sip files for some QGraphicsItem classes)
   switch (sipCpp->type())
   {
   case QgsComposerItem::ComposerItem:

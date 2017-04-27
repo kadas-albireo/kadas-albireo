@@ -29,7 +29,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 
 
 const int QgsRemoteDataSearchProvider::sSearchTimeout = 2000;
@@ -151,14 +156,24 @@ void QgsRemoteDataSearchProvider::replyFinished()
     }
 
     QByteArray replyText = reply->readAll();
-    QgsDebugMsg( replyText );
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QJson::Parser parser;
-    QVariant result = parser.parse( replyText );
-    if ( result.isNull() )
+    bool ok = false;
+    QVariantMap resultMap = parser.parse( replyText, &ok ).toMap();
+    if ( !ok )
     {
       QgsDebugMsg( QString( "Error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
     }
-    foreach ( const QVariant& item, result.toMap()["results"].toList() )
+#else
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson( replyText, &err );
+    if ( doc.isNull() )
+    {
+      QgsDebugMsg( QString( "Parsing error:" ).arg( err.errorString() ) );
+    }
+    QVariantMap resultMap = doc.object().toVariantMap();
+#endif
+    foreach ( const QVariant& item, resultMap["results"].toList() )
     {
       QVariantMap itemMap = item.toMap();
       QVariantMap itemAttrsMap = itemMap["attrs"].toMap();

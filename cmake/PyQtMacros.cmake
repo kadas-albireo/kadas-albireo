@@ -1,4 +1,4 @@
-# Macros for PyQt4
+# Macros for PyQt
 # ~~~~~~~~~~~~~~~~
 # Copyright (c) 2009, Juergen E. Fischer <jef at norbit dot de>
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -21,7 +21,7 @@ IF(NOT PYUIC4_PROGRAM)
 ENDIF(NOT PYUIC4_PROGRAM)
 
 # Adapted from QT4_WRAP_UI
-MACRO(PYQT4_WRAP_UI outfiles )
+MACRO(PYQT_WRAP_UI outfiles )
   IF(WIN32 AND NOT CMAKE_CROSSCOMPILING)
     SET(PYUIC4_WRAPPER "${CMAKE_SOURCE_DIR}/scripts/pyuic4-wrapper.bat")
     SET(PYUIC4_WRAPPER_PATH "${QGIS_OUTPUT_DIRECTORY}/bin/${CMAKE_BUILD_TYPE}")
@@ -42,7 +42,7 @@ MACRO(PYQT4_WRAP_UI outfiles )
     )
     SET(${outfiles} ${${outfiles}} ${outfile})
   ENDFOREACH(it)
-ENDMACRO(PYQT4_WRAP_UI)
+ENDMACRO(PYQT_WRAP_UI)
 
 IF(NOT PYRCC4_PROGRAM)
   IF (MSVC)
@@ -60,7 +60,7 @@ IF(NOT PYRCC4_PROGRAM)
 ENDIF(NOT PYRCC4_PROGRAM)
 
 # Adapted from QT4_ADD_RESOURCES
-MACRO (PYQT4_ADD_RESOURCES outfiles )
+MACRO (PYQT_ADD_RESOURCES outfiles )
   FOREACH (it ${ARGN})
     GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
     GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
@@ -85,4 +85,4 @@ MACRO (PYQT4_ADD_RESOURCES outfiles )
       DEPENDS ${_RC_DEPENDS})
     SET(${outfiles} ${${outfiles}} ${outfile})
   ENDFOREACH (it)
-ENDMACRO (PYQT4_ADD_RESOURCES)
+ENDMACRO (PYQT_ADD_RESOURCES)

@@ -20,6 +20,7 @@
 
 #include <QString>
 #include <QColor>
+#include <QObject>
 #include <QPair>
 
 /**List of colors paired with a friendly display name identifying the color

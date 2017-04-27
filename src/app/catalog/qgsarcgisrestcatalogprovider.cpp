@@ -23,7 +23,12 @@
 #include <QFileInfo>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 
 QgsArcGisRestCatalogProvider::QgsArcGisRestCatalogProvider( const QString &baseUrl, QgsCatalogBrowser *browser )
     : QgsCatalogProvider( browser ), mBaseUrl( baseUrl )
@@ -64,8 +69,12 @@ void QgsArcGisRestCatalogProvider::parseFolderDo()
 
   if ( reply->error() == QNetworkReply::NoError )
   {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QJson::Parser parser;
     QVariantMap folderData = parser.parse( reply->readAll() ).toMap();
+#else
+    QVariantMap folderData = QJsonDocument::fromJson( reply->readAll() ).object().toVariantMap();
+#endif
     QString catName = QFileInfo( path ).baseName();
     if ( !catName.isEmpty() )
     {
@@ -103,8 +112,12 @@ void QgsArcGisRestCatalogProvider::parseServiceDo()
 
   if ( reply->error() == QNetworkReply::NoError )
   {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QJson::Parser parser;
     QVariantMap serviceData = parser.parse( reply->readAll() ).toMap();
+#else
+    QVariantMap serviceData = QJsonDocument::fromJson( reply->readAll() ).object().toVariantMap();
+#endif
     if ( serviceData.contains( "singleFusedMapCache" ) )
     {
       QString catName = serviceData["documentInfo"].toMap()["Title"].toString();

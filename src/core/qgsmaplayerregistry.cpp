@@ -159,12 +159,3 @@ const QMap<QString, QgsMapLayer*>& QgsMapLayerRegistry::mapLayers()
 {
   return mMapLayers;
 }
-
-
-#if 0
-void QgsMapLayerRegistry::connectNotify( const char * signal )
-{
-  Q_UNUSED( signal );
-  //QgsDebugMsg("QgsMapLayerRegistry connected to " + QString(signal));
-} //  QgsMapLayerRegistry::connectNotify
-#endif

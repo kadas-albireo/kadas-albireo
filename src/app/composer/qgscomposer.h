@@ -44,6 +44,7 @@ class QGridLayout;
 class QDomNode;
 class QDomDocument;
 class QMoveEvent;
+class QPrinter;
 class QResizeEvent;
 class QFile;
 class QSizeGrip;

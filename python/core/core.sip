@@ -6,9 +6,13 @@
 %Import QtGui/QtGuimod.sip
 %Import QtXml/QtXmlmod.sip
 %Import QtNetwork/QtNetworkmod.sip
-
+%If (Qt_5_0_0 -)
+  %Import QtWidgets/QtWidgetsmod.sip
+  %Import QtPrintSupport/QtPrintSupportmod.sip
+  typedef void* XEvent;
+%End
 %If (WS_WIN)
-typedef void* XEvent;
+  typedef void* XEvent;
 %End
 
 %Include conversions.sip
@@ -46,7 +50,9 @@ typedef void* XEvent;
 %Include qgsmaptopixelgeometrysimplifier.sip
 %Include qgsgml.sip
 %Include qgsgmlschema.sip
-%Include qgshttptransaction.sip
+%If (- Qt_5_0_0)
+  %Include qgshttptransaction.sip
+%End
 %Include qgslabel.sip
 %Include qgslabelattributes.sip
 %Include qgslabelsearchtree.sip

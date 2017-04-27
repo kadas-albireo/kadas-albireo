@@ -19,7 +19,7 @@ email                : lrssvtml (at) gmail (dot) com
 Some portions of code were taken from https://code.google.com/p/pydee/
 """
 
-from PyQt4.QtCore import Qt, QTimer, QSettings, QCoreApplication, QSize, QByteArray, QFileInfo, SIGNAL
+from PyQt4.QtCore import Qt, QTimer, QSettings, QCoreApplication, QSize, QByteArray, QFileInfo
 from PyQt4.QtGui import QDockWidget, QToolBar, QToolButton, QWidget, QSplitter, QTreeWidget, QAction, QFileDialog, QCheckBox, QSizePolicy, QMenu, QGridLayout, QApplication
 from qgis.utils import iface
 from console_sci import ShellScintilla
@@ -436,24 +436,24 @@ class PythonConsoleWidget(QWidget):
         ##------------ Layout -------------------------------
 
         self.mainLayout = QGridLayout(self)
-        self.mainLayout.setMargin(0)
+        self.mainLayout.setContentsMargins(0, 0, 0, 0)
         self.mainLayout.setSpacing(0)
         self.mainLayout.addWidget(self.widgetButton, 0, 0, 1, 1)
         self.mainLayout.addWidget(self.splitterEditor, 0, 1, 1, 1)
 
         self.layoutEditor = QGridLayout(self.widgetEditor)
-        self.layoutEditor.setMargin(0)
+        self.layoutEditor.setContentsMargins(0, 0, 0, 0)
         self.layoutEditor.setSpacing(0)
         self.layoutEditor.addWidget(self.widgetButtonEditor, 0, 0, 2, 1)
         self.layoutEditor.addWidget(self.tabEditorWidget, 0, 1, 1, 1)
         self.layoutEditor.addWidget(self.widgetFind, 1, 1, 1, 1)
 
         self.toolBarLayout = QGridLayout(self.widgetButton)
-        self.toolBarLayout.setMargin(0)
+        self.toolBarLayout.setContentsMargins(0, 0, 0, 0)
         self.toolBarLayout.setSpacing(0)
         self.toolBarLayout.addWidget(self.toolBar)
         self.toolBarEditorLayout = QGridLayout(self.widgetButtonEditor)
-        self.toolBarEditorLayout.setMargin(0)
+        self.toolBarEditorLayout.setContentsMargins(0, 0, 0, 0)
         self.toolBarEditorLayout.setSpacing(0)
         self.toolBarEditorLayout.addWidget(self.toolBarEditor)
 
@@ -520,8 +520,7 @@ class PythonConsoleWidget(QWidget):
         self.saveFileButton.triggered.connect(self.saveScriptFile)
         self.saveAsFileButton.triggered.connect(self.saveAsScriptFile)
         self.helpButton.triggered.connect(self.openHelp)
-        self.connect(self.listClassMethod, SIGNAL('itemClicked(QTreeWidgetItem*, int)'),
-                     self.onClickGoToLine)
+        self.listClassMethod.itemClicked.connect(self.onClickGoToLine)
         self.lineEditFind.returnPressed.connect(self._findText)
         self.findNextButton.clicked.connect(self._findNext)
         self.findPrevButton.clicked.connect(self._findPrev)

@@ -893,15 +893,6 @@ QString QgsMapLayer::lastError()
   return QString();
 }
 
-#if 0
-void QgsMapLayer::connectNotify( const char * signal )
-{
-  Q_UNUSED( signal );
-  QgsDebugMsgLevel( "QgsMapLayer connected to " + QString( signal ), 3 );
-} //  QgsMapLayer::connectNotify
-#endif
-
-
 void QgsMapLayer::toggleScaleBasedVisibility( bool theVisibilityFlag )
 {
   setScaleBasedVisibility( theVisibilityFlag );

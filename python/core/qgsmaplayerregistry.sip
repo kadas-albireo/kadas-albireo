@@ -206,6 +206,4 @@ class QgsMapLayerRegistry : QObject
 
   private:
     QgsMapLayerRegistry(); // private 'cause it's a singleton
-
-    void connectNotify( const char * signal );
 }; // class QgsMapLayerRegistry

@@ -576,11 +576,6 @@ class CORE_EXPORT QgsMapLayer : public QObject
     /** Write style manager's configuration (if exists). To be called by subclasses. */
     void writeStyleManager( QDomNode& layerNode, QDomDocument& doc ) const;
 
-#if 0
-    /** debugging member - invoked when a connect() is made to this object */
-    void connectNotify( const char * signal ) override;
-#endif
-
     /** Add error message */
     void appendError( const QgsErrorMessage & theMessage ) { mError.append( theMessage );}
     /** Set error message */

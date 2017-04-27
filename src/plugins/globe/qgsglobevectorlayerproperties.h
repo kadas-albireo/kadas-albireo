@@ -28,6 +28,7 @@ class QListWidgetItem;
 
 struct QgsGlobeVectorLayerConfig : public QObject
 {
+  Q_OBJECT
 public:
   enum RenderingMode
   {

@@ -65,6 +65,13 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
   runString( "import sys" ); // import sys module (for display / exception hooks)
   runString( "import os" ); // import os module (for user paths)
 
+  // Set API for QtPy and rewire PyQt imports
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  runString( "os.environ['QT_API'] = 'pyqt4'" );
+#else
+  runString( "os.environ['QT_API'] = 'pyqt5'" );
+#endif
+
   // support for PYTHONSTARTUP-like environment variable: PYQGIS_STARTUP
   // (unlike PYTHONHOME and PYTHONPATH, PYTHONSTARTUP is not supported for embedded interpreter by default)
   // this is different than user's 'startup.py' (below), since it is loaded just after Py_Initialize
@@ -120,7 +127,7 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
     return;
   }
 
-  // set PyQt4 api versions
+  // set PyQt api versions
   QStringList apiV2classes;
   apiV2classes << "QDate" << "QDateTime" << "QString" << "QTextStream" << "QTime" << "QUrl" << "QVariant";
   foreach ( const QString& clsName, apiV2classes )
@@ -134,12 +141,17 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
   }
 
   // import Qt bindings
-  if ( !runString( "from PyQt4 import QtCore, QtGui",
-                   QObject::tr( "Couldn't load PyQt4." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
+  if ( !runString( "from qtpy import QtCore, QtGui",
+                   QObject::tr( "Couldn't load qtpy." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
   {
     exitPython();
     return;
   }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  runString( "sys.modules['PyQt5'] = __import__('qtpy')" );
+#else
+  runString( "sys.modules['PyQt4'] = __import__('qtpy')" );
+#endif
 
   // import QGIS bindings
   QString error_msg = QObject::tr( "Couldn't load PyQGIS." ) + "\n" + QObject::tr( "Python support will be disabled." );
@@ -209,6 +221,13 @@ void QgsPythonUtilsImpl::initServerPython( QgsServerInterface* interface )
   runString( "import sys" ); // import sys module (for display / exception hooks)
   runString( "import os" ); // import os module (for user paths)
 
+  // Set API for QtPy
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  runString( "os.environ['QT_API'] = 'pyqt4'" );
+#else
+  runString( "os.environ['QT_API'] = 'pyqt5'" );
+#endif
+
   // support for PYTHONSTARTUP-like environment variable: PYQGIS_STARTUP
   // (unlike PYTHONHOME and PYTHONPATH, PYTHONSTARTUP is not supported for embedded interpreter by default)
   // this is different than user's 'startup.py' (below), since it is loaded just after Py_Initialize
@@ -264,7 +283,7 @@ void QgsPythonUtilsImpl::initServerPython( QgsServerInterface* interface )
     return;
   }
 
-  // set PyQt4 api versions
+  // set PyQt api versions
   QStringList apiV2classes;
   apiV2classes << "QDate" << "QDateTime" << "QString" << "QTextStream" << "QTime" << "QUrl" << "QVariant";
   foreach ( const QString& clsName, apiV2classes )
@@ -278,12 +297,18 @@ void QgsPythonUtilsImpl::initServerPython( QgsServerInterface* interface )
   }
 
   // import Qt bindings
-  if ( !runString( "from PyQt4 import QtCore, QtGui",
-                   QObject::tr( "Couldn't load PyQt4." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
+  if ( !runString( "from qtpy import QtCore, QtGui",
+                   QObject::tr( "Couldn't load qtpy." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
   {
     exitPython();
     return;
   }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  runString( "sys.modules['PyQt5'] = __import__('qtpy')" );
+#else
+  runString( "sys.modules['PyQt4'] = __import__('qtpy')" );
+#endif
 
   // import QGIS bindings
   QString error_msg = QObject::tr( "Couldn't load PyQGIS." ) + "\n" + QObject::tr( "Python support will be disabled." );

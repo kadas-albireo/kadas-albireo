@@ -738,7 +738,7 @@ template<TYPE>
 
 
 //
-// copied from PyQt4 QMap<int, TYPE> and adapted to qint64
+// copied from PyQt QMap<int, TYPE> and adapted to qint64
 //
 
 // QMap<qint64, TYPE> is implemented as a Python dictionary.

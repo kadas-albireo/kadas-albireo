@@ -26,7 +26,12 @@
 #include "qgsgeometry.h"
 
 #include <cstring>
-#include <qjson/parser.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+# include <qjson/parser.h>
+#else
+# include <QJsonDocument>
+# include <QJsonObject>
+#endif
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QPainter>
@@ -59,6 +64,7 @@ void QgsAmsLegendFetcher::handleError( QString errorTitle, QString errorMsg )
 void QgsAmsLegendFetcher::handleFinished()
 {
   // Parse result
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QJson::Parser parser;
   bool ok = false;
   QVariantMap queryResults = parser.parse( mQueryReply, &ok ).toMap();
@@ -66,6 +72,16 @@ void QgsAmsLegendFetcher::handleFinished()
   {
     emit error( QString( "Parsing error at line %1: %2" ).arg( parser.errorLine() ).arg( parser.errorString() ) );
   }
+#else
+  QJsonParseError err;
+  QJsonDocument doc = QJsonDocument::fromJson( mQueryReply, &err );
+  if ( doc.isNull() )
+  {
+    emit error( QString( "Parsing error:" ).arg( err.errorString() ) );
+  }
+  QVariantMap queryResults = doc.object().toVariantMap();
+#endif
+
   QgsDataSourceURI dataSource( mProvider->dataSourceUri() );
   QList< QPair<QString, QImage> > legendEntries;
   foreach ( const QVariant& result, queryResults["layers"].toList() )

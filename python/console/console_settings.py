@@ -19,7 +19,7 @@ email                : lrssvtml (at) gmail (dot) com
 Some portions of code were taken from https://code.google.com/p/pydee/
 """
 
-from PyQt4.QtCore import QCoreApplication, SIGNAL, QSize, QSettings, QFileInfo, Qt
+from PyQt4.QtCore import QCoreApplication, QSize, QSettings, QFileInfo, Qt
 from PyQt4.QtGui import QDialog, QIcon, QFileDialog, QMessageBox, QTableWidgetItem, QFont, QColor
 from console_compile_apis import PrepareAPIDialog
 
@@ -43,12 +43,9 @@ class optionsDialog(QDialog, Ui_SettingsDialogPythonConsole):
         self.removeAPIpath.setIcon(QIcon(":/images/themes/default/symbologyRemove.png"))
         self.removeAPIpath.setToolTip(QCoreApplication.translate("PythonConsole", "Remove API path"))
 
-        self.connect( self.preloadAPI,
-                      SIGNAL("stateChanged(int)"), self.initialCheck)
-        self.connect(self.addAPIpath,
-                     SIGNAL("clicked()"), self.loadAPIFile)
-        self.connect(self.removeAPIpath,
-                     SIGNAL("clicked()"), self.removeAPI)
+        self.preloadAPI.stateChanged.connect(self.initialCheck)
+        self.addAPIpath.clicked.connect(self.loadAPIFile)
+        self.removeAPIpath.clicked.connect(self.removeAPI)
         self.compileAPIs.clicked.connect(self._prepareAPI)
 
         self.resetFontColor.setIcon(QIcon(":/images/themes/default/console/iconResetColorConsole.png"))

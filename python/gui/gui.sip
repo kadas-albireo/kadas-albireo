@@ -8,7 +8,12 @@
 %Import QtXml/QtXmlmod.sip
 
 %If (HAVE_QSCI_SIP)
+%If (- Qt_5_0_0)
 %Import Qsci/qscimod4.sip
+%End
+%If (Qt_5_0_0 -)
+%Import Qsci/qscimod5.sip
+%End
 %End
 
 %Import core/core.sip
