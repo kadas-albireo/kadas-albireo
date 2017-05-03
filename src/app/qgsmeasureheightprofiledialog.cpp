@@ -63,6 +63,21 @@ class QgsMeasureHeightProfileDialog::ScaleDraw : public QwtScaleDraw
     double mFactor;
 };
 
+#if QWT_VERSION >= 0x060000
+class PaddedPlotMarker : public QwtPlotMarker
+{
+  public:
+    PaddedPlotMarker() : QwtPlotMarker() {}
+    void getCanvasMarginHint( const QwtScaleMap &/*xMap*/, const QwtScaleMap &/*yMap*/, const QRectF &/*canvasSize*/, double &left, double &top, double &right, double &bottom ) const override
+    {
+      left = 15;
+      right = 15;
+      top = 15;
+      bottom = 5;
+    }
+};
+#endif
+
 
 QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightProfileTool *tool, QWidget *parent, Qt::WindowFlags f )
     : QDialog( parent, f ), mTool( tool ), mLineOfSightMarker( 0 ), mNSamples( 1000 )
@@ -107,13 +122,16 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mPlotCurve->setData( new QwtPointSeriesData() );
 #endif
 
-  mPlotMarker = new QwtPlotMarker();
 #if QWT_VERSION < 0x060000
+  mPlotMarker = new QwtPlotMarker();
   mPlotMarker->setSymbol( QwtSymbol( QwtSymbol::Ellipse, QBrush( Qt::blue ), QPen( Qt::blue ), QSize( 5, 5 ) ) );
 #else
+  mPlotMarker = new PaddedPlotMarker();
   mPlotMarker->setSymbol( new QwtSymbol( QwtSymbol::Ellipse, QBrush( Qt::blue ), QPen( Qt::blue ), QSize( 5, 5 ) ) );
-#endif
   mPlotMarker->attach( mPlot );
+  mPlotMarker->setItemAttribute( QwtPlotItem::Margins );
+#endif
+  mPlotMarker->setLabelAlignment( Qt::AlignTop | Qt::AlignHCenter );
 
   mLineOfSightGroupBoxgroupBox = new QGroupBox( this );
   mLineOfSightGroupBoxgroupBox->setTitle( tr( "Line of sight" ) );
@@ -193,8 +211,11 @@ void QgsMeasureHeightProfileDialog::setMarkerPos( int segment, const QgsPoint &p
   int idx = qMin( int( x / mTotLength * mNSamples ), mNSamples - 1 );
 #if QWT_VERSION < 0x060000
   mPlotMarker->setValue( mPlotCurve->x( idx ), mPlotCurve->y( idx ) );
+  mPlotMarker->setLabel( QString::number( qRound( mPlotCurve->y( idx ) ) ) );
 #else
-  mPlotMarker->setValue( mPlotCurve->data()->sample( idx ) );
+  QPointF sample = mPlotCurve->data()->sample( idx );
+  mPlotMarker->setValue( sample );
+  mPlotMarker->setLabel( QString::number( qRound( sample.y() ) ) );
 #endif
   mPlot->replot();
 }
