@@ -26,6 +26,7 @@ class APP_EXPORT QgsMapToolSlope : public QgsMapToolDrawRectangle
   public:
     QgsMapToolSlope( QgsMapCanvas* mapCanvas );
     void activate();
+    void compute( const QgsRectangle& extent, const QgsCoordinateReferenceSystem& crs );
 
   private slots:
     void drawFinished();

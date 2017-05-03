@@ -27,6 +27,8 @@ class APP_EXPORT QgsMapToolHillshade : public QgsMapToolDrawRectangle
     QgsMapToolHillshade( QgsMapCanvas* mapCanvas );
     void activate();
 
+    void compute( const QgsRectangle &extent, const QgsCoordinateReferenceSystem &crs );
+
   private slots:
     void drawFinished();
 };

@@ -52,12 +52,30 @@ void QgsMapToolHillshade::activate()
 
 void QgsMapToolHillshade::drawFinished()
 {
+  QgsPoint p1, p2;
+  getPart( 0, p1, p2 );
+  QgsRectangle rect( p1, p2 );
+  rect.normalize();
+  if ( rect.isEmpty() )
+  {
+    reset();
+    return;
+  }
+
+  QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
+
+  compute( rect, rectCrs );
+
+  reset();
+}
+
+void QgsMapToolHillshade::compute( const QgsRectangle &extent, const QgsCoordinateReferenceSystem &crs )
+{
   QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
   QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
   if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
   {
     QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
-    reset();
     return;
   }
 
@@ -87,25 +105,13 @@ void QgsMapToolHillshade::drawFinished()
   anglesDialog.setFixedSize( anglesDialog.sizeHint() );
   if ( anglesDialog.exec() == QDialog::Rejected )
   {
-    reset();
     return;
   }
 
-  QgsPoint p1, p2;
-  getPart( 0, p1, p2 );
-  QgsRectangle rect( p1, p2 );
-  rect.normalize();
-  if ( rect.isEmpty() )
-  {
-    reset();
-    return;
-  }
-  QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
-
-  QString outputFileName = QString( "hillshade_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
+  QString outputFileName = QString( "hillshade_%1-%2_%3-%4.tif" ).arg( extent.xMinimum() ).arg( extent.xMaximum() ).arg( extent.yMinimum() ).arg( extent.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
 
-  QgsHillshadeFilter hillshade( layer->source(), outputFile, "GTiff", spinHorAngle->value(), spinVerAngle->value(), rect, rectCrs );
+  QgsHillshadeFilter hillshade( layer->source(), outputFile, "GTiff", spinHorAngle->value(), spinVerAngle->value(), extent, crs );
   QProgressDialog p( tr( "Calculating hillshade..." ), tr( "Abort" ), 0, 0 );
   p.setWindowTitle( tr( "Hillshade" ) );
   p.setWindowModality( Qt::ApplicationModal );
@@ -114,12 +120,11 @@ void QgsMapToolHillshade::drawFinished()
   QApplication::restoreOverrideCursor();
   if ( !p.wasCanceled() )
   {
-    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( rect.toString( true ) ) );
+    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Hillshade [%1]" ).arg( extent.toString( true ) ) );
     if ( layer->isValid() && layer->renderer() )
     {
       layer->renderer()->setOpacity( 0.6 );
       QgsMapLayerRegistry::instance()->addMapLayer( layer );
     }
   }
-  reset();
 }

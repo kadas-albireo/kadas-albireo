@@ -47,15 +47,6 @@ void QgsMapToolSlope::activate()
 
 void QgsMapToolSlope::drawFinished()
 {
-  QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
-  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
-  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
-  {
-    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
-    reset();
-    return;
-  }
-
   QgsPoint p1, p2;
   getPart( 0, p1, p2 );
   QgsRectangle rect( p1, p2 );
@@ -67,10 +58,25 @@ void QgsMapToolSlope::drawFinished()
   }
   QgsCoordinateReferenceSystem rectCrs = canvas()->mapSettings().destinationCrs();
 
-  QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( rect.xMinimum() ).arg( rect.xMaximum() ).arg( rect.yMinimum() ).arg( rect.yMaximum() );
+  compute( rect, rectCrs );
+
+  reset();
+}
+
+void QgsMapToolSlope::compute( const QgsRectangle &extent, const QgsCoordinateReferenceSystem &crs )
+{
+  QString layerid = QgsProject::instance()->readEntry( "Heightmap", "layer" );
+  QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerid );
+  if ( !layer || layer->type() != QgsMapLayer::RasterLayer )
+  {
+    QgisApp::instance()->messageBar()->pushMessage( tr( "No heightmap is defined in the project." ), tr( "Right-click a raster layer in the layer tree and select it to be used as heightmap." ), QgsMessageBar::INFO, 10 );
+    return;
+  }
+
+  QString outputFileName = QString( "slope_%1-%2_%3-%4.tif" ).arg( extent.xMinimum() ).arg( extent.xMaximum() ).arg( extent.yMinimum() ).arg( extent.yMaximum() );
   QString outputFile = QgsTemporaryFile::createNewFile( outputFileName );
 
-  QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", rect, rectCrs );
+  QgsSlopeFilter slope( layer->source(), outputFile, "GTiff", extent, crs );
   QProgressDialog p( tr( "Calculating slope..." ), tr( "Abort" ), 0, 0 );
   p.setWindowTitle( tr( "Slope" ) );
   p.setWindowModality( Qt::ApplicationModal );
@@ -79,7 +85,7 @@ void QgsMapToolSlope::drawFinished()
   QApplication::restoreOverrideCursor();
   if ( !p.wasCanceled() )
   {
-    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( rect.toString( true ) ) );
+    QgsRasterLayer* layer = new QgsRasterLayer( outputFile, tr( "Slope [%1]" ).arg( extent.toString( true ) ) );
     QgsColorRampShader* rampShader = new QgsColorRampShader();
     QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
         << QgsColorRampShader::ColorRampItem( 0, QColor( 43, 131, 186 ), QString::fromUtf8( "0°" ) )
@@ -99,5 +105,4 @@ void QgsMapToolSlope::drawFinished()
     layer->setRenderer( renderer );
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
   }
-  reset();
 }

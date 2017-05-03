@@ -30,6 +30,8 @@
 #include "qgsfeaturepicker.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
+#include "qgsmaptoolslope.h"
+#include "qgsmaptoolhillshade.h"
 #include "qgsmeasuretoolv2.h"
 #include "qgsmeasureheightprofiletool.h"
 #include "qgsredlining.h"
@@ -113,14 +115,20 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
   }
 
-  if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
+  if ( mLabelPositions.isEmpty() )
   {
     QMenu* analysisMenu = new QMenu();
     addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );
     analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
     analysisMenu->addAction( QIcon( ":/images/themes/default/hillshade.svg" ), tr( "Hillshade" ), this, SLOT( terrainHillshade() ) );
-    analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
-    analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
+    if ( !mSelectedFeature.isValid() )
+    {
+      analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
+    }
+    if ( !mSelectedFeature.isValid() || mSelectedFeature.geometry()->type() != QGis::Point )
+    {
+      analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
+    }
   }
 
   addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
@@ -293,12 +301,30 @@ void QgsMapCanvasContextMenu::rasterAttributes()
 
 void QgsMapCanvasContextMenu::terrainSlope()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mSlope );
+  if ( mSelectedFeature.isValid() )
+  {
+    QgsRectangle extent = mSelectedFeature.geometry()->boundingBox();
+    const QgsCoordinateReferenceSystem& crs = mSelectedLayer->crs();
+    static_cast<QgsMapToolSlope*>( QgisApp::instance()->mapTools()->mSlope )->compute( extent, crs );
+  }
+  else
+  {
+    QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mSlope );
+  }
 }
 
 void QgsMapCanvasContextMenu::terrainHillshade()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mHillshade );
+  if ( mSelectedFeature.isValid() )
+  {
+    QgsRectangle extent = mSelectedFeature.geometry()->boundingBox();
+    const QgsCoordinateReferenceSystem& crs = mSelectedLayer->crs();
+    static_cast<QgsMapToolHillshade*>( QgisApp::instance()->mapTools()->mHillshade )->compute( extent, crs );
+  }
+  else
+  {
+    QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mHillshade );
+  }
 }
 
 void QgsMapCanvasContextMenu::terrainViewshed()
