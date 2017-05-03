@@ -386,6 +386,18 @@ QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& 
   }
   else if ( !press && button == Qt::RightButton )
   {
+    if ( mPoints.back().size() > 2 )
+    {
+      // If last two points are very close, discard last point
+      // (To avoid confusion if user left-clicks to set point and right-clicks to terminate)
+      int nPoints = mPoints.back().size();
+      QPoint p1 = toCanvasCoordinates( mPoints.back()[nPoints - 2] );
+      QPoint p2 = toCanvasCoordinates( mPoints.back()[nPoints - 1] );
+      if (( p2  - p1 ).manhattanLength() < 5 )
+      {
+        mPoints.back().pop_back();
+      }
+    }
     if ( mMultipart )
     {
       if ( !mIsArea || mPoints.back().size() > 2 )
