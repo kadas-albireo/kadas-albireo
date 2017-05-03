@@ -30,12 +30,26 @@ REGISTER_QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem )
 
 QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, QString* errMsg )
 {
-  QgsPoint wgs84Pos;
-  if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
+  QByteArray format = QImageReader::imageFormat( filePath );
+  if ( format.isEmpty() )
   {
+    // Image format not supported
     return 0;
   }
+  QgsPoint wgs84Pos;
+  bool locked = true;
+  // Fall back to canvas center position if image has no geotags
+  if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
+  {
+    locked = false;
+    const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( canvas->mapSettings().destinationCrs().authid(), "EPSG:4326" );
+    wgs84Pos = crst->transform( canvas->mapSettings().extent().center() );
+  }
   QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( canvas );
+  if ( locked )
+  {
+    item->setItemFlags( QgsAnnotationItem::ItemAnchorIsNotMoveable );
+  }
   item->setFilePath( filePath );
   item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
   return item;
@@ -192,6 +206,9 @@ void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const
     mFilePath = newFilePath;
   }
   geoImageAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
+  QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
+  geoImageAnnotationElem.setAttribute( "lon", worldPos.x() );
+  geoImageAnnotationElem.setAttribute( "lat", worldPos.y() );
   _writeXML( doc, geoImageAnnotationElem );
   documentElem.appendChild( geoImageAnnotationElem );
 }
@@ -199,13 +216,9 @@ void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const
 void QgsGeoImageAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& itemElem )
 {
   QString filePath = QgsProject::instance()->readPath( itemElem.attribute( "file" ) );
-  QgsPoint wgs84Pos;
-  if ( !readGeoPos( filePath, wgs84Pos ) )
-  {
-    // Suicide
-    delete this;
-    return;
-  }
+  QString lon = itemElem.attribute( "lon" );
+  QString lat = itemElem.attribute( "lat" );
+  QgsPoint wgs84Pos( lon.toDouble(), lat.toDouble() );
 
   setFilePath( filePath );
   QDomElement annotationElem = itemElem.firstChildElement( "AnnotationItem" );

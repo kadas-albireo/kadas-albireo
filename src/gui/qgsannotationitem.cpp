@@ -333,7 +333,7 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 
   int cursorSensitivity = 7;
 
-  if ( qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity ) //move map point if position is close to the origin
+  if (( mFlags & ItemAnchorIsNotMoveable ) == 0 && qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity ) //move map point if position is close to the origin
   {
     return MoveMapPosition;
   }
@@ -395,7 +395,7 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
       return MoveFramePosition;
     }
   }
-  else
+  else if (( mFlags & ItemAnchorIsNotMoveable ) == 0 )
   {
     if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
          itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
