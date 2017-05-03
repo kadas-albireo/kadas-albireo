@@ -211,11 +211,11 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
   private:
     QString mId;
-    virtual void _showItemEditor() = 0;
     void notifyItemUpdated();
 
   private slots:
     void syncGeoPos();
+    virtual void _showItemEditor() = 0;
 };
 
 #endif // QGSANNOTATIONITEM_H

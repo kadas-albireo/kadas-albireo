@@ -45,6 +45,8 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void paint( QPainter* painter ) override;
     QString filePath() const { return mFilePath; }
 
+    void showContextMenu( const QPoint& screenPos ) override;
+
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
 
@@ -54,6 +56,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 
     static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos , QString *errMsg = 0 );
 
+  private slots:
     void _showItemEditor() override;
 };
 

@@ -42,6 +42,7 @@ class GUI_EXPORT QgsImageAnnotationItem: public QgsAnnotationItem
   private:
     QImage mImage;
 
+  private slots:
     void _showItemEditor() override;
 };
 

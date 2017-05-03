@@ -20,10 +20,11 @@
 #include "qgsgeoimageannotationitem.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
+#include <QDesktopServices>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QImageReader>
-#include <QDesktopServices>
+#include <QMenu>
 #include <exiv2/exiv2.hpp>
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem )
@@ -250,4 +251,12 @@ void QgsGeoImageAnnotationItem::paint( QPainter* painter )
 void QgsGeoImageAnnotationItem::_showItemEditor()
 {
   QDesktopServices::openUrl( QUrl::fromLocalFile( mFilePath ) );
+}
+
+void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
+{
+  QMenu menu;
+  menu.addAction( tr( "Open" ), this, SLOT( _showItemEditor() ) );
+  menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
+  menu.exec( screenPos );
 }
