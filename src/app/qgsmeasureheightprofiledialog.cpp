@@ -234,6 +234,8 @@ void QgsMeasureHeightProfileDialog::clear()
   mLinesOfSightRB.clear();
   delete mLineOfSightMarker;
   mLineOfSightMarker = 0;
+  qDeleteAll( mNodeMarkers );
+  mNodeMarkers.clear();
   mPlot->replot();
   mLineOfSightGroupBoxgroupBox->setEnabled( false );
 }
@@ -316,6 +318,7 @@ void QgsMeasureHeightProfileDialog::replot()
     {
       continue;
     }
+
     QgsVector dir = QgsVector( mPoints[i + 1] - mPoints[i] ).normal();
     while ( x < mSegmentLengths[i] )
     {
@@ -375,6 +378,25 @@ void QgsMeasureHeightProfileDialog::replot()
   mPlot->setAxisScale( QwtPlot::xBottom, 0, nSamples, step );
 
   GDALClose( raster );
+
+  // Node markers
+  x = 0;
+  for ( int i = 0, n = mPoints.size() - 1; i < n; ++i )
+  {
+    x += mSegmentLengths[i];
+    QwtPlotMarker* nodeMarker = new QwtPlotMarker();
+    nodeMarker->setLinePen( Qt::black, 1, Qt::DashLine );
+    nodeMarker->setLineStyle( QwtPlotMarker::VLine );
+    int idx = qMin( int( x / mTotLength * mNSamples ), mNSamples - 1 );
+#if QWT_VERSION < 0x060000
+    nodeMarker->setValue( mPlotCurve->x( idx ), mPlotCurve->y( idx ) );
+#else
+    QPointF sample = mPlotCurve->data()->sample( idx );
+    nodeMarker->setValue( sample );
+#endif
+    nodeMarker->attach( mPlot );
+    mNodeMarkers.append( nodeMarker );
+  }
 
   updateLineOfSight( );
 }

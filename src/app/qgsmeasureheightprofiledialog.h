@@ -59,6 +59,7 @@ class APP_EXPORT QgsMeasureHeightProfileDialog : public QDialog
     QVector<QgsRubberBand*> mLinesOfSightRB;
     QwtPlotMarker* mPlotMarker;
     QwtPlotMarker* mLineOfSightMarker;
+    QList<QwtPlotMarker*> mNodeMarkers;
     QList<QgsPoint> mPoints;
     QVector<double> mSegmentLengths;
     double mTotLength;
