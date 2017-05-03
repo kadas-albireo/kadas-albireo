@@ -41,6 +41,7 @@
 #include <QSettings>
 #include <qwt_scale_draw.h>
 #include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
@@ -77,6 +78,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   QGis::UnitType heightDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
 
   mPlot = new QwtPlot( this );
+  mPlot->canvas()->setCursor( Qt::ArrowCursor );
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
   mPlot->enableAxis( QwtPlot::xBottom );
