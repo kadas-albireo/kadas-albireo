@@ -492,7 +492,8 @@ void QgsGeometryRubberBand::addMeasurements( const QStringList& measurements, co
   {
     return;
   }
-  QGraphicsTextItem* label = new QGraphicsTextItem( "", 0 );
+  QGraphicsTextItem* label = new QGraphicsTextItem();
+  mMapCanvas->scene()->addItem( label );
   int red = QSettings().value( "/qgis/default_measure_color_red", 222 ).toInt();
   int green = QSettings().value( "/qgis/default_measure_color_green", 155 ).toInt();
   int blue = QSettings().value( "/qgis/default_measure_color_blue", 67 ).toInt();
