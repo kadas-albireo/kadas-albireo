@@ -26,18 +26,16 @@ QgsLocaleNumC::QgsLocaleNumC()
 {
   sLocaleLock.lock();
 
-  mOldlocale = setlocale( LC_NUMERIC, NULL );
-  if ( mOldlocale )
-    mOldlocale = qstrdup( mOldlocale );
+  char* oldlocale = setlocale( LC_NUMERIC, NULL );
+  if ( oldlocale )
+    mOldlocale = QByteArray( oldlocale );
 
   setlocale( LC_NUMERIC, "C" );
 }
 
 QgsLocaleNumC::~QgsLocaleNumC()
 {
-  setlocale( LC_NUMERIC, mOldlocale );
-  if ( mOldlocale )
-    delete [] mOldlocale;
+  setlocale( LC_NUMERIC, mOldlocale.data() );
 
   sLocaleLock.unlock();
 }

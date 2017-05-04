@@ -18,11 +18,12 @@
 #ifndef QGSLOCALENUMC_H
 #define QGSLOCALENUMC_H
 
+#include <QByteArray>
 #include <QMutex>
 
 class CORE_EXPORT QgsLocaleNumC
 {
-    char *mOldlocale;
+    QByteArray mOldlocale;
     static QMutex sLocaleLock;
 
   public:
