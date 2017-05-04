@@ -94,9 +94,7 @@ function linkDep {
     mkdir -p "$destdir" || return 1
     ln -sf "$MINGWROOT/$1" "$destdir/$name" || return 1
     autoLinkDeps "$destdir/$name" "${2:-bin}" "${indent}  " || return 1
-    if [ $withdebug ]; then
-        [ -e "$MINGWROOT/$1.debug" ] && ln -sf "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
-    fi
+    [ -e "$MINGWROOT/$1.debug" ] && ln -sf "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
     return 0
 }
 
