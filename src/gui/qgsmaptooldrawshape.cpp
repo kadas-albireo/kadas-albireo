@@ -386,6 +386,7 @@ QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& 
   }
   else if ( !press && button == Qt::RightButton )
   {
+#if 0
     if ( mPoints.back().size() > 2 )
     {
       // If last two points are very close, discard last point
@@ -398,6 +399,7 @@ QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& 
         mPoints.back().pop_back();
       }
     }
+#endif
     if ( mMultipart )
     {
       if ( !mIsArea || mPoints.back().size() > 2 )

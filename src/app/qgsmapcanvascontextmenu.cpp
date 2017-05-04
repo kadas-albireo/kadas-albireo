@@ -115,7 +115,11 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
   }
 
+#if 0
   if ( mLabelPositions.isEmpty() )
+#else
+  if ( mLabelPositions.isEmpty() && !mSelectedFeature.isValid() )
+#endif
   {
     QMenu* analysisMenu = new QMenu();
     addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );

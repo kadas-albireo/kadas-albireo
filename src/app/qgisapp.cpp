@@ -7452,9 +7452,10 @@ void QgisApp::addRasterLayer()
   QStringList rasterFiles;
   foreach ( const QString& file, selectedFiles )
   {
-    QByteArray format = QImageReader::imageFormat(file);
+    QByteArray format = QImageReader::imageFormat( file );
     // Tiff files are most likely raster images, don't open these as geoimages
-    if(format == "tiff" || !QgsGeoImageAnnotationItem::create( mapCanvas(), file )) {
+    if ( format == "tiff" || !QgsGeoImageAnnotationItem::create( mapCanvas(), file ) )
+    {
       rasterFiles.append( file );
     }
   }
