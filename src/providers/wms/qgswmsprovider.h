@@ -645,6 +645,7 @@ class QgsWmsTiledImageDownloadHandler : public QObject
 
   protected slots:
     void tileReplyFinished();
+    void canceled();
 
   signals:
     void aborted();

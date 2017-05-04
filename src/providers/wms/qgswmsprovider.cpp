@@ -3529,7 +3529,7 @@ QgsWmsTiledImageDownloadHandler::QgsWmsTiledImageDownloadHandler( const QString&
 {
   if ( feedback )
   {
-    connect( feedback, SIGNAL( cancelled() ), this, SLOT( cancelled() ), Qt::QueuedConnection );
+    connect( feedback, SIGNAL( canceled() ), this, SLOT( canceled() ), Qt::QueuedConnection );
 
     // rendering could have been cancelled before we started to listen to cancelled() signal
     // so let's check before doing the download and maybe quit prematurely
@@ -3806,6 +3806,16 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
                       + tr( ", %n errors.", "errors", stat.errors )
                     );
 #endif
+}
+
+void QgsWmsTiledImageDownloadHandler::canceled()
+{
+  QgsDebugMsg( "Caught cancelled() signal" );
+  Q_FOREACH ( QNetworkReply* reply, mReplies )
+  {
+    QgsDebugMsg( "Aborting tiled network request" );
+    reply->abort();
+  }
 }
 
 
