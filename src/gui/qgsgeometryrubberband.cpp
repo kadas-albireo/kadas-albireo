@@ -327,19 +327,20 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
         {
           QList<QgsPointV2> points;
           static_cast<QgsCurveV2*>( geometry )->points( points );
+          double totLength = 0;
           for ( int i = 0, n = points.size() - 1; i < n; ++i )
           {
             QgsPoint p1( points[i].x(), points[i].y() );
             QgsPoint p2( points[i+1].x(), points[i+1].y() );
-            QString segmentLength = formatMeasurement( mDa.measureLine( p1, p2 ), false );
-            addMeasurements( QStringList() << segmentLength, QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
+            double segmentLength = mDa.measureLine( p1, p2 );
+            totLength += segmentLength;
+            addMeasurements( QStringList() << formatMeasurement( segmentLength, false ), QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
           }
           if ( !points.isEmpty() )
           {
-            double length = mDa.measureLine( static_cast<QgsCurveV2*>( geometry ) );
-            mPartMeasurements.append( length );
-            QString totLength = QApplication::translate( "QgsGeometryRubberBand", "Tot.: %1" ).arg( formatMeasurement( length, false ) );
-            addMeasurements( QStringList() << totLength, points.last() );
+            mPartMeasurements.append( totLength );
+            QString totLengthStr = QApplication::translate( "QgsGeometryRubberBand", "Tot.: %1" ).arg( formatMeasurement( totLength, false ) );
+            addMeasurements( QStringList() << totLengthStr, points.last() );
           }
         }
         break;
