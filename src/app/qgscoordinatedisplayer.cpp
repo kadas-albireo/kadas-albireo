@@ -70,13 +70,15 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
 
   mHeightSelectionCombo->addItem( tr( "Meters" ), static_cast<int>( QGis::Meters ) );
   mHeightSelectionCombo->addItem( tr( "Feet" ), static_cast<int>( QGis::Feet ) );
-  mHeightSelectionCombo->setCurrentIndex( QSettings().value( "/qgis/heightUnit", 0 ).toInt() );
+  mHeightSelectionCombo->setCurrentIndex( -1 ); // to ensure currentIndexChanged is triggered below
 
   connect( mMapCanvas, SIGNAL( xyCoordinates( QgsPoint ) ), this, SLOT( displayCoordinates( QgsPoint ) ) );
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncProjectCrs() ) );
   connect( crsSelectionMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( displayFormatChanged( QAction* ) ) );
   connect( mHeightSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( heightUnitChanged( int ) ) );
   connect( QgisApp::instance(), SIGNAL( projectRead() ), this, SLOT( readProjectSettings() ) );
+
+  mHeightSelectionCombo->setCurrentIndex( QSettings().value( "/qgis/heightUnit", 0 ).toInt() );
 
   syncProjectCrs();
   int displayFormat = QgsProject::instance()->readNumEntry( "crsdisplay", "format" );
