@@ -81,7 +81,6 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void userScale();
     void showScale( double scale );
     void switchToTabForTool( QgsMapTool* tool );
-    void toggleLayersSpacer();
     void showProjectSelectionWidget();
     void onLanguageChanged( int idx );
     void onDecimalPlacesChanged( int idx );

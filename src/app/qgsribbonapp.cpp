@@ -81,7 +81,6 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mGeodataBox->setCollapsed( false );
   mLayersBox->setCollapsed( false );
-  mLayersSpacer->setVisible( false );
   mZoomInOutFrame->setCursor( Qt::ArrowCursor );
   mGeodataBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
   mLayersBox->setStyleSheet( "QgsCollapsibleGroupBox { font-size: 16px; }" );
@@ -134,8 +133,6 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mCRSSelectionButton->setMapCanvas( mMapCanvas );
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
-  connect( mLayersBox, SIGNAL( collapsedStateChanged( bool ) ), this, SLOT( toggleLayersSpacer() ) );
-  connect( mGeodataBox, SIGNAL( collapsedStateChanged( bool ) ), this, SLOT( toggleLayersSpacer() ) );
 
   mNumericInputCheckbox->setChecked( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   connect( mNumericInputCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onNumericInputCheckboxToggled( bool ) ) );
@@ -621,12 +618,6 @@ void QgsRibbonApp::switchToTabForTool( QgsMapTool *tool )
   }
   // Nothing found, do nothing
 }
-
-void QgsRibbonApp::toggleLayersSpacer()
-{
-  mLayersSpacer->setVisible( mLayersBox->isCollapsed() || mGeodataBox->isCollapsed() );
-}
-
 
 void QgsRibbonApp::showProjectSelectionWidget()
 {
