@@ -456,7 +456,10 @@ double QgsDistanceArea::measureLine( const QgsPoint &p1, const QgsPoint &p2 ) co
       pp1 = mCoordTransform->transform( p1 );
       pp2 = mCoordTransform->transform( p2 );
       QgsDebugMsgLevel( QString( "New points are %1 and %2, calculating..." ).arg( pp1.toString( 4 ) ).arg( pp2.toString( 4 ) ), 4 );
-      result = computeDistanceBearing( pp1, pp2 );
+      // Mid-point: if longitude difference between points is more than 180deg, measurement would wrap around
+      // By taking mid-point, the the longitude difference between the measurement points will always be less than 180 deg, if the original points are valid
+      QgsPoint pp12( 0.5 * ( pp1.x() + pp2.x() ), 0.5 * ( pp1.y() + pp2.y() ) );
+      result = computeDistanceBearing( pp1, pp12 ) + computeDistanceBearing( pp12, pp2 );
     }
     else
     {
@@ -789,7 +792,11 @@ double QgsDistanceArea::computeDistance( const QList<QgsPoint>& points ) const
       p2 = *i;
       if ( mEllipsoidalMode && ( mEllipsoid != GEO_NONE ) )
       {
-        total += computeDistanceBearing( p1, p2 );
+        // Mid-point: if longitude difference between points is more than 180deg, measurement would wrap around
+        // By taking mid-point, the the longitude difference between the measurement points will always be less than 180 deg, if the original points are valid
+        QgsPoint p12( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) );
+        total += computeDistanceBearing( p1, p12 );
+        total += computeDistanceBearing( p12, p2 );
       }
       else
       {
