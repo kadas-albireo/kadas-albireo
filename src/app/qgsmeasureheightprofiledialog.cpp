@@ -250,7 +250,7 @@ void QgsMeasureHeightProfileDialog::finish()
 void QgsMeasureHeightProfileDialog::replot()
 {
   QGis::UnitType vertDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
-  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
+  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft AMSL]" ) : tr( "Height [m AMSL]" ) );
   mObserverHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
   mTargetHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
 
@@ -302,7 +302,7 @@ void QgsMeasureHeightProfileDialog::replot()
   // Get vertical unit
   QGis::UnitType vertUnit = strcmp( GDALGetRasterUnitType( band ), "ft" ) == 0 ? QGis::Feet : QGis::Meters;
   double heightConversion = QGis::fromUnitToUnitFactor( vertUnit, vertDisplayUnit );
-  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft]" ) : tr( "Height [m]" ) );
+  mPlot->setAxisTitle( QwtPlot::yLeft, vertDisplayUnit == QGis::Feet ? tr( "Height [ft AMSL]" ) : tr( "Height [m AMSL]" ) );
   mObserverHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
   mTargetHeightSpinBox->setSuffix( vertDisplayUnit == QGis::Feet ? " ft" : " m" );
 
