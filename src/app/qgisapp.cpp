@@ -3442,7 +3442,7 @@ void QgisApp::saveMapAsImage( QString theImageFileNameQString, QPixmap * theQPix
 void QgisApp::saveMapToClipboard()
 {
   QImage image( mapCanvas()->size(), QImage::Format_ARGB32 );
-  image.fill( Qt::transparent );
+  image.fill( QColor( 255, 255, 255, 1 ) );
   QPainter painter( &image );
   mapCanvas()->render( &painter );
   QApplication::clipboard()->setImage( image );

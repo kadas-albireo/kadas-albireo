@@ -820,11 +820,11 @@ void QgsMapCanvas::saveAsImage( QString theFileName, QPixmap * theQPixmap, QStri
   }
   else //use the map view
   {
-    QPixmap pixmap( size() );
-    pixmap.fill( Qt::transparent );
-    QPainter painter( &pixmap );
+    QImage image( size(), QImage::Format_ARGB32 );
+    image.fill( QColor( 255, 255, 255, 1 ) );
+    QPainter painter( &image );
     render( &painter );
-    pixmap.save( theFileName, theFormat.toLocal8Bit().data() );
+    image.save( theFileName, theFormat.toLocal8Bit().data() );
   }
   //create a world file to go with the image...
   QgsRectangle myRect = mapSettings().visibleExtent();
