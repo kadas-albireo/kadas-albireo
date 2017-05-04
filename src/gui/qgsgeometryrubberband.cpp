@@ -463,7 +463,7 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
 
 QString QgsGeometryRubberBand::formatMeasurement( double value, bool isArea ) const
 {
-  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt();
   QGis::UnitType measureUnits = mMapCanvas->mapSettings().mapUnits();
   mDa.convertMeasurement( value, measureUnits, mDisplayUnits, isArea );
   return mDa.textUnit( value, decimals, mDisplayUnits, isArea );
@@ -471,7 +471,7 @@ QString QgsGeometryRubberBand::formatMeasurement( double value, bool isArea ) co
 
 QString QgsGeometryRubberBand::formatAngle( double value ) const
 {
-  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  int decimals = QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt();
   switch ( mAngleUnit )
   {
     case ANGLE_DEGREES:

@@ -50,7 +50,7 @@ void QgsDisplayAngle::updateUi()
 
   QString unitString = mComboBoxUnit->itemData( mComboBoxUnit->currentIndex() ).toString();
   settings.setValue( "/qgis/measure/angleunits", unitString );
-  int decimals = settings.value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  int decimals = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
 
   if ( unitString == "degrees" )
   {

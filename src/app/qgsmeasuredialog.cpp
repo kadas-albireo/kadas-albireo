@@ -67,7 +67,7 @@ void QgsMeasureDialog::updateSettings()
 {
   QSettings settings;
 
-  mDecimalPlaces = settings.value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  mDecimalPlaces = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
   mCanvasUnits = mTool->canvas()->mapUnits();
   // Configure QgsDistanceArea
   mDisplayUnits = QGis::fromTr( mUnitsCombo->currentText() );

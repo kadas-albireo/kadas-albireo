@@ -111,7 +111,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
     }
   }
   connect( mLanguageCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onLanguageChanged( int ) ) );
-  mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces" ).toInt() );
+  mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt() );
   connect( mSpinBoxDecimalPlaces, SIGNAL( valueChanged( int ) ), this, SLOT( onDecimalPlacesChanged( int ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );

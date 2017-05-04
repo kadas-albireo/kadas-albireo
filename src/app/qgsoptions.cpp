@@ -482,7 +482,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
 
   // set decimal places of the measure tool
-  int decimalPlaces = settings.value( "/qgis/measure/decimalplaces", "3" ).toInt();
+  int decimalPlaces = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
   mDecimalPlacesSpinBox->setRange( 0, 12 );
   mDecimalPlacesSpinBox->setValue( decimalPlaces );
 
