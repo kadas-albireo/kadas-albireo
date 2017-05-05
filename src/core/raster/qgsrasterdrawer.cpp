@@ -115,9 +115,10 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
     }
 
     drawImage( p, viewPort, img, topLeftCol, topLeftRow, scaleFactor, &mapToPixel );
-    QgsDebugMsg( "Block drawn" );
-
     delete block;
+
+    p->setCompositionMode( QPainter::CompositionMode_SourceOver ); //go back to the default composition mode
+
     if ( ctx && ctx->renderingStopped() ) { break; }
 
     // ok this does not matter much anyway as the tile size quite big so most of the time

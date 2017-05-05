@@ -353,12 +353,21 @@ void QgsMapRendererJob::updateLayerGeometryCaches()
 
 bool QgsMapRendererJob::needTemporaryImage( QgsMapLayer* ml )
 {
-  if ( mSettings.testFlag( QgsMapSettings::UseAdvancedEffects ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
+  if ( ml->type() == QgsMapLayer::VectorLayer )
   {
-    QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
-    if ((( vl->blendMode() != QPainter::CompositionMode_SourceOver )
-         || ( vl->featureBlendMode() != QPainter::CompositionMode_SourceOver )
-         || ( vl->layerTransparency() != 0 ) ) )
+    if ( mSettings.testFlag( QgsMapSettings::UseAdvancedEffects ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
+    {
+      QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
+      if ((( vl->blendMode() != QPainter::CompositionMode_SourceOver )
+           || ( vl->featureBlendMode() != QPainter::CompositionMode_SourceOver )
+           || ( vl->layerTransparency() != 0 ) ) )
+        return true;
+    }
+  }
+  else if ( ml->type() == QgsMapLayer::RasterLayer )
+  {
+    // preview of intermediate raster rendering results requires a temporary output image
+    if ( mSettings.testFlag( QgsMapSettings::RenderPartialOutput ) )
       return true;
   }
 
