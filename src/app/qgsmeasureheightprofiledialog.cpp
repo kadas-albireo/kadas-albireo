@@ -385,7 +385,7 @@ void QgsMeasureHeightProfileDialog::replot()
   {
     x += mSegmentLengths[i];
     QwtPlotMarker* nodeMarker = new QwtPlotMarker();
-    nodeMarker->setLinePen( Qt::black, 1, Qt::DashLine );
+    nodeMarker->setLinePen( QPen( Qt::black, 1, Qt::DashLine ) );
     nodeMarker->setLineStyle( QwtPlotMarker::VLine );
     int idx = qMin( int( x / mTotLength * mNSamples ), mNSamples - 1 );
 #if QWT_VERSION < 0x060000
