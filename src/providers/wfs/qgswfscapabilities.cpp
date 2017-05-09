@@ -241,7 +241,7 @@ void QgsWFSCapabilities::capabilitiesReplyFinished()
 
   // get the <FeatureType> elements
   QDomNodeList featureTypeList = capabilitiesDocument.elementsByTagNameNS( WFS_NAMESPACE, "FeatureType" );
-  for ( unsigned int i = 0; i < featureTypeList.length(); ++i )
+  for ( int i = 0; i < featureTypeList.length(); ++i )
   {
     FeatureType featureType;
     QDomElement featureTypeElem = featureTypeList.at( i ).toElement();
@@ -274,14 +274,14 @@ void QgsWFSCapabilities::capabilitiesReplyFinished()
 
     //OtherSRS
     QDomNodeList otherCRSList = featureTypeElem.elementsByTagNameNS( WFS_NAMESPACE, "OtherSRS" );
-    for ( unsigned int i = 0; i < otherCRSList.length(); ++i )
+    for ( int i = 0; i < otherCRSList.length(); ++i )
     {
       featureType.crslist.append( otherCRSList.at( i ).toElement().text() );
     }
 
     //Support <SRS> for compatibility with older versions
     QDomNodeList srsList = featureTypeElem.elementsByTagNameNS( WFS_NAMESPACE, "SRS" );
-    for ( unsigned int i = 0; i < srsList.length(); ++i )
+    for ( int i = 0; i < srsList.length(); ++i )
     {
       featureType.crslist.append( srsList.at( i ).toElement().text() );
     }
