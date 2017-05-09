@@ -26,10 +26,9 @@
 #include <QMouseEvent>
 
 QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::MeasureMode measureMode )
-    : QFrame( canvas ), mMeasureMode( measureMode )
+    : QgsBottomBar( canvas ), mMeasureMode( measureMode )
 {
   bool measureAngle = measureMode == QgsMeasureToolV2::MeasureAngle || measureMode == QgsMeasureToolV2::MeasureAzimuth;
-  mCanvas = canvas;
   setLayout( new QHBoxLayout() );
 
   mMeasurementLabel = new QLabel();
@@ -91,11 +90,6 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   connect( closeButton, SIGNAL( clicked( bool ) ), this, SIGNAL( closeRequested() ) );
   layout()->addWidget( closeButton );
 
-  mCanvas->installEventFilter( this );
-
-  setStyleSheet( QString( "QFrame { background-color: orange; }" ) );
-  setCursor( Qt::ArrowCursor );
-
   show();
   if ( !measureAngle )
   {
@@ -138,24 +132,6 @@ QGis::UnitType QgsMeasureWidget::currentUnit() const
 QgsGeometryRubberBand::AngleUnit QgsMeasureWidget::currentAngleUnit() const
 {
   return static_cast<QgsGeometryRubberBand::AngleUnit>( mUnitComboBox->itemData( mUnitComboBox->currentIndex() ).toInt() );
-}
-
-bool QgsMeasureWidget::eventFilter( QObject* obj, QEvent* event )
-{
-  if ( obj == mCanvas && event->type() == QEvent::Resize )
-  {
-    updatePosition();
-  }
-  return false;
-}
-
-void QgsMeasureWidget::updatePosition()
-{
-  int w = width();
-  int h = height();
-  QRect canvasGeometry = mCanvas->geometry();
-  move( canvasGeometry.x() + 0.5 * ( canvasGeometry.width() - w ),
-        canvasGeometry.y() + canvasGeometry.height() - h );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

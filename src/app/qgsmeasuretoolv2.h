@@ -19,6 +19,7 @@
 
 #include "qgsmaptool.h"
 #include "qgsmaptooldrawshape.h"
+#include "qgsbottombar.h"
 
 class QComboBox;
 class QgsMapCanvas;
@@ -53,7 +54,7 @@ class APP_EXPORT QgsMeasureToolV2 : public QgsMapTool
     void requestPick();
 };
 
-class APP_EXPORT QgsMeasureWidget : public QFrame
+class APP_EXPORT QgsMeasureWidget : public QgsBottomBar
 {
     Q_OBJECT
   public:
@@ -62,8 +63,6 @@ class APP_EXPORT QgsMeasureWidget : public QFrame
     QGis::UnitType currentUnit() const;
     QgsGeometryRubberBand::AngleUnit currentAngleUnit() const;
 
-    bool eventFilter( QObject* obj, QEvent* event ) override;
-
   signals:
     void clearRequested();
     void closeRequested();
@@ -71,12 +70,9 @@ class APP_EXPORT QgsMeasureWidget : public QFrame
     void unitsChanged();
 
   private:
-    QgsMapCanvas* mCanvas;
     QLabel* mMeasurementLabel;
     QComboBox* mUnitComboBox;
     QgsMeasureToolV2::MeasureMode mMeasureMode;
-
-    void updatePosition();
 
   private slots:
     void saveDefaultUnits( int index );
