@@ -11,8 +11,10 @@
   %Import QtPrintSupport/QtPrintSupportmod.sip
   typedef void* XEvent;
 %End
-%If (WS_WIN)
-  typedef void* XEvent;
+%If (- Qt_5_0_0)
+  %If (WS_WIN)
+    typedef void* XEvent;
+  %End
 %End
 
 %Include conversions.sip

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 arch=${1:-x86_64}
+qt=${2:-qt5}
 
 if [ "$arch" == "i686" ]; then
     bits=32
@@ -8,6 +9,15 @@ elif [ "$arch" == "x86_64" ]; then
     bits=64
 else
     echo "Error: unrecognized architecture $arch"
+    exit 1
+fi
+
+if [ "$qt" == "qt5" ]; then
+  useqt5=1
+elif [ "qt" == "qt4" ]; then
+  useqt5=0
+else
+    echo "Error: unrecognized qt version $qt"
     exit 1
 fi
 
@@ -25,7 +35,7 @@ export MINGW64_CFLAGS="$optflags"
 export MINGW64_CXXFLAGS="$optflags"
 
 srcdir="$(readlink -f "$(dirname "$(readlink -f "$0")")/..")"
-builddir="$srcdir/build_mingw$bits"
+builddir="$srcdir/build_mingw${bits}_${qt}"
 installroot="$builddir/dist"
 installprefix="$installroot/usr/$arch-w64-mingw32/sys-root/mingw"
 
@@ -37,6 +47,7 @@ mkdir -p $builddir
 (
     cd $builddir
     mingw$bits-cmake \
+        -DENABLE_QT5=$useqt5 \
         -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
         -DWINDRES=$arch-w64-mingw32-windres \
         -DWITH_INTERNAL_QWTPOLAR=1 \
@@ -50,7 +61,7 @@ mkdir -p $builddir
         -DBINDINGS_GLOBAL_INSTALL=TRUE ..
 )
 
-mingw$bits-make -C$builddir -j8 DESTDIR="${installroot}" install
+mingw$bits-make -C$builddir -j12 DESTDIR="${installroot}" install
 
 binaries=$(find $installprefix -name '*.exe' -or -name '*.dll' -or -name '*.pyd')
 
@@ -116,20 +127,35 @@ for binary in $binaries; do
 done
 linkDep bin/gdb.exe
 
-# Additional qt4 dependencies
 linkDep $(ls $MINGWROOT/bin/libssl-*.dll)
 linkDep $(ls $MINGWROOT/bin/libcrypto-*.dll)
-linkDep lib/qt4/plugins/imageformats/qgif4.dll  bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qico4.dll  bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qmng4.dll  bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qtga4.dll  bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qsvg4.dll  bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qtiff4.dll bin/imageformats
-linkDep lib/qt4/plugins/imageformats/qjpeg4.dll bin/imageformats
+# Additional qt4 dependencies
+if [ "$qt" == "qt4" ]; then
+  linkDep lib/qt4/plugins/imageformats/qgif4.dll  bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qico4.dll  bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qmng4.dll  bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qtga4.dll  bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qsvg4.dll  bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qtiff4.dll bin/imageformats
+  linkDep lib/qt4/plugins/imageformats/qjpeg4.dll bin/imageformats
 
-# Install locale files
-mkdir -p $installprefix/share/qt4/translations/
-cp -a $MINGWROOT/share/qt4/translations/qt_*.qm  $installprefix/share/qt4/translations
+  mkdir -p $installprefix/share/qt4/translations/
+  cp -a $MINGWROOT/share/qt4/translations/qt_*.qm  $installprefix/share/qt4/translations
+elif [ "$qt" == "qt5" ]; then
+  linkDep lib/qt5/plugins/imageformats/qgif.dll  bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qicns.dll bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qico.dll  bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qjp2.dll  bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qjpeg.dll bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qtga.dll  bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qtiff.dll bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qwbmp.dll bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qwebp.dll bin/imageformats
+  linkDep lib/qt5/plugins/platforms/qwindows.dll bin/platforms
+
+  mkdir -p $installprefix/share/qt5/translations/
+  cp -a $MINGWROOT/share/qt5/translations/qt_*.qm  $installprefix/share/qt5/translations
+fi
 
 # Install python libs
 (
