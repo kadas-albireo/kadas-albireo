@@ -12,20 +12,37 @@
 #
 
 
-FIND_PATH(QWT_INCLUDE_DIR NAMES qwt.h PATHS
-  /usr/include
-  /usr/local/include
-  "$ENV{LIB_DIR}/include" 
-  "$ENV{INCLUDE}" 
-  PATH_SUFFIXES qwt-qt4 qwt qwt5 qwt6
-  )
+IF(ENABLE_QT5)
+  FIND_PATH(QWT_INCLUDE_DIR NAMES qwt.h PATHS
+    /usr/include
+    /usr/local/include
+    "$ENV{LIB_DIR}/include"
+    "$ENV{INCLUDE}"
+    PATH_SUFFIXES qt5/qwt qt5/qwt6 qt5/qwt5 qwt qwt6 qwt5
+    )
 
-FIND_LIBRARY(QWT_LIBRARY NAMES qwt qwt5 qwt6 qwt-qt4 qwt5-qt4 PATHS
-  /usr/lib
-  /usr/local/lib
-  "$ENV{LIB_DIR}/lib" 
-  "$ENV{LIB}" 
-  )
+  FIND_LIBRARY(QWT_LIBRARY NAMES qwt qwt-qt5 qwt6 qwt6-qt5 qwt5 qwt5-qt5 PATHS
+    /usr/lib
+    /usr/local/lib
+    "$ENV{LIB_DIR}/lib"
+    "$ENV{LIB}"
+    )
+ELSE(ENABLE_QT5)
+  FIND_PATH(QWT_INCLUDE_DIR NAMES qwt.h PATHS
+    /usr/include
+    /usr/local/include
+    "$ENV{LIB_DIR}/include"
+    "$ENV{INCLUDE}"
+    PATH_SUFFIXES qwt qwt6 qwt5
+    )
+
+  FIND_LIBRARY(QWT_LIBRARY NAMES qwt qwt-qt4 qwt6 qwt6-qt4 qwt5 qwt5-qt4 PATHS
+    /usr/lib
+    /usr/local/lib
+    "$ENV{LIB_DIR}/lib"
+    "$ENV{LIB}"
+    )
+ENDIF(ENABLE_QT5)
 
 IF (QWT_INCLUDE_DIR AND QWT_LIBRARY)
   SET(QWT_FOUND TRUE)
