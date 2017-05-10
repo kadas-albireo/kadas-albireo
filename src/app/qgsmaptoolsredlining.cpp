@@ -32,6 +32,27 @@
 #include <QMenu>
 #include <QMouseEvent>
 
+class AddFeatureCommand : public QgsMapToolDrawShape::StateChangeCommand
+{
+  public:
+    AddFeatureCommand( QgsMapToolDrawShape* tool, QgsMapToolDrawShape::State* newState, QgsVectorLayer* layer, const QgsFeature& feature )
+        : StateChangeCommand( tool, newState, true ), mLayer( layer ), mFeature( feature ) {}
+    void undo() override
+    {
+      StateChangeCommand::undo();
+      mLayer->deleteFeature( mFeature.id() );
+      mLayer->triggerRepaint();
+    }
+    void redo() override
+    {
+      StateChangeCommand::redo();
+      mLayer->addFeature( mFeature );
+      mLayer->triggerRepaint();
+    }
+  private:
+    QgsVectorLayer* mLayer;
+    QgsFeature mFeature;
+};
 
 QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape , QgsRedliningAttributeEditor* editor )
     : QgsMapToolDrawPoint( canvas ), mLayer( layer ), mShape( shape ), mEditor( editor )
@@ -59,8 +80,7 @@ void QgsRedliningPointMapTool::onFinished()
       return;
     }
   }
-  mLayer->addFeature( f );
-  reset();
+  mUndoStack.push( new AddFeatureCommand( this, emptyState(), mLayer, f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,8 +98,7 @@ void QgsRedliningRectangleMapTool::onFinished()
   QgsFeature f( mLayer->pendingFields() );
   f.setAttribute( "flags", "rect:" + mCanvas->mapSettings().destinationCrs().authid() );
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
-  mLayer->addFeature( f );
-  reset();
+  mUndoStack.push( new AddFeatureCommand( this, emptyState(), mLayer, f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,8 +123,7 @@ void QgsRedliningPolylineMapTool::onFinished()
   QStringList changedAttributes;
   if ( mEditor )
     mEditor->exec( f, changedAttributes );
-  mLayer->addFeature( f );
-  reset();
+  mUndoStack.push( new AddFeatureCommand( this, emptyState(), mLayer, f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -122,8 +140,7 @@ void QgsRedliningCircleMapTool::onFinished()
 {
   QgsFeature f( mLayer->pendingFields() );
   f.setGeometry( new QgsGeometry( createGeometry( mLayer->crs() ) ) );
-  mLayer->addFeature( f );
-  reset();
+  mUndoStack.push( new AddFeatureCommand( this, emptyState(), mLayer, f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

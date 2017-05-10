@@ -36,8 +36,27 @@
 #include <QMouseEvent>
 #include <qmath.h>
 
-QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
-    : QgsMapTool( canvas ), mState( StateReady ), mIsArea( isArea ), mMultipart( false ), mSnapPoints( false ), mShowInput( false ), mResetOnDeactivate( true ), mIgnoreNextMoveEvent( false ), mInputWidget( 0 )
+QgsMapToolDrawShape::StateChangeCommand::StateChangeCommand( QgsMapToolDrawShape* tool, State* nextState, bool compress )
+    : mTool( tool ), mPrevState( mTool->mState ), mNextState( nextState ), mCompress( compress )
+{
+}
+
+void QgsMapToolDrawShape::StateChangeCommand::undo()
+{
+  mTool->mState = mPrevState;
+  mTool->update();
+}
+
+void QgsMapToolDrawShape::StateChangeCommand::redo()
+{
+  mTool->mState = mNextState;
+  mTool->update();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea, State *initialState )
+    : QgsMapTool( canvas ), mIsArea( isArea ), mMultipart( false ), mInputWidget( 0 ), mSnapPoints( false ), mShowInput( false ), mResetOnDeactivate( true ), mIgnoreNextMoveEvent( false ), mState( initialState )
 {
   setCursor( Qt::CrossCursor );
 
@@ -55,6 +74,9 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea )
 
   // Shapes typically won't survive projection changes without distortion (circle, square, etc)
   connect( canvas, SIGNAL( destinationCrsChanged() ), this, SLOT( reset() ) );
+
+  connect( &mUndoStack, SIGNAL( canUndoChanged( bool ) ), this, SIGNAL( canUndo( bool ) ) );
+  connect( &mUndoStack, SIGNAL( canRedoChanged( bool ) ), this, SIGNAL( canRedo( bool ) ) );
 }
 
 QgsMapToolDrawShape::~QgsMapToolDrawShape()
@@ -108,31 +130,31 @@ void QgsMapToolDrawShape::update()
 
 void QgsMapToolDrawShape::reset()
 {
-  clear();
   mRubberBand->setGeometry( 0 );
-  mState = StateReady;
+  mState = QSharedPointer<State>( emptyState() );
+  mUndoStack.clear();
   emit geometryChanged();
   emit cleared();
 }
 
 void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
 {
-  if ( mState == StateFinished )
+  if ( mState->status == StatusFinished )
   {
     reset();
   }
-  if ( mState == StateReady && e->button() == Qt::RightButton && canvas()->mapTool() == this )
+  if ( mState->status == StatusReady && e->button() == Qt::RightButton && canvas()->mapTool() == this )
   {
     canvas()->unsetMapTool( this ); // unset
     return;
   }
-  mState = buttonEvent( transformPoint( e->pos() ), true, e->button() );
+  buttonEvent( transformPoint( e->pos() ), true, e->button() );
+
   if ( mShowInput )
   {
     updateInputWidget( transformPoint( e->pos() ) );
   }
-  update();
-  if ( mState == StateFinished )
+  if ( mState->status == StatusFinished )
   {
     emit finished();
   }
@@ -146,10 +168,9 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
     return;
   }
 
-  if ( mState == StateDrawing )
+  if ( mState->status == StatusDrawing )
   {
     moveEvent( transformPoint( e->pos() ) );
-    update();
   }
   if ( mShowInput )
   {
@@ -160,15 +181,15 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
 
 void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
 {
-  if ( mState != StateFinished )
+  if ( mState->status != StatusFinished )
   {
-    mState = buttonEvent( transformPoint( e->pos() ), false, e->button() );
+    buttonEvent( transformPoint( e->pos() ), false, e->button() );
+
     if ( mShowInput )
     {
       updateInputWidget( transformPoint( e->pos() ) );
     }
-    update();
-    if ( mState == StateFinished )
+    if ( mState->status == StatusFinished )
     {
       emit finished();
     }
@@ -179,25 +200,37 @@ void QgsMapToolDrawShape::keyReleaseEvent( QKeyEvent* e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
-    if ( mState == StateReady )
+    if ( mState->status == StatusReady )
       canvas()->unsetMapTool( this ); // unset
     else
       reset();
+  }
+  else if ( e->key() == Qt::Key_Z && e->modifiers() == Qt::CTRL )
+  {
+    undo();
+  }
+  else if ( e->key() == Qt::Key_Y && e->modifiers() == Qt::CTRL )
+  {
+    redo();
   }
 }
 
 void QgsMapToolDrawShape::acceptInput()
 {
-  if ( mState == StateFinished )
+  if ( mState->status == StatusFinished )
   {
     reset();
   }
-  mState = inputAccepted();
-  update();
-  if ( mState == StateFinished )
+  inputAccepted();
+  if ( mState->status == StatusFinished )
   {
     emit finished();
   }
+}
+
+void QgsMapToolDrawShape::updateState( State *newState, bool mergeable )
+{
+  mUndoStack.push( new StateChangeCommand( this, newState, mergeable ) );
 }
 
 QgsPoint QgsMapToolDrawShape::transformPoint( const QPoint& p )
@@ -217,8 +250,6 @@ void QgsMapToolDrawShape::addGeometry( const QgsAbstractGeometryV2* geometry, co
     reset();
   }
   doAddGeometry( geometry, *QgsCoordinateTransformCache::instance()->transform( sourceCrs.authid(), canvas()->mapSettings().destinationCrs().authid() ) );
-  mState = mMultipart ? StateReady : StateFinished;
-  update();
 }
 
 void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
@@ -240,7 +271,7 @@ void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
   // may get altered
   mIgnoreNextMoveEvent = true;
   QCursor::setPos( mCanvas->mapToGlobal( p ) );
-  if ( mState == StateDrawing )
+  if ( mState->status == StatusDrawing )
   {
     moveEvent( geoPos );
     update();
@@ -255,30 +286,34 @@ void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawPoint::QgsMapToolDrawPoint( QgsMapCanvas *canvas )
-    : QgsMapToolDrawShape( canvas, false )
+    : QgsMapToolDrawShape( canvas, false, emptyState() )
 {
   mRubberBand->setIconType( QgsGeometryRubberBand::ICON_CIRCLE );
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawPoint::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button )
+QgsMapToolDrawShape::State* QgsMapToolDrawPoint::emptyState() const
+{
+  State* newState = new State;
+  newState->status = StatusReady;
+  return newState;
+}
+
+void QgsMapToolDrawPoint::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button )
 {
   if ( !press && button == Qt::LeftButton )
   {
-    mPoints.append( QList<QgsPoint>() << pos );
-    return mMultipart ? StateReady : StateFinished;
+    State* newState = cloneState();
+    newState->points.append( QList<QgsPoint>() << pos );
+    newState->status = mMultipart ? StatusReady : StatusFinished;
+    updateState( newState );
   }
-  return mState;
-}
-
-void QgsMapToolDrawPoint::moveEvent( const QgsPoint& /*pos*/ )
-{
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawPoint::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPointV2();
-  foreach ( const QList<QgsPoint>& part, mPoints )
+  foreach ( const QList<QgsPoint>& part, state()->points )
   {
     if ( part.size() > 0 )
     {
@@ -298,28 +333,26 @@ QgsAbstractGeometryV2* QgsMapToolDrawPoint::createGeometry( const QgsCoordinateR
   }
 }
 
-void QgsMapToolDrawPoint::clear()
-{
-  mPoints.clear();
-}
-
 void QgsMapToolDrawPoint::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
 {
+  State* newState = cloneState();
   for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
   {
-    if ( !mPoints.back().isEmpty() )
+    if ( !newState->points.back().isEmpty() )
     {
-      mPoints.append( QList<QgsPoint>() );
+      newState->points.append( QList<QgsPoint>() );
     }
     for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
     {
       for ( int iVtx = 0, nVtx = geometry->vertexCount( iPart, iRing ); iVtx < nVtx; ++iVtx )
       {
         QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, iVtx ) );
-        mPoints.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+        newState->points.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
       }
     }
   }
+  newState->status = mMultipart ? StatusReady : StatusFinished;
+  updateState( newState );
 }
 
 void QgsMapToolDrawPoint::initInputWidget()
@@ -349,13 +382,15 @@ void QgsMapToolDrawPoint::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusChild()->selectAll();
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawPoint::inputAccepted()
+void QgsMapToolDrawPoint::inputAccepted()
 {
+  State* newState = cloneState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
-  mPoints.append( QList<QgsPoint>() << QgsPoint( x, y ) );
+  newState->points.append( QList<QgsPoint>() << QgsPoint( x, y ) );
   mInputWidget->setFocusChild( mXEdit );
-  return mMultipart ? StateReady : StateFinished;
+  newState->status = mMultipart ? StatusReady : StatusFinished;
+  updateState( newState );
 }
 
 void QgsMapToolDrawPoint::inputChanged()
@@ -365,67 +400,80 @@ void QgsMapToolDrawPoint::inputChanged()
   moveMouseToPos( QgsPoint( x, y ) );
 }
 
+void QgsMapToolDrawPoint::setPart( int part, const QgsPoint& p )
+{
+  State* newState = cloneState();
+  newState->points[part].front() = p;
+  updateState( newState );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawPolyLine::QgsMapToolDrawPolyLine( QgsMapCanvas *canvas, bool closed )
-    : QgsMapToolDrawShape( canvas, closed )
+    : QgsMapToolDrawShape( canvas, closed, emptyState() )
 {
-  mPoints.append( QList<QgsPoint>() );
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button )
+QgsMapToolDrawShape::State* QgsMapToolDrawPolyLine::emptyState() const
+{
+  State* newState = new State;
+  newState->status = StatusReady;
+  newState->points.append( QList<QgsPoint>() );
+  return newState;
+}
+
+void QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button )
 {
   if ( press && button == Qt::LeftButton )
   {
-    if ( mPoints.back().isEmpty() )
+    State* newState = cloneState();
+    if ( newState->points.back().isEmpty() )
     {
-      mPoints.back().append( pos );
+      newState->points.back().append( pos );
     }
-    mPoints.back().append( pos );
-    return StateDrawing;
+    newState->points.back().append( pos );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
   else if ( !press && button == Qt::RightButton )
   {
-#if 0
-    if ( mPoints.back().size() > 2 )
+    if ( !mIsArea || state()->points.back().size() > 2 )
     {
+      State* newState = cloneState();
       // If last two points are very close, discard last point
       // (To avoid confusion if user left-clicks to set point and right-clicks to terminate)
-      int nPoints = mPoints.back().size();
-      QPoint p1 = toCanvasCoordinates( mPoints.back()[nPoints - 2] );
-      QPoint p2 = toCanvasCoordinates( mPoints.back()[nPoints - 1] );
+      int nPoints = newState->points.back().size();
+      QPoint p1 = toCanvasCoordinates( newState->points.back()[nPoints - 2] );
+      QPoint p2 = toCanvasCoordinates( newState->points.back()[nPoints - 1] );
       if (( p2  - p1 ).manhattanLength() < 5 )
       {
-        mPoints.back().pop_back();
+        newState->points.back().pop_back();
       }
-    }
-#endif
-    if ( mMultipart )
-    {
-      if ( !mIsArea || mPoints.back().size() > 2 )
+      if ( mMultipart )
       {
-        mPoints.append( QList<QgsPoint>() );
-        return StateReady;
+        newState->points.append( QList<QgsPoint>() );
+        newState->status = StatusReady;
       }
-    }
-    else if ( !mIsArea || mPoints.back().size() > 2 )
-    {
-      return StateFinished;
+      else
+      {
+        newState->status = StatusFinished;
+      }
+      updateState( newState );
     }
   }
-  return mState;
 }
 
-void QgsMapToolDrawPolyLine::moveEvent( const QgsPoint& pos )
+void QgsMapToolDrawPolyLine::moveEvent( const QgsPoint &pos )
 {
-  mPoints.back().back() = pos;
+  modifyableState()->points.back().back() = pos;
+  update();
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = mIsArea ? static_cast<QgsGeometryCollectionV2*>( new QgsMultiPolygonV2() ) : static_cast<QgsGeometryCollectionV2*>( new QgsMultiLineStringV2() );
-  foreach ( const QList<QgsPoint>& part, mPoints )
+  foreach ( const QList<QgsPoint>& part, state()->points )
   {
     QgsLineStringV2* ring = new QgsLineStringV2();
     foreach ( const QgsPoint& point, part )
@@ -458,28 +506,32 @@ QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordina
 
 void QgsMapToolDrawPolyLine::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
 {
+  State* newState = cloneState();
   for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
   {
-    if ( !mPoints.back().isEmpty() )
+    if ( !newState->points.back().isEmpty() )
     {
-      mPoints.append( QList<QgsPoint>() );
+      newState->points.append( QList<QgsPoint>() );
     }
     for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
     {
       for ( int iVtx = 0, nVtx = geometry->vertexCount( iPart, iRing ); iVtx < nVtx; ++iVtx )
       {
         QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, iVtx ) );
-        mPoints.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+        newState->points.back().append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
       }
     }
   }
-  mPoints.append( QList<QgsPoint>() );
-}
-
-void QgsMapToolDrawPolyLine::clear()
-{
-  mPoints.clear();
-  mPoints.append( QList<QgsPoint>() );
+  if ( mMultipart )
+  {
+    newState->points.append( QList<QgsPoint>() );
+    newState->status = StatusReady;
+  }
+  else
+  {
+    newState->status = StatusFinished;
+  }
+  updateState( newState );
 }
 
 void QgsMapToolDrawPolyLine::initInputWidget()
@@ -509,31 +561,36 @@ void QgsMapToolDrawPolyLine::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusChild()->selectAll();
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawPolyLine::inputAccepted()
+void QgsMapToolDrawPolyLine::inputAccepted()
 {
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
-  if ( mState == StateReady )
+  if ( state()->status == StatusReady )
   {
-    mPoints.back().append( QgsPoint( x, y ) );
-    mPoints.back().append( QgsPoint( x, y ) );
-    return StateDrawing;
+    State* newState = cloneState();
+    newState->points.back().append( QgsPoint( x, y ) );
+    newState->points.back().append( QgsPoint( x, y ) );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( mState == StateDrawing )
+  else if ( state()->status == StatusDrawing )
   {
+    State* newState = cloneState();
     // At least two points and enter pressed twice -> finish
-    int n = mPoints.back().size();
-    if ( n > 1 && mPoints.back()[n - 2] == mPoints.back()[n - 1] )
+    int n = newState->points.back().size();
+    if ( n > 1 && newState->points.back()[n - 2] == newState->points.back()[n - 1] )
     {
       mInputWidget->setFocusChild( mXEdit );
-      mPoints.back().removeLast();
-      mPoints.append( QList<QgsPoint>() );
-      return mMultipart ? StateReady : StateFinished;
+      newState->points.back().removeLast();
+      newState->points.append( QList<QgsPoint>() );
+      newState->status = mMultipart ? StatusReady : StatusFinished;
+      updateState( newState, true );
+      return;
     }
-    mPoints.back().back() = QgsPoint( x, y );
-    mPoints.back().append( QgsPoint( x, y ) );
+    newState->points.back().back() = QgsPoint( x, y );
+    newState->points.back().append( QgsPoint( x, y ) );
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawPolyLine::inputChanged()
@@ -543,43 +600,64 @@ void QgsMapToolDrawPolyLine::inputChanged()
   moveMouseToPos( QgsPoint( x, y ) );
 }
 
+void QgsMapToolDrawPolyLine::setPart( int part, const QList<QgsPoint>& p )
+{
+  State* newState = cloneState();
+  newState->points[part] = p;
+  updateState( newState );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawRectangle::QgsMapToolDrawRectangle( QgsMapCanvas* canvas )
-    : QgsMapToolDrawShape( canvas, true ) {}
+    : QgsMapToolDrawShape( canvas, true, emptyState() ) {}
 
-QgsMapToolDrawShape::State QgsMapToolDrawRectangle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
+QgsMapToolDrawShape::State* QgsMapToolDrawRectangle::emptyState() const
 {
-  if ( press && button == Qt::LeftButton && mState == StateReady )
+  State* newState = new State;
+  newState->status = StatusReady;
+  return newState;
+}
+
+void QgsMapToolDrawRectangle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
+{
+  if ( press && button == Qt::LeftButton && state()->status == StatusReady )
   {
-    mP1.append( pos );
-    mP2.append( pos );
-    return StateDrawing;
+    State* newState = cloneState();
+    newState->p1.append( pos );
+    newState->p2.append( pos );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( !press && mState == StateDrawing && mP1.back() != mP2.back() )
+  else if ( !press && state()->status == StatusDrawing && state()->p1.back() != pos )
   {
-    return mMultipart ? StateReady : StateFinished;
+    State* newState = cloneState();
+    newState->p2.back() = pos;
+    newState->status = mMultipart ? StatusReady : StatusFinished;
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawRectangle::moveEvent( const QgsPoint &pos )
 {
-  mP2.last() = pos;
+  modifyableState()->p2.back() = pos;
+  update();
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
-  for ( int i = 0, n = mP1.size(); i < n; ++i )
+  for ( int i = 0, n = state()->p1.size(); i < n; ++i )
   {
+    const QgsPoint& p1 = state()->p1[i];
+    const QgsPoint& p2 = state()->p2[i];
     QgsLineStringV2* ring = new QgsLineStringV2;
-    ring->addVertex( QgsPointV2( t->transform( mP1[i] ) ) );
-    ring->addVertex( QgsPointV2( t->transform( mP2[i].x(), mP1[i].y() ) ) );
-    ring->addVertex( QgsPointV2( t->transform( mP2[i] ) ) );
-    ring->addVertex( QgsPointV2( t->transform( mP1[i].x(), mP2[i].y() ) ) );
-    ring->addVertex( QgsPointV2( t->transform( mP1[i] ) ) );
+    ring->addVertex( QgsPointV2( t->transform( p1 ) ) );
+    ring->addVertex( QgsPointV2( t->transform( p2.x(), p1.y() ) ) );
+    ring->addVertex( QgsPointV2( t->transform( p2 ) ) );
+    ring->addVertex( QgsPointV2( t->transform( p1.x(), p2.y() ) ) );
+    ring->addVertex( QgsPointV2( t->transform( p1 ) ) );
     QgsPolygonV2* poly = new QgsPolygonV2;
     poly->setExteriorRing( ring );
     multiGeom->addGeometry( poly );
@@ -598,6 +676,7 @@ QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordin
 
 void QgsMapToolDrawRectangle::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
 {
+  State* newState = cloneState();
   for ( int iPart = 0, nParts = geometry->partCount(); iPart < nParts; ++iPart )
   {
     for ( int iRing = 0, nRings = geometry->ringCount( iPart ); iRing < nRings; ++iRing )
@@ -605,18 +684,14 @@ void QgsMapToolDrawRectangle::doAddGeometry( const QgsAbstractGeometryV2* geomet
       if ( geometry->vertexCount( iPart, iRing ) == 5 )
       {
         QgsPointV2 vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, 0 ) );
-        mP1.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+        newState->p1.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
         vertex = geometry->vertexAt( QgsVertexId( iPart, iRing, 2 ) );
-        mP2.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
+        newState->p1.append( t.transform( QgsPoint( vertex.x(), vertex.y() ) ) );
       }
     }
   }
-}
-
-void QgsMapToolDrawRectangle::clear()
-{
-  mP1.clear();
-  mP2.clear();
+  newState->status = mMultipart ? StatusReady : StatusFinished;
+  updateState( newState );
 }
 
 void QgsMapToolDrawRectangle::initInputWidget()
@@ -646,23 +721,26 @@ void QgsMapToolDrawRectangle::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusChild()->selectAll();
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawRectangle::inputAccepted()
+void QgsMapToolDrawRectangle::inputAccepted()
 {
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   mInputWidget->setFocusChild( mXEdit );
-  if ( mState == StateReady )
+  if ( state()->status == StatusReady )
   {
-    mP1.append( QgsPoint( x, y ) );
-    mP2.append( QgsPoint( x, y ) );
-    return StateDrawing;
+    State* newState = cloneState();
+    newState->p1.append( QgsPoint( x, y ) );
+    newState->p2.append( QgsPoint( x, y ) );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( mState == StateDrawing )
+  else if ( state()->status == StatusDrawing )
   {
-    mP2.back() = QgsPoint( x, y );
-    return mMultipart ? StateReady : StateFinished;
+    State* newState = cloneState();
+    newState->p2.back() = QgsPoint( x, y );
+    newState->status = mMultipart ? StatusReady : StatusFinished;
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawRectangle::inputChanged()
@@ -670,6 +748,14 @@ void QgsMapToolDrawRectangle::inputChanged()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   moveMouseToPos( QgsPoint( x, y ) );
+}
+
+void QgsMapToolDrawRectangle::setPart( int part, const QgsPoint& p1, const QgsPoint& p2 )
+{
+  State* newState = cloneState();
+  newState->p1[part] = p1;
+  newState->p2[part] = p2;
+  updateState( newState );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -683,8 +769,8 @@ class GeodesicCircleMeasurer : public QgsGeometryRubberBand::Measurer
       QList<Measurement> measurements;
       if ( measurementMode == QgsGeometryRubberBand::MEASURE_CIRCLE )
       {
-        const QgsPoint& c = mTool->mCenters[mTool->mPartMap[part]];
-        const QgsPoint& p = mTool->mRingPos[mTool->mPartMap[part]];
+        const QgsPoint& c = mTool->state()->centers[mTool->mPartMap[part]];
+        const QgsPoint& p = mTool->state()->ringPos[mTool->mPartMap[part]];
         const QgsCoordinateTransform* t1 = QgsCoordinateTransformCache::instance()->transform( mTool->canvas()->mapSettings().destinationCrs().authid(), "EPSG:4326" );
         double radius = mTool->mDa.measureLine( t1->transform( c ), t1->transform( p ) );
 
@@ -703,7 +789,7 @@ class GeodesicCircleMeasurer : public QgsGeometryRubberBand::Measurer
 };
 
 QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas , bool geodesic )
-    : QgsMapToolDrawShape( canvas, true ), mGeodesic( geodesic )
+    : QgsMapToolDrawShape( canvas, true, emptyState() ), mGeodesic( geodesic )
 {
   if ( geodesic )
   {
@@ -714,45 +800,59 @@ QgsMapToolDrawCircle::QgsMapToolDrawCircle( QgsMapCanvas* canvas , bool geodesic
   }
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
+QgsMapToolDrawShape::State* QgsMapToolDrawCircle::emptyState() const
 {
-  if ( press && button == Qt::LeftButton && mState == StateReady )
+  State* newState = new State;
+  newState->status = StatusReady;
+  return newState;
+}
+
+void QgsMapToolDrawCircle::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
+{
+  if ( press && button == Qt::LeftButton && state()->status == StatusReady )
   {
-    mCenters.append( pos );
-    mRingPos.append( pos );
-    return StateDrawing;
+    State* newState = cloneState();
+    newState->centers.append( pos );
+    newState->ringPos.append( pos );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( !press && mState == StateDrawing && mCenters.back() != mRingPos.back() )
+  else if ( !press && state()->status == StatusDrawing && state()->centers.back() != pos )
   {
-    return mMultipart ? StateReady : StateFinished;
+    State* newState = cloneState();
+    newState->ringPos.back() = pos;
+    newState->status = mMultipart ? StatusReady : StatusFinished;
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawCircle::moveEvent( const QgsPoint &pos )
 {
-  mRingPos.last() = pos;
+  modifyableState()->ringPos.back() = pos;
+  update();
 }
 
 void QgsMapToolDrawCircle::getPart( int part, QgsPoint &center, double &radius ) const
 {
-  center = mCenters[part];
-  radius = qSqrt( mCenters[part].sqrDist( mRingPos[part] ) );
+  center = state()->centers[part];
+  radius = qSqrt( state()->centers[part].sqrDist( state()->ringPos[part] ) );
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   mPartMap.clear();
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2();
-  for ( int i = 0, n = mCenters.size(); i < n; ++i )
+  for ( int i = 0, n = state()->centers.size(); i < n; ++i )
   {
     // 1 deg segmentized circle around center
     if ( mGeodesic )
     {
       const QgsCoordinateTransform* t1 = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), "EPSG:4326" );
       const QgsCoordinateTransform* t2 = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", targetCrs.authid() );
-      QgsPoint p1 = t1->transform( mCenters[i].x(), mCenters[i].y() );
-      QgsPoint p2 = t1->transform( mRingPos[i].x(), mRingPos[i].y() );
+      const QgsPoint& center = state()->centers[i];
+      const QgsPoint& ringPos = state()->ringPos[i];
+      QgsPoint p1 = t1->transform( center.x(), center.y() );
+      QgsPoint p2 = t1->transform( ringPos.x(), ringPos.y() );
       double clampLatitude = targetCrs.authid() == "EPSG:3857" ? 85 : 90;
       if ( p2.y() > 90 )
       {
@@ -868,12 +968,14 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinate
     else
     {
       const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
-      double radius = qSqrt( mCenters[i].sqrDist( mRingPos[i] ) );
+      const QgsPoint& center = state()->centers[i];
+      const QgsPoint& ringPos = state()->ringPos[i];
+      double radius = qSqrt( center.sqrDist( ringPos ) );
       QgsCircularStringV2* ring = new QgsCircularStringV2();
       ring->setPoints( QList<QgsPointV2>()
-                       << QgsPointV2( t->transform( mCenters[i].x() + radius, mCenters[i].y() ) )
-                       << QgsPointV2( t->transform( mCenters[i].x(), mCenters[i].y() ) )
-                       << QgsPointV2( t->transform( mCenters[i].x() + radius, mCenters[i].y() ) ) );
+                       << QgsPointV2( t->transform( center.x() + radius, center.y() ) )
+                       << QgsPointV2( t->transform( center.x(), center.y() ) )
+                       << QgsPointV2( t->transform( center.x() + radius, center.y() ) ) );
       QgsCurvePolygonV2* poly = new QgsCurvePolygonV2();
       poly->setExteriorRing( ring );
       multiGeom->addGeometry( poly );
@@ -893,6 +995,7 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinate
 
 void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t )
 {
+  State* newState = cloneState();
   if ( dynamic_cast<const QgsGeometryCollectionV2*>( geometry ) )
   {
     const QgsGeometryCollectionV2* geomCollection = static_cast<const QgsGeometryCollectionV2*>( geometry );
@@ -901,8 +1004,8 @@ void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry,
       QgsRectangle bb = geomCollection->geometryN( i )->boundingBox();
       QgsPoint c = t.transform( bb.center() );
       QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
-      mCenters.append( c );
-      mRingPos.append( r );
+      newState->centers.append( c );
+      newState->ringPos.append( r );
     }
   }
   else
@@ -910,16 +1013,11 @@ void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry,
     QgsRectangle bb = geometry->boundingBox();
     QgsPoint c = t.transform( bb.center() );
     QgsPoint r = t.transform( QgsPoint( bb.xMinimum(), bb.center().y() ) );
-    mCenters.append( c );
-    mRingPos.append( r );
+    newState->centers.append( c );
+    newState->ringPos.append( r );
   }
-}
-
-void QgsMapToolDrawCircle::clear()
-{
-  mCenters.clear();
-  mRingPos.clear();
-  mPartMap.clear();
+  newState->status = mMultipart ? StatusReady : StatusFinished;
+  updateState( newState );
 }
 
 void QgsMapToolDrawCircle::initInputWidget()
@@ -951,166 +1049,210 @@ void QgsMapToolDrawCircle::initInputWidget()
 void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
 {
   bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
-  if ( mState == StateReady )
+  if ( state()->status == StatusReady )
   {
     mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
     mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
     mREdit->setText( "0" );
   }
-  else if ( mState == StateDrawing )
+  else if ( state()->status == StatusDrawing )
   {
-    mREdit->setText( QString::number( qSqrt( mCenters.last().sqrDist( mRingPos.last() ) ), 'f', isDegrees ? 4 : 0 ) );
+    mREdit->setText( QString::number( qSqrt( state()->centers.last().sqrDist( state()->ringPos.last() ) ), 'f', isDegrees ? 4 : 0 ) );
   }
   if ( mInputWidget->focusChild() )
     mInputWidget->focusChild()->selectAll();
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircle::inputAccepted()
+void QgsMapToolDrawCircle::inputAccepted()
 {
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
   mInputWidget->setFocusChild( mXEdit );
-  if ( mState == StateReady )
+  if ( state()->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRingPos.append( QgsPoint( x + r, y ) );
-    return StateDrawing;
+    State* newState = cloneState();
+    newState->centers.append( QgsPoint( x, y ) );
+    newState->ringPos.append( QgsPoint( x + r, y ) );
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( mState == StateDrawing )
+  else if ( state()->status == StatusDrawing )
   {
+    State* newState = cloneState();
     mREdit->setText( "0" );
-    mCenters.back() = QgsPoint( x, y );
-    mRingPos.back() = QgsPoint( x + r, y );
-    return mMultipart ? StateReady : StateFinished;
+    newState->centers.back() = QgsPoint( x, y );
+    newState->ringPos.back() = QgsPoint( x + r, y );
+    newState->status = mMultipart ? StatusReady : StatusFinished;
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawCircle::centerInputChanged()
 {
+  State* state = modifyableState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
-  if ( mState == StateReady )
+  if ( state->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRingPos.append( QgsPoint( x + r, y ) );
-    mState = StateDrawing;
+    state->centers.append( QgsPoint( x, y ) );
+    state->ringPos.append( QgsPoint( x + r, y ) );
+    state->status = StatusDrawing;
   }
-  mCenters.back() = QgsPoint( x, y );
+  else
+  {
+    state->centers.back() = QgsPoint( x, y );
+  }
+  update();
   moveMouseToPos( QgsPoint( x + r, y ) );
 }
 
 void QgsMapToolDrawCircle::radiusInputChanged()
 {
+  State* state = modifyableState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
-  if ( mState == StateReady )
+  if ( state->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRingPos.append( QgsPoint( x + r, y ) );
-    mState = StateDrawing;
+    state->centers.append( QgsPoint( x, y ) );
+    state->ringPos.append( QgsPoint( x + r, y ) );
+    state->status = StatusDrawing;
   }
-  mRingPos.back() = QgsPoint( x + r, y );
+  else
+  {
+    state->ringPos.back() = QgsPoint( x + r, y );
+  }
+  update();
   moveMouseToPos( QgsPoint( x + r, y ) );
+}
+
+void QgsMapToolDrawCircle::setPart( int part, const QgsPoint& center, double radius )
+{
+  State* newState = cloneState();
+  newState->centers[part] = center;
+  newState->ringPos[part] = QgsPoint( center.x() + radius, center.y() );
+  updateState( newState );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMapToolDrawCircularSector::QgsMapToolDrawCircularSector( QgsMapCanvas* canvas )
-    : QgsMapToolDrawShape( canvas, true ), mSectorStage( HaveNothing ) {}
+    : QgsMapToolDrawShape( canvas, true, emptyState() ) {}
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
+QgsMapToolDrawShape::State* QgsMapToolDrawCircularSector::emptyState() const
+{
+  State* newState = new State;
+  newState->status = StatusReady;
+  newState->sectorStatus = HaveNothing;
+  return newState;
+}
+
+void QgsMapToolDrawCircularSector::buttonEvent( const QgsPoint &pos, bool press, Qt::MouseButton button )
 {
   if ( press && button == Qt::LeftButton )
   {
-    if ( mSectorStage == HaveNothing )
+    if ( state()->sectorStatus == HaveNothing )
     {
-      mCenters.append( pos );
-      mRadii.append( 0 );
-      mStartAngles.append( 0 );
-      mStopAngles.append( 0 );
-      mSectorStage = HaveCenter;
-      return StateDrawing;
+      State* newState = cloneState();
+      newState->centers.append( pos );
+      newState->radii.append( 0 );
+      newState->startAngles.append( 0 );
+      newState->stopAngles.append( 0 );
+      newState->sectorStatus = HaveCenter;
+      newState->status = StatusDrawing;
+      updateState( newState );
     }
-    else if ( mSectorStage == HaveCenter )
+    else if ( state()->sectorStatus == HaveCenter )
     {
-      mSectorStage = HaveRadius;
-      return StateDrawing;
+      State* newState = cloneState();
+      newState->sectorStatus = HaveRadius;
+      newState->status = StatusDrawing;
+      updateState( newState );
     }
-    else if ( mSectorStage == HaveRadius )
+    else if ( state()->sectorStatus == HaveRadius )
     {
-      mSectorStage = HaveNothing;
-      return mMultipart ? StateReady : StateFinished;
+      State* newState = cloneState();
+      newState->sectorStatus = HaveNothing;
+      newState->status = mMultipart ? StatusReady : StatusFinished;
+      updateState( newState );
     }
   }
-  return mState;
 }
 
 void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
 {
-  if ( mSectorStage == HaveCenter )
+  State* state = modifyableState();
+  if ( state->sectorStatus == HaveCenter )
   {
-    mRadii.back() = qSqrt( pos.sqrDist( mCenters.back() ) );
-    mStartAngles.back() = mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
+    state->radii.back() = qSqrt( pos.sqrDist( state->centers.back() ) );
+    state->startAngles.back() = state->stopAngles.back() = qAtan2( pos.y() - state->centers.back().y(), pos.x() - state->centers.back().x() );
   }
-  else if ( mSectorStage == HaveRadius )
+  else if ( state->sectorStatus == HaveRadius )
   {
-    mStopAngles.back() = qAtan2( pos.y() - mCenters.back().y(), pos.x() - mCenters.back().x() );
-    if ( mStopAngles.back() <= mStartAngles.back() )
+    state->stopAngles.back() = qAtan2( pos.y() - state->centers.back().y(), pos.x() - state->centers.back().x() );
+    if ( state->stopAngles.back() <= state->startAngles.back() )
     {
-      mStopAngles.back() += 2 * M_PI;
+      state->stopAngles.back() += 2 * M_PI;
     }
 
     // Snap to full circle if within 5px
-    QgsPoint pStart( mCenters.back().x() + mRadii.back() * qCos( mStartAngles.back() ),
-                     mCenters.back().y() + mRadii.back() * qSin( mStartAngles.back() ) );
-    QgsPoint pEnd( mCenters.back().x() + mRadii.back() * qCos( mStopAngles.back() ),
-                   mCenters.back().y() + mRadii.back() * qSin( mStopAngles.back() ) );
+    const QgsPoint& center = state->centers.back();
+    const double& radius = state->radii.back();
+    const double& startAngle = state->startAngles.back();
+    const double& stopAngle = state->stopAngles.back();
+    QgsPoint pStart( center.x() + radius * qCos( startAngle ),
+                     center.y() + radius * qSin( startAngle ) );
+    QgsPoint pEnd( center.x() + radius * qCos( stopAngle ),
+                   center.y() + radius * qSin( stopAngle ) );
     QPoint diff = toCanvasCoordinates( pEnd ) - toCanvasCoordinates( pStart );
     if (( diff.x() * diff.x() + diff.y() * diff.y() ) < 25 )
     {
-      mStopAngles.back() = mStartAngles.back() + 2 * M_PI;
+      state->stopAngles.back() = state->startAngles.back() + 2 * M_PI;
     }
   }
+  update();
 }
 
 QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
-  for ( int i = 0, n = mCenters.size(); i < n; ++i )
+  for ( int i = 0, n = state()->centers.size(); i < n; ++i )
   {
+    const QgsPoint& center = state()->centers[i];
+    const double& radius = state()->radii[i];
+    const double& startAngle = state()->startAngles[i];
+    const double& stopAngle = state()->stopAngles[i];
     QgsPoint pStart, pMid, pEnd;
-    if ( mStopAngles[i] == mStartAngles[i] + 2 * M_PI )
+    if ( stopAngle == startAngle + 2 * M_PI )
     {
-      pStart = pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] ),
-                                mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] ) );
-      pMid = mCenters[i];
+      pStart = pEnd = QgsPoint( center.x() + radius * qCos( stopAngle ),
+                                center.y() + radius * qSin( stopAngle ) );
+      pMid = center;
     }
     else
     {
-      double alphaMid = 0.5 * ( mStartAngles[i] + mStopAngles[i] - 2 * M_PI );
-      pStart = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStartAngles[i] ),
-                         mCenters[i].y() + mRadii[i] * qSin( mStartAngles[i] ) );
-      pMid = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( alphaMid ),
-                       mCenters[i].y() + mRadii[i] * qSin( alphaMid ) );
-      pEnd = QgsPoint( mCenters[i].x() + mRadii[i] * qCos( mStopAngles[i] - 2 * M_PI ),
-                       mCenters[i].y() + mRadii[i] * qSin( mStopAngles[i] - 2 * M_PI ) );
+      double alphaMid = 0.5 * ( startAngle + stopAngle - 2 * M_PI );
+      pStart = QgsPoint( center.x() + radius * qCos( startAngle ),
+                         center.y() + radius * qSin( startAngle ) );
+      pMid = QgsPoint( center.x() + radius * qCos( alphaMid ),
+                       center.y() + radius * qSin( alphaMid ) );
+      pEnd = QgsPoint( center.x() + radius * qCos( stopAngle - 2 * M_PI ),
+                       center.y() + radius * qSin( stopAngle - 2 * M_PI ) );
     }
     QgsCompoundCurveV2* exterior = new QgsCompoundCurveV2();
-    if ( mStartAngles[i] != mStopAngles[i] )
+    if ( startAngle != stopAngle )
     {
       QgsCircularStringV2* arc = new QgsCircularStringV2();
       arc->setPoints( QList<QgsPointV2>() << t->transform( pStart ) << t->transform( pMid ) << t->transform( pEnd ) );
       exterior->addCurve( arc );
     }
-    if ( mStopAngles[i] != mStartAngles[i] + 2 * M_PI )
+    if ( startAngle != stopAngle + 2 * M_PI )
     {
       QgsLineStringV2* line = new QgsLineStringV2();
-      line->setPoints( QList<QgsPointV2>() << t->transform( pEnd ) << t->transform( mCenters[i] ) << t->transform( pStart ) );
+      line->setPoints( QList<QgsPointV2>() << t->transform( pEnd ) << t->transform( center ) << t->transform( pStart ) );
       exterior->addCurve( line );
     }
     QgsCurvePolygonV2* poly = new QgsCurvePolygonV2;
@@ -1131,16 +1273,7 @@ QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCo
 
 void QgsMapToolDrawCircularSector::doAddGeometry( const QgsAbstractGeometryV2* /*geometry*/, const QgsCoordinateTransform& /*t*/ )
 {
-  // Not yet implemented
-}
-
-void QgsMapToolDrawCircularSector::clear()
-{
-  mCenters.clear();
-  mRadii.clear();
-  mStartAngles.clear();
-  mStopAngles.clear();
-  mSectorStage = HaveNothing;
+  /* Not yet implemented */
 }
 
 void QgsMapToolDrawCircularSector::initInputWidget()
@@ -1184,7 +1317,7 @@ void QgsMapToolDrawCircularSector::initInputWidget()
 void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
 {
   bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
-  if ( mSectorStage == HaveNothing )
+  if ( state()->sectorStatus == HaveNothing )
   {
     mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
     mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
@@ -1192,19 +1325,19 @@ void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
     mA1Edit->setText( "0" );
     mA2Edit->setText( "0" );
   }
-  else if ( mSectorStage == HaveCenter )
+  else if ( state()->sectorStatus == HaveCenter )
   {
-    mREdit->setText( QString::number( mRadii.last(), 'f', isDegrees ? 4 : 0 ) );
+    mREdit->setText( QString::number( state()->radii.last(), 'f', isDegrees ? 4 : 0 ) );
   }
-  else if ( mSectorStage == HaveRadius )
+  else if ( state()->sectorStatus == HaveRadius )
   {
-    double startAngle = 2.5 * M_PI - mStartAngles.last();
+    double startAngle = 2.5 * M_PI - state()->startAngles.last();
     if ( startAngle > 2 * M_PI )
       startAngle -= 2 * M_PI;
     else if ( startAngle < 0 )
       startAngle += 2 * M_PI;
     mA1Edit->setText( QString::number( startAngle / M_PI * 180., 'f', 1 ) );
-    double stopAngle = 2.5 * M_PI - mStopAngles.last();
+    double stopAngle = 2.5 * M_PI - state()->stopAngles.last();
     if ( stopAngle > 2 * M_PI )
       stopAngle -= 2 * M_PI;
     else if ( stopAngle < 0 )
@@ -1215,7 +1348,7 @@ void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusChild()->selectAll();
 }
 
-QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::inputAccepted()
+void QgsMapToolDrawCircularSector::inputAccepted()
 {
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
@@ -1233,53 +1366,57 @@ QgsMapToolDrawShape::State QgsMapToolDrawCircularSector::inputAccepted()
   if ( a2 <= a1 )
     a2 += 2 * M_PI;
   mInputWidget->setFocusChild( mXEdit );
-  if ( mState == StateReady )
+  if ( state()->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    State* newState = cloneState();
+    newState->centers.append( QgsPoint( x, y ) );
+    newState->radii.append( r );
     if ( r > 0 )
     {
-      mStartAngles.append( a1 );
-      mStopAngles.append( a2 );
-      mSectorStage = HaveRadius;
+      newState->startAngles.append( a1 );
+      newState->stopAngles.append( a2 );
+      newState->sectorStatus = HaveRadius;
     }
     else
     {
-      mStartAngles.append( 0 );
-      mStopAngles.append( 0 );
-      mSectorStage = HaveCenter;
+      newState->startAngles.append( 0 );
+      newState->stopAngles.append( 0 );
+      newState->sectorStatus = HaveCenter;
     }
-    return StateDrawing;
+    newState->status = StatusDrawing;
+    updateState( newState );
   }
-  else if ( mState == StateDrawing )
+  else if ( state()->status == StatusDrawing )
   {
-    mCenters.back() = QgsPoint( x, y );
-    mRadii.back() = r;
+    State* newState = cloneState();
+    newState->centers.back() = QgsPoint( x, y );
+    newState->radii.back() = r;
     if ( r > 0 )
     {
-      mStartAngles.back() = a1;
-      mStopAngles.back() = a2;
-      mSectorStage = HaveRadius;
+      newState->startAngles.back() = a1;
+      newState->stopAngles.back() = a2;
+      newState->sectorStatus = HaveRadius;
     }
     else
     {
-      mStartAngles.back() = 0;
-      mStopAngles.back() = 0;
-      mSectorStage = HaveCenter;
+      newState->startAngles.back() = 0;
+      newState->stopAngles.back() = 0;
+      newState->sectorStatus = HaveCenter;
     }
-    if ( mSectorStage == HaveRadius )
+    if ( newState->sectorStatus == HaveRadius )
     {
       mREdit->setText( "0" );
       mA1Edit->setText( "0" );
       mA2Edit->setText( "0" );
-      return mMultipart ? StateReady : StateFinished;
+      newState->status = mMultipart ? StatusReady : StatusFinished;
     }
+    updateState( newState );
   }
-  return mState;
 }
 
 void QgsMapToolDrawCircularSector::centerInputChanged()
 {
+  State* state = modifyableState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
@@ -1295,30 +1432,32 @@ void QgsMapToolDrawCircularSector::centerInputChanged()
     a2 -= 2 * M_PI;
   if ( a2 <= a1 )
     a2 += 2 * M_PI;
-  if ( mState == StateReady )
+  if ( state->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    state->centers.append( QgsPoint( x, y ) );
+    state->radii.append( r );
     if ( r > 0 )
     {
-      mStartAngles.append( a1 );
-      mStopAngles.append( a2 );
-      mSectorStage = HaveRadius;
+      state->startAngles.append( a1 );
+      state->stopAngles.append( a2 );
+      state->sectorStatus = HaveRadius;
     }
     else
     {
-      mStartAngles.append( 0 );
-      mStopAngles.append( 0 );
-      mSectorStage = HaveCenter;
+      state->startAngles.append( 0 );
+      state->stopAngles.append( 0 );
+      state->sectorStatus = HaveCenter;
     }
-    mState = StateDrawing;
+    state->status = StatusDrawing;
   }
-  mCenters.back() = QgsPoint( x, y );
-  moveMouseToPos( QgsPoint( x + r * qCos( mStopAngles.back() ), y + r * qSin( mStopAngles.back() ) ) );
+  state->centers.back() = QgsPoint( x, y );
+  update();
+  moveMouseToPos( QgsPoint( x + r * qCos( state->stopAngles.back() ), y + r * qSin( state->stopAngles.back() ) ) );
 }
 
 void QgsMapToolDrawCircularSector::arcInputChanged()
 {
+  State* state = modifyableState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
@@ -1334,36 +1473,47 @@ void QgsMapToolDrawCircularSector::arcInputChanged()
     a2 -= 2 * M_PI;
   if ( a2 <= a1 )
     a2 += 2 * M_PI;
-  if ( mState == StateReady )
+  if ( state->status == StatusReady )
   {
-    mCenters.append( QgsPoint( x, y ) );
-    mRadii.append( r );
+    state->centers.append( QgsPoint( x, y ) );
+    state->radii.append( r );
     if ( r > 0 )
     {
-      mStartAngles.append( a1 );
-      mStopAngles.append( a2 );
-      mSectorStage = HaveRadius;
+      state->startAngles.append( a1 );
+      state->stopAngles.append( a2 );
+      state->sectorStatus = HaveRadius;
     }
     else
     {
-      mStartAngles.append( 0 );
-      mStopAngles.append( 0 );
-      mSectorStage = HaveCenter;
+      state->startAngles.append( 0 );
+      state->stopAngles.append( 0 );
+      state->sectorStatus = HaveCenter;
     }
-    mState = StateDrawing;
+    state->status = StatusDrawing;
   }
-  mRadii.back() = r;
+  state->radii.back() = r;
   if ( r > 0 )
   {
-    mStartAngles.back() = a1;
-    mStopAngles.back() = a2;
-    mSectorStage = HaveRadius;
+    state->startAngles.back() = a1;
+    state->stopAngles.back() = a2;
+    state->sectorStatus = HaveRadius;
   }
   else
   {
-    mStartAngles.back() = 0;
-    mStopAngles.back() = 0;
-    mSectorStage = HaveCenter;
+    state->startAngles.back() = 0;
+    state->stopAngles.back() = 0;
+    state->sectorStatus = HaveCenter;
   }
-  moveMouseToPos( QgsPoint( x + r * qCos( mStopAngles.back() ), y + r * qSin( mStopAngles.back() ) ) );
+  update();
+  moveMouseToPos( QgsPoint( x + r * qCos( state->stopAngles.back() ), y + r * qSin( state->stopAngles.back() ) ) );
+}
+
+void QgsMapToolDrawCircularSector::setPart( int part, const QgsPoint& center, double radius, double startAngle, double stopAngle )
+{
+  State* newState = cloneState();
+  newState->centers[part] = center;
+  newState->radii[part] = radius;
+  newState->startAngles[part] = startAngle;
+  newState->stopAngles[part] = stopAngle;
+  updateState( newState );
 }

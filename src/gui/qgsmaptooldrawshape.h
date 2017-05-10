@@ -18,6 +18,7 @@
 
 #include "qgsmaptool.h"
 #include "qgsgeometryrubberband.h"
+#include "qgsundostack.h"
 #include <QPointer>
 
 class QgsMapToolDrawShapeInputWidget;
@@ -27,9 +28,17 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 {
     Q_OBJECT
   public:
-    enum State { StateReady, StateDrawing, StateFinished };
+    enum Status { StatusReady, StatusDrawing, StatusFinished };
 
-    QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea );
+  protected:
+    struct State
+    {
+      Status status;
+    };
+
+    QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea, State* initialState );
+
+  public:
     ~QgsMapToolDrawShape();
     void activate() override;
     void deactivate() override;
@@ -40,7 +49,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void setResetOnDeactivate( bool resetOnDeactivate ) { mResetOnDeactivate = resetOnDeactivate; }
     void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
-    State getState() const { return mState; }
+    Status getStatus() const { return mState->status; }
 
     void canvasPressEvent( QMouseEvent* e ) override;
     void canvasMoveEvent( QMouseEvent* e ) override;
@@ -51,38 +60,64 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void addGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs );
     void update();
 
+
   public slots:
     void reset();
+    void undo() { mUndoStack.undo(); }
+    void redo() { mUndoStack.redo(); }
 
   signals:
     void cleared();
     void finished();
     void geometryChanged();
+    void canUndo( bool );
+    void canRedo( bool );
 
   protected:
-    State mState;
+    class StateChangeCommand : public QgsUndoCommand
+    {
+      public:
+        StateChangeCommand( QgsMapToolDrawShape* tool, State* newState, bool compress );
+        void undo() override;
+        void redo() override;
+        bool compress() const override { return mCompress; }
+      private:
+        QgsMapToolDrawShape* mTool;
+        QSharedPointer<QgsMapToolDrawShape::State> mPrevState, mNextState;
+        bool mCompress;
+    };
+    friend class StateChangeCommand;
+
     bool mIsArea;
     bool mMultipart;
-    bool mSnapPoints;
-    bool mShowInput;
-    bool mResetOnDeactivate;
-    bool mIgnoreNextMoveEvent;
     QPointer<QgsGeometryRubberBand> mRubberBand;
     QgsMapToolDrawShapeInputWidget* mInputWidget;
+    QgsUndoStack mUndoStack;
 
-    virtual State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
-    virtual void moveEvent( const QgsPoint& pos ) = 0;
-    virtual void clear() = 0;
+    const State* state() const { return mState.data(); }
+    State* modifyableState() { return mState.data(); }
+    State* cloneState() const { return new State( *state() ); }
+    virtual State* emptyState() const = 0;
+    virtual void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
+    virtual void moveEvent( const QgsPoint &/*pos*/ ) { }
+    virtual void inputAccepted() { }
     virtual void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) = 0;
     virtual void initInputWidget() {}
     virtual void updateInputWidget( const QgsPoint& /*mousePos*/ ) {}
-    virtual State inputAccepted() { return mState; }
+
     void moveMouseToPos( const QgsPoint& geoPos );
+    void updateState( State* newState, bool mergeable = false );
 
   protected slots:
     void acceptInput();
 
   private:
+    bool mSnapPoints;
+    bool mShowInput;
+    bool mResetOnDeactivate;
+    bool mIgnoreNextMoveEvent;
+    QSharedPointer<State> mState;
+
     QgsPoint transformPoint( const QPoint& p );
 };
 
@@ -93,23 +128,29 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
     Q_OBJECT
   public:
     QgsMapToolDrawPoint( QgsMapCanvas* canvas );
-    int getPartCount() const override { return mPoints.size(); }
-    void getPart( int part, QgsPoint& p ) const { p = mPoints[part].front(); }
-    void setPart( int part, const QgsPoint& p ) { mPoints[part].front() = p; }
+    int getPartCount() const override { return state()->points.size(); }
+    void getPart( int part, QgsPoint& p ) const { p = state()->points[part].front(); }
+    void setPart( int part, const QgsPoint& p );
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
-    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
-    QList< QList<QgsPoint> > mPoints;
+    struct State : QgsMapToolDrawShape::State
+    {
+      QList< QList<QgsPoint> > points;
+    };
+
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
-    State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
-    void moveEvent( const QgsPoint& pos ) override;
-    void clear() override;
+    const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
+    State* modifyableState() { return static_cast<State*>( QgsMapToolDrawShape::modifyableState() ); }
+    State* cloneState() const { return new State( *state() ); }
+    QgsMapToolDrawShape::State* emptyState() const override;
+    void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
+    void inputAccepted() override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
-    State inputAccepted() override;
 
   private slots:
     void inputChanged();
@@ -122,23 +163,30 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
     Q_OBJECT
   public:
     QgsMapToolDrawPolyLine( QgsMapCanvas* canvas, bool closed );
-    int getPartCount() const override { return mPoints.size(); }
-    void getPart( int part, QList<QgsPoint>& p ) const { p = mPoints[part]; }
-    void setPart( int part, const QList<QgsPoint>& p ) { mPoints[part] = p; }
+    int getPartCount() const override { return state()->points.size(); }
+    void getPart( int part, QList<QgsPoint>& p ) const { p = state()->points[part]; }
+    void setPart( int part, const QList<QgsPoint>& p );
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
-    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
-    QList< QList<QgsPoint> > mPoints;
+    struct State : QgsMapToolDrawShape::State
+    {
+      QList< QList<QgsPoint> > points;
+    };
+
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
-    State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
-    void moveEvent( const QgsPoint& pos ) override;
-    void clear() override;
+    const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
+    State* modifyableState() { return static_cast<State*>( QgsMapToolDrawShape::modifyableState() ); }
+    State* cloneState() const { return new State( *state() ); }
+    QgsMapToolDrawShape::State* emptyState() const override;
+    void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
+    void moveEvent( const QgsPoint &pos ) override;
+    void inputAccepted() override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
-    State inputAccepted() override;
 
   private slots:
     void inputChanged();
@@ -151,23 +199,34 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
     Q_OBJECT
   public:
     QgsMapToolDrawRectangle( QgsMapCanvas* canvas );
-    int getPartCount() const override { return mP1.size(); }
-    void getPart( int part, QgsPoint& p1, QgsPoint& p2 ) const { p1 = mP1[part]; p2 = mP2[part]; }
-    void setPart( int part, const QgsPoint& p1, const QgsPoint& p2 ) { mP1[part] = p1; mP2[part] = p2; }
+    int getPartCount() const override { return state()->p1.size(); }
+    void getPart( int part, QgsPoint& p1, QgsPoint& p2 ) const
+    {
+      p1 = state()->p1[part];
+      p2 = state()->p2[part];
+    }
+    void setPart( int part, const QgsPoint& p1, const QgsPoint& p2 );
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
-    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
-    QList<QgsPoint> mP1, mP2;
+    struct State : QgsMapToolDrawShape::State
+    {
+      QList<QgsPoint> p1, p2;
+    };
+
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
-    State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
-    void moveEvent( const QgsPoint& pos ) override;
-    void clear() override;
+    const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
+    State* modifyableState() { return static_cast<State*>( QgsMapToolDrawShape::modifyableState() ); }
+    State* cloneState() const { return new State( *state() ); }
+    QgsMapToolDrawShape::State* emptyState() const override;
+    void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
+    void moveEvent( const QgsPoint &pos ) override;
+    void inputAccepted() override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
-    State inputAccepted() override;
 
   private slots:
     void inputChanged();
@@ -180,29 +239,36 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
     Q_OBJECT
   public:
     QgsMapToolDrawCircle( QgsMapCanvas* canvas, bool geodesic = false );
-    int getPartCount() const override { return mCenters.size(); }
+    int getPartCount() const override { return state()->centers.size(); }
     void getPart( int part, QgsPoint& center, double& radius ) const;
-    void setPart( int part, const QgsPoint& center, double radius ) { mCenters[part] = center; mRingPos[part] = QgsPoint( center.x() + radius, center.y() ); }
+    void setPart( int part, const QgsPoint& center, double radius );
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
-    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
+    struct State : QgsMapToolDrawShape::State
+    {
+      QList<QgsPoint> centers;
+      QList<QgsPoint> ringPos;
+    };
+
     friend class GeodesicCircleMeasurer;
     bool mGeodesic;
     QgsDistanceArea mDa;
-    QList<QgsPoint> mCenters;
-    QList<QgsPoint> mRingPos;
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
     QPointer<QgsMapToolDrawShapeInputField> mREdit;
     mutable QVector<int> mPartMap;
 
-    State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
-    void moveEvent( const QgsPoint& pos ) override;
-    void clear() override;
+    const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
+    State* modifyableState() { return static_cast<State*>( QgsMapToolDrawShape::modifyableState() ); }
+    State* cloneState() const { return new State( *state() ); }
+    QgsMapToolDrawShape::State* emptyState() const override;
+    void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
+    void moveEvent( const QgsPoint &pos ) override;
+    void inputAccepted() override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
-    State inputAccepted() override;
 
   private slots:
     void centerInputChanged();
@@ -216,36 +282,44 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
     Q_OBJECT
   public:
     QgsMapToolDrawCircularSector( QgsMapCanvas* canvas );
-    int getPartCount() const override { return mCenters.size(); }
+    int getPartCount() const override { return state()->centers.size(); }
     void getPart( int part, QgsPoint& center, double& radius, double& startAngle, double& stopAngle ) const
     {
-      center = mCenters[part]; radius = mRadii[part]; startAngle = mStartAngles[part]; stopAngle = mStopAngles[part];
+      center = state()->centers[part];
+      radius = state()->radii[part];
+      startAngle = state()->startAngles[part];
+      stopAngle = state()->stopAngles[part];
     }
-    void setPart( int part, const QgsPoint& center, double radius, double startAngle, double stopAngle )
-    {
-      mCenters[part] = center; mRadii[part] = radius; mStartAngles[part] = startAngle; mStopAngles[part] = stopAngle;
-    }
+    void setPart( int part, const QgsPoint& center, double radius, double startAngle, double stopAngle );
     QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
-    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
 
   protected:
-    enum Stage { HaveNothing, HaveCenter, HaveRadius } mSectorStage;
-    QList<QgsPoint> mCenters;
-    QList<double> mRadii;
-    QList<double> mStartAngles;
-    QList<double> mStopAngles;
+    enum SectorStatus { HaveNothing, HaveCenter, HaveRadius };
+    struct State : QgsMapToolDrawShape::State
+    {
+      SectorStatus sectorStatus;
+      QList<QgsPoint> centers;
+      QList<double> radii;
+      QList<double> startAngles;
+      QList<double> stopAngles;
+    };
+
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
     QPointer<QgsMapToolDrawShapeInputField> mREdit;
     QPointer<QgsMapToolDrawShapeInputField> mA1Edit;
     QPointer<QgsMapToolDrawShapeInputField> mA2Edit;
 
-    State buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
-    void moveEvent( const QgsPoint& pos ) override;
-    void clear() override;
+    const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
+    State* modifyableState() { return static_cast<State*>( QgsMapToolDrawShape::modifyableState() ); }
+    State* cloneState() const { return new State( *state() ); }
+    QgsMapToolDrawShape::State* emptyState() const override;
+    void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) override;
+    void moveEvent( const QgsPoint &pos ) override;
+    void inputAccepted() override;
+    void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
-    State inputAccepted() override;
 
   private slots:
     void centerInputChanged();

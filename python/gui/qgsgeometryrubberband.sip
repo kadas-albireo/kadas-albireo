@@ -42,6 +42,14 @@ class QgsGeometryRubberBand: public QgsMapCanvasItem
       MEASURE_CIRCLE
     };
 
+    enum AngleUnit
+    {
+      ANGLE_DEGREES,
+      ANGLE_RADIANS,
+      ANGLE_GRADIANS,
+      ANGLE_MIL
+    };
+
     QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType = QGis::Line );
     ~QgsGeometryRubberBand();
 
@@ -61,7 +69,7 @@ class QgsGeometryRubberBand: public QgsMapCanvasItem
     void setLineStyle( Qt::PenStyle penStyle );
     void setBrushStyle( Qt::BrushStyle brushStyle );
     void setIconType( IconType iconType );
-    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits );
+    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
 
 
   protected:

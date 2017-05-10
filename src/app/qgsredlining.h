@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include "qgsfeature.h"
+#include "qgsbottombar.h"
 #include "qgsmaptoolmovelabel.h"
 
 class QAction;
@@ -26,7 +27,9 @@ class QSpinBox;
 class QToolButton;
 class QgisApp;
 class QgsColorButtonV2;
+class QgsBottomBar;
 class QgsRedliningLayer;
+class QgsRedliningBottomBar;
 class QgsRibbonApp;
 
 class QgsRedlining : public QObject
@@ -67,6 +70,7 @@ class QgsRedlining : public QObject
 
     QgisApp* mApp;
     RedliningUi mUi;
+    QgsRedliningBottomBar* mBottomBar;
     QAction* mActionEditObject;
     QAction* mActionNewPoint;
     QAction* mActionNewSquare;
@@ -88,6 +92,7 @@ class QgsRedlining : public QObject
 
   private slots:
     void clearLayer();
+    void unsetTool();
     void deactivateTool();
     void editObject();
     void saveColor();

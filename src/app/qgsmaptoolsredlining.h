@@ -41,6 +41,7 @@ class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
     QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape, QgsRedliningAttributeEditor* editor = 0 );
     ~QgsRedliningPointMapTool();
   private:
+    friend class AddFeatureCommand;
     QgsVectorLayer* mLayer;
     QString mShape;
     QgsRedliningAttributeEditor* mEditor;
@@ -54,6 +55,7 @@ class QgsRedliningRectangleMapTool : public QgsMapToolDrawRectangle
   public:
     QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
   private:
+    friend class AddFeatureCommand;
     QgsVectorLayer* mLayer;
   private slots:
     void onFinished();
@@ -66,6 +68,7 @@ class QgsRedliningPolylineMapTool : public QgsMapToolDrawPolyLine
     QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed, QgsRedliningAttributeEditor* editor = 0 );
     ~QgsRedliningPolylineMapTool();
   private:
+    friend class AddFeatureCommand;
     QgsVectorLayer* mLayer;
     QgsRedliningAttributeEditor* mEditor;
   private slots:
@@ -78,6 +81,7 @@ class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
   public:
     QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
   private:
+    friend class AddFeatureCommand;
     QgsVectorLayer* mLayer;
   private slots:
     void onFinished();

@@ -272,7 +272,7 @@ void QgsMeasureToolV2::keyReleaseEvent( QKeyEvent *e )
     mPickFeature = false;
     setCursor( Qt::ArrowCursor );
   }
-  else if ( e->key() == Qt::Key_Escape && mDrawTool->getState() == QgsMapToolDrawShape::StateReady )
+  else if ( e->key() == Qt::Key_Escape && mDrawTool->getStatus() == QgsMapToolDrawShape::StatusReady )
   {
     canvas()->unsetMapTool( this );
   }

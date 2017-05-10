@@ -98,7 +98,7 @@ void QgsMeasureHeightProfileTool::canvasMoveEvent( QMouseEvent * e )
 {
   if ( !mPicking )
   {
-    if ( mDrawTool->getState() == QgsMapToolDrawShape::StateFinished && mDrawTool->getPartCount() > 0 )
+    if ( mDrawTool->getStatus() == QgsMapToolDrawShape::StatusFinished && mDrawTool->getPartCount() > 0 )
     {
       QgsPoint p = toMapCoordinates( e->pos() );
       QList<QgsPoint> points;
@@ -155,7 +155,7 @@ void QgsMeasureHeightProfileTool::keyReleaseEvent( QKeyEvent *e )
     mPicking = false;
     setCursor( Qt::ArrowCursor );
   }
-  else if ( e->key() == Qt::Key_Escape && mDrawTool->getState() == QgsMapToolDrawShape::StateReady )
+  else if ( e->key() == Qt::Key_Escape && mDrawTool->getStatus() == QgsMapToolDrawShape::StatusReady )
   {
     canvas()->unsetMapTool( this );
   }

@@ -15,6 +15,7 @@
 
 #include "qgsredlining.h"
 #include "qgisapp.h"
+#include "qgsbottombar.h"
 #include "qgscolorbuttonv2.h"
 #include "qgsribbonapp.h"
 #include "qgslayertreemodel.h"
@@ -29,9 +30,45 @@
 #include "qgsproject.h"
 
 #include <QMenu>
+#include <QHBoxLayout>
+#include <QPushButton>
 #include <QSettings>
 #include <QToolBar>
 
+class QgsRedliningBottomBar: public QgsBottomBar
+{
+  public:
+    QgsRedliningBottomBar( QgsRedlining* redlining, QgsMapCanvas* canvas, QgsMapTool* tool )
+        : QgsBottomBar( canvas )
+    {
+      setLayout( new QHBoxLayout() );
+
+      QPushButton* undoButton = new QPushButton( tr( "Undo" ) );
+      undoButton->setEnabled( false );
+      undoButton->setIcon( QIcon( ":/images/themes/default/mActionUndo.png" ) );
+      connect( undoButton, SIGNAL( clicked( bool ) ), tool, SLOT( undo() ) );
+      connect( tool, SIGNAL( canUndo( bool ) ), undoButton, SLOT( setEnabled( bool ) ) );
+      layout()->addWidget( undoButton );
+
+      QPushButton* redoButton = new QPushButton( tr( "Redo" ) );
+      redoButton->setEnabled( false );
+      redoButton->setIcon( QIcon( ":/images/themes/default/mActionRedo.png" ) );
+      connect( redoButton, SIGNAL( clicked( bool ) ), tool, SLOT( redo() ) );
+      connect( tool, SIGNAL( canRedo( bool ) ), redoButton, SLOT( setEnabled( bool ) ) );
+      layout()->addWidget( redoButton );
+
+      QPushButton* closeButton = new QPushButton();
+      closeButton->setIcon( QIcon( ":/images/themes/default/mIconClose.png" ) );
+      closeButton->setToolTip( tr( "Close" ) );
+      connect( closeButton, SIGNAL( clicked( bool ) ), redlining, SLOT( unsetTool() ) );
+
+      layout()->addWidget( closeButton );
+
+      show();
+      setFixedWidth( width() );
+      updatePosition();
+    }
+};
 
 class QgsRedlining::LabelEditor : public QgsRedliningAttributeEditor
 {
@@ -74,6 +111,7 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
     : QObject( app )
     , mApp( app )
     , mUi( ui )
+    , mBottomBar( 0 )
     , mLayer( 0 )
     , mLayerRefCount( 0 )
 {
@@ -309,12 +347,19 @@ void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
     ++mLayerRefCount;
     mApp->mapCanvas()->setMapTool( tool );
     mRedliningTool = tool;
+
+    mBottomBar = new QgsRedliningBottomBar( this, mApp->mapCanvas(), mRedliningTool );
   }
   else if ( !active && mApp->mapCanvas()->mapTool() && mApp->mapCanvas()->mapTool()->action() == action )
   {
     delete tool;
     mApp->mapCanvas()->unsetMapTool( mApp->mapCanvas()->mapTool() );
   }
+}
+
+void QgsRedlining::unsetTool()
+{
+  mApp->mapCanvas()->unsetMapTool( mRedliningTool );
 }
 
 void QgsRedlining::deactivateTool()
@@ -334,6 +379,8 @@ void QgsRedlining::deactivateTool()
       }
     }
     mRedliningTool.data()->deleteLater();
+    delete mBottomBar;
+    mBottomBar = 0;
   }
 }
 
