@@ -143,22 +143,22 @@ class QgsMapTool : QObject
     QgsMapTool( QgsMapCanvas* canvas /TransferThis/ );
 
     //! transformation from screen coordinates to map coordinates
-    QgsPoint toMapCoordinates( const QPoint& point );
+    QgsPoint toMapCoordinates( const QPoint& point ) const;
 
     //! transformation from screen coordinates to layer's coordinates
-    QgsPoint toLayerCoordinates( QgsMapLayer* layer, const QPoint& point );
+    QgsPoint toLayerCoordinates( QgsMapLayer* layer, const QPoint& point ) const;
 
     //! transformation from map coordinates to layer's coordinates
-    QgsPoint toLayerCoordinates( QgsMapLayer* layer, const QgsPoint& point );
+    QgsPoint toLayerCoordinates( QgsMapLayer* layer, const QgsPoint& point ) const;
 
     //!transformation from layer's coordinates to map coordinates (which is different in case reprojection is used)
-    QgsPoint toMapCoordinates( QgsMapLayer* layer, const QgsPoint& point );
+    QgsPoint toMapCoordinates( QgsMapLayer* layer, const QgsPoint& point ) const;
 
     //! trnasformation of the rect from map coordinates to layer's coordinates
-    QgsRectangle toLayerCoordinates( QgsMapLayer* layer, const QgsRectangle& rect );
+    QgsRectangle toLayerCoordinates( QgsMapLayer* layer, const QgsRectangle& rect ) const;
 
     //! transformation from map coordinates to screen coordinates
-    QPoint toCanvasCoordinates( const QgsPoint& point );
+    QPoint toCanvasCoordinates( const QgsPoint& point ) const;
 
 
 };
