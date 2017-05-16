@@ -117,7 +117,10 @@ void QgsRasterDrawer::draw( QPainter* p, QgsRasterViewPort* viewPort, const QgsM
     drawImage( p, viewPort, img, topLeftCol, topLeftRow, scaleFactor, &mapToPixel );
     delete block;
 
-    p->setCompositionMode( QPainter::CompositionMode_SourceOver ); //go back to the default composition mode
+    if ( feedback && feedback->renderPartialOutput() )
+    {
+        p->setCompositionMode( QPainter::CompositionMode_SourceOver ); //go back to the default composition mode
+    }
 
     if ( ctx && ctx->renderingStopped() ) { break; }
 
