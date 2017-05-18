@@ -1122,10 +1122,6 @@ void QgisApp::setupConnections()
   connect( mapCanvas(), SIGNAL( layersChanged( QStringList ) ),
            this, SLOT( markDirty() ) );
 
-  // connect MapCanvas keyPress event so we can check if selected feature collection must be deleted
-  connect( mapCanvas(), SIGNAL( keyPressed( QKeyEvent * ) ),
-           this, SLOT( mapCanvas_keyPressed( QKeyEvent * ) ) );
-
   // connect renderer
   connect( mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ),
            this, SLOT( hasCrsTransformEnabled( bool ) ) );
@@ -7771,15 +7767,6 @@ void QgisApp::keyPressEvent( QKeyEvent * e )
   else
   {
     e->ignore();
-  }
-}
-
-void QgisApp::mapCanvas_keyPressed( QKeyEvent *e )
-{
-  // Delete selected features when it is possible and KeyEvent was not managed by current MapTool
-  if (( e->key() == Qt::Key_Backspace || e->key() == Qt::Key_Delete ) && e->isAccepted() )
-  {
-    deleteSelected();
   }
 }
 

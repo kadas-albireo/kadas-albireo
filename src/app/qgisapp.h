@@ -1054,9 +1054,6 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     void clipboardChanged();
 
-    //! catch MapCanvas keyPress event so we can check if selected feature collection must be deleted
-    void mapCanvas_keyPressed( QKeyEvent *e );
-
     //! Deletes the active QgsComposerManager instance
     void deleteComposerManager();
 
