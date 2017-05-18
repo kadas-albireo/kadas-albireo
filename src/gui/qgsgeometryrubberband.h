@@ -57,7 +57,11 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       /**
        * A full box is used to highlight points (■)
        */
-      ICON_FULL_BOX
+      ICON_FULL_BOX,
+      /**
+       * A triangle is used to highlight points (△)
+       */
+      ICON_TRIANGLE
     };
 
     enum MeasurementMode
@@ -93,13 +97,22 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void moveVertex( const QgsVertexId& id, const QgsPointV2& newPos );
 
     void setFillColor( const QColor& c );
+    QColor fillColor() const;
     void setOutlineColor( const QColor& c );
+    QColor outlineColor() const;
     void setOutlineWidth( int width );
+    int outlineWidth() const;
     void setLineStyle( Qt::PenStyle penStyle );
+    Qt::PenStyle lineStyle() const;
     void setBrushStyle( Qt::BrushStyle brushStyle );
+    Qt::BrushStyle brushStyle() const;
     void setIconType( IconType iconType ) { mIconType = iconType; }
     void setIconSize( int iconSize ) { mIconSize = iconSize; }
-    void setIconFillColor( const QColor& c ) { mIconFill = c; }
+    void setIconFillColor( const QColor& c );
+    void setIconOutlineColor( const QColor& c );
+    void setIconOutlineWidth( int width );
+    void setIconLineStyle( Qt::PenStyle penStyle );
+    void setIconBrushStyle( Qt::BrushStyle brushStyle );
     void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
 
     // Custom measurement handler for cases where default measurement method does not work
@@ -130,7 +143,8 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     QPen mPen;
     int mIconSize;
     IconType mIconType;
-    QColor mIconFill;
+    QBrush mIconBrush;
+    QPen mIconPen;
     QGis::GeometryType mGeometryType;
     QgsDistanceArea mDa;
     MeasurementMode mMeasurementMode;

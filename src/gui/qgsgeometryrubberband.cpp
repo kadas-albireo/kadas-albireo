@@ -29,14 +29,21 @@
 #include "qgsproject.h"
 #include <QPainter>
 
-QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType ): QgsMapCanvasItem( mapCanvas ),
-    mGeometry( 0 ), mIconSize( 5 ), mIconType( ICON_BOX ), mIconFill( Qt::transparent ), mGeometryType( geomType ), mMeasurementMode( MEASURE_NONE ), mMeasurer( 0 )
+QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType )
+    : QgsMapCanvasItem( mapCanvas )
+    , mGeometry( 0 )
+    , mPen( Qt::red )
+    , mBrush( Qt::red )
+    , mIconSize( 5 )
+    , mIconType( ICON_BOX )
+    , mIconPen( Qt::black )
+    , mIconBrush( Qt::transparent )
+    , mGeometryType( geomType )
+    , mMeasurementMode( MEASURE_NONE )
+    , mMeasurer( 0 )
 {
   mTranslationOffset[0] = 0.;
   mTranslationOffset[1] = 0.;
-
-  mPen = QPen( QColor( 255, 0, 0 ) );
-  mBrush = QBrush( QColor( 255, 0, 0 ) );
 
   connect( mapCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( redrawMeasurements() ) );
   connect( mapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( configureDistanceArea() ) );
@@ -97,7 +104,8 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
 {
   qreal s = ( mIconSize - 1 ) / 2;
   p->save();
-  p->setBrush( mIconFill );
+  p->setPen( mIconPen );
+  p->setBrush( mIconBrush );
 
   switch ( mIconType )
   {
@@ -127,6 +135,12 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
 
     case ICON_CIRCLE:
       p->drawEllipse( x - s, y - s, mIconSize, mIconSize );
+      break;
+
+    case ICON_TRIANGLE:
+      p->drawLine( QLineF( x - s, y - s, x + s, y - s ) );
+      p->drawLine( QLineF( x + s, y - s, x, y + s ) );
+      p->drawLine( QLineF( x, y + s, x - s, y - s ) );
       break;
   }
   p->restore();
@@ -221,9 +235,19 @@ void QgsGeometryRubberBand::setFillColor( const QColor& c )
   mBrush.setColor( c );
 }
 
+QColor QgsGeometryRubberBand::fillColor() const
+{
+  return mBrush.color();
+}
+
 void QgsGeometryRubberBand::setOutlineColor( const QColor& c )
 {
   mPen.setColor( c );
+}
+
+QColor QgsGeometryRubberBand::outlineColor() const
+{
+  return mPen.color();
 }
 
 void QgsGeometryRubberBand::setOutlineWidth( int width )
@@ -231,14 +255,54 @@ void QgsGeometryRubberBand::setOutlineWidth( int width )
   mPen.setWidth( width );
 }
 
+int QgsGeometryRubberBand::outlineWidth() const
+{
+  return mPen.width();
+}
+
 void QgsGeometryRubberBand::setLineStyle( Qt::PenStyle penStyle )
 {
   mPen.setStyle( penStyle );
 }
 
+Qt::PenStyle QgsGeometryRubberBand::lineStyle() const
+{
+  return mPen.style();
+}
+
 void QgsGeometryRubberBand::setBrushStyle( Qt::BrushStyle brushStyle )
 {
   mBrush.setStyle( brushStyle );
+}
+
+Qt::BrushStyle QgsGeometryRubberBand::brushStyle() const
+{
+  return mBrush.style();
+}
+
+void QgsGeometryRubberBand::setIconFillColor( const QColor& c )
+{
+  mIconBrush.setColor( c );
+}
+
+void QgsGeometryRubberBand::setIconOutlineColor( const QColor& c )
+{
+  mIconPen.setColor( c );
+}
+
+void QgsGeometryRubberBand::setIconOutlineWidth( int width )
+{
+  mIconPen.setWidth( width );
+}
+
+void QgsGeometryRubberBand::setIconLineStyle( Qt::PenStyle penStyle )
+{
+  mIconPen.setStyle( penStyle );
+}
+
+void QgsGeometryRubberBand::setIconBrushStyle( Qt::BrushStyle brushStyle )
+{
+  mIconBrush.setStyle( brushStyle );
 }
 
 void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits , AngleUnit angleUnit )

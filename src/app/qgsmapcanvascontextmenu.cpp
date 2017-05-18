@@ -215,42 +215,42 @@ void QgsMapCanvasContextMenu::drawPin()
 
 void QgsMapCanvasContextMenu::drawPointMarker()
 {
-  QgisApp::instance()->redlining()->newPoint();
+  QgisApp::instance()->redlining()->setPointTool();
 }
 
 void QgsMapCanvasContextMenu::drawSquareMarker()
 {
-  QgisApp::instance()->redlining()->newSquare();
+  QgisApp::instance()->redlining()->setSquareTool();
 }
 
 void QgsMapCanvasContextMenu::drawTriangleMarker()
 {
-  QgisApp::instance()->redlining()->newTriangle();
+  QgisApp::instance()->redlining()->setTriangleTool();
 }
 
 void QgsMapCanvasContextMenu::drawLine()
 {
-  QgisApp::instance()->redlining()->newLine();
+  QgisApp::instance()->redlining()->setLineTool();
 }
 
 void QgsMapCanvasContextMenu::drawRectangle()
 {
-  QgisApp::instance()->redlining()->newRectangle();
+  QgisApp::instance()->redlining()->setRectangleTool();
 }
 
 void QgsMapCanvasContextMenu::drawPolygon()
 {
-  QgisApp::instance()->redlining()->newPolygon();
+  QgisApp::instance()->redlining()->setPolygonTool();
 }
 
 void QgsMapCanvasContextMenu::drawCircle()
 {
-  QgisApp::instance()->redlining()->newCircle();
+  QgisApp::instance()->redlining()->setCircleTool();
 }
 
 void QgsMapCanvasContextMenu::drawText()
 {
-  QgisApp::instance()->redlining()->newText();
+  QgisApp::instance()->redlining()->setTextTool();
 }
 
 void QgsMapCanvasContextMenu::measureLine()

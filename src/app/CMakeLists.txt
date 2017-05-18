@@ -129,7 +129,6 @@ SET(QGIS_APP_SRCS
   qgsrastercalcdialog.cpp
   qgsrasterlayerproperties.cpp
   qgsredlining.cpp
-  qgsredliningtextdialog.cpp
   qgsshortcutsmanager.cpp
   qgssnappingdialog.cpp
   qgsundowidget.cpp
@@ -308,7 +307,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsrastercalcdialog.h
   qgsrasterlayerproperties.h
   qgsredlining.h
-  qgsredliningtextdialog.h
   qgssnappingdialog.h
   qgssponsors.h
   qgstipgui.h

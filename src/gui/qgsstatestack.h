@@ -1,7 +1,7 @@
 /***************************************************************************
-    qgsundostack.h
+    QgsStateStack.h
     -------------------------------------------------------------
-  begin                : May 10, 2017
+  begin                : May 16, 2017
   copyright            : (C) 2017 by Sandro Mani
   email                : smani@sourcepole.ch
  ***************************************************************************
@@ -13,41 +13,58 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGSUNDOSTACK_H
-#define QGSUNDOSTACK_H
+#ifndef QGSSTATESTACK_H
+#define QGSSTATESTACK_H
 
 #include <QObject>
+#include <QSharedPointer>
 #include <QStack>
 
-class GUI_EXPORT QgsUndoCommand
-{
-  public:
-    virtual ~QgsUndoCommand() {}
-    virtual void undo() = 0;
-    virtual void redo() = 0;
-    virtual bool compress() const { return false; }
-};
-
-class GUI_EXPORT QgsUndoStack : public QObject
+class GUI_EXPORT QgsStateStack : public QObject
 {
     Q_OBJECT
   public:
-    QgsUndoStack( QObject* parent = 0 );
-    ~QgsUndoStack();
-    void clear();
-    void push( QgsUndoCommand* command );
+    struct State
+    {
+      virtual ~State() {}
+    };
+
+    class StateChangeCommand
+    {
+      public:
+        StateChangeCommand( QgsStateStack* stateStack, State* newState, bool compress );
+        virtual void undo();
+        virtual void redo();
+        virtual bool compress() const { return mCompress; }
+      private:
+        QgsStateStack* mStateStack;
+        QSharedPointer<State> mPrevState, mNextState;
+        bool mCompress;
+    };
+
+    QgsStateStack( State* initialState, QObject* parent = 0 );
+    ~QgsStateStack();
+    void clear( State* cleanState );
+    void updateState( State* newState, bool mergeable = false );
+    void push( StateChangeCommand* command );
     void undo();
     void redo();
     bool canUndo() const { return !mUndoStack.isEmpty(); }
     bool canRedo() const { return !mRedoStack.isEmpty(); }
+    const State* state() const { return mState.data(); }
+    State* mutableState() { return mState.data(); }
 
   signals:
     void canUndoChanged( bool );
     void canRedoChanged( bool );
+    void stateChanged();
+
+  protected:
+    QSharedPointer<State> mState;
 
   private:
-    QStack<QgsUndoCommand*> mUndoStack;
-    QStack<QgsUndoCommand*> mRedoStack;
+    QStack<StateChangeCommand*> mUndoStack;
+    QStack<StateChangeCommand*> mRedoStack;
 };
 
-#endif // QGSUNDOSTACK_H
+#endif // QGSSTATESTACK_H

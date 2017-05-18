@@ -437,6 +437,8 @@
         <file>themes/default/symbologyRemove.png</file>
         <file>themes/default/symbologyUp.png</file>
         <file>themes/default/text.png</file>
+        <file>themes/default/textBold.png</file>
+        <file>themes/default/textItalic.png</file>
         <file>themes/default/tracking.png</file>
         <file>themes/default/transformed.png</file>
         <file>themes/default/transp-background_8x8.png</file>

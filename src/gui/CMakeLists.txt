@@ -252,7 +252,7 @@ qgstextannotationitem.cpp
 qgstextannotationdialog.cpp
 qgsvectorlayerpropertiespage.cpp
 qgsvertexmarker.cpp
-qgsundostack.cpp
+qgsstatestack.cpp
 qgsunitselectionwidget.cpp
 )
 
@@ -363,7 +363,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsslider.h
   qgssourceselectdialog.h
   qgssublayersdialog.h
-  qgsundostack.h
+  qgsstatestack.h
   qgsunitselectionwidget.h
   qgsvectorlayerpropertiespage.h
 

@@ -21,11 +21,8 @@
 #include "qgsmaptoolmovelabel.h"
 
 class QAction;
-class QComboBox;
-class QSpinBox;
-class QToolButton;
 class QgisApp;
-class QgsColorButtonV2;
+class QgsMapToolDrawShape;
 class QgsRedliningLayer;
 
 class QgsGPSRouteEditor : public QObject
@@ -56,16 +53,16 @@ class QgsGPSRouteEditor : public QObject
     QAction* mActionEdit;
 
     QPointer<QgsRedliningLayer> mLayer;
-    QPointer<QgsMapTool> mRedliningTool;
+    QPointer<QgsMapToolDrawShape> mRedliningTool;
     int mLayerRefCount;
 
     void setLayer( QgsRedliningLayer* layer );
-    void setTool( QgsMapTool* tool, QAction *action, bool active = true );
+    void setTool( QgsMapToolDrawShape *tool, QAction *action, bool active = true );
 
   private slots:
-    void createWaypoints( bool active );
-    void createRoutes( bool active );
-    void clearLayer();
+    void setWaypointsTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void setRoutesTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void checkLayerRemoved( const QString &layerId );
     void deactivateTool();
     void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );

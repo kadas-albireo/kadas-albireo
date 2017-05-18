@@ -154,8 +154,9 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   }
   mDrawTool->setParent( this );
   mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );
-  mDrawTool->setShowNodes( mMeasureMode != MeasureCircle );
+  mDrawTool->getRubberBand()->setIconType( mMeasureMode != MeasureCircle ? QgsGeometryRubberBand::ICON_CIRCLE : QgsGeometryRubberBand::ICON_NONE );
   mDrawTool->setSnapPoints( true );
+  mDrawTool->setParentTool( this );
   mMeasureWidget = 0;
   connect( mDrawTool, SIGNAL( geometryChanged() ), this, SLOT( updateTotal() ) );
 }

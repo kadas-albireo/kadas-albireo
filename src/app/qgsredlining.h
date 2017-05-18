@@ -27,7 +27,7 @@ class QSpinBox;
 class QToolButton;
 class QgisApp;
 class QgsColorButtonV2;
-class QgsBottomBar;
+class QgsMapToolDrawShape;
 class QgsRedliningLayer;
 class QgsRedliningBottomBar;
 class QgsRibbonApp;
@@ -53,14 +53,15 @@ class QgsRedlining : public QObject
     void editLabel( const QgsLabelPosition &labelPos );
 
   public slots:
-    void newPoint( bool active = true );
-    void newSquare( bool active = true );
-    void newTriangle( bool active = true );
-    void newLine( bool active = true );
-    void newRectangle( bool active = true );
-    void newPolygon( bool active = true );
-    void newCircle( bool active = true );
-    void newText( bool active = true );
+    void setMarkerTool( const QString& shape, bool active = true, const QgsFeature *editFeature = 0 );
+    void setPointTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "circle", active, editFeature ); }
+    void setSquareTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "rectangle", active, editFeature ); }
+    void setTriangleTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "triangle", active, editFeature ); }
+    void setLineTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void setRectangleTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void setPolygonTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void setCircleTool( bool active = true, const QgsFeature* editFeature = 0 );
+    void setTextTool( bool active = true );
 
   signals:
     void featureStyleChanged();
@@ -70,8 +71,6 @@ class QgsRedlining : public QObject
 
     QgisApp* mApp;
     RedliningUi mUi;
-    QgsRedliningBottomBar* mBottomBar;
-    QAction* mActionEditObject;
     QAction* mActionNewPoint;
     QAction* mActionNewSquare;
     QAction* mActionNewTriangle;
@@ -86,20 +85,18 @@ class QgsRedlining : public QObject
     int mLayerRefCount;
 
     void setLayer( QgsRedliningLayer* layer );
-    void setTool( QgsMapTool* tool, QAction *action, bool active = true );
+    void setTool( QgsMapTool *tool, QAction *action, bool active = true );
     static QIcon createOutlineStyleIcon( Qt::PenStyle style );
     static QIcon createFillStyleIcon( Qt::BrushStyle style );
 
   private slots:
-    void clearLayer();
-    void unsetTool();
+    void checkLayerRemoved( const QString& layerId );
     void deactivateTool();
-    void editObject();
     void saveColor();
     void saveOutlineWidth();
     void saveStyle();
     void syncStyleWidgets( const QgsFeature &feature );
-    void updateFeatureStyle( const QgsFeatureId& fid );
+    void updateToolRubberbandStyle();
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
 };

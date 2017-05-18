@@ -18,7 +18,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include "qgsfeature.h"
+#include "qgsbottombar.h"
 #include "qgsmaptooldrawshape.h"
 #include "qgsmaptoolpan.h"
 #include "qgsmaprenderer.h"
@@ -27,114 +27,158 @@ class QgsRubberBand;
 class QgsSelectedFeature;
 class QgsVectorLayer;
 
-class QgsRedliningAttributeEditor : public QObject
-{
-  public:
-    virtual QString getName() const = 0;
-    virtual bool exec( QgsFeature& f, QStringList& changedAttributes ) = 0;
-};
-
-class QgsRedliningPointMapTool : public QgsMapToolDrawPoint
+class QgsRedliningAttribEditor : public QWidget
 {
     Q_OBJECT
   public:
-    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& shape, QgsRedliningAttributeEditor* editor = 0 );
-    ~QgsRedliningPointMapTool();
+    QgsRedliningAttribEditor( const QString& title ) { setWindowTitle( title ); }
+    virtual void set( const QgsAttributes& attribs, const QgsFields& fields ) = 0;
+    virtual void get( QgsAttributes& attrib, const QgsFields& fields ) const = 0;
+    virtual bool isValid() const { return true; }
+  signals:
+    void changed();
+};
+
+class QgsRedliningBottomBar: public QgsBottomBar
+{
+    Q_OBJECT
+  public:
+    QgsRedliningBottomBar( QgsMapTool* tool, QgsRedliningAttribEditor* editor = 0 );
+    QgsRedliningAttribEditor* editor() const { return mEditor; }
   private:
-    friend class AddFeatureCommand;
-    QgsVectorLayer* mLayer;
-    QString mShape;
-    QgsRedliningAttributeEditor* mEditor;
+    QgsMapTool* mTool;
+    QgsRedliningAttribEditor* mEditor;
   private slots:
-    void onFinished();
+    void onClose();
 };
 
-class QgsRedliningRectangleMapTool : public QgsMapToolDrawRectangle
+template <class T>
+class QgsRedliningMapToolT : public T
 {
-    Q_OBJECT
   public:
-    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
+    QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& flags, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0, bool isArea = false )
+        : T( canvas ), mLayer( layer ), mFlags( flags )
+    {
+      init( editFeature, editor );
+      Q_UNUSED( isArea );
+    }
+    ~QgsRedliningMapToolT()
+    {
+      delete mBottomBar;
+    }
+
   private:
-    friend class AddFeatureCommand;
-    QgsVectorLayer* mLayer;
-  private slots:
-    void onFinished();
-};
+    class AddFeatureCommand;
 
-class QgsRedliningPolylineMapTool : public QgsMapToolDrawPolyLine
-{
-    Q_OBJECT
-  public:
-    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed, QgsRedliningAttributeEditor* editor = 0 );
-    ~QgsRedliningPolylineMapTool();
   private:
-    friend class AddFeatureCommand;
     QgsVectorLayer* mLayer;
-    QgsRedliningAttributeEditor* mEditor;
-  private slots:
-    void onFinished();
+    QString mFlags;
+    QgsRedliningBottomBar* mBottomBar;
+    QgsRedliningAttribEditor* mStandaloneEditor;
+
+    void init( const QgsFeature* editFeature, QgsRedliningAttribEditor* editor );
+    QgsFeature createFeature() const;
+    void onFinished() override;
 };
 
-class QgsRedliningCircleMapTool : public QgsMapToolDrawCircle
+template<>
+QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea );
+
+class QgsRedliningPointMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPoint>
 {
     Q_OBJECT
-  public:
-    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer );
   private:
-    friend class AddFeatureCommand;
-    QgsVectorLayer* mLayer;
+    static const int sSizeRatio;
+
+  public:
+    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& symbol, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 );
+    void updateStyle( int outlineWidth, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle ) override;
+  private:
+    QgsRubberBand* mNodeRubberband;
   private slots:
-    void onFinished();
+    void updateNodeRubberband();
 };
 
-class QgsRedliningEditTool : public QgsMapToolPan
+class QgsRedliningRectangleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawRectangle>
+{
+  public:
+    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawRectangle>( canvas, layer, "shape=rectangle", editFeature, editor )
+    {
+      setMeasurementMode( QgsGeometryRubberBand::MEASURE_RECTANGLE, QGis::Meters );
+    }
+};
+
+class QgsRedliningPolylineMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPolyLine>
+{
+  public:
+    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, bool closed, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawPolyLine>( canvas, layer, closed ? "shape=polygon" : "shape=line", editFeature, editor, closed )
+    {
+      if ( closed )
+      {
+        setMeasurementMode( QgsGeometryRubberBand::MEASURE_POLYGON, QGis::Meters );
+      }
+      else
+      {
+        setMeasurementMode( QgsGeometryRubberBand::MEASURE_LINE_AND_SEGMENTS, QGis::Meters );
+      }
+    }
+};
+
+class QgsRedliningCircleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawCircle>
+{
+  public:
+    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawCircle>( canvas, layer, "shape=circle", editFeature, editor )
+    {
+      setMeasurementMode( QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
+    }
+};
+
+class QgsRedliningEditTextMapTool : public QgsMapToolPan
 {
     Q_OBJECT
   public:
-    QgsRedliningEditTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, QgsRedliningAttributeEditor* editor = 0 );
-    void setUnsetOnMiss( bool unsetOnMiss ) { mUnsetOnMiss = unsetOnMiss; }
-    void selectFeature( const QgsFeature &feature );
-    void selectLabel( const QgsLabelPosition& labelPos );
-    ~QgsRedliningEditTool();
+    QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor* editor = 0 );
+    ~QgsRedliningEditTextMapTool();
+
     void canvasPressEvent( QMouseEvent *e ) override;
-    void canvasReleaseEvent( QMouseEvent *e ) override;
-    void canvasMoveEvent( QMouseEvent* e );
-    void canvasDoubleClickEvent( QMouseEvent *e ) override;
+    void canvasMoveEvent( QMouseEvent *e ) override;
+    void canvasReleaseEvent( QMouseEvent */*e*/ ) override;
     void keyPressEvent( QKeyEvent *e ) override;
-    bool isEditTool() { return true; }
-    void deactivate() override;
+    void updateStyle( int outlineWidth, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle );
 
   public slots:
-    void onStyleChanged();
+    void undo() { mStateStack->undo(); }
+    void redo() { mStateStack->redo(); }
 
   signals:
-    void featureSelected( const QgsFeature& feature );
-    void updateFeatureStyle( const QgsFeatureId& fid );
+    void canUndo( bool );
+    void canRedo( bool );
 
   private:
+    enum Status {StatusReady, StatusMoving} mStatus;
     QgsVectorLayer* mLayer;
-    QgsRedliningAttributeEditor* mEditor;
-    enum Mode { NoSelection, TextSelected, FeatureSelected } mMode;
-    QgsLabelPosition mCurrentLabel;
+    QgsLabelPosition mLabel;
     QgsGeometryRubberBand* mRubberBand;
-    QPointer<QgsSelectedFeature> mCurrentFeature;
-    int mCurrentVertex;
-    bool mIsRectangle;
-    bool mLabelIsForPoint;
-    QString mRectangleCRS;
     QgsPoint mPressPos;
-    QgsPoint mPrevPos;
-    bool mUnsetOnMiss;
+    QgsStateStack* mStateStack;
+    QgsRedliningBottomBar* mBottomBar;
 
-    void checkVertexSelection();
+    struct State : public QgsStateStack::State
+    {
+      QgsPointV2 pos;
+      QgsAttributes attributes;
+    } mState;
+
     void showContextMenu( QMouseEvent *e );
-    void addVertex( const QPoint& pos );
-    void deleteCurrentVertex();
-    void runEditor( const QgsFeatureId& featureId );
+    void updateRubberband( const QgsRectangle& rect );
 
   private slots:
-    void clearCurrent( bool refresh = true );
+    void update();
     void updateLabelBoundingBox();
+    void applyEditorChanges();
 };
 
 #endif // QGSMAPTOOLSREDLINING_H

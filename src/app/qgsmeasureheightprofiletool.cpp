@@ -30,7 +30,8 @@ QgsMeasureHeightProfileTool::QgsMeasureHeightProfileTool( QgsMapCanvas *canvas )
   setCursor( Qt::ArrowCursor );
 
   mDrawTool = new QgsMapToolDrawPolyLine( canvas, false );
-  mDrawTool->setShowNodes( true );
+  mDrawTool->getRubberBand()->setIconType( QgsGeometryRubberBand::ICON_CIRCLE );
+  mDrawTool->setParentTool( this );
 
   QSettings settings;
   int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();

@@ -89,20 +89,44 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
 
 void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
 {
-  foreach ( QgsFeature feature, features )
+  foreach ( const QgsFeature& feature, features )
   {
-    if ( feature.attribute( "size" ).isNull() )
-      feature.setAttribute( "size", 1 );
-    if ( feature.attribute( "outline" ).isNull() )
-      feature.setAttribute( "outline", QgsSymbolLayerV2Utils::encodeColor( Qt::red ) );
-    if ( feature.attribute( "fill" ).isNull() )
-      feature.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( Qt::blue ) );
-    if ( feature.attribute( "outline_style" ).isNull() )
-      feature.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( Qt::SolidLine ) );
-    if ( feature.attribute( "fill_style" ).isNull() )
-      feature.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( Qt::SolidPattern ) );
+    QString flags;
+    if ( feature.geometry()->type() == QGis::Point )
+    {
+      flags = "shape=point,symbol=circle";
+    }
+    else if ( feature.geometry()->type() == QGis::Line )
+    {
+      flags = "shape=line";
+    }
+    else if ( feature.geometry()->type() == QGis::Polygon )
+    {
+      flags = "shape=polygon";
+    }
+    else
+    {
+      continue;
+    }
+    QgsFeature newFeature( dataProvider()->fields() );
+    newFeature.setGeometry( QgsGeometry( feature.geometry()->geometry()->clone() ) );
 
-    dataProvider()->addFeatures( QgsFeatureList() << feature );
+    newFeature.setAttribute( "flags", flags );
+
+    QMap<QString, QVariant> attribs;
+    attribs["size"] = 1;
+    attribs["outline"] = QgsSymbolLayerV2Utils::encodeColor( Qt::black );
+    attribs["fill"] = QgsSymbolLayerV2Utils::encodeColor( Qt::yellow );
+    attribs["outline_style"] = QgsSymbolLayerV2Utils::encodePenStyle( Qt::SolidLine );
+    attribs["fill_style"] = QgsSymbolLayerV2Utils::encodeBrushStyle( Qt::SolidPattern );
+
+    foreach ( const QString& key, attribs.keys() )
+    {
+      QVariant srcValue = feature.attribute( key );
+      newFeature.setAttribute( key, srcValue.isNull() ? attribs[key] : srcValue );
+    }
+
+    dataProvider()->addFeatures( QgsFeatureList() << newFeature );
   }
 }
 

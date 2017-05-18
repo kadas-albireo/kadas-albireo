@@ -1,7 +1,7 @@
 /***************************************************************************
-    qgsundostack.cpp
+    QgsStateStack.cpp
     -------------------------------------------------------------
-  begin                : May 10, 2017
+  begin                : May 16, 2017
   copyright            : (C) 2017 by Sandro Mani
   email                : smani@sourcepole.ch
  ***************************************************************************
@@ -13,19 +13,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsundostack.h"
+#include "qgsstatestack.h"
 
-QgsUndoStack::QgsUndoStack( QObject* parent )
-    : QObject( parent )
+QgsStateStack::QgsStateStack(State *initialState, QObject* parent )
+    : mState(initialState), QObject( parent )
 {}
 
-QgsUndoStack::~QgsUndoStack()
+QgsStateStack::~QgsStateStack()
 {
   qDeleteAll( mUndoStack );
   qDeleteAll( mRedoStack );
 }
 
-void QgsUndoStack::clear()
+void QgsStateStack::clear(State* cleanState)
 {
   qDeleteAll( mUndoStack );
   mUndoStack.clear();
@@ -33,22 +33,15 @@ void QgsUndoStack::clear()
   mRedoStack.clear();
   emit canUndoChanged( false );
   emit canRedoChanged( false );
+  mState = QSharedPointer<State>(cleanState);
+  emit stateChanged();
 }
 
-void QgsUndoStack::push( QgsUndoCommand* command )
-{
-  qDeleteAll( mRedoStack );
-  mRedoStack.clear();
-  mUndoStack.push( command );
-  command->redo();
-  emit canUndoChanged( true );
-}
-
-void QgsUndoStack::undo()
+void QgsStateStack::undo()
 {
   while ( !mUndoStack.isEmpty() )
   {
-    QgsUndoCommand* command = mUndoStack.pop();
+    StateChangeCommand* command = mUndoStack.pop();
     command->undo();
     mRedoStack.push( command );
     if ( !command->compress() )
@@ -60,11 +53,11 @@ void QgsUndoStack::undo()
   emit canRedoChanged( !mRedoStack.isEmpty() );
 }
 
-void QgsUndoStack::redo()
+void QgsStateStack::redo()
 {
   while ( !mRedoStack.isEmpty() )
   {
-    QgsUndoCommand* command = mRedoStack.pop();
+    StateChangeCommand* command = mRedoStack.pop();
     command->redo();
     mUndoStack.push( command );
     if ( mRedoStack.isEmpty() || !mRedoStack.top()->compress() )
@@ -74,4 +67,36 @@ void QgsUndoStack::redo()
   }
   emit canUndoChanged( !mUndoStack.isEmpty() );
   emit canRedoChanged( !mRedoStack.isEmpty() );
+}
+
+void QgsStateStack::updateState( State *newState, bool mergeable )
+{
+  push(new StateChangeCommand( this, newState, mergeable ));
+}
+
+void QgsStateStack::push( StateChangeCommand* command )
+{
+  qDeleteAll( mRedoStack );
+  mRedoStack.clear();
+  mUndoStack.push( command );
+  command->redo();
+  emit canUndoChanged( true );
+}
+///////////////////////////////////////////////////////////////////////////////
+
+QgsStateStack::StateChangeCommand::StateChangeCommand( QgsStateStack* stateStack, State* nextState, bool compress )
+    : mStateStack( stateStack ), mPrevState( stateStack->mState ), mNextState( nextState ), mCompress( compress )
+{
+}
+
+void QgsStateStack::StateChangeCommand::undo()
+{
+  mStateStack->mState = mPrevState;
+  emit mStateStack->stateChanged();
+}
+
+void QgsStateStack::StateChangeCommand::redo()
+{
+  mStateStack->mState = mNextState;
+  emit mStateStack->stateChanged();
 }
