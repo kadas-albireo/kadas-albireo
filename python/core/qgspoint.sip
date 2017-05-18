@@ -1,3 +1,32 @@
+class QgsVector
+{
+%TypeHeaderCode
+#include <qgspoint.h>
+%End
+
+  public:
+    QgsVector();
+    QgsVector( double x, double y );
+
+    QgsVector operator-() const;
+    QgsVector operator*( double scalar ) const;
+    QgsVector operator/( double scalar ) const;
+    double operator*( QgsVector v ) const;
+    double length() const;
+
+    double x() const;
+    double y() const;
+
+    // perpendicular vector (rotated 90 degrees counter-clockwise)
+    QgsVector perpVector() const;
+
+    double angle() const;
+    double angle( QgsVector v ) const;
+    QgsVector rotateBy( double rot ) const;
+    QgsVector normal() const;
+
+};
+
 /** \ingroup core
  * A class to represent a point.
  * Currently no Z axis / 2.5D support is implemented.
