@@ -220,6 +220,7 @@ void QgsMapToolViewshed::drawFinished()
     QgsMapLayerRegistry::instance()->addMapLayer( layer );
     QgsPinAnnotationItem* pin = new QgsPinAnnotationItem( canvas() );
     pin->setMapPosition( center, canvasCrs );
+    pin->setItemFlags( pin->itemFlags() | QgsAnnotationItem::ItemAnchorIsNotMoveable );
     QgisApp::instance()->itemCouplingManager()->addCoupling( layer, pin );
   }
   else
