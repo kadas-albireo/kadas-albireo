@@ -200,7 +200,7 @@ LayerRenderJobs QgsMapRendererJob::prepareJobs( QPainter* painter, QgsPalLabelin
 
     // Force render of layers that are being edited
     // or if there's a labeling engine that needs the layer to register features
-    if ( mCache && ml->type() == QgsMapLayer::VectorLayer )
+    if ( mCache && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
     {
       QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
       if ( vl->isEditable() || ( labelingEngine && labelingEngine->willUseLayer( vl ) ) )
