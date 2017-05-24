@@ -260,7 +260,7 @@ class QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
     enum SectorStatus { HaveNothing, HaveCenter, HaveRadius };
     struct State : QgsMapToolDrawShape::State
     {
-      SectorStatus sectorStatus;
+      // SectorStatus sectorStatus;
       QList<QgsPoint> centers;
       QList<double> radii;
       QList<double> startAngles;
