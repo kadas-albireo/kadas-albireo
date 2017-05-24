@@ -29,7 +29,7 @@ class GUI_EXPORT QgsStateStack : public QObject
       virtual ~State() {}
     };
 
-    class StateChangeCommand
+    class GUI_EXPORT StateChangeCommand
     {
       public:
         StateChangeCommand( QgsStateStack* stateStack, State* newState, bool compress );
