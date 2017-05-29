@@ -11,7 +11,9 @@ class QgsMapToolDrawShape : public QgsMapTool
     {
       QgsMapToolDrawShape::Status status;
     };
-    struct EditContext;
+    struct EditContext {
+		virtual ~EditContext();
+	};
 
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea, State* initialState );
 
