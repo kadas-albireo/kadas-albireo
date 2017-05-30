@@ -219,6 +219,15 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
     }
     return true;
   }
+  else if ( obj == mTreeWidget && ( ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease ) )
+  {
+    QMouseEvent* mev = static_cast<QMouseEvent*>( ev );
+    if ( mSearchBox->rect().contains( mSearchBox->mapFromGlobal( mev->globalPos() ) ) )
+    {
+      mSearchBox->event( ev );
+      return true;
+    }
+  }
   else if ( obj == mSearchBox && ev->type() == QEvent::FocusIn )
   {
     mTreeWidget->resize( mSearchBox->width(), 200 );
@@ -284,11 +293,7 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
     else
       return mSearchBox->event( ev );
   }
-  else
-  {
-    return QWidget::eventFilter( obj, ev );
-  }
-  return false;
+  return QWidget::eventFilter( obj, ev );
 }
 
 void QgsSearchBox::textChanged()
