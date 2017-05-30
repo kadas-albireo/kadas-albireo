@@ -205,7 +205,21 @@ void QgsSearchBox::removeSearchProvider( QgsSearchProvider* provider )
 
 bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
 {
-  if ( obj == mSearchBox && ev->type() == QEvent::FocusIn )
+  if ( obj == mTreeWidget && ev->type() == QEvent::MouseButtonPress )
+  {
+    QMouseEvent* mev = static_cast<QMouseEvent*>( ev );
+    if ( mSearchBox->rect().contains( mSearchBox->mapFromGlobal( mev->globalPos() ) ) )
+    {
+      mSearchBox->event( ev );
+    }
+    else
+    {
+      mTreeWidget->close();
+      mMapCanvas->unsetMapTool( mFilterTool );
+    }
+    return true;
+  }
+  else if ( obj == mSearchBox && ev->type() == QEvent::FocusIn )
   {
     mTreeWidget->resize( mSearchBox->width(), 200 );
     mTreeWidget->move( mSearchBox->mapToGlobal( QPoint( 0, mSearchBox->height() ) ) );
@@ -245,12 +259,6 @@ bool QgsSearchBox::eventFilter( QObject* obj, QEvent* ev )
     mSearchBox->clearFocus();
     if ( mFilterTool )
       mFilterTool->getRubberBand()->setVisible( false );
-    return true;
-  }
-  else if ( obj == mTreeWidget && ev->type() == QEvent::MouseButtonPress )
-  {
-    mTreeWidget->close();
-    mMapCanvas->unsetMapTool( mFilterTool );
     return true;
   }
   else if ( obj == mTreeWidget && ev->type() == QEvent::KeyPress )
