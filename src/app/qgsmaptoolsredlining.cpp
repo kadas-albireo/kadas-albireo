@@ -94,7 +94,8 @@ class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateCh
 {
   public:
     AddFeatureCommand( QgsStateStack* stateStack, QgsMapToolDrawShape::State* newState, QgsVectorLayer* layer, const QgsFeature& feature )
-        : StateChangeCommand( stateStack, newState, true ), mLayer( layer ), mFeature( feature ) {}
+        : StateChangeCommand( stateStack, newState, true ), mLayer( layer ), mFeature( feature )
+    {}
     void undo() override
     {
       StateChangeCommand::undo();
@@ -117,6 +118,7 @@ class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateCh
 template <class T>
 void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningAttribEditor *editor )
 {
+  T::setSnapPoints( QSettings().value( "/qgis/snapping", false ).toBool() );
   mStandaloneEditor = 0;
   mBottomBar = new QgsRedliningBottomBar( this, editFeature ? editor : 0 );
   T::getRubberBand()->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );

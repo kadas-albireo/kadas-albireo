@@ -30,6 +30,7 @@ QgsSnappingUtils::QgsSnappingUtils( QObject* parent )
     , mDefaultTolerance( 10 )
     , mDefaultUnit( QgsTolerance::Pixels )
     , mSnapOnIntersection( false )
+    , mReadDefaultConfigFromProject( true )
 {
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersWillBeRemoved( QStringList ) ), this, SLOT( onLayersWillBeRemoved( QStringList ) ) );
 }
@@ -390,17 +391,20 @@ void QgsSnappingUtils::readConfigFromProject()
 
   QString snapMode = QgsProject::instance()->readEntry( "Digitizing", "/SnappingMode" );
 
-  int type = 0;
-  QString snapType = QgsProject::instance()->readEntry( "Digitizing", "/DefaultSnapType", QString( "off" ) );
-  if ( snapType == "to segment" )
-    type = QgsPointLocator::Edge;
-  else if ( snapType == "to vertex and segment" )
-    type = QgsPointLocator::Vertex | QgsPointLocator::Edge;
-  else if ( snapType == "to vertex" )
-    type = QgsPointLocator::Vertex;
-  double tolerance = QgsProject::instance()->readDoubleEntry( "Digitizing", "/DefaultSnapTolerance", 0 );
-  QgsTolerance::UnitType unit = ( QgsTolerance::UnitType ) QgsProject::instance()->readNumEntry( "Digitizing", "/DefaultSnapToleranceUnit", QgsTolerance::ProjectUnits );
-  setDefaultSettings( type, tolerance, unit );
+  if ( mReadDefaultConfigFromProject )
+  {
+    int type = 0;
+    QString snapType = QgsProject::instance()->readEntry( "Digitizing", "/DefaultSnapType", QString( "off" ) );
+    if ( snapType == "to segment" )
+      type = QgsPointLocator::Edge;
+    else if ( snapType == "to vertex and segment" )
+      type = QgsPointLocator::Vertex | QgsPointLocator::Edge;
+    else if ( snapType == "to vertex" )
+      type = QgsPointLocator::Vertex;
+    double tolerance = QgsProject::instance()->readDoubleEntry( "Digitizing", "/DefaultSnapTolerance", 0 );
+    QgsTolerance::UnitType unit = ( QgsTolerance::UnitType ) QgsProject::instance()->readNumEntry( "Digitizing", "/DefaultSnapToleranceUnit", QgsTolerance::ProjectUnits );
+    setDefaultSettings( type, tolerance, unit );
+  }
 
   //snapping on intersection on?
   setSnapOnIntersections( QgsProject::instance()->readNumEntry( "Digitizing", "/IntersectionSnapping", 0 ) );

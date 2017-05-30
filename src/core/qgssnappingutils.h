@@ -119,6 +119,7 @@ class CORE_EXPORT QgsSnappingUtils : public QObject
     void setSnapOnIntersections( bool enabled ) { mSnapOnIntersection = enabled; }
     /** Query whether to consider intersections of nearby segments for snapping */
     bool snapOnIntersections() const { return mSnapOnIntersection; }
+    void setReadDefaultConfigFromProject( bool readFromProject ) { mReadDefaultConfigFromProject = readFromProject; }
 
   public slots:
     /** Read snapping configuration from the project */
@@ -163,6 +164,7 @@ class CORE_EXPORT QgsSnappingUtils : public QObject
     QgsTolerance::UnitType mDefaultUnit;
     QList<LayerConfig> mLayers;
     bool mSnapOnIntersection;
+    bool mReadDefaultConfigFromProject;
 
     // internal data
     typedef QMap<QgsVectorLayer*, QgsPointLocator*> LocatorsMap;

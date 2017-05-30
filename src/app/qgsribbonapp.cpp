@@ -33,6 +33,7 @@
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
+#include "qgssnappingutils.h"
 #include "qgsundowidget.h"
 
 #include <QDrag>
@@ -110,8 +111,12 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
     }
   }
   connect( mLanguageCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onLanguageChanged( int ) ) );
+
   mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt() );
   connect( mSpinBoxDecimalPlaces, SIGNAL( valueChanged( int ) ), this, SLOT( onDecimalPlacesChanged( int ) ) );
+
+  mSnappingCheckbox->setChecked( QSettings().value( "/qgis/snapping", false ).toBool() );
+  connect( mSnappingCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onSnappingChanged( bool ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
   mInfoBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
@@ -141,6 +146,9 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   // Base class init
   init( restorePlugins );
+  mMapCanvas->snappingUtils()->setReadDefaultConfigFromProject( false );
+  mMapCanvas->snappingUtils()->setDefaultSettings( QgsPointLocator::Vertex, 10, QgsTolerance::Pixels );
+  mMapCanvas->snappingUtils()->setSnapToMapMode( QgsSnappingUtils::SnapAllLayers );
 
   // Redlining
   QgsRedlining::RedliningUi redliningUi;
@@ -642,6 +650,11 @@ void QgsRibbonApp::onLanguageChanged( int idx )
 void QgsRibbonApp::onDecimalPlacesChanged( int places )
 {
   QSettings().setValue( "/qgis/measure/decimalplaces", places );
+}
+
+void QgsRibbonApp::onSnappingChanged( bool enabled )
+{
+  QSettings().setValue( "/qgis/snapping", enabled );
 }
 
 void QgsRibbonApp::onNumericInputCheckboxToggled( bool checked )
