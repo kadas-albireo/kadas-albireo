@@ -353,6 +353,13 @@ void QgsSearchBox::clearSearch()
 void QgsSearchBox::searchProviderFinished()
 {
   --mNumRunningProviders;
+  if ( mNumRunningProviders == 0 && mTreeWidget->invisibleRootItem()->childCount() == 0 )
+  {
+    QTreeWidgetItem* noResultsItem = new QTreeWidgetItem();
+    noResultsItem->setData( 0, Qt::DisplayRole, tr( "No search results found" ) );
+    noResultsItem->setFlags( noResultsItem->flags() & ~Qt::ItemIsEnabled );
+    mTreeWidget->invisibleRootItem()->insertChild( 0, noResultsItem );
+  }
 }
 
 void QgsSearchBox::searchResultFound( QgsSearchProvider::SearchResult result )
