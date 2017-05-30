@@ -104,7 +104,9 @@ class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateCh
     void redo() override
     {
       StateChangeCommand::redo();
-      mLayer->dataProvider()->addFeatures( QgsFeatureList() << mFeature );
+      QgsFeatureList flist = QgsFeatureList() << mFeature;
+      mLayer->dataProvider()->addFeatures( flist );
+      mFeature.setFeatureId( flist.first().id() ); // Update feature id so that delete works
       mLayer->triggerRepaint();
     }
   private:
