@@ -37,6 +37,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     };
     struct EditContext
     {
+      virtual ~EditContext() {}
     };
 
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea, State* initialState );
@@ -207,7 +208,7 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
     void inputChanged();
 
   private:
-    enum ContextMenuActions {DeleteNode, AddNode};
+    enum ContextMenuActions {DeleteNode, AddNode, ContinueGeometry};
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -828,6 +828,11 @@ void QgsMapToolDrawPolyLine::addContextMenuActions( const QgsMapToolDrawShape::E
     QAction* deleteNodeAction = menu.addAction( tr( "Delete node" ) );
     deleteNodeAction->setData( DeleteNode );
     deleteNodeAction->setEnabled( state()->points[ctx->part].length() >= 3 + mIsArea );
+    if ( mIsArea || ( ctx->node == 0 || ctx->node == state()->points[ctx->part].length() - 1 ) )
+    {
+      QAction* continueAction = menu.addAction( tr( "Continue drawing" ) );
+      continueAction->setData( ContinueGeometry );
+    }
   }
   else
   {
@@ -867,6 +872,38 @@ void QgsMapToolDrawPolyLine::executeContextMenuAction( const QgsMapToolDrawShape
       newstate->points[ctx->part].insert( closestIdx, pos );
       mStateStack.updateState( newstate );
     }
+  }
+  else if ( action == ContinueGeometry )
+  {
+    State* newstate = cloneState();
+    if ( !mIsArea )
+    {
+      // Reverse points if continuing from start
+      if ( ctx->node == 0 )
+      {
+        QList<QgsPoint> reversed;
+        foreach ( const QgsPoint& p, newstate->points[ctx->part] )
+        {
+          reversed.prepend( p );
+        }
+        newstate->points[ctx->part] = reversed;
+      }
+    }
+    else
+    {
+      // Rearrange points so that picked point is last
+      QList<QgsPoint> rearranged;
+      int n = newstate->points[ctx->part].size();
+      for ( int i = ( ctx->node + 1 ) % n; i  != ctx->node; i = ( i + 1 ) % n )
+      {
+        rearranged.append( newstate->points[ctx->part][i] );
+      }
+      rearranged.append( newstate->points[ctx->part][ctx->node] );
+      newstate->points[ctx->part] = rearranged;
+    }
+    newstate->points[ctx->part].append( newstate->points[ctx->part].last() );
+    newstate->status = StatusDrawing;
+    mStateStack.updateState( newstate );
   }
 }
 
