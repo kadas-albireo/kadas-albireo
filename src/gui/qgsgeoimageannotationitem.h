@@ -58,6 +58,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 
   private slots:
     void _showItemEditor() override;
+    void toggleLocked();
 };
 
 #endif // QGSGEOIMAGEANNOTATIONITEM_H

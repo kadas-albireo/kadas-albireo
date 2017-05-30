@@ -38,8 +38,8 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
     return 0;
   }
   QgsPoint wgs84Pos;
-#if 0
   bool locked = true;
+#if 0
   // Fall back to canvas center position if image has no geotags
   if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
   {
@@ -48,7 +48,6 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
     wgs84Pos = crst->transform( canvas->mapSettings().extent().center() );
   }
 #else
-  bool locked = false;
   if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
   {
     return 0;
@@ -261,10 +260,26 @@ void QgsGeoImageAnnotationItem::_showItemEditor()
   QDesktopServices::openUrl( QUrl::fromLocalFile( mFilePath ) );
 }
 
+void QgsGeoImageAnnotationItem::toggleLocked()
+{
+  bool locked = itemFlags() & QgsAnnotationItem::ItemAnchorIsNotMoveable;
+  if ( locked )
+  {
+    setItemFlags( itemFlags() & ~QgsAnnotationItem::ItemAnchorIsNotMoveable );
+  }
+  else
+  {
+    setItemFlags( itemFlags() | QgsAnnotationItem::ItemAnchorIsNotMoveable );
+  }
+}
+
 void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
 {
   QMenu menu;
   menu.addAction( tr( "Open" ), this, SLOT( _showItemEditor() ) );
+  QAction* lockAction = menu.addAction( tr( "Lock position" ), this, SLOT( toggleLocked() ) );
+  lockAction->setCheckable( true );
+  lockAction->setChecked( itemFlags() & QgsAnnotationItem::ItemAnchorIsNotMoveable );
   menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }
