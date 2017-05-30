@@ -386,7 +386,6 @@ const QgsCoordinateReferenceSystem* QgsSnappingUtils::destCRS()
 
 void QgsSnappingUtils::readConfigFromProject()
 {
-  mSnapToMapMode = SnapCurrentLayer;
   mLayers.clear();
 
   QString snapMode = QgsProject::instance()->readEntry( "Digitizing", "/SnappingMode" );
@@ -425,16 +424,18 @@ void QgsSnappingUtils::readConfigFromProject()
     return;
 
   if ( !snappingDefinedInProject )
-    return; // nothing defined in project - use current layer
+    return; // nothing defined in project
 
-  // Use snapping information from the project
-  if ( snapMode == "current_layer" )
-    mSnapToMapMode = SnapCurrentLayer;
-  else if ( snapMode == "all_layers" )
-    mSnapToMapMode = SnapAllLayers;
-  else   // either "advanced" or empty (for background compatibility)
-    mSnapToMapMode = SnapAdvanced;
-
+  if ( mReadDefaultConfigFromProject )
+  {
+    // Use snapping information from the project
+    if ( snapMode == "current_layer" )
+      mSnapToMapMode = SnapCurrentLayer;
+    else if ( snapMode == "all_layers" )
+      mSnapToMapMode = SnapAllLayers;
+    else   // either "advanced" or empty (for background compatibility)
+      mSnapToMapMode = SnapAdvanced;
+  }
 
 
   // load layers, tolerances, snap type
