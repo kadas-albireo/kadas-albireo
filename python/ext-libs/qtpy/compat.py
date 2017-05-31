@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2009- The Spyder Development Team
+# Copyright (C) 2009- The Spyder Development Team
 # Licensed under the terms of the MIT License
 
 """
