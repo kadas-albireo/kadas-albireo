@@ -66,6 +66,7 @@ class QgsRedliningMapToolT : public T
     ~QgsRedliningMapToolT()
     {
       delete mBottomBar;
+      delete mStandaloneEditor;
     }
 
   private:

@@ -191,11 +191,13 @@ void QgsRedliningMapToolT<T>::onFinished()
     if ( dialog.exec() != QDialog::Accepted || !mStandaloneEditor->isValid() )
     {
       dialog.layout()->removeWidget( mStandaloneEditor ); // Remove to avoid QDialog deleting it
+      mStandaloneEditor->setParent( 0 );
       T::reset();
       return;
     }
     QgsAttributes attribs = f.attributes();
     mStandaloneEditor->get( attribs, mLayer->dataProvider()->fields() );
+    mStandaloneEditor->setParent( 0 );
     f.setAttributes( attribs );
     dialog.layout()->removeWidget( mStandaloneEditor ); // Remove to avoid QDialog deleting it
   }
