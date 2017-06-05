@@ -431,11 +431,10 @@ void QgsRedliningEditTextMapTool::keyPressEvent( QKeyEvent *e )
   }
 }
 
-void QgsRedliningEditTextMapTool::updateStyle( int outlineWidth, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle )
+void QgsRedliningEditTextMapTool::updateStyle( int /*outlineWidth*/, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle )
 {
   const QgsFields& fields = mLayer->dataProvider()->fields();
   QgsAttributeMap attribs;
-  attribs[fields.indexFromName( "size" )] = outlineWidth;
   attribs[fields.indexFromName( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( outlineColor );
   attribs[fields.indexFromName( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( fillColor );
   attribs[fields.indexFromName( "outline_style" )] = QgsSymbolLayerV2Utils::encodePenStyle( lineStyle );
