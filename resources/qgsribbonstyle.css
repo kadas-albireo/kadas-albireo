@@ -189,6 +189,13 @@ QPushButton#mLayerTreeViewButton:pressed
   border-radius: 2px;
 }
 
+#mRibbonWidget > QWidget > QWidget > QComboBox:disabled,
+#mRibbonWidget > QWidget > QWidget > QToolButton:disabled,
+#mRibbonWidget > QWidget > QWidget > QSpinBox:disabled
+{
+  color: #bbbbbb;
+}
+
 #mRibbonWidget > QWidget > QWidget > QComboBox
 {
     padding: 1px 4px 1px 4px;
@@ -232,6 +239,28 @@ QPushButton#mLayerTreeViewButton:pressed
 #mRibbonWidget > QWidget > QWidget > QSpinBox:down-button
 {
     image: url(:/images/ribbon/downarrow.png);
+    border-left: 1px solid #263B4E;
+    width: 15px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QComboBox:down-arrow:disabled,
+#mRibbonWidget > QWidget > QWidget > QToolButton:menu-arrow:disabled
+{
+  image: url(:/images/ribbon/downarrow_disabled.png);
+}
+
+#mRibbonWidget > QWidget > QWidget > QSpinBox:up-button:disabled
+{
+    image: url(:/images/ribbon/uparrow_disabled.png);
+    border-left: 1px solid #263B4E;
+    border-bottom: 1px solid #263B4E;
+    padding-bottom: 1px;
+    width: 15px;
+}
+
+#mRibbonWidget > QWidget > QWidget > QSpinBox:down-button:disabled
+{
+    image: url(:/images/ribbon/downarrow_disabled.png);
     border-left: 1px solid #263B4E;
     width: 15px;
 }

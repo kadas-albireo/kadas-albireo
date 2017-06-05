@@ -260,7 +260,11 @@ void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
   QgsFeature feature;
   getOrCreateLayer()->getFeatures( QgsFeatureRequest( labelPos.featureId ) ).nextFeature( feature );
   syncStyleWidgets( feature );
-  setTool( new QgsRedliningEditTextMapTool( mApp->mapCanvas(), getOrCreateLayer(), labelPos, new LabelEditor ), mActionNewText );
+  setTool( new QgsRedliningEditTextMapTool( mApp->mapCanvas(), getOrCreateLayer(), labelPos, new QgsRedliningLabelEditor ), mActionNewText );
+  mUi.spinBoxSize->setEnabled( false );
+  mUi.comboFillStyle->setEnabled( false );
+  mUi.colorButtonOutlineColor->setEnabled( false );
+  mUi.comboOutlineStyle->setEnabled( false );
 }
 
 void QgsRedlining::checkLayerRemoved( const QString &layerId )
@@ -300,7 +304,11 @@ void QgsRedlining::setCircleTool( bool active, const QgsFeature *editFeature )
 
 void QgsRedlining::setTextTool( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "", 0, new LabelEditor ), mActionNewText, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "", 0, new QgsRedliningLabelEditor ), mActionNewText, active );
+  mUi.spinBoxSize->setEnabled( false );
+  mUi.comboFillStyle->setEnabled( false );
+  mUi.colorButtonOutlineColor->setEnabled( false );
+  mUi.comboOutlineStyle->setEnabled( false );
 }
 
 void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
@@ -341,6 +349,11 @@ void QgsRedlining::deactivateTool()
     }
     mRedliningTool.data()->deleteLater();
   }
+  mUi.spinBoxSize->setEnabled( true );
+  mUi.colorButtonFillColor->setEnabled( true );
+  mUi.comboFillStyle->setEnabled( true );
+  mUi.colorButtonOutlineColor->setEnabled( true );
+  mUi.comboOutlineStyle->setEnabled( true );
 }
 
 void QgsRedlining::syncStyleWidgets( const QgsFeature& feature )
