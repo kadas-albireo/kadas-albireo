@@ -171,7 +171,6 @@ class QgsRedliningEditTextMapTool : public QgsMapToolPan
     struct State : public QgsStateStack::State
     {
       QgsPointV2 pos;
-      QgsAttributes attributes;
     } mState;
 
     void showContextMenu( QMouseEvent *e );

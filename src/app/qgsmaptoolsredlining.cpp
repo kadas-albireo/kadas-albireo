@@ -324,7 +324,6 @@ QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, 
 
   State* initialState = new State;
   initialState->pos = *static_cast<QgsPointV2*>( f.geometry()->geometry() );
-  initialState->attributes = f.attributes();
   mStateStack = new QgsStateStack( initialState, this );
   connect( mStateStack, SIGNAL( stateChanged() ), this, SLOT( update() ) );
   connect( mStateStack, SIGNAL( canUndoChanged( bool ) ), this, SIGNAL( canUndo( bool ) ) );
@@ -464,23 +463,10 @@ void QgsRedliningEditTextMapTool::updateRubberband( const QgsRectangle &rect )
 void QgsRedliningEditTextMapTool::update()
 {
   const State* state = static_cast<const State*>( mStateStack->state() );
-  if ( mBottomBar->editor() )
-  {
-    mBottomBar->editor()->set( state->attributes, mLayer->dataProvider()->fields() );
-  }
 
   QgsGeometryMap geomMap;
   geomMap[mLabel.featureId] = QgsGeometry( state->pos.clone() );
   mLayer->dataProvider()->changeGeometryValues( geomMap );
-
-  QgsAttributeMap attribs;
-  for ( int i = 0, n = state->attributes.size(); i < n; ++i )
-  {
-    attribs[i] = state->attributes[i];
-  }
-  QgsChangedAttributesMap changedAttribs;
-  changedAttribs[mLabel.featureId] = attribs;
-  mLayer->dataProvider()->changeAttributeValues( changedAttribs );
 
   mLayer->triggerRepaint();
 }
@@ -508,7 +494,18 @@ void QgsRedliningEditTextMapTool::updateLabelBoundingBox()
 
 void QgsRedliningEditTextMapTool::applyEditorChanges()
 {
-  State* newState = new State( *static_cast<const State*>( mStateStack->state() ) );
-  mBottomBar->editor()->get( newState->attributes, mLayer->dataProvider()->fields() );
-  mStateStack->updateState( newState );
+  QgsFeature f;
+  mLayer->getFeatures( QgsFeatureRequest( mLabel.featureId ) ).nextFeature( f );
+  QgsAttributes attrs = f.attributes();
+  mBottomBar->editor()->get( attrs, mLayer->dataProvider()->fields() );
+
+  QgsAttributeMap attribs;
+  for ( int i = 0, n = attrs.size(); i < n; ++i )
+  {
+    attribs[i] = attrs[i];
+  }
+  QgsChangedAttributesMap changedAttribs;
+  changedAttribs[mLabel.featureId] = attribs;
+  mLayer->dataProvider()->changeAttributeValues( changedAttribs );
+  mLayer->triggerRepaint();
 }
