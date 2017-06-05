@@ -1615,7 +1615,7 @@ class CORE_EXPORT QgsVectorLayer : public QgsMapLayer
     void layerDeleted();
 
     void attributeValueChanged( QgsFeatureId fid, int idx, const QVariant & );
-    void geometryChanged( QgsFeatureId fid, QgsGeometry &geom );
+    void geometryChanged( QgsFeatureId fid, const QgsGeometry &geom );
 
     /** Signals emitted after committing changes */
     void committedAttributesDeleted( const QString& layerId, const QgsAttributeList& deletedAttributes );
