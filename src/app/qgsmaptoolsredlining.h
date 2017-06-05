@@ -35,6 +35,7 @@ class QgsRedliningAttribEditor : public QWidget
     virtual void set( const QgsAttributes& attribs, const QgsFields& fields ) = 0;
     virtual void get( QgsAttributes& attrib, const QgsFields& fields ) const = 0;
     virtual bool isValid() const { return true; }
+    virtual void setFocus() {}
   signals:
     void changed();
 };

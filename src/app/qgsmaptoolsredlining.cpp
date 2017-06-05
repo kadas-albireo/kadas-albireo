@@ -81,6 +81,10 @@ QgsRedliningBottomBar::QgsRedliningBottomBar( QgsMapTool* tool , QgsRedliningAtt
   show();
   setFixedWidth( width() );
   updatePosition();
+  if ( editor )
+  {
+    editor->setFocus();
+  }
 }
 
 void QgsRedliningBottomBar::onClose()
@@ -182,6 +186,8 @@ void QgsRedliningMapToolT<T>::onFinished()
     QObject::connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
     QObject::connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
     dialog.layout()->addWidget( bbox );
+    dialog.show();
+    mStandaloneEditor->setFocus();
     if ( dialog.exec() != QDialog::Accepted || !mStandaloneEditor->isValid() )
     {
       dialog.layout()->removeWidget( mStandaloneEditor ); // Remove to avoid QDialog deleting it

@@ -67,6 +67,10 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
     }
+    void setFocus() override
+    {
+      mNameEdit->setFocus();
+    }
 
   private:
     QLineEdit* mNameEdit;
@@ -110,6 +114,10 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       flagsMap["routeNumber"] = mNumberEdit->text();
       attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
+    }
+    void setFocus() override
+    {
+      mNameEdit->setFocus();
     }
   private:
     QLineEdit* mNameEdit;
