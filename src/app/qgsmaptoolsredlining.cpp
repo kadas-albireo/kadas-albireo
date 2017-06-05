@@ -25,7 +25,7 @@
 #include "qgssymbollayerv2utils.h"
 #include "qgsrubberband.h"
 #include "qgsvectordataprovider.h"
-#include "qgsvectorlayer.h"
+#include "qgsredlininglayer.h"
 #include "nodetool/qgsselectedfeature.h"
 #include "nodetool/qgsvertexentry.h"
 
@@ -97,25 +97,24 @@ template <class T>
 class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateChangeCommand
 {
   public:
-    AddFeatureCommand( QgsStateStack* stateStack, QgsMapToolDrawShape::State* newState, QgsVectorLayer* layer, const QgsFeature& feature )
+    AddFeatureCommand( QgsStateStack* stateStack, QgsMapToolDrawShape::State* newState, QgsRedliningLayer* layer, const QgsFeature& feature )
         : StateChangeCommand( stateStack, newState, true ), mLayer( layer ), mFeature( feature )
     {}
     void undo() override
     {
       StateChangeCommand::undo();
-      mLayer->dataProvider()->deleteFeatures( QgsFeatureIds() << mFeature.id() );
+      mLayer->deleteFeature( mFeature.id() );
       mLayer->triggerRepaint();
     }
     void redo() override
     {
       StateChangeCommand::redo();
-      QgsFeatureList flist = QgsFeatureList() << mFeature;
-      mLayer->dataProvider()->addFeatures( flist );
-      mFeature.setFeatureId( flist.first().id() ); // Update feature id so that delete works
+      QgsFeatureId newId = mLayer->addFeature( mFeature );
+      mFeature.setFeatureId( newId ); // Update feature id so that delete works
       mLayer->triggerRepaint();
     }
   private:
-    QgsVectorLayer* mLayer;
+    QgsRedliningLayer* mLayer;
     QgsFeature mFeature;
 };
 
@@ -132,11 +131,11 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
   if ( editFeature )
   {
     T::editGeometry( editFeature->geometry()->geometry(), mLayer->crs() );
-    mLayer->dataProvider()->deleteFeatures( QgsFeatureIds() << editFeature->id() );
+    mLayer->deleteFeature( editFeature->id() );
     mLayer->triggerRepaint();
     if ( editor )
     {
-      editor->set( editFeature->attributes(), mLayer->dataProvider()->fields() );
+      editor->set( editFeature->attributes(), mLayer->pendingFields() );
     }
   }
   else
@@ -154,7 +153,7 @@ QgsFeature QgsRedliningMapToolT<T>::createFeature() const
     delete geom;
     return QgsFeature();
   }
-  const QgsFields& fields = mLayer->dataProvider()->fields();
+  const QgsFields& fields = mLayer->pendingFields();
   QgsFeature f( fields );
   QgsAttributes attribs = f.attributes();
   attribs[fields.fieldNameIndex( "flags" )] = mFlags;
@@ -196,7 +195,7 @@ void QgsRedliningMapToolT<T>::onFinished()
       return;
     }
     QgsAttributes attribs = f.attributes();
-    mStandaloneEditor->get( attribs, mLayer->dataProvider()->fields() );
+    mStandaloneEditor->get( attribs, mLayer->pendingFields() );
     mStandaloneEditor->setParent( 0 );
     f.setAttributes( attribs );
     dialog.layout()->removeWidget( mStandaloneEditor ); // Remove to avoid QDialog deleting it
@@ -204,12 +203,12 @@ void QgsRedliningMapToolT<T>::onFinished()
   else if ( mBottomBar->editor() )
   {
     QgsAttributes attribs = f.attributes();
-    mBottomBar->editor()->get( attribs, mLayer->dataProvider()->fields() );
+    mBottomBar->editor()->get( attribs, mLayer->pendingFields() );
     f.setAttributes( attribs );
   }
   if ( T::getStatus() == QgsMapToolDrawShape::StatusEditingMoving || T::getStatus() == QgsMapToolDrawShape::StatusEditingReady )
   {
-    mLayer->dataProvider()->addFeatures( QgsFeatureList() << f );
+    mLayer->addFeature( f );
     mLayer->triggerRepaint();
   }
   else
@@ -219,7 +218,7 @@ void QgsRedliningMapToolT<T>::onFinished()
 }
 
 template<>
-QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea )
+QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea )
     : QgsMapToolDrawPolyLine( canvas, isArea ), mLayer( layer ), mFlags( flags )
 {
   init( editFeature, editor );
@@ -227,7 +226,7 @@ QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas
 
 const int QgsRedliningPointMapTool::sSizeRatio = 2;
 
-QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QString& symbol, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor )
+QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor )
     : QgsRedliningMapToolT<QgsMapToolDrawPoint>( canvas, layer, QString( "shape=point,symbol=%1,w=%2*\"size\",h=%2*\"size\",r=0" ).arg( symbol ).arg( sSizeRatio ), editFeature, editor )
 {
   if ( symbol == "circle" )
@@ -294,7 +293,7 @@ template class QgsRedliningMapToolT<QgsMapToolDrawCircle>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsVectorLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor *editor )
+QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor *editor )
     : QgsMapToolPan( canvas ), mStatus( StatusReady ), mLayer( layer ), mLabel( label )
 {
   connect( mCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateLabelBoundingBox() ) );
@@ -318,7 +317,7 @@ QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, 
 
   if ( editor )
   {
-    editor->set( f.attributes(), mLayer->dataProvider()->fields() );
+    editor->set( f.attributes(), mLayer->pendingFields() );
     connect( editor, SIGNAL( changed() ), this, SLOT( applyEditorChanges() ) );
   }
 
@@ -373,7 +372,7 @@ void QgsRedliningEditTextMapTool::showContextMenu( QMouseEvent *e )
   QAction* actionDelete = menu.addAction( tr( "Delete" ) );
   if ( menu.exec( e->globalPos() ) == actionDelete )
   {
-    mLayer->dataProvider()->deleteFeatures( QgsFeatureIds() << mLabel.featureId );
+    mLayer->deleteFeature( mLabel.featureId );
     mLayer->triggerRepaint();
     canvas()->unsetMapTool( this );
   }
@@ -414,7 +413,7 @@ void QgsRedliningEditTextMapTool::keyPressEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Delete || e->key() == Qt::Key_Backspace )
   {
-    mLayer->dataProvider()->deleteFeatures( QgsFeatureIds() << mLabel.featureId );
+    mLayer->deleteFeature( mLabel.featureId );
     canvas()->unsetMapTool( this );
   }
   else if ( e->key() == Qt::Key_Escape )
@@ -433,17 +432,14 @@ void QgsRedliningEditTextMapTool::keyPressEvent( QKeyEvent *e )
 
 void QgsRedliningEditTextMapTool::updateStyle( int /*outlineWidth*/, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle )
 {
-  const QgsFields& fields = mLayer->dataProvider()->fields();
+  const QgsFields& fields = mLayer->pendingFields();
   QgsAttributeMap attribs;
   attribs[fields.indexFromName( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( outlineColor );
   attribs[fields.indexFromName( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( fillColor );
   attribs[fields.indexFromName( "outline_style" )] = QgsSymbolLayerV2Utils::encodePenStyle( lineStyle );
   attribs[fields.indexFromName( "fill_style" )] = QgsSymbolLayerV2Utils::encodeBrushStyle( brushStyle );
 
-  QgsChangedAttributesMap changedAttribs;
-  changedAttribs[mLabel.featureId] = attribs;
-
-  mLayer->dataProvider()->changeAttributeValues( changedAttribs );
+  mLayer->changeAttributes( mLabel.featureId, attribs );
   mLayer->triggerRepaint();
 }
 
@@ -462,11 +458,7 @@ void QgsRedliningEditTextMapTool::updateRubberband( const QgsRectangle &rect )
 void QgsRedliningEditTextMapTool::update()
 {
   const State* state = static_cast<const State*>( mStateStack->state() );
-
-  QgsGeometryMap geomMap;
-  geomMap[mLabel.featureId] = QgsGeometry( state->pos.clone() );
-  mLayer->dataProvider()->changeGeometryValues( geomMap );
-
+  mLayer->changeGeometry( mLabel.featureId, QgsGeometry( state->pos.clone() ) );
   mLayer->triggerRepaint();
 }
 
@@ -496,15 +488,13 @@ void QgsRedliningEditTextMapTool::applyEditorChanges()
   QgsFeature f;
   mLayer->getFeatures( QgsFeatureRequest( mLabel.featureId ) ).nextFeature( f );
   QgsAttributes attrs = f.attributes();
-  mBottomBar->editor()->get( attrs, mLayer->dataProvider()->fields() );
+  mBottomBar->editor()->get( attrs, mLayer->pendingFields() );
 
   QgsAttributeMap attribs;
   for ( int i = 0, n = attrs.size(); i < n; ++i )
   {
     attribs[i] = attrs[i];
   }
-  QgsChangedAttributesMap changedAttribs;
-  changedAttribs[mLabel.featureId] = attribs;
-  mLayer->dataProvider()->changeAttributeValues( changedAttribs );
+  mLayer->changeAttributes( mLabel.featureId, attribs );
   mLayer->triggerRepaint();
 }

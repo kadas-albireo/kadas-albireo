@@ -27,6 +27,11 @@ class CORE_EXPORT QgsRedliningLayer : public QgsVectorLayer
     bool addText( const QString &text, const QgsPointV2 &pos, const QColor& color, const QFont& font , const QString &tooltip = QString() , double rotation = 0, int markerSize = 2 );
     void pasteFeatures( const QList<QgsFeature> &features );
 
+    QgsFeatureId addFeature( QgsFeature& f );
+    void deleteFeature( QgsFeatureId fid );
+    void changeGeometry( QgsFeatureId fid, const QgsGeometry &geom );
+    void changeAttributes( QgsFeatureId fid, const QgsAttributeMap& attribs );
+
     static QMap<QString, QString> deserializeFlags( const QString& flagsStr );
     static QString serializeFlags( const QMap<QString, QString> &flagsMap );
 

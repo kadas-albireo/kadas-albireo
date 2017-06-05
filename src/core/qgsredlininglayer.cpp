@@ -130,6 +130,44 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
   }
 }
 
+QgsFeatureId QgsRedliningLayer::addFeature( QgsFeature& f )
+{
+  QgsFeatureList features = QgsFeatureList() << f;
+  dataProvider()->addFeatures( features );
+  updateExtents();
+  emit featureAdded( features.front().id() );
+  return features.front().id();
+}
+
+void QgsRedliningLayer::deleteFeature( QgsFeatureId fid )
+{
+  dataProvider()->deleteFeatures( QgsFeatureIds() << fid );
+  updateExtents();
+  emit featureDeleted( fid );
+}
+
+void QgsRedliningLayer::changeGeometry( QgsFeatureId fid, const QgsGeometry& geom )
+{
+  QgsGeometryMap geomMap;
+  geomMap[fid] = geom;
+  dataProvider()->changeGeometryValues( geomMap );
+  updateExtents();
+  emit geometryChanged( fid, geom );
+}
+
+void QgsRedliningLayer::changeAttributes( QgsFeatureId fid, const QgsAttributeMap& attribs )
+{
+  QgsChangedAttributesMap changedAttribs;
+  changedAttribs[fid] = attribs;
+  dataProvider()->changeAttributeValues( changedAttribs );
+  updateExtents();
+  foreach ( int key, attribs.keys() )
+  {
+    emit attributeValueChanged( fid, key, attribs[key] );
+  }
+}
+
+
 QMap<QString, QString> QgsRedliningLayer::deserializeFlags( const QString& flagsStr )
 {
   QMap<QString, QString> flagsMap;
