@@ -20,6 +20,8 @@
 #include "qgsfeature.h"
 #include "qgsbottombar.h"
 #include "qgsmaptoolmovelabel.h"
+#include "qgsmaptoolsredlining.h"
+#include "ui_qgsredliningtexteditor.h"
 
 class QAction;
 class QComboBox;
@@ -31,6 +33,23 @@ class QgsMapToolDrawShape;
 class QgsRedliningLayer;
 class QgsRedliningBottomBar;
 class QgsRibbonApp;
+
+class QgsRedliningLabelEditor : public QgsRedliningAttribEditor
+{
+    Q_OBJECT
+  public:
+    QgsRedliningLabelEditor();
+    void set( const QgsAttributes &attribs, const QgsFields &fields ) override;
+    void get( QgsAttributes &attribs, const QgsFields &fields ) const override;
+    bool isValid() const override { return !ui.lineEditText->text().isEmpty(); }
+    void setFocus() override { ui.lineEditText->setFocus(); }
+
+  private:
+    Ui::QgsRedliningTextEditor ui;
+
+  private slots:
+    void saveFont();
+};
 
 class QgsRedlining : public QObject
 {
@@ -67,8 +86,6 @@ class QgsRedlining : public QObject
     void featureStyleChanged();
 
   private:
-    class LabelEditor;
-
     QgisApp* mApp;
     RedliningUi mUi;
     QAction* mActionNewPoint;

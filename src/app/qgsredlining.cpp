@@ -32,61 +32,73 @@
 #include <QMenu>
 #include <QSettings>
 
-class QgsRedlining::LabelEditor : public QgsRedliningAttribEditor
+QgsRedliningLabelEditor::QgsRedliningLabelEditor() : QgsRedliningAttribEditor( tr( "Label" ) )
 {
-  public:
-    LabelEditor() : QgsRedliningAttribEditor( tr( "Label" ) )
-    {
-      ui.setupUi( this );
-      connect( ui.lineEditText, SIGNAL( textChanged( QString ) ), this, SIGNAL( changed() ) );
-      connect( ui.fontComboBox, SIGNAL( currentFontChanged( QFont ) ), this, SIGNAL( changed() ) );
-      connect( ui.toolButtonBold, SIGNAL( toggled( bool ) ), this, SIGNAL( changed() ) );
-      connect( ui.toolButtonItalic, SIGNAL( toggled( bool ) ), this, SIGNAL( changed() ) );
-      connect( ui.spinBoxFontSize, SIGNAL( valueChanged( int ) ), this, SIGNAL( changed() ) );
-      connect( ui.spinBoxRotation, SIGNAL( valueChanged( int ) ), this, SIGNAL( changed() ) );
-    }
-    void set( const QgsAttributes &attribs, const QgsFields &fields ) override
-    {
-      blockSignals( true );
-      QString text = attribs[fields.fieldNameIndex( "text" )].toString();
-      QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
-      QFont font;
-      font.fromString( QSettings().value( "/Redlining/font", font.toString() ).toString() );
-      font.setFamily( flagsMap.value( "family", font.family() ) );
-      font.setPointSize( flagsMap.value( "fontSize", QString( "%1" ).arg( font.pointSize() ) ).toInt() );
-      font.setItalic( flagsMap.value( "italic", QString( "%1" ).arg( font.italic() ) ).toInt() );
-      font.setBold( flagsMap.value( "bold", QString( "%1" ).arg( font.bold() ) ).toInt() );
-      ui.lineEditText->setText( text );
-      ui.toolButtonBold->setChecked( font.bold() );
-      ui.toolButtonItalic->setChecked( font.italic() );
-      ui.spinBoxFontSize->setValue( font.pointSize() );
-      ui.spinBoxRotation->setValue( flagsMap.value( "rotation" ).toDouble() );
-      // Set only family to make the text in the fontComboBox appear normal
-      QFont fontComboFont;
-      fontComboFont.setFamily( font.family() );
-      ui.fontComboBox->setCurrentFont( fontComboFont );
-      blockSignals( false );
-    }
-    void get( QgsAttributes &attribs, const QgsFields &fields ) const override
-    {
-      QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
-      flagsMap["family"] = ui.fontComboBox->currentFont().family();
-      flagsMap["italic"] = QString( "%1" ).arg( ui.toolButtonItalic->isChecked() );
-      flagsMap["bold"] = QString( "%1" ).arg( ui.toolButtonBold->isChecked() );
-      flagsMap["rotation"] = QString( "%1" ).arg( ui.spinBoxRotation->value() );
-      flagsMap["fontSize"] = QString( "%1" ).arg( ui.spinBoxFontSize->value() );
+  ui.setupUi( this );
 
-      attribs[fields.fieldNameIndex( "text" )] = ui.lineEditText->text();
-      attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
-    }
-    bool isValid() const override
-    {
-      return !ui.lineEditText->text().isEmpty();
-    }
+  QFont font;
+  font.fromString( QSettings().value( "/Redlining/font", font.toString() ).toString() );
+  ui.toolButtonBold->setChecked( font.bold() );
+  ui.toolButtonItalic->setChecked( font.italic() );
+  ui.spinBoxFontSize->setValue( font.pointSize() );
+  ui.spinBoxRotation->setValue( QSettings().value( "/Redlining/fontrotation", 0 ).toDouble() );
+  // Set only family to make the text in the fontComboBox appear normal
+  QFont fontComboFont;
+  fontComboFont.setFamily( font.family() );
+  ui.fontComboBox->setCurrentFont( fontComboFont );
 
-  private:
-    Ui::QgsRedliningTextEditor ui;
-};
+  connect( ui.lineEditText, SIGNAL( textChanged( QString ) ), this, SIGNAL( changed() ) );
+  connect( ui.fontComboBox, SIGNAL( currentFontChanged( QFont ) ), this, SIGNAL( changed() ) );
+  connect( ui.toolButtonBold, SIGNAL( toggled( bool ) ), this, SIGNAL( changed() ) );
+  connect( ui.toolButtonItalic, SIGNAL( toggled( bool ) ), this, SIGNAL( changed() ) );
+  connect( ui.spinBoxFontSize, SIGNAL( valueChanged( int ) ), this, SIGNAL( changed() ) );
+  connect( ui.spinBoxRotation, SIGNAL( valueChanged( double ) ), this, SIGNAL( changed() ) );
+  connect( this, SIGNAL( changed() ), this, SLOT( saveFont() ) );
+}
+
+void QgsRedliningLabelEditor::set( const QgsAttributes &attribs, const QgsFields &fields )
+{
+  blockSignals( true );
+  QString text = attribs[fields.fieldNameIndex( "text" )].toString();
+  QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
+
+  QFont font;
+  ui.lineEditText->setText( text );
+  ui.spinBoxFontSize->setValue( flagsMap.value( "fontSize", QString( "%1" ).arg( font.pointSize() ) ).toInt() );
+  ui.toolButtonItalic->setChecked( flagsMap.value( "italic", QString( "%1" ).arg( font.italic() ) ).toInt() );
+  ui.toolButtonBold->setChecked( flagsMap.value( "bold", QString( "%1" ).arg( font.bold() ) ).toInt() );
+  ui.spinBoxRotation->setValue( flagsMap.value( "rotation" ).toDouble() );
+  // Set only family to make the text in the fontComboBox appear normal
+  font.setFamily( flagsMap.value( "family", font.family() ) );
+  ui.fontComboBox->setCurrentFont( font );
+  blockSignals( false );
+
+  saveFont();
+}
+
+void QgsRedliningLabelEditor::get( QgsAttributes &attribs, const QgsFields &fields ) const
+{
+  QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
+  flagsMap["family"] = ui.fontComboBox->currentFont().family();
+  flagsMap["italic"] = QString( "%1" ).arg( ui.toolButtonItalic->isChecked() );
+  flagsMap["bold"] = QString( "%1" ).arg( ui.toolButtonBold->isChecked() );
+  flagsMap["rotation"] = QString( "%1" ).arg( ui.spinBoxRotation->value() );
+  flagsMap["fontSize"] = QString( "%1" ).arg( ui.spinBoxFontSize->value() );
+
+  attribs[fields.fieldNameIndex( "text" )] = ui.lineEditText->text();
+  attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
+}
+
+void QgsRedliningLabelEditor::saveFont()
+{
+  QFont font;
+  font.setFamily( ui.fontComboBox->currentFont().family() );
+  font.setItalic( ui.toolButtonItalic->isChecked() );
+  font.setBold( ui.toolButtonBold->isChecked() );
+  font.setPointSize( ui.spinBoxFontSize->value() );
+  QSettings().setValue( "/Redlining/font", font.toString() );
+  QSettings().setValue( "/Redlining/fontrotation", ui.spinBoxRotation->value() );
+}
 
 
 QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
