@@ -235,11 +235,11 @@ QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRed
   }
   else if ( symbol == "rectangle" )
   {
-    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_BOX );
+    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
   }
   else if ( symbol == "triangle" )
   {
-    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_TRIANGLE );
+    mRubberBand->setIconType( QgsGeometryRubberBand::ICON_FULL_TRIANGLE );
   }
   else
   {

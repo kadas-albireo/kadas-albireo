@@ -237,12 +237,17 @@ void QgsRedlining::editFeature( const QgsFeature& feature )
   QString shape = shapeRe.cap( 1 );
   if ( shape == "point" )
   {
+    QMap<QString, QAction*> actionMap;
+    actionMap.insert( "circle", mActionNewPoint );
+    actionMap.insert( "rectangle", mActionNewSquare );
+    actionMap.insert( "triangle", mActionNewTriangle );
+
     QRegExp symbolRe( "\\bsymbol=(\\w+)\\b" );
     symbolRe.indexIn( flags );
     QString symbol = symbolRe.cap( 1 );
     if ( !symbol.isEmpty() )
     {
-      setMarkerTool( symbol, true, &feature );
+      setMarkerTool( symbol, true, &feature, actionMap.value( symbol, 0 ) );
     }
     else
     {
@@ -289,9 +294,9 @@ void QgsRedlining::checkLayerRemoved( const QString &layerId )
   }
 }
 
-void QgsRedlining::setMarkerTool( const QString &shape, bool active, const QgsFeature *editFeature )
+void QgsRedlining::setMarkerTool( const QString &shape, bool active, const QgsFeature *editFeature, QAction *action )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), shape, editFeature ), mActionNewPoint, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), shape, editFeature ), action, active );
 }
 
 void QgsRedlining::setLineTool( bool active, const QgsFeature *editFeature )

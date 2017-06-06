@@ -36,7 +36,7 @@ QgsGeometryRubberBand::QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::Geo
     , mBrush( Qt::red )
     , mIconSize( 5 )
     , mIconType( ICON_BOX )
-    , mIconPen( Qt::black )
+    , mIconPen( Qt::black, 1, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin )
     , mIconBrush( Qt::transparent )
     , mGeometryType( geomType )
     , mMeasurementMode( MEASURE_NONE )
@@ -138,9 +138,16 @@ void QgsGeometryRubberBand::drawVertex( QPainter* p, double x, double y )
       break;
 
     case ICON_TRIANGLE:
-      p->drawLine( QLineF( x - s, y - s, x + s, y - s ) );
-      p->drawLine( QLineF( x + s, y - s, x, y + s ) );
-      p->drawLine( QLineF( x, y + s, x - s, y - s ) );
+      p->drawLine( QLineF( x - s, y + s, x + s, y + s ) );
+      p->drawLine( QLineF( x + s, y + s, x, y - s ) );
+      p->drawLine( QLineF( x, y - s, x - s, y + s ) );
+      break;
+
+    case ICON_FULL_TRIANGLE:
+      p->drawPolygon( QPolygonF() <<
+                      QPointF( x - s, y + s ) <<
+                      QPointF( x + s, y + s ) <<
+                      QPointF( x, y - s ) );
       break;
   }
   p->restore();

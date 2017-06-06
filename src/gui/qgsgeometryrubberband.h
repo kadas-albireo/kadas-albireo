@@ -61,7 +61,11 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       /**
        * A triangle is used to highlight points (△)
        */
-      ICON_TRIANGLE
+      ICON_TRIANGLE,
+      /**
+       * A full triangle is used to highlight points (▲)
+       */
+      ICON_FULL_TRIANGLE
     };
 
     enum MeasurementMode

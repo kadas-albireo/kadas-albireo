@@ -72,10 +72,10 @@ class QgsRedlining : public QObject
     void editLabel( const QgsLabelPosition &labelPos );
 
   public slots:
-    void setMarkerTool( const QString& shape, bool active = true, const QgsFeature *editFeature = 0 );
-    void setPointTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "circle", active, editFeature ); }
-    void setSquareTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "rectangle", active, editFeature ); }
-    void setTriangleTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "triangle", active, editFeature ); }
+    void setMarkerTool( const QString& shape, bool active, const QgsFeature *editFeature, QAction *action );
+    void setPointTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "circle", active, editFeature, mActionNewPoint ); }
+    void setSquareTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "rectangle", active, editFeature, mActionNewSquare ); }
+    void setTriangleTool( bool active = true, const QgsFeature* editFeature = 0 ) { setMarkerTool( "triangle", active, editFeature, mActionNewTriangle ); }
     void setLineTool( bool active = true, const QgsFeature* editFeature = 0 );
     void setRectangleTool( bool active = true, const QgsFeature* editFeature = 0 );
     void setPolygonTool( bool active = true, const QgsFeature* editFeature = 0 );
