@@ -121,7 +121,7 @@ class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateCh
 template <class T>
 void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningAttribEditor *editor )
 {
-  T::setSnapPoints( QSettings().value( "/qgis/snapping", false ).toBool() );
+  T::setSnapPoints( QSettings().value( "/qgis/snapping/enabled", false ).toBool() );
   mStandaloneEditor = 0;
   mBottomBar = new QgsRedliningBottomBar( this, editFeature ? editor : 0 );
   T::getRubberBand()->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );

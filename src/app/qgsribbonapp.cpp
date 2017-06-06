@@ -115,7 +115,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt() );
   connect( mSpinBoxDecimalPlaces, SIGNAL( valueChanged( int ) ), this, SLOT( onDecimalPlacesChanged( int ) ) );
 
-  mSnappingCheckbox->setChecked( QSettings().value( "/qgis/snapping", false ).toBool() );
+  mSnappingCheckbox->setChecked( QSettings().value( "/qgis/snapping/enabled", false ).toBool() );
   connect( mSnappingCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onSnappingChanged( bool ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
@@ -147,7 +147,8 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   // Base class init
   init( restorePlugins );
   mMapCanvas->snappingUtils()->setReadDefaultConfigFromProject( false );
-  mMapCanvas->snappingUtils()->setDefaultSettings( QgsPointLocator::Vertex, 10, QgsTolerance::Pixels );
+  int snappingRadius = QSettings().value( "/qgis/snapping/radius", 10 ).toInt();
+  mMapCanvas->snappingUtils()->setDefaultSettings( QgsPointLocator::Vertex, snappingRadius, QgsTolerance::Pixels );
   mMapCanvas->snappingUtils()->setSnapToMapMode( QgsSnappingUtils::SnapAllLayers );
 
   // Redlining
@@ -654,7 +655,7 @@ void QgsRibbonApp::onDecimalPlacesChanged( int places )
 
 void QgsRibbonApp::onSnappingChanged( bool enabled )
 {
-  QSettings().setValue( "/qgis/snapping", enabled );
+  QSettings().setValue( "/qgis/snapping/enabled", enabled );
 }
 
 void QgsRibbonApp::onNumericInputCheckboxToggled( bool checked )
