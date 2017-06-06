@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1309</width>
+    <width>1349</width>
     <height>152</height>
    </rect>
   </property>
@@ -1190,32 +1190,6 @@ Sight</string>
             <property name="spacing">
              <number>10</number>
             </property>
-            <item row="1" column="2">
-             <widget class="QLabel" name="mLabelRedliningFillColor">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Fill:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="mLabelRedliningBorderColor">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Border:</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0" colspan="2">
              <widget class="QToolButton" name="mToolButtonRedliningNewObject">
               <property name="sizePolicy">
@@ -1244,26 +1218,10 @@ Sight</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
-             <widget class="QgsColorButtonV2" name="mToolButtonRedliningBorderColor">
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="mSpinBoxRedliningSize">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QgsColorButtonV2" name="mToolButtonRedliningFillColor">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -1289,7 +1247,65 @@ Sight</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="4">
+            <item row="1" column="2">
+             <widget class="QLabel" name="mLabelRedliningBorderColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Border:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="mLabelRedliningFillColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Fill:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QgsColorButtonV2" name="mToolButtonRedliningBorderColor">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QgsColorButtonV2" name="mToolButtonRedliningFillColor">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
              <widget class="QComboBox" name="mComboBoxRedliningBorderStyle">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1311,7 +1327,7 @@ Sight</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="4">
+            <item row="0" column="4">
              <widget class="QComboBox" name="mComboBoxRedliningFillStyle">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1330,22 +1346,6 @@ Sight</string>
               </property>
               <property name="minimumContentsLength">
                <number>2</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="mSpinBoxRedliningSize">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
               </property>
              </widget>
             </item>
