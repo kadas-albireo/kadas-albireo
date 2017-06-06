@@ -297,6 +297,8 @@ void QgsRedlining::setMarkerTool( const QString &shape, bool active, const QgsFe
 void QgsRedlining::setLineTool( bool active, const QgsFeature *editFeature )
 {
   setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false, editFeature ), mActionNewLine, active );
+  mUi.colorButtonFillColor->setEnabled( false );
+  mUi.comboFillStyle->setEnabled( false );
 }
 
 void QgsRedlining::setRectangleTool( bool active, const QgsFeature *editFeature )
