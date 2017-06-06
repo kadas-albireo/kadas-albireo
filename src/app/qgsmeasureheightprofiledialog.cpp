@@ -130,9 +130,9 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
 #else
   mPlotMarker = new PaddedPlotMarker();
   mPlotMarker->setSymbol( new QwtSymbol( QwtSymbol::Ellipse, QBrush( Qt::blue ), QPen( Qt::blue ), QSize( 5, 5 ) ) );
-  mPlotMarker->attach( mPlot );
   mPlotMarker->setItemAttribute( QwtPlotItem::Margins );
 #endif
+  mPlotMarker->attach( mPlot );
   mPlotMarker->setLabelAlignment( Qt::AlignTop | Qt::AlignHCenter );
 
   mLineOfSightGroupBoxgroupBox = new QGroupBox( this );
