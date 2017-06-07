@@ -55,6 +55,11 @@ void QgsMapToolPan::activate()
 void QgsMapToolPan::deactivate()
 {
   mCanvas->ungrabGesture( Qt::PinchGesture );
+  QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
+  if ( selAnnotationItem )
+  {
+    selAnnotationItem->setSelected( false );
+  }
   QgsMapTool::deactivate();
 }
 
