@@ -1512,7 +1512,7 @@ void QgsMapCanvas::mouseMoveEvent( QMouseEvent * e )
 /** Sets the map tool currently being used on the canvas */
 void QgsMapCanvas::setMapTool( QgsMapTool* tool )
 {
-  if ( !tool )
+  if ( !tool || tool == mMapTool )
     return;
 
   QgsMapTool* oldTool = mMapTool;
