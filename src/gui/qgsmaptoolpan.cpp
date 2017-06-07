@@ -277,6 +277,15 @@ void QgsMapToolPan::keyPressEvent( QKeyEvent *e )
       }
       // Fall-through
 
+    case Qt::Key_Escape:
+    {
+      QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
+      if ( selAnnotationItem )
+      {
+        selAnnotationItem->setSelected( false );
+      }
+      break;
+    }
     case Qt::Key_Delete:
     case Qt::Key_Backspace:
     {
