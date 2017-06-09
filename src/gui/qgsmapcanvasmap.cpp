@@ -34,6 +34,7 @@ QgsMapCanvasMap::~QgsMapCanvasMap()
 
 void QgsMapCanvasMap::setContent( const QImage& image, const QgsRectangle& rect )
 {
+  mPreviewImages.clear();
   mImage = image;
 
   // For true retro fans: this is approximately how the graphics looked like in 1990
@@ -44,8 +45,22 @@ void QgsMapCanvasMap::setContent( const QImage& image, const QgsRectangle& rect 
   setRect( rect );
 }
 
+void QgsMapCanvasMap::addPreviewImage( const QImage& image, const QgsRectangle& rect )
+{
+  mPreviewImages.append( qMakePair( image, rect ) );
+}
+
 void QgsMapCanvasMap::paint( QPainter* painter )
 {
+  //draw preview images first
+  QList< QPair< QImage, QgsRectangle > >::const_iterator previewIt = mPreviewImages.constBegin();
+  for ( ; previewIt != mPreviewImages.constEnd(); ++previewIt )
+  {
+    QPointF ul = toCanvasCoordinates( QgsPoint( previewIt->second.xMinimum(), previewIt->second.yMaximum() ) );
+    QPointF lr = toCanvasCoordinates( QgsPoint( previewIt->second.xMaximum(), previewIt->second.yMinimum() ) );
+    painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt->first, QRect( 0, 0, previewIt->first.width(), previewIt->first.height() ) );
+  }
+
   int w = qRound( boundingRect().width() ) - 2, h = qRound( boundingRect().height() ) - 2; // setRect() makes the size +2 :-(
   if ( mImage.size() != QSize( w, h ) )
   {
@@ -73,6 +88,7 @@ void QgsMapCanvasMap::paint( QPainter* painter )
   br = QRectF( c - QPointF( nw / 2, nh / 2 ), QSize( nw, nh ) );
   painter->drawRoundedRect( br, rad, rad );
 #endif
+
 }
 
 QPaintDevice& QgsMapCanvasMap::paintDevice()

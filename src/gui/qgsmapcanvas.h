@@ -479,6 +479,8 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     //! called when a renderer job has finished successfully or when it was cancelled
     void rendererJobFinished();
+    //! called when a preview job has been finished
+    void previewJobFinished();
 
     void mapUpdateTimeout();
 
@@ -705,10 +707,15 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     QgsSnappingUtils* mSnappingUtils;
 
+    QList< QgsMapRendererQImageJob* > mPreviewJobs;
+
 
     int nextWMTSZoomLevel( const QList<double>& resolutions, bool zoomIn = true ) const;
     double zoomInFactor() const;
     double zoomOutFactor() const;
+
+    void startPreviewJobs();
+    void stopPreviewJobs();
 
 }; // class QgsMapCanvas
 

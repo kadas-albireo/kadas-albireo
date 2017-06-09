@@ -17,6 +17,7 @@
 #define QGSMAPCANVASMAP_H
 
 #include <QGraphicsRectItem>
+#include <QPair>
 #include <QPixmap>
 #include <QTimer>
 
@@ -42,6 +43,8 @@ class GUI_EXPORT QgsMapCanvasMap : public QgsMapCanvasItem  // public QObject, p
 
     //! @note added in 2.4
     void setContent( const QImage& image, const QgsRectangle& rect );
+
+    void addPreviewImage( const QImage& image, const QgsRectangle& rect );
 
     //! @note added in 2.4
     QImage contentImage() const { return mImage; }
@@ -75,6 +78,8 @@ class GUI_EXPORT QgsMapCanvasMap : public QgsMapCanvasItem  // public QObject, p
   private:
 
     QImage mImage;
+    /**Preview images for panning. Usually cover area around the rendered image*/
+    QList< QPair< QImage, QgsRectangle > > mPreviewImages;
 };
 
 #endif

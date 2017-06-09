@@ -673,6 +673,7 @@ void QgsMapCanvas::refreshMap()
   QgsDebugMsg( "CANVAS refresh!" );
 
   stopRendering(); // if any...
+  stopPreviewJobs();
 
   // from now on we can accept refresh requests again
   mRefreshScheduled = false;
@@ -760,6 +761,7 @@ void QgsMapCanvas::rendererJobFinished()
     p.end();
 
     mMap->setContent( img, imageRect( img, mJob->mapSettings() ) );
+    startPreviewJobs();
   }
 
   // now we are in a slot called from mJob - do not delete it immediately
@@ -768,6 +770,20 @@ void QgsMapCanvas::rendererJobFinished()
   mJob = 0;
 
   emit mapCanvasRefreshed();
+}
+
+void QgsMapCanvas::previewJobFinished()
+{
+  QgsMapRendererQImageJob* job = dynamic_cast<QgsMapRendererQImageJob*>( sender() );
+  if ( !job )
+  {
+    return;
+  }
+
+  if ( mMap )
+  {
+    mMap->addPreviewImage( job->renderedImage(), job->mapSettings().extent() );
+  }
 }
 
 QgsRectangle QgsMapCanvas::imageRect( const QImage& img, const QgsMapSettings& mapSettings )
@@ -2139,4 +2155,55 @@ double QgsMapCanvas::zoomOutFactor() const
     }
   }
   return mWheelZoomFactor;
+}
+
+void QgsMapCanvas::startPreviewJobs()
+{
+  stopPreviewJobs(); //just in case still running
+
+  QgsRectangle mapRect = mSettings.visibleExtent();
+
+  for ( int j = 0; j < 3; ++j )
+  {
+    for ( int i = 0; i < 3; ++i )
+    {
+      if ( i == 1 && j == 1 )
+      {
+        continue;
+      }
+
+
+      //copy settings, only update extent
+      QgsMapSettings jobSettings = mSettings;
+
+      double dx = ( i - 1 ) * mapRect.width();
+      double dy = ( 1 - j ) * mapRect.height();
+      QgsRectangle jobExtent = mapRect;
+      jobExtent.setXMaximum( jobExtent.xMaximum() + dx );
+      jobExtent.setXMinimum( jobExtent.xMinimum() + dx );
+      jobExtent.setYMaximum( jobExtent.yMaximum() + dy );
+      jobExtent.setYMinimum( jobExtent.yMinimum() + dy );
+
+      jobSettings.setExtent( jobExtent );
+
+      QgsMapRendererQImageJob* job = new QgsMapRendererParallelJob( jobSettings );
+      mPreviewJobs.append( job );
+      connect( job, SIGNAL( finished() ), this, SLOT( previewJobFinished() ) );
+      job->start();
+    }
+  }
+}
+
+void QgsMapCanvas::stopPreviewJobs()
+{
+  QList< QgsMapRendererQImageJob* >::iterator it = mPreviewJobs.begin();
+  for ( ; it != mPreviewJobs.end(); ++it )
+  {
+    if ( *it )
+    {
+      ( *it )->cancel();
+    }
+    delete( *it );
+  }
+  mPreviewJobs.clear();
 }
