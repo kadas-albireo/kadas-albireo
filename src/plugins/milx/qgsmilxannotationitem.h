@@ -36,7 +36,7 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     QgsMilXAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsMilXAnnotationItem( canvas, this ); }
 
     void fromMilxItem( QgsMilXItem* item );
-    QgsMilXItem* toMilxItem();
+    QgsMilXItem* toMilxItem() const;
 
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;

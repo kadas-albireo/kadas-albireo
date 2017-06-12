@@ -73,7 +73,7 @@ void QgsMilXAnnotationItem::fromMilxItem( QgsMilXItem* item )
   updateSymbol( true );
 }
 
-QgsMilXItem* QgsMilXAnnotationItem::toMilxItem()
+QgsMilXItem* QgsMilXAnnotationItem::toMilxItem() const
 {
   Q_ASSERT( mFinalized );
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" );
