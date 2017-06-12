@@ -18,7 +18,6 @@ SET(QGIS_APP_SRCS
   qgsattributetypedialog.cpp
   qgsattributetabledialog.cpp
   qgsbookmarks.cpp
-  qgsbottombar.cpp
   qgsbrowserdockwidget.cpp
   qgsadvanceddigitizingdockwidget.cpp
   qgsadvanceddigitizingcanvasitem.cpp
@@ -203,7 +202,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsattributetypedialog.h
   qgsattributetabledialog.h
   qgsbookmarks.h
-  qgsbottombar.h
   qgsbrowserdockwidget.h
   qgsadvanceddigitizingdockwidget.h
   qgsclipboard.h
