@@ -156,7 +156,7 @@ bool QgsMilXIO::save( QgisInterface* iface )
   QString cartouche = QgsProject::instance()->readEntry( "VBS-Print", "cartouche" );
 
   // Replace custom texts by "Custom" since the MSS Schema Validator enforces this
-  QStringList validClassifications = QStringList() << "None" << "Internal" << "Confidential" << "Secret" << "ForExercise";
+  QStringList validClassifications = QStringList() << "None" << "Internal" << "Confidential" << "Secret";
   QDomDocument cartoucheDoc;
   cartoucheDoc.setContent( cartouche );
   QDomNodeList exClassifications = cartoucheDoc.elementsByTagName( "ExerciseClassification" );
