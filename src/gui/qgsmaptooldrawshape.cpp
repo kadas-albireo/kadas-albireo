@@ -567,7 +567,7 @@ void QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::M
   }
   else if ( !press && button == Qt::RightButton )
   {
-    if ( !mIsArea || state()->points.back().size() > 2 )
+    if ( !mIsArea && state()->points.back().size() >= 2 )
     {
       State* newState = cloneState();
       // If last two points are very close, discard last point
