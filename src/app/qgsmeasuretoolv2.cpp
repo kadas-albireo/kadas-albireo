@@ -150,7 +150,7 @@ QgsMeasureToolV2::QgsMeasureToolV2( QgsMapCanvas *canvas, MeasureMode measureMod
   }
   else
   {
-    mDrawTool = new QgsMapToolDrawPolyLine( canvas, mMeasureMode == MeasurePolygon );
+    mDrawTool = new QgsMapToolDrawPolyLine( canvas, mMeasureMode == MeasurePolygon, true );
   }
   mDrawTool->setParent( this );
   mDrawTool->setAllowMultipart( mMeasureMode != MeasureAngle && mMeasureMode != MeasureAzimuth );

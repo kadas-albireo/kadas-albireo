@@ -93,7 +93,10 @@ void QgsGeometryRubberBand::paint( QPainter* painter )
   QgsPointV2 vertex;
   while ( paintGeom->nextVertex( vertexId, vertex ) )
   {
-    drawVertex( painter, vertex.x(), vertex.y() );
+    if ( !mHiddenNodes.contains( vertexId ) )
+    {
+      drawVertex( painter, vertex.x(), vertex.y() );
+    }
   }
 
   delete paintGeom;
@@ -185,8 +188,9 @@ void QgsGeometryRubberBand::redrawMeasurements()
   }
 }
 
-void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom )
+void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom , const QList<QgsVertexId> &hiddenNodes )
 {
+  mHiddenNodes.clear();
   delete mGeometry;
   mGeometry = geom;
   qDeleteAll( mMeasurementLabels );
@@ -198,6 +202,7 @@ void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom )
     setRect( QgsRectangle() );
     return;
   }
+  mHiddenNodes = hiddenNodes;
 
   setRect( rubberBandRectangle() );
 
@@ -396,8 +401,16 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
       case MEASURE_LINE_AND_SEGMENTS:
         if ( dynamic_cast<QgsCurveV2*>( geometry ) )
         {
+          QgsVertexId vid;
+          QgsPointV2 p;
           QList<QgsPointV2> points;
-          static_cast<QgsCurveV2*>( geometry )->points( points );
+          while ( geometry->nextVertex( vid, p ) )
+          {
+            if ( !mHiddenNodes.contains( vid ) )
+            {
+              points.append( p );
+            }
+          }
           double totLength = 0;
           for ( int i = 0, n = points.size() - 1; i < n; ++i )
           {
@@ -405,7 +418,10 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
             QgsPoint p2( points[i+1].x(), points[i+1].y() );
             double segmentLength = mDa.measureLine( p1, p2 );
             totLength += segmentLength;
-            addMeasurements( QStringList() << formatMeasurement( segmentLength, false ), QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
+            if ( n > 1 )
+            {
+              addMeasurements( QStringList() << formatMeasurement( segmentLength, false ), QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );
+            }
           }
           if ( !points.isEmpty() )
           {

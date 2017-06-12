@@ -37,6 +37,10 @@
 #include <QMouseEvent>
 #include <qmath.h>
 
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLine.hpp>
+#include <GeographicLib/Constants.hpp>
+
 QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea, State *initialState )
     : QgsMapTool( canvas )
     , mIsArea( isArea )
@@ -127,7 +131,9 @@ void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::Measurement
 
 void QgsMapToolDrawShape::update()
 {
-  mRubberBand->setGeometry( createGeometry( mCanvas->mapSettings().destinationCrs() ) );
+  QList<QgsVertexId> hiddenNodes;
+  QgsAbstractGeometryV2* geom = createGeometry( mCanvas->mapSettings().destinationCrs(), &hiddenNodes );
+  mRubberBand->setGeometry( geom, hiddenNodes );
   emit geometryChanged();
 }
 
@@ -405,7 +411,7 @@ void QgsMapToolDrawPoint::buttonEvent( const QgsPoint& pos, bool press, Qt::Mous
   }
 }
 
-QgsAbstractGeometryV2* QgsMapToolDrawPoint::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
+QgsAbstractGeometryV2* QgsMapToolDrawPoint::createGeometry( const QgsCoordinateReferenceSystem &targetCrs , QList<QgsVertexId> */*hiddenNodes*/ ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPointV2();
@@ -539,9 +545,15 @@ void QgsMapToolDrawPoint::setPart( int part, const QgsPoint& p )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsMapToolDrawPolyLine::QgsMapToolDrawPolyLine( QgsMapCanvas *canvas, bool closed )
-    : QgsMapToolDrawShape( canvas, closed, emptyState() )
+QgsMapToolDrawPolyLine::QgsMapToolDrawPolyLine( QgsMapCanvas *canvas, bool closed, bool geodesic )
+    : QgsMapToolDrawShape( canvas, closed, emptyState() ), mGeodesic( geodesic )
 {
+  if ( geodesic )
+  {
+    mDa.setEllipsoid( "WGS84" );
+    mDa.setEllipsoidalMode( true );
+    mDa.setSourceCrs( QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
+  }
 }
 
 QgsMapToolDrawShape::State* QgsMapToolDrawPolyLine::emptyState() const
@@ -567,7 +579,7 @@ void QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::M
   }
   else if ( !press && button == Qt::RightButton )
   {
-    if ( !mIsArea && state()->points.back().size() >= 2 )
+    if (( mIsArea && state()->points.back().size() >= 3 ) || state()->points.back().size() >= 2 )
     {
       State* newState = cloneState();
       // If last two points are very close, discard last point
@@ -599,20 +611,89 @@ void QgsMapToolDrawPolyLine::moveEvent( const QgsPoint &pos )
   update();
 }
 
-QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
+QgsAbstractGeometryV2* QgsMapToolDrawPolyLine::createGeometry( const QgsCoordinateReferenceSystem &targetCrs , QList<QgsVertexId> *hiddenNodes ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = mIsArea ? static_cast<QgsGeometryCollectionV2*>( new QgsMultiPolygonV2() ) : static_cast<QgsGeometryCollectionV2*>( new QgsMultiLineStringV2() );
-  foreach ( const QList<QgsPoint>& part, state()->points )
+  for ( int iPart = 0, nParts = state()->points.size(); iPart < nParts; ++iPart )
   {
+    const QList<QgsPoint>& part = state()->points[iPart];
     QgsLineStringV2* ring = new QgsLineStringV2();
-    foreach ( const QgsPoint& point, part )
+    if ( mGeodesic )
     {
-      ring->addVertex( QgsPointV2( t->transform( point ) ) );
+      int nPoints = part.size();
+      if ( nPoints < 2 )
+      {
+        continue;
+      }
+      const QgsCoordinateTransform* t1 = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), "EPSG:4326" );
+      const QgsCoordinateTransform* t2 = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", targetCrs.authid() );
+      QList<QgsPoint> wgsPoints;
+
+      GeographicLib::Geodesic geod( GeographicLib::Constants::WGS84_a(), GeographicLib::Constants::WGS84_f() );
+
+      foreach ( const QgsPoint& point, part )
+      {
+        wgsPoints.append( t1->transform( point ) );
+      }
+
+      double sdist = 500000; // 500km segments
+      for ( int i = 0; i < nPoints - 1; ++i )
+      {
+        int ringSize = ring->vertexCount();
+        GeographicLib::GeodesicLine line = geod.InverseLine( wgsPoints[i].y(), wgsPoints[i].x(), wgsPoints[i+1].y(), wgsPoints[i+1].x() );
+        double dist = line.Distance();
+        int nIntervals = qMax( 1, int( std::ceil( dist / sdist ) ) );
+        for ( int j = 0; j < nIntervals; ++j )
+        {
+          double lat, lon;
+          line.Position( j * sdist, lat, lon );
+          ring->addVertex( QgsPointV2( t2->transform( QgsPoint( lon, lat ) ) ) );
+          if ( hiddenNodes && j != 0 )
+          {
+            hiddenNodes->append( QgsVertexId( iPart, 0, ringSize + j ) );
+          }
+        }
+        if ( !mIsArea && i == nPoints - 2 )
+        {
+          double lat, lon;
+          line.Position( dist, lat, lon );
+          ring->addVertex( QgsPointV2( t2->transform( QgsPoint( lon, lat ) ) ) );
+        }
+      }
+      if ( mIsArea && !part.isEmpty() )
+      {
+        GeographicLib::GeodesicLine line = geod.InverseLine( wgsPoints[nPoints -1].y(), wgsPoints[nPoints -1].x(), wgsPoints[0].y(), wgsPoints[0].x() );
+        double dist = line.Distance();
+        int nIntervals = qMax( 1, int( std::ceil( dist / sdist ) ) );
+        int ringSize = ring->vertexCount();
+        for ( int j = 0; j < nIntervals; ++j )
+        {
+          double lat, lon;
+          line.Position( j * sdist, lat, lon );
+          ring->addVertex( QgsPointV2( t2->transform( QgsPoint( lon, lat ) ) ) );
+          if ( hiddenNodes && j != 0 )
+          {
+            hiddenNodes->append( QgsVertexId( iPart, 0, ringSize + j ) );
+          }
+        }
+        ring->addVertex( ring->vertexAt( QgsVertexId( 0, 0, 0 ) ) );
+      }
     }
+    else
+    {
+      foreach ( const QgsPoint& point, part )
+      {
+        ring->addVertex( QgsPointV2( t->transform( point ) ) );
+      }
+      if ( mIsArea && !part.isEmpty() )
+      {
+        ring->addVertex( QgsPointV2( t->transform( part.front() ) ) );
+      }
+    }
+
     if ( mIsArea )
     {
-      if ( !part.isEmpty() ) ring->addVertex( QgsPointV2( t->transform( part.front() ) ) );
       QgsPolygonV2* poly = new QgsPolygonV2;
       poly->setExteriorRing( ring );
       multiGeom->addGeometry( poly );
@@ -951,7 +1032,7 @@ void QgsMapToolDrawRectangle::moveEvent( const QgsPoint &pos )
   update();
 }
 
-QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
+QgsAbstractGeometryV2* QgsMapToolDrawRectangle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs , QList<QgsVertexId> */*hiddenNodes*/ ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;
@@ -1225,7 +1306,7 @@ void QgsMapToolDrawCircle::getPart( int part, QgsPoint &center, double &radius )
   radius = qSqrt( state()->centers[part].sqrDist( state()->ringPos[part] ) );
 }
 
-QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
+QgsAbstractGeometryV2* QgsMapToolDrawCircle::createGeometry( const QgsCoordinateReferenceSystem &targetCrs , QList<QgsVertexId> */*hiddenNodes*/ ) const
 {
   mPartMap.clear();
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2();
@@ -1656,7 +1737,7 @@ void QgsMapToolDrawCircularSector::moveEvent( const QgsPoint &pos )
   update();
 }
 
-QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCoordinateReferenceSystem &targetCrs ) const
+QgsAbstractGeometryV2* QgsMapToolDrawCircularSector::createGeometry( const QgsCoordinateReferenceSystem &targetCrs , QList<QgsVertexId> */*hiddenNodes*/ ) const
 {
   const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), targetCrs.authid() );
   QgsGeometryCollectionV2* multiGeom = new QgsMultiPolygonV2;

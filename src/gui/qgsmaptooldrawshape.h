@@ -61,7 +61,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void canvasReleaseEvent( QMouseEvent* e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
     virtual int getPartCount() const = 0;
-    virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const = 0;
+    virtual QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const = 0;
     void addGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateReferenceSystem& sourceCrs );
 
     virtual void updateStyle( int outlineWidth, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle );
@@ -132,7 +132,7 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
     int getPartCount() const override { return state()->points.size(); }
     void getPart( int part, QgsPoint& p ) const { p = state()->points[part].front(); }
     void setPart( int part, const QgsPoint& p );
-    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const override;
 
   protected:
     struct State : QgsMapToolDrawShape::State
@@ -169,11 +169,11 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 {
     Q_OBJECT
   public:
-    QgsMapToolDrawPolyLine( QgsMapCanvas* canvas, bool closed );
+    QgsMapToolDrawPolyLine( QgsMapCanvas* canvas, bool closed, bool geodesic = false );
     int getPartCount() const override { return state()->points.size(); }
     void getPart( int part, QList<QgsPoint>& p ) const { p = state()->points[part]; }
     void setPart( int part, const QList<QgsPoint>& p );
-    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const override;
 
   protected:
     struct State : QgsMapToolDrawShape::State
@@ -186,6 +186,8 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
       int node;
     };
 
+    bool mGeodesic;
+    QgsDistanceArea mDa;
     QPointer<QgsMapToolDrawShapeInputField> mXEdit;
     QPointer<QgsMapToolDrawShapeInputField> mYEdit;
 
@@ -225,7 +227,7 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
       p2 = state()->p2[part];
     }
     void setPart( int part, const QgsPoint& p1, const QgsPoint& p2 );
-    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const override;
 
   protected:
     struct State : QgsMapToolDrawShape::State
@@ -268,7 +270,7 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
     int getPartCount() const override { return state()->centers.size(); }
     void getPart( int part, QgsPoint& center, double& radius ) const;
     void setPart( int part, const QgsPoint& center, double radius );
-    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const override;
 
   protected:
     struct State : QgsMapToolDrawShape::State
@@ -324,7 +326,7 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
       stopAngle = state()->stopAngles[part];
     }
     void setPart( int part, const QgsPoint& center, double radius, double startAngle, double stopAngle );
-    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs ) const override;
+    QgsAbstractGeometryV2* createGeometry( const QgsCoordinateReferenceSystem& targetCrs, QList<QgsVertexId>* hiddenNodes = 0 ) const override;
 
   protected:
     enum SectorStatus { HaveNothing, HaveCenter, HaveRadius };

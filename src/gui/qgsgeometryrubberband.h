@@ -18,13 +18,13 @@
 #ifndef QGSGEOMETRYRUBBERBAND_H
 #define QGSGEOMETRYRUBBERBAND_H
 
+#include "qgsabstractgeometryv2.h"
 #include "qgsmapcanvasitem.h"
 #include "qgsdistancearea.h"
 #include <QBrush>
 #include <QPen>
 
 
-class QgsAbstractGeometryV2;
 class QgsPointV2;
 struct QgsVertexId;
 
@@ -91,7 +91,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     ~QgsGeometryRubberBand();
 
     /** Sets geometry (takes ownership). Geometry is expected to be in map coordinates */
-    void setGeometry( QgsAbstractGeometryV2* geom );
+    void setGeometry( QgsAbstractGeometryV2* geom, const QList<QgsVertexId>& hiddenNodes = QList<QgsVertexId>() );
     const QgsAbstractGeometryV2* geometry() { return mGeometry; }
 
     /** Sets the translation offset (offset in map coordinates for drawing geometry) */
@@ -142,6 +142,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
 
   private:
     QgsAbstractGeometryV2* mGeometry;
+    QList<QgsVertexId> mHiddenNodes;
     double mTranslationOffset[2];
     QBrush mBrush;
     QPen mPen;
