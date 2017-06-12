@@ -82,7 +82,7 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     void setApproved( bool approved ) { mIsApproved = approved; }
     bool isApproved() const { return mIsApproved; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
-    void exportToMilxly( QDomElement &milxDocumentEl, int dpi );
+    void exportToMilxly( QDomElement &milxLayerEl, int dpi );
     bool importMilxly( QDomElement &milxLayerEl, int dpi, QString &errorMsg );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }

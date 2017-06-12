@@ -24,6 +24,7 @@
 #include "qgsmilxio.h"
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
+#include "qgsproject.h"
 #include "layertree/qgslayertreeview.h"
 #include <QApplication>
 #include <QComboBox>
@@ -47,6 +48,8 @@ bool QgsMilXIO::save( QgisInterface* iface )
   layerSelectionDialog.setLayout( layout );
   layout->addWidget( new QLabel( tr( "Select MilX layers to export" ) ), 0, 0, 1, 2 );
   QListWidget* layerListWidget = new QListWidget();
+  QComboBox* cartoucheCombo = new QComboBox();
+  cartoucheCombo->addItem( tr( "Don't add" ) );
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
   {
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
@@ -55,10 +58,13 @@ bool QgsMilXIO::save( QgisInterface* iface )
       item->setData( Qt::UserRole, layer->id() );
       item->setCheckState( iface->mapCanvas()->layers().contains( layer ) ? Qt::Checked : Qt::Unchecked );
       layerListWidget->addItem( item );
+      cartoucheCombo->addItem( layer->name(), layer->id() );
     }
   }
   layout->addWidget( layerListWidget, 1, 0, 1, 2 );
-  layout->addWidget( new QLabel( "MilX version:" ), 2, 0, 1, 1 );
+  layout->addWidget( new QLabel( "Add cartouche to layer:" ), 2, 0, 1, 1 );
+  layout->addWidget( cartoucheCombo, 2, 1, 1, 1 );
+  layout->addWidget( new QLabel( "MilX version:" ), 3, 0, 1, 1 );
   QComboBox* combo = new QComboBox();
   QStringList versionTags, versionNames;
   MilXClient::getSupportedLibraryVersionTags( versionTags, versionNames );
@@ -67,9 +73,9 @@ bool QgsMilXIO::save( QgisInterface* iface )
     combo->addItem( versionNames[i], versionTags[i] );
   }
   combo->setCurrentIndex( 0 );
-  layout->addWidget( combo, 2, 1, 1, 1 );
+  layout->addWidget( combo, 3, 1, 1, 1 );
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
-  layout->addWidget( bbox, 3, 0, 1, 2 );
+  layout->addWidget( bbox, 4, 0, 1, 2 );
   connect( bbox, SIGNAL( accepted() ), &layerSelectionDialog, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), &layerSelectionDialog, SLOT( reject() ) );
   if ( layerSelectionDialog.exec() == QDialog::Rejected )
@@ -146,12 +152,47 @@ bool QgsMilXIO::save( QgisInterface* iface )
   milxVersionEl.appendChild( doc.createTextNode( currentVersionTag ) );
   milxDocumentEl.appendChild( milxVersionEl );
 
+  QString cartoucheLayerId = cartoucheCombo->itemData( cartoucheCombo->currentIndex() ).toString();
+  QString cartouche = QgsProject::instance()->readEntry( "VBS-Print", "cartouche" );
+
+  // Replace custom texts by "Custom" since the MSS Schema Validator enforces this
+  QStringList validClassifications = QStringList() << "None" << "Internal" << "Confidential" << "Secret" << "ForExercise";
+  QDomDocument cartoucheDoc;
+  cartoucheDoc.setContent( cartouche );
+  QDomNodeList exClassifications = cartoucheDoc.elementsByTagName( "ExerciseClassification" );
+  if ( !exClassifications.isEmpty() )
+  {
+    QDomElement el = exClassifications.at( 0 ).toElement();
+    QString classification = el.text();
+    if ( !validClassifications.contains( classification ) )
+      el.replaceChild( cartoucheDoc.createTextNode( "Custom" ), el.firstChild() );
+  }
+
+  QDomNodeList missingClassifications = cartoucheDoc.elementsByTagName( "MissionClassification" );
+  if ( !missingClassifications.isEmpty() )
+  {
+    QDomElement el = missingClassifications.at( 0 ).toElement();
+    QString classification = el.text();
+    if ( !validClassifications.contains( classification ) )
+      el.replaceChild( cartoucheDoc.createTextNode( "Custom" ), el.firstChild() );
+  }
+  cartouche = cartoucheDoc.toString();
+
   foreach ( const QString& layerId, exportLayers )
   {
     QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
     if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
-      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxDocumentEl, dpi );
+      QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
+      milxDocumentEl.appendChild( milxLayerEl );
+      static_cast<QgsMilXLayer*>( layer )->exportToMilxly( milxLayerEl, dpi );
+
+      if ( cartoucheLayerId == layerId )
+      {
+        QDomDocument cartoucheDoc;
+        cartoucheDoc.setContent( cartouche );
+        milxLayerEl.appendChild( cartoucheDoc.documentElement() );
+      }
     }
   }
   QString inputXml = doc.toString();
@@ -261,6 +302,7 @@ bool QgsMilXIO::load( QgisInterface* iface )
   QDomNodeList milxLayerEls = milxDocumentEl.elementsByTagName( "MilXLayer" );
   QString errorMsg;
   QList<QgsMilXLayer*> importedLayers;
+  QList< QPair<QString, QString> > cartouches;
   for ( int iLayer = 0, nLayers = milxLayerEls.count(); iLayer < nLayers; ++iLayer )
   {
     QDomElement milxLayerEl = milxLayerEls.at( iLayer ).toElement();
@@ -270,6 +312,14 @@ bool QgsMilXIO::load( QgisInterface* iface )
       break;
     }
     importedLayers.append( layer );
+    QDomNodeList cartoucheEls = milxLayerEl.elementsByTagName( "Legend" );
+    if ( !cartoucheEls.isEmpty() )
+    {
+      QString cartouche;
+      QTextStream ts( &cartouche );
+      cartoucheEls.at( 0 ).save( ts, 2 );
+      cartouches.append( qMakePair( layer->name(), cartouche ) );
+    }
   }
 
   if ( errorMsg.isEmpty() )
@@ -277,6 +327,34 @@ bool QgsMilXIO::load( QgisInterface* iface )
     foreach ( QgsMilXLayer* layer, importedLayers )
     {
       QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    }
+    if ( !cartouches.isEmpty() )
+    {
+      QDialog cartoucheSelectionDialog( iface->mainWindow() );
+      cartoucheSelectionDialog.setWindowTitle( tr( "Import cartouche" ) );
+      QGridLayout* layout = new QGridLayout();
+      cartoucheSelectionDialog.setLayout( layout );
+      layout->addWidget( new QLabel( tr( "Import cartouche from MilX layer:" ) ), 0, 0, 1, 1 );
+      QComboBox* cartoucheCombo = new QComboBox();
+      cartoucheCombo->addItem( tr( "Don't import" ) );
+      typedef QPair<QString, QString> CartouchePair;
+      foreach ( const CartouchePair& pair, cartouches )
+      {
+        cartoucheCombo->addItem( pair.first, pair.second );
+      }
+      layout->addWidget( cartoucheCombo, 0, 1, 1, 1 );
+      QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok );
+      connect( bbox, SIGNAL( accepted() ), &cartoucheSelectionDialog, SLOT( accept() ) );
+      connect( bbox, SIGNAL( rejected() ), &cartoucheSelectionDialog, SLOT( reject() ) );
+      layout->addWidget( bbox, 1, 1, 1, 2 );
+      if ( cartoucheSelectionDialog.exec() == QDialog::Accepted )
+      {
+        QString cartouche = cartoucheCombo->itemData( cartoucheCombo->currentIndex() ).toString();
+        if ( !cartouche.isEmpty() )
+        {
+          QgsProject::instance()->writeEntry( "VBS-Print", "cartouche", cartouche );
+        }
+      }
     }
     iface->messageBar()->pushMessage( tr( "Import Completed" ), "", QgsMessageBar::INFO, 5 );
     if ( !messages.isEmpty() )

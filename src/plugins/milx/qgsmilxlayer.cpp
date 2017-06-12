@@ -441,12 +441,9 @@ void QgsMilXLayer::invalidateBillboards()
   }
 }
 
-void QgsMilXLayer::exportToMilxly( QDomElement& milxDocumentEl, int dpi )
+void QgsMilXLayer::exportToMilxly( QDomElement& milxLayerEl, int dpi )
 {
-  QDomDocument doc = milxDocumentEl.ownerDocument();
-
-  QDomElement milxLayerEl = doc.createElement( "MilXLayer" );
-  milxDocumentEl.appendChild( milxLayerEl );
+  QDomDocument doc = milxLayerEl.ownerDocument();
 
   QDomElement milxLayerNameEl = doc.createElement( "Name" );
   milxLayerNameEl.appendChild( doc.createTextNode( name() ) );
@@ -533,12 +530,14 @@ bool QgsMilXLayer::readXml( const QDomNode& layer_node )
   return true;
 }
 
-bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ )
+bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & document )
 {
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
-  exportToMilxly( layerElement, 96 );
+  QDomElement milxLayerEl = document.createElement( "MilXLayer" );
+  layerElement.appendChild( milxLayerEl );
+  exportToMilxly( milxLayerEl, 96 );
   return true;
 }
 
