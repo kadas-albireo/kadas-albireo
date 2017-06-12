@@ -18,10 +18,17 @@
 #ifndef QGSMILXMAPTOOLS_H
 #define QGSMILXMAPTOOLS_H
 
-#include "qgsmaptoolannotation.h"
+#include "qgsbottombar.h"
+#include "qgsmaptool.h"
+#include <QAction>
 #include <QPointer>
 
+class QgsBottomBar;
+class QGraphicsRectItem;
+class QPushButton;
+class QgisInterface;
 class QgsMilXAnnotationItem;
+class QgsMilXEditTool;
 class QgsMilXItem;
 class QgsMilXLayer;
 
@@ -44,19 +51,66 @@ class QgsMilXCreateTool : public QgsMapTool
     QgsMilXLayer* mLayer;
 };
 
-class QgsMilXEditTool : public QgsMapToolPan
+class QgsMilxEditBottomBar : public QgsBottomBar
 {
     Q_OBJECT
   public:
-    QgsMilXEditTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, QgsMilXItem* item );
+    QgsMilxEditBottomBar( QgsMilXEditTool* tool );
+
+  private:
+    QgsMilXEditTool* mTool;
+    QLabel* mStatusLabel;
+    QPushButton* mCopyButton;
+    QPushButton* mMoveButton;
+    QMenu* mCopyMenu;
+    QMenu* mMoveMenu;
+
+  private:
+    QString createLayer();
+    void copyMoveSymbols( const QString& targetLayerId, bool move );
+
+  private slots:
+    void onClose();
+    void repopulateLayers();
+    void updateStatus();
+
+    void copyToLayer() { copyMoveSymbols( qobject_cast<QAction*>( sender() )->data().toString(), false ); }
+    void copyToNewLayer() { copyMoveSymbols( createLayer(), false ); }
+    void moveToLayer() { copyMoveSymbols( qobject_cast<QAction*>( sender() )->data().toString(), true ); }
+    void moveToNewLayer() { copyMoveSymbols( createLayer(), true ); }
+};
+
+class QgsMilXEditTool : public QgsMapTool
+{
+    Q_OBJECT
+  public:
+    QgsMilXEditTool( QgisInterface* iface, QgsMilXLayer* layer, QgsMilXItem* layerItem );
     ~QgsMilXEditTool();
+    void activate() override;
+    void canvasPressEvent( QMouseEvent* e ) override;
+    void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
 
-  private:
-    QPointer<QgsMilXAnnotationItem> mItem;
-    QPointer<QgsMilXLayer> mLayer;
+  signals:
+    void itemsChanged();
 
+  private:
+    friend class QgsMilxEditBottomBar;
+    QgisInterface* mIface;
+    QgsMilxEditBottomBar* mBottomBar;
+    QList<QgsMilXAnnotationItem*> mItems;
+    QPointer<QgsMilXLayer> mLayer;
+    QGraphicsRectItem* mRectItem;
+    QPoint mMouseMoveLastXY;
+    bool mPanning;
+    QgsMilXAnnotationItem* mActiveAnnotation;
+    int mAnnotationMoveAction;
+
+  private slots:
+    void removeItemFromList();
+    void updateRect();
+    void checkLayerHidden();
 };
 
 #endif // QGSMILXMAPTOOLS_H

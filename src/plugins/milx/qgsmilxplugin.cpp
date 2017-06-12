@@ -205,7 +205,7 @@ void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
     // Approved layers are not editable
     return;
   }
-  QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface->mapCanvas(), layer, layer->items()[symbolIdx] );
+  QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface, layer, layer->items()[symbolIdx] );
   delete layer->takeItem( symbolIdx );
   mQGisIface->mapCanvas()->setMapTool( tool );
   layer->triggerRepaint();
