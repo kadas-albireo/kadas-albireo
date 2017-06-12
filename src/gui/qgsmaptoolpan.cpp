@@ -106,7 +106,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
       mMouseMoveLastXY = e->pos();
 
       QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-      if ( e->button() == Qt::LeftButton && selectedItem && selectedItem == mCanvas->annotationItemAtPos( e->pos() ) )
+      if ( selectedItem && selectedItem == mCanvas->annotationItemAtPos( e->pos() ) )
       {
         mAnnotationMoveAction = selectedItem->moveActionForPosition( e->posF() );
       }
