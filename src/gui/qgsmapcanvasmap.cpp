@@ -48,6 +48,7 @@ void QgsMapCanvasMap::setContent( const QImage& image, const QgsRectangle& rect 
 void QgsMapCanvasMap::addPreviewImage( const QImage& image, const QgsRectangle& rect )
 {
   mPreviewImages.append( qMakePair( image, rect ) );
+  update();
 }
 
 void QgsMapCanvasMap::paint( QPainter* painter )
