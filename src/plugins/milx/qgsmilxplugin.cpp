@@ -54,8 +54,8 @@ void QgsMilXPlugin::initGui()
     return;
   }
 
-  mActionMilx = mQGisIface->findAction( "mActionMilx" );
-  connect( mActionMilx, SIGNAL( triggered( ) ), this, SLOT( toggleMilXLibrary( ) ) );
+  mActionCreateMilx = mQGisIface->findAction( "mActionMilx" );
+  connect( mActionCreateMilx, SIGNAL( triggered() ), this, SLOT( createMilx() ) );
 
   mActionSaveMilx = mQGisIface->findAction( "mActionSaveMilx" );
   connect( mActionSaveMilx, SIGNAL( triggered( ) ), this, SLOT( saveMilx( ) ) );
@@ -96,7 +96,7 @@ void QgsMilXPlugin::initGui()
 
   QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsMilXLayerType( mQGisIface->layerTreeView()->menuProvider() ) );
 
-  mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mapCanvas() );
+  mMilXLibrary = new QgsMilXLibrary( mQGisIface->mainWindow() );
 
   connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged( QStringList ) ), this, SLOT( connectPickHandlers() ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( stopEditing() ) );
@@ -113,16 +113,26 @@ void QgsMilXPlugin::unload()
   mQGisIface->layerTreeView()->menuProvider()->removeLegendLayerAction( mActionApprovedLayer );
   QgsPluginLayerRegistry::instance()->removePluginLayerType( QgsMilXLayer::layerTypeKey() );
   mActionApprovedLayer = 0;
-  mActionMilx = 0;
+  mActionCreateMilx = 0;
   mActionSaveMilx = 0;
   mActionLoadMilx = 0;
+  delete mMilXLibrary;
+  mMilXLibrary = 0;
 }
 
-void QgsMilXPlugin::toggleMilXLibrary( )
+void QgsMilXPlugin::createMilx( )
 {
-  mMilXLibrary->autocreateLayer();
-  mMilXLibrary->show();
-  mMilXLibrary->raise();
+  QgsMilXCreateTool* createTool = qobject_cast<QgsMilXCreateTool*>( mQGisIface->mapCanvas()->mapTool() );
+  if ( createTool )
+  {
+    createTool->deleteLater();
+  }
+  else
+  {
+    QgsMilXCreateTool* createTool = new QgsMilXCreateTool( mQGisIface, mMilXLibrary );
+    createTool->setAction( mActionCreateMilx );
+    mQGisIface->mapCanvas()->setMapTool( createTool );
+  }
 }
 
 void QgsMilXPlugin::saveMilx()

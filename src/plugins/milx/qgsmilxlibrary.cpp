@@ -17,29 +17,17 @@
 
 #include "qgsapplication.h"
 #include "qgsmilxlibrary.h"
-#include "qgsmilxmaptools.h"
 #include "qgsmilxlayer.h"
 #include "qgsfilterlineedit.h"
-#include "qgslogger.h"
-#include "qgisinterface.h"
-#include "qgsmapcanvas.h"
-#include "qgsmaplayerregistry.h"
-#include "layertree/qgslayertreeview.h"
-#include <QAction>
-#include <QComboBox>
-#include <QDialogButtonBox>
 #include <QDomDocument>
+#include <QDir>
 #include <QFile>
-#include <QGridLayout>
-#include <QInputDialog>
-#include <QKeyEvent>
 #include <QLabel>
-#include <QListWidget>
-#include <QMessageBox>
+#include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
-#include <QToolButton>
 #include <QTreeView>
+#include <QVBoxLayout>
 #include "MilXClient.hpp"
 
 const int QgsMilXLibrary::SymbolXmlRole = Qt::UserRole + 1;
@@ -90,32 +78,21 @@ class QgsMilXLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 };
 
 
-QgsMilXLibrary::QgsMilXLibrary( QgisInterface* iface, QWidget *parent )
-    : QDialog( parent ), mIface( iface ), mLoader( 0 )
+QgsMilXLibrary::QgsMilXLibrary( QWidget *parent )
+    : QWidget( parent ), mLoader( 0 )
 {
-  setWindowTitle( tr( "MSS Symbol Gallery" ) );
-  resize( 480, 640 );
-  QGridLayout* layout = new QGridLayout( this );
+  setWindowFlags( Qt::Popup );
+  setObjectName( "QgsMilXLibrary" );
+  setStyleSheet( "QWidget#QgsMilXLibrary { background-color: white;}" );
+
+  QVBoxLayout* layout = new QVBoxLayout( this );
+  layout->setMargin( 2 );
+  layout->setSpacing( 2 );
   setLayout( layout );
-
-  layout->addWidget( new QLabel( tr( "Layer:" ) ), 0, 0, 1, 1 );
-  mLayersCombo = new QComboBox( this );
-  connect( mLayersCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setCurrentLayer( int ) ) );
-  layout->addWidget( mLayersCombo, 0, 1, 1, 1 );
-
-  QToolButton* newLayerButton = new QToolButton();
-  newLayerButton->setIcon( QIcon( ":/images/themes/default/mActionAdd.png" ) );
-  connect( newLayerButton, SIGNAL( clicked( bool ) ), this, SLOT( addMilXLayer() ) );
-  layout->addWidget( newLayerButton, 0, 2, 1, 1 );
-
-  QFrame* separator = new QFrame( this );
-  separator->setFrameShape( QFrame::HLine );
-  separator->setFrameShadow( QFrame::Sunken );
-  layout->addWidget( separator, 1, 0, 1, 3 );
 
   mFilterLineEdit = new QgsFilterLineEdit( this );
   mFilterLineEdit->setPlaceholderText( tr( "Filter..." ) );
-  layout->addWidget( mFilterLineEdit, 2, 0, 1, 3 );
+  layout->addWidget( mFilterLineEdit );
   connect( mFilterLineEdit, SIGNAL( textChanged( QString ) ), this, SLOT( filterChanged( QString ) ) );
 
   mTreeView = new QTreeView( this );
@@ -123,36 +100,23 @@ QgsMilXLibrary::QgsMilXLibrary( QgisInterface* iface, QWidget *parent )
   mTreeView->setEditTriggers( QTreeView::NoEditTriggers );
   mTreeView->setHeaderHidden( true );
   mTreeView->setIconSize( QSize( 32, 32 ) );
-  layout->addWidget( mTreeView, 3, 0, 1, 3 );
+  layout->addWidget( mTreeView );
   connect( mTreeView, SIGNAL( clicked( QModelIndex ) ), this, SLOT( itemClicked( QModelIndex ) ) );
 
   mGalleryModel = new QStandardItemModel( this );
   mFilterProxyModel = new TreeFilterProxyModel( this );
   mFilterProxyModel->setSourceModel( mGalleryModel );
-//  mTreeView->setModel( mFilterProxyModel );
 
   mLoadingModel = new QStandardItemModel( this );
   QStandardItem* loadingItem = new QStandardItem( tr( "Loading..." ) );
   loadingItem->setEnabled( false );
   mLoadingModel->appendRow( loadingItem );
 
-  QDialogButtonBox* buttonBox = new QDialogButtonBox( this );
-  buttonBox->addButton( QDialogButtonBox::Close );
-  layout->addWidget( buttonBox, 4, 0, 1, 3 );
-  connect( buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
-  connect( buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( updateLayers() ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( updateLayers() ) );
-  connect( mIface->mapCanvas(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setCurrentLayer( QgsMapLayer* ) ) );
-
   setCursor( Qt::WaitCursor );
   mTreeView->setModel( mLoadingModel );
   mLoader = new QgsMilXLibraryLoader( this );
   connect( mLoader, SIGNAL( finished() ), this, SLOT( loaderFinished() ) );
   mLoader->start();
-
-  updateLayers();
 }
 
 QgsMilXLibrary::~QgsMilXLibrary()
@@ -165,43 +129,6 @@ QgsMilXLibrary::~QgsMilXLibrary()
       QApplication::instance()->processEvents( QEventLoop::ExcludeUserInputEvents );
     }
   }
-}
-
-void QgsMilXLibrary::autocreateLayer()
-{
-  if ( mLayersCombo->count() == 0 )
-  {
-    QgsMilXLayer* layer = new QgsMilXLayer( mIface->layerTreeView()->menuProvider() );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    mIface->layerTreeView()->setCurrentLayer( layer );
-  }
-}
-
-void QgsMilXLibrary::updateLayers()
-{
-  // Avoid update while updating
-  if ( mLayersCombo->signalsBlocked() )
-  {
-    return;
-  }
-  mLayersCombo->blockSignals( true );
-  mLayersCombo->clear();
-  int idx = 0, current = 0;
-  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
-  {
-    if ( dynamic_cast<QgsMilXLayer*>( layer ) )
-    {
-      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( updateLayers() ), Qt::UniqueConnection );
-      mLayersCombo->addItem( layer->name(), layer->id() );
-      if ( mIface->mapCanvas()->currentLayer() == layer )
-      {
-        current = idx;
-      }
-      ++idx;
-    }
-  }
-  mLayersCombo->blockSignals( false );
-  mLayersCombo->setCurrentIndex( current );
 }
 
 void QgsMilXLibrary::loaderFinished()
@@ -223,15 +150,15 @@ void QgsMilXLibrary::filterChanged( const QString &text )
   }
 }
 
-void QgsMilXLibrary::itemClicked( QModelIndex index )
+void QgsMilXLibrary::itemClicked( const QModelIndex &index )
 {
-  index = mFilterProxyModel->mapToSource( index );
+  QModelIndex sourceIndex = mFilterProxyModel->mapToSource( index );
   QList<QModelIndex> indexStack;
-  indexStack.prepend( index );
-  while ( index.parent().isValid() )
+  indexStack.prepend( sourceIndex );
+  while ( sourceIndex.parent().isValid() )
   {
-    index = index.parent();
-    indexStack.prepend( index );
+    sourceIndex = sourceIndex.parent();
+    indexStack.prepend( sourceIndex );
   }
 
   QStandardItem* item = mGalleryModel->itemFromIndex( indexStack.front() );
@@ -242,41 +169,32 @@ void QgsMilXLibrary::itemClicked( QModelIndex index )
       item = item->child( indexStack[i].row() );
     }
 
-    QString symbolXml = item->data( SymbolXmlRole ).toString();
-    QString symbolInfo = item->data( SymbolMilitaryNameRole ).toString();
-    int pointCount = item->data( SymbolPointCountRole ).toInt();
-    bool hasVariablePoints = item->data( SymbolVariablePointsRole ).toInt();
-    QPixmap pixmap = item->icon().pixmap( item->icon().actualSize( QSize( 32, 32 ) ) );
-    if ( !symbolXml.isEmpty() )
+    QgsMilxSymbolTemplate symbolTemplate;
+    symbolTemplate.symbolXml = item->data( SymbolXmlRole ).toString();
+    if ( symbolTemplate.symbolXml.isEmpty() )
     {
-      QgsMilXLayer* layer = static_cast<QgsMilXLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( mLayersCombo->currentIndex() ).toString() ) );
-      if ( !layer )
-      {
-        mIface->messageBar()->pushMessage( tr( "No MilX Layer Selected" ), "", QgsMessageBar::WARNING, 5 );
-      }
-      else if ( layer->isApproved() )
-      {
-        mIface->messageBar()->pushMessage( tr( "Non-editable MilX Layer Selected" ), tr( "Approved layers cannot be edited." ), QgsMessageBar::WARNING, 5 );
-      }
-      else
-      {
-        if ( symbolXml == "<custom>" )
-        {
-          MilXClient::SymbolDesc desc;
-          if ( !MilXClient::createSymbol( symbolXml, desc ) )
-          {
-            return;
-          }
-          symbolInfo = desc.militaryName;
-          pointCount = desc.minNumPoints;
-          hasVariablePoints = desc.hasVariablePoints;
-          pixmap = QPixmap::fromImage( desc.icon ).scaled( 32, 32, Qt::KeepAspectRatio );
-        }
-        mIface->layerTreeView()->setLayerVisible( layer, true );
-        QgsMilXCreateTool* tool = new QgsMilXCreateTool( mIface->mapCanvas(), layer, symbolXml, symbolInfo, pointCount, hasVariablePoints, pixmap );
-        mIface->mapCanvas()->setMapTool( tool );
-      }
+      return;
     }
+    else if ( symbolTemplate.symbolXml == "<custom>" )
+    {
+      MilXClient::SymbolDesc desc;
+      if ( !MilXClient::createSymbol( symbolTemplate.symbolXml, desc ) )
+      {
+        return;
+      }
+      symbolTemplate.symbolMilitaryName = desc.militaryName;
+      symbolTemplate.minNPoints = desc.minNumPoints;
+      symbolTemplate.hasVariablePoints = desc.hasVariablePoints;
+      symbolTemplate.pixmap = QPixmap::fromImage( desc.icon ).scaled( 32, 32, Qt::KeepAspectRatio );
+    }
+    else
+    {
+      symbolTemplate.symbolMilitaryName = item->data( SymbolMilitaryNameRole ).toString();
+      symbolTemplate.minNPoints = item->data( SymbolPointCountRole ).toInt();
+      symbolTemplate.hasVariablePoints = item->data( SymbolVariablePointsRole ).toInt();
+      symbolTemplate.pixmap = item->icon().pixmap( item->icon().actualSize( QSize( 32, 32 ) ) );
+    }
+    emit symbolSelected( symbolTemplate );
   }
 }
 
@@ -337,37 +255,6 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
     item->setToolTip( item->text() );
     item->setIcon( icon );
     return item;
-  }
-}
-
-void QgsMilXLibrary::setCurrentLayer( int idx )
-{
-  if ( idx >= 0 )
-  {
-    mIface->layerTreeView()->setCurrentLayer( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( idx ).toString() ) );
-  }
-}
-
-void QgsMilXLibrary::setCurrentLayer( QgsMapLayer *layer )
-{
-  int idx = layer ? mLayersCombo->findData( layer->id() ) : -1;
-  if ( idx >= 0 )
-  {
-    mLayersCombo->blockSignals( true );
-    mLayersCombo->setCurrentIndex( idx );
-    mLayersCombo->blockSignals( false );
-  }
-}
-
-void QgsMilXLibrary::addMilXLayer()
-{
-  QString layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new MilX layer:" ) );
-  if ( !layerName.isEmpty() )
-  {
-    QgsMilXLayer* layer = new QgsMilXLayer( mIface->layerTreeView()->menuProvider(), layerName );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    mLayersCombo->addItem( layer->name(), layer->id() );
-    mLayersCombo->setCurrentIndex( mLayersCombo->count() - 1 );
   }
 }
 

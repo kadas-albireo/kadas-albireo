@@ -20,35 +20,68 @@
 
 #include "qgsbottombar.h"
 #include "qgsmaptool.h"
+#include "qgsmilxlibrary.h"
 #include <QAction>
 #include <QPointer>
 
 class QgsBottomBar;
+class QComboBox;
 class QGraphicsRectItem;
 class QPushButton;
+class QWidgetAction;
 class QgisInterface;
 class QgsMilXAnnotationItem;
+class QgsMilXCreateTool;
 class QgsMilXEditTool;
 class QgsMilXItem;
 class QgsMilXLayer;
 
+class QgsMilxCreateBottomBar : public QgsBottomBar
+{
+    Q_OBJECT
+  public:
+    QgsMilxCreateBottomBar( QgsMilXCreateTool* tool, QgsMilXLibrary* library );
+
+  private:
+    QgsMilXCreateTool* mTool;
+    QToolButton* mSymbolButton;
+    QComboBox* mLayersCombo;
+    QgsMilXLibrary* mLibrary;
+
+  private slots:
+    void onClose();
+    void createLayer();
+    void repopulateLayers();
+    void setCurrentLayer( int idx );
+    void setCurrentLayer( QgsMapLayer* layer );
+    void symbolSelected( const QgsMilxSymbolTemplate& symbolTemplate );
+    void toggleLibrary( bool visible );
+};
+
 class QgsMilXCreateTool : public QgsMapTool
 {
+    Q_OBJECT
   public:
-    QgsMilXCreateTool( QgsMapCanvas* canvas, QgsMilXLayer *layer, const QString& symbolXml, const QString& symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview );
+    QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary *library );
     ~QgsMilXCreateTool();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
 
   private:
-    QString mSymbolXml;
-    QString mSymbolMilitaryName;
-    int mMinNPoints;
+    friend class QgsMilxCreateBottomBar;
+    QgsMilxCreateBottomBar* mBottomBar;
+    QgisInterface* mIface;
+    QgsMilxSymbolTemplate mSymbolTemplate;
     int mNPressedPoints;
-    bool mHasVariablePoints;
-    QPointer<QgsMilXAnnotationItem> mItem;
+    QgsMilXAnnotationItem* mItem;
     QgsMilXLayer* mLayer;
+
+    void setTargetLayer( QgsMilXLayer* layer );
+    void setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTemplate );
+
+  private slots:
+    void reset();
 };
 
 class QgsMilxEditBottomBar : public QgsBottomBar

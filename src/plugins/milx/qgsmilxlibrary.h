@@ -18,16 +18,9 @@
 #ifndef QGSMILXLIBRARY_H
 #define QGSMILXLIBRARY_H
 
-#include <QDialog>
-#include <QIcon>
-#include <QModelIndex>
+#include <QWidget>
 #include <QThread>
 
-class QgisInterface;
-class QComboBox;
-class QListWidget;
-class QListWidgetItem;
-class QgsMapLayer;
 class QModelIndex;
 class QStandardItem;
 class QStandardItemModel;
@@ -35,16 +28,27 @@ class QTreeView;
 class QgsFilterLineEdit;
 class QgsMilXLibraryLoader;
 
-class QgsMilXLibrary : public QDialog
+
+struct QgsMilxSymbolTemplate
+{
+  QString symbolXml;
+  QString symbolMilitaryName;
+  int minNPoints;
+  bool hasVariablePoints;
+  QPixmap pixmap;
+};
+
+
+class QgsMilXLibrary : public QWidget
 {
     Q_OBJECT
   public:
-    QgsMilXLibrary( QgisInterface *iface, QWidget* parent = 0 );
+    QgsMilXLibrary( QWidget* parent = 0 );
     ~QgsMilXLibrary();
-    void autocreateLayer();
 
-  public slots:
-    void updateLayers();
+  signals:
+    void symbolSelected( const QgsMilxSymbolTemplate& symbolTemplate );
+    void visibilityChanged( bool visible );
 
   private:
     class TreeFilterProxyModel;
@@ -55,23 +59,21 @@ class QgsMilXLibrary : public QDialog
     static const int SymbolPointCountRole;
     static const int SymbolVariablePointsRole;
 
-    QgisInterface* mIface;
     QgsMilXLibraryLoader* mLoader;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;
     QStandardItemModel* mGalleryModel;
     QStandardItemModel* mLoadingModel;
     TreeFilterProxyModel* mFilterProxyModel;
-    QComboBox* mLayersCombo;
+
+    void showEvent( QShowEvent * ) { emit visibilityChanged( true ); }
+    void hideEvent( QHideEvent * ) { emit visibilityChanged( false ); }
 
   private slots:
     void filterChanged( const QString& text );
-    void itemClicked( QModelIndex index );
+    void itemClicked( const QModelIndex& index );
     void loaderFinished();
     QStandardItem* addItem( QStandardItem* parent, const QString& value, const QImage &image = QImage(), bool isLeaf = false, const QString& symbolXml = QString(), const QString &symbolMilitaryName = QString(), int symbolPointCount = 0, bool symbolHasVariablePoints = false );
-    void setCurrentLayer( int idx );
-    void setCurrentLayer( QgsMapLayer* layer );
-    void addMilXLayer();
 };
 
 

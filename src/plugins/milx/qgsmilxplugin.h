@@ -42,7 +42,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
 
   private:
     QgisInterface* mQGisIface;
-    QAction* mActionMilx;
+    QAction* mActionCreateMilx;
     QAction* mActionSaveMilx;
     QAction* mActionLoadMilx;
     QAction* mActionApprovedLayer;
@@ -53,7 +53,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     QPointer<QgsMilXEditTool> mActiveEditTool;
 
   private slots:
-    void toggleMilXLibrary();
+    void createMilx();
     void saveMilx();
     void loadMilx();
     void setMilXSymbolSize( int value );

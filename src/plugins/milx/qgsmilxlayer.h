@@ -79,7 +79,7 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     void addItem( QgsMilXItem* item );
     QgsMilXItem* takeItem( int idx ) { return mItems.takeAt( idx ); }
     const QList<QgsMilXItem*>& items() const { return mItems; }
-    void setApproved( bool approved ) { mIsApproved = approved; }
+    void setApproved( bool approved ) { mIsApproved = approved; emit approvedChanged( approved ); }
     bool isApproved() const { return mIsApproved; }
     QgsLegendSymbologyList legendSymbologyItems( const QSize& iconSize ) override;
     void exportToMilxly( QDomElement &milxLayerEl, int dpi );
@@ -99,6 +99,7 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
 
   signals:
     void symbolPicked( int symbolIdx );
+    void approvedChanged( bool approved );
 
   protected:
     bool readXml( const QDomNode& layer_node ) override;

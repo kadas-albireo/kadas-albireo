@@ -23,6 +23,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 
+#include <QComboBox>
 #include <QGraphicsRectItem>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -30,25 +31,196 @@
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QToolButton>
+#include <QWidgetAction>
 
 
-QgsMilXCreateTool::QgsMilXCreateTool( QgsMapCanvas* canvas, QgsMilXLayer* layer, const QString& symbolXml, const QString &symbolMilitaryName, int nMinPoints, bool hasVariablePoints, const QPixmap& preview )
-    : QgsMapTool( canvas ), mSymbolXml( symbolXml ), mSymbolMilitaryName( symbolMilitaryName ), mMinNPoints( nMinPoints ), mNPressedPoints( 0 ), mHasVariablePoints( hasVariablePoints ), mItem( 0 ), mLayer( layer )
+QgsMilxCreateBottomBar::QgsMilxCreateBottomBar( QgsMilXCreateTool *tool, QgsMilXLibrary *library )
+    : QgsBottomBar( tool->canvas() ), mTool( tool ), mLibrary( library )
 {
-  setCursor( QCursor( preview, -0.5 * preview.width(), -0.5 * preview.height() ) );
-  // If layer is deleted or layers are changed, quit tool
-  connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
-  connect( canvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( deleteLater() ) );
+  QHBoxLayout* layout = new QHBoxLayout();
+  setLayout( layout );
+
+  layout->addWidget( new QLabel( tr( "<b>Symbol:</b>" ) ) );
+  layout->setSpacing( 2 );
+
+  mSymbolButton = new QToolButton();
+  mSymbolButton->setText( tr( "Select..." ) );
+  mSymbolButton->setIconSize( QSize( 32, 32 ) );
+  mSymbolButton->setCheckable( true );
+  mSymbolButton->setFixedHeight( 35 );
+  layout->addWidget( mSymbolButton );
+
+  layout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
+
+  layout->addWidget( new QLabel( tr( "<b>Layer:</b>" ) ) );
+
+  mLayersCombo = new QComboBox( this );
+  mLayersCombo->setFixedWidth( 100 );
+  connect( mLayersCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setCurrentLayer( int ) ) );
+  layout->addWidget( mLayersCombo );
+
+  QToolButton* newLayerButton = new QToolButton();
+  newLayerButton->setIcon( QIcon( ":/images/themes/default/mActionAdd.png" ) );
+  connect( newLayerButton, SIGNAL( clicked( bool ) ), this, SLOT( createLayer() ) );
+  layout->addWidget( newLayerButton );
+
+  layout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
+
+  QPushButton* closeButton = new QPushButton( this );
+  closeButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
+  closeButton->setIcon( QIcon( ":/images/themes/default/mIconClose.png" ) );
+  closeButton->setToolTip( tr( "Close" ) );
+  connect( closeButton, SIGNAL( clicked( bool ) ), this, SLOT( onClose() ) );
+  layout->addWidget( closeButton );
+
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
+  connect( mTool->mIface->mapCanvas(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setCurrentLayer( QgsMapLayer* ) ) );
+  connect( mSymbolButton, SIGNAL( clicked( bool ) ), this, SLOT( toggleLibrary( bool ) ) );
+  connect( library, SIGNAL( symbolSelected( QgsMilxSymbolTemplate ) ), this, SLOT( symbolSelected( QgsMilxSymbolTemplate ) ) );
+  connect( library, SIGNAL( visibilityChanged( bool ) ), mSymbolButton, SLOT( setChecked( bool ) ) );
+
+  repopulateLayers();
+
+  // Auto-create layer if necessary
+  if ( mLayersCombo->count() == 0 )
+  {
+    QgsMilXLayer* layer = new QgsMilXLayer( mTool->mIface->layerTreeView()->menuProvider() );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    setCurrentLayer( layer );
+  }
+
+  show();
+  setFixedWidth( width() );
+  updatePosition();
+  toggleLibrary( true );
+}
+
+void QgsMilxCreateBottomBar::repopulateLayers()
+{
+  // Avoid update while updating
+  if ( mLayersCombo->signalsBlocked() )
+  {
+    return;
+  }
+  mLayersCombo->blockSignals( true );
+  mLayersCombo->clear();
+  int idx = 0, current = 0;
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( dynamic_cast<QgsMilXLayer*>( layer ) )
+    {
+      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( updateLayers() ), Qt::UniqueConnection );
+      mLayersCombo->addItem( layer->name(), layer->id() );
+      if ( mTool->mIface->mapCanvas()->currentLayer() == layer )
+      {
+        current = idx;
+      }
+      ++idx;
+    }
+  }
+  mLayersCombo->setCurrentIndex( -1 );
+  mLayersCombo->blockSignals( false );
+  mLayersCombo->setCurrentIndex( current );
+}
+
+void QgsMilxCreateBottomBar::setCurrentLayer( int idx )
+{
+  if ( idx >= 0 )
+  {
+    QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( idx ).toString() ) );
+    if ( layer && mTool->mIface->layerTreeView()->currentLayer() != layer )
+    {
+      mTool->mIface->layerTreeView()->setCurrentLayer( layer );
+    }
+    mTool->setTargetLayer( layer );
+  }
+  else
+  {
+    mTool->setTargetLayer( 0 );
+  }
+}
+
+void QgsMilxCreateBottomBar::setCurrentLayer( QgsMapLayer *layer )
+{
+  int idx = layer ? mLayersCombo->findData( layer->id() ) : -1;
+  if ( idx >= 0 )
+  {
+    mLayersCombo->setCurrentIndex( idx );
+  }
+}
+
+void QgsMilxCreateBottomBar::onClose()
+{
+  mTool->deleteLater();
+}
+
+void QgsMilxCreateBottomBar::createLayer()
+{
+  QString layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new MilX layer:" ) );
+  if ( !layerName.isEmpty() )
+  {
+    QgsMilXLayer* layer = new QgsMilXLayer( mTool->mIface->layerTreeView()->menuProvider(), layerName );
+    QgsMapLayerRegistry::instance()->addMapLayer( layer );
+    setCurrentLayer( layer );
+  }
+}
+
+void QgsMilxCreateBottomBar::symbolSelected( const QgsMilxSymbolTemplate &symbolTemplate )
+{
+  mSymbolButton->setIcon( QIcon( symbolTemplate.pixmap ) );
+  mSymbolButton->setText( "" );
+  mTool->setSymbolTemplate( symbolTemplate );
+  mLibrary->hide();
+}
+
+void QgsMilxCreateBottomBar::toggleLibrary( bool visible )
+{
+  if ( visible )
+  {
+    mLibrary->resize( width(), 320 );
+    mLibrary->move( QPoint( mapToGlobal( QPoint( 0, 0 ) ).x(), mSymbolButton->mapToGlobal( QPoint( 0, -320 ) ).y() ) );
+    mLibrary->show();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QgsMilXCreateTool::QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary* library )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mItem( 0 ), mLayer( 0 )
+{
+  mBottomBar = new QgsMilxCreateBottomBar( this, library );
+  connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
 }
 
 QgsMilXCreateTool::~QgsMilXCreateTool()
 {
-  // If an item is still set, it means that positioning was not finished when the tool is disabled -> delete it
-  delete mItem.data();
+  delete mBottomBar;
+  reset();
 }
 
 void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
 {
+  if ( e->button() == Qt::RightButton && !mItem )
+  {
+    deleteLater(); // quit tool
+    return;
+  }
+  if ( mSymbolTemplate.symbolXml.isEmpty() )
+  {
+    return;
+  }
+  if ( !mLayer )
+  {
+    mIface->messageBar()->pushMessage( tr( "No MilX Layer Selected" ), "", QgsMessageBar::WARNING, 5 );
+    return;
+  }
+  if ( mLayer->isApproved() )
+  {
+    mIface->messageBar()->pushMessage( tr( "Non-editable MilX Layer Selected" ), tr( "Approved layers cannot be edited." ), QgsMessageBar::WARNING, 5 );
+    return;
+  }
   if ( e->button() == Qt::LeftButton )
   {
     if ( mItem == 0 )
@@ -62,54 +234,56 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
 
       mItem = new QgsMilXAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
-      mItem->setSymbolXml( mSymbolXml, mSymbolMilitaryName );
+      mItem->setSymbolXml( mSymbolTemplate.symbolXml, mSymbolTemplate.symbolMilitaryName );
       mItem->setSelected( true );
-      setCursor( Qt::CrossCursor );
       mNPressedPoints = 1;
       // Only actually add the point if more than the minimum number have been specified
       // The server automatically adds points up to the minimum number
-      if ( mNPressedPoints >= mMinNPoints && mHasVariablePoints )
+      if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
       {
         mItem->appendPoint( e->pos() );
       }
     }
-    else if ( mNPressedPoints < mMinNPoints || mHasVariablePoints )
+    else if ( mNPressedPoints < mSymbolTemplate.minNPoints || mSymbolTemplate.hasVariablePoints )
     {
       ++mNPressedPoints;
       // Only actually add the point if more than the minimum number have been specified
       // The server automatically adds points up to the minimum number
-      if ( mNPressedPoints >= mMinNPoints && mHasVariablePoints )
+      if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
       {
         mItem->appendPoint( e->pos() );
       }
     }
 
-    if ( mNPressedPoints >= mMinNPoints && !mHasVariablePoints )
+    if ( mNPressedPoints >= mSymbolTemplate.minNPoints && !mSymbolTemplate.hasVariablePoints )
     {
       // Max points reached, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
       mNPressedPoints = 0;
       // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( deleteLater() ) );
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
+      mItem = 0;
+      mNPressedPoints = 0;
       mLayer->triggerRepaint();
     }
   }
-  else if ( e->button() == Qt::RightButton && mItem != 0 )
+  else if ( e->button() == Qt::RightButton && mItem )
   {
-    if ( mNPressedPoints + 1 >= mMinNPoints )
+    if ( mNPressedPoints + 1 >= mSymbolTemplate.minNPoints )
     {
       // Done with N point symbol, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
       // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), this, SLOT( deleteLater() ) );
+      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
+      mItem = 0;
+      mNPressedPoints = 0;
       mLayer->triggerRepaint();
     }
-    else if ( mNPressedPoints + 1 < mMinNPoints )
+    else if ( mNPressedPoints + 1 < mSymbolTemplate.minNPoints )
     {
-      // premature stop
-      deleteLater();
+      reset();
     }
   }
 }
@@ -126,8 +300,46 @@ void QgsMilXCreateTool::keyReleaseEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
-    deleteLater(); // quit tool
+    if ( mItem )
+    {
+      reset();
+    }
+    else
+    {
+      deleteLater(); // quit tool
+    }
   }
+}
+
+void QgsMilXCreateTool::setTargetLayer( QgsMilXLayer *layer )
+{
+  if ( mLayer )
+  {
+    disconnect( layer, SIGNAL( approvedChanged( bool ) ), this, SLOT( reset() ) );
+  }
+  mLayer = layer;
+  if ( mLayer )
+  {
+    connect( layer, SIGNAL( approvedChanged( bool ) ), this, SLOT( reset() ) );
+    mIface->layerTreeView()->setLayerVisible( layer, true );
+  }
+  // Reset any drawing operation which might be in progress
+  reset();
+}
+
+void QgsMilXCreateTool::setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTemplate )
+{
+  mSymbolTemplate = symbolTemplate;
+  // Reset any drawing operation which might be in progress
+  reset();
+  setCursor( QCursor( symbolTemplate.pixmap, -0.5 * symbolTemplate.pixmap.width(), -0.5 * symbolTemplate.pixmap.height() ) );
+}
+
+void QgsMilXCreateTool::reset()
+{
+  mNPressedPoints = 0;
+  delete mItem;
+  mItem = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,7 +365,7 @@ QgsMilxEditBottomBar::QgsMilxEditBottomBar( QgsMilXEditTool *tool )
   layout->addWidget( mMoveButton );
 
   QPushButton* closeButton = new QPushButton( this );
-  closeButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
+  closeButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
   closeButton->setIcon( QIcon( ":/images/themes/default/mIconClose.png" ) );
   closeButton->setToolTip( tr( "Close" ) );
   connect( closeButton, SIGNAL( clicked( bool ) ), this, SLOT( onClose() ) );
@@ -228,7 +440,7 @@ void QgsMilxEditBottomBar::copyMoveSymbols( const QString &targetLayerId, bool m
 
 void QgsMilxEditBottomBar::updateStatus()
 {
-  mStatusLabel->setText( tr( "<b>%1 symbols(s)</b>" ).arg( mTool->mItems.size() ) );
+  mStatusLabel->setText( tr( "<b>%1 symbol(s)</b>" ).arg( mTool->mItems.size() ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

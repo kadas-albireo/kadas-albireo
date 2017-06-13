@@ -1710,6 +1710,9 @@ Sight</string>
               <height>32</height>
              </size>
             </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -2439,6 +2442,9 @@ Sight</string>
    </property>
   </action>
   <action name="mActionMilx">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/ribbon/milx_symbol.png</normaloff>:/images/ribbon/milx_symbol.png</iconset>
