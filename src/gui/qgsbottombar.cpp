@@ -22,7 +22,8 @@ QgsBottomBar::QgsBottomBar( QgsMapCanvas* canvas, const QString& color )
 {
   mCanvas->installEventFilter( this );
 
-  setStyleSheet( QString( "QFrame { background-color: %1; }" ).arg( color ) );
+  setObjectName( "QgsBottomBar" );
+  setStyleSheet( QString( "QFrame#QgsBottomBar { background-color: %1; }" ).arg( color ) );
   setCursor( Qt::ArrowCursor );
 }
 
