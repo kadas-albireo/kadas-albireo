@@ -21,7 +21,7 @@
 
 class QgsMapCanvas;
 
-class APP_EXPORT QgsBottomBar : public QFrame
+class GUI_EXPORT QgsBottomBar : public QFrame
 {
   public:
     QgsBottomBar( QgsMapCanvas* canvas, const QString& color = "orange" );
