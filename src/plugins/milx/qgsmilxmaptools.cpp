@@ -111,7 +111,7 @@ void QgsMilxCreateBottomBar::repopulateLayers()
   {
     if ( dynamic_cast<QgsMilXLayer*>( layer ) )
     {
-      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( updateLayers() ), Qt::UniqueConnection );
+      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( repopulateLayers() ), Qt::UniqueConnection );
       mLayersCombo->addItem( layer->name(), layer->id() );
       if ( mTool->mIface->mapCanvas()->currentLayer() == layer )
       {
