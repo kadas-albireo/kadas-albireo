@@ -396,6 +396,7 @@ void QgsMilxEditBottomBar::repopulateLayers()
   {
     if ( layer != mTool->mLayer && qobject_cast<QgsMilXLayer*>( layer ) )
     {
+      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( repopulateLayers() ), Qt::UniqueConnection );
       mCopyMenu->addAction( layer->name(), this, SLOT( copyToLayer() ) )->setData( layer->id() );
       mMoveMenu->addAction( layer->name(), this, SLOT( moveToLayer() ) )->setData( layer->id() );
     }
