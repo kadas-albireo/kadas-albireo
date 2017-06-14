@@ -4653,9 +4653,31 @@ bool QgisApp::loadComposersFromProject( const QDomDocument& doc )
   QDomNodeList composerNodes = doc.elementsByTagName( "Composer" );
   for ( int i = 0; i < composerNodes.size(); ++i )
   {
+    QDomElement composerElement = composerNodes.at( i ).toElement();
+    QString path = composerElement.attribute( "template" );
+    if ( !path.isEmpty() )
+    {
+      QFileInfo finfo( path );
+      if ( !finfo.isAbsolute() )
+      {
+        path = QFileInfo( QgsProject::instance()->fileName() ).dir().absoluteFilePath( path );
+      }
+      QFile file( path );
+      if ( file.open( QIODevice::ReadOnly ) )
+      {
+        QDomDocument qptdoc;
+        qptdoc.setContent( &file );
+        QDomNodeList composerNodeList = qptdoc.elementsByTagName( "Composer" );
+        if ( !composerNodeList.isEmpty() )
+        {
+          composerElement = composerNodeList.at( 0 ).toElement();
+        }
+      }
+    }
+
     ++mLastComposerId;
     QgsComposer* composer = new QgsComposer( this, tr( "Composer %1" ).arg( mLastComposerId ) );
-    composer->readXML( composerNodes.at( i ).toElement(), doc );
+    composer->readXML( composerElement, doc );
     mPrintComposers.insert( composer );
     printComposersMenu()->addAction( composer->windowAction() );
 #ifndef Q_OS_MACX
@@ -4668,7 +4690,7 @@ bool QgisApp::loadComposersFromProject( const QDomDocument& doc )
     {
       composerView->updateRulers();
     }
-    if ( composerNodes.at( i ).toElement().attribute( "visible", "1" ).toInt() < 1 )
+    if ( composerElement.attribute( "visible", "1" ).toInt() < 1 )
     {
       composer->close();
     }
