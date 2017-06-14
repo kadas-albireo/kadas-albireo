@@ -192,7 +192,7 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
      * @return pointer to composer's view
      * @note new composer window will be shown and activated
      */
-    QgsComposerView* createNewComposer( QString title = QString( "" ) ) override;
+    QgsComposerView* createNewComposer( QString title = QString( "" ), bool show = true ) override;
 
     // ### QGIS 3: return QgsComposer*, not QgsComposerView*
     /** Duplicate an existing parent composer from composer view

@@ -4550,7 +4550,7 @@ QString QgisApp::uniqueComposerTitle( QWidget* parent, bool acceptEmpty, const Q
   return newTitle;
 }
 
-QgsComposer* QgisApp::createNewComposer( QString title )
+QgsComposer* QgisApp::createNewComposer( QString title, bool show )
 {
   //ask user about name
   mLastComposerId++;
@@ -4565,7 +4565,10 @@ QgsComposer* QgisApp::createNewComposer( QString title )
   mPrintComposers.insert( newComposerObject );
   //and place action into print composers menu
   printComposersMenu()->addAction( newComposerObject->windowAction() );
-  newComposerObject->open();
+  if ( show )
+  {
+    newComposerObject->open();
+  }
   emit composerAdded( newComposerObject->view() );
   connect( newComposerObject, SIGNAL( composerAdded( QgsComposerView* ) ), this, SIGNAL( composerAdded( QgsComposerView* ) ) );
   connect( newComposerObject, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ), this, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ) );

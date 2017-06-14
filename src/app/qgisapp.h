@@ -348,7 +348,7 @@ class APP_EXPORT QgisApp : public QMainWindow
      */
     QString uniqueComposerTitle( QWidget *parent, bool acceptEmpty, const QString& currentTitle = QString( "" ) );
     /**Creates a new composer and returns a pointer to it*/
-    QgsComposer* createNewComposer( QString title = QString( "" ) );
+    QgsComposer* createNewComposer( QString title = QString( "" ) , bool show = false );
     /**Deletes a composer and removes entry from Set*/
     void deleteComposer( QgsComposer *c );
     /** Duplicates a composer and adds it to Set

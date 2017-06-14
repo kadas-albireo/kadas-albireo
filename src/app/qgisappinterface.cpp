@@ -347,10 +347,10 @@ QList<QgsComposerView*> QgisAppInterface::activeComposers()
   return composerViewList;
 }
 
-QgsComposerView* QgisAppInterface::createNewComposer( QString title )
+QgsComposerView* QgisAppInterface::createNewComposer( QString title , bool show )
 {
   QgsComposer* composerObj = 0;
-  composerObj = qgis->createNewComposer( title );
+  composerObj = qgis->createNewComposer( title, show );
   if ( composerObj )
   {
     return composerObj->view();

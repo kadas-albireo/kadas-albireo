@@ -178,7 +178,7 @@ class QgisInterface : QObject
      * @return pointer to composer's view
      * @note new composer window will be shown and activated
      */
-    virtual QgsComposerView* createNewComposer( QString title = QString( "" ) ) = 0;
+    virtual QgsComposerView* createNewComposer( QString title = QString( "" ), bool show = true ) = 0;
 
     /** Duplicate an existing parent composer from composer view
      * @param composerView pointer to existing composer view
