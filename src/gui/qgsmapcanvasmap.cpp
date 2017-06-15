@@ -23,7 +23,7 @@
 #include <QPainter>
 
 QgsMapCanvasMap::QgsMapCanvasMap( QgsMapCanvas* canvas )
-    : QgsMapCanvasItem( canvas )
+    : QgsMapCanvasItem( canvas ), mPanPreviewEnabled( false )
 {
   setZValue( -10 );
 }
@@ -47,19 +47,24 @@ void QgsMapCanvasMap::setContent( const QImage& image, const QgsRectangle& rect 
 
 void QgsMapCanvasMap::addPreviewImage( const QImage& image, const QgsRectangle& rect )
 {
-  mPreviewImages.append( qMakePair( image, rect ) );
+  if ( !mPanPreviewEnabled )
+  {
+    mPanPreviewEnabled = true;
+    prepareGeometryChange();
+  }
+  mPreviewImages.insert( rect, image );
   update();
 }
 
 void QgsMapCanvasMap::paint( QPainter* painter )
 {
   //draw preview images first
-  QList< QPair< QImage, QgsRectangle > >::const_iterator previewIt = mPreviewImages.constBegin();
+  QMap< QgsRectangle, QImage >::const_iterator previewIt = mPreviewImages.constBegin();
   for ( ; previewIt != mPreviewImages.constEnd(); ++previewIt )
   {
-    QPointF ul = toCanvasCoordinates( QgsPoint( previewIt->second.xMinimum(), previewIt->second.yMaximum() ) );
-    QPointF lr = toCanvasCoordinates( QgsPoint( previewIt->second.xMaximum(), previewIt->second.yMinimum() ) );
-    painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt->first, QRect( 0, 0, previewIt->first.width(), previewIt->first.height() ) );
+    QPointF ul = toCanvasCoordinates( QgsPoint( previewIt.key().xMinimum(), previewIt.key().yMaximum() ) );
+    QPointF lr = toCanvasCoordinates( QgsPoint( previewIt.key().xMaximum(), previewIt.key().yMinimum() ) );
+    painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt.value(), QRect( 0, 0, previewIt.value().width(), previewIt.value().height() ) );
   }
 
   int w = qRound( boundingRect().width() ) - 2, h = qRound( boundingRect().height() ) - 2; // setRect() makes the size +2 :-(
@@ -95,4 +100,19 @@ void QgsMapCanvasMap::paint( QPainter* painter )
 QPaintDevice& QgsMapCanvasMap::paintDevice()
 {
   return mImage;
+}
+
+QRectF QgsMapCanvasMap::boundingRect() const
+{
+  if ( 0 /*mPanPreviewEnabled*/ )
+  {
+    double width = mItemSize.width();
+    double height = mItemSize.height();
+
+    return QRectF( -width * 1.5, -height * 1.5, 3 * width, 3 * height );
+  }
+  else
+  {
+    return QgsMapCanvasItem::boundingRect();
+  }
 }

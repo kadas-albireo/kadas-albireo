@@ -123,6 +123,9 @@ class CORE_EXPORT QgsRectangle
       @return True if rectangles are equal
     */
     bool operator==( const QgsRectangle &r1 ) const;
+
+    bool operator<( const QgsRectangle& other ) const;
+
     /*! Comparison operator
     @return False if rectangles are equal
      */
@@ -217,5 +220,6 @@ inline std::ostream& operator << ( std::ostream& os, const QgsRectangle &r )
 {
   return os << r.toString().toLocal8Bit().data();
 }
+
 
 #endif // QGSRECTANGLE_H

@@ -256,6 +256,9 @@ QgsMapCanvas::QgsMapCanvas( QWidget * parent, const char *name )
   connect( &mMapUpdateTimer, SIGNAL( timeout() ), SLOT( mapUpdateTimeout() ) );
   mMapUpdateTimer.setInterval( 250 );
 
+  connect( &mPanPreviewUpdateTimer, SIGNAL( timeout() ), this, SLOT( panPreviewUpdateTimeout() ) );
+  mPanPreviewUpdateTimer.setInterval( 250 );
+
 #ifdef Q_OS_WIN
   // Enable touch event on Windows.
   // Qt on Windows needs to be told it can take touch events or else it ignores them.
@@ -803,6 +806,26 @@ void QgsMapCanvas::mapUpdateTimeout()
   {
     const QImage& img = mJob->renderedImage();
     mMap->setContent( img, imageRect( img, mJob->mapSettings() ) );
+  }
+}
+
+void QgsMapCanvas::panPreviewUpdateTimeout()
+{
+  if ( !mMap )
+  {
+    return;
+  }
+
+  QList< QgsMapRendererQImageJob* >::iterator jobIt = mPreviewJobs.begin();
+  for ( ; jobIt != mPreviewJobs.end(); ++jobIt )
+  {
+    QgsMapRendererQImageJob* job = ( *jobIt );
+    if ( !job )
+    {
+      continue;
+    }
+
+    mMap->addPreviewImage( job->renderedImage(), job->mapSettings().extent() );
   }
 }
 
@@ -2198,10 +2221,12 @@ void QgsMapCanvas::startPreviewJobs()
       job->start();
     }
   }
+  mPanPreviewUpdateTimer.start();
 }
 
 void QgsMapCanvas::stopPreviewJobs()
 {
+  mPanPreviewUpdateTimer.stop();
   QList< QgsMapRendererQImageJob* >::iterator it = mPreviewJobs.begin();
   for ( ; it != mPreviewJobs.end(); ++it )
   {

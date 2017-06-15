@@ -327,6 +327,28 @@ bool QgsRectangle::operator==( const QgsRectangle & r1 ) const
          r1.yMinimum() == yMinimum();
 }
 
+bool QgsRectangle::operator<( const QgsRectangle& other ) const
+{
+  if ( !qgsDoubleNear( yMinimum(), other.yMinimum() ) )
+  {
+    return yMinimum() < other.yMinimum();
+  }
+  if ( !qgsDoubleNear( xMinimum(), other.xMinimum() ) )
+  {
+    return xMinimum() < other.xMinimum();
+  }
+
+  if ( !qgsDoubleNear( width(), other.width() ) )
+  {
+    return width() < other.width();
+  }
+  if ( !qgsDoubleNear( height(), other.height() ) )
+  {
+    return height() < other.height();
+  }
+
+  return false;
+}
 
 bool QgsRectangle::operator!=( const QgsRectangle & r1 ) const
 {
