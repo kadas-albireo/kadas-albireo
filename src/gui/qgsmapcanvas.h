@@ -716,6 +716,7 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
 
     void startPreviewJobs();
     void stopPreviewJobs();
+    static QStringList filterPreviewLayers( const QStringList& layers );
 
 }; // class QgsMapCanvas
 

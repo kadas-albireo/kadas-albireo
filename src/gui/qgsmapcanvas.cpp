@@ -2163,6 +2163,9 @@ void QgsMapCanvas::startPreviewJobs()
 
   QgsRectangle mapRect = mSettings.visibleExtent();
 
+  //Not all layers are intended to be included in pan-preview
+  QStringList previewLayers = filterPreviewLayers( mSettings.layers() );
+
   for ( int j = 0; j < 3; ++j )
   {
     for ( int i = 0; i < 3; ++i )
@@ -2173,8 +2176,11 @@ void QgsMapCanvas::startPreviewJobs()
       }
 
 
-      //copy settings, only update extent
+      //copy settings
       QgsMapSettings jobSettings = mSettings;
+      jobSettings.setLayers( previewLayers );
+
+
 
       double dx = ( i - 1 ) * mapRect.width();
       double dy = ( 1 - j ) * mapRect.height();
@@ -2206,4 +2212,35 @@ void QgsMapCanvas::stopPreviewJobs()
     delete( *it );
   }
   mPreviewJobs.clear();
+}
+
+QStringList QgsMapCanvas::filterPreviewLayers( const QStringList& layers )
+{
+  QStringList previewLayers;
+
+  QStringList::const_iterator it = layers.constBegin();
+  for ( ; it != layers.constEnd(); ++it )
+  {
+    QgsRasterLayer* rasterLayer = dynamic_cast<QgsRasterLayer*>( QgsMapLayerRegistry::instance()->mapLayer( *it ) );
+    if ( !rasterLayer )
+    {
+      continue;
+    }
+
+    QgsRasterDataProvider* rasterProvider = rasterLayer->dataProvider();
+    if ( !rasterProvider )
+    {
+      continue;
+    }
+
+    QList< QVariant > resolutionList = rasterProvider->property( "resolutions" ).toList();
+    if ( rasterProvider->name().compare( "wms", Qt::CaseInsensitive ) == 0 && resolutionList.size() < 1 )
+    {
+      continue; //no preview for normal wms
+    }
+
+    previewLayers.append( *it );
+  }
+
+  return previewLayers;
 }
