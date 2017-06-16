@@ -260,6 +260,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Max points reached, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
+      mItem->setSelected( false );
       mNPressedPoints = 0;
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
@@ -275,6 +276,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Done with N point symbol, stop
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
+      mItem->setSelected( false );
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
@@ -476,6 +478,7 @@ QgsMilXEditTool::~QgsMilXEditTool()
     foreach ( QgsMilXAnnotationItem* item, mItems )
     {
       mLayer->addItem( item->toMilxItem() );
+      item->setSelected( false );
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), item, SLOT( deleteLater() ) );
     }
     // Delay delete until after refresh, to avoid flickering
@@ -562,6 +565,7 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
       // CTRL+Clicked a selected item, deselect it
       mItems.removeAll( item );
       mLayer->addItem( item->toMilxItem() );
+      item->setSelected( false );
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), item, SLOT( deleteLater() ) );
       mLayer->triggerRepaint();
       updateRect();
@@ -584,6 +588,7 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
           foreach ( QgsMilXAnnotationItem* item, mItems )
           {
             mLayer->addItem( item->toMilxItem() );
+            item->setSelected( false );
             connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), item, SLOT( deleteLater() ) );
           }
           mItems.clear();
@@ -594,8 +599,12 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
       }
       else if ( e->modifiers() != Qt::ControlModifier )
       {
-        // Didn't hit an item, CTRL was not pressed => quit
-        deleteLater(); // quit tool
+        QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
+        if ( !item || !mItems.contains( item ) )
+        {
+          // Didn't hit an item, CTRL was not pressed => quit
+          deleteLater(); // quit tool
+        }
       }
     }
   }
@@ -620,6 +629,16 @@ void QgsMilXEditTool::keyReleaseEvent( QKeyEvent *e )
     deleteLater(); // quit tool
   }
 }
+
+void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent *e )
+{
+  QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
+  if ( item && mItems.contains( item ) )
+  {
+    item->showItemEditor();
+  }
+}
+
 
 void QgsMilXEditTool::removeItemFromList()
 {

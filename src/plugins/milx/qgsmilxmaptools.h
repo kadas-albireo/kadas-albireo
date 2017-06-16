@@ -124,6 +124,7 @@ class QgsMilXEditTool : public QgsMapTool
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
+    void canvasDoubleClickEvent( QMouseEvent *e ) override;
 
   signals:
     void itemsChanged();
