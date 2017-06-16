@@ -16,8 +16,9 @@
 #define QGSAFSFEATUREITERATOR_H
 
 #include "qgsfeatureiterator.h"
+#include "qgsafsshareddata.h"
+#include <QSharedPointer>
 
-class QgsAfsProvider;
 class QgsSpatialIndex;
 
 
@@ -26,15 +27,12 @@ class QgsAfsFeatureSource : public QObject, public QgsAbstractFeatureSource
     Q_OBJECT
 
   public:
-    QgsAfsFeatureSource( const QgsAfsProvider* provider );
-    QgsFeatureIterator getFeatures( const QgsFeatureRequest& request ) override;
-    QgsAfsProvider* provider() const;
-
-  signals:
-    void extentRequested( const QgsRectangle & );
+    QgsAfsFeatureSource( const QSharedPointer<QgsAfsSharedData> &sharedData );
+    QgsFeatureIterator getFeatures( const QgsFeatureRequest &request ) override;
+    QgsAfsSharedData *sharedData() const;
 
   protected:
-    QgsAfsProvider* mProvider;
+    QSharedPointer<QgsAfsSharedData> mSharedData;
 
     friend class QgsAfsFeatureIterator;
 };

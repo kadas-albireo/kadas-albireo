@@ -14,14 +14,12 @@
  ***************************************************************************/
 #include "qgsafsfeatureiterator.h"
 #include "qgsspatialindex.h"
-#include "qgsafsprovider.h"
+#include "qgsafsshareddata.h"
 #include "qgsmessagelog.h"
 #include "geometry/qgsgeometry.h"
 
-
-QgsAfsFeatureSource::QgsAfsFeatureSource( const QgsAfsProvider* provider )
-// FIXME: ugly const_cast...
-    : mProvider( const_cast<QgsAfsProvider*>( provider ) )
+QgsAfsFeatureSource::QgsAfsFeatureSource( const QSharedPointer<QgsAfsSharedData> &sharedData )
+    : mSharedData( sharedData )
 {
 }
 
@@ -30,17 +28,17 @@ QgsFeatureIterator QgsAfsFeatureSource::getFeatures( const QgsFeatureRequest& re
   return QgsFeatureIterator( new QgsAfsFeatureIterator( this, false, request ) );
 }
 
-QgsAfsProvider* QgsAfsFeatureSource::provider() const
+QgsAfsSharedData *QgsAfsFeatureSource::sharedData() const
 {
-  return mProvider;
+  return mSharedData.data();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsAfsFeatureIterator::QgsAfsFeatureIterator( QgsAfsFeatureSource* source, bool ownSource, const QgsFeatureRequest& request )
     : QgsAbstractFeatureIteratorFromSource<QgsAfsFeatureSource>( source, ownSource, request )
+    , mFeatureIterator( 0 )
 {
-  mFeatureIterator = 0;
 }
 
 QgsAfsFeatureIterator::~QgsAfsFeatureIterator()
@@ -53,7 +51,7 @@ bool QgsAfsFeatureIterator::fetchFeature( QgsFeature& f )
   if ( mClosed )
     return false;
 
-  if ( mFeatureIterator >= mSource->provider()->featureCount() )
+  if ( mFeatureIterator >= mSource->sharedData()->featureCount() )
     return false;
 
   bool fetchGeometries = ( mRequest.flags() & QgsFeatureRequest::NoGeometry ) == 0;
@@ -62,22 +60,22 @@ bool QgsAfsFeatureIterator::fetchFeature( QgsFeature& f )
     fetchAttribures = mRequest.subsetOfAttributes();
   else
   {
-    for ( int i = 0; i < mSource->provider()->fields().size(); ++i )
+    for ( int i = 0; i < mSource->sharedData()->fields().size(); ++i )
       fetchAttribures.append( i );
   }
 
   if ( mRequest.filterType() == QgsFeatureRequest::FilterFid )
   {
-    return mSource->provider()->getFeature( mRequest.filterFid(), f, fetchGeometries, fetchAttribures );
+    return mSource->sharedData()->getFeature( mRequest.filterFid(), f, fetchGeometries, fetchAttribures );
   }
   else
   {
-    QgsRectangle filterRect = mSource->provider()->extent();
+    QgsRectangle filterRect = mSource->sharedData()->extent();
     if ( mRequest.filterType() == QgsFeatureRequest::FilterRect )
       filterRect = filterRect.intersect( &mRequest.filterRect() );
-    while ( mFeatureIterator < mSource->provider()->featureCount() )
+    while ( mFeatureIterator < mSource->sharedData()->featureCount() )
     {
-      bool success = mSource->provider()->getFeature( mFeatureIterator, f, fetchGeometries, fetchAttribures, filterRect );
+      bool success = mSource->sharedData()->getFeature( mFeatureIterator, f, fetchGeometries, fetchAttribures, filterRect );
       ++mFeatureIterator;
       if ( !success )
         continue;
