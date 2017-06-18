@@ -67,7 +67,7 @@ void QgsMapCanvasMap::paint( QPainter* painter )
     painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt.value(), QRect( 0, 0, previewIt.value().width(), previewIt.value().height() ) );
   }
 
-  int w = qRound( boundingRect().width() ) - 2, h = qRound( boundingRect().height() ) - 2; // setRect() makes the size +2 :-(
+  int w = mImage.width(), h = mImage.height(); // setRect() makes the size +2 :-(
   if ( mImage.size() != QSize( w, h ) )
   {
     QgsDebugMsg( QString( "map paint DIFFERENT SIZE: img %1,%2  item %3,%4" ).arg( mImage.width() ).arg( mImage.height() ).arg( w ).arg( h ) );
@@ -104,7 +104,7 @@ QPaintDevice& QgsMapCanvasMap::paintDevice()
 
 QRectF QgsMapCanvasMap::boundingRect() const
 {
-  if ( 0 /*mPanPreviewEnabled*/ )
+  if ( mPanPreviewEnabled )
   {
     double width = mItemSize.width();
     double height = mItemSize.height();
