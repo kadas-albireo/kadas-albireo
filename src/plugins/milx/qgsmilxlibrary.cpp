@@ -152,6 +152,7 @@ void QgsMilXLibrary::filterChanged( const QString &text )
 
 void QgsMilXLibrary::itemClicked( const QModelIndex &index )
 {
+  hide();
   QModelIndex sourceIndex = mFilterProxyModel->mapToSource( index );
   QList<QModelIndex> indexStack;
   indexStack.prepend( sourceIndex );

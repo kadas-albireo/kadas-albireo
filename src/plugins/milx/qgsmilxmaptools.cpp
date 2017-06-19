@@ -172,7 +172,6 @@ void QgsMilxCreateBottomBar::symbolSelected( const QgsMilxSymbolTemplate &symbol
   mSymbolButton->setIcon( QIcon( symbolTemplate.pixmap ) );
   mSymbolButton->setText( "" );
   mTool->setSymbolTemplate( symbolTemplate );
-  mLibrary->hide();
 }
 
 void QgsMilxCreateBottomBar::toggleLibrary( bool visible )
