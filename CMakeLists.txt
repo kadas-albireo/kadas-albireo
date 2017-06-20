@@ -32,10 +32,6 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # set path to additional CMake modules
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-IF(MINGW)
-  SET(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
-ENDIF(MINGW)
-
 # in generated makefiles use relative paths so the project dir is moveable
 # Note commented out since it cause problems but it would be nice to resolve these and enable
 #
@@ -331,14 +327,8 @@ ENDIF (SUPPRESS_QT_WARNINGS)
 # (Keeps code compatible with Qt/Mac/64bit)
 ADD_DEFINITIONS(-DQT_NO_CAST_TO_ASCII)
 
-IF(ENABLE_QT5)
-  SET(QT_LRELEASE_NAMES lrelease-qt5 lrelease)
-ELSE(ENABLE_QT5)
-  SET(QT_LRELEASE_NAMES lrelease)
-ENDIF(ENABLE_QT5)
-
 FIND_PROGRAM(QT_LRELEASE_EXECUTABLE
-    NAMES ${QT_LRELEASE_NAMES}
+    NAMES lrelease
     PATHS ${QT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
@@ -350,6 +340,7 @@ FIND_PROGRAM(QT_LRELEASE_EXECUTABLE
 #   or definitely Apple LLVM 5.0 (based on LLVM 3.3svn, in Xcode 5+):
 #   https://gist.github.com/yamaya/2924292
 
+IF (NOT USE_CXX_11)
 IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
   EXECUTE_PROCESS(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
   IF (GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
@@ -364,6 +355,7 @@ ELSEIF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   ENDIF()
 ELSE()
   SET(USE_CXX_11 FALSE)
+ENDIF()
 ENDIF()
 
 #allow override keyword if available
