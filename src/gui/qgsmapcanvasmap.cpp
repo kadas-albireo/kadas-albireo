@@ -58,7 +58,6 @@ void QgsMapCanvasMap::addPreviewImage( const QImage& image, const QgsRectangle& 
 
 void QgsMapCanvasMap::paint( QPainter* painter )
 {
-
   int w = mImage.width(), h = mImage.height(); // setRect() makes the size +2 :-(
   if ( mImage.size() != QSize( w, h ) )
   {
@@ -67,62 +66,22 @@ void QgsMapCanvasMap::paint( QPainter* painter )
     // the renderer has completed
   }
 
-  //draw preview images
+  /*Offset between 0/0 and mRect.xMinimum/mRect.yMinimum.
+  We need to consider the offset, because mRect is not updated yet and there might be an offset*/
+  QgsPoint pt = toMapCoordinates( QPoint( 0, 0 ) );
+  double offsetX = pt.x() - mRect.xMinimum();
+  double offsetY = pt.y() - mRect.yMaximum();
+
+  //draw preview images first
   QMap< QgsRectangle, QImage >::const_iterator previewIt = mPreviewImages.constBegin();
   for ( ; previewIt != mPreviewImages.constEnd(); ++previewIt )
   {
-
-    int imagePointX = 0;
-    int imagePointY = 0;
-
-    if ( !qgsDoubleNear( previewIt.key().xMinimum(), mRect.xMinimum(), mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel() ) )
-    {
-      if ( previewIt.key().xMinimum() < mRect.xMinimum() )
-      {
-        imagePointX = -w;
-      }
-      else
-      {
-        imagePointX = w;
-      }
-    }
-
-    if ( !qgsDoubleNear( previewIt.key().yMaximum(), mRect.yMaximum(), mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel() ) )
-    {
-      if ( previewIt.key().yMaximum() > mRect.yMaximum() )
-      {
-        imagePointY = -h;
-      }
-      else
-      {
-        imagePointY = h;
-      }
-    }
-
-    painter->drawImage( QRect( imagePointX, imagePointY, w, h ), previewIt.value() );
-
+    QPointF ul = toCanvasCoordinates( QgsPoint( previewIt.key().xMinimum() + offsetX, previewIt.key().yMaximum() + offsetY ) );
+    QPointF lr = toCanvasCoordinates( QgsPoint( previewIt.key().xMaximum() + offsetX, previewIt.key().yMinimum() + offsetY ) );
+    painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt.value(), QRect( 0, 0, previewIt.value().width(), previewIt.value().height() ) );
   }
 
   painter->drawImage( QRect( 0, 0, w, h ), mImage );
-
-  // For debugging:
-#if 0
-  QRectF br = boundingRect();
-  QPointF c = br.center();
-  double rad = std::max( br.width(), br.height() ) / 10;
-  painter->drawRoundedRect( br, rad, rad );
-  painter->drawLine( QLineF( 0, 0, br.width(), br.height() ) );
-  painter->drawLine( QLineF( br.width(), 0, 0, br.height() ) );
-
-  double nw = br.width() * 0.5; double nh = br.height() * 0.5;
-  br = QRectF( c - QPointF( nw / 2, nh / 2 ), QSize( nw, nh ) );
-  painter->drawRoundedRect( br, rad, rad );
-
-  nw = br.width() * 0.5; nh = br.height() * 0.5;
-  br = QRectF( c - QPointF( nw / 2, nh / 2 ), QSize( nw, nh ) );
-  painter->drawRoundedRect( br, rad, rad );
-#endif
-
 }
 
 QPaintDevice& QgsMapCanvasMap::paintDevice()
