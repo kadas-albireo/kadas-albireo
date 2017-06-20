@@ -58,14 +58,6 @@ void QgsMapCanvasMap::addPreviewImage( const QImage& image, const QgsRectangle& 
 
 void QgsMapCanvasMap::paint( QPainter* painter )
 {
-  //draw preview images first
-  QMap< QgsRectangle, QImage >::const_iterator previewIt = mPreviewImages.constBegin();
-  for ( ; previewIt != mPreviewImages.constEnd(); ++previewIt )
-  {
-    QPointF ul = toCanvasCoordinates( QgsPoint( previewIt.key().xMinimum(), previewIt.key().yMaximum() ) );
-    QPointF lr = toCanvasCoordinates( QgsPoint( previewIt.key().xMaximum(), previewIt.key().yMinimum() ) );
-    painter->drawImage( QRectF( ul.x(), ul.y(), lr.x() - ul.x(), lr.y() - ul.y() ), previewIt.value(), QRect( 0, 0, previewIt.value().width(), previewIt.value().height() ) );
-  }
 
   int w = mImage.width(), h = mImage.height(); // setRect() makes the size +2 :-(
   if ( mImage.size() != QSize( w, h ) )
@@ -73,6 +65,42 @@ void QgsMapCanvasMap::paint( QPainter* painter )
     QgsDebugMsg( QString( "map paint DIFFERENT SIZE: img %1,%2  item %3,%4" ).arg( mImage.width() ).arg( mImage.height() ).arg( w ).arg( h ) );
     // This happens on zoom events when ::paint is called before
     // the renderer has completed
+  }
+
+  //draw preview images
+  QMap< QgsRectangle, QImage >::const_iterator previewIt = mPreviewImages.constBegin();
+  for ( ; previewIt != mPreviewImages.constEnd(); ++previewIt )
+  {
+
+    int imagePointX = 0;
+    int imagePointY = 0;
+
+    if ( !qgsDoubleNear( previewIt.key().xMinimum(), mRect.xMinimum(), mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel() ) )
+    {
+      if ( previewIt.key().xMinimum() < mRect.xMinimum() )
+      {
+        imagePointX = -w;
+      }
+      else
+      {
+        imagePointX = w;
+      }
+    }
+
+    if ( !qgsDoubleNear( previewIt.key().yMaximum(), mRect.yMaximum(), mMapCanvas->getCoordinateTransform()->mapUnitsPerPixel() ) )
+    {
+      if ( previewIt.key().yMaximum() > mRect.yMaximum() )
+      {
+        imagePointY = -h;
+      }
+      else
+      {
+        imagePointY = h;
+      }
+    }
+
+    painter->drawImage( QRect( imagePointX, imagePointY, w, h ), previewIt.value() );
+
   }
 
   painter->drawImage( QRect( 0, 0, w, h ), mImage );
@@ -109,7 +137,7 @@ QRectF QgsMapCanvasMap::boundingRect() const
     double width = mItemSize.width();
     double height = mItemSize.height();
 
-    return QRectF( -width * 1.5, -height * 1.5, 3 * width, 3 * height );
+    return QRectF( -width, -height, 3 * width, 3 * height );
   }
   else
   {
