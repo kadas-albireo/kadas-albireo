@@ -15,8 +15,8 @@
 
 #include "qgsstatestack.h"
 
-QgsStateStack::QgsStateStack(State *initialState, QObject* parent )
-    : mState(initialState), QObject( parent )
+QgsStateStack::QgsStateStack( State *initialState, QObject* parent )
+    : QObject( parent ), mState( initialState )
 {}
 
 QgsStateStack::~QgsStateStack()
@@ -25,7 +25,7 @@ QgsStateStack::~QgsStateStack()
   qDeleteAll( mRedoStack );
 }
 
-void QgsStateStack::clear(State* cleanState)
+void QgsStateStack::clear( State* cleanState )
 {
   qDeleteAll( mUndoStack );
   mUndoStack.clear();
@@ -33,7 +33,7 @@ void QgsStateStack::clear(State* cleanState)
   mRedoStack.clear();
   emit canUndoChanged( false );
   emit canRedoChanged( false );
-  mState = QSharedPointer<State>(cleanState);
+  mState = QSharedPointer<State>( cleanState );
   emit stateChanged();
 }
 
@@ -71,7 +71,7 @@ void QgsStateStack::redo()
 
 void QgsStateStack::updateState( State *newState, bool mergeable )
 {
-  push(new StateChangeCommand( this, newState, mergeable ));
+  push( new StateChangeCommand( this, newState, mergeable ) );
 }
 
 void QgsStateStack::push( StateChangeCommand* command )
