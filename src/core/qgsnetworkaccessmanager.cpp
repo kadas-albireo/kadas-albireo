@@ -479,10 +479,18 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
   if ( !newcache )
     newcache = new QgsNetworkDiskCache( this );
 
-  QString cacheDirectory = settings.value( "cache/directory", QgsApplication::qgisSettingsDirPath() + "cache" ).toString();
+  QString defaultCacheDir = QgsApplication::qgisSettingsDirPath() + "cache";
+#if Q_OS_WIN
+  QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
+  if ( !localappdata.isEmpty() )
+  {
+    defaultCacheDir = QDir( localAppData ).absoluteFilePath( "qgis_" + QGis::RELEASE_NAME + "_cache" );
+  }
+#endif
+  QString cacheDirectory = settings.value( "cache/directory", defaultCacheDir ).toString();
   if ( cacheDirectory.isEmpty() )
   {
-    cacheDirectory = QgsApplication::qgisSettingsDirPath() + "cache";
+    cacheDirectory = defaultCacheDir;
   }
   qint64 cacheSize = settings.value( "cache/size", 50 * 1024 * 1024 ).toULongLong();
   QgsDebugMsg( QString( "setCacheDirectory: %1" ).arg( cacheDirectory ) );
