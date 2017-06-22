@@ -380,15 +380,9 @@ void myMessageOutput( QtMsgType type, const char *msg )
 }
 
 #ifdef _MSC_VER
-#undef APP_EXPORT
-#define APP_EXPORT __declspec(dllexport)
-#endif
-
-#if defined(Q_OS_WIN)
 // On Windows this main is included in qgis_app and called from mainwin.cpp
-APP_EXPORT
+__declspec(dllexport)
 #endif
-
 int main( int argc, char *argv[] )
 {
 #ifdef Q_OS_MACX
