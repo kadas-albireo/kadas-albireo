@@ -644,6 +644,32 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance()->setEnabled( false );
   }
 
+  QByteArray osgGeo4WRoot = qgetenv( "OSGEO4W_ROOT" );
+  if ( !osgGeo4WRoot.isEmpty() )
+  {
+    QFile newSettingsFile( QDir( osgGeo4WRoot ).absoluteFilePath( "appdata/settings.ini" ) );
+    if ( newSettingsFile.exists() )
+    {
+      QSettings settings;
+      QSettings newSettings( newSettingsFile.fileName(), QSettings::IniFormat );
+      QString timestamp = settings.value( "timestamp", "0" ).toString();
+      QString newtimestamp = newSettings.value( "timestamp" ).toString();
+      if ( newtimestamp > timestamp )
+      {
+        // Merge new settings to old settings
+        foreach ( const QString &group, newSettings.childGroups() )
+        {
+          newSettings.beginGroup( group );
+          foreach ( const QString &key, newSettings.childKeys() )
+          {
+            settings.setValue( key, newSettings.value( key ) );
+          }
+          newSettings.endGroup();
+        }
+      }
+    }
+  }
+
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
   //set stylesheet if there
