@@ -2252,6 +2252,12 @@ QStringList QgsMapCanvas::filterPreviewLayers( const QStringList& layers )
       continue;
     }
 
+    //no pan-preview for reprojected layers
+    if ( rasterLayer->crs() != mSettings.destinationCrs() )
+    {
+      continue;
+    }
+
     QgsRasterDataProvider* rasterProvider = rasterLayer->dataProvider();
     if ( !rasterProvider )
     {
