@@ -484,7 +484,7 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
   QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
   if ( !localappdata.isEmpty() )
   {
-    defaultCacheDir = QDir( localAppData ).absoluteFilePath( "qgis_" + QGis::RELEASE_NAME + "_cache" );
+    defaultCacheDir = QDir( localappdata ).absoluteFilePath( QString( "qgis_%1_cache" ).arg( RELEASE_NAME ) );
   }
 #endif
   QString cacheDirectory = settings.value( "cache/directory", defaultCacheDir ).toString();
