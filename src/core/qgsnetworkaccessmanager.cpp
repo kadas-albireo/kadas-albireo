@@ -480,7 +480,7 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
     newcache = new QgsNetworkDiskCache( this );
 
   QString defaultCacheDir = QgsApplication::qgisSettingsDirPath() + "cache";
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
   QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
   if ( !localappdata.isEmpty() )
   {

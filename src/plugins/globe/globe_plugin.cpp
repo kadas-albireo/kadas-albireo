@@ -359,12 +359,13 @@ void GlobePlugin::run()
   else
   {
     QString defaultCacheDir = QgsApplication::qgisSettingsDirPath() + "cache";
-  #if Q_OS_WIN
-    QByteArray localappdata = qgetenv("LOCALAPPDATA");
-    if(!localappdata.isEmpty()) {
-      defaultCacheDir = QDir(localAppData).absoluteFilePath("qgis_" + QGis::RELEASE_NAME + "_cache");
+#ifdef Q_OS_WIN
+    QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
+    if ( !localappdata.isEmpty() )
+    {
+      defaultCacheDir = QDir( localAppData ).absoluteFilePath( "qgis_" + QGis::RELEASE_NAME + "_cache" );
     }
-  #endif
+#endif
     QString cacheDirectory = settings.value( "cache/directory", defaultCacheDir ).toString();
     if ( cacheDirectory.isEmpty() )
     {
