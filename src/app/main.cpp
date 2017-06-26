@@ -381,7 +381,7 @@ void myMessageOutput( QtMsgType type, const char *msg )
 
 #ifdef _MSC_VER
 // On Windows this main is included in qgis_app and called from mainwin.cpp
-__declspec(dllexport)
+__declspec( dllexport )
 #endif
 int main( int argc, char *argv[] )
 {
@@ -644,32 +644,6 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance()->setEnabled( false );
   }
 
-  QByteArray osgGeo4WRoot = qgetenv( "OSGEO4W_ROOT" );
-  if ( !osgGeo4WRoot.isEmpty() )
-  {
-    QFile newSettingsFile( QDir( osgGeo4WRoot ).absoluteFilePath( "appdata/settings.ini" ) );
-    if ( newSettingsFile.exists() )
-    {
-      QSettings settings;
-      QSettings newSettings( newSettingsFile.fileName(), QSettings::IniFormat );
-      QString timestamp = settings.value( "timestamp", "0" ).toString();
-      QString newtimestamp = newSettings.value( "timestamp" ).toString();
-      if ( newtimestamp > timestamp )
-      {
-        // Merge new settings to old settings
-        foreach ( const QString &group, newSettings.childGroups() )
-        {
-          newSettings.beginGroup( group );
-          foreach ( const QString &key, newSettings.childKeys() )
-          {
-            settings.setValue( key, newSettings.value( key ) );
-          }
-          newSettings.endGroup();
-        }
-      }
-    }
-  }
-
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
   //set stylesheet if there
@@ -764,6 +738,34 @@ int main( int argc, char *argv[] )
 #endif
 
   QSettings mySettings;
+
+  QByteArray osgGeo4WRoot = qgetenv( "OSGEO4W_ROOT" );
+  if ( !osgGeo4WRoot.isEmpty() )
+  {
+    QFile newSettingsFile( QDir( osgGeo4WRoot ).absoluteFilePath( "appdata/settings.ini" ) );
+    if ( newSettingsFile.exists() )
+    {
+      QSettings newSettings( newSettingsFile.fileName(), QSettings::IniFormat );
+      QString timestamp = mySettings.value( "timestamp", "0" ).toString();
+      QString newtimestamp = newSettings.value( "timestamp" ).toString();
+      if ( newtimestamp > timestamp )
+      {
+        mySettings.setValue( "timestamp", newtimestamp );
+        // Merge new settings to old settings
+        foreach ( const QString &group, newSettings.childGroups() )
+        {
+          newSettings.beginGroup( group );
+          mySettings.beginGroup( group );
+          foreach ( const QString &key, newSettings.childKeys() )
+          {
+            mySettings.setValue( key, newSettings.value( key ) );
+          }
+          newSettings.endGroup();
+          mySettings.endGroup();
+        }
+      }
+    }
+  }
 
   // update any saved setting for older themes to new default 'gis' theme (2013-04-15)
   if ( mySettings.contains( "/Themes" ) )
