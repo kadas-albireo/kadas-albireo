@@ -137,7 +137,6 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoin
 
   connect( actionCreateWaypoints, SIGNAL( triggered( bool ) ), this, SLOT( setWaypointsTool( bool ) ) );
   connect( actionCreateRoutes, SIGNAL( triggered( bool ) ), this, SLOT( setRoutesTool( bool ) ) );
-  connect( app, SIGNAL( newProject() ), this, SLOT( clearLayer() ) );
   connect( QgsProject::instance(), SIGNAL( readProject( QDomDocument ) ), this, SLOT( readProject( QDomDocument ) ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeProject( QDomDocument& ) ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWillBeRemoved( QString ) ), this, SLOT( checkLayerRemoved( QString ) ) );

@@ -734,7 +734,7 @@ void QgsPalLayerSettings::readFromLayer( QgsVectorLayer* layer )
     fontFamily = appFont.family();
   }
 
-  double fontSize = layer->customProperty( "labeling/fontSize" ).toDouble();
+  double fontSize = layer->customProperty( "labeling/fontSize", QFont().pointSizeF() ).toDouble();
   fontSizeInMapUnits = layer->customProperty( "labeling/fontSizeInMapUnits" ).toBool();
   fontSizeMapUnitScale.minScale = layer->customProperty( "labeling/fontSizeMapUnitMinScale", 0.0 ).toDouble();
   fontSizeMapUnitScale.maxScale = layer->customProperty( "labeling/fontSizeMapUnitMaxScale", 0.0 ).toDouble();
