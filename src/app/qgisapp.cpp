@@ -8097,11 +8097,11 @@ void QgisApp::namConfirmSslErrors( const QUrl& url, const QList<QSslError> &erro
 
 void QgisApp::namRequestTimedOut( QUrl url )
 {
-  QLabel *msgLabel = new QLabel( tr( "A network request for %1 timed out, any data received is likely incomplete." ).arg( url.host() ) +
+  /*QLabel *msgLabel = new QLabel( tr( "A network request for %1 timed out, any data received is likely incomplete." ).arg( url.host() ) +
                                  tr( " Please check the <a href=\"#messageLog\">message log</a> for further info." ), messageBar() );
   msgLabel->setWordWrap( true );
   connect( msgLabel, SIGNAL( linkActivated( QString ) ), mLogDock, SLOT( show() ) );
-  messageBar()->pushItem( new QgsMessageBarItem( msgLabel, QgsMessageBar::WARNING, messageTimeout() ) );
+  messageBar()->pushItem( new QgsMessageBarItem( msgLabel, QgsMessageBar::WARNING, messageTimeout() ) );*/
 }
 
 void QgisApp::namUpdate()

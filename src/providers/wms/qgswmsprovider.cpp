@@ -3784,9 +3784,9 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
     QgsWmsStatistics::Stat& stat = QgsWmsStatistics::statForUri( mProviderUri );
     stat.errors++;
 
-    if( reply->error() == QNetworkReply::TimeoutError )
+    if ( reply->error() == QNetworkReply::TimeoutError )
     {
-        repeatTileRequest( reply->request() );
+      repeatTileRequest( reply->request() );
     }
 
     mReplies.removeOne( reply );
@@ -3823,7 +3823,7 @@ void QgsWmsTiledImageDownloadHandler::repeatTileRequest( QNetworkRequest const &
 
   if ( stat.errors == 100 )
   {
-    QgsMessageLog::logMessage( tr( "Not logging more than 100 request errors." ), tr( "WMS" ) );
+    //QgsMessageLog::logMessage( tr( "Not logging more than 100 request errors." ), tr( "WMS" ) );
   }
 
   QNetworkRequest request( oldRequest );
@@ -3840,8 +3840,8 @@ void QgsWmsTiledImageDownloadHandler::repeatTileRequest( QNetworkRequest const &
   {
     if ( stat.errors < 100 )
     {
-      QgsMessageLog::logMessage( tr( "Tile request max retry error. Failed %1 requests for tile %2 of tileRequest %3 (url: %4)" )
-                                 .arg( maxRetry ).arg( tileNo ).arg( tileReqNo ).arg( url ), tr( "WMS" ) );
+      //QgsMessageLog::logMessage( tr( "Tile request max retry error. Failed %1 requests for tile %2 of tileRequest %3 (url: %4)" )
+      //                           .arg( maxRetry ).arg( tileNo ).arg( tileReqNo ).arg( url ), tr( "WMS" ) );
     }
     return;
   }
