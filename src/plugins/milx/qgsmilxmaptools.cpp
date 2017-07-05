@@ -448,7 +448,7 @@ void QgsMilxEditBottomBar::updateStatus()
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* layerItem )
-    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mPanning( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mPanning( false ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
   QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
   item->fromMilxItem( layerItem );
@@ -502,12 +502,17 @@ void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
 {
   if ( e->button() == Qt::LeftButton && ( e->modifiers() & Qt::ControlModifier ) == 0 )
   {
-    mMouseMoveLastXY = e->pos();
+    mMouseMoveLastXY = e->posF();
     QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
     if ( item && mItems.contains( item ) )
     {
       mActiveAnnotation = item;
       mAnnotationMoveAction = item->moveActionForPosition( e->posF() );
+    }
+    else if ( e->modifiers() != Qt::ControlModifier && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
+    {
+      mDraggingRect = true;
+      mCanvas->setCursor( Qt::SizeAllCursor );
     }
   }
 }
@@ -517,10 +522,18 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
   QCursor cursor = mCursor;
   if (( e->buttons() & Qt::LeftButton ) )
   {
-    if ( mActiveAnnotation && mAnnotationMoveAction != QgsAnnotationItem::NoAction )
+    if ( mDraggingRect )
+    {
+      QPointF newPos = e->posF();
+      foreach ( QgsMilXAnnotationItem* item, mItems )
+      {
+        item->handleMoveAction( QgsAnnotationItem::MoveMapPosition, newPos, mMouseMoveLastXY );
+      }
+      mRectItem->moveBy( newPos.x() - mMouseMoveLastXY.x(), newPos.y() - mMouseMoveLastXY.y() );
+    }
+    else if ( mActiveAnnotation && mAnnotationMoveAction != QgsAnnotationItem::NoAction )
     {
       mActiveAnnotation->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
-      mMouseMoveLastXY = e->pos();
       updateRect();
     }
     else
@@ -540,12 +553,19 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
         cursor = QCursor( item->cursorShapeForAction( moveAction ) );
     }
   }
+  mMouseMoveLastXY = e->posF();
   mCanvas->setCursor( cursor );
 }
 
 void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
 {
-  if ( mPanning )
+  if ( mDraggingRect )
+  {
+    mDraggingRect = false;
+    mCanvas->setCursor( mCursor );
+    updateRect();
+  }
+  else if ( mPanning )
   {
     mCanvas->panActionEnd( e->pos() );
     mPanning = false;
@@ -660,6 +680,7 @@ void QgsMilXEditTool::updateRect()
   {
     rect = rect.unite( mItems[i]->boundingRect().translated( mItems[i]->pos() ) );
   }
+  mRectItem->setPos( 0, 0 );
   mRectItem->setRect( rect );
   mRectItem->setVisible( n > 1 );
 }
