@@ -123,6 +123,7 @@ class QgsMilXEditTool : public QgsMapTool
     void canvasPressEvent( QMouseEvent* e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
+    void keyPressEvent( QKeyEvent *e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
 
@@ -134,9 +135,11 @@ class QgsMilXEditTool : public QgsMapTool
     QgisInterface* mIface;
     QgsMilxEditBottomBar* mBottomBar;
     QList<QgsMilXAnnotationItem*> mItems;
+    QList<QgsMilXItem*> mClipboard;
+    QList<QgsVector> mClipboardItemOffsets;
     QPointer<QgsMilXLayer> mLayer;
     QGraphicsRectItem* mRectItem;
-    QPoint mMouseMoveLastXY;
+    QPointF mMouseMoveLastXY;
     bool mPanning;
     bool mDraggingRect;
     QgsMilXAnnotationItem* mActiveAnnotation;

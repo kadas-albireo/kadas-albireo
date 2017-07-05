@@ -36,9 +36,37 @@ QgsVector::QgsVector( double x, double y ) : m_x( x ), m_y( y )
 {
 }
 
+QgsVector::QgsVector( const QgsPoint &p ) : m_x( p.x() ), m_y( p.y() )
+{
+}
+
 QgsVector QgsVector::operator-( void ) const
 {
   return QgsVector( -m_x, -m_y );
+}
+
+QgsVector QgsVector::operator+( const QgsVector& v ) const
+{
+  return QgsVector( m_x + v.m_x, m_y + v.m_y );
+}
+
+QgsVector QgsVector::operator-( const QgsVector& v ) const
+{
+  return QgsVector( m_x - v.m_x, m_y - v.m_y );
+}
+
+const QgsVector& QgsVector::operator+=( const QgsVector & v )
+{
+  m_x += v.m_x;
+  m_y += v.m_y;
+  return *this;
+}
+
+const QgsVector& QgsVector::operator-=( const QgsVector & v )
+{
+  m_x -= v.m_x;
+  m_y -= v.m_y;
+  return *this;
 }
 
 QgsVector QgsVector::operator*( double scalar ) const

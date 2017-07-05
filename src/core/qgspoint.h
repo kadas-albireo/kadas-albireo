@@ -25,6 +25,8 @@
 #include <QString>
 #include <QPoint>
 
+class QgsPoint;
+
 /** \ingroup core
  * A class to represent a vector.
  * Currently no Z axis / 2.5D support is implemented.
@@ -37,8 +39,13 @@ class CORE_EXPORT QgsVector
   public:
     QgsVector();
     QgsVector( double x, double y );
+    QgsVector( const QgsPoint& p );
 
     QgsVector operator-( void ) const;
+    QgsVector operator+( const QgsVector& v ) const;
+    QgsVector operator-( const QgsVector& v ) const;
+    const QgsVector& operator+=( const QgsVector& v );
+    const QgsVector& operator-=( const QgsVector& v );
     QgsVector operator*( double scalar ) const;
     QgsVector operator/( double scalar ) const;
     double operator*( QgsVector v ) const;
