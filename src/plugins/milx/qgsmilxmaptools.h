@@ -145,6 +145,8 @@ class QgsMilXEditTool : public QgsMapTool
     QgsMilXAnnotationItem* mActiveAnnotation;
     int mAnnotationMoveAction;
 
+    void setLayer( QgsMilXLayer* layer );
+
   private slots:
     void removeItemFromList();
     void updateRect();

@@ -424,21 +424,15 @@ void QgsMilxEditBottomBar::copyMoveSymbols( const QString &targetLayerId, bool m
   {
     return;
   }
-  foreach ( QgsMilXAnnotationItem* item, mTool->mItems )
-  {
-    layer->addItem( item->toMilxItem() );
-    if ( move )
-    {
-      item->deleteLater();
+  if(!move) {
+    foreach ( QgsMilXAnnotationItem* item, mTool->mItems ) {
+      mTool->mLayer->addItem(item->toMilxItem());
     }
   }
-  mTool->mIface->messageBar()->pushMessage( tr( "%1 symbol(s) %2" ).arg( mTool->mItems.size() ).arg( move ? tr( "moved" ) : tr( "copied" ) ), "", QgsMessageBar::INFO, 5 );
-  layer->triggerRepaint();
   mTool->mLayer->triggerRepaint();
-  if ( move )
-  {
-    mTool->deleteLater();
-  }
+  // Keep selection but switch layer, effectively moving/copying symbols to that layer once the selection is dismissed and the items added to the layer
+  mTool->setLayer(layer);
+  mTool->mIface->messageBar()->pushMessage( tr( "%1 symbol(s) %2" ).arg( mTool->mItems.size() ).arg( move ? tr( "moved" ) : tr( "copied" ) ), "", QgsMessageBar::INFO, 5 );
 }
 
 void QgsMilxEditBottomBar::updateStatus()
@@ -492,6 +486,12 @@ QgsMilXEditTool::~QgsMilXEditTool()
       delete item;
     }
   }
+}
+
+void QgsMilXEditTool::setLayer(QgsMilXLayer* layer)
+{
+  disconnect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
+  mLayer = layer;
 }
 
 void QgsMilXEditTool::activate()
