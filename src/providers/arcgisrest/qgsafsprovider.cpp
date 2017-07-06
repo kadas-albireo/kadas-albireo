@@ -24,7 +24,9 @@
 #include "geometry/qgsgeometry.h"
 #include "qgsnetworkaccessmanager.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <qjson/parser.h>
+#endif
 #include <QEventLoop>
 #include <QMessageBox>
 #include <QNetworkRequest>
