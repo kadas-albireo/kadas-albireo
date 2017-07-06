@@ -36,13 +36,9 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QUuid>
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <quazip/quazipfile.h>
-#else
-#include <quazip5/quazipfile.h>
-#endif
 
-bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLayer *> &layers, const QgsMapSettings& settings )
+bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLayer *> &layers, bool exportAnnotations, const QgsMapSettings& settings )
 {
   // Prepare outputs
   bool kmz = filename.endsWith( ".kmz", Qt::CaseInsensitive );
@@ -186,6 +182,18 @@ bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLaye
 
   labeling.drawLabeling( labelingRc );
 
+  if ( kmz && exportAnnotations )
+  {
+    progress.setLabelText( tr( "Rendering annotations..." ) );
+    progress.setRange( 0, 0 );
+    QApplication::processEvents();
+
+    outStream << "<Folder>" << "\n";
+    outStream << "<name>" << "Annotations" << "</name>" << "\n";
+    writeBillboards( "", outStream, quaZip );
+    outStream << "</Folder>" << "\n";
+  }
+
   outStream << "</Document>" << "\n";
   outStream << "</kml>";
   outStream.flush();
@@ -318,13 +326,12 @@ void QgsKMLExport::writeTiles( QgsMapLayer* mapLayer, const QgsRectangle& layerE
 
       QgsRectangle tileExtent( renderExtent.xMinimum() + ix * resolution, renderExtent.yMinimum() + iy * resolution,
                                renderExtent.xMinimum() + ( ix + tileSize ) * resolution, renderExtent.yMinimum() + ( iy + tileSize ) * resolution );
-      if ( renderTile( image, tileExtent, mapLayer ) )
-      {
-        QString filename = QString( "%1_%2.png" ).arg( mapLayer->id() ).arg( tileCounter++ );
-        QuaZipFile outputFile( quaZip );
-        if ( outputFile.open( QIODevice::WriteOnly, QuaZipNewInfo( filename ) ) && image.save( &outputFile, "PNG" ) )
-          writeGroundOverlay( outStream, QString( "Tile %1" ).arg( tileExtent.toString( 3 ) ), filename, tileExtent, drawingOrder );
-      }
+      renderTile( image, tileExtent, mapLayer );
+
+      QString filename = QString( "%1_%2.png" ).arg( mapLayer->id() ).arg( tileCounter++ );
+      QuaZipFile outputFile( quaZip );
+      if ( outputFile.open( QIODevice::WriteOnly, QuaZipNewInfo( filename ) ) && image.save( &outputFile, "PNG" ) )
+        writeGroundOverlay( outStream, QString( "Tile %1" ).arg( tileExtent.toString( 3 ) ), filename, tileExtent, drawingOrder );
     }
   }
 }
@@ -391,8 +398,10 @@ void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStre
   }
 }
 
-bool QgsKMLExport::renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer )
+void QgsKMLExport::renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer )
 {
+  QTextStream( stdout ) << "** Rendering " << extent.toString( 3 ) << endl;
+
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), "EPSG:4326" );
   QgsRenderContext context;
   img.fill( 0 );
@@ -405,13 +414,9 @@ bool QgsKMLExport::renderTile( QImage& img, const QgsRectangle& extent, QgsMapLa
   context.setExtent( crst->transformBoundingBox( extent, QgsCoordinateTransform::ReverseTransform ) );
   context.setCustomRenderFlags( "kml" );
   QgsMapLayerRenderer* layerRenderer = mapLayer->createMapRenderer( context );
-  bool rendered = false;
   if ( layerRenderer )
-  {
-    rendered = layerRenderer->render();
-  }
+    layerRenderer->render();
   delete layerRenderer;
-  return rendered;
 }
 
 void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc )

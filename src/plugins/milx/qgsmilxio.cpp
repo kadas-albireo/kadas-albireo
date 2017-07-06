@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "qgisinterface.h"
-#include "qgsclipboard.h"
 #include "qgscrscache.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayer.h"
@@ -39,11 +38,7 @@
 #include <QPlainTextEdit>
 #include <QSettings>
 #include <QGridLayout>
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <quazip/quazipfile.h>
-#else
-#include <quazip5/quazipfile.h>
-#endif
 
 bool QgsMilXIO::save( QgisInterface* iface )
 {
@@ -373,44 +368,6 @@ bool QgsMilXIO::load( QgisInterface* iface )
     iface->messageBar()->pushMessage( tr( "Import Failed" ), errorMsg, QgsMessageBar::CRITICAL, 5 );
   }
   return true;
-}
-
-void QgsMilXIO::copyToClipboard( const QList<QgsMilXItem*>& milxItems, QgisInterface *iface )
-{
-  QgsVector center;
-  foreach ( const QgsMilXItem* item, milxItems )
-  {
-    center += QgsVector( item->points()[0] );
-  }
-  center = center / double( milxItems.size() );
-
-  QDomDocument doc;
-  doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"utf-8\"" ) );
-
-  QDomElement symbolGroup = doc.createElement( "SymbolGroup" );
-  doc.appendChild( symbolGroup );
-
-  int dpi = QApplication::desktop()->logicalDpiX();
-  QDomElement symbolSizeEl = doc.createElement( "SymbolSize" );
-  symbolSizeEl.appendChild( doc.createTextNode( QString::number(( MilXClient::getSymbolSize() * 25.4 ) / dpi ) ) );
-  symbolGroup.appendChild( symbolSizeEl );
-
-  QDomElement itemsEl = doc.createElement( "GraphicList" );
-  foreach ( QgsMilXItem* milxItem, milxItems )
-  {
-    QDomElement graphicEl = doc.createElement( "MilXGraphic" );
-    graphicEl.setAttribute( "offsetX", milxItem->points()[0].x() - center.x() );
-    graphicEl.setAttribute( "offsetY", milxItem->points()[0].y() - center.y() );
-    milxItem->writeMilx( doc, graphicEl );
-    itemsEl.appendChild( graphicEl );
-  }
-  symbolGroup.appendChild( itemsEl );
-
-  QString xml = doc.toString();
-  QMimeData* mimeData = new QMimeData();
-  mimeData->setData( "text/plain", xml.toUtf8() );
-  mimeData->setData( QGSCLIPBOARD_MILXITEMS_MIME, xml.toUtf8() );
-  iface->clipboard()->setMimeData( mimeData );
 }
 
 void QgsMilXIO::showMessageDialog( const QString& title, const QString& body, const QString& messages )

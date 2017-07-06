@@ -28,11 +28,7 @@
 #include <QTextDocument>
 #include "qgsconfig.h"
 #include "qgslogger.h"
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <quazip/quazipfile.h>
-#else
-#include <quazip5/quazipfile.h>
-#endif
 #include "qgswkbtypes.h"
 
 #include <ogr_api.h>
