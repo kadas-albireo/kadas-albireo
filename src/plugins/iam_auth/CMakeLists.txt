@@ -24,6 +24,11 @@ SET (iamauth_RCCS
 ########################################################
 # Build
 
+IF(ENABLE_QT5)
+	FIND_PACKAGE(Qt5AxContainer REQUIRED)
+	SET(QT_QAXCONTAINER_LIBRARY ${Qt5AxContainer_LIBRARIES})
+ENDIF(ENABLE_QT5)
+
 QT4_WRAP_UI (iamauth_UIS_H  ${iamauth_UIS})
 
 QT4_WRAP_CPP (iamauth_MOC_SRCS  ${iamauth_MOC_HDRS})
