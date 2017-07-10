@@ -166,7 +166,7 @@ bool MilXClientWorker::initialize()
   istream << lang;
   istream << MILX_INTERFACE_VERSION;
 #ifdef Q_OS_WIN32
-  qlonglong wid = (HWND)( QApplication::topLevelWidgets().front()->winId() );
+  qlonglong wid = HandleToLong((HWND)( QApplication::topLevelWidgets().front()->winId() ));
 #else
   qlonglong wid = 0;
 #endif
