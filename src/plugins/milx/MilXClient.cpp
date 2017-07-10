@@ -166,7 +166,7 @@ bool MilXClientWorker::initialize()
   istream << lang;
   istream << MILX_INTERFACE_VERSION;
 #ifdef Q_OS_WIN32
-  qlonglong wid = HandleToLong( QApplication::topLevelWidgets().front()->effectiveWinId() );
+  qlonglong wid = (HWND)( QApplication::topLevelWidgets().front()->winId() );
 #else
   qlonglong wid = 0;
 #endif
@@ -314,7 +314,7 @@ QString MilXClient::attributeName( int idx )
     return "Length";
   else if ( idx == AttributeRadius )
     return "Radius";
-  else if ( idx == AttributeAttitude )
+  else if ( idx == AttributeAttutide )
     return "Attitude";
   return "";
 }
@@ -328,7 +328,7 @@ int MilXClient::attributeIdx( const QString& name )
   else if ( name == "Radius" )
     return AttributeRadius;
   else if ( name == "Attitude" )
-    return AttributeAttitude;
+    return AttributeAttutide;
   return 0;
 }
 
@@ -605,14 +605,13 @@ bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& s
   return true;
 }
 
-bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, double scaleFactor, QList<NPointSymbolGraphic>& result )
+bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result )
 {
   int nSymbols = symbols.length();
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << MILX_REQUEST_UPDATE_SYMBOLS;
   istream << visibleExtent;
-  istream << scaleFactor;
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
@@ -720,7 +719,7 @@ bool MilXClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bo
   return true;
 }
 
-bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol, QRect& boundingBox )
+bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol )
 {
   int nSymbols = symbols.length();
   QByteArray request;
@@ -739,7 +738,7 @@ bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& c
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   MilXServerReply replycmd = 0; ostream >> replycmd;
-  ostream >> selectedSymbol >> boundingBox;
+  ostream >> selectedSymbol;
   return true;
 }
 
