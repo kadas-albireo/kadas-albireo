@@ -36,7 +36,11 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QUuid>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <quazip/quazipfile.h>
+#else
+#include <quazip5/quazipfile.h>
+#endif
 
 bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLayer *> &layers, bool exportAnnotations, const QgsMapSettings& settings )
 {

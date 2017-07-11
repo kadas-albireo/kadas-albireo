@@ -38,7 +38,11 @@
 #include <QPlainTextEdit>
 #include <QSettings>
 #include <QGridLayout>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <quazip/quazipfile.h>
+#else
+#include <quazip5/quazipfile.h>
+#endif
 
 bool QgsMilXIO::save( QgisInterface* iface )
 {
