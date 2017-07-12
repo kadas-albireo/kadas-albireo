@@ -379,8 +379,7 @@ QgsMilxEditBottomBar::QgsMilxEditBottomBar( QgsMilXEditTool *tool )
 
   repopulateLayers();
   show();
-  setFixedWidth( width() );
-  updatePosition();
+  updateStatus();
 }
 
 void QgsMilxEditBottomBar::onClose()
@@ -437,7 +436,9 @@ void QgsMilxEditBottomBar::copyMoveSymbols( const QString &targetLayerId, bool m
 
 void QgsMilxEditBottomBar::updateStatus()
 {
-  mStatusLabel->setText( tr( "<b>%1 symbol(s)</b>" ).arg( mTool->mItems.size() ) );
+  mStatusLabel->setText( tr( "<b>%1 symbol(s) of layer %2</b>" ).arg( mTool->mItems.size() ).arg( mTool->mLayer->name() ) );
+  setFixedWidth( sizeHint().width() );
+  updatePosition();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
