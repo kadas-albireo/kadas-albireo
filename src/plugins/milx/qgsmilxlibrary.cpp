@@ -152,7 +152,7 @@ void QgsMilXLibrary::filterChanged( const QString &text )
 
 void QgsMilXLibrary::itemClicked( const QModelIndex &index )
 {
-  hide();
+
   QModelIndex sourceIndex = mFilterProxyModel->mapToSource( index );
   QList<QModelIndex> indexStack;
   indexStack.prepend( sourceIndex );
@@ -176,7 +176,8 @@ void QgsMilXLibrary::itemClicked( const QModelIndex &index )
     {
       return;
     }
-    else if ( symbolTemplate.symbolXml == "<custom>" )
+    hide();
+    if ( symbolTemplate.symbolXml == "<custom>" )
     {
       MilXClient::SymbolDesc desc;
       if ( !MilXClient::createSymbol( symbolTemplate.symbolXml, desc ) )
