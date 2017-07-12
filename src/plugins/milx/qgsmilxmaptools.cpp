@@ -232,6 +232,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
         selectedItem->setSelected( false );
       }
 
+      setCursor( Qt::CrossCursor );
       mItem = new QgsMilXAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
       mItem->setSymbolXml( mSymbolTemplate.symbolXml, mSymbolTemplate.symbolMilitaryName );
@@ -261,11 +262,10 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       mItem->finalize();
       mLayer->addItem( mItem->toMilxItem() );
       mItem->setSelected( false );
-      mNPressedPoints = 0;
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
-      mNPressedPoints = 0;
+      reset();
       mLayer->triggerRepaint();
     }
   }
@@ -280,7 +280,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       // Delay delete until after refresh, to avoid flickering
       connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
       mItem = 0;
-      mNPressedPoints = 0;
+      reset();
       mLayer->triggerRepaint();
     }
     else if ( mNPressedPoints + 1 < mSymbolTemplate.minNPoints )
@@ -334,11 +334,14 @@ void QgsMilXCreateTool::setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTe
   mSymbolTemplate = symbolTemplate;
   // Reset any drawing operation which might be in progress
   reset();
-  setCursor( QCursor( symbolTemplate.pixmap, -0.5 * symbolTemplate.pixmap.width(), -0.5 * symbolTemplate.pixmap.height() ) );
 }
 
 void QgsMilXCreateTool::reset()
 {
+  if ( !mSymbolTemplate.symbolXml.isEmpty() )
+  {
+    setCursor( QCursor( mSymbolTemplate.pixmap, -0.5 * mSymbolTemplate.pixmap.width(), -0.5 * mSymbolTemplate.pixmap.height() ) );
+  }
   mNPressedPoints = 0;
   delete mItem;
   mItem = 0;
