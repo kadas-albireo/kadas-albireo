@@ -14,7 +14,7 @@
  ***************************************************************************/
 
 #include "qgsmaptooldrawshape.h"
-#include "qgsmaptooldrawshape_p.h"
+#include "qgsfloatinginputwidget.h"
 #include "qgscircularstringv2.h"
 #include "qgscompoundcurvev2.h"
 #include "qgscrscache.h"
@@ -92,7 +92,7 @@ void QgsMapToolDrawShape::activate()
   QgsMapTool::activate();
   if ( mShowInput )
   {
-    mInputWidget = new QgsMapToolDrawShapeInputWidget( canvas() );
+    mInputWidget = new QgsFloatingInputWidget( canvas() );
     initInputWidget();
     // Initially out of sight
     mInputWidget->move( -1000, -1000 );
@@ -459,20 +459,14 @@ void QgsMapToolDrawPoint::doAddGeometry( const QgsAbstractGeometryV2* geometry, 
 
 void QgsMapToolDrawPoint::initInputWidget()
 {
-  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
-  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
-  mXEdit = new QgsMapToolDrawShapeInputField();
+  mXEdit = new QgsFloatingInputWidgetField();
   connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
-  mYEdit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "x=", mXEdit, true );
+  mYEdit = new QgsFloatingInputWidgetField();
   connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
-  mInputWidget->addFocusChild( mXEdit );
-  mInputWidget->addFocusChild( mYEdit );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->addInputField( "y=", mYEdit );
 }
 
 void QgsMapToolDrawPoint::updateInputWidget( const QgsPoint& mousePos )
@@ -480,8 +474,8 @@ void QgsMapToolDrawPoint::updateInputWidget( const QgsPoint& mousePos )
   bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
   mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
   mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
-  if ( mInputWidget->focusChild() )
-    mInputWidget->focusChild()->selectAll();
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
 }
 
 void QgsMapToolDrawPoint::inputAccepted()
@@ -490,7 +484,7 @@ void QgsMapToolDrawPoint::inputAccepted()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   newState->points.append( QList<QgsPoint>() << QgsPoint( x, y ) );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->setFocusedInputField( mXEdit );
   newState->status = mMultipart ? StatusReady : StatusFinished;
   mStateStack.updateState( newState );
 }
@@ -752,20 +746,14 @@ void QgsMapToolDrawPolyLine::doAddGeometry( const QgsAbstractGeometryV2* geometr
 
 void QgsMapToolDrawPolyLine::initInputWidget()
 {
-  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
-  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
-  mXEdit = new QgsMapToolDrawShapeInputField();
+  mXEdit = new QgsFloatingInputWidgetField();
   connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
-  mYEdit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "x=", mXEdit, true );
+  mYEdit = new QgsFloatingInputWidgetField();
   connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
-  mInputWidget->addFocusChild( mXEdit );
-  mInputWidget->addFocusChild( mYEdit );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->addInputField( "y=", mYEdit );
 }
 
 void QgsMapToolDrawPolyLine::updateInputWidget( const QgsPoint& mousePos )
@@ -773,8 +761,8 @@ void QgsMapToolDrawPolyLine::updateInputWidget( const QgsPoint& mousePos )
   bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
   mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
   mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
-  if ( mInputWidget->focusChild() )
-    mInputWidget->focusChild()->selectAll();
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
 }
 
 void QgsMapToolDrawPolyLine::inputAccepted()
@@ -796,7 +784,7 @@ void QgsMapToolDrawPolyLine::inputAccepted()
     int n = newState->points.back().size();
     if ( n > 1 && newState->points.back()[n - 2] == newState->points.back()[n - 1] )
     {
-      mInputWidget->setFocusChild( mXEdit );
+      mInputWidget->setFocusedInputField( mXEdit );
       newState->points.back().removeLast();
       newState->points.append( QList<QgsPoint>() );
       newState->status = mMultipart ? StatusReady : StatusFinished;
@@ -1084,20 +1072,14 @@ void QgsMapToolDrawRectangle::doAddGeometry( const QgsAbstractGeometryV2* geomet
 
 void QgsMapToolDrawRectangle::initInputWidget()
 {
-  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
-  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
-  mXEdit = new QgsMapToolDrawShapeInputField();
+  mXEdit = new QgsFloatingInputWidgetField();
   connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
-  mYEdit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "x=", mXEdit, true );
+  mYEdit = new QgsFloatingInputWidgetField();
   connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( inputChanged() ) );
   connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
-  mInputWidget->addFocusChild( mXEdit );
-  mInputWidget->addFocusChild( mYEdit );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->addInputField( "y=", mYEdit );
 }
 
 void QgsMapToolDrawRectangle::updateInputWidget( const QgsPoint& mousePos )
@@ -1105,15 +1087,15 @@ void QgsMapToolDrawRectangle::updateInputWidget( const QgsPoint& mousePos )
   bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
   mXEdit->setText( QString::number( mousePos.x(), 'f', isDegrees ? 4 : 0 ) );
   mYEdit->setText( QString::number( mousePos.y(), 'f', isDegrees ? 4 : 0 ) );
-  if ( mInputWidget->focusChild() )
-    mInputWidget->focusChild()->selectAll();
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
 }
 
 void QgsMapToolDrawRectangle::inputAccepted()
 {
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->setFocusedInputField( mXEdit );
   if ( state()->status == StatusReady )
   {
     State* newState = cloneState();
@@ -1490,28 +1472,20 @@ void QgsMapToolDrawCircle::doAddGeometry( const QgsAbstractGeometryV2* geometry,
 
 void QgsMapToolDrawCircle::initInputWidget()
 {
-  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
-  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
-  mXEdit = new QgsMapToolDrawShapeInputField();
+  mXEdit = new QgsFloatingInputWidgetField();
   connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
   connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
-  mYEdit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "x=", mXEdit, true );
+  mYEdit = new QgsFloatingInputWidgetField();
   connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
   connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "r=" ), 2, 0, 1, 1 );
+  mInputWidget->addInputField( "y=", mYEdit );
   QDoubleValidator* validator = new QDoubleValidator();
   validator->setBottom( 0 );
-  mREdit = new QgsMapToolDrawShapeInputField( validator );
+  mREdit = new QgsFloatingInputWidgetField( validator );
   connect( mREdit, SIGNAL( inputChanged() ), this, SLOT( radiusInputChanged() ) );
   connect( mREdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mREdit, 2, 1, 1, 1 );
-  mInputWidget->addFocusChild( mXEdit );
-  mInputWidget->addFocusChild( mYEdit );
-  mInputWidget->addFocusChild( mREdit );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->addInputField( "r=", mREdit );
 }
 
 void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
@@ -1527,8 +1501,8 @@ void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
   {
     mREdit->setText( QString::number( qSqrt( state()->centers.last().sqrDist( state()->ringPos.last() ) ), 'f', isDegrees ? 4 : 0 ) );
   }
-  if ( mInputWidget->focusChild() )
-    mInputWidget->focusChild()->selectAll();
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
 }
 
 void QgsMapToolDrawCircle::inputAccepted()
@@ -1536,7 +1510,7 @@ void QgsMapToolDrawCircle::inputAccepted()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->setFocusedInputField( mXEdit );
   if ( state()->status == StatusReady )
   {
     State* newState = cloneState();
@@ -1800,40 +1774,28 @@ void QgsMapToolDrawCircularSector::doAddGeometry( const QgsAbstractGeometryV2* /
 
 void QgsMapToolDrawCircularSector::initInputWidget()
 {
-  QGridLayout* gridLayout = static_cast<QGridLayout*>( mInputWidget->layout() );
-  gridLayout->addWidget( new QLabel( "x=" ), 0, 0, 1, 1 );
-  mXEdit = new QgsMapToolDrawShapeInputField();
+  mXEdit = new QgsFloatingInputWidgetField();
   connect( mXEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
   connect( mXEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mXEdit, 0, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "y=" ), 1, 0, 1, 1 );
-  mYEdit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "x=", mXEdit, true );
+  mYEdit = new QgsFloatingInputWidgetField();
   connect( mYEdit, SIGNAL( inputChanged() ), this, SLOT( centerInputChanged() ) );
   connect( mYEdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mYEdit, 1, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( "r=" ), 2, 0, 1, 1 );
+  mInputWidget->addInputField( "y=", mYEdit );
   QDoubleValidator* validator = new QDoubleValidator();
   validator->setBottom( 0 );
-  mREdit = new QgsMapToolDrawShapeInputField( validator );
+  mREdit = new QgsFloatingInputWidgetField( validator );
   connect( mREdit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
   connect( mREdit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mREdit, 2, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( QString( QChar( 0x03B1 ) ) + "1=" ), 3, 0, 1, 1 );
-  mA1Edit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( "r=", mREdit );
+  mA1Edit = new QgsFloatingInputWidgetField();
   connect( mA1Edit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
   connect( mA1Edit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mA1Edit, 3, 1, 1, 1 );
-  gridLayout->addWidget( new QLabel( QString( QChar( 0x03B1 ) ) + "2=" ), 4, 0, 1, 1 );
-  mA2Edit = new QgsMapToolDrawShapeInputField();
+  mInputWidget->addInputField( QString( QChar( 0x03B1 ) ) + "1=", mA1Edit );
+  mA2Edit = new QgsFloatingInputWidgetField();
   connect( mA2Edit, SIGNAL( inputChanged() ), this, SLOT( arcInputChanged() ) );
   connect( mA2Edit, SIGNAL( inputConfirmed() ), this, SLOT( acceptInput() ) );
-  gridLayout->addWidget( mA2Edit, 4, 1, 1, 1 );
-  mInputWidget->addFocusChild( mXEdit );
-  mInputWidget->addFocusChild( mYEdit );
-  mInputWidget->addFocusChild( mREdit );
-  mInputWidget->addFocusChild( mA1Edit );
-  mInputWidget->addFocusChild( mA2Edit );
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->addInputField( QString( QChar( 0x03B1 ) ) + "2=", mA2Edit );
 }
 
 void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
@@ -1866,8 +1828,8 @@ void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
       stopAngle += 2 * M_PI;
     mA2Edit->setText( QString::number( stopAngle / M_PI * 180., 'f', 1 ) );
   }
-  if ( mInputWidget->focusChild() )
-    mInputWidget->focusChild()->selectAll();
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
 }
 
 void QgsMapToolDrawCircularSector::inputAccepted()
@@ -1887,7 +1849,7 @@ void QgsMapToolDrawCircularSector::inputAccepted()
     a2 -= 2 * M_PI;
   if ( a2 <= a1 )
     a2 += 2 * M_PI;
-  mInputWidget->setFocusChild( mXEdit );
+  mInputWidget->setFocusedInputField( mXEdit );
   if ( state()->status == StatusReady )
   {
     State* newState = cloneState();

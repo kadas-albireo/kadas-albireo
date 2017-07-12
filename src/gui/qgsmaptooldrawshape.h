@@ -21,8 +21,8 @@
 #include "qgsstatestack.h"
 #include <QPointer>
 
-class QgsMapToolDrawShapeInputWidget;
-class QgsMapToolDrawShapeInputField;
+class QgsFloatingInputWidget;
+class QgsFloatingInputWidgetField;
 
 class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 {
@@ -83,7 +83,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     bool mIsArea;
     bool mMultipart;
     QPointer<QgsGeometryRubberBand> mRubberBand;
-    QgsMapToolDrawShapeInputWidget* mInputWidget;
+    QgsFloatingInputWidget* mInputWidget;
     QgsStateStack mStateStack;
 
     const State* state() const { return static_cast<const State*>( mStateStack.state() ); }
@@ -144,8 +144,8 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
       int index;
     };
 
-    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
+    QPointer<QgsFloatingInputWidgetField> mXEdit;
+    QPointer<QgsFloatingInputWidgetField> mYEdit;
 
     const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
     State* mutableState() { return static_cast<State*>( QgsMapToolDrawShape::mutableState() ); }
@@ -188,8 +188,8 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
 
     bool mGeodesic;
     QgsDistanceArea mDa;
-    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
+    QPointer<QgsFloatingInputWidgetField> mXEdit;
+    QPointer<QgsFloatingInputWidgetField> mYEdit;
 
     const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
     State* mutableState() { return static_cast<State*>( QgsMapToolDrawShape::mutableState() ); }
@@ -240,8 +240,8 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
       int point;
     };
 
-    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
+    QPointer<QgsFloatingInputWidgetField> mXEdit;
+    QPointer<QgsFloatingInputWidgetField> mYEdit;
 
     const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
     State* mutableState() { return static_cast<State*>( QgsMapToolDrawShape::mutableState() ); }
@@ -287,9 +287,9 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
     friend class GeodesicCircleMeasurer;
     bool mGeodesic;
     QgsDistanceArea mDa;
-    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mREdit;
+    QPointer<QgsFloatingInputWidgetField> mXEdit;
+    QPointer<QgsFloatingInputWidgetField> mYEdit;
+    QPointer<QgsFloatingInputWidgetField> mREdit;
     mutable QVector<int> mPartMap;
 
     const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
@@ -339,11 +339,11 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
       QList<double> stopAngles;
     };
 
-    QPointer<QgsMapToolDrawShapeInputField> mXEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mYEdit;
-    QPointer<QgsMapToolDrawShapeInputField> mREdit;
-    QPointer<QgsMapToolDrawShapeInputField> mA1Edit;
-    QPointer<QgsMapToolDrawShapeInputField> mA2Edit;
+    QPointer<QgsFloatingInputWidgetField> mXEdit;
+    QPointer<QgsFloatingInputWidgetField> mYEdit;
+    QPointer<QgsFloatingInputWidgetField> mREdit;
+    QPointer<QgsFloatingInputWidgetField> mA1Edit;
+    QPointer<QgsFloatingInputWidgetField> mA2Edit;
 
     const State* state() const { return static_cast<const State*>( QgsMapToolDrawShape::state() ); }
     State* mutableState() { return static_cast<State*>( QgsMapToolDrawShape::mutableState() ); }

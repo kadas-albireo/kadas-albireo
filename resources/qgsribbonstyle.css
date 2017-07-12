@@ -471,18 +471,18 @@ QgsAttributeForm QScrollArea > QWidget > QWidget
   background-color: #FFFFFF;
 }
 
-#MapToolDrawShapeInputWidget
+#FloatingInputWidget
 {
   background-color: rgba(30,33,38,230);
   border-radius: 3px;
 }
 
-#MapToolDrawShapeInputWidget QLabel
+#FloatingInputWidget QLabel
 {
   color: #FFFFFF;
 }
 
-#MapToolDrawShapeInputWidget QLineEdit
+#FloatingInputWidget QLineEdit
 {
   background-color: #16171B;
   color: #FFFFFF;

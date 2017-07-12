@@ -176,6 +176,7 @@ qgsfieldvalidator.cpp
 qgsfieldproxymodel.cpp
 qgsfiledropedit.cpp
 qgsfilterlineedit.cpp
+qgsfloatinginputwidget.cpp
 qgsformannotationitem.cpp
 qgsformannotationdialog.cpp
 qgsgenericprojectionselector.cpp
@@ -306,6 +307,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsfieldproxymodel.h
   qgsfieldvalidator.h
   qgsfilterlineedit.h
+  qgsfloatinginputwidget.h
   qgsformannotationitem.h
   qgsgenericprojectionselector.h
   qgsgeometryrubberband.h
@@ -327,7 +329,6 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmaptool.h
   qgsmaptooldeleteitems.h
   qgsmaptooldrawshape.h
-  qgsmaptooldrawshape_p.h
   qgsmaptoolemitpoint.h
   qgsmaptoolidentify.h
   qgsmaptoolidentifyfeature.h
