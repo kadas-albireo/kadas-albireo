@@ -398,11 +398,14 @@ void QgsMilxEditBottomBar::repopulateLayers()
   mMoveMenu->addAction( tr( "New layer..." ), this, SLOT( moveToNewLayer() ) );
   foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
   {
-    if ( layer != mTool->mLayer && qobject_cast<QgsMilXLayer*>( layer ) )
+    if ( qobject_cast<QgsMilXLayer*>( layer ) )
     {
       connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( repopulateLayers() ), Qt::UniqueConnection );
       mCopyMenu->addAction( layer->name(), this, SLOT( copyToLayer() ) )->setData( layer->id() );
-      mMoveMenu->addAction( layer->name(), this, SLOT( moveToLayer() ) )->setData( layer->id() );
+      if ( layer != mTool->mLayer )
+      {
+        mMoveMenu->addAction( layer->name(), this, SLOT( moveToLayer() ) )->setData( layer->id() );
+      }
     }
   }
 }
@@ -426,15 +429,32 @@ void QgsMilxEditBottomBar::copyMoveSymbols( const QString &targetLayerId, bool m
   {
     return;
   }
-  if(!move) {
-    foreach ( QgsMilXAnnotationItem* item, mTool->mItems ) {
-      mTool->mLayer->addItem(item->toMilxItem());
+  if ( !move )
+  {
+    foreach ( QgsMilXAnnotationItem* item, mTool->mItems )
+    {
+      mTool->mLayer->addItem( item->toMilxItem() );
     }
   }
   mTool->mLayer->triggerRepaint();
-  // Keep selection but switch layer, effectively moving/copying symbols to that layer once the selection is dismissed and the items added to the layer
-  mTool->setLayer(layer);
-  mTool->mIface->messageBar()->pushMessage( tr( "%1 symbol(s) %2" ).arg( mTool->mItems.size() ).arg( move ? tr( "moved" ) : tr( "copied" ) ), "", QgsMessageBar::INFO, 5 );
+  if ( layer != mTool->mLayer.data() )
+  {
+    // Keep selection but switch layer, effectively moving/copying symbols to that layer once the selection is dismissed and the items added to the layer
+    mTool->setLayer( layer );
+    mTool->mIface->messageBar()->pushMessage( tr( "%1 symbol(s) %2" ).arg( mTool->mItems.size() ).arg( move ? tr( "moved" ) : tr( "copied" ) ), "", QgsMessageBar::INFO, 5 );
+  }
+  else
+  {
+    // Offset symbols when pasting to same layer
+    mTool->mIface->mapCanvas()->freeze( true );
+    foreach ( QgsMilXAnnotationItem* item, mTool->mItems )
+    {
+      QPoint canvasPos = mTool->toCanvasCoordinates( item->mapPosition() ) + QPoint( 25, 25 );
+      item->setMapPosition( mTool->toMapCoordinates( canvasPos ) );
+    }
+    mTool->mIface->mapCanvas()->freeze( false );
+  }
+  updateStatus();
 }
 
 void QgsMilxEditBottomBar::updateStatus()
