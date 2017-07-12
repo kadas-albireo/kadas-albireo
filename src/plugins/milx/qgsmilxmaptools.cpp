@@ -492,10 +492,11 @@ QgsMilXEditTool::~QgsMilXEditTool()
   }
 }
 
-void QgsMilXEditTool::setLayer(QgsMilXLayer* layer)
+void QgsMilXEditTool::setLayer( QgsMilXLayer* layer )
 {
   disconnect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
   mLayer = layer;
+  connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
 }
 
 void QgsMilXEditTool::activate()
