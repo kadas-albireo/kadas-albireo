@@ -67,11 +67,29 @@ class QgsGeometryRubberBand: public QgsMapCanvasItem
     void moveVertex( const QgsVertexId& id, const QgsPointV2& newPos );
 
     void setFillColor( const QColor& c );
+    QColor fillColor() const;
     void setOutlineColor( const QColor& c );
+    QColor outlineColor() const;
     void setOutlineWidth( int width );
+    int outlineWidth() const;
     void setLineStyle( Qt::PenStyle penStyle );
+    Qt::PenStyle lineStyle() const;
     void setBrushStyle( Qt::BrushStyle brushStyle );
+    Qt::BrushStyle brushStyle() const;
     void setIconType( IconType iconType );
+    IconType iconType() const;
+    void setIconSize( int iconSize );
+    int iconSize() const;
+    void setIconFillColor( const QColor& c );
+    const QColor& iconFillColor() const;
+    void setIconOutlineColor( const QColor& c );
+    QColor iconOutlineColor() const;
+    void setIconOutlineWidth( int width );
+    int iconOutlineWidth() const;
+    void setIconLineStyle( Qt::PenStyle penStyle );
+    Qt::PenStyle iconLineStyle() const;
+    void setIconBrushStyle( Qt::BrushStyle brushStyle );
+    Qt::BrushStyle iconBrushStyle() const;
     void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
 
 

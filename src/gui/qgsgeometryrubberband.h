@@ -114,12 +114,19 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void setBrushStyle( Qt::BrushStyle brushStyle );
     Qt::BrushStyle brushStyle() const;
     void setIconType( IconType iconType ) { mIconType = iconType; }
+    IconType iconType() const { return mIconType; }
     void setIconSize( int iconSize ) { mIconSize = iconSize; }
+    int iconSize() const { return mIconSize; }
     void setIconFillColor( const QColor& c );
+    const QColor& iconFillColor() const { return mIconBrush.color(); }
     void setIconOutlineColor( const QColor& c );
+    QColor iconOutlineColor() const { return mIconPen.color(); }
     void setIconOutlineWidth( int width );
+    int iconOutlineWidth() const { return mIconPen.width(); }
     void setIconLineStyle( Qt::PenStyle penStyle );
+    Qt::PenStyle iconLineStyle() const { return mIconPen.style(); }
     void setIconBrushStyle( Qt::BrushStyle brushStyle );
+    Qt::BrushStyle iconBrushStyle() const { return mIconBrush.style(); }
     void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
 
     // Custom measurement handler for cases where default measurement method does not work
