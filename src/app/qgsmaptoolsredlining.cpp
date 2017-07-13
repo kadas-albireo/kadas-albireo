@@ -294,7 +294,7 @@ template class QgsRedliningMapToolT<QgsMapToolDrawCircle>;
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor *editor )
-    : QgsMapToolPan( canvas ), mStatus( StatusReady ), mLayer( layer ), mLabel( label )
+    : QgsMapTool( canvas ), mStatus( StatusReady ), mLayer( layer ), mLabel( label )
 {
   connect( mCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateLabelBoundingBox() ) );
   setCursor( Qt::CrossCursor );

@@ -138,7 +138,7 @@ class QgsRedliningCircleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawCirc
     }
 };
 
-class QgsRedliningEditTextMapTool : public QgsMapToolPan
+class QgsRedliningEditTextMapTool : public QgsMapTool
 {
     Q_OBJECT
   public:
