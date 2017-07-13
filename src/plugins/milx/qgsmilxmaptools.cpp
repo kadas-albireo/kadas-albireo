@@ -631,15 +631,6 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
         mLayer->triggerRepaint();
         updateRect();
       }
-      else if ( e->modifiers() != Qt::ControlModifier )
-      {
-        QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
-        if ( !item || !mItems.contains( item ) )
-        {
-          // Didn't hit an item, CTRL was not pressed => quit
-          deleteLater(); // quit tool
-        }
-      }
     }
   }
   else if ( e->button() == Qt::RightButton )
