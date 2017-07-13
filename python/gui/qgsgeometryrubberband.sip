@@ -55,7 +55,7 @@ class QgsGeometryRubberBand: public QgsMapCanvasItem
 
     /** Sets geometry (takes ownership). Geometry is expected to be in map coordinates */
     void setGeometry( QgsAbstractGeometryV2* geom );
-    const QgsAbstractGeometryV2* geometry();
+    const QgsAbstractGeometryV2* geometry() const;
 
     /** Returns whether the geometry contains the specified point */
     bool contains(const QgsPoint& p, double tol) const;

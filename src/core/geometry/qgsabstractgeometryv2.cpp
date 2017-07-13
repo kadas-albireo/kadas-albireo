@@ -231,7 +231,7 @@ QgsPointV2 QgsAbstractGeometryV2::centroid() const
 }
 
 
-QgsAbstractGeometryV2* QgsAbstractGeometryV2::transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d )
+QgsAbstractGeometryV2* QgsAbstractGeometryV2::transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d ) const
 {
   QgsAbstractGeometryV2* geom = clone();
   geom->transform( ct, d );

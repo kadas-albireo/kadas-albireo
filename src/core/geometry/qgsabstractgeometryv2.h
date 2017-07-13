@@ -192,7 +192,7 @@ class CORE_EXPORT QgsAbstractGeometryV2
      * @param ct coordinate transform
        @param d transformation direction
      */
-    QgsAbstractGeometryV2* transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform );
+    QgsAbstractGeometryV2* transformed( const QgsCoordinateTransform& ct, QgsCoordinateTransform::TransformDirection d = QgsCoordinateTransform::ForwardTransform ) const;
 
     /** Transforms the geometry using a QTransform object
      * @param t QTransform transformation

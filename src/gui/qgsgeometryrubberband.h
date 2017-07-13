@@ -92,7 +92,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
 
     /** Sets geometry (takes ownership). Geometry is expected to be in map coordinates */
     void setGeometry( QgsAbstractGeometryV2* geom, const QList<QgsVertexId>& hiddenNodes = QList<QgsVertexId>() );
-    const QgsAbstractGeometryV2* geometry() { return mGeometry; }
+    const QgsAbstractGeometryV2* geometry() const { return mGeometry; }
 
     /** Returns whether the geometry contains the specified point */
     bool contains( const QgsPoint& p, double tol ) const;
