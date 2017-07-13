@@ -25,6 +25,7 @@
 
 class QgsRubberBand;
 class QgsSelectedFeature;
+class QgsRedliningManager;
 class QgsRedliningLayer;
 
 class QgsRedliningAttribEditor : public QWidget
@@ -57,8 +58,8 @@ template <class T>
 class QgsRedliningMapToolT : public T
 {
   public:
-    QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0, bool isArea = false )
-        : T( canvas ), mLayer( layer ), mFlags( flags )
+    QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0, bool isArea = false )
+        : T( canvas ), mRedlining( redlining ), mLayer( layer ), mFlags( flags ), mEditMode( false )
     {
       init( editFeature, editor );
       Q_UNUSED( isArea );
@@ -72,11 +73,16 @@ class QgsRedliningMapToolT : public T
   private:
     class AddFeatureCommand;
 
+  protected:
+    void canvasPressEvent( QMouseEvent* ev ) override;
+
   private:
+    QgsRedliningManager* mRedlining;
     QgsRedliningLayer* mLayer;
     QString mFlags;
     QgsRedliningBottomBar* mBottomBar;
     QgsRedliningAttribEditor* mStandaloneEditor;
+    bool mEditMode;
 
     void init( const QgsFeature* editFeature, QgsRedliningAttribEditor* editor );
     QgsFeature createFeature() const;
@@ -84,16 +90,15 @@ class QgsRedliningMapToolT : public T
 };
 
 template<>
-QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea );
+QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea );
 
 class QgsRedliningPointMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPoint>
 {
     Q_OBJECT
-  private:
+  public:
     static const int sSizeRatio;
 
-  public:
-    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 );
+    QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 );
     void updateStyle( int outlineWidth, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle ) override;
   private:
     QgsRubberBand* mNodeRubberband;
@@ -104,8 +109,8 @@ class QgsRedliningPointMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPoint
 class QgsRedliningRectangleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawRectangle>
 {
   public:
-    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
-        : QgsRedliningMapToolT<QgsMapToolDrawRectangle>( canvas, layer, "shape=rectangle", editFeature, editor )
+    QgsRedliningRectangleMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawRectangle>( canvas, redlining, layer, "shape=rectangle", editFeature, editor )
     {
       setMeasurementMode( QgsGeometryRubberBand::MEASURE_RECTANGLE, QGis::Meters );
     }
@@ -114,8 +119,8 @@ class QgsRedliningRectangleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawR
 class QgsRedliningPolylineMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPolyLine>
 {
   public:
-    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, bool closed, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
-        : QgsRedliningMapToolT<QgsMapToolDrawPolyLine>( canvas, layer, closed ? "shape=polygon" : "shape=line", editFeature, editor, closed )
+    QgsRedliningPolylineMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, bool closed, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawPolyLine>( canvas, redlining, layer, closed ? "shape=polygon" : "shape=line", editFeature, editor, closed )
     {
       if ( closed )
       {
@@ -131,11 +136,42 @@ class QgsRedliningPolylineMapTool : public QgsRedliningMapToolT<QgsMapToolDrawPo
 class QgsRedliningCircleMapTool : public QgsRedliningMapToolT<QgsMapToolDrawCircle>
 {
   public:
-    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
-        : QgsRedliningMapToolT<QgsMapToolDrawCircle>( canvas, layer, "shape=circle", editFeature, editor )
+    QgsRedliningCircleMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0 )
+        : QgsRedliningMapToolT<QgsMapToolDrawCircle>( canvas, redlining, layer, "shape=circle", editFeature, editor )
     {
       setMeasurementMode( QgsGeometryRubberBand::MEASURE_CIRCLE, QGis::Meters );
     }
+};
+
+class QgsRedliningEditGroupMapTool : public QgsMapTool
+{
+    Q_OBJECT
+  public:
+    QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features );
+    ~QgsRedliningEditGroupMapTool();
+    void canvasReleaseEvent( QMouseEvent * e ) override;
+    void keyReleaseEvent( QKeyEvent *e ) override;
+
+  private:
+    struct Item
+    {
+      QgsGeometryRubberBand* rubberband;
+      QgsRubberBand* nodeRubberband;
+      QString flags;
+    };
+    QgsRedliningManager* mRedlining;
+    QPointer<QgsRedliningLayer> mLayer;
+    QList<Item> mItems;
+    QGraphicsRectItem* mRectItem;
+    QPointF mMouseMoveLastXY;
+    bool mDraggingRect;
+
+    void addFeatureToSelection( const QgsFeature& feature, bool update = true );
+    void removeItemFromSelection( int itemIndex, bool update = true );
+    QgsFeature featureFromItem( const Item& item ) const;
+
+  private slots:
+    void updateRect();
 };
 
 class QgsRedliningEditTextMapTool : public QgsMapTool

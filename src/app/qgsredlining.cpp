@@ -102,7 +102,7 @@ void QgsRedliningLabelEditor::saveFont()
 
 
 QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
-    : QObject( app )
+    : QgsRedliningManager( app )
     , mApp( app )
     , mUi( ui )
     , mLayer( 0 )
@@ -296,34 +296,34 @@ void QgsRedlining::checkLayerRemoved( const QString &layerId )
 
 void QgsRedlining::setMarkerTool( const QString &shape, bool active, const QgsFeature *editFeature, QAction *action )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), shape, editFeature ), action, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), shape, editFeature ), action, active );
 }
 
 void QgsRedlining::setLineTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false, editFeature ), mActionNewLine, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), false, editFeature ), mActionNewLine, active );
   mUi.colorButtonFillColor->setEnabled( false );
   mUi.comboFillStyle->setEnabled( false );
 }
 
 void QgsRedlining::setRectangleTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningRectangleMapTool( mApp->mapCanvas(), getOrCreateLayer(), editFeature ), mActionNewRectangle, active );
+  setTool( new QgsRedliningRectangleMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), editFeature ), mActionNewRectangle, active );
 }
 
 void QgsRedlining::setPolygonTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), true, editFeature ), mActionNewPolygon, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), true, editFeature ), mActionNewPolygon, active );
 }
 
 void QgsRedlining::setCircleTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), getOrCreateLayer(), editFeature ), mActionNewCircle, active );
+  setTool( new QgsRedliningCircleMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), editFeature ), mActionNewCircle, active );
 }
 
 void QgsRedlining::setTextTool( bool active )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "", 0, new QgsRedliningLabelEditor ), mActionNewText, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), "", 0, new QgsRedliningLabelEditor ), mActionNewText, active );
   mUi.spinBoxSize->setEnabled( false );
   mUi.comboFillStyle->setEnabled( false );
   mUi.colorButtonOutlineColor->setEnabled( false );

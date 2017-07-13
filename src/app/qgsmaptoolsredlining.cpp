@@ -17,6 +17,7 @@
 #include "qgscircularstringv2.h"
 #include "qgscrscache.h"
 #include "qgscurvepolygonv2.h"
+#include "qgsfeaturepicker.h"
 #include "qgsgeometryutils.h"
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
@@ -25,6 +26,7 @@
 #include "qgssymbollayerv2utils.h"
 #include "qgsrubberband.h"
 #include "qgsvectordataprovider.h"
+#include "qgsredlining.h"
 #include "qgsredlininglayer.h"
 #include "nodetool/qgsselectedfeature.h"
 #include "nodetool/qgsvertexentry.h"
@@ -130,6 +132,7 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
   T::setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
   if ( editFeature )
   {
+    mEditMode = true;
     T::editGeometry( editFeature->geometry()->geometry(), mLayer->crs() );
     mLayer->deleteFeature( editFeature->id() );
     mLayer->triggerRepaint();
@@ -141,6 +144,24 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
   else
   {
     mStandaloneEditor = editor;
+  }
+}
+
+template <class T>
+void QgsRedliningMapToolT<T>::canvasPressEvent( QMouseEvent *ev )
+{
+  if ( mEditMode && ev->button() == Qt::LeftButton && ev->modifiers() == Qt::ControlModifier )
+  {
+    QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( T::canvas(), T::toMapCoordinates( ev->pos() ), QGis::AnyGeometry );
+    if ( result.layer == mLayer )
+    {
+      QList<QgsFeature> features = QList<QgsFeature>() << createFeature() << result.feature;
+      T::canvas()->setMapTool( new QgsRedliningEditGroupMapTool( T::canvas(), mRedlining, mLayer, features ) );
+    }
+  }
+  else
+  {
+    T::canvasPressEvent( ev );
   }
 }
 
@@ -218,16 +239,16 @@ void QgsRedliningMapToolT<T>::onFinished()
 }
 
 template<>
-QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea )
-    : QgsMapToolDrawPolyLine( canvas, isArea ), mLayer( layer ), mFlags( flags )
+QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor, bool isArea )
+    : QgsMapToolDrawPolyLine( canvas, isArea ), mRedlining( redlining ), mLayer( layer ), mFlags( flags )
 {
   init( editFeature, editor );
 }
 
 const int QgsRedliningPointMapTool::sSizeRatio = 2;
 
-QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor )
-    : QgsRedliningMapToolT<QgsMapToolDrawPoint>( canvas, layer, QString( "shape=point,symbol=%1,w=%2*\"size\",h=%2*\"size\",r=0" ).arg( symbol ).arg( sSizeRatio ), editFeature, editor )
+QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor )
+    : QgsRedliningMapToolT<QgsMapToolDrawPoint>( canvas, redlining, layer, QString( "shape=point,symbol=%1,w=%2*\"size\",h=%2*\"size\",r=0" ).arg( symbol ).arg( sSizeRatio ), editFeature, editor )
 {
   if ( symbol == "circle" )
   {
@@ -290,6 +311,264 @@ template class QgsRedliningMapToolT<QgsMapToolDrawPoint>;
 template class QgsRedliningMapToolT<QgsMapToolDrawRectangle>;
 template class QgsRedliningMapToolT<QgsMapToolDrawPolyLine>;
 template class QgsRedliningMapToolT<QgsMapToolDrawCircle>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features )
+    : QgsMapTool( canvas ), mRedlining( redlining ), mLayer( layer )
+{
+  connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
+  connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
+  connect( canvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateRect() ) );
+
+  mRectItem = new QGraphicsRectItem();
+  mRectItem->setPen( QPen( Qt::black, 2, Qt::DashLine ) );
+  canvas->scene()->addItem( mRectItem );
+
+  for ( int i = 0, n = features.size(); i < n; ++i )
+  {
+    addFeatureToSelection( features[i], i == n - 1 );
+  }
+}
+
+QgsRedliningEditGroupMapTool::~QgsRedliningEditGroupMapTool()
+{
+  while ( !mItems.isEmpty() )
+  {
+    removeItemFromSelection( 0, false );
+  }
+  delete mRectItem;
+}
+
+void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
+{
+  if ( mDraggingRect )
+  {
+    mDraggingRect = false;
+    mCanvas->setCursor( mCursor );
+    updateRect();
+  }
+  else if ( e->button() == Qt::LeftButton )
+  {
+    QgsRenderContext renderContext = QgsRenderContext::fromMapSettings( canvas()->mapSettings() );
+    double radiusmm = QSettings().value( "/Map/searchRadiusMM", QGis::DEFAULT_SEARCH_RADIUS_MM ).toDouble();
+    radiusmm = radiusmm > 0 ? radiusmm : QGis::DEFAULT_SEARCH_RADIUS_MM;
+    double mapTol = radiusmm * renderContext.scaleFactor() * renderContext.mapToPixel().mapUnitsPerPixel();
+    QgsPoint mapPos = toMapCoordinates( e->pos() );
+
+    int selectedItem = -1;
+    for ( int i = 0, n = mItems.size(); i < n; ++i )
+    {
+      if ( mItems[i].rubberband->contains( mapPos, mapTol ) )
+      {
+        selectedItem = i;
+        break;
+      }
+    }
+
+    if ( e->modifiers() == Qt::ControlModifier && selectedItem >= 0 )
+    {
+      // CTRL+Clicked a selected item, deselect it
+      removeItemFromSelection( selectedItem );
+    }
+    else
+    {
+      QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( canvas(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+      if ( result.layer == mLayer )
+      {
+        if ( e->modifiers() != Qt::ControlModifier )
+        {
+          // Clicked a new item without CTRL item, remove other items
+          while ( !mItems.isEmpty() )
+          {
+            removeItemFromSelection( 0, false );
+          }
+        }
+        // Add new item
+        addFeatureToSelection( result.feature );
+      }
+    }
+  }
+  else if ( e->button() == Qt::RightButton  && !mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
+  {
+    deleteLater(); // quit tool
+  }
+}
+
+void QgsRedliningEditGroupMapTool::keyReleaseEvent( QKeyEvent *e )
+{
+  if ( e->key() == Qt::Key_Escape )
+  {
+    deleteLater(); // quit tool
+  }
+}
+
+void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feature, bool update )
+{
+  QString flags = feature.attribute( "flags" ).toString();
+  int outlineWidth = feature.attribute( "size" ).toInt();
+  QColor outlineColor = QgsSymbolLayerV2Utils::decodeColor( feature.attribute( "outline" ).toString() );
+  QColor fillColor = QgsSymbolLayerV2Utils::decodeColor( feature.attribute( "fill" ).toString() );
+  Qt::PenStyle outlineStyle = QgsSymbolLayerV2Utils::decodePenStyle( feature.attribute( "outline_style" ).toString() );
+  Qt::BrushStyle fillStyle = QgsSymbolLayerV2Utils::decodeBrushStyle( feature.attribute( "fill_style" ).toString() );
+
+  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mLayer->crs().authid(), canvas()->mapSettings().destinationCrs().authid() );
+
+  Item item;
+  item.rubberband = new QgsGeometryRubberBand( canvas(), feature.geometry()->type() );
+  item.rubberband->setGeometry( feature.geometry()->geometry()->transformed( *ct ) );
+  item.nodeRubberband = 0;
+  item.flags = flags;
+
+  QRegExp shapeRe( "\\bshape=(\\w+)\\b" );
+  shapeRe.indexIn( flags );
+  QString shape = shapeRe.cap( 1 );
+  if ( shape == "point" )
+  {
+    QRegExp symbolRe( "\\bsymbol=(\\w+)\\b" );
+    symbolRe.indexIn( flags );
+    QString symbol = symbolRe.cap( 1 );
+    if ( symbol == "circle" )
+    {
+      item.rubberband->setIconType( QgsGeometryRubberBand::ICON_CIRCLE );
+    }
+    else if ( symbol == "rectangle" )
+    {
+      item.rubberband->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
+    }
+    else if ( symbol == "triangle" )
+    {
+      item.rubberband->setIconType( QgsGeometryRubberBand::ICON_FULL_TRIANGLE );
+    }
+    else
+    {
+      item.rubberband->setIconType( QgsGeometryRubberBand::ICON_NONE );
+    }
+    // canvas()->logicalDpiX() / 25.48: mm -> px
+    item.rubberband->setIconSize( QgsRedliningPointMapTool::sSizeRatio * canvas()->logicalDpiX() / 25.48 * outlineWidth );
+    item.rubberband->setIconOutlineWidth( outlineWidth );
+    item.rubberband->setIconOutlineColor( outlineColor );
+    item.rubberband->setIconFillColor( fillColor );
+    item.rubberband->setIconLineStyle( outlineStyle );
+    item.rubberband->setIconBrushStyle( fillStyle );
+    item.nodeRubberband = new QgsRubberBand( canvas(), QGis::Point );
+    item.nodeRubberband->setBorderColor( Qt::red );
+    item.nodeRubberband->setFillColor( Qt::white );
+    item.nodeRubberband->setIcon( QgsRubberBand::ICON_FULL_BOX );
+    item.nodeRubberband->setIconSize( 10 );
+    item.nodeRubberband->setWidth( 2 );
+    const QgsPointV2* pos = static_cast<const QgsPointV2*>( item.rubberband->geometry() );
+    item.nodeRubberband->addPoint( QgsPoint( pos->x(), pos->y() ) );
+  }
+  else
+  {
+    item.rubberband->setIconSize( 10 );
+    item.rubberband->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
+    item.rubberband->setIconOutlineColor( Qt::red );
+    item.rubberband->setIconFillColor( Qt::white );
+    item.rubberband->setOutlineWidth( outlineWidth );
+    item.rubberband->setOutlineColor( outlineColor );
+    item.rubberband->setFillColor( fillColor );
+    item.rubberband->setLineStyle( outlineStyle );
+    item.rubberband->setBrushStyle( fillStyle );
+  }
+
+  mLayer->deleteFeature( feature.id() );
+  mLayer->triggerRepaint();
+
+  mItems.append( item );
+
+  if ( update )
+  {
+    updateRect();
+  }
+}
+
+void QgsRedliningEditGroupMapTool::removeItemFromSelection( int itemIndex, bool update )
+{
+  Item& item = mItems[itemIndex];
+  if ( mLayer )
+  {
+    QgsFeature feature = featureFromItem( item );
+    mLayer->addFeature( feature );
+  }
+  if ( update )
+  {
+    updateRect();
+  }
+  mLayer->triggerRepaint();
+  connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
+  delete item.nodeRubberband;
+  mItems.removeAt( itemIndex );
+}
+
+QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) const
+{
+  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( canvas()->mapSettings().destinationCrs().authid(), mLayer->crs().authid() );
+  const QgsFields& fields = mLayer->pendingFields();
+  const QgsGeometryRubberBand* rubberBand = item.rubberband;
+  QgsFeature f( fields );
+  QgsAttributes attribs = f.attributes();
+  attribs[fields.fieldNameIndex( "flags" )] = item.flags;
+  if ( item.nodeRubberband )   // Is point
+  {
+    attribs[fields.fieldNameIndex( "size" )] = rubberBand->iconOutlineWidth();
+    attribs[fields.fieldNameIndex( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( rubberBand->iconOutlineColor() );
+    attribs[fields.fieldNameIndex( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( rubberBand->iconFillColor() );
+    attribs[fields.fieldNameIndex( "outline_style" )] = QgsSymbolLayerV2Utils::encodePenStyle( rubberBand->iconLineStyle() );
+    attribs[fields.fieldNameIndex( "fill_style" )] = QgsSymbolLayerV2Utils::encodeBrushStyle( rubberBand->iconBrushStyle() );
+  }
+  else
+  {
+    attribs[fields.fieldNameIndex( "size" )] = rubberBand->outlineWidth();
+    attribs[fields.fieldNameIndex( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( rubberBand->outlineColor() );
+    attribs[fields.fieldNameIndex( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( rubberBand->fillColor() );
+    attribs[fields.fieldNameIndex( "outline_style" )] = QgsSymbolLayerV2Utils::encodePenStyle( rubberBand->lineStyle() );
+    attribs[fields.fieldNameIndex( "fill_style" )] = QgsSymbolLayerV2Utils::encodeBrushStyle( rubberBand->brushStyle() );
+  }
+  f.setAttributes( attribs );
+  f.setGeometry( new QgsGeometry( rubberBand->geometry()->transformed( *ct ) ) );
+  return f;
+}
+
+void QgsRedliningEditGroupMapTool::updateRect()
+{
+  if ( mItems.isEmpty() )
+  {
+    deleteLater(); // quit tool if no items remain
+    return;
+  }
+  int n = mItems.size();
+  if ( n == 1 )
+  {
+    // Just one item, return to individual item editing mode
+    Item& item = mItems.front();
+    QgsFeature feature = featureFromItem( item );
+    mLayer->addFeature( feature );
+    mLayer->triggerRepaint();
+    connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
+    delete item.nodeRubberband;
+    mItems.clear();
+    deleteLater();
+    mRedlining->editFeature( feature );
+    return;
+  }
+  QRectF rect = mItems.front().rubberband->boundingRect().translated( mItems.front().rubberband->pos() );
+  int iconSize = mItems.front().rubberband->iconSize();
+  rect.translate( -0.5*iconSize, -0.5 * iconSize );
+  rect.setSize( rect.size() + QSizeF( iconSize, iconSize ) );
+  for ( int i = 1; i < n; ++i )
+  {
+    QRectF itemRect = mItems[i].rubberband->boundingRect().translated( mItems[i].rubberband->pos() );
+    iconSize = mItems[i].rubberband->iconSize();
+    itemRect.translate( -0.5*iconSize, -0.5 * iconSize );
+    itemRect.setSize( itemRect.size() + QSizeF( iconSize, iconSize ) );
+    rect = rect.unite( itemRect );
+  }
+  mRectItem->setPos( 0, 0 );
+  mRectItem->setRect( rect );
+  mRectItem->setVisible( n > 1 );
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -126,7 +126,7 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
 
 
 QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoints, QAction *actionCreateRoutes )
-    : QObject( app )
+    : QgsRedliningManager( app )
     , mApp( app )
     , mActionCreateWaypoints( actionCreateWaypoints )
     , mActionCreateRoutes( actionCreateRoutes )
@@ -207,12 +207,12 @@ void QgsGPSRouteEditor::checkLayerRemoved( const QString &layerId )
 
 void QgsGPSRouteEditor::setWaypointsTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), getOrCreateLayer(), "circle", editFeature, new WaypointEditor ), mActionCreateWaypoints, active );
+  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), "circle", editFeature, new WaypointEditor ), mActionCreateWaypoints, active );
 }
 
 void QgsGPSRouteEditor::setRoutesTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), getOrCreateLayer(), false, editFeature, new RouteEditor ), mActionCreateRoutes, active );
+  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), false, editFeature, new RouteEditor ), mActionCreateRoutes, active );
 }
 
 void QgsGPSRouteEditor::setTool( QgsMapToolDrawShape *tool, QAction* action , bool active )

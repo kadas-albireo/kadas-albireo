@@ -17,6 +17,7 @@
 #define QGSREDLINING_H
 
 #include <QObject>
+#include "qgsredliningmanager.h"
 #include "qgsfeature.h"
 #include "qgsbottombar.h"
 #include "qgsmaptoolmovelabel.h"
@@ -51,7 +52,7 @@ class QgsRedliningLabelEditor : public QgsRedliningAttribEditor
     void saveFont();
 };
 
-class QgsRedlining : public QObject
+class QgsRedlining : public QgsRedliningManager
 {
     Q_OBJECT
   public:
@@ -68,8 +69,8 @@ class QgsRedlining : public QObject
     QgsRedlining( QgisApp* app, const RedliningUi &ui );
     QgsRedliningLayer *getOrCreateLayer();
     QgsRedliningLayer *getLayer() const;
-    void editFeature( const QgsFeature &feature );
-    void editLabel( const QgsLabelPosition &labelPos );
+    void editFeature( const QgsFeature &feature ) override;
+    void editLabel( const QgsLabelPosition &labelPos ) override;
 
   public slots:
     void setMarkerTool( const QString& shape, bool active, const QgsFeature *editFeature, QAction *action );

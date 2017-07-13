@@ -17,6 +17,7 @@
 #define QGSGPSROUTEEDITOR_H
 
 #include <QObject>
+#include "qgsredliningmanager.h"
 #include "qgsfeature.h"
 #include "qgsmaptoolmovelabel.h"
 
@@ -25,15 +26,15 @@ class QgisApp;
 class QgsMapToolDrawShape;
 class QgsRedliningLayer;
 
-class QgsGPSRouteEditor : public QObject
+class QgsGPSRouteEditor : public QgsRedliningManager
 {
     Q_OBJECT
   public:
     QgsGPSRouteEditor( QgisApp *app, QAction* actionCreateWaypoints, QAction* actionCreateRoutes );
     QgsRedliningLayer *getOrCreateLayer();
     QgsRedliningLayer *getLayer() const;
-    void editFeature( const QgsFeature &feature );
-    void editLabel( const QgsLabelPosition &labelPos );
+    void editFeature( const QgsFeature &feature ) override;
+    void editLabel( const QgsLabelPosition &labelPos ) override;
 
   public slots:
     void importGpx();
