@@ -467,7 +467,7 @@ void QgsMilxEditBottomBar::updateStatus()
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* layerItem )
-    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mPanning( false ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
   QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
   item->fromMilxItem( layerItem );
@@ -563,12 +563,6 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
       mActiveAnnotation->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
       updateRect();
     }
-    else
-    {
-      mCanvas->panAction( e );
-      cursor = QCursor( Qt::ClosedHandCursor );
-      mPanning = true;
-    }
   }
   else
   {
@@ -591,12 +585,6 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
     mDraggingRect = false;
     mCanvas->setCursor( mCursor );
     updateRect();
-  }
-  else if ( mPanning )
-  {
-    mCanvas->panActionEnd( e->pos() );
-    mPanning = false;
-    mCanvas->setCursor( mCursor );
   }
   else if ( mActiveAnnotation )
   {

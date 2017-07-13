@@ -140,7 +140,6 @@ class QgsMilXEditTool : public QgsMapTool
     QPointer<QgsMilXLayer> mLayer;
     QGraphicsRectItem* mRectItem;
     QPointF mMouseMoveLastXY;
-    bool mPanning;
     bool mDraggingRect;
     QgsMilXAnnotationItem* mActiveAnnotation;
     int mAnnotationMoveAction;
