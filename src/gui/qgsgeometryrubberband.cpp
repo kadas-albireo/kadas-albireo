@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include "qgsgeometryrubberband.h"
+#include "qgsgeometry.h"
+#include "qgsgeometryengine.h"
 #include "qgsabstractgeometryv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspointv2.h"
@@ -221,6 +223,29 @@ void QgsGeometryRubberBand::setGeometry( QgsAbstractGeometryV2* geom , const QLi
       measureGeometry( mGeometry, 0 );
     }
   }
+}
+
+bool QgsGeometryRubberBand::contains( const QgsPoint& p, double tol ) const
+{
+  if ( !mGeometry )
+  {
+    return false;
+  }
+
+  QgsPolygonV2 filterRect;
+  QgsLineStringV2* exterior = new QgsLineStringV2();
+  exterior->setPoints( QList<QgsPointV2>()
+                       << QgsPointV2( p.x() - tol, p.y() - tol )
+                       << QgsPointV2( p.x() + tol, p.y() - tol )
+                       << QgsPointV2( p.x() + tol, p.y() + tol )
+                       << QgsPointV2( p.x() - tol, p.y() + tol )
+                       << QgsPointV2( p.x() - tol, p.y() - tol ) );
+  filterRect.setExteriorRing( exterior );
+
+  QgsGeometryEngine* geomEngine = QgsGeometry::createGeometryEngine( mGeometry );
+  bool intersects = geomEngine->intersects( filterRect );
+  delete geomEngine;
+  return intersects;
 }
 
 void QgsGeometryRubberBand::setTranslationOffset( double dx, double dy )

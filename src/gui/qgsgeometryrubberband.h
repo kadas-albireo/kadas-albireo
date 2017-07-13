@@ -94,6 +94,9 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     void setGeometry( QgsAbstractGeometryV2* geom, const QList<QgsVertexId>& hiddenNodes = QList<QgsVertexId>() );
     const QgsAbstractGeometryV2* geometry() { return mGeometry; }
 
+    /** Returns whether the geometry contains the specified point */
+    bool contains( const QgsPoint& p, double tol ) const;
+
     /** Sets the translation offset (offset in map coordinates for drawing geometry) */
     void setTranslationOffset( double dx, double dy );
     void translationOffset( double& dx, double& dy ) { dx = mTranslationOffset[0]; dy = mTranslationOffset[1]; }
