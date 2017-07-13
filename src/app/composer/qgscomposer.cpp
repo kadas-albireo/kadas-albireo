@@ -3745,17 +3745,20 @@ void QgsComposer::setPrinterPageOrientation( QString orientation )
 
 void QgsComposer::setPrinterPageDefaults()
 {
-  double paperWidth = mComposition->paperWidth();
-  double paperHeight = mComposition->paperHeight();
+  if ( mPrinter )
+  {
+    double paperWidth = mComposition->paperWidth();
+    double paperHeight = mComposition->paperHeight();
 
-  //set printer page orientation
-  if ( paperWidth > paperHeight )
-  {
-    printer()->setOrientation( QPrinter::Landscape );
-  }
-  else
-  {
-    printer()->setOrientation( QPrinter::Portrait );
+    //set printer page orientation
+    if ( paperWidth > paperHeight )
+    {
+      mPrinter->setOrientation( QPrinter::Landscape );
+    }
+    else
+    {
+      mPrinter->setOrientation( QPrinter::Portrait );
+    }
   }
 }
 
@@ -3813,7 +3816,10 @@ QPrinter *QgsComposer::printer()
   //only create the printer on demand - creating a printer object can be very slow
   //due to QTBUG-3033
   if ( !mPrinter )
+  {
     mPrinter = new QPrinter();
+    setPrinterPageDefaults();
+  }
 
   return mPrinter;
 }
