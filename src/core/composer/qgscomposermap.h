@@ -798,6 +798,7 @@ class CORE_EXPORT QgsComposerMap : public QgsComposerItem
   public slots:
 
     /**Called if map canvas has changed*/
+    void scheduleUpdateCachedImage();
     void updateCachedImage();
     /**Call updateCachedImage if item is in render mode*/
     void renderModeUpdateCachedImage();
@@ -831,6 +832,8 @@ class CORE_EXPORT QgsComposerMap : public QgsComposerItem
 
     // Cache used in composer preview
     QImage mCacheImage;
+
+    QTimer* mRefreshTimer;
 
     // Is cache up to date
     bool mCacheUpdated;

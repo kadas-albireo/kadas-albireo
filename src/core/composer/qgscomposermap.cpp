@@ -125,6 +125,10 @@ QgsComposerMap::QgsComposerMap( QgsComposition *composition )
 
 void QgsComposerMap::init()
 {
+  mRefreshTimer = new QTimer( this );
+  mRefreshTimer->setSingleShot( true );
+  connect( mRefreshTimer, SIGNAL( timeout() ), this, SLOT( updateCachedImage() ) );
+
   mGridStack = new QgsComposerMapGridStack( this );
   mOverviewStack = new QgsComposerMapOverviewStack( this );
   connectUpdateSlot();
@@ -512,7 +516,12 @@ bool QgsComposerMap::shouldDrawPart( PartType part ) const
   return true; // for Layer
 }
 
-void QgsComposerMap::updateCachedImage( void )
+void QgsComposerMap::scheduleUpdateCachedImage()
+{
+  mRefreshTimer->start( 1 );
+}
+
+void QgsComposerMap::updateCachedImage()
 {
   syncLayerSet(); //layer list may have changed
   mCacheUpdated = false;
@@ -1197,8 +1206,8 @@ void QgsComposerMap::connectUpdateSlot()
   QgsMapLayerRegistry* layerRegistry = QgsMapLayerRegistry::instance();
   if ( layerRegistry )
   {
-    connect( layerRegistry, SIGNAL( layerRemoved( QString ) ), this, SLOT( updateCachedImage() ) );
-    connect( layerRegistry, SIGNAL( layerWasAdded( QgsMapLayer* ) ), this, SLOT( updateCachedImage() ) );
+    connect( layerRegistry, SIGNAL( layersRemoved( QStringList ) ), this, SLOT( scheduleUpdateCachedImage() ) );
+    connect( layerRegistry, SIGNAL( layersAdded( QList<QgsMapLayer *> ) ), this, SLOT( scheduleUpdateCachedImage() ) );
   }
 }
 
