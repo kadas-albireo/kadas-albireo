@@ -34,6 +34,7 @@ QgsLayerTreeView::QgsLayerTreeView( QWidget *parent )
   setDragEnabled( true );
   setAcceptDrops( true );
   setDropIndicatorShown( true );
+  setDefaultDropAction( Qt::MoveAction );
   setEditTriggers( EditKeyPressed );
   setExpandsOnDoubleClick( false ); // normally used for other actions
 
