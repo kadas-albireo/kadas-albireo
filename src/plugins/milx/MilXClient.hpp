@@ -94,7 +94,7 @@ public:
     AttributeWidth = 1,
     AttributeLength = 2,
     AttributeRadius = 4,
-    AttributeAttutide = 8
+    AttributeAttitude = 8
   };
 
   static QString attributeName(int idx);

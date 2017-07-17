@@ -314,7 +314,7 @@ QString MilXClient::attributeName( int idx )
     return "Length";
   else if ( idx == AttributeRadius )
     return "Radius";
-  else if ( idx == AttributeAttutide )
+  else if ( idx == AttributeAttitude )
     return "Attitude";
   return "";
 }
@@ -328,7 +328,7 @@ int MilXClient::attributeIdx( const QString& name )
   else if ( name == "Radius" )
     return AttributeRadius;
   else if ( name == "Attitude" )
-    return AttributeAttutide;
+    return AttributeAttitude;
   return 0;
 }
 

@@ -333,7 +333,7 @@ QList< QPair<int, double> > QgsMilXAnnotationItem::screenAttributes() const
     foreach ( const AttribPt_t& attrib, mAttributes )
     {
       double value = attrib.second;
-      if ( attrib.first != MilXClient::AttributeAttutide )
+      if ( attrib.first != MilXClient::AttributeAttitude )
       {
         value = value * m2p;
       }
@@ -398,7 +398,7 @@ void QgsMilXAnnotationItem::setGraphic( MilXClient::NPointSymbolGraphic &result,
       foreach ( const AttribPt_t& attrib, result.attributes )
       {
         double value = attrib.second;
-        if ( attrib.first != MilXClient::AttributeAttutide )
+        if ( attrib.first != MilXClient::AttributeAttitude )
         {
           value = value / m2p;
         }
