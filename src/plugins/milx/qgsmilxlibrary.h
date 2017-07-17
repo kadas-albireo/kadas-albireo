@@ -45,6 +45,7 @@ class QgsMilXLibrary : public QWidget
   public:
     QgsMilXLibrary( QWidget* parent = 0 );
     ~QgsMilXLibrary();
+    void focusFilter();
 
   signals:
     void symbolSelected( const QgsMilxSymbolTemplate& symbolTemplate );

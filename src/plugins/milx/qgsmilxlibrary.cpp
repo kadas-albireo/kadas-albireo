@@ -131,6 +131,12 @@ QgsMilXLibrary::~QgsMilXLibrary()
   }
 }
 
+void QgsMilXLibrary::focusFilter()
+{
+  mFilterLineEdit->setFocus();
+  mFilterLineEdit->selectAll();
+}
+
 void QgsMilXLibrary::loaderFinished()
 {
   mLoader->deleteLater();

@@ -182,6 +182,7 @@ void QgsMilxCreateBottomBar::toggleLibrary( bool visible )
     mLibrary->resize( width(), 320 );
     mLibrary->move( QPoint( mapToGlobal( QPoint( 0, 0 ) ).x(), mSymbolButton->mapToGlobal( QPoint( 0, -320 ) ).y() ) );
     mLibrary->show();
+    mLibrary->focusFilter();
   }
 }
 
