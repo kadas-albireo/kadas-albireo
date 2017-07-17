@@ -914,7 +914,7 @@ int main( int argc, char *argv[] )
     }
     else
     {
-      qWarning( "loading of qt translation failed [%s]", QString( "%1/qt_%2" ).arg( translationsPath ).arg( myTranslationCode ).toLocal8Bit().constData() );
+      QgsDebugMsg( QString( "loading of qt translation failed [%1/qt_%2]" ).arg( translationsPath ).arg( myTranslationCode ).toLocal8Bit().constData() );
     }
   }
   else
