@@ -107,6 +107,10 @@ QgsMapLayerRegistry::addMapLayer( QgsMapLayer* theMapLayer,
 //introduced in 1.8
 void QgsMapLayerRegistry::removeMapLayers( QStringList theLayerIds )
 {
+  if ( theLayerIds.isEmpty() )
+  {
+    return;
+  }
   emit layersWillBeRemoved( theLayerIds );
 
   foreach ( const QString &myId, theLayerIds )
