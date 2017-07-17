@@ -210,6 +210,19 @@ void QgsMilXAnnotationItem::handleMoveAction( int moveAction, const QPointF &new
   }
 }
 
+int QgsMilXAnnotationItem::attributeIndexForMoveAction( int moveAction ) const
+{
+  if ( moveAction >= NumMouseMoveActions )
+  {
+    int idx = moveAction - NumMouseMoveActions;
+    if ( idx < 1 + mAdditionalPoints.size() + mAttributes.size() )
+    {
+      return idx - 1 - mAdditionalPoints.size();
+    }
+  }
+  return -1;
+}
+
 Qt::CursorShape QgsMilXAnnotationItem::cursorShapeForAction( int moveAction ) const
 {
   if ( moveAction >= NumMouseMoveActions )
@@ -291,6 +304,15 @@ void QgsMilXAnnotationItem::moveAttributePoint( int attr, const QPoint& newPos )
   if ( MilXClient::moveAttributePoint( mMapCanvas->sceneRect().toRect(), symbol, attr, newPos, result ) )
   {
     setGraphic( result, true );
+  }
+}
+
+void QgsMilXAnnotationItem::setAttribute( int attridx, double value )
+{
+  if ( attridx >= 0 && attridx < mAttributes.size() )
+  {
+    mAttributes[attridx].second = value;
+    updateSymbol( true );
   }
 }
 

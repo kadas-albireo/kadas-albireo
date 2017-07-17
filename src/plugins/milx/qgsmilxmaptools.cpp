@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgscrscache.h"
+#include "qgsfloatinginputwidget.h"
 #include "qgsmilxmaptools.h"
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxlayer.h"
@@ -189,7 +190,7 @@ void QgsMilxCreateBottomBar::toggleLibrary( bool visible )
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXCreateTool::QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary* library )
-    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mItem( 0 ), mLayer( 0 )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mItem( 0 ), mLayer( 0 ), mInputWidget( 0 )
 {
   mBottomBar = new QgsMilxCreateBottomBar( this, library );
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
@@ -237,6 +238,8 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       mItem = new QgsMilXAnnotationItem( mCanvas );
       mItem->setMapPosition( toMapCoordinates( e->pos() ) );
       mItem->setSymbolXml( mSymbolTemplate.symbolXml, mSymbolTemplate.symbolMilitaryName );
+      // Ensure attributes are populated
+      mItem->updateSymbol( true );
       mItem->setSelected( true );
       mNPressedPoints = 1;
       // Only actually add the point if more than the minimum number have been specified
@@ -244,6 +247,25 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
       if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
       {
         mItem->appendPoint( e->pos() );
+      }
+      if ( !mItem->attributes().isEmpty() )
+      {
+        mInputWidget = new QgsFloatingInputWidget( canvas() );
+        bool first = true;
+        for ( int i = 0, n = mItem->attributes().size(); i < n; ++i )
+        {
+          const QPair<int, double>& attr = mItem->attributes()[i];
+          QDoubleValidator* validator = new QDoubleValidator();
+          validator->setBottom( 0 );
+          QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
+          input->setText( QString::number( attr.second ) );
+          input->setProperty( "attridx", i );
+          connect( input, SIGNAL( textEdited( QString ) ), this, SLOT( updateAttribute( QString ) ) );
+          mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input, first );
+          first = false;
+        }
+        mInputWidget->move( e->x(), e->y() + 20 );
+        mInputWidget->show();
       }
     }
     else if ( mNPressedPoints < mSymbolTemplate.minNPoints || mSymbolTemplate.hasVariablePoints )
@@ -296,6 +318,10 @@ void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
   if ( mItem != 0 && e->buttons() == Qt::NoButton )
   {
     mItem->movePoint( mItem->absolutePointIdx( mNPressedPoints ), e->pos() );
+    if ( mInputWidget )
+    {
+      mInputWidget->move( e->x(), e->y() + 20 );
+    }
   }
 }
 
@@ -346,6 +372,23 @@ void QgsMilXCreateTool::reset()
   mNPressedPoints = 0;
   delete mItem;
   mItem = 0;
+  delete mInputWidget;
+  mInputWidget = 0;
+}
+
+void QgsMilXCreateTool::updateAttribute( const QString& value )
+{
+  if ( !mItem )
+  {
+    return;
+  }
+  QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
+  if ( !field )
+  {
+    return;
+  }
+  int attr = field->property( "attridx" ).toInt();
+  mItem->setAttribute( attr, value.toDouble() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -468,7 +511,7 @@ void QgsMilxEditBottomBar::updateStatus()
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* layerItem )
-    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction ), mInputWidget( 0 )
 {
   QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
   item->fromMilxItem( layerItem );
@@ -493,6 +536,7 @@ QgsMilXEditTool::~QgsMilXEditTool()
   qDeleteAll( mClipboard );
   delete mBottomBar;
   delete mRectItem;
+  delete mInputWidget;
   if ( mLayer )
   {
     foreach ( QgsMilXAnnotationItem* item, mItems )
@@ -547,6 +591,8 @@ void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
 
 void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
 {
+  delete mInputWidget;
+  mInputWidget = 0;
   QCursor cursor = mCursor;
   if (( e->buttons() & Qt::LeftButton ) )
   {
@@ -573,6 +619,23 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
       int moveAction = item->moveActionForPosition( e -> pos() );
       if ( moveAction != QgsAnnotationItem::NoAction )
         cursor = QCursor( item->cursorShapeForAction( moveAction ) );
+      int attridx = item->attributeIndexForMoveAction( moveAction );
+
+      if ( attridx != -1 )
+      {
+        mInputWidget = new QgsFloatingInputWidget( canvas() );
+        const QPair<int, double>& attr = item->attributes()[attridx];
+        QDoubleValidator* validator = new QDoubleValidator();
+        validator->setBottom( 0 );
+        QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
+        input->setText( QString::number( attr.second ) );
+        input->setProperty( "attridx", attridx );
+        input->setProperty( "item", QVariant::fromValue<void*>( reinterpret_cast<void*>( item ) ) );
+        connect( input, SIGNAL( textEdited( QString ) ), this, SLOT( updateAttribute( QString ) ) );
+        mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input, true );
+        mInputWidget->move( e->x(), e->y() + 20 );
+        mInputWidget->show();
+      }
     }
   }
   mMouseMoveLastXY = e->posF();
@@ -749,4 +812,16 @@ void QgsMilXEditTool::checkLayerHidden()
   {
     deleteLater();
   }
+}
+
+void QgsMilXEditTool::updateAttribute( const QString& value )
+{
+  QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
+  if ( !field )
+  {
+    return;
+  }
+  QgsMilXAnnotationItem* item = reinterpret_cast<QgsMilXAnnotationItem*>( field->property( "item" ).value<void*>() );
+  int attr = field->property( "attridx" ).toInt();
+  item->setAttribute( attr, value.toDouble() );
 }

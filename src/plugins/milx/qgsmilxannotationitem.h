@@ -43,7 +43,9 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
     void appendPoint( const QPoint &newPoint );
     void movePoint( int index, const QPoint &newPos );
     void moveAttributePoint( int attr, const QPoint& newPos );
+    void setAttribute( int attridx, double value );
     QList<QPoint> screenPoints() const;
+    const QList< QPair<int, double> >& attributes() const { return mAttributes; }
     QList< QPair<int, double> > screenAttributes() const;
     QList< QPair<int, QPoint> > screenAttributePoints() const;
     int absolutePointIdx( int regularIdx ) const;
@@ -56,12 +58,16 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
     int moveActionForPosition( const QPointF& pos ) const override;
     void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
+    int attributeIndexForMoveAction( int moveAction ) const;
     Qt::CursorShape cursorShapeForAction( int moveAction ) const override;
 
     void showContextMenu( const QPoint &screenPos );
     bool hitTest( const QPoint& screenPos ) const override;
 
     bool isMultiPoint() const { return !mAdditionalPoints.isEmpty() || !mAttributes.isEmpty(); }
+
+  public slots:
+    void updateSymbol( bool updatePoints = false );
 
   protected:
     QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnotationItem* source );
@@ -79,9 +85,6 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
     void _showItemEditor() override;
     double metersToPixels() const;
-
-  private slots:
-    void updateSymbol( bool updatePoints = false );
 };
 
 #endif // QGSMILXANNOTATIONITEM_H

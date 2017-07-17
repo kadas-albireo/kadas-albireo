@@ -30,6 +30,7 @@ class QGraphicsRectItem;
 class QPushButton;
 class QWidgetAction;
 class QgisInterface;
+class QgsFloatingInputWidget;
 class QgsMilXAnnotationItem;
 class QgsMilXCreateTool;
 class QgsMilXEditTool;
@@ -76,12 +77,14 @@ class QgsMilXCreateTool : public QgsMapTool
     int mNPressedPoints;
     QgsMilXAnnotationItem* mItem;
     QgsMilXLayer* mLayer;
+    QgsFloatingInputWidget* mInputWidget;
 
     void setTargetLayer( QgsMilXLayer* layer );
     void setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTemplate );
 
   private slots:
     void reset();
+    void updateAttribute( const QString& value );
 };
 
 class QgsMilxEditBottomBar : public QgsBottomBar
@@ -143,6 +146,7 @@ class QgsMilXEditTool : public QgsMapTool
     bool mDraggingRect;
     QgsMilXAnnotationItem* mActiveAnnotation;
     int mAnnotationMoveAction;
+    QgsFloatingInputWidget* mInputWidget;
 
     void setLayer( QgsMilXLayer* layer );
 
@@ -150,6 +154,7 @@ class QgsMilXEditTool : public QgsMapTool
     void removeItemFromList();
     void updateRect();
     void checkLayerHidden();
+    void updateAttribute( const QString& value );
 };
 
 #endif // QGSMILXMAPTOOLS_H
