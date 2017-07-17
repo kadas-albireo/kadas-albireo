@@ -702,6 +702,7 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     QgsMapRendererCache* mCache;
 
     QTimer *mResizeTimer;
+    QTimer *mRefreshTimer;
 
     QgsPreviewEffect* mPreviewEffect;
 
