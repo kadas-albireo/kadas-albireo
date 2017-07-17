@@ -65,6 +65,8 @@ QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( par
   gridLayout->setContentsMargins( 2, 2, 2, 2 );
   gridLayout->setSpacing( 1 );
   setLayout( gridLayout );
+  // Initially out of sight
+  move( -1000, -1000 );
 }
 
 void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInputWidgetField* widget, bool initiallyfocused )

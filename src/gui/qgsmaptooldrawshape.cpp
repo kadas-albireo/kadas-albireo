@@ -94,8 +94,6 @@ void QgsMapToolDrawShape::activate()
   {
     mInputWidget = new QgsFloatingInputWidget( canvas() );
     initInputWidget();
-    // Initially out of sight
-    mInputWidget->move( -1000, -1000 );
     mInputWidget->show();
   }
 }
