@@ -45,7 +45,8 @@ class QgsFloatingInputWidget : public QWidget
     QgsFloatingInputWidget( QWidget* parent );
     void addInputField( const QString& label, QgsFloatingInputWidgetField* widget, bool initiallyfocused = false );
     void setFocusedInputField( QgsFloatingInputWidgetField* widget );
-    QgsFloatingInputWidgetField* focusedInputField() const { return mFocusChild; }
+    QgsFloatingInputWidgetField* inputField( int index ) const { return mInputFields[index]; }
+    QgsFloatingInputWidgetField* focusedInputField() const { return mFocusedInput; }
     bool eventFilter( QObject *obj, QEvent *ev ) override;
 
   protected:
@@ -53,8 +54,8 @@ class QgsFloatingInputWidget : public QWidget
     void keyPressEvent( QKeyEvent *ev ) override;
 
   private:
-    QgsFloatingInputWidgetField* mFocusChild;
-    QList<QgsFloatingInputWidgetField*> mFocusChildren;
+    QgsFloatingInputWidgetField* mFocusedInput;
+    QList<QgsFloatingInputWidgetField*> mInputFields;
 
 };
 

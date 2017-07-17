@@ -58,7 +58,7 @@ void QgsFloatingInputWidgetField::checkInputChanged()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( parent ), mFocusChild( 0 )
+QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( parent ), mFocusedInput( 0 )
 {
   setObjectName( "FloatingInputWidget" );
   QGridLayout* gridLayout = new QGridLayout();
@@ -73,7 +73,7 @@ void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInp
   int row = gridLayout->rowCount();
   gridLayout->addWidget( new QLabel( label ), row, 0, 1, 1 );;
   gridLayout->addWidget( widget, row, 1, 1, 1 );
-  mFocusChildren.append( widget );
+  mInputFields.append( widget );
   if ( initiallyfocused )
   {
     setFocusedInputField( widget );
@@ -82,23 +82,23 @@ void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInp
 
 void QgsFloatingInputWidget::setFocusedInputField( QgsFloatingInputWidgetField* widget )
 {
-  if ( mFocusChild )
+  if ( mFocusedInput )
   {
-    mFocusChild->removeEventFilter( this );
+    mFocusedInput->removeEventFilter( this );
   }
-  mFocusChild = widget;
-  mFocusChild->setFocus();
-  mFocusChild->selectAll();
-  mFocusChild->installEventFilter( this );
+  mFocusedInput = widget;
+  mFocusedInput->setFocus();
+  mFocusedInput->selectAll();
+  mFocusedInput->installEventFilter( this );
 }
 
 bool QgsFloatingInputWidget::eventFilter( QObject *obj, QEvent *ev )
 {
   // If currently focused widget loses focus, make it receive focus again
-  if ( obj == mFocusChild && ev->type() == QEvent::FocusOut )
+  if ( obj == mFocusedInput && ev->type() == QEvent::FocusOut )
   {
-    mFocusChild->setFocus();
-    mFocusChild->selectAll();
+    mFocusedInput->setFocus();
+    mFocusedInput->selectAll();
     return true;
   }
   return QWidget::eventFilter( obj, ev );
@@ -116,16 +116,16 @@ void QgsFloatingInputWidget::keyPressEvent( QKeyEvent *ev )
   // Override tab handling to ensure only the input fields inside the widget receive focus
   if ( ev->key() == Qt::Key_Tab )
   {
-    int n = mFocusChildren.size();
-    int nextIdx = ( mFocusChildren.indexOf( mFocusChild ) + 1 ) % n;
-    setFocusedInputField( mFocusChildren[nextIdx] );
+    int n = mInputFields.size();
+    int nextIdx = ( mInputFields.indexOf( mFocusedInput ) + 1 ) % n;
+    setFocusedInputField( mInputFields[nextIdx] );
     ev->accept();
   }
   else if ( ev->key() == Qt::Key_Backtab )
   {
-    int n = mFocusChildren.size();
-    int nextIdx = ( n + mFocusChildren.indexOf( mFocusChild ) - 1 ) % n;
-    setFocusedInputField( mFocusChildren[nextIdx] );
+    int n = mInputFields.size();
+    int nextIdx = ( n + mInputFields.indexOf( mFocusedInput ) - 1 ) % n;
+    setFocusedInputField( mInputFields[nextIdx] );
     ev->accept();
   }
   else
