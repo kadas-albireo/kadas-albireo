@@ -1523,6 +1523,19 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
     return "./" + src.mid( pos );
   }
 
+  // If stored in tmp dir, move to <project>_files folder
+  if ( src.startsWith( QDesktopServices::storageLocation( QDesktopServices::TempLocation ) ) )
+  {
+    QDir projectDir = QFileInfo( fileName() ).absoluteDir();
+    QString projectFilesDirName = QFileInfo( fileName() ).baseName() + "_files";
+    QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
+    QString newSrc = projectFilesDir.absoluteFilePath( QFileInfo( src ).fileName() );
+    if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( src ).copy( newSrc ) )
+    {
+      return QString( "./%1/%2" ).arg( projectFilesDirName ).arg( QFileInfo( src ).fileName() );
+    }
+  }
+
   if ( readBoolEntry( "Paths", "/Absolute", false ) || src.isEmpty() )
   {
     return src;
