@@ -251,7 +251,12 @@ void QgsAnnotationItem::drawFrame( QPainter* p )
 void QgsAnnotationItem::setFrameSize( const QSizeF& size )
 {
   QSizeF frameSize = minimumFrameSize().expandedTo( size ); //don't allow frame sizes below minimum
+
   mFrameSize = frameSize;
+  if ( mFlags & ItemHasNoMarker )
+  {
+    setOffsetFromReferencePoint( QPointF( -0.5 * mFrameSize.width(), -0.5 * mFrameSize.height() ) );
+  }
   updateBoundingRect();
   updateBalloon();
 }
