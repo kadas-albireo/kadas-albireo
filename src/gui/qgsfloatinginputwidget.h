@@ -45,7 +45,7 @@ class QgsFloatingInputWidget : public QWidget
     QgsFloatingInputWidget( QWidget* parent );
     void addInputField( const QString& label, QgsFloatingInputWidgetField* widget, bool initiallyfocused = false );
     void setFocusedInputField( QgsFloatingInputWidgetField* widget );
-    QgsFloatingInputWidgetField* inputField( int index ) const { return mInputFields[index]; }
+    const QList<QgsFloatingInputWidgetField*>& inputFields() const { return mInputFields; }
     QgsFloatingInputWidgetField* focusedInputField() const { return mFocusedInput; }
     bool eventFilter( QObject *obj, QEvent *ev ) override;
 
