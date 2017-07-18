@@ -435,30 +435,32 @@ void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos,
     double ymin = mOffsetFromReferencePoint.y();
     double xmax = xmin + mFrameSize.width();
     double ymax = ymin + mFrameSize.height();
+    double dx = newPos.x() - oldPos.x();
+    double dy = newPos.y() - oldPos.y();
 
     if ( moveAction == QgsAnnotationItem::ResizeFrameRight ||
          moveAction == QgsAnnotationItem::ResizeFrameRightDown ||
          moveAction == QgsAnnotationItem::ResizeFrameRightUp )
     {
-      xmax += newPos.x() - oldPos.x();
+      xmax += dx;
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameLeft ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftUp )
     {
-      xmin += newPos.x() - oldPos.x();
+      xmin += dx;
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameUp ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftUp ||
          moveAction == QgsAnnotationItem::ResizeFrameRightUp )
     {
-      ymin += newPos.y() - oldPos.y();
+      ymin += dy;
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameDown ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
          moveAction == QgsAnnotationItem::ResizeFrameRightDown )
     {
-      ymax += newPos.y() - oldPos.y();
+      ymax += dy;
     }
 
     //switch min / max if necessary
@@ -470,6 +472,26 @@ void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos,
     if ( ymax < ymin )
     {
       tmp = ymax; ymax = ymin; ymin = tmp;
+    }
+
+    // Preserve aspect ratio
+    if ( mFlags & ItemKeepsAspectRatio )
+    {
+      double ratio = mFrameSize.height() / mFrameSize.width();
+      double dx = qAbs( mFrameSize.width() - ( xmax - xmin ) );
+      double dy = qAbs( mFrameSize.height() - ( ymax - ymin ) );
+      if ( dx > dy )
+      {
+        double ymid = mOffsetFromReferencePoint.y() + 0.5 * mFrameSize.height();
+        ymin = ymid - 0.5 * ( xmax - xmin ) * ratio;
+        ymax = ymid + 0.5 * ( xmax - xmin ) * ratio;
+      }
+      else
+      {
+        double xmid = mOffsetFromReferencePoint.x() + 0.5 * mFrameSize.width();
+        xmin = xmid - 0.5 * ( ymax - ymin ) / ratio;
+        xmax = xmid + 0.5 * ( ymax - ymin ) / ratio;
+      }
     }
 
     setOffsetFromReferencePoint( QPointF( xmin, ymin ) );
