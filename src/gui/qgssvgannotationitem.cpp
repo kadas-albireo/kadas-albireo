@@ -114,6 +114,8 @@ void QgsSvgAnnotationItem::setFilePath( const QString& file )
 {
   mFilePath = file;
   mSvgRenderer.load( mFilePath );
+  QRect viewBox = mSvgRenderer.viewBox();
+  setFrameSize( QSizeF( viewBox.width(), viewBox.height() ) );
 }
 
 QImage QgsSvgAnnotationItem::getImage()
