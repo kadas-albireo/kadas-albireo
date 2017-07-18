@@ -33,9 +33,12 @@
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
+#include "qgstemporaryfile.h"
 #include "qgssnappingutils.h"
+#include "qgssvgannotationitem.h"
 #include "qgsundowidget.h"
 
+#include <QClipboard>
 #include <QDrag>
 #include <QFileDialog>
 #include <QImageReader>
@@ -445,6 +448,9 @@ void QgsRibbonApp::configureButtons()
   connect( mActionAddCameraPicture, SIGNAL( triggered( bool ) ), this, SLOT( addCameraPicture() ) );
   setActionToButton( mActionAddCameraPicture, mAddPictureButton );
 
+  connect( mActionPasteImage, SIGNAL( triggered( bool ) ), this, SLOT( pasteImage() ) );
+  setActionToButton( mActionPasteImage, mPasteImageButton );
+
   connect( mActionDeleteItems, SIGNAL( triggered( bool ) ), this, SLOT( deleteItems( bool ) ) );
   setActionToButton( mActionDeleteItems, mDeleteItemsButton, mMapTools.mDeleteItems );
 
@@ -578,6 +584,31 @@ void QgsRibbonApp::addCameraPicture()
     {
       mInfoBar->pushCritical( tr( "Could not add picture" ), errMsg );
     }
+  }
+}
+
+void QgsRibbonApp::pasteImage()
+{
+  const QMimeData* mimeData = QApplication::clipboard()->mimeData();
+  if ( mimeData && mimeData->hasFormat( "image/svg+xml" ) )
+  {
+    QString filename = QgsTemporaryFile::createNewFile( "pasted_image.svg" );
+    QFile file( filename );
+    if ( file.open( QIODevice::WriteOnly ) )
+    {
+      file.write( mimeData->data( "image/svg+xml" ) );
+      file.close();
+      QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
+      item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio );
+      item->setFilePath( filename );
+      item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
+      item->setSelected( true );
+      messageBar()->pushMessage( tr( "Image Pasted" ), "", QgsMessageBar::INFO, 5 );
+    }
+  }
+  else
+  {
+    messageBar()->pushMessage( tr( "No supported image data in clipboard" ), "", QgsMessageBar::WARNING, 5 );
   }
 }
 

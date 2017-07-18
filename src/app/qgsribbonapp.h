@@ -78,6 +78,7 @@ class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui:
     void on_mLayerTreeViewButton_clicked();
     void checkOnTheFlyProjection( const QStringList &prevLayers = QStringList() );
     void addCameraPicture();
+    void pasteImage();
     void userScale();
     void showScale( double scale );
     void switchToTabForTool( QgsMapTool* tool );

@@ -554,6 +554,7 @@
         <file>ribbon/downarrow_disabled.png</file>
         <file>ribbon/uparrow.png</file>
         <file>ribbon/uparrow_disabled.png</file>
+        <file>ribbon/einfuegen.png</file>
         <file>themes/default/clear.svg</file>
         <file>themes/default/hillshade.svg</file>
         <file>themes/default/ovl.svg</file>
