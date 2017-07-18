@@ -253,7 +253,7 @@ void QgsAnnotationItem::setFrameSize( const QSizeF& size )
   QSizeF frameSize = minimumFrameSize().expandedTo( size ); //don't allow frame sizes below minimum
 
   mFrameSize = frameSize;
-  if ( mFlags & ItemHasNoMarker )
+  if ( mFlags & ItemMarkerCentered )
   {
     setOffsetFromReferencePoint( QPointF( -0.5 * mFrameSize.width(), -0.5 * mFrameSize.height() ) );
   }

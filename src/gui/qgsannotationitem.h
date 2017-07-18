@@ -49,7 +49,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ItemHasNoMarker = 4,
       ItemIsNotEditable = 8,
       ItemAnchorIsNotMoveable = 16,
-      ItemKeepsAspectRatio = 32
+      ItemKeepsAspectRatio = 32,
+      ItemMarkerCentered = 64
     };
 
     enum MouseMoveAction

@@ -599,7 +599,7 @@ void QgsRibbonApp::pasteImage()
       file.write( mimeData->data( "image/svg+xml" ) );
       file.close();
       QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
-      item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio );
+      item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered );
       item->setFilePath( filename );
       item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
       item->setSelected( true );
