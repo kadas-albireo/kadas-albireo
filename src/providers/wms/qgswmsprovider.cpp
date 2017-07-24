@@ -3781,12 +3781,18 @@ void QgsWmsTiledImageDownloadHandler::tileReplyFinished()
   }
   else
   {
-    QgsWmsStatistics::Stat& stat = QgsWmsStatistics::statForUri( mProviderUri );
-    stat.errors++;
-
-    if ( reply->error() == QNetworkReply::TimeoutError )
+    if ( !( mFeedback && mFeedback->isPreviewOnly() ) )
     {
-      repeatTileRequest( reply->request() );
+      if ( reply->error() != QNetworkReply::OperationCanceledError )
+      {
+        QgsWmsStatistics::Stat& stat = QgsWmsStatistics::statForUri( mProviderUri );
+        stat.errors++;
+
+        if ( reply->error() == QNetworkReply::TimeoutError )
+        {
+          repeatTileRequest( reply->request() );
+        }
+      }
     }
 
     mReplies.removeOne( reply );
