@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsfloatinginputwidget.h"
+#include "qgsmapcanvas.h"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -106,6 +107,24 @@ bool QgsFloatingInputWidget::eventFilter( QObject *obj, QEvent *ev )
   return QWidget::eventFilter( obj, ev );
 }
 
+void QgsFloatingInputWidget::adjustCursorAndExtent( QgsMapCanvas* canvas, const QgsPoint& geoPos )
+{
+  // If position is not within visible extent, center map there
+  if ( !canvas->mapSettings().visibleExtent().contains( geoPos ) )
+  {
+    QgsRectangle rect = canvas->mapSettings().visibleExtent();
+    rect = QgsRectangle( geoPos.x() - 0.5 * rect.width(), geoPos.y() - 0.5 * rect.height(), geoPos.x() + 0.5 * rect.width(), geoPos.y() + 0.5 * rect.height() );
+    canvas->setExtent( rect );
+    canvas->refresh();
+  }
+  // Then, move cursor to corresponding screen position and simulate move event
+  double x = geoPos.x(), y = geoPos.y();
+  canvas->getCoordinateTransform()->transformInPlace( x, y );
+  QPoint p( qRound( x ), qRound( y ) );
+  QCursor::setPos( canvas->mapToGlobal( p ) );
+  move( p.x(), p.y() + 20 );
+}
+
 bool QgsFloatingInputWidget::focusNextPrevChild( bool /*next*/ )
 {
   // Disable automatic TAB event handling
@@ -116,14 +135,14 @@ bool QgsFloatingInputWidget::focusNextPrevChild( bool /*next*/ )
 void QgsFloatingInputWidget::keyPressEvent( QKeyEvent *ev )
 {
   // Override tab handling to ensure only the input fields inside the widget receive focus
-  if ( ev->key() == Qt::Key_Tab )
+  if ( ev->key() == Qt::Key_Tab || ev->key() == Qt::Key_Down )
   {
     int n = mInputFields.size();
     int nextIdx = ( mInputFields.indexOf( mFocusedInput ) + 1 ) % n;
     setFocusedInputField( mInputFields[nextIdx] );
     ev->accept();
   }
-  else if ( ev->key() == Qt::Key_Backtab )
+  else if ( ev->key() == Qt::Key_Backtab || ev->key() == Qt::Key_Up )
   {
     int n = mInputFields.size();
     int nextIdx = ( n + mInputFields.indexOf( mFocusedInput ) - 1 ) % n;

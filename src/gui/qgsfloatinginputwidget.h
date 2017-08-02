@@ -20,6 +20,9 @@
 #include <QGridLayout>
 #include <QLineEdit>
 
+class QgsMapCanvas;
+class QgsPoint;
+
 class QgsFloatingInputWidgetField : public QLineEdit
 {
     Q_OBJECT
@@ -48,6 +51,8 @@ class QgsFloatingInputWidget : public QWidget
     const QList<QgsFloatingInputWidgetField*>& inputFields() const { return mInputFields; }
     QgsFloatingInputWidgetField* focusedInputField() const { return mFocusedInput; }
     bool eventFilter( QObject *obj, QEvent *ev ) override;
+
+    void adjustCursorAndExtent( QgsMapCanvas* canvas, const QgsPoint& geoPos );
 
   protected:
     bool focusNextPrevChild( bool next ) override;
