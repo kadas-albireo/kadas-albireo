@@ -65,6 +65,7 @@ QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( par
   QGridLayout* gridLayout = new QGridLayout();
   gridLayout->setContentsMargins( 2, 2, 2, 2 );
   gridLayout->setSpacing( 1 );
+  gridLayout->setSizeConstraint( QLayout::SetFixedSize );
   setLayout( gridLayout );
   // Initially out of sight
   move( -1000, -1000 );
@@ -73,7 +74,7 @@ QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( par
 void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInputWidgetField* widget, bool initiallyfocused )
 {
   QGridLayout* gridLayout = static_cast<QGridLayout*>( layout() );
-  int row = gridLayout->rowCount();
+  int row = gridLayout->isEmpty() ? 0 : gridLayout->rowCount();
   gridLayout->addWidget( new QLabel( label ), row, 0, 1, 1 );;
   gridLayout->addWidget( widget, row, 1, 1, 1 );
   mInputFields.append( widget );
@@ -81,6 +82,46 @@ void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInp
   {
     setFocusedInputField( widget );
   }
+}
+
+void QgsFloatingInputWidget::removeInputField( int idx )
+{
+  if ( mFocusedInput == mInputFields.at( idx ) )
+  {
+    int n = mInputFields.size();
+    int prev = ( idx - 1 + n ) % n;
+    mFocusedInput = prev != idx ? mInputFields[prev] : 0;
+  }
+  mInputFields.removeAt( idx );
+  // Because re-creating the layout is actually easier than just deleting a row...
+  QGridLayout* oldLayout = static_cast<QGridLayout*>( layout() );
+  QGridLayout* newLayout = new QGridLayout();
+  newLayout->setContentsMargins( 2, 2, 2, 2 );
+  newLayout->setSpacing( 1 );
+  newLayout->setSizeConstraint( QLayout::SetFixedSize );
+  for ( int row = 0, newrow = 0, n = oldLayout->rowCount(); row < n; ++row )
+  {
+    QLayoutItem* item0 = oldLayout->itemAtPosition( row, 0 );
+    QLayoutItem* item1 = oldLayout->itemAtPosition( row, 1 );
+    if ( row != idx )
+    {
+      if ( item0 && item1 )
+      {
+        oldLayout->removeItem( item0 );
+        oldLayout->removeItem( item1 );
+        newLayout->addWidget( item0->widget(), newrow, 0 );
+        newLayout->addWidget( item1->widget(), newrow, 1 );
+        ++newrow;
+      }
+    }
+    else
+    {
+      delete item0->widget();
+      delete item1->widget();
+    }
+  }
+  delete oldLayout;
+  setLayout( newLayout );
 }
 
 void QgsFloatingInputWidget::setFocusedInputField( QgsFloatingInputWidgetField* widget )

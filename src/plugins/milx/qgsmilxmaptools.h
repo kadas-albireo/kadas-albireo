@@ -81,10 +81,14 @@ class QgsMilXCreateTool : public QgsMapTool
 
     void setTargetLayer( QgsMilXLayer* layer );
     void setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTemplate );
+    void initializeItem( const QgsPoint &position );
+    void finalizeItem();
 
   private slots:
     void reset();
-    void updateAttribute( const QString& value );
+    void updateAttribute();
+    void updatePoint();
+    void confirmPoint();
 };
 
 class QgsMilxEditBottomBar : public QgsBottomBar

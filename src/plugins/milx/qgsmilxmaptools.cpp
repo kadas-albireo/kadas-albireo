@@ -194,10 +194,30 @@ QgsMilXCreateTool::QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary* libr
 {
   mBottomBar = new QgsMilxCreateBottomBar( this, library );
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
+
+  if ( QSettings().value( "/qgis/showNumericInput", false ).toBool() )
+  {
+    mInputWidget = new QgsFloatingInputWidget( canvas() );
+
+    QgsFloatingInputWidgetField* xinput = new QgsFloatingInputWidgetField();
+    xinput->setProperty( "coordinate", 0 );
+    connect( xinput, SIGNAL( inputChanged( ) ), this, SLOT( updatePoint( ) ) );
+    connect( xinput, SIGNAL( inputConfirmed() ), this, SLOT( confirmPoint() ) );
+    mInputWidget->addInputField( "x:", xinput, true );
+
+    QgsFloatingInputWidgetField* yinput = new QgsFloatingInputWidgetField();
+    yinput->setProperty( "coordinate", 1 );
+    connect( yinput, SIGNAL( inputChanged( ) ), this, SLOT( updatePoint( ) ) );
+    connect( yinput, SIGNAL( inputConfirmed() ), this, SLOT( confirmPoint() ) );
+    mInputWidget->addInputField( "y:", yinput );
+
+    mInputWidget->show();
+  }
 }
 
 QgsMilXCreateTool::~QgsMilXCreateTool()
 {
+  delete mInputWidget;
   delete mBottomBar;
   reset();
 }
@@ -227,49 +247,7 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
   {
     if ( mItem == 0 )
     {
-      // Deselect any previously selected items
-      QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-      if ( selectedItem )
-      {
-        selectedItem->setSelected( false );
-      }
-
-      setCursor( Qt::CrossCursor );
-      mItem = new QgsMilXAnnotationItem( mCanvas );
-      mItem->setMapPosition( toMapCoordinates( e->pos() ) );
-      mItem->setSymbolXml( mSymbolTemplate.symbolXml, mSymbolTemplate.symbolMilitaryName );
-      // Ensure attributes are populated
-      mItem->updateSymbol( true );
-      mItem->setSelected( true );
-      mNPressedPoints = 1;
-      // Only actually add the point if more than the minimum number have been specified
-      // The server automatically adds points up to the minimum number
-      if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
-      {
-        mItem->appendPoint( e->pos() );
-      }
-      if ( !mItem->attributes().isEmpty() && QSettings().value( "/qgis/showNumericInput", false ).toBool() )
-      {
-        mInputWidget = new QgsFloatingInputWidget( canvas() );
-        bool first = true;
-        for ( int i = 0, n = mItem->attributes().size(); i < n; ++i )
-        {
-          const QPair<int, double>& attr = mItem->attributes()[i];
-          QDoubleValidator* validator = new QDoubleValidator();
-          if ( attr.first != MilXClient::AttributeAttitude )
-          {
-            validator->setBottom( 0 );
-          }
-          QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
-          input->setText( QString::number( attr.second ) );
-          input->setProperty( "attridx", i );
-          connect( input, SIGNAL( textEdited( QString ) ), this, SLOT( updateAttribute( QString ) ) );
-          mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input, first );
-          first = false;
-        }
-        mInputWidget->move( e->x(), e->y() + 20 );
-        mInputWidget->show();
-      }
+      initializeItem( toMapCoordinates( e->pos() ) );
     }
     else if ( mNPressedPoints < mSymbolTemplate.minNPoints || mSymbolTemplate.hasVariablePoints )
     {
@@ -284,36 +262,75 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
 
     if ( mNPressedPoints >= mSymbolTemplate.minNPoints && !mSymbolTemplate.hasVariablePoints )
     {
-      // Max points reached, stop
-      mItem->finalize();
-      mLayer->addItem( mItem->toMilxItem() );
-      mItem->setSelected( false );
-      // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
-      mItem = 0;
-      reset();
-      mLayer->triggerRepaint();
+      finalizeItem(); // Max points reached, stop
     }
   }
   else if ( e->button() == Qt::RightButton && mItem )
   {
     if ( mNPressedPoints + 1 >= mSymbolTemplate.minNPoints )
     {
-      // Done with N point symbol, stop
-      mItem->finalize();
-      mLayer->addItem( mItem->toMilxItem() );
-      mItem->setSelected( false );
-      // Delay delete until after refresh, to avoid flickering
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
-      mItem = 0;
-      reset();
-      mLayer->triggerRepaint();
+      finalizeItem(); // Done with N point symbol, stop
     }
     else if ( mNPressedPoints + 1 < mSymbolTemplate.minNPoints )
     {
-      reset();
+      reset(); // Premature stop, reset
     }
   }
+}
+
+void QgsMilXCreateTool::initializeItem( const QgsPoint& position )
+{
+  // Deselect any previously selected items
+  QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+  if ( selectedItem )
+  {
+    selectedItem->setSelected( false );
+  }
+
+  setCursor( Qt::CrossCursor );
+  mItem = new QgsMilXAnnotationItem( mCanvas );
+  mItem->setMapPosition( position );
+  mItem->setSymbolXml( mSymbolTemplate.symbolXml, mSymbolTemplate.symbolMilitaryName );
+  // Ensure attributes are populated
+  mItem->updateSymbol( true );
+  mItem->setSelected( true );
+  mNPressedPoints = 1;
+  // Only actually add the point if more than the minimum number have been specified
+  // The server automatically adds points up to the minimum number
+  if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
+  {
+    mItem->appendPoint( toCanvasCoordinates( position ) );
+  }
+  if ( mInputWidget && !mItem->attributes().isEmpty() )
+  {
+    for ( int i = 0, n = mItem->attributes().size(); i < n; ++i )
+    {
+      const QPair<int, double>& attr = mItem->attributes()[i];
+      QDoubleValidator* validator = new QDoubleValidator();
+      if ( attr.first != MilXClient::AttributeAttitude )
+      {
+        validator->setBottom( 0 );
+      }
+      QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
+      input->setText( QString::number( attr.second, 'f', attr.first == MilXClient::AttributeAttitude ? 1 : 0 ) );
+      input->setProperty( "attridx", i );
+      connect( input, SIGNAL( inputChanged( ) ), this, SLOT( updateAttribute( ) ) );
+      mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input );
+    }
+  }
+}
+
+void QgsMilXCreateTool::finalizeItem()
+{
+
+  mItem->finalize();
+  mLayer->addItem( mItem->toMilxItem() );
+  mItem->setSelected( false );
+  // Delay delete until after refresh, to avoid flickering
+  connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), mItem, SLOT( deleteLater() ) );
+  mItem = 0;
+  reset();
+  mLayer->triggerRepaint();
 }
 
 void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
@@ -323,8 +340,21 @@ void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
     mItem->movePoint( mItem->absolutePointIdx( mNPressedPoints ), e->pos() );
     if ( mInputWidget )
     {
-      mInputWidget->move( e->x(), e->y() + 20 );
+      int pointidx = mItem->absolutePointIdx( mNPressedPoints );
+      QgsPoint p = mItem->point( pointidx );
+      bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+      mInputWidget->inputFields()[0]->setText( QString::number( p.x(), 'f', isDegrees ? 4 : 0 ) );
+      mInputWidget->inputFields()[1]->setText( QString::number( p.y(), 'f', isDegrees ? 4 : 0 ) );
+      mInputWidget->move( e->x() + 5, e->y() - 5 - mInputWidget->height() );
     }
+  }
+  else if ( mInputWidget )
+  {
+    QgsPoint p = toMapCoordinates( e->pos() );
+    bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+    mInputWidget->inputFields()[0]->setText( QString::number( p.x(), 'f', isDegrees ? 4 : 0 ) );
+    mInputWidget->inputFields()[1]->setText( QString::number( p.y(), 'f', isDegrees ? 4 : 0 ) );
+    mInputWidget->move( e->x() + 5, e->y() - 5 - mInputWidget->height() );
   }
 }
 
@@ -375,23 +405,103 @@ void QgsMilXCreateTool::reset()
   mNPressedPoints = 0;
   delete mItem;
   mItem = 0;
-  delete mInputWidget;
-  mInputWidget = 0;
+  if ( mInputWidget )
+  {
+    int n = mInputWidget->inputFields().size();
+    while ( n > 2 )
+    {
+      mInputWidget->removeInputField( --n );
+    }
+  }
 }
 
-void QgsMilXCreateTool::updateAttribute( const QString& value )
+void QgsMilXCreateTool::updateAttribute( )
 {
-  if ( !mItem )
-  {
-    return;
-  }
   QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
-  if ( !field )
+  if ( !field || !mItem )
   {
     return;
   }
-  int attr = field->property( "attridx" ).toInt();
-  mItem->setAttribute( attr, value.toDouble() );
+  int attridx = field->property( "attridx" ).toInt();
+  mItem->setAttribute( attridx, field->text().toDouble() );
+}
+
+void QgsMilXCreateTool::updatePoint( )
+{
+  if ( mItem )
+  {
+    QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
+    if ( !field )
+    {
+      return;
+    }
+    int pointidx = mItem->absolutePointIdx( mNPressedPoints );
+    int coordinate = field->property( "coordinate" ).toInt();
+    QgsPoint p = mItem->point( pointidx );
+    coordinate == 0 ? p.setX( field->text().toDouble() ) : p.setY( field->text().toDouble() );
+    mItem->movePoint( pointidx, toCanvasCoordinates( p ) );
+    mInputWidget->adjustCursorAndExtent( mCanvas, mItem->point( pointidx ) );
+  }
+  else
+  {
+    QgsPoint point;
+    point.setX( mInputWidget->inputFields()[0]->text().toDouble() );
+    point.setY( mInputWidget->inputFields()[1]->text().toDouble() );
+    mInputWidget->adjustCursorAndExtent( mCanvas, point );
+  }
+}
+
+void QgsMilXCreateTool::confirmPoint()
+{
+  if ( mSymbolTemplate.symbolXml.isEmpty() )
+  {
+    return;
+  }
+  if ( !mLayer )
+  {
+    mIface->messageBar()->pushMessage( tr( "No MilX Layer Selected" ), "", QgsMessageBar::WARNING, 5 );
+    return;
+  }
+  if ( mLayer->isApproved() )
+  {
+    mIface->messageBar()->pushMessage( tr( "Non-editable MilX Layer Selected" ), tr( "Approved layers cannot be edited." ), QgsMessageBar::WARNING, 5 );
+    return;
+  }
+  QgsPoint point;
+  point.setX( mInputWidget->inputFields()[0]->text().toDouble() );
+  point.setY( mInputWidget->inputFields()[1]->text().toDouble() );
+  if ( mItem == 0 )
+  {
+    initializeItem( point );
+  }
+  else if ( mNPressedPoints < mSymbolTemplate.minNPoints || mSymbolTemplate.hasVariablePoints )
+  {
+    int prevPointIdx = mItem->absolutePointIdx( mNPressedPoints ) - 1;
+    QgsPoint prevPoint = mItem->point( prevPointIdx );
+    if ( toCanvasCoordinates( prevPoint ) == toCanvasCoordinates( point ) )
+    {
+      if ( mNPressedPoints >= mSymbolTemplate.minNPoints )
+      {
+        // Finalize item if previous point is confirmed
+        finalizeItem();
+      }
+    }
+    else
+    {
+      ++mNPressedPoints;
+      // Only actually add the point if more than the minimum number have been specified
+      // The server automatically adds points up to the minimum number
+      if ( mNPressedPoints >= mSymbolTemplate.minNPoints && mSymbolTemplate.hasVariablePoints )
+      {
+        mItem->appendPoint( toCanvasCoordinates( point ) );
+      }
+    }
+  }
+
+  if ( mNPressedPoints >= mSymbolTemplate.minNPoints && !mSymbolTemplate.hasVariablePoints )
+  {
+    finalizeItem(); // Max points reached, stop
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
