@@ -210,6 +210,23 @@ void QgsMilXAnnotationItem::handleMoveAction( int moveAction, const QPointF &new
   }
 }
 
+int QgsMilXAnnotationItem::pointIndexForMoveAction( int moveAction ) const
+{
+  if ( moveAction >= NumMouseMoveActions )
+  {
+    int idx = moveAction - NumMouseMoveActions;
+    if ( idx < 1 + mAdditionalPoints.size() )
+    {
+      return idx;
+    }
+  }
+  else if ( moveAction == MoveMapPosition )
+  {
+    return 0;
+  }
+  return -1;
+}
+
 int QgsMilXAnnotationItem::attributeIndexForMoveAction( int moveAction ) const
 {
   if ( moveAction >= NumMouseMoveActions )

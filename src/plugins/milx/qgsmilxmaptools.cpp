@@ -514,7 +514,7 @@ void QgsMilxEditBottomBar::updateStatus()
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* layerItem )
-    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction ), mInputWidget( 0 )
+    : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction ), mInputWidget( 0 ), mMoving( false )
 {
   QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
   item->fromMilxItem( layerItem );
@@ -593,6 +593,13 @@ void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
 
 void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
 {
+  // Deleting mInputWidget can trigger an extra move event if the mouse was previously
+  // over the input widget, can cause mInputWidget to be deleted again before it is reset.
+  if ( mMoving )
+  {
+    return;
+  }
+  mMoving = true;
   QCursor cursor = mCursor;
   if (( e->buttons() & Qt::LeftButton ) )
   {
@@ -610,12 +617,24 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
       mActiveAnnotation->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
       if ( mInputWidget )
       {
+        bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
         foreach ( QgsFloatingInputWidgetField* field, mInputWidget->inputFields() )
         {
-          int attridx = field->property( "attridx" ).toInt();
-          const QPair<int, double>& attr = mActiveAnnotation->attributes()[attridx];
-          field->setText( QString::number( attr.second ) );
+          if ( field->property( "attridx" ).isValid() )
+          {
+            int attridx = field->property( "attridx" ).toInt();
+            const QPair<int, double>& attr = mActiveAnnotation->attributes()[attridx];
+            field->setText( QString::number( attr.second, 'f', attr.first == MilXClient::AttributeAttitude ? 1 : 0 ) );
+          }
+          else if ( field->property( "pointidx" ).isValid() )
+          {
+            int pointidx = field->property( "pointidx" ).toInt();
+            int coordinate = field->property( "coordinate" ).toInt();
+            const QgsPoint& p = mActiveAnnotation->point( pointidx );
+            field->setText( QString::number( coordinate == 0 ? p.x() : p.y(), 'f', isDegrees ? 4 : 0 ) );
+          }
         }
+        mInputWidget->move( e->x() + 5, e->y() - 5 - mInputWidget->height() );
       }
       updateRect();
     }
@@ -635,24 +654,50 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
 
         if ( mAnnotationMoveAction != QgsAnnotationItem::NoAction )
           cursor = QCursor( item->cursorShapeForAction( mAnnotationMoveAction ) );
-        int attridx = item->attributeIndexForMoveAction( mAnnotationMoveAction );
-
-        if ( attridx >= 0 && QSettings().value( "/qgis/showNumericInput", false ).toBool() )
+        if ( QSettings().value( "/qgis/showNumericInput", false ).toBool() )
         {
-          mInputWidget = new QgsFloatingInputWidget( canvas() );
-          const QPair<int, double>& attr = item->attributes()[attridx];
-          QDoubleValidator* validator = new QDoubleValidator();
-          if ( attr.first != MilXClient::AttributeAttitude )
+          int pointidx = item->pointIndexForMoveAction( mAnnotationMoveAction );
+          int attridx = item->attributeIndexForMoveAction( mAnnotationMoveAction );
+          if ( pointidx >= 0 || attridx >= 0 )
           {
-            validator->setBottom( 0 );
+            mInputWidget = new QgsFloatingInputWidget( canvas() );
           }
-          QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
-          input->setText( QString::number( attr.second ) );
-          input->setProperty( "attridx", attridx );
-          connect( input, SIGNAL( textEdited( QString ) ), this, SLOT( updateAttribute( QString ) ) );
-          mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input, true );
-          mInputWidget->move( e->x(), e->y() + 20 );
-          mInputWidget->show();
+          if ( pointidx >= 0 )
+          {
+            bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+            const QgsPoint& point = item->point( pointidx );
+            QgsFloatingInputWidgetField* xinput = new QgsFloatingInputWidgetField();
+            xinput->setText( QString::number( point.x(), 'f', isDegrees ? 4 : 0 ) );
+            xinput->setProperty( "pointidx", pointidx );
+            xinput->setProperty( "coordinate", 0 );
+            connect( xinput, SIGNAL( inputChanged( ) ), this, SLOT( updatePoint( ) ) );
+            mInputWidget->addInputField( "x:", xinput, true );
+            QgsFloatingInputWidgetField* yinput = new QgsFloatingInputWidgetField();
+            yinput->setText( QString::number( point.y(), 'f', isDegrees ? 4 : 0 ) );
+            yinput->setProperty( "pointidx", pointidx );
+            yinput->setProperty( "coordinate", 1 );
+            connect( yinput, SIGNAL( inputChanged( ) ), this, SLOT( updatePoint( ) ) );
+            mInputWidget->addInputField( "y:", yinput );
+          }
+          else if ( attridx >= 0 )
+          {
+            const QPair<int, double>& attr = item->attributes()[attridx];
+            QDoubleValidator* validator = new QDoubleValidator();
+            if ( attr.first != MilXClient::AttributeAttitude )
+            {
+              validator->setBottom( 0 );
+            }
+            QgsFloatingInputWidgetField* input = new QgsFloatingInputWidgetField( validator );
+            input->setText( QString::number( attr.second, 'f', attr.first == MilXClient::AttributeAttitude ? 1 : 0 ) );
+            input->setProperty( "attridx", attridx );
+            connect( input, SIGNAL( inputChanged( ) ), this, SLOT( updateAttribute( ) ) );
+            mInputWidget->addInputField( MilXClient::attributeName( attr.first ) + ":", input, true );
+          }
+          if ( mInputWidget )
+          {
+            mInputWidget->show();
+            mInputWidget->move( e->x() + 5, e->y() - 5 - mInputWidget->height() );
+          }
         }
       }
     }
@@ -666,6 +711,7 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
   }
   mMouseMoveLastXY = e->posF();
   mCanvas->setCursor( cursor );
+  mMoving = false;
 }
 
 void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
@@ -840,13 +886,31 @@ void QgsMilXEditTool::checkLayerHidden()
   }
 }
 
-void QgsMilXEditTool::updateAttribute( const QString& value )
+void QgsMilXEditTool::updatePoint( )
 {
   QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
   if ( !field  || !mActiveAnnotation )
   {
     return;
   }
-  mActiveAnnotation->setAttribute( field->property( "attridx" ).toInt(), value.toDouble() );
+  int pointidx = field->property( "pointidx" ).toInt();
+  int coordinate = field->property( "coordinate" ).toInt();
+  QgsPoint p = mActiveAnnotation->point( pointidx );
+  coordinate == 0 ? p.setX( field->text().toDouble() ) : p.setY( field->text().toDouble() );
+  mActiveAnnotation->movePoint( pointidx, toCanvasCoordinates( p ) );
+  mInputWidget->adjustCursorAndExtent( mCanvas, mActiveAnnotation->point( pointidx ) );
+  updateRect();
+}
+
+void QgsMilXEditTool::updateAttribute( )
+{
+  QgsFloatingInputWidgetField* field = qobject_cast<QgsFloatingInputWidgetField*>( QObject::sender() );
+  if ( !field  || !mActiveAnnotation )
+  {
+    return;
+  }
+  int attridx = field->property( "attridx" ).toInt();
+  mActiveAnnotation->setAttribute( attridx, field->text().toDouble() );
+  mInputWidget->adjustCursorAndExtent( mCanvas, mActiveAnnotation->attributePoints()[attridx].second );
   updateRect();
 }

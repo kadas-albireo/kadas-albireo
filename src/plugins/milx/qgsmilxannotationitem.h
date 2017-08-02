@@ -40,12 +40,15 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
     void setSymbolXml( const QString& symbolXml, const QString &symbolMilitaryName );
     void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs = QgsCoordinateReferenceSystem() ) override;
+    const QgsPoint& point( int idx ) const { return idx == 0 ? mMapPosition : mAdditionalPoints[idx - 1]; }
+    int pointCount() const { return 1 + mAdditionalPoints.size(); }
     void appendPoint( const QPoint &newPoint );
     void movePoint( int index, const QPoint &newPos );
     void moveAttributePoint( int attr, const QPoint& newPos );
     void setAttribute( int attridx, double value );
     QList<QPoint> screenPoints() const;
     const QList< QPair<int, double> >& attributes() const { return mAttributes; }
+    const QList< QPair<int, QgsPoint> >& attributePoints() const { return mAttributePoints; }
     QList< QPair<int, double> > screenAttributes() const;
     QList< QPair<int, QPoint> > screenAttributePoints() const;
     int absolutePointIdx( int regularIdx ) const;
@@ -58,6 +61,7 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
     int moveActionForPosition( const QPointF& pos ) const override;
     void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
+    int pointIndexForMoveAction( int moveAction ) const;
     int attributeIndexForMoveAction( int moveAction ) const;
     Qt::CursorShape cursorShapeForAction( int moveAction ) const override;
 

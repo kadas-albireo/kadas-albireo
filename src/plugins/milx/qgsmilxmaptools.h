@@ -147,6 +147,7 @@ class QgsMilXEditTool : public QgsMapTool
     QgsMilXAnnotationItem* mActiveAnnotation;
     int mAnnotationMoveAction;
     QgsFloatingInputWidget* mInputWidget;
+    bool mMoving;
 
     void setLayer( QgsMilXLayer* layer );
 
@@ -154,7 +155,8 @@ class QgsMilXEditTool : public QgsMapTool
     void removeItemFromList();
     void updateRect();
     void checkLayerHidden();
-    void updateAttribute( const QString& value );
+    void updatePoint();
+    void updateAttribute();
 };
 
 #endif // QGSMILXMAPTOOLS_H
