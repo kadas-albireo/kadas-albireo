@@ -61,6 +61,12 @@ QgsGeometryRubberBand::~QgsGeometryRubberBand()
   delete mMeasurer;
 }
 
+void QgsGeometryRubberBand::updatePosition()
+{
+  setRect( rubberBandRectangle() );
+  QgsMapCanvasItem::updatePosition();
+}
+
 void QgsGeometryRubberBand::paint( QPainter* painter )
 {
   if ( !mGeometry || !painter )
@@ -290,6 +296,7 @@ QColor QgsGeometryRubberBand::outlineColor() const
 void QgsGeometryRubberBand::setOutlineWidth( int width )
 {
   mPen.setWidth( width );
+  setRect( rubberBandRectangle() );
 }
 
 int QgsGeometryRubberBand::outlineWidth() const
@@ -315,6 +322,12 @@ void QgsGeometryRubberBand::setBrushStyle( Qt::BrushStyle brushStyle )
 Qt::BrushStyle QgsGeometryRubberBand::brushStyle() const
 {
   return mBrush.style();
+}
+
+void QgsGeometryRubberBand::setIconSize( int iconSize )
+{
+  mIconSize = iconSize;
+  setRect( rubberBandRectangle() );
 }
 
 void QgsGeometryRubberBand::setIconFillColor( const QColor& c )
@@ -373,6 +386,10 @@ QString QgsGeometryRubberBand::getTotalMeasurement() const
 
 QgsRectangle QgsGeometryRubberBand::rubberBandRectangle() const
 {
+  if ( !mGeometry )
+  {
+    return QgsRectangle();
+  }
   qreal scale = mMapCanvas->mapUnitsPerPixel();
   qreal s = ( mIconSize - 1 ) / 2.0 * scale;
   qreal p = mPen.width() * scale;

@@ -90,6 +90,8 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType = QGis::Line );
     ~QgsGeometryRubberBand();
 
+    void updatePosition() override;
+
     /** Sets geometry (takes ownership). Geometry is expected to be in map coordinates */
     void setGeometry( QgsAbstractGeometryV2* geom, const QList<QgsVertexId>& hiddenNodes = QList<QgsVertexId>() );
     const QgsAbstractGeometryV2* geometry() const { return mGeometry; }
@@ -115,7 +117,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     Qt::BrushStyle brushStyle() const;
     void setIconType( IconType iconType ) { mIconType = iconType; }
     IconType iconType() const { return mIconType; }
-    void setIconSize( int iconSize ) { mIconSize = iconSize; }
+    void setIconSize( int iconSize );
     int iconSize() const { return mIconSize; }
     void setIconFillColor( const QColor& c );
     const QColor& iconFillColor() const { return mIconBrush.color(); }
