@@ -26,6 +26,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsbillboardregistry.h"
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QVector2D>
 
 bool QgsMilXItem::validateMssString( const QString &mssString, QString& adjustedMssString, QString &messages )
@@ -278,7 +279,8 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
         return true;
       }
       QList<MilXClient::NPointSymbolGraphic> result;
-      if ( !MilXClient::updateSymbols( screenExtent(), symbols, result ) )
+      double scaleFactor = double( mRendererContext.painter()->device()->logicalDpiX() ) / double( QApplication::desktop()->logicalDpiX() );
+      if ( !MilXClient::updateSymbols( screenExtent(), symbols, scaleFactor, result ) )
       {
         return false;
       }

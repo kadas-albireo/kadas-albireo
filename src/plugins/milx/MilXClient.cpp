@@ -605,13 +605,14 @@ bool MilXClient::updateSymbol( const QRect& visibleExtent, const NPointSymbol& s
   return true;
 }
 
-bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result )
+bool MilXClient::updateSymbols( const QRect& visibleExtent, const QList<NPointSymbol>& symbols, double scaleFactor, QList<NPointSymbolGraphic>& result )
 {
   int nSymbols = symbols.length();
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
   istream << MILX_REQUEST_UPDATE_SYMBOLS;
   istream << visibleExtent;
+  istream << scaleFactor;
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
