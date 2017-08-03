@@ -148,7 +148,7 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
 }
 
 template <class T>
-void QgsRedliningMapToolT<T>::canvasPressEvent( QMouseEvent *ev )
+void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
 {
   if ( mEditMode && ev->button() == Qt::LeftButton && ev->modifiers() == Qt::ControlModifier )
   {
@@ -156,12 +156,13 @@ void QgsRedliningMapToolT<T>::canvasPressEvent( QMouseEvent *ev )
     if ( result.layer == mLayer )
     {
       QList<QgsFeature> features = QList<QgsFeature>() << createFeature() << result.feature;
+      T::mutableState()->status = T::StatusFinished; // Avoid onFinished being called, which adds the feature to the layer
       T::canvas()->setMapTool( new QgsRedliningEditGroupMapTool( T::canvas(), mRedlining, mLayer, features ) );
     }
   }
   else
   {
-    T::canvasPressEvent( ev );
+    T::canvasReleaseEvent( ev );
   }
 }
 
@@ -315,7 +316,7 @@ template class QgsRedliningMapToolT<QgsMapToolDrawCircle>;
 ///////////////////////////////////////////////////////////////////////////////
 
 QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features )
-    : QgsMapTool( canvas ), mRedlining( redlining ), mLayer( layer )
+    : QgsMapTool( canvas ), mRedlining( redlining ), mLayer( layer ), mDraggingRect( false )
 {
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
@@ -340,10 +341,72 @@ QgsRedliningEditGroupMapTool::~QgsRedliningEditGroupMapTool()
   delete mRectItem;
 }
 
+void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
+{
+  if ( e->button() == Qt::LeftButton && ( e->modifiers() & Qt::ControlModifier ) == 0 )
+  {
+    mMouseMoveLastXY = e->posF();
+    if ( mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
+    {
+      mDraggingRect = true;
+      mCanvas->setCursor( Qt::SizeAllCursor );
+    }
+  }
+}
+
+void QgsRedliningEditGroupMapTool::canvasMoveEvent( QMouseEvent *e )
+{
+  if ( mDraggingRect )
+  {
+    QPointF newPos = e->posF();
+    double dx = newPos.x() - mMouseMoveLastXY.x();
+    double dy = newPos.y() - mMouseMoveLastXY.y();
+    QgsPoint oldMapPos = toMapCoordinates( mMouseMoveLastXY.toPoint() );
+    QgsPoint newMapPos = toMapCoordinates( newPos.toPoint() );
+    double mdx = newMapPos.x() - oldMapPos.x();
+    double mdy = newMapPos.y() - oldMapPos.y();
+    foreach ( const Item& item, mItems )
+    {
+      double ox, oy;
+      item.rubberband->translationOffset( ox, oy );
+      ox += mdx;
+      oy += mdy;
+      item.rubberband->setTranslationOffset( ox, oy );
+      if ( item.nodeRubberband )
+      {
+        item.nodeRubberband->setTranslationOffset( ox, oy );
+      }
+    }
+    mRectItem->moveBy( dx, dy );
+  }
+  mMouseMoveLastXY = e->posF();
+}
+
 void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( mDraggingRect )
   {
+    foreach ( const Item& item, mItems )
+    {
+      double ox, oy;
+      item.rubberband->translationOffset( ox, oy );
+      QgsAbstractGeometryV2* geom = item.rubberband->geometry()->clone();
+      geom->transform( QTransform::fromTranslate( ox, oy ) );
+      item.rubberband->setGeometry( geom );
+      item.rubberband->setTranslationOffset( 0, 0 );
+      if ( item.nodeRubberband )
+      {
+        item.nodeRubberband->translationOffset( ox, oy );
+        const QgsPoint* p = item.nodeRubberband->getPoint( 0 );
+        if ( p )
+        {
+          QgsPoint newPos = QgsPoint( p->x() + ox, p->y() + oy );
+          item.nodeRubberband->movePoint( 0, newPos, false );
+          item.nodeRubberband->movePoint( 1, newPos );
+        }
+        item.nodeRubberband->setTranslationOffset( 0, 0 );
+      }
+    }
     mDraggingRect = false;
     mCanvas->setCursor( mCursor );
     updateRect();
@@ -554,16 +617,9 @@ void QgsRedliningEditGroupMapTool::updateRect()
     return;
   }
   QRectF rect = mItems.front().rubberband->boundingRect().translated( mItems.front().rubberband->pos() );
-  int iconSize = mItems.front().rubberband->iconSize();
-  rect.translate( -0.5*iconSize, -0.5 * iconSize );
-  rect.setSize( rect.size() + QSizeF( iconSize, iconSize ) );
   for ( int i = 1; i < n; ++i )
   {
-    QRectF itemRect = mItems[i].rubberband->boundingRect().translated( mItems[i].rubberband->pos() );
-    iconSize = mItems[i].rubberband->iconSize();
-    itemRect.translate( -0.5*iconSize, -0.5 * iconSize );
-    itemRect.setSize( itemRect.size() + QSizeF( iconSize, iconSize ) );
-    rect = rect.unite( itemRect );
+    rect = rect.unite( mItems[i].rubberband->boundingRect().translated( mItems[i].rubberband->pos() ) );
   }
   mRectItem->setPos( 0, 0 );
   mRectItem->setRect( rect );

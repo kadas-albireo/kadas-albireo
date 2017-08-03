@@ -74,7 +74,7 @@ class QgsRedliningMapToolT : public T
     class AddFeatureCommand;
 
   protected:
-    void canvasPressEvent( QMouseEvent* ev ) override;
+    void canvasReleaseEvent( QMouseEvent* ev ) override;
 
   private:
     QgsRedliningManager* mRedlining;
@@ -149,6 +149,8 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
   public:
     QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features );
     ~QgsRedliningEditGroupMapTool();
+    void canvasPressEvent( QMouseEvent *e ) override;
+    void canvasMoveEvent( QMouseEvent *e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void keyReleaseEvent( QKeyEvent *e ) override;
 
