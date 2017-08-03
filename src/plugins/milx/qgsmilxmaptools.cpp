@@ -685,19 +685,12 @@ void QgsMilXEditTool::activate()
 
 void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
 {
-  if ( e->button() == Qt::LeftButton && ( e->modifiers() & Qt::ControlModifier ) == 0 )
+  mMouseMoveLastXY = e->posF();
+  if ( e->button() == Qt::LeftButton && ( e->modifiers() & Qt::ControlModifier ) == 0 &&
+       !mActiveAnnotation && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
   {
-    mMouseMoveLastXY = e->posF();
-    QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
-    if ( item && mItems.contains( item ) )
-    {
-      // pass
-    }
-    else if ( e->modifiers() != Qt::ControlModifier && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
-    {
-      mDraggingRect = true;
-      mCanvas->setCursor( Qt::SizeAllCursor );
-    }
+    mDraggingRect = true;
+    mCanvas->setCursor( Qt::SizeAllCursor );
   }
 }
 
@@ -752,7 +745,7 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
   else
   {
     QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
-    if ( item )
+    if ( mItems.size() == 1 && item )
     {
       int moveAction = item->moveActionForPosition( e->posF() );
       if ( item != mActiveAnnotation || moveAction != mAnnotationMoveAction )
@@ -949,10 +942,9 @@ void QgsMilXEditTool::keyReleaseEvent( QKeyEvent *e )
 
 void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent *e )
 {
-  QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( mCanvas->annotationItemAtPos( e->pos() ) );
-  if ( item && mItems.contains( item ) )
+  if ( mActiveAnnotation )
   {
-    item->showItemEditor();
+    mActiveAnnotation->showItemEditor();
   }
 }
 
