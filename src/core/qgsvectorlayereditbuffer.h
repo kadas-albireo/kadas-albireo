@@ -116,7 +116,7 @@ class CORE_EXPORT QgsVectorLayerEditBuffer : public QObject
 
     void featureAdded( QgsFeatureId fid );
     void featureDeleted( QgsFeatureId fid );
-    void geometryChanged( QgsFeatureId fid, QgsGeometry &geom );
+    void geometryChanged( QgsFeatureId fid, const QgsGeometry &geom );
     void attributeValueChanged( QgsFeatureId fid, int idx, const QVariant & );
     void attributeAdded( int idx );
     void attributeDeleted( int idx );

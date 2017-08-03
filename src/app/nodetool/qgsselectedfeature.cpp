@@ -69,7 +69,7 @@ void QgsSelectedFeature::currentLayerChanged( QgsMapLayer *layer )
     deleteLater();
 }
 
-void QgsSelectedFeature::updateGeometry( QgsGeometry *geom )
+void QgsSelectedFeature::updateGeometry( const QgsGeometry *geom )
 {
   QgsDebugCall;
 
@@ -112,7 +112,7 @@ void QgsSelectedFeature::setSelectedFeature( QgsFeatureId featureId, QgsVectorLa
   connect( canvas, SIGNAL( extentsChanged() ), this, SLOT( updateVertexMarkersPosition() ) );
 
   // geometry was changed
-  connect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry & ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry & ) ) );
+  connect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry ) ) );
 
   replaceVertexMap();
 }
@@ -120,7 +120,7 @@ void QgsSelectedFeature::setSelectedFeature( QgsFeatureId featureId, QgsVectorLa
 void QgsSelectedFeature::beforeRollBack()
 {
   QgsDebugCall;
-  disconnect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry & ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry & ) ) );
+  disconnect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry ) ) );
   deleteVertexMap();
 }
 
@@ -129,7 +129,7 @@ void QgsSelectedFeature::beginGeometryChange()
   Q_ASSERT( !mChangingGeometry );
   mChangingGeometry = true;
 
-  disconnect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry & ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry & ) ) );
+  disconnect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry ) ) );
 }
 
 void QgsSelectedFeature::endGeometryChange()
@@ -137,7 +137,7 @@ void QgsSelectedFeature::endGeometryChange()
   Q_ASSERT( mChangingGeometry );
   mChangingGeometry = false;
 
-  connect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry & ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry & ) ) );
+  connect( mVlayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry ) ) );
 }
 
 void QgsSelectedFeature::canvasLayersChanged()
@@ -151,7 +151,7 @@ void QgsSelectedFeature::featureDeleted( QgsFeatureId fid )
     deleteLater();
 }
 
-void QgsSelectedFeature::geometryChanged( QgsFeatureId fid, QgsGeometry &geom )
+void QgsSelectedFeature::geometryChanged( QgsFeatureId fid, const QgsGeometry &geom )
 {
   QgsDebugCall;
 

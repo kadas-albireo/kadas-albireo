@@ -591,7 +591,7 @@ QgsPointLocator::QgsPointLocator( QgsVectorLayer* layer, const QgsCoordinateRefe
 
   connect( mLayer, SIGNAL( featureAdded( QgsFeatureId ) ), this, SLOT( onFeatureAdded( QgsFeatureId ) ) );
   connect( mLayer, SIGNAL( featureDeleted( QgsFeatureId ) ), this, SLOT( onFeatureDeleted( QgsFeatureId ) ) );
-  connect( mLayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry& ) ), this, SLOT( onGeometryChanged( QgsFeatureId, QgsGeometry& ) ) );
+  connect( mLayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( onGeometryChanged( QgsFeatureId, QgsGeometry ) ) );
 }
 
 
@@ -763,7 +763,7 @@ void QgsPointLocator::onFeatureDeleted( QgsFeatureId fid )
   }
 }
 
-void QgsPointLocator::onGeometryChanged( QgsFeatureId fid, QgsGeometry& geom )
+void QgsPointLocator::onGeometryChanged( QgsFeatureId fid, const QgsGeometry& geom )
 {
   Q_UNUSED( geom );
   onFeatureDeleted( fid );

@@ -157,7 +157,7 @@ class QgsSelectedFeature: public QObject
     /*
      * the geometry of a feature from the layer was changed - might be the selected
      */
-    void geometryChanged( QgsFeatureId, QgsGeometry & );
+    void geometryChanged( QgsFeatureId, const QgsGeometry & );
 
     /*
      * the current layer changed - destroy
@@ -189,7 +189,7 @@ class QgsSelectedFeature: public QObject
      * Updates stored geometry to actual one loaded from layer
      * (or already available geometry)
      */
-    void updateGeometry( QgsGeometry *geom );
+    void updateGeometry( const QgsGeometry *geom );
 
     /**
      * Validates the geometry

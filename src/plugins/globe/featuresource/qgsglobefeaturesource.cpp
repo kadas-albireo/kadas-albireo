@@ -26,7 +26,7 @@ void QgsGlobeFeatureSource::initialize( const osgDB::Options* dbOptions )
   mLayer = mOptions.layer();
 
   connect( mLayer, SIGNAL( attributeValueChanged( QgsFeatureId, int, QVariant ) ), this, SLOT( attributeValueChanged( QgsFeatureId, int, QVariant ) ) );
-  connect( mLayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry& ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry& ) ) );
+  connect( mLayer, SIGNAL( geometryChanged( QgsFeatureId, QgsGeometry ) ), this, SLOT( geometryChanged( QgsFeatureId, QgsGeometry ) ) );
 
   // create the profile
   osgEarth::SpatialReference* ref = osgEarth::SpatialReference::create( mLayer->crs().toWkt().toStdString() );
