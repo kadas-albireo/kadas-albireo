@@ -126,7 +126,7 @@ public:
   static bool updateSymbols(const QRect& visibleExtent, const QList<NPointSymbol>& symbols, double scaleFactor, QList<NPointSymbolGraphic>& result);
 
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
-  static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol);
+  static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol, QRect &boundingBox);
 
   static bool getCurrentLibraryVersionTag(QString& versionTag);
   static bool getSupportedLibraryVersionTags(QStringList& versionTags, QStringList& versionNames);

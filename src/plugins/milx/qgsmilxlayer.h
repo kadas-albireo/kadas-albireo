@@ -90,7 +90,7 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     QgsRectangle extent() override;
     int margin() const override;
 
-    bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult ) override;
+    bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult, QRect &pickResultsExtent ) override;
     void handlePick( const QVariant& pick ) override;
     QVariantList getItems( const QgsRectangle& extent ) const override;
     void deleteItems( const QVariantList& items ) override;

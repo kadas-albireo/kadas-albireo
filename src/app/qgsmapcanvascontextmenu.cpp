@@ -19,6 +19,7 @@
 #include <QClipboard>
 #include <QToolButton>
 #include "qgisapp.h"
+#include "qgsannotationitem.h"
 #include "qgsattributedialog.h"
 #include "qgscoordinateformat.h"
 #include "qgsgeometry.h"
@@ -27,37 +28,49 @@
 #include "qgisinterface.h"
 #include "qgslinestringv2.h"
 #include "qgsfeature.h"
-#include "qgsfeaturepicker.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
 #include "qgsmaptoolslope.h"
 #include "qgsmaptoolhillshade.h"
 #include "qgsmeasuretoolv2.h"
 #include "qgsmeasureheightprofiletool.h"
+#include "qgspluginlayer.h"
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
 #include "qgsvectorlayer.h"
 #include "qgsvbsrasteridentify.h"
 
-QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
-    : mMapPos( mapPos ), mSelectedLayer( 0 ), mSelectedFeature( 0 )
+QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QPoint& canvasPos, const QgsPoint& mapPos )
+    : mMapPos( mapPos ), mCanvas( canvas ), mRubberBand( 0 ), mRectItem( 0 )
 {
-  mRubberBand = 0;
-
-  // TODO: Handle MiliX layers
-  QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( QgisApp::instance()->mapCanvas(), mapPos, QGis::AnyGeometry );
-  const QgsLabelingResults* labelingResults = QgisApp::instance()->mapCanvas()->labelingResults();
+  mPickResult = QgsFeaturePicker::pick( mCanvas, canvasPos, mapPos, QGis::AnyGeometry );
+  const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
   mLabelPositions = labelingResults ? labelingResults->labelsAtPosition( mMapPos ) : QList<QgsLabelPosition>();
-  // A feature was picked
-  if ( pickResult.feature.isValid() )
+
+  if ( mPickResult.annotation )
   {
-    mSelectedFeature = pickResult.feature;
-    mSelectedLayer = static_cast<QgsVectorLayer*>( pickResult.layer );
-    QgsCoordinateTransform ct( pickResult.layer->crs(), QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs() );
-    mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), pickResult.feature.geometry()->type() );
+    addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editAnnotation() ) );
+    mRectItem = new QGraphicsRectItem();
+    mRectItem->setRect( mPickResult.boundingBox );
+    mRectItem->setPen( QPen( Qt::red, 2 ) );
+    mCanvas->scene()->addItem( mRectItem );
+  }
+  else if ( mPickResult.otherResult.isValid() && dynamic_cast<QgsPluginLayer*>( mPickResult.layer ) )
+  {
+    addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editOtherResult() ) );
+    mRectItem = new QGraphicsRectItem();
+    mRectItem->setRect( mPickResult.boundingBox );
+    mRectItem->setPen( QPen( Qt::red, 2 ) );
+    mCanvas->scene()->addItem( mRectItem );
+  }
+  else if ( mPickResult.feature.isValid() && mPickResult.layer )
+  {
+    QgsCoordinateTransform ct( mPickResult.layer->crs(), mCanvas->mapSettings().destinationCrs() );
+    mRubberBand = new QgsGeometryRubberBand( mCanvas, mPickResult.feature.geometry()->type() );
     mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
-    mRubberBand->setGeometry( pickResult.feature.geometry()->geometry()->transformed( ct ) );
-    if ( pickResult.layer->type() == QgsMapLayer::RedliningLayer )
+    mRubberBand->setOutlineWidth( 2 );
+    mRubberBand->setGeometry( mPickResult.feature.geometry()->geometry()->transformed( ct ) );
+    if ( mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
       addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
@@ -71,8 +84,9 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
   else if ( !mLabelPositions.isEmpty() )
   {
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editLabel() ) );
-    mRubberBand = new QgsGeometryRubberBand( QgisApp::instance()->mapCanvas(), QGis::Line );
+    mRubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
     mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
+    mRubberBand->setOutlineWidth( 2 );
     QgsLineStringV2* lineString = new QgsLineStringV2();
     foreach ( const QgsPoint& p, mLabelPositions.first().cornerPoints )
     {
@@ -81,7 +95,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     lineString->addVertex( lineString->vertexAt( QgsVertexId( 0, 0, 0 ) ) );
     mRubberBand->setGeometry( lineString );
   }
-  if ( !pickResult.feature.isValid() && mLabelPositions.isEmpty() )
+  if ( mPickResult.isEmpty() && mLabelPositions.isEmpty() )
   {
     addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( rasterAttributes() ) );
     addSeparator();
@@ -104,7 +118,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     addAction( QIcon( ":/images/themes/default/mIconSelectRemove.svg" ), tr( "Delete items" ), this, SLOT( deleteItems() ) );
   }
   addSeparator();
-  if ( mLabelPositions.isEmpty() )
+  if (( mPickResult.isEmpty() || mPickResult.feature.isValid() ) && mLabelPositions.isEmpty() )
   {
     QMenu* measureMenu = new QMenu();
     addAction( tr( "Measure" ) )->setMenu( measureMenu );
@@ -113,23 +127,15 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
     measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureCircle.png" ), tr( "Circle" ), this, SLOT( measureCircle() ) );
     measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
     measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
-  }
-
-#if 0
-  if ( mLabelPositions.isEmpty() )
-#else
-  if ( mLabelPositions.isEmpty() && !mSelectedFeature.isValid() )
-#endif
-  {
     QMenu* analysisMenu = new QMenu();
     addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );
     analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
     analysisMenu->addAction( QIcon( ":/images/themes/default/hillshade.svg" ), tr( "Hillshade" ), this, SLOT( terrainHillshade() ) );
-    if ( !mSelectedFeature.isValid() )
+    if ( !mPickResult.feature.isValid() )
     {
       analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
     }
-    if ( !mSelectedFeature.isValid() || mSelectedFeature.geometry()->type() != QGis::Point )
+    if ( !mPickResult.feature.isValid() || mPickResult.feature.geometry()->type() != QGis::Point )
     {
       analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
     }
@@ -143,23 +149,37 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( const QgsPoint& mapPos )
 QgsMapCanvasContextMenu::~QgsMapCanvasContextMenu()
 {
   delete mRubberBand;
+  delete mRectItem;
 }
 
 void QgsMapCanvasContextMenu::featureAttributes()
 {
-  if ( mSelectedLayer )
+  QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
+  QgsAttributeDialog *dialog = new QgsAttributeDialog( vlayer, &mPickResult.feature, false, QgisApp::instance() );
+  dialog->show( true );
+}
+
+void QgsMapCanvasContextMenu::editAnnotation()
+{
+  QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
+  if ( selItem )
   {
-    QgsAttributeDialog *dialog = new QgsAttributeDialog( mSelectedLayer, &mSelectedFeature, false, QgisApp::instance() );
-    dialog->show( true );
+    selItem->setSelected( false );
   }
+  mPickResult.annotation->setSelected( true );
 }
 
 void QgsMapCanvasContextMenu::editFeature()
 {
-  if ( mSelectedLayer == QgisApp::instance()->redlining()->getLayer() )
-    QgisApp::instance()->redlining()->editFeature( mSelectedFeature );
-  else if ( mSelectedLayer == QgisApp::instance()->gpsRouteEditor()->getLayer() )
-    QgisApp::instance()->gpsRouteEditor()->editFeature( mSelectedFeature );
+  if ( mPickResult.layer == QgisApp::instance()->redlining()->getLayer() )
+    QgisApp::instance()->redlining()->editFeature( mPickResult.feature );
+  else if ( mPickResult.layer == QgisApp::instance()->gpsRouteEditor()->getLayer() )
+    QgisApp::instance()->gpsRouteEditor()->editFeature( mPickResult.feature );
+}
+
+void QgsMapCanvasContextMenu::editOtherResult()
+{
+  static_cast<QgsPluginLayer*>( mPickResult.layer )->handlePick( mPickResult.otherResult );
 }
 
 void QgsMapCanvasContextMenu::editLabel()
@@ -181,25 +201,27 @@ void QgsMapCanvasContextMenu::editLabel()
 
 void QgsMapCanvasContextMenu::cutFeature()
 {
-  if ( mSelectedLayer && mSelectedLayer == QgisApp::instance()->redlining()->getLayer() )
+  if ( mPickResult.layer && mPickResult.layer == QgisApp::instance()->redlining()->getLayer() )
   {
-    QgsFeatureIds prevSelection = mSelectedLayer->selectedFeaturesIds();
-    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature.id() );
-    mSelectedLayer->startEditing();
-    QgisApp::instance()->editCut( mSelectedLayer );
-    mSelectedLayer->commitChanges();
-    mSelectedLayer->setSelectedFeatures( prevSelection );
+    QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
+    QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
+    vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
+    vlayer->startEditing();
+    QgisApp::instance()->editCut( vlayer );
+    vlayer->commitChanges();
+    vlayer->setSelectedFeatures( prevSelection );
   }
 }
 
 void QgsMapCanvasContextMenu::copyFeature()
 {
-  if ( mSelectedLayer )
+  if ( mPickResult.layer )
   {
-    QgsFeatureIds prevSelection = mSelectedLayer->selectedFeaturesIds();
-    mSelectedLayer->setSelectedFeatures( QgsFeatureIds() << mSelectedFeature.id() );
-    QgisApp::instance()->editCopy( mSelectedLayer );
-    mSelectedLayer->setSelectedFeatures( prevSelection );
+    QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
+    QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
+    vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
+    QgisApp::instance()->editCopy( vlayer );
+    vlayer->setSelectedFeatures( prevSelection );
   }
 }
 
@@ -210,7 +232,7 @@ void QgsMapCanvasContextMenu::pasteFeature()
 
 void QgsMapCanvasContextMenu::drawPin()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mPinAnnotation );
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mPinAnnotation );
 }
 
 void QgsMapCanvasContextMenu::drawPointMarker()
@@ -255,95 +277,95 @@ void QgsMapCanvasContextMenu::drawText()
 
 void QgsMapCanvasContextMenu::measureLine()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureDist );
-  if ( mSelectedLayer )
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureDist );
+  if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureDist )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureDist )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
 void QgsMapCanvasContextMenu::measurePolygon()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureArea );
-  if ( mSelectedLayer )
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureArea );
+  if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureArea )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureArea )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
 void QgsMapCanvasContextMenu::measureCircle()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureCircle );
-  if ( mSelectedLayer )
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureCircle );
+  if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureCircle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureCircle )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
 void QgsMapCanvasContextMenu::measureAngle()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureAngle );
-  if ( mSelectedLayer )
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureAngle );
+  if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureAngle )->addGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureAngle )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
 void QgsMapCanvasContextMenu::measureHeightProfile()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
-  if ( mSelectedLayer )
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
+  if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureHeightProfileTool*>( QgisApp::instance()->mapTools()->mMeasureHeightProfile )->setGeometry( mSelectedFeature.geometry(), mSelectedLayer );
+    static_cast<QgsMeasureHeightProfileTool*>( QgisApp::instance()->mapTools()->mMeasureHeightProfile )->setGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
 void QgsMapCanvasContextMenu::rasterAttributes()
 {
-  QgsVBSRasterIdentify::identify( QgisApp::instance()->mapCanvas(), mMapPos );
+  QgsVBSRasterIdentify::identify( mCanvas, mMapPos );
 }
 
 void QgsMapCanvasContextMenu::terrainSlope()
 {
-  if ( mSelectedFeature.isValid() )
+  if ( mPickResult.feature.isValid() )
   {
-    QgsRectangle extent = mSelectedFeature.geometry()->boundingBox();
-    const QgsCoordinateReferenceSystem& crs = mSelectedLayer->crs();
+    QgsRectangle extent = mPickResult.feature.geometry()->boundingBox();
+    const QgsCoordinateReferenceSystem& crs = mPickResult.layer->crs();
     static_cast<QgsMapToolSlope*>( QgisApp::instance()->mapTools()->mSlope )->compute( extent, crs );
   }
   else
   {
-    QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mSlope );
+    mCanvas->setMapTool( QgisApp::instance()->mapTools()->mSlope );
   }
 }
 
 void QgsMapCanvasContextMenu::terrainHillshade()
 {
-  if ( mSelectedFeature.isValid() )
+  if ( mPickResult.feature.isValid() )
   {
-    QgsRectangle extent = mSelectedFeature.geometry()->boundingBox();
-    const QgsCoordinateReferenceSystem& crs = mSelectedLayer->crs();
+    QgsRectangle extent = mPickResult.feature.geometry()->boundingBox();
+    const QgsCoordinateReferenceSystem& crs = mPickResult.layer->crs();
     static_cast<QgsMapToolHillshade*>( QgisApp::instance()->mapTools()->mHillshade )->compute( extent, crs );
   }
   else
   {
-    QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mHillshade );
+    mCanvas->setMapTool( QgisApp::instance()->mapTools()->mHillshade );
   }
 }
 
 void QgsMapCanvasContextMenu::terrainViewshed()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mViewshed );
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mViewshed );
 }
 
 void QgsMapCanvasContextMenu::terrainLineOfSight()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
 }
 
 void QgsMapCanvasContextMenu::copyCoordinates()
 {
-  const QgsCoordinateReferenceSystem& mapCrs = QgisApp::instance()->mapCanvas()->mapSettings().destinationCrs();
+  const QgsCoordinateReferenceSystem& mapCrs = mCanvas->mapSettings().destinationCrs();
   QString posStr = QgsCoordinateFormat::instance()->getDisplayString( mMapPos, mapCrs );
   if ( posStr.isEmpty() )
   {
@@ -371,5 +393,5 @@ void QgsMapCanvasContextMenu::print()
 
 void QgsMapCanvasContextMenu::deleteItems()
 {
-  QgisApp::instance()->mapCanvas()->setMapTool( QgisApp::instance()->mapTools()->mDeleteItems );
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mDeleteItems );
 }

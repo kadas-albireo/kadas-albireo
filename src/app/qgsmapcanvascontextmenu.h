@@ -21,8 +21,10 @@
 #include <QMenu>
 #include "qgspoint.h"
 #include "qgsfeature.h"
+#include "qgsfeaturepicker.h"
 #include "qgsmaprenderer.h"
 
+class QGraphicsRectItem;
 class QgsGeometryRubberBand;
 class QgsVectorLayer;
 
@@ -30,12 +32,14 @@ class QgsMapCanvasContextMenu : public QMenu
 {
     Q_OBJECT
   public:
-    QgsMapCanvasContextMenu( const QgsPoint& mapPos );
+    QgsMapCanvasContextMenu( QgsMapCanvas *canvas, const QPoint &canvasPos, const QgsPoint& mapPos );
     ~QgsMapCanvasContextMenu();
 
   private slots:
     void featureAttributes();
+    void editAnnotation();
     void editFeature();
+    void editOtherResult();
     void editLabel();
     void cutFeature();
     void copyFeature();
@@ -66,9 +70,10 @@ class QgsMapCanvasContextMenu : public QMenu
 
   private:
     QgsPoint mMapPos;
-    QgsVectorLayer* mSelectedLayer;
-    QgsFeature mSelectedFeature;
+    QgsMapCanvas* mCanvas;
+    QgsFeaturePicker::PickResult mPickResult;
     QgsGeometryRubberBand* mRubberBand;
+    QGraphicsRectItem* mRectItem;
     QList<QgsLabelPosition> mLabelPositions;
 };
 

@@ -360,7 +360,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
   }
 }
 
-bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult )
+bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult, QRect& pickResultsExtent )
 {
   QPoint screenPos = mapSettings.mapToPixel().transform( mapPos ).toQPointF().toPoint();
   const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", mapSettings.destinationCrs().authid() );
@@ -376,7 +376,7 @@ bool QgsMilXLayer::testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSe
     symbols.append( MilXClient::NPointSymbol( mItems[i]->mssString(), points, mItems[i]->controlPoints(), screenAttribs, true, true ) );
   }
   int selectedSymbol = -1;
-  if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol ) && selectedSymbol >= 0 )
+  if ( MilXClient::pickSymbol( symbols, screenPos, selectedSymbol, pickResultsExtent ) && selectedSymbol >= 0 )
   {
     pickResult = QVariant::fromValue( selectedSymbol );
     return true;

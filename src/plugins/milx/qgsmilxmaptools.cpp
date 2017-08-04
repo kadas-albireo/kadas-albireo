@@ -841,7 +841,8 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
     else
     {
       QVariant pickResult;
-      if ( mLayer->testPick( toMapCoordinates( e->pos() ), canvas()->mapSettings(), pickResult ) )
+      QRect boundingBox;
+      if ( mLayer->testPick( toMapCoordinates( e->pos() ), canvas()->mapSettings(), pickResult, boundingBox ) )
       {
         // Clicked a new item
         QgsMilXItem* layerItem = mLayer->takeItem( pickResult.toInt() );
@@ -940,7 +941,7 @@ void QgsMilXEditTool::keyReleaseEvent( QKeyEvent *e )
   }
 }
 
-void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent *e )
+void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
 {
   if ( mActiveAnnotation )
   {

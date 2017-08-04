@@ -152,7 +152,7 @@ void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
 {
   if ( mEditMode && ev->button() == Qt::LeftButton && ev->modifiers() == Qt::ControlModifier )
   {
-    QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( T::canvas(), T::toMapCoordinates( ev->pos() ), QGis::AnyGeometry );
+    QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( T::canvas(), ev->pos(), T::toMapCoordinates( ev->pos() ), QGis::AnyGeometry );
     if ( result.layer == mLayer )
     {
       QList<QgsFeature> features = QList<QgsFeature>() << createFeature() << result.feature;
@@ -436,7 +436,7 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
     }
     else
     {
-      QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( canvas(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+      QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( canvas(), e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
       if ( result.layer == mLayer )
       {
         if ( e->modifiers() != Qt::ControlModifier )

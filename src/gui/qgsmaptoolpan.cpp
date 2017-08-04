@@ -114,21 +114,11 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
   }
   else if ( e->button() == Qt::RightButton && mAllowItemInteraction )
   {
-    // First, try to show menu for annotation items
-    QgsAnnotationItem* itemAtPos = canvas()->annotationItemAtPos( e->pos() );
+    // If annotation item is selected, show its context menu
     QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
-    if ( itemAtPos )
+    if ( selItem )
     {
-      bool isPreviouslySelected = itemAtPos == selItem;
-      if ( !isPreviouslySelected )
-      {
-        itemAtPos->setSelected( true );
-        if ( selItem )
-          selItem->setSelected( false );
-      }
-      itemAtPos->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
-      if ( !isPreviouslySelected )
-        itemAtPos->setSelected( false );
+      selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
     }
     // Otherwise, request application context menu
     else
@@ -136,7 +126,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
       QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
       if ( selItem )
         selItem->setSelected( false );
-      emit contextMenuRequested( mCanvas->mapToGlobal( e->pos() ), toMapCoordinates( e->pos() ) );
+      emit contextMenuRequested( e->pos(), toMapCoordinates( e->pos() ) );
     }
   }
 }
@@ -246,7 +236,7 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
         else
         {
 
-          QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+          QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
           if ( result.layer )
           {
             emit featurePicked( result.layer, result.feature, result.otherResult );

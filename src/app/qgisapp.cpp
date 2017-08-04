@@ -5941,9 +5941,10 @@ void QgisApp::dizzy()
   mapCanvas()->setTransform( matrix );
 }
 
-void QgisApp::showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos )
+void QgisApp::showCanvasContextMenu( QPoint canvasPos, QgsPoint mapPos )
 {
-  QgsMapCanvasContextMenu( mapPos ).exec( screenPos );
+  QPoint screenPos = mapCanvas()->mapToGlobal( canvasPos );
+  QgsMapCanvasContextMenu( mapCanvas(), canvasPos, mapPos ).exec( screenPos );
 }
 
 void QgisApp::handleFeaturePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult )

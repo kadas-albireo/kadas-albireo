@@ -720,7 +720,7 @@ bool MilXClient::hitTest( const NPointSymbol& symbol, const QPoint& clickPos, bo
   return true;
 }
 
-bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol )
+bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol, QRect& boundingBox )
 {
   int nSymbols = symbols.length();
   QByteArray request;
@@ -739,7 +739,7 @@ bool MilXClient::pickSymbol( const QList<NPointSymbol>& symbols, const QPoint& c
 
   QDataStream ostream( &response, QIODevice::ReadOnly );
   MilXServerReply replycmd = 0; ostream >> replycmd;
-  ostream >> selectedSymbol;
+  ostream >> selectedSymbol >> boundingBox;
   return true;
 }
 

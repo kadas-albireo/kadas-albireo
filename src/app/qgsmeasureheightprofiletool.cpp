@@ -139,7 +139,7 @@ void QgsMeasureHeightProfileTool::canvasReleaseEvent( QMouseEvent *e )
   }
   else
   {
-    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::Line );
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::Line );
     if ( pickResult.feature.isValid() )
     {
       setGeometry( pickResult.feature.geometry(), static_cast<QgsVectorLayer*>( pickResult.layer ) );

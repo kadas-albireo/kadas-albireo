@@ -90,7 +90,7 @@ void QgsMeasureCircleTool::canvasReleaseEvent( QMouseEvent * e )
   QgsPoint point = snapPoint( e->pos() );
   if ( mPickFeature )
   {
-    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), QGis::Polygon );
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::Polygon );
     if ( pickResult.feature.isValid() )
     {
       addGeometry( pickResult.feature.geometry(), static_cast<QgsVectorLayer*>( pickResult.layer ) );

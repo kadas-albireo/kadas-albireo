@@ -30,7 +30,7 @@ class QgsPluginLayer : QgsMapLayer
     virtual QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) /Factory/;
 
     /** Test for mouse pick. */
-    virtual bool testPick(const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult );
+    virtual bool testPick(const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult, QRect &pickResultsExtent );
     /** Handle a pick result. */
     virtual void handlePick(const QVariant& pick);
     /** Get items in extent */

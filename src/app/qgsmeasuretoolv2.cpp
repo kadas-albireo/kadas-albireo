@@ -256,7 +256,7 @@ void QgsMeasureToolV2::canvasReleaseEvent( QMouseEvent *e )
   }
   else
   {
-    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAzimuth ) ? QGis::Line : QGis::Polygon );
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), ( mMeasureMode == MeasureLine || mMeasureMode == MeasureAzimuth ) ? QGis::Line : QGis::Polygon );
     if ( pickResult.feature.isValid() )
     {
       mDrawTool->addGeometry( pickResult.feature.geometry()->geometry(), pickResult.layer->crs() );

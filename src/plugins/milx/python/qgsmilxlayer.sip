@@ -48,7 +48,8 @@ class QgsMilXLayer : public QgsPluginLayer
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext );
     QgsRectangle extent();
 
-    bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult );
+    bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult, QRect& boundingBox );
+
     void handlePick( const QVariant& pick );
 
   signals:

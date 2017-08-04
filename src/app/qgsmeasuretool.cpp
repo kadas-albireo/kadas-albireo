@@ -187,7 +187,7 @@ void QgsMeasureTool::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( mPickFeature )
   {
-    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
+    QgsFeaturePicker::PickResult pickResult = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), mMeasureArea ? QGis::Polygon : QGis::Line );
     if ( pickResult.feature.isValid() )
     {
       addGeometry( pickResult.feature.geometry(), static_cast<QgsVectorLayer*>( pickResult.layer ) );

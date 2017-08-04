@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsfeaturepicker.h"
+#include "qgsannotationitem.h"
 #include "qgsgeometry.h"
 #include "qgslegendinterface.h"
 #include "qgsmapcanvas.h"
@@ -21,8 +22,18 @@
 #include "qgsrendererv2.h"
 #include "qgsvectorlayer.h"
 
-QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas, const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
+QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas, const QPoint &canvasPos, const QgsPoint &mapPos, QGis::GeometryType geomType, filter_t filter )
 {
+  PickResult pickResult;
+
+  QgsAnnotationItem* annotationItem = canvas->annotationItemAtPos( canvasPos );
+  if ( annotationItem )
+  {
+    pickResult.annotation = annotationItem;
+    pickResult.boundingBox = annotationItem->boundingRect().translated( annotationItem->pos() );
+    return pickResult;
+  }
+
   QgsRenderContext renderContext = QgsRenderContext::fromMapSettings( canvas->mapSettings() );
   double radiusmm = QSettings().value( "/Map/searchRadiusMM", QGis::DEFAULT_SEARCH_RADIUS_MM ).toDouble();
   radiusmm = radiusmm > 0 ? radiusmm : QGis::DEFAULT_SEARCH_RADIUS_MM;
@@ -33,8 +44,6 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
   filterRect.setYMinimum( mapPos.y() - radiusmu );
   filterRect.setYMaximum( mapPos.y() + radiusmu );
 
-  PickResult pickResult = {};
-
   QgsFeatureList features;
   foreach ( QgsMapLayer* layer, canvas->layers() )
   {
@@ -42,10 +51,12 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
     {
       QgsPluginLayer* pluginLayer = static_cast<QgsPluginLayer*>( layer );
       QVariant result;
-      if ( pluginLayer->testPick( mapPos, canvas->mapSettings(), result ) )
+      QRect boundingBox;
+      if ( pluginLayer->testPick( mapPos, canvas->mapSettings(), result, boundingBox ) )
       {
         pickResult.layer = layer;
         pickResult.otherResult = result;
+        pickResult.boundingBox = boundingBox;
         return pickResult;
       }
     }

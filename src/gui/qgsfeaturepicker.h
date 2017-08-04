@@ -18,7 +18,9 @@
 
 #include "qgis.h"
 #include "qgsfeature.h"
+#include <QRectF>
 
+class QgsAnnotationItem;
 class QgsPoint;
 class QgsMapLayer;
 class QgsMapCanvas;
@@ -26,15 +28,21 @@ class QgsMapCanvas;
 class GUI_EXPORT QgsFeaturePicker
 {
   public:
-    struct PickResult
+    class PickResult
     {
-      QgsMapLayer* layer;
-      QgsFeature feature;
-      QVariant otherResult;
+      public:
+        PickResult() : layer( 0 ), annotation( 0 ) {}
+        bool isEmpty() const { return layer == 0 && annotation == 0; }
+
+        QgsMapLayer* layer;
+        QgsFeature feature;
+        QVariant otherResult;
+        QgsAnnotationItem* annotation;
+        QRectF boundingBox;
     };
 
     typedef bool( *filter_t )( const QgsFeature& );
-    static PickResult pick( const QgsMapCanvas *canvas, const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
+    static PickResult pick( const QgsMapCanvas *canvas, const QPoint& canvasPos, const QgsPoint& mapPos, QGis::GeometryType geomType, filter_t filter = 0 );
 };
 
 #endif // QGSFEATUREPICKER_H

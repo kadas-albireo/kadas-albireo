@@ -1080,7 +1080,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     /** Make the user feel dizzy */
     void dizzy();
 
-    void showCanvasContextMenu( QPoint screenPos, QgsPoint mapPos );
+    void showCanvasContextMenu( QPoint canvasPos, QgsPoint mapPos );
     void handleFeaturePicked( QgsMapLayer *layer , const QgsFeature& feature, const QVariant &otherResult );
     void handleLabelPicked( const QgsLabelPosition& labelPos );
 
