@@ -648,6 +648,11 @@ void QgsAnnotationItem::showContextMenu( const QPoint &screenPos )
   menu.exec( screenPos );
 }
 
+bool QgsAnnotationItem::hitTest( const QPoint &screenPos ) const
+{
+  return boundingRect().translated( pos() ).contains( screenPos );
+}
+
 void QgsAnnotationItem::syncGeoPos()
 {
   if ( mMapPositionFixed )

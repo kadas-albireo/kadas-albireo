@@ -133,7 +133,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     void showItemEditor();
     virtual void showContextMenu( const QPoint& screenPos );
-    virtual bool hitTest( const QPoint& /*screenPos*/ ) const { return true; }
+    virtual bool hitTest( const QPoint& screenPos ) const;
 
   signals:
     void itemUpdated( QgsAnnotationItem* item );

@@ -116,7 +116,7 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
   {
     // If annotation item is selected, show its context menu
     QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
-    if ( selItem )
+    if ( selItem && selItem->hitTest( e->pos() ) )
     {
       selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
     }
