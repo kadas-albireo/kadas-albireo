@@ -20,6 +20,7 @@
 #include "qgsproject.h"
 #include <QDomDocument>
 #include <QDomElement>
+#include <qmath.h>
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsSvgAnnotationItem )
 
@@ -96,8 +97,16 @@ void QgsSvgAnnotationItem::paint( QPainter* painter )
       renderWidth = viewBox.width() * mFrameSize.height() / viewBox.height();
     }
 
-    mSvgRenderer.render( painter, QRectF( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), renderWidth,
-                                          renderHeight ) );
+    double alpha = mAngle / 180. * M_PI;
+    double rw = renderHeight * qAbs( qSin( alpha ) ) + renderWidth * qAbs( qCos( alpha ) );
+    double rh = renderHeight * qAbs( qCos( alpha ) ) + renderWidth * qAbs( qSin( alpha ) );
+    double scale = qMin( renderWidth / rw, renderHeight / rh );
+    painter->save();
+    painter->scale( scale, scale );
+    painter->rotate( mAngle );
+    mSvgRenderer.render( painter, QRectF( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(),
+                                          renderWidth, renderHeight ) );
+    painter->restore();
   }
   if ( isSelected() )
   {

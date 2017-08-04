@@ -30,6 +30,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
     , mFlags( ItemAllFeatures )
     , mMapPositionFixed( true )
     , mOffsetFromReferencePoint( QPointF( 50, -50 ) )
+    , mAngle( 0 )
     , mBalloonSegment( -1 )
     , mIsClone( false )
     , mId( QUuid::createUuid().toString() )
@@ -54,6 +55,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* s
   mGeoPos = source->mGeoPos;
   mGeoPosCrs = source->mGeoPosCrs;
   mOffsetFromReferencePoint = source->mOffsetFromReferencePoint;
+  mAngle = source->mAngle;
   mBoundingRect = source->mBoundingRect;
   mMarkerSymbol = static_cast<QgsMarkerSymbolV2*>( source->mMarkerSymbol->clone() );
   mFrameSize = source->mFrameSize;
@@ -300,6 +302,14 @@ void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
   p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.top(), handlerSize, handlerSize ) );
   p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.bottom() - handlerSize, handlerSize, handlerSize ) );
   p->drawRect( QRectF( frameRect.left(), frameRect.bottom() - handlerSize, handlerSize, handlerSize ) );
+  if ( mFlags & ItemRotatable )
+  {
+    double alpha = mAngle / 180. * M_PI;
+    QPointF pos = mOffsetFromReferencePoint +
+                  QPointF( 0.5 * mFrameSize.width() + ( 0.5 * mFrameSize.width() - 0.5 * handlerSize ) *  qCos( alpha ),
+                           0.5 * mFrameSize.height() + ( 0.5 * mFrameSize.height() - 0.5 * handlerSize ) *  qSin( alpha ) );
+    p->drawEllipse( pos, 0.5 * handlerSize, 0.5 * handlerSize );
+  }
 }
 
 QLineF QgsAnnotationItem::segment( int index )
@@ -341,6 +351,19 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
   if (( mFlags & ItemAnchorIsNotMoveable ) == 0 && qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity ) //move map point if position is close to the origin
   {
     return MoveMapPosition;
+  }
+
+  if ( mFlags & ItemRotatable )
+  {
+    QPointF itemPos = mapFromScene( pos );
+    double alpha = mAngle / 180. * M_PI;
+    QPointF rotPos = mOffsetFromReferencePoint +
+                     QPointF( 0.5 * mFrameSize.width() + ( 0.5 * mFrameSize.width() - 4 ) *  qCos( alpha ),
+                              0.5 * mFrameSize.height() + ( 0.5 * mFrameSize.height() - 4 ) *  qSin( alpha ) );
+    if ( qAbs( rotPos.x() - itemPos.x() ) < 7 && qAbs( rotPos.y() - itemPos.y() ) < 7 )
+    {
+      return RotateItem;
+    }
   }
 
   if (( mFlags & ItemIsNotResizeable ) == 0 &&
@@ -432,6 +455,17 @@ void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos,
       setMapPosition( mMapCanvas->getCoordinateTransform()->toMapCoordinates( newCanvasPos.toPoint() ) );
     }
     update();
+  }
+  else if ( moveAction == QgsAnnotationItem::RotateItem )
+  {
+    QPointF center = mOffsetFromReferencePoint + QPointF( 0.5 * mFrameSize.width(), 0.5 * mFrameSize.height() );
+    QPointF delta = mapFromScene( newPos ) - center;
+    mAngle = qAtan2( delta.y(), delta.x() ) / M_PI * 180.;
+    if ( qAbs( mAngle - qRound( mAngle / 90. ) * 90. ) < 5 )
+    {
+      // If less than 5 deg from quarter, snap to quarter
+      mAngle = qRound( mAngle / 90. ) * 90.;
+    }
   }
   else if ( moveAction != QgsAnnotationItem::NoAction )
   {
@@ -526,6 +560,8 @@ Qt::CursorShape QgsAnnotationItem::cursorShapeForAction( int moveAction ) const
     case ResizeFrameRightUp:
     case ResizeFrameLeftDown:
       return Qt::SizeBDiagCursor;
+    case RotateItem:
+      return Qt::OpenHandCursor;
     default:
       return Qt::ArrowCursor;
   }
@@ -563,6 +599,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   annotationElem.setAttribute( "mapGeoPosAuthID", mGeoPosCrs.authid() );
   annotationElem.setAttribute( "offsetX", qgsDoubleToString( mOffsetFromReferencePoint.x() ) );
   annotationElem.setAttribute( "offsetY", qgsDoubleToString( mOffsetFromReferencePoint.y() ) );
+  annotationElem.setAttribute( "angle", qgsDoubleToString( mAngle ) );
   annotationElem.setAttribute( "frameWidth", QString::number( mFrameSize.width() ) );
   annotationElem.setAttribute( "frameHeight", QString::number( mFrameSize.height() ) );
   QPointF canvasPos = pos();
@@ -612,6 +649,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   mFrameSize.setHeight( annotationElem.attribute( "frameHeight", "50" ).toDouble() );
   mOffsetFromReferencePoint.setX( annotationElem.attribute( "offsetX", "0" ).toDouble() );
   mOffsetFromReferencePoint.setY( annotationElem.attribute( "offsetY", "0" ).toDouble() );
+  mAngle = annotationElem.attribute( "angle", "0" ).toDouble();
   mMapPositionFixed = annotationElem.attribute( "mapPositionFixed", "1" ).toInt();
   mFlags = annotationElem.attribute( "flags", QString::number( ItemAllFeatures ) ).toInt();
   setVisible( annotationElem.attribute( "visible", "1" ).toInt() );

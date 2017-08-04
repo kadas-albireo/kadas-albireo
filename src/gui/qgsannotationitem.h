@@ -50,7 +50,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ItemIsNotEditable = 8,
       ItemAnchorIsNotMoveable = 16,
       ItemKeepsAspectRatio = 32,
-      ItemMarkerCentered = 64
+      ItemMarkerCentered = 64,
+      ItemRotatable = 128
     };
 
     enum MouseMoveAction
@@ -66,6 +67,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ResizeFrameRightUp,
       ResizeFrameLeftDown,
       ResizeFrameRightDown,
+      RotateItem,
       NumMouseMoveActions
     };
 
@@ -170,6 +172,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
 
     /**Describes the shift of the item content box to the reference point*/
     QPointF mOffsetFromReferencePoint;
+    /**Rotation angle*/
+    double mAngle;
 
     /**Bounding rect (including item frame and balloon)*/
     QRectF mBoundingRect;
