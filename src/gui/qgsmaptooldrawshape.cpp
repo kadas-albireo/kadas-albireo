@@ -193,10 +193,6 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
         mLastEditPos = transformPoint( e->pos() );
       }
     }
-    else if ( e->button() == Qt::RightButton )
-    {
-      canvas()->unsetMapTool( mParentTool ? mParentTool : this ); // unset
-    }
     return;
   }
   if ( state()->status == StatusFinished )
@@ -265,6 +261,10 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
     {
       emit finished();
     }
+  }
+  else if ( state()->status == StatusEditingReady )
+  {
+    canvas()->unsetMapTool( mParentTool ? mParentTool : this ); // unset
   }
 }
 

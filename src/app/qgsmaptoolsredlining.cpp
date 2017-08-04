@@ -439,7 +439,7 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
       QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( canvas(), e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
       if ( result.layer == mLayer )
       {
-        if ( e->modifiers() != Qt::ControlModifier )
+        if (( e->modifiers() & Qt::ControlModifier ) == 0 )
         {
           // Clicked a new item without CTRL item, remove other items
           while ( !mItems.isEmpty() )
@@ -449,6 +449,11 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
         }
         // Add new item
         addFeatureToSelection( result.feature );
+      }
+      else if (( e->modifiers() & Qt::ControlModifier ) == 0 )
+      {
+        // Empty-clicked without control, quit tool
+        deleteLater();
       }
     }
   }

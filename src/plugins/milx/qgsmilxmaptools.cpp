@@ -851,7 +851,7 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
         item->setSelected( true );
         connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
         delete layerItem;
-        if ( e->modifiers() != Qt::ControlModifier )
+        if (( e->modifiers() & Qt::ControlModifier ) == 0 )
         {
           // Clicked a new item without CTRL item, add it as sole selected item
           foreach ( QgsMilXAnnotationItem* item, mItems )
@@ -865,6 +865,11 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
         mItems.append( item );
         mLayer->triggerRepaint();
         updateRect();
+      }
+      else if (( e->modifiers() & Qt::ControlModifier ) == 0 )
+      {
+        // Empty-clicked without control, quit tool
+        deleteLater();
       }
     }
   }
