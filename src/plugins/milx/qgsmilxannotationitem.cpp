@@ -476,7 +476,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     {
       if ( qAbs( canvasPos.x() - pts[i].x() ) < 7 && qAbs( canvasPos.y() - pts[i].y() ) < 7 )
       {
-        actionRemovePoint = menu.addAction( tr( "Remove node" ) );
+        actionRemovePoint = menu.addAction( tr( "Delete node" ) );
         actionRemovePoint->setData( i );
         MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributes(), mFinalized, true );
         bool canDelete = false;
@@ -494,7 +494,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
       {
         if ( qAbs( canvasPos.x() - attribPoint.second.x() ) < 7 && qAbs( canvasPos.y() - attribPoint.second.y() ) < 7 )
         {
-          actionRemovePoint = menu.addAction( tr( "Remove node" ) );
+          actionRemovePoint = menu.addAction( tr( "Delete node" ) );
           actionRemovePoint->setEnabled( false );
           break;
         }
@@ -511,7 +511,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   }
   menu.addSeparator();
   QAction* actionEdit = menu.addAction( tr( "Edit symbol" ) );
-  QAction* actionRemove = menu.addAction( tr( "Remove symbol" ) );
+  QAction* actionRemove = menu.addAction( tr( "Delete symbol" ) );
   QAction* clickedAction = menu.exec( screenPos );
   if ( !clickedAction )
   {
