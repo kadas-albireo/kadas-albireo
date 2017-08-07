@@ -38,6 +38,8 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
 
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
+    QgsRectangle extent() override;
+    int margin() const override;
 
   protected:
     bool readXml( const QDomNode& layer_node ) override;

@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsannotationlayer.h"
+#include "qgscrscache.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsannotationitem.h"
@@ -40,7 +41,7 @@ QgsAnnotationLayer::QgsAnnotationLayer( QgsMapCanvas *canvas, const QString &ite
 {
   mValid = true;
   // This is actually irrelevant, but proj errors are emitted if the crs is empty
-  setCrs( QgsCoordinateReferenceSystem( "EPSG:4326" ), false );
+  setCrs( QgsCoordinateReferenceSystem( "EPSG:3857" ), false );
   connect( mCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( checkLayerVisibility( ) ) );
 }
 
@@ -59,6 +60,45 @@ QgsAnnotationLayer::~QgsAnnotationLayer()
 void QgsAnnotationLayer::addItem( QgsAnnotationItem *item )
 {
   mItemIds.insert( item->id() );
+}
+
+QgsRectangle QgsAnnotationLayer::extent()
+{
+  QgsRectangle extent;
+  bool empty = true;
+  foreach ( QGraphicsItem* item, mCanvas->items() )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+    {
+      if ( empty )
+      {
+        extent = QgsRectangle( annotationItem->mapPosition(), annotationItem->mapPosition() );
+        empty = false;
+      }
+      else
+      {
+        extent.include( annotationItem->mapPosition() );
+      }
+    }
+  }
+  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), crs().authid() );
+  return t->transformBoundingBox( extent );
+}
+
+int QgsAnnotationLayer::margin() const
+{
+  int margin = 0;
+  foreach ( QGraphicsItem* item, mCanvas->items() )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+    {
+      QRectF rect = annotationItem->boundingRect();
+      margin = qMax( margin, qMax( qCeil( rect.width() ), qCeil( rect.height() ) ) );
+    }
+  }
+  return margin;
 }
 
 void QgsAnnotationLayer::checkLayerVisibility()
