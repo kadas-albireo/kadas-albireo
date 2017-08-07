@@ -14,15 +14,14 @@
  ***************************************************************************/
 
 #include "qgsmaptoolsredlining.h"
-#include "qgscircularstringv2.h"
+#include "qgisapp.h"
+#include "qgsclipboard.h"
 #include "qgscrscache.h"
-#include "qgscurvepolygonv2.h"
 #include "qgsfeaturepicker.h"
 #include "qgsgeometryutils.h"
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspallabeling.h"
-#include "qgspolygonv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsrubberband.h"
 #include "qgsvectordataprovider.h"
@@ -352,6 +351,13 @@ void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
       mCanvas->setCursor( Qt::SizeAllCursor );
     }
   }
+  else if ( e->button() == Qt::RightButton && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
+  {
+    QMenu menu;
+    menu.addAction( tr( "Copy" ), this, SLOT( copy() ) );
+    menu.addAction( tr( "Delete" ), this, SLOT( deleteAll() ) );
+    menu.exec( e->globalPos() );
+  }
 }
 
 void QgsRedliningEditGroupMapTool::canvasMoveEvent( QMouseEvent *e )
@@ -463,11 +469,19 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
   }
 }
 
-void QgsRedliningEditGroupMapTool::keyReleaseEvent( QKeyEvent *e )
+void QgsRedliningEditGroupMapTool::keyPressEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
     deleteLater(); // quit tool
+  }
+  else if ( e->key() == Qt::Key_Delete )
+  {
+    deleteAll();
+  }
+  else if ( e->key() == Qt::Key_C && e->modifiers() == Qt::ControlModifier )
+  {
+    copy();
   }
 }
 
@@ -597,6 +611,27 @@ QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) con
   f.setAttributes( attribs );
   f.setGeometry( new QgsGeometry( rubberBand->geometry()->transformed( *ct ) ) );
   return f;
+}
+
+void QgsRedliningEditGroupMapTool::copy()
+{
+  QgsFeatureStore featureStore( mLayer->pendingFields(), mLayer->crs() );
+  foreach ( const Item& item, mItems )
+  {
+    featureStore.addFeature( featureFromItem( item ) );
+  }
+  QgisApp::instance()->clipboard()->replaceWithCopyOf( featureStore );
+}
+
+void QgsRedliningEditGroupMapTool::deleteAll()
+{
+  foreach ( const Item& item, mItems )
+  {
+    delete item.rubberband;
+    delete item.nodeRubberband;
+  }
+  mItems.clear();
+  deleteLater(); // quit tool
 }
 
 void QgsRedliningEditGroupMapTool::updateRect()

@@ -152,7 +152,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
     void canvasPressEvent( QMouseEvent *e ) override;
     void canvasMoveEvent( QMouseEvent *e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
-    void keyReleaseEvent( QKeyEvent *e ) override;
+    void keyPressEvent( QKeyEvent *e ) override;
 
   private:
     struct Item
@@ -173,6 +173,8 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
     QgsFeature featureFromItem( const Item& item ) const;
 
   private slots:
+    void copy();
+    void deleteAll();
     void updateRect();
 };
 
