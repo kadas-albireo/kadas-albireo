@@ -81,6 +81,7 @@
 #include "qgis.h"
 #include "qgisplugin.h"
 #include "qgsabout.h"
+#include "qgsannotationlayer.h"
 #include "qgsapplication.h"
 #include "qgsattributeaction.h"
 #include "qgsattributetabledialog.h"
@@ -776,6 +777,8 @@ void QgisApp::init( bool restorePlugins )
   // request notification of FileOpen events (double clicking a file icon in Mac OS X Finder)
   // should come after fileNewBlank to ensure project is properly set up to receive any data source files
   QgsApplication::setFileOpenEventReceiver( this );
+
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsAnnotationLayerType( mapCanvas() ) );
 
 #ifdef ANDROID
   toggleFullScreen();

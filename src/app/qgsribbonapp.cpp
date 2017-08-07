@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsribbonapp.h"
+#include "qgsannotationlayer.h"
 #include "qgsattributetabledialog.h"
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
@@ -604,6 +605,7 @@ void QgsRibbonApp::pasteImage()
       item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
       item->setSelected( true );
       messageBar()->pushMessage( tr( "Image Pasted" ), "", QgsMessageBar::INFO, 5 );
+      QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", "SVG Symbols" )->addItem( item );
     }
   }
   else

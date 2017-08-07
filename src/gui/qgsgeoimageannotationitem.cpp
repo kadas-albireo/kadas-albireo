@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgscrscache.h"
+#include "qgsannotationlayer.h"
 #include "qgsbillboardregistry.h"
 #include "qgsgeoimageannotationitem.h"
 #include "qgsproject.h"
@@ -60,6 +61,7 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   }
   item->setFilePath( filePath );
   item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
+  QgsAnnotationLayer::getLayer( canvas, "geoImage", tr( "Camera pictures" ) )->addItem( item );
   return item;
 }
 

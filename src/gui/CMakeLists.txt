@@ -123,6 +123,7 @@ layertree/qgslayertreeviewdefaultactions.cpp
 qgisgui.cpp
 qgisinterface.cpp
 qgsannotationitem.cpp
+qgsannotationlayer.cpp
 qgsactionmenu.cpp
 qgsattributedialog.cpp
 qgsattributeeditor.cpp
@@ -262,6 +263,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgisinterface.h
   qgsactionmenu.h
   qgsannotationitem.h
+  qgsannotationlayer.h
   qgsannotationwidget.h
   qgsattributedialog.h
   qgsattributeeditor.h

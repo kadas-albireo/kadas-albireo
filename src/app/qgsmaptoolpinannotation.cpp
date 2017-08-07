@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgisapp.h"
+#include "qgsannotationlayer.h"
 #include "qgsmaptoolpinannotation.h"
 #include "qgspinannotationitem.h"
 
@@ -24,5 +25,6 @@ QgsAnnotationItem* QgsMapToolPinAnnotation::createItem( const QPoint &pos )
   QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
   pinItem->setMapPosition( toMapCoordinates( pos ) );
   pinItem->setSelected( true );
+  QgsAnnotationLayer::getLayer( mCanvas, "mapPins", tr( "Pins" ) )->addItem( pinItem );
   return pinItem;
 }
