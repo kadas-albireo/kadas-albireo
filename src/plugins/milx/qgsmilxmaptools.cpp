@@ -358,7 +358,7 @@ void QgsMilXCreateTool::canvasMoveEvent( QMouseEvent * e )
   }
 }
 
-void QgsMilXCreateTool::keyReleaseEvent( QKeyEvent *e )
+void QgsMilXCreateTool::keyPressEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
