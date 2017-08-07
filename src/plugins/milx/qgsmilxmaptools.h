@@ -67,7 +67,7 @@ class QgsMilXCreateTool : public QgsMapTool
     ~QgsMilXCreateTool();
     void canvasPressEvent( QMouseEvent * e ) override;
     void canvasMoveEvent( QMouseEvent * e ) override;
-    void keyReleaseEvent( QKeyEvent *e ) override;
+    void keyPressEvent( QKeyEvent *e ) override;
 
   private:
     friend class QgsMilxCreateBottomBar;
@@ -131,7 +131,6 @@ class QgsMilXEditTool : public QgsMapTool
     void canvasMoveEvent( QMouseEvent * e ) override;
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void keyPressEvent( QKeyEvent *e ) override;
-    void keyReleaseEvent( QKeyEvent *e ) override;
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
 
   signals:
@@ -156,6 +155,9 @@ class QgsMilXEditTool : public QgsMapTool
     void setLayer( QgsMilXLayer* layer );
 
   private slots:
+    void copy();
+    void paste();
+    void deleteAll();
     void removeItemFromList();
     void updateRect();
     void checkLayerHidden();
