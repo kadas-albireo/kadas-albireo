@@ -121,7 +121,6 @@ class QGS_MILX_EXPORT QgsMilXLayerType : public QgsPluginLayerType
         : QgsPluginLayerType( QgsMilXLayer::layerTypeKey() ), mMenuProvider( menuProvider ) {}
     QgsPluginLayer* createLayer() override { return new QgsMilXLayer( mMenuProvider ); }
     int hasLayerProperties() const override { return 0; }
-    bool showLayerProperties( QgsPluginLayer* /*layer*/ ) override { return false; }
 
   private:
     QgsLayerTreeViewMenuProvider* mMenuProvider;

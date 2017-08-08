@@ -61,6 +61,7 @@ class GUI_EXPORT QgsAnnotationLayerType : public QgsPluginLayerType
   public:
     QgsAnnotationLayerType( QgsMapCanvas* canvas ) : QgsPluginLayerType( QgsAnnotationLayer::layerTypeKey() ), mCanvas( canvas ) {}
     QgsPluginLayer* createLayer() override { return new QgsAnnotationLayer( mCanvas ); }
+    int hasLayerProperties() const override { return 0; }
 
   private:
     QgsMapCanvas* mCanvas;
