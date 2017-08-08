@@ -23,7 +23,7 @@
 
 class QgsAnnotationItem;
 
-class GUI_EXPORT QgsMapToolAnnotation : public QgsMapToolPan
+class GUI_EXPORT QgsMapToolAnnotation : public QgsMapTool
 {
   public:
     QgsMapToolAnnotation( QgsMapCanvas* canvas );

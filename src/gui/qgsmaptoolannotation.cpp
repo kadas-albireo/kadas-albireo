@@ -23,24 +23,23 @@
 #include <QMouseEvent>
 
 QgsMapToolAnnotation::QgsMapToolAnnotation( QgsMapCanvas* canvas )
-    : QgsMapToolPan( canvas )
+    : QgsMapTool( canvas )
 {
   setCursor( QCursor( Qt::CrossCursor ) );
 }
 
 void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent * e )
 {
-  QgsAnnotationItem* itemAtPos = mCanvas->annotationItemAtPos( e->pos() );
-  if ( !mDragging && e->button() == Qt::LeftButton && !itemAtPos )
+  if ( e->button() == Qt::LeftButton )
   {
     QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
     if ( selectedItem )
       selectedItem->setSelected( false );
     createItem( e->pos() );
   }
-  else
+  else if ( e->button() == Qt::RightButton )
   {
-    QgsMapToolPan::canvasReleaseEvent( e );
+    canvas()->unsetMapTool( this );
   }
 }
 
@@ -48,10 +47,6 @@ void QgsMapToolAnnotation::keyReleaseEvent( QKeyEvent* e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
-    canvas()->unsetMapTool( this ); // unset
-  }
-  else
-  {
-    QgsMapToolPan::keyReleaseEvent( e );
+    canvas()->unsetMapTool( this );
   }
 }
