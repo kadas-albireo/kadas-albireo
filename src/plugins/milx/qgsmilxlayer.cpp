@@ -284,6 +284,7 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       {
         return false;
       }
+      mRendererContext.painter()->save();
       mRendererContext.painter()->setOpacity(( 100. - mLayer->mTransparency ) / 100. );
       for ( int i = 0, n = result.size(); i < n; ++i )
       {
@@ -295,6 +296,7 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
         }
         mRendererContext.painter()->drawImage( renderPos, result[i].graphic );
       }
+      mRendererContext.painter()->restore();
       return true;
     }
 
