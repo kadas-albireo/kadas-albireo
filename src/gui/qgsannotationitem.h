@@ -159,6 +159,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       { _registeredAnnotations().append( qMakePair( name, factory ) ); }
     };
 
+    QString mName;
+
     /**Flags specifying the features of the item*/
     int mFlags;
 
@@ -223,6 +225,10 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     QString mId;
     QString mLayerId;
     void notifyItemUpdated();
+
+    virtual bool createBillboard() const { return false; }
+    virtual QImage billboardImage() const { return QImage(); }
+    virtual int billboardOffset() const { return 0; }
 
   private slots:
     void syncGeoPos();

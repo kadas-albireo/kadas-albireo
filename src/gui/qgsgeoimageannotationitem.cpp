@@ -17,7 +17,6 @@
 
 #include "qgscrscache.h"
 #include "qgsannotationlayer.h"
-#include "qgsbillboardregistry.h"
 #include "qgsgeoimageannotationitem.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
@@ -147,10 +146,7 @@ QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas *canvas )
 
 QgsGeoImageAnnotationItem::~QgsGeoImageAnnotationItem()
 {
-  if ( !mIsClone )
-  {
-    QgsBillBoardRegistry::instance()->removeItem( this );
-  }
+
 }
 
 QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source )
@@ -163,6 +159,7 @@ QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsG
 void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
 {
   mFilePath = filePath;
+  mName = QFileInfo( mFilePath ).baseName();
 
   QImageReader reader( mFilePath );
 
@@ -183,21 +180,6 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
   reader.setScaledSize( imageSize );
   mImage = reader.read().convertToFormat( QImage::Format_RGB32 );
   setFrameSize( QSize( imageSize.width() + 4, imageSize.height() + 4 ) );
-  if ( !mIsClone )
-  {
-    QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos, 0, layerId() );
-  }
-}
-
-void QgsGeoImageAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs )
-{
-  QgsAnnotationItem::setMapPosition( pos, crs );
-  if ( !mIsClone )
-  {
-    QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos, 0, layerId() );
-  }
 }
 
 void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const

@@ -35,9 +35,6 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     QgsGeoImageAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsGeoImageAnnotationItem( canvas, this ); }
 
     void setFilePath( const QString& filePath );
-    const QImage& getImage() const { return mImage; }
-
-    void setMapPosition( const QgsPoint &pos, const QgsCoordinateReferenceSystem &crs ) override;
 
     void writeXML( QDomDocument& doc ) const override;
     void readXML( const QDomDocument& doc, const QDomElement& itemElem ) override;
@@ -55,6 +52,9 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     QImage mImage;
 
     static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos , QString *errMsg = 0 );
+
+    bool createBillboard() const override { return true; }
+    QImage billboardImage() const override { return mImage; }
 
   private slots:
     void _showItemEditor() override;

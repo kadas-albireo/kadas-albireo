@@ -32,7 +32,6 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
   public:
     QgsMilXAnnotationItem( QgsMapCanvas* canvas );
-    ~QgsMilXAnnotationItem();
     QgsMilXAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsMilXAnnotationItem( canvas, this ); }
 
     void fromMilxItem( QgsMilXItem* item );
@@ -89,6 +88,10 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
 
     void _showItemEditor() override;
     double metersToPixels() const;
+
+    bool createBillboard() const override { return !isMultiPoint(); }
+    QImage billboardImage() const override { return mGraphic.toImage(); }
+    int billboardOffset() const override { return mRenderOffset.x() + mGraphic.width() / 2; }
 };
 
 #endif // QGSMILXANNOTATIONITEM_H

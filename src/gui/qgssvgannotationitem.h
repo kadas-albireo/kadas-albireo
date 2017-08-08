@@ -27,7 +27,6 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
   public:
 
     QgsSvgAnnotationItem( QgsMapCanvas* canvas );
-    ~QgsSvgAnnotationItem();
 
     QgsSvgAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsSvgAnnotationItem( canvas, this ); }
 
@@ -39,14 +38,17 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
     void setFilePath( const QString& file );
     QString filePath() const { return mFilePath; }
 
-    QImage getImage();
-
   protected:
     QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotationItem* source );
 
-    QSvgRenderer mSvgRenderer;
+    mutable QSvgRenderer mSvgRenderer;
     QString mFilePath;
 
+  private:
+    bool createBillboard() const override { return true; }
+    QImage billboardImage() const override;
+
+  private slots:
     void _showItemEditor() override;
 };
 

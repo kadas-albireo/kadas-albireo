@@ -30,7 +30,6 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
   public:
 
     QgsPinAnnotationItem( QgsMapCanvas* canvas );
-    ~QgsPinAnnotationItem();
 
     QgsPinAnnotationItem* clone( QgsMapCanvas *canvas ) override { return new QgsPinAnnotationItem( canvas, this ); }
 
@@ -47,7 +46,6 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source );
 
   private:
-    QString mName;
     QString mRemarks;
 
     void _showItemEditor() override;

@@ -17,7 +17,6 @@
 
 #include "qgspinannotationitem.h"
 #include "qgsproject.h"
-#include "qgsbillboardregistry.h"
 #include "qgscoordinateformat.h"
 #include "qgscrscache.h"
 #include <QApplication>
@@ -104,14 +103,6 @@ QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas )
   connect( QgsCoordinateFormat::instance(), SIGNAL( heightDisplayUnitChanged( QGis::UnitType ) ), this, SLOT( updateToolTip() ) );
 }
 
-QgsPinAnnotationItem::~QgsPinAnnotationItem()
-{
-  if ( !mIsClone )
-  {
-    QgsBillBoardRegistry::instance()->removeItem( this );
-  }
-}
-
 QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source )
     : QgsSvgAnnotationItem( canvas, source )
 {
@@ -139,11 +130,6 @@ void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordin
 {
   QgsSvgAnnotationItem::setMapPosition( pos, crs );
   updateToolTip();
-  if ( !mIsClone )
-  {
-    QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
-  }
 }
 
 void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )
@@ -183,8 +169,6 @@ void QgsPinAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& 
     _readXML( doc, annotationElem );
   }
   updateToolTip();
-  QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
 }
 
 
@@ -224,6 +208,4 @@ void QgsPinAnnotationItem::_showItemEditor()
     mRemarks = remarksEdit->toHtml();
   }
   updateToolTip();
-  QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
 }

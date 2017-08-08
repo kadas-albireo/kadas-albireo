@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsannotationitem.h"
+#include "qgsbillboardregistry.h"
 #include "qgscrscache.h"
 #include "qgsmapcanvas.h"
 #include "qgsrendercontext.h"
@@ -80,6 +81,10 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* s
 QgsAnnotationItem::~QgsAnnotationItem()
 {
   delete mMarkerSymbol;
+  if ( !mIsClone )
+  {
+    QgsBillBoardRegistry::instance()->removeItem( this );
+  }
 }
 
 void QgsAnnotationItem::setMarkerSymbol( QgsMarkerSymbolV2* symbol )
@@ -261,6 +266,7 @@ void QgsAnnotationItem::setFrameSize( const QSizeF& size )
   {
     setOffsetFromReferencePoint( QPointF( -0.5 * mFrameSize.width(), -0.5 * mFrameSize.height() ) );
   }
+  notifyItemUpdated();
   updateBoundingRect();
   updateBalloon();
 }
@@ -690,6 +696,7 @@ void QgsAnnotationItem::showItemEditor()
   if (( mFlags & ItemIsNotEditable ) == 0 )
   {
     _showItemEditor();
+    notifyItemUpdated();
   }
 }
 
@@ -721,6 +728,12 @@ void QgsAnnotationItem::syncGeoPos()
 
 void QgsAnnotationItem::notifyItemUpdated()
 {
-  emit itemUpdated( this );
-  mMapCanvas->notifyAnnotationItemChanged( this );
+  if ( !mIsClone )
+  {
+    QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
+    QgsBillBoardRegistry::instance()->addItem( this, mName, billboardImage(), worldPos, 0, layerId() );
+
+    emit itemUpdated( this );
+    mMapCanvas->notifyAnnotationItemChanged( this );
+  }
 }

@@ -42,6 +42,9 @@ class GUI_EXPORT QgsImageAnnotationItem: public QgsAnnotationItem
   private:
     QImage mImage;
 
+    bool createBillboard() const override { return true; }
+    QImage billboardImage() const override { return mImage; }
+
   private slots:
     void _showItemEditor() override;
 };

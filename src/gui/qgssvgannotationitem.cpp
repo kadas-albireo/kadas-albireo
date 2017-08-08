@@ -35,11 +35,6 @@ QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotati
   setFilePath( source->mFilePath );
 }
 
-QgsSvgAnnotationItem::~QgsSvgAnnotationItem()
-{
-
-}
-
 void QgsSvgAnnotationItem::writeXML( QDomDocument& doc ) const
 {
   QDomElement documentElem = doc.documentElement();
@@ -130,10 +125,9 @@ void QgsSvgAnnotationItem::setFilePath( const QString& file )
   }
 }
 
-QImage QgsSvgAnnotationItem::getImage()
+QImage QgsSvgAnnotationItem::billboardImage() const
 {
-  QRect viewBox = mSvgRenderer.viewBox();
-  QImage image( viewBox.size(), QImage::Format_ARGB32 );
+  QImage image( mFrameSize.toSize(), QImage::Format_ARGB32 );
   image.fill( Qt::transparent );
   QPainter painter( &image );
   mSvgRenderer.render( &painter );
