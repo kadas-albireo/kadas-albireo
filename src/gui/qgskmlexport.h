@@ -40,7 +40,7 @@ class QuaZip;
 class GUI_EXPORT QgsKMLExport : public QObject
 {
   public:
-    bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, bool exportAnnotations, const QgsMapSettings& settings );
+    bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, const QgsMapSettings& settings );
     static QString convertColor( const QColor& c );
 
   private:
@@ -48,7 +48,7 @@ class GUI_EXPORT QgsKMLExport : public QObject
     void writeTiles( QgsMapLayer* mapLayer, const QgsRectangle &layerExtent, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog *progress );
     void writeGroundOverlay( QTextStream& outStream, const QString& name, const QString& href, const QgsRectangle& latLongBox, int drawingOrder );
     void writeBillboards( const QString& layerId, QTextStream& outStream, QuaZip* quaZip );
-    void renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer );
+    bool renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer );
     void addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRendererV2& r, QgsRenderContext& rc );
 
 };

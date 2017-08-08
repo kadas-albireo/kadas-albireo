@@ -82,7 +82,6 @@ void QgsKMLExportDialog::selectFile()
     {
       mLayerListWidget->item( i )->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
     }
-    mAnnotationsCheckBox->setEnabled( true );
   }
   else if ( selectedFilter == filters[1] )
   {
@@ -97,8 +96,6 @@ void QgsKMLExportDialog::selectFile()
         mLayerListWidget->item( i )->setCheckState( Qt::Unchecked );
       }
     }
-    mAnnotationsCheckBox->setChecked( false );
-    mAnnotationsCheckBox->setEnabled( false );
   }
 }
 

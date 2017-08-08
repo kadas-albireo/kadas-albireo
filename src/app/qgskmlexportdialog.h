@@ -31,7 +31,6 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
   public:
     QgsKMLExportDialog( const QList<QgsMapLayer *> &activeLayers, QWidget * parent = 0, Qt::WindowFlags f = 0 );
     QString getFilename() const { return mFileLineEdit->text(); }
-    bool getExportAnnotations() const { return mAnnotationsCheckBox->isChecked(); }
     QList<QgsMapLayer*> getSelectedLayers() const;
 
   private slots:

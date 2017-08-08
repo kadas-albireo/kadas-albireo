@@ -140,7 +140,7 @@ void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordin
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
   }
 }
 
@@ -182,7 +182,7 @@ void QgsPinAnnotationItem::readXML( const QDomDocument& doc, const QDomElement& 
   }
   updateToolTip();
   QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos );
+  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
 }
 
 
@@ -222,4 +222,6 @@ void QgsPinAnnotationItem::_showItemEditor()
     mRemarks = remarksEdit->toHtml();
   }
   updateToolTip();
+  QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
+  QgsBillBoardRegistry::instance()->addItem( this, mName, getImage(), worldPos, 0, layerId() );
 }

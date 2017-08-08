@@ -3158,7 +3158,7 @@ void QgisApp::kmlExport()
   }
   QApplication::setOverrideCursor( Qt::BusyCursor );
   QgsKMLExport kmlExport;
-  if ( kmlExport.exportToFile( d.getFilename(), d.getSelectedLayers(), d.getExportAnnotations(), mapCanvas()->mapSettings() ) )
+  if ( kmlExport.exportToFile( d.getFilename(), d.getSelectedLayers(), mapCanvas()->mapSettings() ) )
   {
     messageBar()->pushMessage( tr( "KML export completed" ), QgsMessageBar::INFO, 4 );
   }

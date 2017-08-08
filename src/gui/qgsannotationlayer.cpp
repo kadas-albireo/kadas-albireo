@@ -59,6 +59,7 @@ QgsAnnotationLayer::~QgsAnnotationLayer()
 
 void QgsAnnotationLayer::addItem( QgsAnnotationItem *item )
 {
+  item->setLayerId( id() );
   mItemIds.insert( item->id() );
 }
 

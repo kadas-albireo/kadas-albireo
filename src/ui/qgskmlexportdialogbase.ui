@@ -14,10 +14,10 @@
    <string>KML export</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0" colspan="3">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="0" column="0">
+    <widget class="QLabel" name="mSaveAsLabel">
+     <property name="text">
+      <string>Output file:</string>
      </property>
     </widget>
    </item>
@@ -31,13 +31,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="mSaveAsLabel">
-     <property name="text">
-      <string>Output file:</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0" colspan="3">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -45,10 +38,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="mFileLineEdit">
-     <property name="readOnly">
-      <bool>true</bool>
+   <item row="2" column="0" colspan="3">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -65,10 +58,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QListWidget" name="mLayerListWidget"/>
-   </item>
-   <item row="8" column="0" colspan="3">
+   <item row="7" column="0" colspan="3">
     <widget class="QDialogButtonBox" name="mButtonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -78,15 +68,15 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="QCheckBox" name="mAnnotationsCheckBox">
-     <property name="text">
-      <string>Export annotations (pins, pictures)</string>
-     </property>
-     <property name="checked">
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="mFileLineEdit">
+     <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <widget class="QListWidget" name="mLayerListWidget"/>
    </item>
    <item row="1" column="0" colspan="3">
     <widget class="QLabel" name="label_2">

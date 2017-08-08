@@ -591,6 +591,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   }
   QDomElement annotationElem = doc.createElement( "AnnotationItem" );
   annotationElem.setAttribute( "id", mId );
+  annotationElem.setAttribute( "layerId", mLayerId );
   annotationElem.setAttribute( "mapPositionFixed", mMapPositionFixed );
   annotationElem.setAttribute( "mapPosX", qgsDoubleToString( mMapPosition.x() ) );
   annotationElem.setAttribute( "mapPosY", qgsDoubleToString( mMapPosition.y() ) );
@@ -631,6 +632,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
     return;
   }
   mId = annotationElem.attribute( "id", "" );
+  mLayerId = annotationElem.attribute( "layerId", "" );
   QPointF pos;
   pos.setX( annotationElem.attribute( "canvasPosX", "0" ).toDouble() );
   pos.setY( annotationElem.attribute( "canvasPosY", "0" ).toDouble() );

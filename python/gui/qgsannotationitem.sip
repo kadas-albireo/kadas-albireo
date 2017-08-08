@@ -25,6 +25,10 @@ class QgsAnnotationItem: QgsMapCanvasItem
     QgsAnnotationItem( QgsMapCanvas* mapCanvas );
     virtual ~QgsAnnotationItem();
 
+    const QString& id() const;
+    void setLayerId(const QString& layerId);
+    const QString& layerId() const;
+
     void updatePosition();
 
     QRectF boundingRect() const;

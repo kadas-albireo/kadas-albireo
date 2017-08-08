@@ -186,7 +186,7 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos, 0, layerId() );
   }
 }
 
@@ -196,7 +196,7 @@ void QgsGeoImageAnnotationItem::setMapPosition( const QgsPoint &pos, const QgsCo
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos );
+    QgsBillBoardRegistry::instance()->addItem( this, QFileInfo( mFilePath ).baseName(), getImage(), worldPos, 0, layerId() );
   }
 }
 
@@ -230,13 +230,13 @@ void QgsGeoImageAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
   QString lat = itemElem.attribute( "lat" );
   QgsPoint wgs84Pos( lon.toDouble(), lat.toDouble() );
 
-  setFilePath( filePath );
   QDomElement annotationElem = itemElem.firstChildElement( "AnnotationItem" );
   if ( !annotationElem.isNull() )
   {
     _readXML( doc, annotationElem );
   }
 
+  setFilePath( filePath );
   setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
 }
 
