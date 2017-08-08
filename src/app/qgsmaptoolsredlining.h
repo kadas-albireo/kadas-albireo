@@ -215,6 +215,7 @@ class QgsRedliningEditTextMapTool : public QgsMapTool
 
     void showContextMenu( QMouseEvent *e );
     void updateRubberband( const QgsRectangle& rect );
+    bool labelClicked( const QgsPoint& mapPos ) const;
 
   private slots:
     void update();

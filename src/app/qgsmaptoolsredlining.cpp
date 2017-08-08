@@ -714,28 +714,12 @@ void QgsRedliningEditTextMapTool::canvasPressEvent( QMouseEvent *e )
 {
   mPressPos = toMapCoordinates( e->pos() );
 
-  const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
-  QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( mPressPos ) : QList<QgsLabelPosition>();
-
-  bool labelClicked = false;
-  foreach ( const QgsLabelPosition& labelPos, labelPositions )
-  {
-    if ( labelPos.layerID == mLayer->id() && labelPos.featureId == mLabel.featureId )
-    {
-      labelClicked = true;
-      break;
-    }
-  }
-
-  if ( !labelClicked && e->button() == Qt::RightButton )
-  {
-    canvas()->unsetMapTool( this );
-  }
-  else if ( labelClicked && e->button() == Qt::RightButton )
+  bool textClicked = labelClicked( mPressPos );
+  if ( textClicked && e->button() == Qt::RightButton )
   {
     showContextMenu( e );
   }
-  else if ( labelClicked )
+  else if ( textClicked )
   {
     mStatus = StatusMoving;
   }
@@ -757,13 +741,13 @@ void QgsRedliningEditTextMapTool::canvasMoveEvent( QMouseEvent *e )
 {
   if ( mStatus == StatusMoving )
   {
-    QgsPoint p = toMapCoordinates( e->pos() );
-    mRubberBand->setTranslationOffset( p.x() - mPressPos.x(), p.y() - mPressPos.y() );
+    QgsPoint mapPos = toMapCoordinates( e->pos() );
+    mRubberBand->setTranslationOffset( mapPos.x() - mPressPos.x(), mapPos.y() - mPressPos.y() );
     mRubberBand->updatePosition();
   }
 }
 
-void QgsRedliningEditTextMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
+void QgsRedliningEditTextMapTool::canvasReleaseEvent( QMouseEvent *e )
 {
   if ( mStatus == StatusMoving )
   {
@@ -781,6 +765,10 @@ void QgsRedliningEditTextMapTool::canvasReleaseEvent( QMouseEvent */*e*/ )
     State* newState = new State( *static_cast<const State*>( mStateStack->state() ) );
     newState->pos = QgsPointV2( toLayerCoordinates( mLayer, mapPos ) );
     mStateStack->updateState( newState );
+  }
+  else if ( !labelClicked( toMapCoordinates( e->pos() ) ) )
+  {
+    canvas()->unsetMapTool( this );
   }
 }
 
@@ -828,6 +816,22 @@ void QgsRedliningEditTextMapTool::updateRubberband( const QgsRectangle &rect )
   geom->addVertex( QgsPointV2( rect.xMaximum(), rect.yMinimum() ) );
   geom->addVertex( QgsPointV2( rect.xMinimum(), rect.yMinimum() ) );
   mRubberBand->setGeometry( geom );
+}
+
+bool QgsRedliningEditTextMapTool::labelClicked( const QgsPoint& mapPos ) const
+{
+  const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
+  QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( mapPos ) : QList<QgsLabelPosition>();
+  bool labelClicked = false;
+  foreach ( const QgsLabelPosition& labelPos, labelPositions )
+  {
+    if ( labelPos.layerID == mLayer->id() && labelPos.featureId == mLabel.featureId )
+    {
+      labelClicked = true;
+      break;
+    }
+  }
+  return labelClicked;
 }
 
 void QgsRedliningEditTextMapTool::update()
