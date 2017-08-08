@@ -471,7 +471,7 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
       }
 
       // Per feature blending mode
-      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer ) )
+      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
       {
         QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
         if ( vl->featureBlendMode() != QPainter::CompositionMode_SourceOver )

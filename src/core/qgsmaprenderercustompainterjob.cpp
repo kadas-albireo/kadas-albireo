@@ -353,7 +353,7 @@ void QgsMapRendererJob::updateLayerGeometryCaches()
 
 bool QgsMapRendererJob::needTemporaryImage( QgsMapLayer* ml )
 {
-  if ( ml->type() == QgsMapLayer::VectorLayer )
+  if ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer )
   {
     if ( mSettings.testFlag( QgsMapSettings::UseAdvancedEffects ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
     {
