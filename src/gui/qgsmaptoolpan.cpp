@@ -120,8 +120,8 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
     {
       selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
     }
-    // Otherwise, request application context menu
-    else
+    // Otherwise, request application context menu if there is not selected item
+    else if ( !selItem )
     {
       QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
       if ( selItem )
@@ -212,12 +212,12 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
     {
       QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
       QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-      if ( selectedItem )
+      if ( selectedItem && selectedItem != annotationItem )
       {
         selectedItem->setSelected( false );
       }
       // Handle pick on annotation item if any
-      if ( annotationItem )
+      else if ( annotationItem )
       {
         annotationItem->setSelected( true );
         int moveAction = annotationItem->moveActionForPosition( e -> pos() );
@@ -245,6 +245,15 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
       }
     }
     mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+  }
+  else if ( e->button() == Qt::RightButton )
+  {
+    QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+    QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
+    if ( selectedItem && selectedItem != annotationItem )
+    {
+      selectedItem->setSelected( false );
+    }
   }
 }
 
