@@ -64,8 +64,14 @@ class CORE_EXPORT QgsPluginLayer : public QgsMapLayer
     /** Delete the specified items */
     virtual void deleteItems( const QVariantList& /*items*/ ) {}
 
+    /** return  the current layer transparency */
+    virtual int layerTransparency() const { return mTransparency; }
+    /** set the layer transparency */
+    virtual void setLayerTransparency( int value ) { mTransparency = value; }
+
   protected:
     QString mPluginLayerType;
+    int mTransparency;
 };
 
 #endif // QGSPLUGINLAYER_H

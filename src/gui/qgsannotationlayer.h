@@ -41,6 +41,8 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
     QgsRectangle extent() override;
     int margin() const override;
 
+    void setLayerTransparency( int value ) override;
+
   protected:
     bool readXml( const QDomNode& layer_node ) override;
     bool writeXml( QDomNode & layer_node, QDomDocument & document ) override;

@@ -101,6 +101,19 @@ int QgsAnnotationLayer::margin() const
   return margin;
 }
 
+void QgsAnnotationLayer::setLayerTransparency( int value )
+{
+  QgsPluginLayer::setLayerTransparency( value );
+  foreach ( QGraphicsItem* item, mCanvas->items() )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+    {
+      annotationItem->setOpacity(( 100. - mTransparency ) / 100. );
+    }
+  }
+}
+
 void QgsAnnotationLayer::checkLayerVisibility()
 {
   bool visible = mCanvas->layers().contains( this );

@@ -284,6 +284,7 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       {
         return false;
       }
+      mRendererContext.painter()->setOpacity(( 100. - mLayer->mTransparency ) / 100. );
       for ( int i = 0, n = result.size(); i < n; ++i )
       {
         QPoint renderPos = itemOrigins[i] + result[i].offset + items[i]->userOffset();

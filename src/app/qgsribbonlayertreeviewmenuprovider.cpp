@@ -43,7 +43,7 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
     if ( QgsLayerTree::isLayer( node ) )
     {
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
-      if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RasterLayer || layer->type() == QgsMapLayer::RedliningLayer )
+      if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RasterLayer || layer->type() == QgsMapLayer::RedliningLayer || layer->type() == QgsMapLayer::PluginLayer )
       {
         menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
       }

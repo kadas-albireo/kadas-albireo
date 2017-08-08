@@ -18,7 +18,7 @@
 #include "qgsmaplayerrenderer.h"
 
 QgsPluginLayer::QgsPluginLayer( QString layerType, QString layerName )
-    : QgsMapLayer( PluginLayer, layerName ), mPluginLayerType( layerType )
+    : QgsMapLayer( PluginLayer, layerName ), mPluginLayerType( layerType ), mTransparency( 0 )
 {
   setLegend( QgsMapLayerLegend::defaultPluginLegend( this ) );
 }

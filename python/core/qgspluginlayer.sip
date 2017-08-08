@@ -37,4 +37,9 @@ class QgsPluginLayer : QgsMapLayer
     virtual QVariantList getItems(const QgsRectangle& /*extent*/) const;
     /** Delete the specified items */
     virtual void deleteItems(const QVariantList& /*items*/);
+
+    /** return  the current layer transparency */
+    virtual int layerTransparency() const;
+    /** set the layer transparency */
+    virtual void setLayerTransparency(int /*value*/);
 };

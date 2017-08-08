@@ -22,6 +22,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsproject.h"
+#include "qgspluginlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
 
@@ -113,6 +114,10 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
   if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
   {
     curValue = static_cast<QgsVectorLayer*>( layer )->layerTransparency();
+  }
+  else if ( layer->type() == QgsMapLayer::PluginLayer )
+  {
+    curValue = static_cast<QgsPluginLayer*>( layer )->layerTransparency();
   }
   else if ( layer->type() == QgsMapLayer::RasterLayer )
   {
@@ -285,6 +290,12 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
   if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RedliningLayer )
   {
     static_cast<QgsVectorLayer*>( layer )->setLayerTransparency( value );
+    mView->refreshLayerSymbology( layer->id() );
+    layer->triggerRepaint();
+  }
+  else if ( layer->type() == QgsMapLayer::PluginLayer )
+  {
+    static_cast<QgsPluginLayer*>( layer )->setLayerTransparency( value );
     mView->refreshLayerSymbology( layer->id() );
     layer->triggerRepaint();
   }
