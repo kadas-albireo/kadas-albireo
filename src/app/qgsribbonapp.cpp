@@ -569,6 +569,8 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QStringList& prevLayers )
 
 void QgsRibbonApp::addCameraPicture()
 {
+  pan(); // Ensure pan tool is active
+
   QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
   QSet<QString> formats;
   foreach ( const QByteArray& format, QImageReader::supportedImageFormats() )
