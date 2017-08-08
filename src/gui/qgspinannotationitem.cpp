@@ -115,6 +115,8 @@ QgsPinAnnotationItem::~QgsPinAnnotationItem()
 QgsPinAnnotationItem::QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source )
     : QgsSvgAnnotationItem( canvas, source )
 {
+  mName = source->mName;
+  mRemarks = source->mRemarks;
 }
 
 void QgsPinAnnotationItem::updateToolTip()
