@@ -34,6 +34,7 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
     QgsAnnotationLayer( QgsMapCanvas* canvas, const QString& itemType = QString() );
     ~QgsAnnotationLayer();
     void addItem( QgsAnnotationItem* item );
+    void addChildCanvas( QgsMapCanvas* canvas );
     const QString& itemType() const { return mItemType; }
 
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
@@ -53,7 +54,7 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
     QString mItemType;
 
   private slots:
-    void checkLayerVisibility();
+    void updateItemVisibility();
 };
 
 class GUI_EXPORT QgsAnnotationLayerType : public QgsPluginLayerType

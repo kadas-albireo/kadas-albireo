@@ -42,7 +42,7 @@ QgsAnnotationLayer::QgsAnnotationLayer( QgsMapCanvas *canvas, const QString &ite
   mValid = true;
   // This is actually irrelevant, but proj errors are emitted if the crs is empty
   setCrs( QgsCoordinateReferenceSystem( "EPSG:3857" ), false );
-  connect( mCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( checkLayerVisibility( ) ) );
+  connect( mCanvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateItemVisibility( ) ) );
 }
 
 QgsAnnotationLayer::~QgsAnnotationLayer()
@@ -61,6 +61,11 @@ void QgsAnnotationLayer::addItem( QgsAnnotationItem *item )
 {
   item->setLayerId( id() );
   mItemIds.insert( item->id() );
+}
+
+void QgsAnnotationLayer::addChildCanvas( QgsMapCanvas* canvas )
+{
+  connect( canvas, SIGNAL( layersChanged( QStringList ) ), this, SLOT( updateItemVisibility( ) ) );
 }
 
 QgsRectangle QgsAnnotationLayer::extent()
@@ -115,15 +120,19 @@ void QgsAnnotationLayer::setLayerTransparency( int value )
   }
 }
 
-void QgsAnnotationLayer::checkLayerVisibility()
+void QgsAnnotationLayer::updateItemVisibility()
 {
-  bool visible = mCanvas->layers().contains( this );
-  foreach ( QGraphicsItem* item, mCanvas->items() )
+  QgsMapCanvas* canvas = qobject_cast<QgsMapCanvas*>( QObject::sender() );
+  if ( canvas )
   {
-    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
-    if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+    bool visible = canvas->layers().contains( this );
+    foreach ( QGraphicsItem* item, canvas->items() )
     {
-      annotationItem->setVisible( visible );
+      QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+      if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+      {
+        annotationItem->setVisible( visible );
+      }
     }
   }
 }

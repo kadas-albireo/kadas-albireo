@@ -49,6 +49,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* mapCanvas )
 QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* source )
     : QgsMapCanvasItem( canvas )
 {
+  mId = source->mId;
   mFlags = source->mFlags;
   mMapPositionFixed = source->mMapPositionFixed;
   mMapPosition = source->mMapPosition;

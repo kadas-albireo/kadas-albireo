@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "qgsannotationitem.h"
+#include "qgsannotationlayer.h"
 #include "qgsmapwidget.h"
 #include "qgisinterface.h"
 #include "qgsmapcanvas.h"
@@ -316,6 +317,11 @@ void QgsMapWidget::addAnnotationItem( QgsAnnotationItem *item )
     clonedItem->updatePosition();
     connect( item, SIGNAL( destroyed( QObject* ) ), clonedItem, SLOT( deleteLater() ) );
     connect( item, SIGNAL( itemUpdated( QgsAnnotationItem* ) ), clonedItem, SLOT( deleteLater() ) );
+    QgsAnnotationLayer* layer = dynamic_cast<QgsAnnotationLayer*>( QgsMapLayerRegistry::instance()->mapLayer( item->layerId() ) );
+    if ( layer )
+    {
+      layer->addChildCanvas( mMapCanvas );
+    }
   }
 }
 
