@@ -43,7 +43,7 @@ void QgsMultiMapManager::addMapWidget()
   int highestNumber = 1;
   foreach ( const QPointer<QgsMapWidget>& mapWidget, mMapWidgets )
   {
-    if ( mapWidget->getNumber() >= highestNumber )
+    if ( mapWidget && mapWidget->getNumber() >= highestNumber )
     {
       highestNumber = mapWidget->getNumber() + 1;
     }
