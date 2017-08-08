@@ -524,6 +524,7 @@ bool QgsMilXLayer::importMilxly( QDomElement& milxLayerEl, int dpi, QString& err
 
 bool QgsMilXLayer::readXml( const QDomNode& layer_node )
 {
+  mTransparency = layer_node.toElement().attribute( "transparency" ).toInt();
   QDomElement milxLayerEl = layer_node.firstChildElement( "MilXLayer" );
   if ( !milxLayerEl.isNull() )
   {
@@ -538,6 +539,7 @@ bool QgsMilXLayer::writeXml( QDomNode & layer_node, QDomDocument & document )
   QDomElement layerElement = layer_node.toElement();
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
+  layerElement.setAttribute( "transparency", mTransparency );
   QDomElement milxLayerEl = document.createElement( "MilXLayer" );
   layerElement.appendChild( milxLayerEl );
   exportToMilxly( milxLayerEl, 96 );
