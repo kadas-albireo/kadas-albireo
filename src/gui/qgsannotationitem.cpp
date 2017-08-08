@@ -468,6 +468,8 @@ void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos,
       // If less than 5 deg from quarter, snap to quarter
       mAngle = qRound( mAngle / 90. ) * 90.;
     }
+    notifyItemUpdated();
+    update();
   }
   else if ( moveAction != QgsAnnotationItem::NoAction )
   {
