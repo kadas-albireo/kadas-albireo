@@ -126,6 +126,8 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     void setFrameBackgroundColor( const QColor& c ) { mFrameBackgroundColor = c; }
     QColor frameBackgroundColor() const { return mFrameBackgroundColor; }
 
+    void setOpacity( double opacity );
+
     virtual void writeXML( QDomDocument& doc ) const = 0;
     virtual void readXML( const QDomDocument& doc, const QDomElement& itemElem ) = 0;
 

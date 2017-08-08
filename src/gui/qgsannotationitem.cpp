@@ -70,6 +70,7 @@ QgsAnnotationItem::QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* s
   setFlag( QGraphicsItem::ItemIsSelectable, true );
   setData( 0, "AnnotationItem" );
   setZValue( source->zValue() );
+  setOpacity( source->opacity() );
 
   connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncGeoPos() ) );
   connect( mMapCanvas, SIGNAL( hasCrsTransformEnabledChanged( bool ) ), this, SLOT( syncGeoPos() ) );
@@ -583,6 +584,12 @@ double QgsAnnotationItem::scaledSymbolSize() const
   return dpmm * mMarkerSymbol->size();
 }
 
+void QgsAnnotationItem::setOpacity( double opacity )
+{
+  QGraphicsItem::setOpacity( opacity );
+  notifyItemUpdated();
+}
+
 void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) const
 {
   if ( itemElem.isNull() )
@@ -613,6 +620,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   annotationElem.setAttribute( "frameBackgroundColorAlpha", mFrameBackgroundColor.alpha() );
   annotationElem.setAttribute( "flags", mFlags );
   annotationElem.setAttribute( "visible", isVisible() );
+  annotationElem.setAttribute( "opacity", opacity() );
   if ( mMarkerSymbol )
   {
     QDomElement symbolElem = QgsSymbolLayerV2Utils::saveSymbol( "marker symbol", mMarkerSymbol, doc );
@@ -655,6 +663,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   mMapPositionFixed = annotationElem.attribute( "mapPositionFixed", "1" ).toInt();
   mFlags = annotationElem.attribute( "flags", QString::number( ItemAllFeatures ) ).toInt();
   setVisible( annotationElem.attribute( "visible", "1" ).toInt() );
+  setOpacity( annotationElem.attribute( "opacity", "1." ).toDouble() );
 
   //marker symbol
   QDomElement symbolElem = annotationElem.firstChildElement( "symbol" );
