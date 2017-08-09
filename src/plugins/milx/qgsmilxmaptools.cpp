@@ -663,7 +663,10 @@ QgsMilXEditTool::~QgsMilXEditTool()
   }
   else
   {
-    qDeleteAll( mItems );
+    foreach ( QgsMilXAnnotationItem* item, mItems )
+    {
+      item->deleteLater();
+    }
   }
 }
 
@@ -924,7 +927,10 @@ void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
 
 void QgsMilXEditTool::deleteAll()
 {
-  qDeleteAll( mItems );
+  foreach ( QgsMilXAnnotationItem* item, mItems )
+  {
+    item->deleteLater();
+  }
   mItems.clear();
   deleteLater();
 }
