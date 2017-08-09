@@ -22,6 +22,7 @@
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspallabeling.h"
+#include "qgspolygonv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsrubberband.h"
 #include "qgsvectordataprovider.h"
@@ -147,6 +148,19 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
 }
 
 template <class T>
+void QgsRedliningMapToolT<T>::canvasPressEvent( QMouseEvent *ev )
+{
+  if ( mEditMode && ev->button() == Qt::LeftButton && ev->modifiers() == Qt::ControlModifier )
+  {
+    // pass
+  }
+  else
+  {
+    T::canvasPressEvent( ev );
+  }
+}
+
+template <class T>
 void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
 {
   if ( mEditMode && ev->button() == Qt::LeftButton && ev->modifiers() == Qt::ControlModifier )
@@ -154,9 +168,18 @@ void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
     QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( T::canvas(), ev->pos(), T::toMapCoordinates( ev->pos() ), QGis::AnyGeometry );
     if ( result.layer == mLayer )
     {
-      QList<QgsFeature> features = QList<QgsFeature>() << createFeature() << result.feature;
+      QList<QgsFeature> features = QList<QgsFeature>() << createFeature();
+      QList<QgsLabelPosition> labels;
+      if ( result.feature.isValid() )
+      {
+        features.append( result.feature );
+      }
+      else if ( result.labelPos.featureId != -1 )
+      {
+        labels.append( result.labelPos );
+      }
       T::mutableState()->status = T::StatusFinished; // Avoid onFinished being called, which adds the feature to the layer
-      T::canvas()->setMapTool( new QgsRedliningEditGroupMapTool( T::canvas(), mRedlining, mLayer, features ) );
+      T::canvas()->setMapTool( new QgsRedliningEditGroupMapTool( T::canvas(), mRedlining, mLayer, features, labels ) );
     }
   }
   else
@@ -314,7 +337,7 @@ template class QgsRedliningMapToolT<QgsMapToolDrawCircle>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features )
+QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features , const QList<QgsLabelPosition> &labels )
     : QgsMapTool( canvas ), mRedlining( redlining ), mLayer( layer ), mDraggingRect( false )
 {
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
@@ -327,8 +350,13 @@ QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas
 
   for ( int i = 0, n = features.size(); i < n; ++i )
   {
-    addFeatureToSelection( features[i], i == n - 1 );
+    addFeatureToSelection( features[i], false );
   }
+  for ( int i = 0, n = labels.size(); i < n; ++i )
+  {
+    addLabelToSelection( labels[i] );
+  }
+  updateRect();
 }
 
 QgsRedliningEditGroupMapTool::~QgsRedliningEditGroupMapTool()
@@ -394,6 +422,21 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
   {
     foreach ( const Item& item, mItems )
     {
+      if ( item.labelFeature != -1 )
+      {
+        double dx, dy;
+        item.rubberband->translationOffset( dx, dy );
+        QgsFeature f;
+        mLayer->getFeatures( QgsFeatureRequest( item.labelFeature ) ).nextFeature( f );
+
+        QgsPointV2* layerPos = static_cast<QgsPointV2*>( f.geometry()->geometry() );
+        QgsPoint mapPos = toMapCoordinates( mLayer, QgsPoint( layerPos->x(), layerPos->y() ) );
+        mapPos.setX( mapPos.x() + dx );
+        mapPos.setY( mapPos.y() + dy );
+        QgsPoint newLayerPos = toLayerCoordinates( mLayer, mapPos );
+        mLayer->changeGeometry( item.labelFeature, QgsGeometry( new QgsPointV2( newLayerPos ) ) );
+        mLayer->triggerRepaint();
+      }
       double ox, oy;
       item.rubberband->translationOffset( ox, oy );
       QgsAbstractGeometryV2* geom = item.rubberband->geometry()->clone();
@@ -454,7 +497,14 @@ void QgsRedliningEditGroupMapTool::canvasReleaseEvent( QMouseEvent * e )
           }
         }
         // Add new item
-        addFeatureToSelection( result.feature );
+        if ( result.feature.isValid() )
+        {
+          addFeatureToSelection( result.feature );
+        }
+        else if ( result.labelPos.featureId != -1 )
+        {
+          addLabelToSelection( result.labelPos );
+        }
       }
       else if (( e->modifiers() & Qt::ControlModifier ) == 0 )
       {
@@ -485,6 +535,41 @@ void QgsRedliningEditGroupMapTool::keyPressEvent( QKeyEvent *e )
   }
 }
 
+void QgsRedliningEditGroupMapTool::addLabelToSelection( const QgsLabelPosition& label, bool update )
+{
+  QgsGeometryRubberBand* rubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
+  rubberBand->setOutlineColor( Qt::red );
+  rubberBand->setOutlineWidth( 1 );
+  rubberBand->setLineStyle( Qt::DashLine );
+  rubberBand->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
+  rubberBand->setIconSize( 10 );
+  rubberBand->setIconOutlineColor( Qt::red );
+  rubberBand->setIconOutlineWidth( 2 );
+  rubberBand->setIconFillColor( Qt::white );
+  rubberBand->setTranslationOffset( 0, 0 );
+  QgsLineStringV2* exterior = new QgsLineStringV2();
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMaximum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMaximum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMinimum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
+  QgsPolygonV2* poly = new QgsPolygonV2();
+  poly->setExteriorRing( exterior );
+  rubberBand->setGeometry( poly );
+
+  Item item;
+  item.rubberband = rubberBand;
+  item.nodeRubberband = 0;
+  item.labelFeature = label.featureId;
+
+  mItems.append( item );
+
+  if ( update )
+  {
+    updateRect();
+  }
+}
+
 void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feature, bool update )
 {
   QString flags = feature.attribute( "flags" ).toString();
@@ -501,6 +586,7 @@ void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feat
   item.rubberband->setGeometry( feature.geometry()->geometry()->transformed( *ct ) );
   item.nodeRubberband = 0;
   item.flags = flags;
+  item.labelFeature = -1;
 
   QRegExp shapeRe( "\\bshape=(\\w+)\\b" );
   shapeRe.indexIn( flags );
@@ -546,6 +632,7 @@ void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feat
   {
     item.rubberband->setIconSize( 10 );
     item.rubberband->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
+    item.rubberband->setIconOutlineWidth( 2 );
     item.rubberband->setIconOutlineColor( Qt::red );
     item.rubberband->setIconFillColor( Qt::white );
     item.rubberband->setOutlineWidth( outlineWidth );
@@ -569,19 +656,26 @@ void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feat
 void QgsRedliningEditGroupMapTool::removeItemFromSelection( int itemIndex, bool update )
 {
   Item& item = mItems[itemIndex];
-  if ( mLayer )
+  if ( item.labelFeature != -1 )
   {
-    QgsFeature feature = featureFromItem( item );
-    mLayer->addFeature( feature );
+    delete item.rubberband;
   }
+  else
+  {
+    if ( mLayer )
+    {
+      QgsFeature feature = featureFromItem( item );
+      mLayer->addFeature( feature );
+      mLayer->triggerRepaint();
+    }
+    connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
+  }
+  delete item.nodeRubberband;
+  mItems.removeAt( itemIndex );
   if ( update )
   {
     updateRect();
   }
-  mLayer->triggerRepaint();
-  connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
-  delete item.nodeRubberband;
-  mItems.removeAt( itemIndex );
 }
 
 QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) const
@@ -618,7 +712,16 @@ void QgsRedliningEditGroupMapTool::copy()
   QgsFeatureStore featureStore( mLayer->pendingFields(), mLayer->crs() );
   foreach ( const Item& item, mItems )
   {
-    featureStore.addFeature( featureFromItem( item ) );
+    if ( item.labelFeature != -1 )
+    {
+      QgsFeature f;
+      mLayer->getFeatures( QgsFeatureRequest( item.labelFeature ) ).nextFeature( f );
+      featureStore.addFeature( f );
+    }
+    else
+    {
+      featureStore.addFeature( featureFromItem( item ) );
+    }
   }
   QgisApp::instance()->clipboard()->replaceWithCopyOf( featureStore );
 }
@@ -629,8 +732,13 @@ void QgsRedliningEditGroupMapTool::deleteAll()
   {
     delete item.rubberband;
     delete item.nodeRubberband;
+    if ( item.labelFeature )
+    {
+      mLayer->deleteFeature( item.labelFeature );
+    }
   }
   mItems.clear();
+  mLayer->triggerRepaint();
   deleteLater(); // quit tool
 }
 
@@ -646,14 +754,31 @@ void QgsRedliningEditGroupMapTool::updateRect()
   {
     // Just one item, return to individual item editing mode
     Item& item = mItems.front();
-    QgsFeature feature = featureFromItem( item );
-    mLayer->addFeature( feature );
-    mLayer->triggerRepaint();
-    connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
+    if ( item.labelFeature != -1 )
+    {
+      const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
+      QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsWithinRect( item.rubberband->geometry()->boundingBox() ) : QList<QgsLabelPosition>();
+      foreach ( const QgsLabelPosition& labelPos, labelPositions )
+      {
+        if ( labelPos.layerID == mLayer->id() && labelPos.featureId == item.labelFeature )
+        {
+          mRedlining->editLabel( labelPos );
+          break;
+        }
+      }
+      delete item.rubberband;
+    }
+    else
+    {
+      QgsFeature feature = featureFromItem( item );
+      feature.setFeatureId( mLayer->addFeature( feature ) );
+      mLayer->triggerRepaint();
+      connect( canvas(), SIGNAL( mapCanvasRefreshed() ), item.rubberband, SLOT( deleteLater() ) );
+      mRedlining->editFeature( feature );
+    }
     delete item.nodeRubberband;
     mItems.clear();
     deleteLater();
-    mRedlining->editFeature( feature );
     return;
   }
   QRectF rect = mItems.front().rubberband->boundingRect().translated( mItems.front().rubberband->pos() );
@@ -668,8 +793,8 @@ void QgsRedliningEditGroupMapTool::updateRect()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor *editor )
-    : QgsMapTool( canvas ), mStatus( StatusReady ), mLayer( layer ), mLabel( label )
+QgsRedliningEditTextMapTool::QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor *editor )
+    : QgsMapTool( canvas ), mStatus( StatusReady ), mRedlining( redlining ), mLayer( layer ), mLabel( label )
 {
   connect( mCanvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateLabelBoundingBox() ) );
   setCursor( Qt::CrossCursor );
@@ -712,16 +837,19 @@ QgsRedliningEditTextMapTool::~QgsRedliningEditTextMapTool()
 
 void QgsRedliningEditTextMapTool::canvasPressEvent( QMouseEvent *e )
 {
-  mPressPos = toMapCoordinates( e->pos() );
+  if ( e->modifiers() != Qt::ControlModifier )
+  {
+    mPressPos = toMapCoordinates( e->pos() );
 
-  bool textClicked = labelClicked( mPressPos );
-  if ( textClicked && e->button() == Qt::RightButton )
-  {
-    showContextMenu( e );
-  }
-  else if ( textClicked )
-  {
-    mStatus = StatusMoving;
+    bool textClicked = labelClicked( mPressPos );
+    if ( textClicked && e->button() == Qt::RightButton )
+    {
+      showContextMenu( e );
+    }
+    else if ( textClicked )
+    {
+      mStatus = StatusMoving;
+    }
   }
 }
 
@@ -765,6 +893,24 @@ void QgsRedliningEditTextMapTool::canvasReleaseEvent( QMouseEvent *e )
     State* newState = new State( *static_cast<const State*>( mStateStack->state() ) );
     newState->pos = QgsPointV2( toLayerCoordinates( mLayer, mapPos ) );
     mStateStack->updateState( newState );
+  }
+  else if ( e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier )
+  {
+    QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( canvas(), e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+    if ( result.layer == mLayer )
+    {
+      QList<QgsFeature> features;
+      QList<QgsLabelPosition> labels = QList<QgsLabelPosition>() << mLabel;
+      if ( result.feature.isValid() )
+      {
+        features.append( result.feature );
+      }
+      else if ( result.labelPos.featureId != -1 )
+      {
+        labels.append( result.labelPos );
+      }
+      canvas()->setMapTool( new QgsRedliningEditGroupMapTool( canvas(), mRedlining, mLayer, features, labels ) );
+    }
   }
   else if ( !labelClicked( toMapCoordinates( e->pos() ) ) )
   {

@@ -91,29 +91,33 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
 {
   foreach ( const QgsFeature& feature, features )
   {
-    QString flags;
-    if ( feature.geometry()->type() == QGis::Point )
+    QString flags = feature.attribute( "flags" ).toString();
+    if ( flags.isEmpty() )
     {
-      flags = "shape=point,symbol=circle";
-    }
-    else if ( feature.geometry()->type() == QGis::Line )
-    {
-      flags = "shape=line";
-    }
-    else if ( feature.geometry()->type() == QGis::Polygon )
-    {
-      flags = "shape=polygon";
-    }
-    else
-    {
-      continue;
+      if ( feature.geometry()->type() == QGis::Point )
+      {
+        flags = "shape=point,symbol=circle";
+      }
+      else if ( feature.geometry()->type() == QGis::Line )
+      {
+        flags = "shape=line";
+      }
+      else if ( feature.geometry()->type() == QGis::Polygon )
+      {
+        flags = "shape=polygon";
+      }
+      else
+      {
+        continue;
+      }
     }
     QgsFeature newFeature( dataProvider()->fields() );
     newFeature.setGeometry( QgsGeometry( feature.geometry()->geometry()->clone() ) );
 
-    newFeature.setAttribute( "flags", flags );
+    newFeature.setAttributes( feature.attributes() );
 
     QMap<QString, QVariant> attribs;
+    attribs["flags"] = flags;
     attribs["size"] = 1;
     attribs["outline"] = QgsSymbolLayerV2Utils::encodeColor( Qt::black );
     attribs["fill"] = QgsSymbolLayerV2Utils::encodeColor( Qt::yellow );
@@ -133,17 +137,21 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
 QgsFeatureId QgsRedliningLayer::addFeature( QgsFeature& f )
 {
   QgsFeatureList features = QgsFeatureList() << f;
-  dataProvider()->addFeatures( features );
-  updateExtents();
-  emit featureAdded( features.front().id() );
+  if ( dataProvider()->addFeatures( features ) )
+  {
+    updateExtents();
+    emit featureAdded( features.front().id() );
+  }
   return features.front().id();
 }
 
 void QgsRedliningLayer::deleteFeature( QgsFeatureId fid )
 {
-  dataProvider()->deleteFeatures( QgsFeatureIds() << fid );
-  updateExtents();
-  emit featureDeleted( fid );
+  if ( dataProvider()->deleteFeatures( QgsFeatureIds() << fid ) )
+  {
+    updateExtents();
+    emit featureDeleted( fid );
+  }
 }
 
 void QgsRedliningLayer::changeGeometry( QgsFeatureId fid, const QgsGeometry& geom )

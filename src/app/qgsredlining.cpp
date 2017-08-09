@@ -277,7 +277,7 @@ void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
   QgsFeature feature;
   getOrCreateLayer()->getFeatures( QgsFeatureRequest( labelPos.featureId ) ).nextFeature( feature );
   syncStyleWidgets( feature );
-  setTool( new QgsRedliningEditTextMapTool( mApp->mapCanvas(), getOrCreateLayer(), labelPos, new QgsRedliningLabelEditor ), mActionNewText );
+  setTool( new QgsRedliningEditTextMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), labelPos, new QgsRedliningLabelEditor ), mActionNewText );
   mUi.spinBoxSize->setEnabled( false );
   mUi.comboFillStyle->setEnabled( false );
   mUi.colorButtonOutlineColor->setEnabled( false );

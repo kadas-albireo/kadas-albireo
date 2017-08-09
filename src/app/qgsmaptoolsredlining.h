@@ -74,6 +74,7 @@ class QgsRedliningMapToolT : public T
     class AddFeatureCommand;
 
   protected:
+    void canvasPressEvent( QMouseEvent* ev ) override;
     void canvasReleaseEvent( QMouseEvent* ev ) override;
 
   private:
@@ -147,7 +148,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features );
+    QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QList<QgsFeature>& features, const QList<QgsLabelPosition>& labels );
     ~QgsRedliningEditGroupMapTool();
     void canvasPressEvent( QMouseEvent *e ) override;
     void canvasMoveEvent( QMouseEvent *e ) override;
@@ -160,6 +161,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
       QgsGeometryRubberBand* rubberband;
       QgsRubberBand* nodeRubberband;
       QString flags;
+      QgsFeatureId labelFeature;
     };
     QgsRedliningManager* mRedlining;
     QPointer<QgsRedliningLayer> mLayer;
@@ -168,6 +170,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
     QPointF mMouseMoveLastXY;
     bool mDraggingRect;
 
+    void addLabelToSelection( const QgsLabelPosition &label, bool update = true );
     void addFeatureToSelection( const QgsFeature& feature, bool update = true );
     void removeItemFromSelection( int itemIndex, bool update = true );
     QgsFeature featureFromItem( const Item& item ) const;
@@ -182,7 +185,7 @@ class QgsRedliningEditTextMapTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor* editor = 0 );
+    QgsRedliningEditTextMapTool( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QgsLabelPosition& label, QgsRedliningAttribEditor* editor = 0 );
     ~QgsRedliningEditTextMapTool();
 
     void canvasPressEvent( QMouseEvent *e ) override;
@@ -201,6 +204,7 @@ class QgsRedliningEditTextMapTool : public QgsMapTool
 
   private:
     enum Status {StatusReady, StatusMoving} mStatus;
+    QgsRedliningManager* mRedlining;
     QgsRedliningLayer* mLayer;
     QgsLabelPosition mLabel;
     QgsGeometryRubberBand* mRubberBand;
