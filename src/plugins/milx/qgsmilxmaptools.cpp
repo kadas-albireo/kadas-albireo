@@ -218,7 +218,9 @@ QgsMilXCreateTool::QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary* libr
 QgsMilXCreateTool::~QgsMilXCreateTool()
 {
   delete mInputWidget;
+  mInputWidget = 0;
   delete mBottomBar;
+  mBottomBar = 0;
   reset();
 }
 
