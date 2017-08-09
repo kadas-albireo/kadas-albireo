@@ -59,7 +59,8 @@ void QgsFloatingInputWidgetField::checkInputChanged()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsFloatingInputWidget::QgsFloatingInputWidget( QWidget* parent ) : QWidget( parent ), mFocusedInput( 0 )
+QgsFloatingInputWidget::QgsFloatingInputWidget( QgsMapCanvas *canvas )
+    : QWidget( canvas ), mCanvas( canvas ), mFocusedInput( 0 )
 {
   setObjectName( "FloatingInputWidget" );
   QGridLayout* gridLayout = new QGridLayout();
@@ -148,21 +149,21 @@ bool QgsFloatingInputWidget::eventFilter( QObject *obj, QEvent *ev )
   return QWidget::eventFilter( obj, ev );
 }
 
-void QgsFloatingInputWidget::adjustCursorAndExtent( QgsMapCanvas* canvas, const QgsPoint& geoPos )
+void QgsFloatingInputWidget::adjustCursorAndExtent( const QgsPoint& geoPos )
 {
   // If position is not within visible extent, center map there
-  if ( !canvas->mapSettings().visibleExtent().contains( geoPos ) )
+  if ( !mCanvas->mapSettings().visibleExtent().contains( geoPos ) )
   {
-    QgsRectangle rect = canvas->mapSettings().visibleExtent();
+    QgsRectangle rect = mCanvas->mapSettings().visibleExtent();
     rect = QgsRectangle( geoPos.x() - 0.5 * rect.width(), geoPos.y() - 0.5 * rect.height(), geoPos.x() + 0.5 * rect.width(), geoPos.y() + 0.5 * rect.height() );
-    canvas->setExtent( rect );
-    canvas->refresh();
+    mCanvas->setExtent( rect );
+    mCanvas->refresh();
   }
   // Then, move cursor to corresponding screen position and simulate move event
   double x = geoPos.x(), y = geoPos.y();
-  canvas->getCoordinateTransform()->transformInPlace( x, y );
+  mCanvas->getCoordinateTransform()->transformInPlace( x, y );
   QPoint p( qRound( x ), qRound( y ) );
-  QCursor::setPos( canvas->mapToGlobal( p ) );
+  QCursor::setPos( mCanvas->mapToGlobal( p ) );
   move( p.x(), p.y() + 20 );
 }
 

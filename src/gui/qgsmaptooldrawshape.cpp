@@ -335,7 +335,7 @@ void QgsMapToolDrawShape::moveMouseToPos( const QgsPoint& geoPos )
   // may get altered
   mIgnoreNextMoveEvent = true;
 
-  mInputWidget->adjustCursorAndExtent( mCanvas, geoPos );
+  mInputWidget->adjustCursorAndExtent( geoPos );
 
   if ( state()->status == StatusDrawing )
   {

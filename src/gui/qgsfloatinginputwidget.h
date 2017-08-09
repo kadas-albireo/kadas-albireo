@@ -45,7 +45,7 @@ class QgsFloatingInputWidgetField : public QLineEdit
 class QgsFloatingInputWidget : public QWidget
 {
   public:
-    QgsFloatingInputWidget( QWidget* parent );
+    QgsFloatingInputWidget( QgsMapCanvas* canvas );
     void addInputField( const QString& label, QgsFloatingInputWidgetField* widget, bool initiallyfocused = false );
     void removeInputField( int idx );
     void setFocusedInputField( QgsFloatingInputWidgetField* widget );
@@ -53,13 +53,14 @@ class QgsFloatingInputWidget : public QWidget
     QgsFloatingInputWidgetField* focusedInputField() const { return mFocusedInput; }
     bool eventFilter( QObject *obj, QEvent *ev ) override;
 
-    void adjustCursorAndExtent( QgsMapCanvas* canvas, const QgsPoint& geoPos );
+    void adjustCursorAndExtent( const QgsPoint& geoPos );
 
   protected:
     bool focusNextPrevChild( bool next ) override;
     void keyPressEvent( QKeyEvent *ev ) override;
 
   private:
+    QgsMapCanvas* mCanvas;
     QgsFloatingInputWidgetField* mFocusedInput;
     QList<QgsFloatingInputWidgetField*> mInputFields;
 

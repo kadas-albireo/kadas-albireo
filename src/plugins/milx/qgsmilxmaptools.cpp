@@ -440,14 +440,14 @@ void QgsMilXCreateTool::updatePoint( )
     QgsPoint p = mItem->point( pointidx );
     coordinate == 0 ? p.setX( field->text().toDouble() ) : p.setY( field->text().toDouble() );
     mItem->movePoint( pointidx, toCanvasCoordinates( p ) );
-    mInputWidget->adjustCursorAndExtent( mCanvas, mItem->point( pointidx ) );
+    mInputWidget->adjustCursorAndExtent( mItem->point( pointidx ) );
   }
   else
   {
     QgsPoint point;
     point.setX( mInputWidget->inputFields()[0]->text().toDouble() );
     point.setY( mInputWidget->inputFields()[1]->text().toDouble() );
-    mInputWidget->adjustCursorAndExtent( mCanvas, point );
+    mInputWidget->adjustCursorAndExtent( point );
   }
 }
 
@@ -1030,7 +1030,7 @@ void QgsMilXEditTool::updatePoint( )
   QgsPoint p = mActiveAnnotation->point( pointidx );
   coordinate == 0 ? p.setX( field->text().toDouble() ) : p.setY( field->text().toDouble() );
   mActiveAnnotation->movePoint( pointidx, toCanvasCoordinates( p ) );
-  mInputWidget->adjustCursorAndExtent( mCanvas, mActiveAnnotation->point( pointidx ) );
+  mInputWidget->adjustCursorAndExtent( mActiveAnnotation->point( pointidx ) );
   updateRect();
 }
 
@@ -1043,6 +1043,6 @@ void QgsMilXEditTool::updateAttribute( )
   }
   int attridx = field->property( "attridx" ).toInt();
   mActiveAnnotation->setAttribute( attridx, field->text().toDouble() );
-  mInputWidget->adjustCursorAndExtent( mCanvas, mActiveAnnotation->attributePoints()[attridx].second );
+  mInputWidget->adjustCursorAndExtent( mActiveAnnotation->attributePoints()[attridx].second );
   updateRect();
 }
