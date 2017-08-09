@@ -18,6 +18,8 @@
 #include "qgsgeometry.h"
 #include "qgslegendinterface.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaplayerregistry.h"
+#include "qgspallabeling.h"
 #include "qgspluginlayer.h"
 #include "qgsrendererv2.h"
 #include "qgsvectorlayer.h"
@@ -26,6 +28,7 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
 {
   PickResult pickResult;
 
+  // First, try annotations
   QgsAnnotationItem* annotationItem = canvas->annotationItemAtPos( canvasPos );
   if ( annotationItem )
   {
@@ -34,6 +37,21 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
     return pickResult;
   }
 
+  // Then, try labels
+  const QgsLabelingResults* labelingResults = canvas->labelingResults();
+  QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( mapPos ) : QList<QgsLabelPosition>();
+  if ( !labelPositions.isEmpty() )
+  {
+    QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( labelPositions.front().layerID );
+    if ( layer )
+    {
+      pickResult.layer = layer;
+      pickResult.labelPos = labelPositions.front();
+      return pickResult;
+    }
+  }
+
+  // Last, try layer features
   QgsRenderContext renderContext = QgsRenderContext::fromMapSettings( canvas->mapSettings() );
   double radiusmm = QSettings().value( "/Map/searchRadiusMM", QGis::DEFAULT_SEARCH_RADIUS_MM ).toDouble();
   radiusmm = radiusmm > 0 ? radiusmm : QGis::DEFAULT_SEARCH_RADIUS_MM;

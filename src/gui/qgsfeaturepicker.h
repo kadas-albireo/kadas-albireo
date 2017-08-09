@@ -18,6 +18,7 @@
 
 #include "qgis.h"
 #include "qgsfeature.h"
+#include "qgsmaprenderer.h"
 #include <QRectF>
 
 class QgsAnnotationItem;
@@ -38,6 +39,7 @@ class GUI_EXPORT QgsFeaturePicker
         QgsFeature feature;
         QVariant otherResult;
         QgsAnnotationItem* annotation;
+        QgsLabelPosition labelPos;
         QRectF boundingBox;
     };
 

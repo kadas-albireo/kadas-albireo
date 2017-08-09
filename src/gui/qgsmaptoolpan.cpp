@@ -14,7 +14,6 @@
  ***************************************************************************/
 
 #include "qgsfeaturepicker.h"
-#include "qgspallabeling.h"
 #include "qgsmaptoolpan.h"
 #include "qgsmapcanvas.h"
 #include "qgscursors.h"
@@ -227,17 +226,14 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
       // Otherwise pick label / feature
       else
       {
-        const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
-        QList<QgsLabelPosition> labelPositions = labelingResults ? labelingResults->labelsAtPosition( toMapCoordinates( e->pos() ) ) : QList<QgsLabelPosition>();
-        if ( !labelPositions.isEmpty() )
+        QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+        if ( result.layer )
         {
-          emit labelPicked( labelPositions.first() );
-        }
-        else
-        {
-
-          QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
-          if ( result.layer )
+          if ( result.labelPos.featureId != -1 )
+          {
+            emit labelPicked( result.labelPos );
+          }
+          else
           {
             emit featurePicked( result.layer, result.feature, result.otherResult );
           }

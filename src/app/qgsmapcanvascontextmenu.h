@@ -20,9 +20,7 @@
 
 #include <QMenu>
 #include "qgspoint.h"
-#include "qgsfeature.h"
 #include "qgsfeaturepicker.h"
-#include "qgsmaprenderer.h"
 
 class QGraphicsRectItem;
 class QgsGeometryRubberBand;
@@ -78,7 +76,6 @@ class QgsMapCanvasContextMenu : public QMenu
     QgsFeaturePicker::PickResult mPickResult;
     QgsGeometryRubberBand* mRubberBand;
     QGraphicsRectItem* mRectItem;
-    QList<QgsLabelPosition> mLabelPositions;
 };
 
 #endif // QGSMAPCANVASCONTEXTMENU_H

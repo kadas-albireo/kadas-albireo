@@ -44,8 +44,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     : mMapPos( mapPos ), mCanvas( canvas ), mRubberBand( 0 ), mRectItem( 0 )
 {
   mPickResult = QgsFeaturePicker::pick( mCanvas, canvasPos, mapPos, QGis::AnyGeometry );
-  const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
-  mLabelPositions = labelingResults ? labelingResults->labelsAtPosition( mMapPos ) : QList<QgsLabelPosition>();
 
   if ( mPickResult.annotation )
   {
@@ -87,7 +85,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
       addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteFeature() ) );
     }
   }
-  else if ( !mLabelPositions.isEmpty() )
+  else if ( mPickResult.labelPos.featureId != -1 && mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
   {
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editLabel() ) );
     addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLabel() ) );
@@ -95,14 +93,14 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
     mRubberBand->setOutlineWidth( 2 );
     QgsLineStringV2* lineString = new QgsLineStringV2();
-    foreach ( const QgsPoint& p, mLabelPositions.first().cornerPoints )
+    foreach ( const QgsPoint& p, mPickResult.labelPos.cornerPoints )
     {
       lineString->addVertex( QgsPointV2( p.x(), p.y() ) );
     }
     lineString->addVertex( lineString->vertexAt( QgsVertexId( 0, 0, 0 ) ) );
     mRubberBand->setGeometry( lineString );
   }
-  if ( mPickResult.isEmpty() && mLabelPositions.isEmpty() )
+  if ( mPickResult.isEmpty() )
   {
     addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( rasterAttributes() ) );
     addSeparator();
@@ -125,7 +123,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     addAction( QIcon( ":/images/themes/default/mIconSelectRemove.svg" ), tr( "Delete items" ), this, SLOT( deleteItems() ) );
   }
   addSeparator();
-  if (( mPickResult.isEmpty() || mPickResult.feature.isValid() ) && mLabelPositions.isEmpty() )
+  if (( mPickResult.isEmpty() || mPickResult.feature.isValid() ) )
   {
     QMenu* measureMenu = new QMenu();
     addAction( tr( "Measure" ) )->setMenu( measureMenu );
@@ -183,21 +181,8 @@ void QgsMapCanvasContextMenu::deleteFeature()
 
 void QgsMapCanvasContextMenu::deleteLabel()
 {
-  if ( !mLabelPositions.isEmpty() )
-  {
-    QgsRedliningLayer* redliningLayer = QgisApp::instance()->redlining()->getLayer();
-    QgsRedliningLayer* gpsLayer = QgisApp::instance()->gpsRouteEditor()->getLayer();
-    if ( redliningLayer && redliningLayer->id() == mLabelPositions.first().layerID )
-    {
-      QgisApp::instance()->redlining()->getLayer()->deleteFeature( mLabelPositions.first().featureId );
-      QgisApp::instance()->redlining()->getLayer()->triggerRepaint();
-    }
-    else if ( gpsLayer && gpsLayer->id() == mLabelPositions.first().layerID )
-    {
-      QgisApp::instance()->gpsRouteEditor()->getLayer()->deleteFeature( mLabelPositions.first().featureId );
-      QgisApp::instance()->gpsRouteEditor()->getLayer()->triggerRepaint();
-    }
-  }
+  static_cast<QgsRedliningLayer*>( mPickResult.layer )->deleteFeature( mPickResult.labelPos.featureId );
+  static_cast<QgsRedliningLayer*>( mPickResult.layer )->triggerRepaint();
 }
 
 void QgsMapCanvasContextMenu::deleteOtherResult()
@@ -231,19 +216,10 @@ void QgsMapCanvasContextMenu::editOtherResult()
 
 void QgsMapCanvasContextMenu::editLabel()
 {
-  if ( !mLabelPositions.isEmpty() )
-  {
-    QgsRedliningLayer* redliningLayer = QgisApp::instance()->redlining()->getLayer();
-    QgsRedliningLayer* gpsLayer = QgisApp::instance()->gpsRouteEditor()->getLayer();
-    if ( redliningLayer && redliningLayer->id() == mLabelPositions.first().layerID )
-    {
-      QgisApp::instance()->redlining()->editLabel( mLabelPositions.first() );
-    }
-    else if ( gpsLayer && gpsLayer->id() == mLabelPositions.first().layerID )
-    {
-      QgisApp::instance()->gpsRouteEditor()->editLabel( mLabelPositions.first() );
-    }
-  }
+  if ( mPickResult.layer == QgisApp::instance()->redlining()->getLayer() )
+    QgisApp::instance()->redlining()->editLabel( mPickResult.labelPos );
+  else if ( mPickResult.layer == QgisApp::instance()->gpsRouteEditor()->getLayer() )
+    QgisApp::instance()->gpsRouteEditor()->editLabel( mPickResult.labelPos );
 }
 
 void QgsMapCanvasContextMenu::cutFeature()
