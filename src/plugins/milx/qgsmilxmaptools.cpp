@@ -631,6 +631,7 @@ QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, Qgs
   QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
   item->fromMilxItem( layerItem );
   mItems.append( item );
+  mActiveAnnotation = item;
   connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   // If layer is deleted or layers are changed, quit tool
@@ -847,6 +848,7 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
     QgsMilXAnnotationItem* item = qobject_cast<QgsMilXAnnotationItem*>( canvas()->annotationItemAtPos( e->pos() ) );
     if ( e->modifiers() == Qt::ControlModifier && item && mItems.contains( item ) )
     {
+      mActiveAnnotation = 0;
       // CTRL+Clicked a selected item, deselect it
       mItems.removeAll( item );
       mLayer->addItem( item->toMilxItem() );
@@ -880,6 +882,10 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
           mItems.clear();
         }
         mItems.append( item );
+        if ( mItems.size() == 1 )
+        {
+          mActiveAnnotation = item;
+        }
         mLayer->triggerRepaint();
         updateRect();
       }
