@@ -264,6 +264,6 @@ void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
   QAction* lockAction = menu.addAction( tr( "Lock position" ), this, SLOT( toggleLocked() ) );
   lockAction->setCheckable( true );
   lockAction->setChecked( itemFlags() & QgsAnnotationItem::ItemAnchorIsNotMoveable );
-  menu.addAction( tr( "Delete" ), this, SLOT( deleteLater() ) );
+  menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }

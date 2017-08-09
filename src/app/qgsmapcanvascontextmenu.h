@@ -37,6 +37,10 @@ class QgsMapCanvasContextMenu : public QMenu
 
   private slots:
     void featureAttributes();
+    void deleteAnnotation();
+    void deleteFeature();
+    void deleteLabel();
+    void deleteOtherResult();
     void editAnnotation();
     void editFeature();
     void editOtherResult();

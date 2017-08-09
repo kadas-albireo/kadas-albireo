@@ -703,7 +703,7 @@ void QgsAnnotationItem::showItemEditor()
 void QgsAnnotationItem::showContextMenu( const QPoint &screenPos )
 {
   QMenu menu;
-  menu.addAction( tr( "Remove" ), this, SLOT( deleteLater() ) );
+  menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Remove" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }
 

@@ -173,6 +173,7 @@
         <file>themes/default/mActionEditCopy.png</file>
         <file>themes/default/mActionEditCut.png</file>
         <file>themes/default/mActionEditPaste.png</file>
+        <file>themes/default/mActionEditor.svg</file>
         <file>themes/default/mActionExpandNewTree.png</file>
         <file>themes/default/mActionExpandTree.png</file>
         <file>themes/default/mActionExportMapServer.png</file>

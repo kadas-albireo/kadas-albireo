@@ -354,8 +354,8 @@ void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
   else if ( e->button() == Qt::RightButton && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
   {
     QMenu menu;
-    menu.addAction( tr( "Copy" ), this, SLOT( copy() ) );
-    menu.addAction( tr( "Delete" ), this, SLOT( deleteAll() ) );
+    menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
+    menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
     menu.exec( e->globalPos() );
   }
 }

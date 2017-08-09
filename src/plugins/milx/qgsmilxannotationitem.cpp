@@ -460,13 +460,15 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   QAction* actionAddPoint = 0;
   QAction* actionRemovePoint = 0;
   QAction* actionClearOffset = 0;
+  QAction* actionEdit = menu.addAction( QIcon( ":/images/themes/default/mActionEditor.svg" ), tr( "Symbol editor..." ) );
+  menu.addSeparator();
   if ( isMultiPoint() )
   {
     for ( int i = 0, n = pts.size(); i < n; ++i )
     {
       if ( qAbs( canvasPos.x() - pts[i].x() ) < 7 && qAbs( canvasPos.y() - pts[i].y() ) < 7 )
       {
-        actionRemovePoint = menu.addAction( tr( "Delete node" ) );
+        actionRemovePoint = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteVertex.png" ), tr( "Delete node" ) );
         actionRemovePoint->setData( i );
         MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributes(), mFinalized, true );
         bool canDelete = false;
@@ -484,7 +486,7 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
       {
         if ( qAbs( canvasPos.x() - attribPoint.second.x() ) < 7 && qAbs( canvasPos.y() - attribPoint.second.y() ) < 7 )
         {
-          actionRemovePoint = menu.addAction( tr( "Delete node" ) );
+          actionRemovePoint = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteVertex.png" ), tr( "Delete node" ) );
           actionRemovePoint->setEnabled( false );
           break;
         }
@@ -492,16 +494,14 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     }
     if ( !actionRemovePoint )
     {
-      actionAddPoint = menu.addAction( tr( "Add node" ) );
+      actionAddPoint = menu.addAction( QIcon( ":/images/themes/default/mActionAddVertex.png" ), tr( "Add node" ) );
     }
   }
   else
   {
-    actionClearOffset = menu.addAction( tr( "Reset offset" ) );
+    actionClearOffset = menu.addAction( QIcon( ":/images/themes/default/clear.svg" ), tr( "Reset offset" ) );
   }
-  menu.addSeparator();
-  QAction* actionEdit = menu.addAction( tr( "Edit symbol" ) );
-  QAction* actionRemove = menu.addAction( tr( "Delete symbol" ) );
+  QAction* actionRemove = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete symbol" ) );
   QAction* clickedAction = menu.exec( screenPos );
   if ( !clickedAction )
   {

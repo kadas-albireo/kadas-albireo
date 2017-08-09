@@ -702,8 +702,8 @@ void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
     else if ( mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
     {
       QMenu menu;
-      menu.addAction( tr( "Copy" ), this, SLOT( copy() ) );
-      menu.addAction( tr( "Delete" ), this, SLOT( deleteAll() ) );
+      menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
+      menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
       menu.exec( e->globalPos() );
     }
   }
@@ -881,7 +881,7 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
         mLayer->triggerRepaint();
         updateRect();
       }
-      else if (( e->modifiers() & Qt::ControlModifier ) == 0 )
+      else if ( !mActiveAnnotation && ( e->modifiers() & Qt::ControlModifier ) == 0 )
       {
         // Empty-clicked without control, quit tool
         deleteLater();
