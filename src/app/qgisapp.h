@@ -1084,6 +1084,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     void handleFeaturePicked( QgsMapLayer *layer , const QgsFeature& feature, const QVariant &otherResult );
     void handleLabelPicked( const QgsLabelPosition& labelPos );
 
+    void onFocusChanged( QWidget* old, QWidget* now );
+
   signals:
     /** emitted when a key is pressed and we want non widget sublasses to be able
       to pick up on this (e.g. maplayer) */

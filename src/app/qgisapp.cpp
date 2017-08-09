@@ -784,6 +784,7 @@ void QgisApp::init( bool restorePlugins )
   toggleFullScreen();
 #endif
 
+  connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), this, SLOT( onFocusChanged( QWidget*, QWidget* ) ) );
 } // QgisApp ctor
 
 QgisApp::QgisApp()
@@ -5975,6 +5976,15 @@ void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
   else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && mGpsRouteEditor->getLayer()->id() == labelPos.layerID )
   {
     mGpsRouteEditor->editLabel( labelPos );
+  }
+}
+
+void QgisApp::onFocusChanged( QWidget* /*old*/, QWidget* now )
+{
+  // If nothing has focus, ensure map canvas receives it
+  if ( !now )
+  {
+    mapCanvas()->setFocus();
   }
 }
 
