@@ -128,7 +128,7 @@ void QgsGlobeFeatureSource::attributeValueChanged( const QgsFeatureId& featureId
   }
 }
 
-void QgsGlobeFeatureSource::geometryChanged( const QgsFeatureId& featureId, QgsGeometry& geometry )
+void QgsGlobeFeatureSource::geometryChanged( const QgsFeatureId& featureId, const QgsGeometry& geometry )
 {
   FeatureMap_t::iterator it = mFeatures.find( featureId );
   if ( it != mFeatures.end() )
