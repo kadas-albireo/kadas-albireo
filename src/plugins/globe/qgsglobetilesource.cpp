@@ -226,10 +226,18 @@ QgsGlobeTileSource::QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::Ti
   dirtyDataExtents();
 }
 
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)
+osgEarth::Status QgsGlobeTileSource::initialize( const osgDB::Options* /*dbOptions*/ )
+#else
 osgEarth::TileSource::Status QgsGlobeTileSource::initialize( const osgDB::Options* /*dbOptions*/ )
+#endif
 {
   setProfile( osgEarth::Registry::instance()->getGlobalGeodeticProfile() );
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)
+  return osgEarth::Status( osgEarth::Status::NoError );
+#else
   return STATUS_OK;
+#endif
 }
 
 osg::Image* QgsGlobeTileSource::createImage( const osgEarth::TileKey& key, osgEarth::ProgressCallback* progress )

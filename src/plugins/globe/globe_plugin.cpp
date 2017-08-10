@@ -68,6 +68,9 @@
 #include <osgEarth/Map>
 #include <osgEarth/MapNode>
 #include <osgEarth/Registry>
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)
+#include <osgEarth/TerrainEngineNode>
+#endif
 #include <osgEarth/TileSource>
 #include <osgEarth/Version>
 #include <osgEarthAnnotation/AnnotationSettings>

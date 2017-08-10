@@ -19,6 +19,7 @@
 #define QGSGLOBETILESOURCE_H
 
 #include <osgEarth/TileSource>
+#include <osgEarth/Version>
 #include <osg/ImageStream>
 #include <QImage>
 #include <QStringList>
@@ -110,7 +111,11 @@ class QgsGlobeTileSource : public osgEarth::TileSource
 {
   public:
     QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::TileSourceOptions& options = osgEarth::TileSourceOptions() );
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)
+    osgEarth::Status initialize( const osgDB::Options *dbOptions ) override;
+#else
     Status initialize( const osgDB::Options *dbOptions ) override;
+#endif
     osg::Image* createImage( const osgEarth::TileKey& key, osgEarth::ProgressCallback* progress );
     osg::HeightField* createHeightField( const osgEarth::TileKey &/*key*/, osgEarth::ProgressCallback* /*progress*/ ) { return 0; }
 
