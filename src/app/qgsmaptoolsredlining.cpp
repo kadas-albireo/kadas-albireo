@@ -342,6 +342,7 @@ QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas
 {
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
+  connect( canvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateLabelBoundingBoxes() ) );
   connect( canvas, SIGNAL( renderComplete( QPainter* ) ), this, SLOT( updateRect() ) );
 
   mRectItem = new QGraphicsRectItem();
@@ -535,6 +536,19 @@ void QgsRedliningEditGroupMapTool::keyPressEvent( QKeyEvent *e )
   }
 }
 
+void QgsRedliningEditGroupMapTool::updateLabelRect( QgsGeometryRubberBand *rubberBand, const QgsLabelPosition &label )
+{
+  QgsLineStringV2* exterior = new QgsLineStringV2();
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMaximum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMaximum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMinimum() ) );
+  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
+  QgsPolygonV2* poly = new QgsPolygonV2();
+  poly->setExteriorRing( exterior );
+  rubberBand->setGeometry( poly );
+}
+
 void QgsRedliningEditGroupMapTool::addLabelToSelection( const QgsLabelPosition& label, bool update )
 {
   QgsGeometryRubberBand* rubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
@@ -547,15 +561,7 @@ void QgsRedliningEditGroupMapTool::addLabelToSelection( const QgsLabelPosition& 
   rubberBand->setIconOutlineWidth( 2 );
   rubberBand->setIconFillColor( Qt::white );
   rubberBand->setTranslationOffset( 0, 0 );
-  QgsLineStringV2* exterior = new QgsLineStringV2();
-  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
-  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMaximum() ) );
-  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMaximum() ) );
-  exterior->addVertex( QgsPointV2( label.labelRect.xMaximum(), label.labelRect.yMinimum() ) );
-  exterior->addVertex( QgsPointV2( label.labelRect.xMinimum(), label.labelRect.yMinimum() ) );
-  QgsPolygonV2* poly = new QgsPolygonV2();
-  poly->setExteriorRing( exterior );
-  rubberBand->setGeometry( poly );
+  updateLabelRect( rubberBand, label );
 
   Item item;
   item.rubberband = rubberBand;
@@ -789,6 +795,33 @@ void QgsRedliningEditGroupMapTool::updateRect()
   mRectItem->setPos( 0, 0 );
   mRectItem->setRect( rect );
   mRectItem->setVisible( n > 1 );
+}
+
+void QgsRedliningEditGroupMapTool::updateLabelBoundingBoxes()
+{
+  // Try to find the label again
+  const QgsLabelingResults* labelingResults = mCanvas->labelingResults();
+  if ( labelingResults )
+  {
+    foreach ( const Item& item, mItems )
+    {
+      if ( item.labelFeature != -1 )
+      {
+        QgsFeature f;
+        mLayer->getFeatures( QgsFeatureRequest( item.labelFeature ) ).nextFeature( f );
+        QgsPointV2* layerPos = static_cast<QgsPointV2*>( f.geometry()->geometry() );
+        QgsPoint mapPos = toMapCoordinates( mLayer, QgsPoint( layerPos->x(), layerPos->y() ) );
+        foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( mapPos ) )
+        {
+          if ( labelPos.layerID == mLayer->id() && labelPos.featureId == item.labelFeature )
+          {
+            updateLabelRect( item.rubberband, labelPos );
+            break;
+          }
+        }
+      }
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

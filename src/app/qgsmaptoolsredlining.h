@@ -174,11 +174,13 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
     void addFeatureToSelection( const QgsFeature& feature, bool update = true );
     void removeItemFromSelection( int itemIndex, bool update = true );
     QgsFeature featureFromItem( const Item& item ) const;
+    void updateLabelRect( QgsGeometryRubberBand* rubberBand, const QgsLabelPosition& label );
 
   private slots:
     void copy();
     void deleteAll();
     void updateRect();
+    void updateLabelBoundingBoxes();
 };
 
 class QgsRedliningEditTextMapTool : public QgsMapTool
