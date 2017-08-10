@@ -566,6 +566,9 @@ class QgsVectorLayer : QgsMapLayer
      */
     bool addFeature( QgsFeature& f, bool alsoUpdateExtent = true );
 
+    /** Insert a copy of the given features, adapting attributes and geometry as necessary */
+    int addFeatures( const QgsFeatureStore& featureStore, bool makeSelected = true);
+
     /** Updates an existing feature. This method needs to query the datasource
         on every call. Consider using {@link changeAttributeValue()} or
         {@link changeGeometry()} instead.

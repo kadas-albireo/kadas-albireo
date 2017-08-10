@@ -448,7 +448,7 @@ QgsRasterIdentifyResult QgsAmsProvider::identify( const QgsPoint & thePoint, Qgs
       params["sublayer"] = resultMap["layerName"].toString();
       params["featureType"] = attributesMap[resultMap["displayFieldName"].toString()].toString();
       store.setParams( params );
-      store.features().append( feature );
+      store.addFeature( feature );
       entries.insert( entries.size(), qVariantFromValue( QList<QgsFeatureStore>() << store ) );
     }
   }

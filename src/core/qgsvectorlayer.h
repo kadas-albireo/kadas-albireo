@@ -48,6 +48,7 @@ class QgsEditorWidgetWrapper;
 class QgsExpressionFieldBuffer;
 class QgsFeatureRendererV2;
 class QgsFeatureRequest;
+class QgsFeatureStore;
 class QgsGeometry;
 class QgsGeometryCache;
 class QgsGeometryVertexIndex;
@@ -1246,6 +1247,9 @@ class CORE_EXPORT QgsVectorLayer : public QgsMapLayer
 
     /** Insert a copy of the given features into the layer  (but does not commit it) */
     bool addFeatures( QgsFeatureList features, bool makeSelected = true );
+
+    /** Insert a copy of the given features, adapting attributes and geometry as necessary */
+    int addFeatures( const QgsFeatureStore& featureStore, bool makeSelected = true );
 
     /** Delete a feature from the layer (but does not commit it) */
     bool deleteFeature( QgsFeatureId fid );

@@ -26,6 +26,7 @@ class QMainWindow;
 class QWidget;
 
 class QgsAttributeDialog;
+class QgsClipboard;
 class QgsComposerView;
 class QgsFeature;
 class QgsLayerTreeView;
@@ -82,6 +83,8 @@ class GUI_EXPORT QgisInterface : public QObject
     virtual QgsLayerTreeView* layerTreeView() = 0;
 
     virtual QgsPluginInterface* pluginInterface( const QString& pluginName ) = 0;
+
+    virtual QgsClipboard* clipboard() = 0;
 
   public slots: // TODO: do these functions really need to be slots?
 

@@ -14,7 +14,9 @@
  ***************************************************************************/
 
 #include "qgsredlininglayer.h"
+#include "qgscrscache.h"
 #include "qgsgeometry.h"
+#include "qgsfeaturestore.h"
 #include "qgsredliningrendererv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsvectordataprovider.h"
@@ -87,9 +89,11 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
+int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore )
 {
-  foreach ( const QgsFeature& feature, features )
+  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( featureStore.crs().authid(), crs().authid() );
+  QgsFeatureList newFeatures;
+  foreach ( const QgsFeature& feature, featureStore.features() )
   {
     QString flags = feature.attribute( "flags" ).toString();
     if ( flags.isEmpty() )
@@ -112,7 +116,7 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
       }
     }
     QgsFeature newFeature( dataProvider()->fields() );
-    newFeature.setGeometry( QgsGeometry( feature.geometry()->geometry()->clone() ) );
+    newFeature.setGeometry( QgsGeometry( feature.geometry()->geometry()->transformed( *ct ) ) );
 
     newFeature.setAttributes( feature.attributes() );
 
@@ -129,9 +133,11 @@ void QgsRedliningLayer::pasteFeatures( const QList<QgsFeature> &features )
       QVariant srcValue = feature.attribute( key );
       newFeature.setAttribute( key, srcValue.isNull() ? attribs[key] : srcValue );
     }
-
-    dataProvider()->addFeatures( QgsFeatureList() << newFeature );
+    newFeatures.append( newFeature );
   }
+
+  bool success = dataProvider()->addFeatures( QgsFeatureList() << newFeatures );
+  return success ? newFeatures.size() : 0;
 }
 
 QgsFeatureId QgsRedliningLayer::addFeature( QgsFeature& f )

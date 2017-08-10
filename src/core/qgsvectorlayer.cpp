@@ -42,10 +42,12 @@
 #include "qgsclipper.h"
 #include "qgscoordinatereferencesystem.h"
 #include "qgscoordinatetransform.h"
+#include "qgscrscache.h"
 #include "qgscurvev2.h"
 #include "qgsdatasourceuri.h"
 #include "qgsexpressionfieldbuffer.h"
 #include "qgsfeature.h"
+#include "qgsfeaturestore.h"
 #include "qgsfeaturerequest.h"
 #include "qgsfield.h"
 #include "qgsgeometrycache.h"
@@ -2426,6 +2428,80 @@ bool QgsVectorLayer::addFeatures( QgsFeatureList features, bool makeSelected )
   return res;
 }
 
+int QgsVectorLayer::addFeatures( const QgsFeatureStore& featureStore, bool makeSelected )
+{
+  QHash<int, int> remap;
+  const QgsFields &fields = featureStore.fields();
+  QgsAttributeList pkAttrList = pendingPkAttributesList();
+  for ( int idx = 0; idx < fields.count(); ++idx )
+  {
+    int dst = fieldNameIndex( fields[idx].name() );
+    if ( dst < 0 )
+      continue;
+
+    remap.insert( idx, dst );
+  }
+
+  int dstAttrCount = pendingFields().count();
+
+  QgsFeatureList newFeatures;
+  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( featureStore.crs().authid(), crs().authid() );
+  foreach ( const QgsFeature& feature, featureStore.features() )
+  {
+    const QgsAttributes &srcAttr = feature.attributes();
+    QgsAttributes dstAttr( dstAttrCount );
+
+    for ( int src = 0; src < srcAttr.count(); ++src )
+    {
+      int dst = remap.value( src, -1 );
+      if ( dst < 0 )
+        continue;
+
+      // use default value for primary key fields if it's NOT NULL
+      if ( pkAttrList.contains( dst ) )
+      {
+        dstAttr[ dst ] = dataProvider()->defaultValue( dst );
+        if ( !dstAttr[ dst ].isNull() )
+          continue;
+        else if ( providerType() == "spatialite" )
+          continue;
+      }
+
+      dstAttr[ dst ] = srcAttr[ src ];
+    }
+
+    QgsFeature newFeature( feature );
+
+    newFeature.setAttributes( dstAttr );
+
+    if ( newFeature.geometry() )
+    {
+      newFeature.geometry()->transform( *ct );
+      // convert geometry to match destination layer
+      QGis::GeometryType destType = geometryType();
+      bool destIsMulti = QGis::isMultiType( wkbType() );
+      if ( dataProvider() && !dataProvider()->doesStrictFeatureTypeCheck() )
+      {
+        // force destination to multi if provider doesn't do a feature strict check
+        destIsMulti = true;
+      }
+
+      if ( destType != QGis::UnknownGeometry )
+      {
+        newFeature.setGeometry( newFeature.geometry()->convertToType( destType, destIsMulti ) );
+        if ( !newFeature.geometry() )
+        {
+          continue;
+        }
+        newFeature.geometry()->avoidIntersections();
+      }
+    }
+
+    newFeatures.append( newFeature );
+  }
+  bool success = addFeatures( newFeatures, makeSelected );
+  return success ? newFeatures.size() : 0;
+}
 
 bool QgsVectorLayer::snapPoint( QgsPoint& point, double tolerance )
 {

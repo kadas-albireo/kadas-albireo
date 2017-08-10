@@ -137,6 +137,7 @@ qgsbottombar.cpp
 qgsbusyindicatordialog.cpp
 qgscharacterselectdialog.cpp
 qgsbrowsertreeview.cpp
+qgsclipboard.cpp
 qgscollapsiblegroupbox.cpp
 qgscolorbutton.cpp
 qgscolorbuttonv2.cpp
@@ -275,6 +276,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsbusyindicatordialog.h
   qgscharacterselectdialog.h
   qgsbrowsertreeview.h
+  qgsclipboard.h
   qgscodeeditor.h
   qgscodeeditorcss.h
   qgscodeeditorhtml.h

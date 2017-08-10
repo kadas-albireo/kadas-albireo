@@ -17,13 +17,13 @@ class QgsFeatureStore
     ~QgsFeatureStore();
 
     /** Get fields list */
-    QgsFields& fields();
+    const QgsFields& fields() const;
 
     /** Set fields. Resets feauters fields to pointer to new internal fields. */
     void setFields( const QgsFields & fields );
 
     /** Get crs */
-    QgsCoordinateReferenceSystem crs() const;
+    const QgsCoordinateReferenceSystem& crs() const;
 
     /** Set crs */
     void setCrs( const QgsCoordinateReferenceSystem& crs );
@@ -35,7 +35,7 @@ class QgsFeatureStore
     void addFeature( const QgsFeature& feature );
 
     /** Get features list reference */
-    QgsFeatureList& features();
+    const QgsFeatureList& features() const;
 
     /** Set map of optional parameters */
     void setParams( const QMap<QString, QVariant> &theParams );

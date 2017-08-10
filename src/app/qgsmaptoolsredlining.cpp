@@ -18,6 +18,7 @@
 #include "qgsclipboard.h"
 #include "qgscrscache.h"
 #include "qgsfeaturepicker.h"
+#include "qgsfeaturestore.h"
 #include "qgsgeometryutils.h"
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
@@ -729,7 +730,7 @@ void QgsRedliningEditGroupMapTool::copy()
       featureStore.addFeature( featureFromItem( item ) );
     }
   }
-  QgisApp::instance()->clipboard()->replaceWithCopyOf( featureStore );
+  QgisApp::instance()->clipboard()->setStoredFeatures( featureStore );
 }
 
 void QgsRedliningEditGroupMapTool::deleteAll()

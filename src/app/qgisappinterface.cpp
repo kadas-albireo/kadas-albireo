@@ -692,3 +692,8 @@ QgsPluginInterface* QgisAppInterface::pluginInterface( const QString& pluginName
 {
   return qgis->pluginInterface( pluginName );
 }
+
+QgsClipboard* QgisAppInterface::clipboard()
+{
+  return qgis->clipboard();
+}

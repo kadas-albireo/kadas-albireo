@@ -34,6 +34,8 @@ class QgisInterface : QObject
 
     virtual QgsPluginInterface* pluginInterface( const QString& pluginName ) = 0;
 
+    virtual QgsClipboard* clipboard() = 0;
+
   public slots: // TODO: do these functions really need to be slots?
 
     /* Exposed functions */

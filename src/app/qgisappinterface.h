@@ -54,6 +54,8 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     QgsPluginInterface* pluginInterface( const QString& pluginName ) override;
 
+    QgsClipboard* clipboard() override;
+
     /* Exposed functions */
 
     //! Zoom map to full extent

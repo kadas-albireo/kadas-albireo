@@ -25,6 +25,7 @@
 #include <qgsclassicapp.h>
 #include <qgsapplication.h>
 #include <qgsfeature.h>
+#include <qgsfeaturestore.h>
 #include <qgsfield.h>
 #include <qgsclipboard.h>
 #include <qgsmaplayerregistry.h>
@@ -97,10 +98,10 @@ void TestQgisAppClipboard::copyPaste()
     inputLayer->selectAll();
     mQgisApp->editCopy( inputLayer );
 
-    QgsFeatureList features = mQgisApp->clipboard()->copyOf();
-    qDebug() << features.size() << " features copied to clipboard";
+    const QgsFeatureStore& featureStore = mQgisApp->clipboard()->getStoredFeatures();
+    qDebug() << featureStore.features().size() << " features copied to clipboard";
 
-    QVERIFY( features.size() == filesCounts.value( fileName ) );
+    QVERIFY( featureStore.features().size() == filesCounts.value( fileName ) );
 
     QgsVectorLayer *pastedLayer = mQgisApp->pasteAsNewMemoryVector( "pasted" );
     QVERIFY( pastedLayer );

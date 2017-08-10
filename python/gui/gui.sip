@@ -28,6 +28,7 @@
 %Include qgsattributeform.sip
 %Include qgsattributeforminterface.sip
 %Include qgsbusyindicatordialog.sip
+%Include qgsclipboard.sip
 %Include qgscollapsiblegroupbox.sip
 %If (HAVE_QSCI_SIP)
 %Include qgscodeeditor.sip

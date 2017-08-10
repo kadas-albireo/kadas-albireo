@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsfeaturestore.h"
+#include "qgsvectorlayer.h"
 
 QgsFeatureStore::QgsFeatureStore()
 {
@@ -33,6 +34,13 @@ QgsFeatureStore::QgsFeatureStore( const QgsFields& fields, const QgsCoordinateRe
 {
 }
 
+QgsFeatureStore::QgsFeatureStore( QgsVectorLayer *src )
+    : mFields( src->pendingFields() )
+    , mCrs( src->crs() )
+    , mFeatures( src->selectedFeatures() )
+{
+}
+
 QgsFeatureStore::~QgsFeatureStore()
 {
 }
@@ -48,7 +56,5 @@ void QgsFeatureStore::setFields( const QgsFields & fields )
 
 void QgsFeatureStore::addFeature( const QgsFeature& feature )
 {
-  QgsFeature f( feature );
-  f.setFields( &mFields );
-  mFeatures.append( f );
+  mFeatures.append( feature );
 }

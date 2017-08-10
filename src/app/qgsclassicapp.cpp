@@ -2255,9 +2255,10 @@ void QgsClassicApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
   mActionRotateLabel->setEnabled( enableRotate );
   mActionChangeLabelProperties->setEnabled( enableChange );
 
-  mMenuPasteAs->setEnabled( clipboard() && !clipboard()->empty() );
-  mActionPasteAsNewVector->setEnabled( clipboard() && !clipboard()->empty() );
-  mActionPasteAsNewMemoryVector->setEnabled( clipboard() && !clipboard()->empty() );
+  bool clipboardHasFeatures = clipboard() && clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME );
+  mMenuPasteAs->setEnabled( clipboardHasFeatures );
+  mActionPasteAsNewVector->setEnabled( clipboardHasFeatures );
+  mActionPasteAsNewMemoryVector->setEnabled( clipboardHasFeatures );
 
   updateLayerModifiedActions();
 
@@ -2400,7 +2401,7 @@ void QgsClassicApp::activateDeactivateLayerRelatedActions( QgsMapLayer* layer )
         updateUndoActions();
       }
 
-      mActionPasteFeatures->setEnabled( isEditable && canAddFeatures && !clipboard()->empty() );
+      mActionPasteFeatures->setEnabled( isEditable && canAddFeatures && clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME ) );
 
       mActionAddFeature->setEnabled( isEditable && canAddFeatures );
       mActionCircularStringCurvePoint->setEnabled( isEditable && ( canAddFeatures || canChangeGeometry ) && vlayer->geometryType() != QGis::Point );

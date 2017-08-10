@@ -21,7 +21,6 @@ SET(QGIS_APP_SRCS
   qgsbrowserdockwidget.cpp
   qgsadvanceddigitizingdockwidget.cpp
   qgsadvanceddigitizingcanvasitem.cpp
-  qgsclipboard.cpp
   qgsconfigureshortcutsdialog.cpp
   qgscrashrpt.cpp
   qgscustomization.cpp
@@ -205,7 +204,6 @@ SET (QGIS_APP_MOC_HDRS
   qgsbookmarks.h
   qgsbrowserdockwidget.h
   qgsadvanceddigitizingdockwidget.h
-  qgsclipboard.h
   qgsconfigureshortcutsdialog.h
   qgscustomization.h
   qgscustomprojectiondialog.h

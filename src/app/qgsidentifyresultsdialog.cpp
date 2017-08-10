@@ -1785,7 +1785,7 @@ void QgsIdentifyResultsDialog::copyFeature()
   }
 
   QgsFeatureStore featureStore( item->fields(), item->crs() );
-  featureStore.features().append( item->feature() );
+  featureStore.addFeature( item->feature() );
   emit copyToClipboard( featureStore );
 }
 

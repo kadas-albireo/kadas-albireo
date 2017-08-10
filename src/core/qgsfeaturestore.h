@@ -18,11 +18,11 @@
 #include "qgis.h"
 #include "qgsfeature.h"
 #include "qgsfield.h"
-#include "qgslogger.h"
 #include "qgscoordinatereferencesystem.h"
 #include <QList>
-#include <QMetaType>
 #include <QVariant>
+
+class QgsVectorLayer;
 
 /** \ingroup core
  * Container for features with the same fields and crs.
@@ -39,17 +39,20 @@ class CORE_EXPORT QgsFeatureStore
     //! Constructor
     QgsFeatureStore( const QgsFields& fields, const QgsCoordinateReferenceSystem& crs );
 
+    //! Constructor
+    QgsFeatureStore( QgsVectorLayer *src );
+
     //! Destructor
     ~QgsFeatureStore();
 
     /** Get fields list */
-    QgsFields& fields() { return mFields; }
+    const QgsFields& fields() const { return mFields; }
 
     /** Set fields. Resets feauters fields to pointer to new internal fields. */
     void setFields( const QgsFields & fields );
 
     /** Get crs */
-    QgsCoordinateReferenceSystem crs() const { return mCrs; }
+    const QgsCoordinateReferenceSystem& crs() const { return mCrs; }
 
     /** Set crs */
     void setCrs( const QgsCoordinateReferenceSystem& crs ) { mCrs = crs; }
@@ -61,7 +64,7 @@ class CORE_EXPORT QgsFeatureStore
     void addFeature( const QgsFeature& feature );
 
     /** Get features list reference */
-    QgsFeatureList& features() { return mFeatures; }
+    const QgsFeatureList& features() const { return mFeatures; }
 
     /** Set map of optional parameters */
     void setParams( const QMap<QString, QVariant> &theParams ) { mParams = theParams; }

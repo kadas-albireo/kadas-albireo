@@ -1627,6 +1627,11 @@ int QgsGeometry::transform( const QgsCoordinateTransform& ct )
     return 1;
   }
 
+  if ( ct.isShortCircuited() )
+  {
+    return 0;
+  }
+
   detach();
   d->geometry->transform( ct );
   removeWkbGeos();

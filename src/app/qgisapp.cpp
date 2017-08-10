@@ -622,7 +622,7 @@ void QgisApp::init( bool restorePlugins )
   QgsEditorWidgetRegistry::initEditors( mapCanvas(), messageBar() );
 
   mInternalClipboard = new QgsClipboard; // create clipboard
-  connect( mInternalClipboard, SIGNAL( changed() ), this, SLOT( clipboardChanged() ) );
+  connect( mInternalClipboard, SIGNAL( dataChanged() ), this, SLOT( clipboardChanged() ) );
   mQgisInterface = new QgisAppInterface( this ); // create the interfce
 
 #ifdef Q_OS_MAC
@@ -5170,7 +5170,7 @@ void QgisApp::editCut( QgsMapLayer * layerContainingSelection )
   if ( !selectionVectorLayer )
     return;
 
-  clipboard()->replaceWithCopyOf( selectionVectorLayer );
+  clipboard()->setStoredFeatures( QgsFeatureStore( selectionVectorLayer ) );
 
   selectionVectorLayer->beginEditCommand( tr( "Features cut" ) );
   selectionVectorLayer->deleteSelectedFeatures();
@@ -5184,7 +5184,7 @@ void QgisApp::editCopy( QgsMapLayer * layerContainingSelection )
     return;
 
   // Test for feature support in this layer
-  clipboard()->replaceWithCopyOf( selectionVectorLayer );
+  clipboard()->setStoredFeatures( QgsFeatureStore( selectionVectorLayer ) );
 }
 
 void QgisApp::clipboardChanged()
@@ -5198,99 +5198,20 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
   if ( !pasteVectorLayer )
     return;
 
-  pasteVectorLayer->beginEditCommand( tr( "Features pasted" ) );
-  QgsFeatureList features;
-  if ( mapCanvas()->mapSettings().hasCrsTransformEnabled() )
-  {
-    features = clipboard()->transformedCopyOf( pasteVectorLayer->crs(), pasteVectorLayer->pendingFields() );
-  }
-  else
-  {
-    features = clipboard()->copyOf( pasteVectorLayer->pendingFields() );
-  }
-  int nTotalFeatures = features.count();
-
-  QHash<int, int> remap;
-  const QgsFields &fields = clipboard()->fields();
-  QgsAttributeList pkAttrList = pasteVectorLayer->pendingPkAttributesList();
-  for ( int idx = 0; idx < fields.count(); ++idx )
-  {
-    int dst = pasteVectorLayer->fieldNameIndex( fields[idx].name() );
-    if ( dst < 0 )
-      continue;
-
-    remap.insert( idx, dst );
-  }
-
-  int dstAttrCount = pasteVectorLayer->pendingFields().count();
-
-  QgsFeatureList::iterator featureIt = features.begin();
-  while ( featureIt != features.end() )
-  {
-    const QgsAttributes &srcAttr = featureIt->attributes();
-    QgsAttributes dstAttr( dstAttrCount );
-
-    for ( int src = 0; src < srcAttr.count(); ++src )
-    {
-      int dst = remap.value( src, -1 );
-      if ( dst < 0 )
-        continue;
-
-      // use default value for primary key fields if it's NOT NULL
-      if ( pkAttrList.contains( dst ) )
-      {
-        dstAttr[ dst ] = pasteVectorLayer->dataProvider()->defaultValue( dst );
-        if ( !dstAttr[ dst ].isNull() )
-          continue;
-        else if ( pasteVectorLayer->providerType() == "spatialite" )
-          continue;
-      }
-
-      dstAttr[ dst ] = srcAttr[ src ];
-    }
-
-    featureIt->setAttributes( dstAttr );
-
-    if ( featureIt->geometry() )
-    {
-      // convert geometry to match destination layer
-      QGis::GeometryType destType = pasteVectorLayer->geometryType();
-      bool destIsMulti = QGis::isMultiType( pasteVectorLayer->wkbType() );
-      if ( pasteVectorLayer->dataProvider() &&
-           !pasteVectorLayer->dataProvider()->doesStrictFeatureTypeCheck() )
-      {
-        // force destination to multi if provider doesn't do a feature strict check
-        destIsMulti = true;
-      }
-
-      if ( destType != QGis::UnknownGeometry )
-      {
-        QgsGeometry* newGeometry = featureIt->geometry()->convertToType( destType, destIsMulti );
-        if ( !newGeometry )
-        {
-          featureIt = features.erase( featureIt );
-          continue;
-        }
-        featureIt->setGeometry( newGeometry );
-      }
-      // avoid intersection if enabled in digitize settings
-      featureIt->geometry()->avoidIntersections();
-    }
-
-    ++featureIt;
-  }
-
+  const QgsFeatureStore& featureStore = clipboard()->getStoredFeatures();
+  int nCopiedFeatures = 0;
+  int nTotalFeatures = featureStore.features().count();
   if ( pasteVectorLayer->type() == QgsMapLayer::RedliningLayer )
   {
-    static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( features );
+    nCopiedFeatures = static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( featureStore );
   }
   else
   {
-    pasteVectorLayer->addFeatures( features );
+    pasteVectorLayer->beginEditCommand( tr( "Features pasted" ) );
+    nCopiedFeatures = pasteVectorLayer->addFeatures( featureStore );
+    pasteVectorLayer->endEditCommand();
   }
-  pasteVectorLayer->endEditCommand();
 
-  int nCopiedFeatures = features.count();
   if ( nCopiedFeatures == 0 )
   {
     messageBar()->pushMessage( tr( "Paste features" ),
@@ -5311,12 +5232,12 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
                                QgsMessageBar::WARNING, messageTimeout() );
   }
 
-  mapCanvas()->refresh();
+  pasteVectorLayer->triggerRepaint();
 }
 
 bool QgisApp::editCanPaste()
 {
-  return clipboard()->hasFeatures();
+  return clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME );
 }
 
 void QgisApp::pasteAsNewVector()
@@ -5358,24 +5279,19 @@ QgsVectorLayer *QgisApp::pasteAsNewMemoryVector( const QString & theLayerName )
 
   layer->setLayerName( layerName );
 
-  mapCanvas()->freeze();
-
   QgsMapLayerRegistry::instance()->addMapLayer( layer );
-
-  mapCanvas()->freeze( false );
-  mapCanvas()->refresh();
 
   return layer;
 }
 
 QgsVectorLayer *QgisApp::pasteToNewMemoryVector()
 {
+  const QgsFeatureStore& featureStore = clipboard()->getStoredFeatures();
+
   // Decide geometry type from features, switch to multi type if at least one multi is found
   QMap<QGis::WkbType, int> typeCounts;
-  QgsFeatureList features = clipboard()->copyOf();
-  for ( int i = 0; i < features.size(); i++ )
+  foreach ( const QgsFeature& feature, featureStore.features() )
   {
-    QgsFeature &feature = features[i];
     if ( !feature.geometry() )
       continue;
 
@@ -5417,11 +5333,11 @@ QgsVectorLayer *QgisApp::pasteToNewMemoryVector()
 
   QString message;
 
-  if ( features.size() == 0 )
+  if ( featureStore.features().isEmpty() == 0 )
   {
     message = tr( "No features in clipboard." ); // should not happen
   }
-  else if ( typeCounts.size() == 0 )
+  else if ( typeCounts.isEmpty() == 0 )
   {
     message = tr( "No features with geometry found, point type layer will be created." );
   }
@@ -5446,9 +5362,9 @@ QgsVectorLayer *QgisApp::pasteToNewMemoryVector()
   }
 
   layer->startEditing();
-  layer->setCrs( clipboard()->crs(), false );
+  layer->setCrs( featureStore.crs(), false );
 
-  foreach ( QgsField f, clipboard()->fields().toList() )
+  foreach ( QgsField f, featureStore.fields().toList() )
   {
     QgsDebugMsg( QString( "field %1 (%2)" ).arg( f.name() ).arg( QVariant::typeToName( f.type() ) ) );
     if ( !layer->addAttribute( f ) )
@@ -5462,9 +5378,9 @@ QgsVectorLayer *QgisApp::pasteToNewMemoryVector()
   }
 
   // Convert to multi if necessary
-  for ( int i = 0; i < features.size(); i++ )
+  QgsFeatureList newFeatures;
+  foreach ( const QgsFeature& feature, featureStore.features() )
   {
-    QgsFeature &feature = features[i];
     if ( !feature.geometry() )
       continue;
 
@@ -5472,17 +5388,19 @@ QgsVectorLayer *QgisApp::pasteToNewMemoryVector()
     if ( type == QGis::WKBUnknown || type == QGis::WKBNoGeometry )
       continue;
 
+    QgsFeature newFeature( feature );
     if ( QGis::singleType( wkbType ) != QGis::singleType( type ) )
     {
-      feature.setGeometry( 0 );
+      newFeature.setGeometry( 0 );
     }
 
     if ( QGis::isMultiType( wkbType ) &&  QGis::isSingleType( type ) )
     {
-      feature.geometry()->convertToMultiType();
+      newFeature.geometry()->convertToMultiType();
     }
+    newFeatures.append( newFeature );
   }
-  if ( ! layer->addFeatures( features ) || !layer->commitChanges() )
+  if ( ! layer->addFeatures( newFeatures ) || !layer->commitChanges() )
   {
     QgsDebugMsg( "Cannot add features or commit changes" );
     delete layer;
@@ -5518,7 +5436,10 @@ void QgisApp::copyStyle( QgsMapLayer * sourceLayer )
       return;
     }
     // Copies data in text form as well, so the XML can be pasted into a text editor
-    clipboard()->setData( QGSCLIPBOARD_STYLE_MIME, doc.toByteArray(), doc.toString() );
+    QMimeData* mimeData = new QMimeData();
+    mimeData->setData( QGSCLIPBOARD_STYLE_MIME, doc.toByteArray() );
+    mimeData->setData( "text/plain", doc.toString().toLocal8Bit() );
+    clipboard()->setData( mimeData );
   }
 }
 
@@ -5532,7 +5453,8 @@ void QgisApp::pasteStyle( QgsMapLayer * destinationLayer )
       QDomDocument doc( "qgis" );
       QString errorMsg;
       int errorLine, errorColumn;
-      if ( !doc.setContent( clipboard()->data( QGSCLIPBOARD_STYLE_MIME ), false, &errorMsg, &errorLine, &errorColumn ) )
+      const QMimeData* mimeData = clipboard()->data();
+      if ( !doc.setContent( mimeData->data( QGSCLIPBOARD_STYLE_MIME ), false, &errorMsg, &errorLine, &errorColumn ) )
       {
         QMessageBox::information( this,
                                   tr( "Error" ),
@@ -5563,7 +5485,7 @@ void QgisApp::pasteStyle( QgsMapLayer * destinationLayer )
 
 void QgisApp::copyFeatures( QgsFeatureStore & featureStore )
 {
-  clipboard()->replaceWithCopyOf( featureStore );
+  clipboard()->setStoredFeatures( featureStore );
 }
 
 void QgisApp::refreshMapCanvas()
