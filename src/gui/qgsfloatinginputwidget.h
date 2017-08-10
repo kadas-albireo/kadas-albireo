@@ -23,7 +23,7 @@
 class QgsMapCanvas;
 class QgsPoint;
 
-class QgsFloatingInputWidgetField : public QLineEdit
+class GUI_EXPORT QgsFloatingInputWidgetField : public QLineEdit
 {
     Q_OBJECT
   public:
@@ -42,7 +42,7 @@ class QgsFloatingInputWidgetField : public QLineEdit
     void checkInputChanged();
 };
 
-class QgsFloatingInputWidget : public QWidget
+class GUI_EXPORT QgsFloatingInputWidget : public QWidget
 {
   public:
     QgsFloatingInputWidget( QgsMapCanvas* canvas );

@@ -27,7 +27,7 @@
 class QgsCoordinateDisplayer;
 class QgsGPSConnection;
 
-class QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui::QgsRibbonTopWidget, private Ui::QgsRibbonStatusWidget
+class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, private Ui::QgsRibbonTopWidget, private Ui::QgsRibbonStatusWidget
 {
     Q_OBJECT
   public:
