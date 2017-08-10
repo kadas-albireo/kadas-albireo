@@ -1147,6 +1147,7 @@ void GlobePlugin::reset()
   mActionToggleGlobe->setChecked( false );
   mActionToggleGlobe->blockSignals( false );
   mMapNode->getMap()->removeImageLayer( mQgisMapLayer ); // abort any rendering
+  mTileSource->waitForFinished();
   mOsgViewer = 0;
   mMapNode = 0;
   mRootNode = 0;

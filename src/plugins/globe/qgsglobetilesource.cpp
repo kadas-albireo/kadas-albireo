@@ -180,6 +180,14 @@ void QgsGlobeTileUpdateManager::removeTile( QgsGlobeTileImage *tile )
   }
 }
 
+void QgsGlobeTileUpdateManager::waitForFinished() const
+{
+  if ( mRenderer )
+  {
+    mRenderer->waitForFinished();
+  }
+}
+
 void QgsGlobeTileUpdateManager::start()
 {
   if ( mRenderer == 0 && !mTileQueue.isEmpty() )

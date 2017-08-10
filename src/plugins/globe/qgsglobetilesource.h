@@ -90,6 +90,7 @@ class QgsGlobeTileUpdateManager : public QObject
     void updateLayerSet( const QStringList& layerSet ) { mLayerSet = layerSet; }
     void addTile( QgsGlobeTileImage* tile );
     void removeTile( QgsGlobeTileImage* tile );
+    void waitForFinished() const;
 
   signals:
     void startRendering();
@@ -124,6 +125,11 @@ class QgsGlobeTileSource : public osgEarth::TileSource
     void refresh( const QgsRectangle &dirtyExtent );
     void setLayerSet( const QStringList& layerSet );
     const QStringList &layerSet() const;
+
+    void waitForFinished() const
+    {
+      mTileUpdateManager.waitForFinished();
+    }
 
   private:
     friend class QgsGlobeTileImage;
