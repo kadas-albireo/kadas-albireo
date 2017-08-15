@@ -237,9 +237,6 @@ QgsRasterLayerProperties::QgsRasterLayerProperties( QgsMapLayer* lyr, QgsMapCanv
                                  .arg( pyramidSentence2 ).arg( pyramidSentence3 )
                                  .arg( pyramidSentence4 ).arg( pyramidSentence5 ) );
 
-  tableTransparency->horizontalHeader()->setResizeMode( 0, QHeaderView::Stretch );
-  tableTransparency->horizontalHeader()->setResizeMode( 1, QHeaderView::Stretch );
-
   //resampling
   mResamplingGroupBox->setSaveCheckedState( true );
   const QgsRasterRenderer* renderer = mRasterLayer->renderer();
