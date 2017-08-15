@@ -28,7 +28,7 @@
 QgsClipboard::QgsClipboard( QObject* parent )
     : QObject( parent )
 {
-  connect( QApplication::clipboard(), SIGNAL( dataChanged() ), this, SIGNAL( dataChanged() ) );
+  connect( QApplication::clipboard(), SIGNAL( dataChanged() ), this, SLOT( onDataChanged() ) );
 }
 
 void QgsClipboard::setData( QMimeData* mimeData )
@@ -100,4 +100,10 @@ void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
 const QgsFeatureStore &QgsClipboard::getStoredFeatures() const
 {
   return mFeatureStore;
+}
+
+void QgsClipboard::onDataChanged()
+{
+  mFeatureStore = QgsFeatureStore();
+  emit dataChanged();
 }

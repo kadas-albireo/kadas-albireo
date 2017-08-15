@@ -55,6 +55,9 @@ class GUI_EXPORT QgsClipboard : public QObject
 
   private:
     QgsFeatureStore mFeatureStore;
+
+  private slots:
+    void onDataChanged();
 };
 
 #endif
