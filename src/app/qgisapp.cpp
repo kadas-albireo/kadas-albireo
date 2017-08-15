@@ -5903,8 +5903,8 @@ void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
 
 void QgisApp::onFocusChanged( QWidget* /*old*/, QWidget* now )
 {
-  // If nothing has focus, ensure map canvas receives it
-  if ( !now )
+  // If nothing has focus even though the window is active, ensure map canvas receives it
+  if ( !now && isActiveWindow() )
   {
     mapCanvas()->setFocus();
   }
