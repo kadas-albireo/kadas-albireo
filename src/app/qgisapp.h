@@ -529,6 +529,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void pasteFeatures( QgsMapLayer *destinationLayer = 0 );
     void pasteSvgImage( const QgsPoint *mapPos );
     void paste( QgsMapLayer *destinationLayer = 0, const QgsPoint* mapPos = 0 );
+    void paste( QgsPoint mapPos ) { paste( 0, &mapPos ); }
     /** Returns whether there are features to paste */
     bool canPaste();
     //! copies features on the clipboard to a new vector layer

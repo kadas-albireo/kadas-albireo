@@ -473,6 +473,9 @@ class QgsMapCanvas : QGraphicsView
     //! @note added in 2.8
     void currentLayerChanged( QgsMapLayer* layer );
 
+    //! Emitted when the users presses CTRL+V, to be handled by QgisApp
+    void pasteRequested(QgsPoint mapPos);
+
   protected:
     //! Overridden standard event to be gestures aware
     bool event( QEvent * e );

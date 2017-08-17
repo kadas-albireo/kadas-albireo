@@ -1186,101 +1186,91 @@ void QgsMapCanvas::keyPressEvent( QKeyEvent * e )
     return;
   }
 
-  QPainter paint;
-  QPen     pen( Qt::gray );
-  QgsPoint ll, ur;
+  QgsRectangle currentExtent = mapSettings().visibleExtent();
+  double dx = qAbs(( currentExtent.xMaximum() - currentExtent.xMinimum() ) / 4 );
+  double dy = qAbs(( currentExtent.yMaximum() - currentExtent.yMinimum() ) / 4 );
 
-  if ( ! mCanvasProperties->mouseButtonDown )
+  if ( e->key() == Qt::Key_Left )
   {
-    // Don't want to interfer with mouse events
+    QgsDebugMsg( "Pan left" );
 
-    QgsRectangle currentExtent = mapSettings().visibleExtent();
-    double dx = qAbs(( currentExtent.xMaximum() - currentExtent.xMinimum() ) / 4 );
-    double dy = qAbs(( currentExtent.yMaximum() - currentExtent.yMinimum() ) / 4 );
+    currentExtent.setXMinimum( currentExtent.xMinimum() - dx );
+    currentExtent.setXMaximum( currentExtent.xMaximum() - dx );
+    setExtent( currentExtent );
+    refresh();
+  }
+  else if ( e->key() == Qt::Key_Right )
+  {
+    QgsDebugMsg( "Pan right" );
 
-    switch ( e->key() )
+    currentExtent.setXMinimum( currentExtent.xMinimum() + dx );
+    currentExtent.setXMaximum( currentExtent.xMaximum() + dx );
+    setExtent( currentExtent );
+    refresh();
+  }
+  else if ( e->key() == Qt::Key_Up )
+  {
+    QgsDebugMsg( "Pan up" );
+
+    currentExtent.setYMaximum( currentExtent.yMaximum() + dy );
+    currentExtent.setYMinimum( currentExtent.yMinimum() + dy );
+    setExtent( currentExtent );
+    refresh();
+  }
+  else if ( e->key() == Qt::Key_Down )
+  {
+    QgsDebugMsg( "Pan down" );
+
+    currentExtent.setYMaximum( currentExtent.yMaximum() - dy );
+    currentExtent.setYMinimum( currentExtent.yMinimum() - dy );
+    setExtent( currentExtent );
+    refresh();
+  }
+  else if ( e->key() == Qt::Key_Space )
+  {
+    QgsDebugMsg( "Pressing pan selector" );
+
+    //mCanvasProperties->dragging = true;
+    if ( ! e->isAutoRepeat() )
     {
-      case Qt::Key_Left:
-        QgsDebugMsg( "Pan left" );
-
-        currentExtent.setXMinimum( currentExtent.xMinimum() - dx );
-        currentExtent.setXMaximum( currentExtent.xMaximum() - dx );
-        setExtent( currentExtent );
-        refresh();
-        break;
-
-      case Qt::Key_Right:
-        QgsDebugMsg( "Pan right" );
-
-        currentExtent.setXMinimum( currentExtent.xMinimum() + dx );
-        currentExtent.setXMaximum( currentExtent.xMaximum() + dx );
-        setExtent( currentExtent );
-        refresh();
-        break;
-
-      case Qt::Key_Up:
-        QgsDebugMsg( "Pan up" );
-
-        currentExtent.setYMaximum( currentExtent.yMaximum() + dy );
-        currentExtent.setYMinimum( currentExtent.yMinimum() + dy );
-        setExtent( currentExtent );
-        refresh();
-        break;
-
-      case Qt::Key_Down:
-        QgsDebugMsg( "Pan down" );
-
-        currentExtent.setYMaximum( currentExtent.yMaximum() - dy );
-        currentExtent.setYMinimum( currentExtent.yMinimum() - dy );
-        setExtent( currentExtent );
-        refresh();
-        break;
-
-
-
-      case Qt::Key_Space:
-        QgsDebugMsg( "Pressing pan selector" );
-
-        //mCanvasProperties->dragging = true;
-        if ( ! e->isAutoRepeat() )
-        {
-          mCanvasProperties->panSelectorDown = true;
-          mCanvasProperties->rubberStartPoint = mCanvasProperties->mouseLastXY;
-        }
-        break;
-
-      case Qt::Key_PageUp:
-        QgsDebugMsg( "Zoom in" );
-        zoomIn();
-        break;
-
-      case Qt::Key_PageDown:
-        QgsDebugMsg( "Zoom out" );
-        zoomOut();
-        break;
-
-#if 0
-      case Qt::Key_P:
-        mUseParallelRendering = !mUseParallelRendering;
-        refresh();
-        break;
-
-      case Qt::Key_S:
-        mDrawRenderingStats = !mDrawRenderingStats;
-        refresh();
-        break;
-#endif
-
-      default:
-        // Pass it on
-        if ( mMapTool )
-        {
-          mMapTool->keyPressEvent( e );
-        }
-        else e->ignore();
-
-        QgsDebugMsg( "Ignoring key: " + QString::number( e->key() ) );
+      mCanvasProperties->panSelectorDown = true;
+      mCanvasProperties->rubberStartPoint = mCanvasProperties->mouseLastXY;
     }
+  }
+  else if ( e->key() == Qt::Key_PageUp )
+  {
+    QgsDebugMsg( "Zoom in" );
+    zoomIn();
+  }
+  else if ( e->key() == Qt::Key_PageDown )
+  {
+    QgsDebugMsg( "Zoom out" );
+    zoomOut();
+  }
+#if 0
+  else if ( e->key() == Qt::Key_P )
+  {
+    mUseParallelRendering = !mUseParallelRendering;
+    refresh();
+  }
+  else if ( e->key() == Qt::Key_S )
+  {
+    mDrawRenderingStats = !mDrawRenderingStats;
+    refresh();
+  }
+#endif
+  else if ( e->key() == Qt::Key_V && e->modifiers() == Qt::ControlModifier )
+  {
+    emit pasteRequested( getCoordinateTransform()->toMapCoordinates( mCanvasProperties->mouseLastXY ) );
+  }
+  else if ( mMapTool )
+  {
+    mMapTool->keyPressEvent( e );
+  }
+  else
+  {
+    e->ignore();
+    QgsDebugMsg( "Ignoring key: " + QString::number( e->key() ) );
   }
 
   emit keyPressed( e );
@@ -1351,7 +1341,8 @@ void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
     return;
   }
 
-  if(e->button() == Qt::LeftButton) {
+  if ( e->button() == Qt::LeftButton )
+  {
     mCanvasProperties->mouseButtonDown = true;
     mCanvasProperties->rubberStartPoint = e->pos();
   }

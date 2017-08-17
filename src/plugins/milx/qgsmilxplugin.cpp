@@ -155,23 +155,31 @@ void QgsMilXPlugin::paste( const QString &mimeType, const QByteArray &data, cons
   {
     return;
   }
-  QDialog dialog;
-  dialog.setWindowTitle( tr( "Paste MilX Symbols" ) );
-  QGridLayout* layout = new QGridLayout();
-  dialog.setLayout( layout );
-  layout->addWidget( new QLabel( tr( "Destination layer:" ) ), 0, 0, 1, 1 );
-  QgsMilXLayerSelectionWidget* layerWidget = new QgsMilXLayerSelectionWidget( mQGisIface, &dialog );
-  layout->addWidget( layerWidget, 0, 1, 1, 1 );
-  QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
-  connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
-  connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
-  layout->addWidget( bbox, 1, 0, 1, 2 );
-  dialog.setFixedSize( dialog.sizeHint() );
-  if ( dialog.exec() != QDialog::Accepted )
+  QgsMilXLayer* layer = 0;
+  if ( mActiveEditTool )
   {
-    return;
+    layer = mActiveEditTool->targetLayer();
   }
-  QgsMilXLayer* layer = layerWidget->getTargetLayer();
+  if ( !layer )
+  {
+    QDialog dialog;
+    dialog.setWindowTitle( tr( "Paste MilX Symbols" ) );
+    QGridLayout* layout = new QGridLayout();
+    dialog.setLayout( layout );
+    layout->addWidget( new QLabel( tr( "Destination layer:" ) ), 0, 0, 1, 1 );
+    QgsMilXLayerSelectionWidget* layerWidget = new QgsMilXLayerSelectionWidget( mQGisIface, &dialog );
+    layout->addWidget( layerWidget, 0, 1, 1, 1 );
+    QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+    connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
+    connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
+    layout->addWidget( bbox, 1, 0, 1, 2 );
+    dialog.setFixedSize( dialog.sizeHint() );
+    if ( dialog.exec() != QDialog::Accepted )
+    {
+      return;
+    }
+    layer = layerWidget->getTargetLayer();
+  }
   if ( !layer )
   {
     return;

@@ -1126,6 +1126,7 @@ void QgisApp::setupConnections()
            this, SLOT( markDirty() ) );
   connect( mapCanvas(), SIGNAL( layersChanged( QStringList ) ),
            this, SLOT( markDirty() ) );
+  connect( mapCanvas(), SIGNAL( pasteRequested( QgsPoint ) ), this, SLOT( paste( QgsPoint ) ) );
 
   // connect renderer
   connect( mapCanvas(), SIGNAL( hasCrsTransformEnabledChanged( bool ) ),

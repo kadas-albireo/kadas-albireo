@@ -837,15 +837,6 @@ void QgsMilXEditTool::keyPressEvent( QKeyEvent *e )
   {
     copy();
   }
-  else if ( e->key() == Qt::Key_V && e->modifiers() == Qt::ControlModifier )
-  {
-    if ( mIface->clipboard()->hasFormat( QGSCLIPBOARD_MILXITEMS_MIME ) )
-    {
-      QByteArray data = mIface->clipboard()->mimeData()->data( QGSCLIPBOARD_MILXITEMS_MIME );
-      QgsPoint mapPos = toMapCoordinates( mMouseMoveLastXY.toPoint() );
-      paste( data, &mapPos );
-    }
-  }
 }
 
 void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
@@ -912,6 +903,11 @@ void QgsMilXEditTool::paste( const QByteArray &data, const QgsPoint* mapPos )
     mItems.append( item );
   }
   updateRect();
+}
+
+QgsMilXLayer* QgsMilXEditTool::targetLayer() const
+{
+  return mLayer.data();
 }
 
 void QgsMilXEditTool::removeItemFromList()

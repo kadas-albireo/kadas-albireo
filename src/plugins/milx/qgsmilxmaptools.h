@@ -127,6 +127,7 @@ class QgsMilXEditTool : public QgsMapTool
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
     void paste( const QByteArray& data, const QgsPoint *mapPos = 0 );
     int itemCount() const { return mItems.size(); }
+    QgsMilXLayer* targetLayer() const;
 
   signals:
     void itemsChanged();

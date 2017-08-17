@@ -573,6 +573,9 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
     //! Emitted when an annotation item is added to the canvas scene
     void annotationItemChanged( QgsAnnotationItem* item );
 
+    //! Emitted when the users presses CTRL+V, to be handled by QgisApp
+    void pasteRequested( QgsPoint mapPos );
+
   protected:
     //! Overridden standard event to be gestures aware
     bool event( QEvent * e ) override;
