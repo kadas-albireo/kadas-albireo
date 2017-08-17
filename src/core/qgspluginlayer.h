@@ -61,6 +61,8 @@ class CORE_EXPORT QgsPluginLayer : public QgsMapLayer
     virtual void handlePick( const QVariant& /*pick*/ ) {}
     /** Get items in extent */
     virtual QVariantList getItems( const QgsRectangle& /*extent*/ ) const { return QVariantList(); }
+    /** Copy or cut the specified items */
+    virtual void copyItems( const QVariantList& /*items*/, bool /*cut*/ ) {}
     /** Delete the specified items */
     virtual void deleteItems( const QVariantList& /*items*/ ) {}
 

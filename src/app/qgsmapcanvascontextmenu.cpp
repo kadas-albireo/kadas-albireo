@@ -57,6 +57,8 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
   else if ( mPickResult.otherResult.isValid() && dynamic_cast<QgsPluginLayer*>( mPickResult.layer ) )
   {
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editOtherResult() ) );
+    addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutOtherResult() ) );
+    addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyOtherResult() ) );
     addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteOtherResult() ) );
     mRectItem = new QGraphicsRectItem();
     mRectItem->setRect( mPickResult.boundingBox );
@@ -247,6 +249,12 @@ void QgsMapCanvasContextMenu::cutFeature()
   }
 }
 
+void QgsMapCanvasContextMenu::cutOtherResult()
+{
+  static_cast<QgsPluginLayer*>( mPickResult.layer )->copyItems( QVariantList() << mPickResult.otherResult, true );
+  static_cast<QgsPluginLayer*>( mPickResult.layer )->triggerRepaint();
+}
+
 void QgsMapCanvasContextMenu::copyFeature()
 {
   if ( mPickResult.layer )
@@ -268,7 +276,12 @@ void QgsMapCanvasContextMenu::copyFeature()
   }
 }
 
-void QgsMapCanvasContextMenu::pasteFeature()
+void QgsMapCanvasContextMenu::copyOtherResult()
+{
+  static_cast<QgsPluginLayer*>( mPickResult.layer )->copyItems( QVariantList() << mPickResult.otherResult, false );
+}
+
+void QgsMapCanvasContextMenu::paste()
 {
   QgisApp::instance()->paste( QgisApp::instance()->redliningLayer(), &mMapPos );
 }
