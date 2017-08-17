@@ -350,8 +350,10 @@ QgsMapRenderer* QgsMapCanvas::mapRenderer()
 QgsMapLayer* QgsMapCanvas::layer( int index )
 {
   const QStringList& layers = mapSettings().layers();
-  if ( index >= 0 && index < ( int ) layers.size() )
+  if ( index >= 0 && index < layers.size() )
+  {
     return QgsMapLayerRegistry::instance()->mapLayer( layers[index] );
+  }
   else
     return NULL;
 }
