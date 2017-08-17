@@ -17,6 +17,7 @@
 #include "qgisapp.h"
 #include "qgsbottombar.h"
 #include "qgscolorbuttonv2.h"
+#include "qgscrscache.h"
 #include "qgsribbonapp.h"
 #include "qgslayertreemodel.h"
 #include "qgsmapcanvas.h"
@@ -282,6 +283,55 @@ void QgsRedlining::editLabel( const QgsLabelPosition &labelPos )
   mUi.comboFillStyle->setEnabled( false );
   mUi.colorButtonOutlineColor->setEnabled( false );
   mUi.comboOutlineStyle->setEnabled( false );
+}
+
+void QgsRedlining::editFeatures( const QList<QgsFeature> &features )
+{
+  QgsRedliningLayer* layer = getOrCreateLayer();
+  QList<QgsLabelPosition> labels;
+  QgsFeatureList shapes;
+
+  // Try to find labels for labelfeatures
+  const QgsLabelingResults* labelingResults = mApp->mapCanvas()->labelingResults();
+  if ( labelingResults )
+  {
+    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( layer->crs().authid(), mApp->mapCanvas()->mapSettings().destinationCrs().authid() );
+    foreach ( const QgsFeature& feature, features )
+    {
+      // Hacky way to detect a label...
+      if ( feature.attribute( "text" ).isNull() )
+      {
+        shapes.append( feature );
+        continue;
+      }
+      QgsPointV2* layerPos = static_cast<QgsPointV2*>( feature.geometry()->geometry() );
+      QgsPoint mapPos = ct->transform( layerPos->x(), layerPos->y() );
+      foreach ( const QgsLabelPosition& labelPos, labelingResults->labelsAtPosition( mapPos ) )
+      {
+        if ( labelPos.layerID == layer->id() && labelPos.featureId == feature.id() )
+        {
+          labels.append( labelPos );
+          break;
+        }
+      }
+    }
+  }
+  int tot = shapes.size() + labels.size();
+  if ( tot == 1 )
+  {
+    if ( !shapes.isEmpty() )
+    {
+      editFeature( shapes.first() );
+    }
+    else if ( !labels.isEmpty() )
+    {
+      editLabel( labels.first() );
+    }
+  }
+  else if ( tot > 1 )
+  {
+    mApp->mapCanvas()->setMapTool( new QgsRedliningEditGroupMapTool( mApp->mapCanvas(), this, layer, shapes, labels ) );
+  }
 }
 
 void QgsRedlining::checkLayerRemoved( const QString &layerId )

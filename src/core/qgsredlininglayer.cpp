@@ -89,7 +89,7 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore, QgsPoint* targetPos )
+QgsFeatureList QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore, QgsPoint* targetPos )
 {
   const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( featureStore.crs().authid(), crs().authid() );
   QgsFeatureList newFeatures;
@@ -148,8 +148,8 @@ int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore, QgsPo
     }
   }
 
-  bool success = dataProvider()->addFeatures( QgsFeatureList() << newFeatures );
-  return success ? newFeatures.size() : 0;
+  dataProvider()->addFeatures( newFeatures );
+  return newFeatures;
 }
 
 QgsFeatureId QgsRedliningLayer::addFeature( QgsFeature& f )

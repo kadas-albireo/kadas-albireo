@@ -195,6 +195,19 @@ void QgsGPSRouteEditor::editLabel( const QgsLabelPosition &labelPos )
   editFeature( feature );
 }
 
+void QgsGPSRouteEditor::editFeatures( const QList<QgsFeature> &features )
+{
+  int tot = features.size();
+  if ( tot == 1 )
+  {
+    editFeature( features.first() );
+  }
+  else if ( tot > 1 )
+  {
+    mApp->mapCanvas()->setMapTool( new QgsRedliningEditGroupMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), features, QList<QgsLabelPosition>() ) );
+  }
+}
+
 void QgsGPSRouteEditor::checkLayerRemoved( const QString &layerId )
 {
   if ( mLayer && mLayer->id() == layerId )

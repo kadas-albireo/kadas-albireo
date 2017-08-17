@@ -5229,13 +5229,31 @@ void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer, const QgsPoint* mapP
   if ( pasteVectorLayer->type() == QgsMapLayer::RedliningLayer )
   {
     QgsPoint targetPos = mapPos ? QgsCoordinateTransformCache::instance()->transform( mapCanvas()->mapSettings().destinationCrs().authid(), pasteVectorLayer->crs().authid() )->transform( *mapPos ) : QgsPoint();
-    nCopiedFeatures = static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( featureStore, mapPos ? &targetPos : 0 );
+    QgsFeatureList pastedFeatures = static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( featureStore, mapPos ? &targetPos : 0 );
+
+    // Wait for repaint to complete since we need the labels
+    QEventLoop evLoop;
+    connect( mapCanvas(), SIGNAL( renderComplete( QPainter* ) ), &evLoop, SLOT( quit() ) );
+    pasteVectorLayer->triggerRepaint();
+    evLoop.exec( QEventLoop::ExcludeUserInputEvents );
+
+    if ( pasteVectorLayer == mRedlining->getLayer() )
+    {
+      mRedlining->editFeatures( pastedFeatures );
+    }
+    else if ( pasteVectorLayer == mGpsRouteEditor->getLayer() )
+    {
+      mGpsRouteEditor->editFeatures( pastedFeatures );
+    }
+
+    nCopiedFeatures = pastedFeatures.size();
   }
   else
   {
     pasteVectorLayer->beginEditCommand( tr( "Features pasted" ) );
     nCopiedFeatures = pasteVectorLayer->addFeatures( featureStore );
     pasteVectorLayer->endEditCommand();
+    pasteVectorLayer->triggerRepaint();
   }
 
   if ( nCopiedFeatures == 0 )
@@ -5257,8 +5275,6 @@ void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer, const QgsPoint* mapP
                                tr( "%1 of %2 features could be successfully pasted." ).arg( nCopiedFeatures ).arg( nTotalFeatures ),
                                QgsMessageBar::WARNING, messageTimeout() );
   }
-
-  pasteVectorLayer->triggerRepaint();
 }
 
 void QgisApp::pasteSvgImage( const QgsPoint *mapPos )

@@ -29,6 +29,7 @@ class QgsRedliningManager : public QObject
     virtual ~QgsRedliningManager();
     virtual void editFeature( const QgsFeature &feature ) = 0;
     virtual void editLabel( const QgsLabelPosition &labelPos ) = 0;
+    virtual void editFeatures( const QList<QgsFeature>& features ) = 0;
 };
 
 #endif // QGSREDLININGMANAGER_H
