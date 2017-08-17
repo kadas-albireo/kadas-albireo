@@ -13,6 +13,7 @@ SET (qgs_milx_SRCS
   qgsmilxlibrary.cpp
   qgsmilxio.cpp
   qgsmilxlayer.cpp
+  qgsmilxutils.cpp
   MilXClient.cpp
 )
 
@@ -27,6 +28,7 @@ SET (qgs_milx_MOC_HDRS
   qgsmilxio.h
   qgsmilxlayer.h
   qgsmilxlibrary.h
+  qgsmilxutils.h
   MilXClient.hpp
 )
 

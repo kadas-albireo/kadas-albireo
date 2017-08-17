@@ -22,6 +22,7 @@
 #include "qgsmilxannotationitem.h"
 #include "qgsmilxio.h"
 #include "qgsmilxlayer.h"
+#include "qgsmilxutils.h"
 #include "qgisinterface.h"
 #include "layertree/qgslayertreeview.h"
 #include "qgsmapcanvas.h"
@@ -61,15 +62,9 @@ QgsMilxCreateBottomBar::QgsMilxCreateBottomBar( QgsMilXCreateTool *tool, QgsMilX
 
   layout->addWidget( new QLabel( tr( "<b>Layer:</b>" ) ) );
 
-  mLayersCombo = new QComboBox( this );
-  mLayersCombo->setFixedWidth( 100 );
-  connect( mLayersCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setCurrentLayer( int ) ) );
-  layout->addWidget( mLayersCombo );
-
-  QToolButton* newLayerButton = new QToolButton();
-  newLayerButton->setIcon( QIcon( ":/images/themes/default/mActionAdd.png" ) );
-  connect( newLayerButton, SIGNAL( clicked( bool ) ), this, SLOT( createLayer() ) );
-  layout->addWidget( newLayerButton );
+  QgsMilXLayerSelectionWidget* layerWidget = new QgsMilXLayerSelectionWidget( mTool->mIface, this );
+  connect( layerWidget, SIGNAL( targetLayerChanged( QgsMilXLayer* ) ), mTool, SLOT( setTargetLayer( QgsMilXLayer* ) ) );
+  layout->addWidget( layerWidget );
 
   layout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
 
@@ -77,100 +72,17 @@ QgsMilxCreateBottomBar::QgsMilxCreateBottomBar( QgsMilXCreateTool *tool, QgsMilX
   closeButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
   closeButton->setIcon( QIcon( ":/images/themes/default/mIconClose.png" ) );
   closeButton->setToolTip( tr( "Close" ) );
-  connect( closeButton, SIGNAL( clicked( bool ) ), this, SLOT( onClose() ) );
+  connect( closeButton, SIGNAL( clicked( bool ) ), mTool, SLOT( deleteLater() ) );
   layout->addWidget( closeButton );
 
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
-  connect( mTool->mIface->mapCanvas(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setCurrentLayer( QgsMapLayer* ) ) );
   connect( mSymbolButton, SIGNAL( clicked( bool ) ), this, SLOT( toggleLibrary( bool ) ) );
   connect( library, SIGNAL( symbolSelected( QgsMilxSymbolTemplate ) ), this, SLOT( symbolSelected( QgsMilxSymbolTemplate ) ) );
   connect( library, SIGNAL( visibilityChanged( bool ) ), mSymbolButton, SLOT( setChecked( bool ) ) );
-
-  repopulateLayers();
-
-  // Auto-create layer if necessary
-  if ( mLayersCombo->count() == 0 )
-  {
-    QgsMilXLayer* layer = new QgsMilXLayer( mTool->mIface->layerTreeView()->menuProvider() );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    setCurrentLayer( layer );
-  }
 
   show();
   setFixedWidth( width() );
   updatePosition();
   toggleLibrary( true );
-}
-
-void QgsMilxCreateBottomBar::repopulateLayers()
-{
-  // Avoid update while updating
-  if ( mLayersCombo->signalsBlocked() )
-  {
-    return;
-  }
-  mLayersCombo->blockSignals( true );
-  mLayersCombo->clear();
-  int idx = 0, current = 0;
-  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
-  {
-    if ( dynamic_cast<QgsMilXLayer*>( layer ) )
-    {
-      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( repopulateLayers() ), Qt::UniqueConnection );
-      mLayersCombo->addItem( layer->name(), layer->id() );
-      if ( mTool->mIface->mapCanvas()->currentLayer() == layer )
-      {
-        current = idx;
-      }
-      ++idx;
-    }
-  }
-  mLayersCombo->setCurrentIndex( -1 );
-  mLayersCombo->blockSignals( false );
-  mLayersCombo->setCurrentIndex( current );
-}
-
-void QgsMilxCreateBottomBar::setCurrentLayer( int idx )
-{
-  if ( idx >= 0 )
-  {
-    QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QgsMapLayerRegistry::instance()->mapLayer( mLayersCombo->itemData( idx ).toString() ) );
-    if ( layer && mTool->mIface->layerTreeView()->currentLayer() != layer )
-    {
-      mTool->mIface->layerTreeView()->setCurrentLayer( layer );
-    }
-    mTool->setTargetLayer( layer );
-  }
-  else
-  {
-    mTool->setTargetLayer( 0 );
-  }
-}
-
-void QgsMilxCreateBottomBar::setCurrentLayer( QgsMapLayer *layer )
-{
-  int idx = layer ? mLayersCombo->findData( layer->id() ) : -1;
-  if ( idx >= 0 )
-  {
-    mLayersCombo->setCurrentIndex( idx );
-  }
-}
-
-void QgsMilxCreateBottomBar::onClose()
-{
-  mTool->deleteLater();
-}
-
-void QgsMilxCreateBottomBar::createLayer()
-{
-  QString layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new MilX layer:" ) );
-  if ( !layerName.isEmpty() )
-  {
-    QgsMilXLayer* layer = new QgsMilXLayer( mTool->mIface->layerTreeView()->menuProvider(), layerName );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer );
-    setCurrentLayer( layer );
-  }
 }
 
 void QgsMilxCreateBottomBar::symbolSelected( const QgsMilxSymbolTemplate &symbolTemplate )
@@ -540,10 +452,7 @@ QgsMilxEditBottomBar::QgsMilxEditBottomBar( QgsMilXEditTool *tool )
   layout->addWidget( closeButton );
 
   connect( mTool, SIGNAL( itemsChanged() ), this, SLOT( updateStatus() ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
-  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
 
-  repopulateLayers();
   show();
   updateStatus();
 }

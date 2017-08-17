@@ -25,7 +25,6 @@
 #include <QPointer>
 
 class QgsBottomBar;
-class QComboBox;
 class QGraphicsRectItem;
 class QPushButton;
 class QWidgetAction;
@@ -46,15 +45,9 @@ class QgsMilxCreateBottomBar : public QgsBottomBar
   private:
     QgsMilXCreateTool* mTool;
     QToolButton* mSymbolButton;
-    QComboBox* mLayersCombo;
     QgsMilXLibrary* mLibrary;
 
   private slots:
-    void onClose();
-    void createLayer();
-    void repopulateLayers();
-    void setCurrentLayer( int idx );
-    void setCurrentLayer( QgsMapLayer* layer );
     void symbolSelected( const QgsMilxSymbolTemplate& symbolTemplate );
     void toggleLibrary( bool visible );
 };
@@ -79,7 +72,6 @@ class QgsMilXCreateTool : public QgsMapTool
     QgsMilXLayer* mLayer;
     QgsFloatingInputWidget* mInputWidget;
 
-    void setTargetLayer( QgsMilXLayer* layer );
     void setSymbolTemplate( const QgsMilxSymbolTemplate& symbolTemplate );
     void initializeItem( const QgsPoint &position );
     void finalizeItem();
@@ -89,6 +81,7 @@ class QgsMilXCreateTool : public QgsMapTool
     void updateAttribute();
     void updatePoint();
     void confirmPoint();
+    void setTargetLayer( QgsMilXLayer* layer );
 };
 
 class QgsMilxEditBottomBar : public QgsBottomBar
