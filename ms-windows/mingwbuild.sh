@@ -43,23 +43,25 @@ installprefix="$installroot/usr/$arch-w64-mingw32/sys-root/mingw"
 rm -rf "$installroot"
 
 # Build
-mkdir -p $builddir
-(
-    cd $builddir
-    mingw$bits-cmake \
-        -DENABLE_QT5=$useqt5 \
-        -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
-        -DWINDRES=$arch-w64-mingw32-windres \
-        -DWITH_INTERNAL_QWTPOLAR=1 \
-        -DWITH_GLOBE=1 \
-        -DNATIVE_CRSSYNC_BIN=$srcdir/build/output/bin/crssync \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DQGIS_BIN_SUBDIR=bin \
-        -DQGIS_LIBEXEC_SUBDIR=bin \
-        -DQGIS_DATA_SUBDIR=share/qgis \
-        -DQGIS_PLUGIN_SUBDIR=bin/qgisplugins \
-        -DBINDINGS_GLOBAL_INSTALL=TRUE ..
-)
+if [ ! -e $builddir ]; then
+  mkdir -p $builddir
+  (
+      cd $builddir
+      mingw$bits-cmake \
+          -DENABLE_QT5=$useqt5 \
+          -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
+          -DWINDRES=$arch-w64-mingw32-windres \
+          -DWITH_INTERNAL_QWTPOLAR=1 \
+          -DWITH_GLOBE=1 \
+          -DNATIVE_CRSSYNC_BIN=$srcdir/build_qt5/output/bin/crssync \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DQGIS_BIN_SUBDIR=bin \
+          -DQGIS_LIBEXEC_SUBDIR=bin \
+          -DQGIS_DATA_SUBDIR=share/qgis \
+          -DQGIS_PLUGIN_SUBDIR=bin/qgisplugins \
+          -DBINDINGS_GLOBAL_INSTALL=TRUE ..
+  )
+fi
 
 mingw$bits-make -C$builddir -j12 DESTDIR="${installroot}" install
 
@@ -151,6 +153,7 @@ elif [ "$qt" == "qt5" ]; then
   linkDep lib/qt5/plugins/imageformats/qtiff.dll bin/imageformats
   linkDep lib/qt5/plugins/imageformats/qwbmp.dll bin/imageformats
   linkDep lib/qt5/plugins/imageformats/qwebp.dll bin/imageformats
+  linkDep lib/qt5/plugins/imageformats/qsvg.dll  bin/imageformats
   linkDep lib/qt5/plugins/platforms/qwindows.dll bin/platforms
 
   mkdir -p $installprefix/share/qt5/translations/
@@ -162,6 +165,13 @@ fi
 cd $MINGWROOT
 for file in $(find lib/python2.7 -type f); do
     mkdir -p $p $installprefix/$(dirname $file)
-    ln -s $MINGWROOT/$file $installprefix/$file
+    ln -sf $MINGWROOT/$file $installprefix/$file
 done
 )
+
+# Osg plugins
+ln -sf $MINGWROOT/bin/osgPlugins-3.5.5 $installprefix/bin/osgPlugins-3.5.5
+
+# Data files
+mkdir -p $installprefix/share/
+ln -sf /usr/share/gdal $installprefix/share/gdal
