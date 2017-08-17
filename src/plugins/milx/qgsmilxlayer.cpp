@@ -426,6 +426,20 @@ void QgsMilXLayer::deleteItems( const QVariantList &items )
   }
 }
 
+void QgsMilXLayer::copyItems( const QVariantList& items, bool cut )
+{
+  QVector<int> indices;
+  foreach ( const QVariant& item, items )
+  {
+    indices.append( item.toInt() );
+  }
+  emit copySymbols( indices );
+  if ( cut && !isApproved() )
+  {
+    deleteItems( items );
+  }
+}
+
 void QgsMilXLayer::invalidateBillboards()
 {
   foreach ( QgsMilXItem* item, mItems )

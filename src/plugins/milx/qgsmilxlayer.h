@@ -93,12 +93,14 @@ class QGS_MILX_EXPORT QgsMilXLayer : public QgsPluginLayer
     bool testPick( const QgsPoint& mapPos, const QgsMapSettings& mapSettings, QVariant& pickResult, QRect &pickResultsExtent ) override;
     void handlePick( const QVariant& pick ) override;
     QVariantList getItems( const QgsRectangle& extent ) const override;
+    void copyItems( const QVariantList& items, bool cut ) override;
     void deleteItems( const QVariantList& items ) override;
 
     void invalidateBillboards();
 
   signals:
     void symbolPicked( int symbolIdx );
+    void copySymbols( QVector<int> symbolIndices );
     void approvedChanged( bool approved );
 
   protected:

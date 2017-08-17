@@ -199,6 +199,7 @@ void QgsMilXPlugin::connectPickHandlers()
     if ( milxLayer )
     {
       connect( milxLayer, SIGNAL( symbolPicked( int ) ), this, SLOT( manageSymbolPick( int ) ), Qt::UniqueConnection );
+      connect( milxLayer, SIGNAL( copySymbols( QVector<int> ) ), this, SLOT( manageSymbolCopy( QVector<int> ) ), Qt::UniqueConnection );
     }
   }
 }
@@ -220,6 +221,21 @@ void QgsMilXPlugin::manageSymbolPick( int symbolIdx )
   mQGisIface->mapCanvas()->setMapTool( tool );
   layer->triggerRepaint();
   mActiveEditTool = tool;
+}
+
+void QgsMilXPlugin::manageSymbolCopy( QVector<int> symbolIndices )
+{
+  QgsMilXLayer* layer = qobject_cast<QgsMilXLayer*>( QObject::sender() );
+  if ( !layer )
+  {
+    return;
+  }
+  QList<QgsMilXItem*> milxItems;
+  foreach ( int idx, symbolIndices )
+  {
+    milxItems.append( layer->items()[idx] );
+  }
+  QgsMilXIO::copyToClipboard( milxItems, mQGisIface );
 }
 
 void QgsMilXPlugin::setApprovedLayer( bool approved )
