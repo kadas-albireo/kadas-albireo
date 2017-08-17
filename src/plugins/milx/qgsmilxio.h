@@ -23,6 +23,9 @@
 class QgisInterface;
 class QgsMessageBar;
 class QgsMilXLayer;
+class QgsMilXItem;
+
+#define QGSCLIPBOARD_MILXITEMS_MIME "application/qgis.milxitems"
 
 class QgsMilXIO : public QObject
 {
@@ -30,6 +33,7 @@ class QgsMilXIO : public QObject
   public:
     static bool save( QgisInterface *iface );
     static bool load( QgisInterface *iface );
+    static void copyToClipboard( const QList<QgsMilXItem*>& milxItems, QgisInterface *iface );
   private:
     static void showMessageDialog( const QString& title, const QString& body, const QString& messages );
 };

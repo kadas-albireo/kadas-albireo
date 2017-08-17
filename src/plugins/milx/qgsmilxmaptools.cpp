@@ -15,17 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgsclipboard.h"
 #include "qgscrscache.h"
 #include "qgsfloatinginputwidget.h"
 #include "qgsmilxmaptools.h"
 #include "qgsmilxannotationitem.h"
+#include "qgsmilxio.h"
 #include "qgsmilxlayer.h"
 #include "qgisinterface.h"
 #include "layertree/qgslayertreeview.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 
+#include <QApplication>
 #include <QComboBox>
+#include <QDesktopWidget>
 #include <QGraphicsRectItem>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -649,7 +653,6 @@ QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, Qgs
 
 QgsMilXEditTool::~QgsMilXEditTool()
 {
-  qDeleteAll( mClipboard );
   delete mBottomBar;
   delete mRectItem;
   delete mInputWidget;
@@ -921,7 +924,12 @@ void QgsMilXEditTool::keyPressEvent( QKeyEvent *e )
   }
   else if ( e->key() == Qt::Key_V && e->modifiers() == Qt::ControlModifier )
   {
-    paste();
+    if ( mIface->clipboard()->hasFormat( QGSCLIPBOARD_MILXITEMS_MIME ) )
+    {
+      QByteArray data = mIface->clipboard()->mimeData()->data( QGSCLIPBOARD_MILXITEMS_MIME );
+      QgsPoint mapPos = toMapCoordinates( mMouseMoveLastXY.toPoint() );
+      paste( data, &mapPos );
+    }
   }
 }
 
@@ -945,51 +953,50 @@ void QgsMilXEditTool::deleteAll()
 
 void QgsMilXEditTool::copy()
 {
-  qDeleteAll( mClipboard );
-  mClipboard.clear();
-  mClipboardItemOffsets.clear();
-  double cx = 0, cy = 0;
+  QList<QgsMilXItem*> milxItems;
   foreach ( QgsMilXAnnotationItem* item, mItems )
   {
-    mClipboard.append( item->toMilxItem() );
-    mClipboardItemOffsets.append( mClipboard.back()->points()[0] );
-    cx += mClipboardItemOffsets.back().x();
-    cy += mClipboardItemOffsets.back().y();
+    milxItems.append( item->toMilxItem() );
   }
-  int n = mClipboardItemOffsets.size();
-  cx /= n; cy /= n;
-  for ( int i = 0; i < n; ++i )
-  {
-    mClipboardItemOffsets[i] -= QgsVector( cx, cy );
-  }
+  QgsMilXIO::copyToClipboard( milxItems, mIface );
+  qDeleteAll( milxItems );
 }
 
-void QgsMilXEditTool::paste()
+void QgsMilXEditTool::paste( const QByteArray &data, const QgsPoint* mapPos )
 {
-  if ( !mClipboard.isEmpty() )
+  mItems.clear();
+
+  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), "EPSG:4326" );
+  QgsPoint pastePosWgs = mapPos ? crst->transform( *mapPos ) : QgsPoint();
+
+  QDomDocument doc;
+  doc.setContent( data );
+
+  QDomElement symbolGroup = doc.firstChildElement( "SymbolGroup" );
+
+  int dpi = QApplication::desktop()->logicalDpiX();
+  float symbolSize = symbolGroup.firstChildElement( "SymbolSize" ).text().toFloat(); // This is in mm
+  symbolSize = ( symbolSize * dpi ) / 25.4; // mm to px
+
+  QDomElement itemsEl = symbolGroup.firstChildElement( "GraphicList" );
+  QDomNodeList itemsList = itemsEl.elementsByTagName( "MilXGraphic" );
+  for ( int i = 0, n = itemsList.size(); i < n; ++i )
   {
-    // Clear current selection
-    foreach ( QgsMilXAnnotationItem* item, mItems )
+    QDomElement itemEl = itemsList.at( i ).toElement();
+    QgsVector offset( itemEl.attribute( "offsetX" ).toDouble(), itemEl.attribute( "offsetY" ).toDouble() );
+    QgsMilXItem milxItem;
+    milxItem.readMilx( itemEl, 0, symbolSize );
+    QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( canvas() );
+    item->fromMilxItem( &milxItem );
+    item->setSelected( true );
+    if ( mapPos )
     {
-      mLayer->addItem( item->toMilxItem() );
-      item->setSelected( false );
-      connect( mCanvas, SIGNAL( mapCanvasRefreshed() ), item, SLOT( deleteLater() ) );
+      item->setMapPosition( crst->transform( pastePosWgs + offset, QgsCoordinateTransform::ReverseTransform ) );
     }
-    mItems.clear();
-    // Add new items
-    const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), "EPSG:4326" );
-    QgsPoint pastePosWgs = crst->transform( toMapCoordinates( mMouseMoveLastXY.toPoint() ) );
-    for ( int i = 0, n = mClipboard.size(); i < n; ++i )
-    {
-      QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( canvas() );
-      item->fromMilxItem( mClipboard[i] );
-      item->setSelected( true );
-      item->setMapPosition( crst->transform( pastePosWgs + mClipboardItemOffsets[i], QgsCoordinateTransform::ReverseTransform ) );
-      connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
-      mItems.append( item );
-    }
-    updateRect();
+    connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
+    mItems.append( item );
   }
+  updateRect();
 }
 
 void QgsMilXEditTool::removeItemFromList()

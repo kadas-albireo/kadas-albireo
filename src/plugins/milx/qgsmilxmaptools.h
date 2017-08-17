@@ -132,6 +132,7 @@ class QgsMilXEditTool : public QgsMapTool
     void canvasReleaseEvent( QMouseEvent * e ) override;
     void keyPressEvent( QKeyEvent *e ) override;
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
+    void paste( const QByteArray& data, const QgsPoint *mapPos = 0 );
 
   signals:
     void itemsChanged();
@@ -141,8 +142,6 @@ class QgsMilXEditTool : public QgsMapTool
     QgisInterface* mIface;
     QgsMilxEditBottomBar* mBottomBar;
     QList<QgsMilXAnnotationItem*> mItems;
-    QList<QgsMilXItem*> mClipboard;
-    QList<QgsVector> mClipboardItemOffsets;
     QPointer<QgsMilXLayer> mLayer;
     QGraphicsRectItem* mRectItem;
     QPointF mMouseMoveLastXY;
@@ -156,7 +155,6 @@ class QgsMilXEditTool : public QgsMapTool
 
   private slots:
     void copy();
-    void paste();
     void deleteAll();
     void removeItemFromList();
     void updateRect();

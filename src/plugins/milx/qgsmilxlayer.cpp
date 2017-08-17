@@ -147,11 +147,8 @@ QList<QPair<int, double> > QgsMilXItem::screenAttributes( const QgsMapToPixel& m
   return screenAttribs;
 }
 
-void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const
+void QgsMilXItem::writeMilx( QDomDocument& doc, QDomElement& graphicEl ) const
 {
-  QDomElement graphicEl = doc.createElement( "MilXGraphic" );
-  graphicListEl.appendChild( graphicEl );
-
   QDomElement stringXmlEl = doc.createElement( "MssStringXML" );
   stringXmlEl.appendChild( doc.createTextNode( mMssString ) );
   graphicEl.appendChild( stringXmlEl );
@@ -463,7 +460,9 @@ void QgsMilXLayer::exportToMilxly( QDomElement& milxLayerEl, int dpi )
 
   foreach ( const QgsMilXItem* item, mItems )
   {
-    item->writeMilx( doc, graphicListEl );
+    QDomElement graphicEl = doc.createElement( "MilXGraphic" );
+    item->writeMilx( doc, graphicEl );
+    graphicListEl.appendChild( graphicEl );
   }
 
   QDomElement crsEl = doc.createElement( "CoordSystemType" );

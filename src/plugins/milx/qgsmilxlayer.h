@@ -53,7 +53,7 @@ class QGS_MILX_EXPORT QgsMilXItem
     const QPoint& userOffset() const { return mUserOffset; }
     bool isMultiPoint() const { return mPoints.size() > 1 || !mAttributes.isEmpty(); }
 
-    void writeMilx( QDomDocument& doc, QDomElement& graphicListEl ) const;
+    void writeMilx( QDomDocument& doc, QDomElement& graphicEl ) const;
     void readMilx( const QDomElement& graphicEl, const QgsCoordinateTransform *crst, int symbolSize );
 
   private:
