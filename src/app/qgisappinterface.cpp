@@ -677,6 +677,16 @@ int QgisAppInterface::messageTimeout()
   return qgis->messageTimeout();
 }
 
+void QgisAppInterface::addPasteHandler( const QString& mimeType, QgsPasteHandler* handler )
+{
+  qgis->addPasteHandler( mimeType, handler );
+}
+
+void QgisAppInterface::removePasteHandler( const QString& mimeType, QgsPasteHandler* handler )
+{
+  qgis->removePasteHandler( mimeType, handler );
+}
+
 void QgisAppInterface::registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
 {
   qgis->registerMapLayerPropertiesFactory( factory );

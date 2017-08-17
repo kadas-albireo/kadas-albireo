@@ -191,6 +191,7 @@
 #include "qgssnappingdialog.h"
 #include "qgssourceselectdialog.h"
 #include "qgssponsors.h"
+#include "qgssvgannotationitem.h"
 #include "qgstemporaryfile.h"
 #include "qgstipgui.h"
 #include "qgsundowidget.h"
@@ -5163,7 +5164,7 @@ void QgisApp::addPart()
 }
 
 
-void QgisApp::editCut( QgsMapLayer * layerContainingSelection )
+void QgisApp::cutFeatures( QgsMapLayer * layerContainingSelection )
 {
   // Test for feature support in this layer
   QgsVectorLayer* selectionVectorLayer = qobject_cast<QgsVectorLayer *>( layerContainingSelection ? layerContainingSelection : activeLayer() );
@@ -5177,7 +5178,7 @@ void QgisApp::editCut( QgsMapLayer * layerContainingSelection )
   selectionVectorLayer->endEditCommand();
 }
 
-void QgisApp::editCopy( QgsMapLayer * layerContainingSelection )
+void QgisApp::copyFeatures( QgsMapLayer * layerContainingSelection )
 {
   QgsVectorLayer* selectionVectorLayer = qobject_cast<QgsVectorLayer *>( layerContainingSelection ? layerContainingSelection : activeLayer() );
   if ( !selectionVectorLayer )
@@ -5192,7 +5193,30 @@ void QgisApp::clipboardChanged()
   activateDeactivateLayerRelatedActions( activeLayer() );
 }
 
-void QgisApp::editPaste( QgsMapLayer *destinationLayer )
+void QgisApp::paste( QgsMapLayer *destinationLayer, const QgsPoint *mapPos )
+{
+  if ( clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME ) )
+  {
+    pasteFeatures( destinationLayer );
+    return;
+  }
+  if ( clipboard()->hasFormat( "image/svg+xml" ) )
+  {
+    pasteSvgImage( mapPos );
+    return;
+  }
+  foreach ( const QString& format, mPasteHandlers.keys() )
+  {
+    if ( clipboard()->hasFormat( format ) )
+    {
+      mPasteHandlers[format]->paste( format, clipboard()->mimeData()->data( format ), mapPos );
+      return;
+    }
+  }
+  messageBar()->pushMessage( tr( "No supported data in clipboard" ), "", QgsMessageBar::WARNING, 5 );
+}
+
+void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer )
 {
   QgsVectorLayer *pasteVectorLayer = qobject_cast<QgsVectorLayer *>( destinationLayer ? destinationLayer : activeLayer() );
   if ( !pasteVectorLayer )
@@ -5235,9 +5259,29 @@ void QgisApp::editPaste( QgsMapLayer *destinationLayer )
   pasteVectorLayer->triggerRepaint();
 }
 
-bool QgisApp::editCanPaste()
+void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
 {
-  return clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME );
+  const QMimeData* mimeData = QApplication::clipboard()->mimeData();
+  QString filename = QgsTemporaryFile::createNewFile( "pasted_image.svg" );
+  QFile file( filename );
+  if ( file.open( QIODevice::WriteOnly ) )
+  {
+    QgsPoint insPos = mapPos ? *mapPos : mapCanvas()->extent().center();
+    file.write( mimeData->data( "image/svg+xml" ) );
+    file.close();
+    QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
+    item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
+    item->setFilePath( filename );
+    item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
+    item->setSelected( true );
+    messageBar()->pushMessage( tr( "Image Pasted" ), "", QgsMessageBar::INFO, 5 );
+    QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
+  }
+}
+
+bool QgisApp::canPaste()
+{
+  return !clipboard()->isEmpty();
 }
 
 void QgisApp::pasteAsNewVector()
@@ -5439,7 +5483,7 @@ void QgisApp::copyStyle( QgsMapLayer * sourceLayer )
     QMimeData* mimeData = new QMimeData();
     mimeData->setData( QGSCLIPBOARD_STYLE_MIME, doc.toByteArray() );
     mimeData->setData( "text/plain", doc.toString().toLocal8Bit() );
-    clipboard()->setData( mimeData );
+    clipboard()->setMimeData( mimeData );
   }
 }
 
@@ -5453,7 +5497,7 @@ void QgisApp::pasteStyle( QgsMapLayer * destinationLayer )
       QDomDocument doc( "qgis" );
       QString errorMsg;
       int errorLine, errorColumn;
-      const QMimeData* mimeData = clipboard()->data();
+      const QMimeData* mimeData = clipboard()->mimeData();
       if ( !doc.setContent( mimeData->data( QGSCLIPBOARD_STYLE_MIME ), false, &errorMsg, &errorLine, &errorColumn ) )
       {
         QMessageBox::information( this,
@@ -6788,6 +6832,19 @@ void QgisApp::registerMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* f
 void QgisApp::unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory )
 {
   mMapLayerPropertiesFactories.removeAll( factory );
+}
+
+void QgisApp::addPasteHandler( const QString& mimeType, QgsPasteHandler* handler )
+{
+  mPasteHandlers.insert( mimeType, handler );
+}
+
+void QgisApp::removePasteHandler( const QString& mimeType, QgsPasteHandler* handler )
+{
+  if ( mPasteHandlers.value( mimeType, 0 ) == handler )
+  {
+    mPasteHandlers.remove( mimeType );
+  }
 }
 
 /** Get a pointer to the currently selected map layer */

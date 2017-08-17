@@ -87,6 +87,8 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
   }
   else if ( mPickResult.labelPos.featureId != -1 && mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
   {
+    addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
+    addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editLabel() ) );
     addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLabel() ) );
     mRubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
@@ -105,9 +107,9 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( rasterAttributes() ) );
     addSeparator();
 
-    if ( QgisApp::instance()->editCanPaste() )
+    if ( QgisApp::instance()->canPaste() )
     {
-      addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( pasteFeature() ) );
+      addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( paste() ) );
     }
     QMenu* drawMenu = new QMenu();
     addAction( tr( "Draw" ) )->setMenu( drawMenu );
@@ -230,7 +232,7 @@ void QgsMapCanvasContextMenu::cutFeature()
     QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
     vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
     vlayer->startEditing();
-    QgisApp::instance()->editCut( vlayer );
+    QgisApp::instance()->cutFeatures( vlayer );
     vlayer->commitChanges();
     vlayer->setSelectedFeatures( prevSelection );
   }
@@ -243,14 +245,14 @@ void QgsMapCanvasContextMenu::copyFeature()
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
     QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
     vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
-    QgisApp::instance()->editCopy( vlayer );
+    QgisApp::instance()->copyFeatures( vlayer );
     vlayer->setSelectedFeatures( prevSelection );
   }
 }
 
 void QgsMapCanvasContextMenu::pasteFeature()
 {
-  QgisApp::instance()->editPaste( QgisApp::instance()->redliningLayer() );
+  QgisApp::instance()->paste( QgisApp::instance()->redliningLayer(), &mMapPos );
 }
 
 void QgsMapCanvasContextMenu::drawPin()

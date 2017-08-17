@@ -96,7 +96,7 @@ void TestQgisAppClipboard::copyPaste()
 
     // copy all features to clipboard
     inputLayer->selectAll();
-    mQgisApp->editCopy( inputLayer );
+    mQgisApp->copyFeatures( inputLayer );
 
     const QgsFeatureStore& featureStore = mQgisApp->clipboard()->getStoredFeatures();
     qDebug() << featureStore.features().size() << " features copied to clipboard";

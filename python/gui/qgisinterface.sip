@@ -504,6 +504,9 @@ class QgisInterface : QObject
     /** Get timeout for timed messages: default of 5 seconds */
     virtual int messageTimeout() = 0;
 
+    virtual void addPasteHandler(const QString& mimeType, QgsPasteHandler* handler) = 0;
+    virtual void removePasteHandler(const QString& mimeType, QgsPasteHandler* handler) = 0;
+
   signals:
     /** Emitted whenever current (selected) layer changes.
      *  The pointer to layer can be null if no layer is selected

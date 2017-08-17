@@ -18,6 +18,7 @@
 #include "qgsribbonapp.h"
 #include "qgsannotationlayer.h"
 #include "qgsattributetabledialog.h"
+#include "qgsclipboard.h"
 #include "qgscomposer.h"
 #include "qgscoordinatedisplayer.h"
 #include "qgsdecorationgrid.h"
@@ -34,12 +35,10 @@
 #include "qgsredlining.h"
 #include "qgsribbonlayertreeviewmenuprovider.h"
 #include "qgsproject.h"
-#include "qgstemporaryfile.h"
-#include "qgssnappingutils.h"
 #include "qgssvgannotationitem.h"
+#include "qgssnappingutils.h"
 #include "qgsundowidget.h"
 
-#include <QClipboard>
 #include <QDrag>
 #include <QFileDialog>
 #include <QImageReader>
@@ -199,6 +198,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mZoomInButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomIn() ) );
   connect( mZoomOutButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomOut() ) );
   connect( mHomeButton, SIGNAL( clicked( bool ) ), this, SLOT( zoomFull() ) );
+  connect( clipboard(), SIGNAL( dataChanged() ), this, SLOT( checkCanPaste() ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -446,11 +446,12 @@ void QgsRibbonApp::configureButtons()
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   setActionToButton( mActionPin, mPinButton, mMapTools.mPinAnnotation );
 
-  connect( mActionAddCameraPicture, SIGNAL( triggered( bool ) ), this, SLOT( addCameraPicture() ) );
-  setActionToButton( mActionAddCameraPicture, mAddPictureButton );
+  connect( mActionAddImage, SIGNAL( triggered( bool ) ), this, SLOT( addImage() ) );
+  setActionToButton( mActionAddImage, mAddImageButton );
 
-  connect( mActionPasteImage, SIGNAL( triggered( bool ) ), this, SLOT( pasteImage() ) );
-  setActionToButton( mActionPasteImage, mPasteImageButton );
+  connect( mActionPaste, SIGNAL( triggered( bool ) ), this, SLOT( paste() ) );
+  setActionToButton( mActionPaste, mPasteButton );
+  mActionPaste->setEnabled( canPaste() );
 
   connect( mActionDeleteItems, SIGNAL( triggered( bool ) ), this, SLOT( deleteItems( bool ) ) );
   setActionToButton( mActionDeleteItems, mDeleteItemsButton, mMapTools.mDeleteItems );
@@ -567,7 +568,7 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QStringList& prevLayers )
   }
 }
 
-void QgsRibbonApp::addCameraPicture()
+void QgsRibbonApp::addImage()
 {
   pan(); // Ensure pan tool is active
 
@@ -577,42 +578,28 @@ void QgsRibbonApp::addCameraPicture()
   {
     formats.insert( QString( "*.%1" ).arg( QString( format ).toLower() ) );
   }
-  QString filter = QString( "Camera pictures (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
-  QString filename = QFileDialog::getOpenFileName( this, tr( "Select Camera Picture" ), lastDir, filter );
-  if ( !filename.isEmpty() )
-  {
-    QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
-    QString errMsg;
-    if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, &errMsg ) )
-    {
-      mInfoBar->pushCritical( tr( "Could not add picture" ), errMsg );
-    }
-  }
-}
+  formats.insert( "*.svg" ); // Ensure svg is present
 
-void QgsRibbonApp::pasteImage()
-{
-  const QMimeData* mimeData = QApplication::clipboard()->mimeData();
-  if ( mimeData && mimeData->hasFormat( "image/svg+xml" ) )
+  QString filter = QString( "Images (%1)" ).arg( QStringList( formats.toList() ).join( " " ) );
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Select Image" ), lastDir, filter );
+  if ( filename.isEmpty() )
   {
-    QString filename = QgsTemporaryFile::createNewFile( "pasted_image.svg" );
-    QFile file( filename );
-    if ( file.open( QIODevice::WriteOnly ) )
-    {
-      file.write( mimeData->data( "image/svg+xml" ) );
-      file.close();
-      QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
-      item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
-      item->setFilePath( filename );
-      item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
-      item->setSelected( true );
-      messageBar()->pushMessage( tr( "Image Pasted" ), "", QgsMessageBar::INFO, 5 );
-      QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", "SVG Symbols" )->addItem( item );
-    }
+    return;
   }
-  else
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
+  QString errMsg;
+  if ( filename.endsWith( ".svg", Qt::CaseInsensitive ) )
   {
-    messageBar()->pushMessage( tr( "No supported image data in clipboard" ), "", QgsMessageBar::WARNING, 5 );
+    QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
+    item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
+    item->setFilePath( filename );
+    item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
+    item->setSelected( true );
+    QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
+  }
+  else if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, &errMsg ) )
+  {
+    mInfoBar->pushCritical( tr( "Could not add image" ), errMsg );
   }
 }
 
@@ -802,4 +789,9 @@ void QgsRibbonApp::saveProject()
   {
     messageBar()->pushMessage( tr( "Project saved" ), "", QgsMessageBar::INFO, 3 );
   }
+}
+
+void QgsRibbonApp::checkCanPaste()
+{
+  mActionPaste->setEnabled( canPaste() );
 }

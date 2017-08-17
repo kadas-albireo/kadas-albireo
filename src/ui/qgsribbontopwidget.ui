@@ -1396,7 +1396,7 @@ Sight</string>
            </layout>
           </item>
           <item row="0" column="3">
-           <widget class="QgsRibbonButton" name="mAddPictureButton">
+           <widget class="QgsRibbonButton" name="mAddImageButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1416,7 +1416,7 @@ Sight</string>
              </size>
             </property>
             <property name="text">
-             <string>Picture</string>
+             <string>Image</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1427,7 +1427,7 @@ Sight</string>
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QgsRibbonButton" name="mPasteImageButton">
+           <widget class="QgsRibbonButton" name="mPasteButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1447,7 +1447,7 @@ Sight</string>
              </size>
             </property>
             <property name="text">
-             <string>Paste Image</string>
+             <string>Paste</string>
             </property>
             <property name="iconSize">
              <size>
@@ -2460,16 +2460,16 @@ Sight</string>
     <string>Export GPX</string>
    </property>
   </action>
-  <action name="mActionAddCameraPicture">
+  <action name="mActionAddImage">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/ribbon/picture.png</normaloff>:/images/ribbon/picture.png</iconset>
    </property>
    <property name="text">
-    <string>Add Picture</string>
+    <string>Add Image</string>
    </property>
    <property name="toolTip">
-    <string>Add Camera Picture</string>
+    <string>Add Image</string>
    </property>
   </action>
   <action name="mActionMilx">
@@ -2574,16 +2574,16 @@ Sight</string>
     <string>About</string>
    </property>
   </action>
-  <action name="mActionPasteImage">
+  <action name="mActionPaste">
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/ribbon/einfuegen.png</normaloff>:/images/ribbon/einfuegen.png</iconset>
    </property>
    <property name="text">
-    <string>Paste image</string>
+    <string>Paste</string>
    </property>
    <property name="toolTip">
-    <string>Paste Image</string>
+    <string>Paste</string>
    </property>
   </action>
  </widget>

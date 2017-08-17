@@ -412,9 +412,9 @@ void QgsClassicApp::createActions()
 
   connect( mActionUndo, SIGNAL( triggered() ), mUndoWidget, SLOT( undo() ) );
   connect( mActionRedo, SIGNAL( triggered() ), mUndoWidget, SLOT( redo() ) );
-  connect( mActionCutFeatures, SIGNAL( triggered() ), this, SLOT( editCut() ) );
-  connect( mActionCopyFeatures, SIGNAL( triggered() ), this, SLOT( editCopy() ) );
-  connect( mActionPasteFeatures, SIGNAL( triggered() ), this, SLOT( editPaste() ) );
+  connect( mActionCutFeatures, SIGNAL( triggered() ), this, SLOT( cutFeatures() ) );
+  connect( mActionCopyFeatures, SIGNAL( triggered() ), this, SLOT( copyFeatures() ) );
+  connect( mActionPasteFeatures, SIGNAL( triggered() ), this, SLOT( pasteFeatures() ) );
   connect( mActionPasteAsNewVector, SIGNAL( triggered() ), this, SLOT( pasteAsNewVector() ) );
   connect( mActionPasteAsNewMemoryVector, SIGNAL( triggered() ), this, SLOT( pasteAsNewMemoryVector() ) );
   connect( mActionCopyStyle, SIGNAL( triggered() ), this, SLOT( copyStyle() ) );

@@ -482,6 +482,9 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     /** Get timeout for timed messages: default of 5 seconds */
     virtual int messageTimeout() override;
 
+    void addPasteHandler( const QString& mimeType, QgsPasteHandler* handler ) override;
+    void removePasteHandler( const QString& mimeType, QgsPasteHandler* handler ) override;
+
   signals:
     void currentThemeChanged( QString );
 

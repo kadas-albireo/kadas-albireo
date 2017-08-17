@@ -22,6 +22,14 @@
 #include "qgsfeaturestore.h"
 
 class QMimeData;
+class QgsPoint;
+
+class GUI_EXPORT QgsPasteHandler
+{
+  public:
+    virtual ~QgsPasteHandler() {}
+    virtual void paste( const QString& mimeData, const QByteArray& data, const QgsPoint* mapPos ) = 0;
+};
 
 /*
  * Constants used to describe copy-paste MIME types
@@ -35,14 +43,17 @@ class GUI_EXPORT QgsClipboard : public QObject
   public:
     QgsClipboard( QObject* parent = 0 );
 
+    // Returns whether there is any data in the clipboard
+    bool isEmpty() const;
+
     // Queries whether the clipboard has specified format.
     bool hasFormat( const QString& format ) const;
 
     // Sets the clipboard contents
-    void setData( QMimeData* mimeData );
+    void setMimeData( QMimeData* mimeData );
 
     // Retreives the clipboard contents
-    const QMimeData* data();
+    const QMimeData* mimeData();
 
     // Utility function for storing features in clipboard
     void setStoredFeatures( const QgsFeatureStore& featureStore );

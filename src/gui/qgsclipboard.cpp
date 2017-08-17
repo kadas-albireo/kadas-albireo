@@ -31,15 +31,21 @@ QgsClipboard::QgsClipboard( QObject* parent )
   connect( QApplication::clipboard(), SIGNAL( dataChanged() ), this, SLOT( onDataChanged() ) );
 }
 
-void QgsClipboard::setData( QMimeData* mimeData )
+void QgsClipboard::setMimeData( QMimeData* mimeData )
 {
   QApplication::clipboard()->setMimeData( mimeData );
   mFeatureStore = QgsFeatureStore();
 }
 
-const QMimeData* QgsClipboard::data()
+const QMimeData* QgsClipboard::mimeData()
 {
   return QApplication::clipboard()->mimeData();
+}
+
+bool QgsClipboard::isEmpty() const
+{
+  const QMimeData* mimeData = QApplication::clipboard()->mimeData();
+  return !mimeData || mimeData->formats().isEmpty();
 }
 
 bool QgsClipboard::hasFormat( const QString& format ) const
@@ -54,8 +60,6 @@ bool QgsClipboard::hasFormat( const QString& format ) const
 
 void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
 {
-  mFeatureStore = featureStore;
-
   // Also store plaintext version
   QSettings settings;
   bool copyWKT = settings.value( "qgis/copyGeometryAsWKT", true ).toBool();
@@ -95,6 +99,9 @@ void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
   QMimeData* mimeData = new QMimeData();
   mimeData->setData( "text/plain", textLines.join( "\n" ).toLocal8Bit() );
   QApplication::clipboard()->setMimeData( mimeData );
+
+  // After plaintext version, because dataChanged clears the internal feature store
+  mFeatureStore = featureStore;
 }
 
 const QgsFeatureStore &QgsClipboard::getStoredFeatures() const

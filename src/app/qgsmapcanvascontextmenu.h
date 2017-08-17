@@ -45,7 +45,7 @@ class QgsMapCanvasContextMenu : public QMenu
     void editLabel();
     void cutFeature();
     void copyFeature();
-    void pasteFeature();
+    void paste();
     void drawPin();
     void drawPointMarker();
     void drawSquareMarker();

@@ -77,8 +77,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     void updateLayerModifiedActions() override {}
     void on_mLayerTreeViewButton_clicked();
     void checkOnTheFlyProjection( const QStringList &prevLayers = QStringList() );
-    void addCameraPicture();
-    void pasteImage();
+    void addImage();
     void userScale();
     void showScale( double scale );
     void switchToTabForTool( QgsMapTool* tool );
@@ -89,6 +88,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     void onNumericInputCheckboxToggled( bool checked );
     void showFavoriteContextMenu( const QPoint& pos );
     void saveProject();
+    void checkCanPaste();
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );

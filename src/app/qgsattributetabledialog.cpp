@@ -558,7 +558,7 @@ void QgsAttributeTableDialog::on_mExpressionSelectButton_clicked()
 
 void QgsAttributeTableDialog::on_mCopySelectedRowsButton_clicked()
 {
-  QgisApp::instance()->editCopy( mLayer );
+  QgisApp::instance()->copyFeatures( mLayer );
 }
 
 void QgsAttributeTableDialog::on_mZoomMapToSelectedRowsButton_clicked()

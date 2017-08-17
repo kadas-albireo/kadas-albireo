@@ -35,6 +35,7 @@ class QgsMapCanvas;
 class QgsMapLayer;
 class QgsMapLayerPropertiesFactory;
 class QgsMessageBar;
+class QgsPasteHandler;
 class QgsPluginInterface;
 class QgsPluginManagerInterface;
 class QgsRasterLayer;
@@ -563,6 +564,9 @@ class GUI_EXPORT QgisInterface : public QObject
 
     /** Get timeout for timed messages: default of 5 seconds */
     virtual int messageTimeout() = 0;
+
+    virtual void addPasteHandler( const QString& mimeType, QgsPasteHandler* handler ) = 0;
+    virtual void removePasteHandler( const QString& mimeType, QgsPasteHandler* handler ) = 0;
 
   signals:
     /** Emitted whenever current (selected) layer changes.

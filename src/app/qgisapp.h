@@ -63,6 +63,7 @@ class QgsMapTool;
 class QgsMessageBar;
 class QgsMessageLogViewer;
 class QgsMultiMapManager;
+class QgsPasteHandler;
 class QgsPluginInterface;
 class QgsPluginManager;
 class QgsPythonUtils;
@@ -425,6 +426,9 @@ class APP_EXPORT QgisApp : public QMainWindow
     /** Unregister a previously registered tab in the layer properties dialog */
     void unregisterMapLayerPropertiesFactory( QgsMapLayerPropertiesFactory* factory );
 
+    void addPasteHandler( const QString& mimeType, QgsPasteHandler* handler );
+    void removePasteHandler( const QString& mimeType, QgsPasteHandler* handler );
+
   public slots:
     //! As above but allows forcing without prompt and forcing blank project
     void fileNew( bool thePromptToSaveFlag, bool forceBlank = false );
@@ -510,21 +514,23 @@ class APP_EXPORT QgisApp : public QMainWindow
        \param layerContainingSelection  The layer that the selection will be taken from
                                         (defaults to the active layer on the legend)
      */
-    void editCut( QgsMapLayer *layerContainingSelection = 0 );
+    void cutFeatures( QgsMapLayer *layerContainingSelection = 0 );
     //! copies selected features on the active layer to the clipboard
     /**
        \param layerContainingSelection  The layer that the selection will be taken from
                                         (defaults to the active layer on the legend)
      */
-    void editCopy( QgsMapLayer *layerContainingSelection = 0 );
+    void copyFeatures( QgsMapLayer *layerContainingSelection = 0 );
     //! copies features on the clipboard to the active layer
     /**
        \param destinationLayer  The layer that the clipboard will be pasted to
                                 (defaults to the active layer on the legend)
      */
-    void editPaste( QgsMapLayer *destinationLayer = 0 );
+    void pasteFeatures( QgsMapLayer *destinationLayer = 0 );
+    void pasteSvgImage( const QgsPoint *mapPos );
+    void paste( QgsMapLayer *destinationLayer = 0, const QgsPoint* mapPos = 0 );
     /** Returns whether there are features to paste */
-    bool editCanPaste();
+    bool canPaste();
     //! copies features on the clipboard to a new vector layer
     void pasteAsNewVector();
     //! copies features on the clipboard to a new memory vector layer
@@ -1361,6 +1367,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     QList<QgsMapLayerPropertiesFactory*> mMapLayerPropertiesFactories;
 
     QgsItemCouplingManager* mItemCouplingManager;
+    QMap<QString, QgsPasteHandler*> mPasteHandlers;
 
     bool gestureEvent( QGestureEvent *event );
 
