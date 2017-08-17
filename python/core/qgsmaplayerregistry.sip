@@ -17,8 +17,6 @@ class QgsMapLayerRegistry : QObject
     //! Return the number of registered layers.
     int count();
 
-    ~QgsMapLayerRegistry();
-
     //! Retrieve a pointer to a loaded layer by id
     QgsMapLayer *mapLayer( QString theLayerId );
 
@@ -204,6 +202,8 @@ class QgsMapLayerRegistry : QObject
      */
     void legendLayersAdded( QList<QgsMapLayer*> theMapLayers );
 
-  private:
-    QgsMapLayerRegistry(); // private 'cause it's a singleton
+  protected:
+    QgsMapLayerRegistry();
+    ~QgsMapLayerRegistry();
+
 }; // class QgsMapLayerRegistry

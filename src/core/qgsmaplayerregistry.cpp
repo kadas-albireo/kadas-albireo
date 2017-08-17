@@ -19,9 +19,22 @@
 #include "qgsmaplayer.h"
 #include "qgslogger.h"
 
-//
-// Main class begins now...
-//
+QgsMapLayerRegistry* QgsMapLayerRegistry::sInstance = 0;
+
+QgsMapLayerRegistry* QgsMapLayerRegistry::instance()
+{
+  if ( sInstance == 0 )
+  {
+    sInstance = new QgsMapLayerRegistry();
+  }
+  return sInstance;
+}
+
+void QgsMapLayerRegistry::cleanup()
+{
+  delete sInstance;
+  sInstance = 0;
+}
 
 QgsMapLayerRegistry::QgsMapLayerRegistry( QObject *parent ) : QObject( parent )
 {

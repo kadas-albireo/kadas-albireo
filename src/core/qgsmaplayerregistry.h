@@ -24,7 +24,6 @@
 #include <QObject>
 #include <QStringList>
 
-#include "qgssingleton.h"
 class QString;
 class QgsMapLayer;
 
@@ -32,15 +31,18 @@ class QgsMapLayer;
 * This class tracks map layers that are currently loaded and provides
 * a means to fetch a pointer to a map layer and delete it.
 */
-class CORE_EXPORT QgsMapLayerRegistry : public QObject, public QgsSingleton<QgsMapLayerRegistry>
+class CORE_EXPORT QgsMapLayerRegistry : public QObject
 {
     Q_OBJECT
 
   public:
-    //! Return the number of registered layers.
-    int count();
+    static QgsMapLayerRegistry* instance();
+    static void cleanup();
 
     ~QgsMapLayerRegistry();
+
+    //! Return the number of registered layers.
+    int count();
 
     //! Retrieve a pointer to a loaded layer by id
     QgsMapLayer *mapLayer( QString theLayerId );
@@ -228,14 +230,15 @@ class CORE_EXPORT QgsMapLayerRegistry : public QObject, public QgsSingleton<QgsM
      */
     void legendLayersAdded( QList<QgsMapLayer*> theMapLayers );
 
-  private:
-    //! private singleton constructor
+  protected:
     QgsMapLayerRegistry( QObject * parent = 0 );
+
+  private:
+    static QgsMapLayerRegistry* sInstance;
 
     QMap<QString, QgsMapLayer*> mMapLayers;
     QSet<QgsMapLayer*> mOwnedLayers;
 
-    friend class QgsSingleton<QgsMapLayerRegistry>; // Let QgsSingleton access private constructor
 }; // class QgsMapLayerRegistry
 
 #endif //QgsMapLayerRegistry_H

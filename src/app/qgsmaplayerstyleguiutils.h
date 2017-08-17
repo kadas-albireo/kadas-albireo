@@ -18,18 +18,21 @@
 
 #include <QObject>
 
-#include "qgssingleton.h"
-
 class QgsMapLayer;
 
 class QAction;
 class QMenu;
 
 /** Various GUI utility functions for dealing with map layer's style manager */
-class QgsMapLayerStyleGuiUtils : public QObject, public QgsSingleton<QgsMapLayerStyleGuiUtils>
+class QgsMapLayerStyleGuiUtils : public QObject
 {
     Q_OBJECT
   public:
+
+    static QgsMapLayerStyleGuiUtils* instance();
+    static void cleanup();
+
+    ~QgsMapLayerStyleGuiUtils() {}
 
     QAction* actionAddStyle( QgsMapLayer* layer, QObject* parent = 0 );
     QAction* actionRemoveStyle( QgsMapLayer* layer, QObject* parent = 0 );
@@ -39,7 +42,12 @@ class QgsMapLayerStyleGuiUtils : public QObject, public QgsSingleton<QgsMapLayer
     //! Add actions for the given map layer to the menu
     void addStyleManagerActions( QMenu* m, QgsMapLayer* layer );
 
+  protected:
+    QgsMapLayerStyleGuiUtils() {}
+
   private:
+    static QgsMapLayerStyleGuiUtils* sInstance;
+
     QString defaultStyleName();
 
   private slots:

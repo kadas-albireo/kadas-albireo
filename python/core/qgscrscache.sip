@@ -2,7 +2,6 @@ class QgsCoordinateTransformCache
 {
   public:
     static QgsCoordinateTransformCache* instance();
-    ~QgsCoordinateTransformCache();
     /**Returns coordinate transformation. Cache keeps ownership
         @param srcAuthId auth id string of source crs
         @param destAuthId auth id string of dest crs
@@ -12,6 +11,10 @@ class QgsCoordinateTransformCache
     const QgsCoordinateTransform* transform( const QString& srcAuthId, const QString& destAuthId, int srcDatumTransform = -1, int destDatumTransform = -1 );
     /**Removes transformations where a changed crs is involved from the cache*/
     void invalidateCrs( const QString& crsAuthId );
+
+  protected:
+    QgsCoordinateTransformCache();
+    ~QgsCoordinateTransformCache();
 };
 
 class QgsCRSCache

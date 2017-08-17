@@ -27,8 +27,6 @@
 #include <QNetworkProxy>
 #include <QNetworkRequest>
 
-#include "qgssingleton.h"
-
 /*
  * \class QgsNetworkAccessManager
  * \brief network access manager for QGIS

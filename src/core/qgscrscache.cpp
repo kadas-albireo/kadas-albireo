@@ -21,6 +21,23 @@
 #include "qgsmessagelog.h"
 #include <sqlite3.h>
 
+QgsCoordinateTransformCache* QgsCoordinateTransformCache::sInstance = 0;
+
+QgsCoordinateTransformCache* QgsCoordinateTransformCache::instance()
+{
+  if ( sInstance == 0 )
+  {
+    sInstance = new QgsCoordinateTransformCache();
+  }
+  return sInstance;
+}
+
+void QgsCoordinateTransformCache::cleanup()
+{
+  delete sInstance;
+  sInstance = 0;
+}
+
 QgsCoordinateTransformCache::~QgsCoordinateTransformCache()
 {
   QHash< QPair< QString, QString >, QgsCoordinateTransform* >::const_iterator tIt = mTransforms.constBegin();
