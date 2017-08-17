@@ -738,6 +738,9 @@ int main( int argc, char *argv[] )
     }
   }
 #endif
+#ifdef __MINGW32__
+  qputenv( "GDAL_DATA", QDir( QString( "%1/../share/gdal/" ).arg( QApplication::applicationDirPath() ) ).absolutePath().toLocal8Bit() );
+#endif
 
   QSettings mySettings;
 
