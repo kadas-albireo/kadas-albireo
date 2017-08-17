@@ -230,7 +230,16 @@ void QgsMapCanvasContextMenu::cutFeature()
   {
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
     QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
-    vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
+    QgsFeatureIds newSelection;
+    if ( mPickResult.feature.isValid() )
+    {
+      newSelection.insert( mPickResult.feature.id() );
+    }
+    else
+    {
+      newSelection.insert( mPickResult.labelPos.featureId );
+    }
+    vlayer->setSelectedFeatures( newSelection );
     vlayer->startEditing();
     QgisApp::instance()->cutFeatures( vlayer );
     vlayer->commitChanges();
@@ -244,7 +253,16 @@ void QgsMapCanvasContextMenu::copyFeature()
   {
     QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
     QgsFeatureIds prevSelection = vlayer->selectedFeaturesIds();
-    vlayer->setSelectedFeatures( QgsFeatureIds() << mPickResult.feature.id() );
+    QgsFeatureIds newSelection;
+    if ( mPickResult.feature.isValid() )
+    {
+      newSelection.insert( mPickResult.feature.id() );
+    }
+    else
+    {
+      newSelection.insert( mPickResult.labelPos.featureId );
+    }
+    vlayer->setSelectedFeatures( newSelection );
     QgisApp::instance()->copyFeatures( vlayer );
     vlayer->setSelectedFeatures( prevSelection );
   }
