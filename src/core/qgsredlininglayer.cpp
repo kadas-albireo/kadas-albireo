@@ -89,10 +89,11 @@ bool QgsRedliningLayer::addText( const QString &text, const QgsPointV2& pos, con
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
-int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore )
+int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore, QgsPoint* targetPos )
 {
   const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( featureStore.crs().authid(), crs().authid() );
   QgsFeatureList newFeatures;
+  QgsPoint oldCenter;
   foreach ( const QgsFeature& feature, featureStore.features() )
   {
     QString flags = feature.attribute( "flags" ).toString();
@@ -117,6 +118,7 @@ int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore )
     }
     QgsFeature newFeature( dataProvider()->fields() );
     newFeature.setGeometry( QgsGeometry( feature.geometry()->geometry()->transformed( *ct ) ) );
+    oldCenter += newFeature.geometry()->boundingBox().center();
 
     newFeature.setAttributes( feature.attributes() );
 
@@ -134,6 +136,16 @@ int QgsRedliningLayer::pasteFeatures( const QgsFeatureStore& featureStore )
       newFeature.setAttribute( key, srcValue.isNull() ? attribs[key] : srcValue );
     }
     newFeatures.append( newFeature );
+  }
+  if ( targetPos )
+  {
+    int n = newFeatures.size();
+    oldCenter = QgsPoint( oldCenter.x() / n, oldCenter.y() / n );
+    QgsVector delta = *targetPos - oldCenter;
+    for ( int i = 0; i < n; ++i )
+    {
+      newFeatures[i].geometry()->translate( delta.x(), delta.y() );
+    }
   }
 
   bool success = dataProvider()->addFeatures( QgsFeatureList() << newFeatures );

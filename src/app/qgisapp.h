@@ -526,7 +526,7 @@ class APP_EXPORT QgisApp : public QMainWindow
        \param destinationLayer  The layer that the clipboard will be pasted to
                                 (defaults to the active layer on the legend)
      */
-    void pasteFeatures( QgsMapLayer *destinationLayer = 0 );
+    void pasteFeatures( QgsMapLayer *destinationLayer = 0 , const QgsPoint *mapPos = 0 );
     void pasteSvgImage( const QgsPoint *mapPos );
     void paste( QgsMapLayer *destinationLayer = 0, const QgsPoint* mapPos = 0 );
     void paste( QgsPoint mapPos ) { paste( 0, &mapPos ); }

@@ -5198,7 +5198,7 @@ void QgisApp::paste( QgsMapLayer *destinationLayer, const QgsPoint *mapPos )
 {
   if ( clipboard()->hasFormat( QGSCLIPBOARD_FEATURESTORE_MIME ) )
   {
-    pasteFeatures( destinationLayer );
+    pasteFeatures( destinationLayer ? destinationLayer : redliningLayer(), mapPos );
     return;
   }
   if ( clipboard()->hasFormat( "image/svg+xml" ) )
@@ -5217,7 +5217,7 @@ void QgisApp::paste( QgsMapLayer *destinationLayer, const QgsPoint *mapPos )
   messageBar()->pushMessage( tr( "No supported data in clipboard" ), "", QgsMessageBar::WARNING, 5 );
 }
 
-void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer )
+void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer, const QgsPoint* mapPos )
 {
   QgsVectorLayer *pasteVectorLayer = qobject_cast<QgsVectorLayer *>( destinationLayer ? destinationLayer : activeLayer() );
   if ( !pasteVectorLayer )
@@ -5228,7 +5228,8 @@ void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer )
   int nTotalFeatures = featureStore.features().count();
   if ( pasteVectorLayer->type() == QgsMapLayer::RedliningLayer )
   {
-    nCopiedFeatures = static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( featureStore );
+    QgsPoint targetPos = mapPos ? QgsCoordinateTransformCache::instance()->transform( mapCanvas()->mapSettings().destinationCrs().authid(), pasteVectorLayer->crs().authid() )->transform( *mapPos ) : QgsPoint();
+    nCopiedFeatures = static_cast<QgsRedliningLayer*>( pasteVectorLayer )->pasteFeatures( featureStore, mapPos ? &targetPos : 0 );
   }
   else
   {

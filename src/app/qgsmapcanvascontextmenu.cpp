@@ -286,7 +286,7 @@ void QgsMapCanvasContextMenu::copyOtherResult()
 
 void QgsMapCanvasContextMenu::paste()
 {
-  QgisApp::instance()->paste( QgisApp::instance()->redliningLayer(), &mMapPos );
+  QgisApp::instance()->paste( mMapPos );
 }
 
 void QgsMapCanvasContextMenu::drawPin()
