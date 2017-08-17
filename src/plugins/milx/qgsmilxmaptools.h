@@ -117,7 +117,7 @@ class QgsMilXEditTool : public QgsMapTool
 {
     Q_OBJECT
   public:
-    QgsMilXEditTool( QgisInterface* iface, QgsMilXLayer* layer, QgsMilXItem* layerItem );
+    QgsMilXEditTool( QgisInterface* iface, QgsMilXLayer* layer, QgsMilXItem* milxItem = 0 );
     ~QgsMilXEditTool();
     void activate() override;
     void canvasPressEvent( QMouseEvent* e ) override;
@@ -126,6 +126,7 @@ class QgsMilXEditTool : public QgsMapTool
     void keyPressEvent( QKeyEvent *e ) override;
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
     void paste( const QByteArray& data, const QgsPoint *mapPos = 0 );
+    int itemCount() const { return mItems.size(); }
 
   signals:
     void itemsChanged();

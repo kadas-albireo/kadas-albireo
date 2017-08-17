@@ -17,6 +17,7 @@
 
 #include "qgsmilxplugin.h"
 #include "qgsmilxmaptools.h"
+#include "qgsmilxutils.h"
 #include "layertree/qgslayertree.h"
 #include "layertree/qgslayertreemodel.h"
 #include "layertree/qgslayertreeview.h"
@@ -34,7 +35,11 @@
 #include "qgsmilxio.h"
 #include "qgsmilxlayer.h"
 #include <QAction>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QComboBox>
+#include <QGridLayout>
+#include <QLabel>
 #include <QMainWindow>
 #include <QSlider>
 #include <QToolBar>
@@ -44,6 +49,12 @@ QgsMilXPlugin::QgsMilXPlugin( QgisInterface * theQgisInterface )
     , mQGisIface( theQgisInterface )
     , mMilXLibrary( 0 )
 {
+  mPasteHandler = new QgsMilXPasteHandler( this );
+}
+
+QgsMilXPlugin::~QgsMilXPlugin()
+{
+  delete mPasteHandler;
 }
 
 void QgsMilXPlugin::initGui()
@@ -105,6 +116,8 @@ void QgsMilXPlugin::initGui()
 
   mQGisIface->layerTreeView()->menuProvider()->addLegendLayerAction( mActionApprovedLayer, "", "milx_approved_layer", QgsMapLayer::PluginLayer, false );
   connect( mQGisIface->layerTreeView(), SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( setApprovedActionState( QgsMapLayer* ) ) );
+
+  mQGisIface->addPasteHandler( QGSCLIPBOARD_MILXITEMS_MIME, mPasteHandler );
 }
 
 void QgsMilXPlugin::unload()
@@ -118,6 +131,7 @@ void QgsMilXPlugin::unload()
   mActionLoadMilx = 0;
   delete mMilXLibrary;
   mMilXLibrary = 0;
+  mQGisIface->removePasteHandler( QGSCLIPBOARD_MILXITEMS_MIME, mPasteHandler );
 }
 
 void QgsMilXPlugin::createMilx( )
@@ -133,6 +147,40 @@ void QgsMilXPlugin::createMilx( )
     createTool->setAction( mActionCreateMilx );
     mQGisIface->mapCanvas()->setMapTool( createTool );
   }
+}
+
+void QgsMilXPlugin::paste( const QString &mimeType, const QByteArray &data, const QgsPoint *mapPos )
+{
+  if ( mimeType != QGSCLIPBOARD_MILXITEMS_MIME )
+  {
+    return;
+  }
+  QDialog dialog;
+  dialog.setWindowTitle( tr( "Paste MilX Symbols" ) );
+  QGridLayout* layout = new QGridLayout();
+  dialog.setLayout( layout );
+  layout->addWidget( new QLabel( tr( "Destination layer:" ) ), 0, 0, 1, 1 );
+  QgsMilXLayerSelectionWidget* layerWidget = new QgsMilXLayerSelectionWidget( mQGisIface, &dialog );
+  layout->addWidget( layerWidget, 0, 1, 1, 1 );
+  QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+  connect( bbox, SIGNAL( accepted() ), &dialog, SLOT( accept() ) );
+  connect( bbox, SIGNAL( rejected() ), &dialog, SLOT( reject() ) );
+  layout->addWidget( bbox, 1, 0, 1, 2 );
+  dialog.setFixedSize( dialog.sizeHint() );
+  if ( dialog.exec() != QDialog::Accepted )
+  {
+    return;
+  }
+  QgsMilXLayer* layer = layerWidget->getTargetLayer();
+  if ( !layer )
+  {
+    return;
+  }
+  QgsMilXEditTool* tool = new QgsMilXEditTool( mQGisIface, layer );
+  mQGisIface->mapCanvas()->setMapTool( tool );
+  mActiveEditTool = tool;
+  tool->paste( data, mapPos );
+  mQGisIface->messageBar()->pushMessage( tr( "%1 MilX Symbol(s) Pasted" ).arg( tool->itemCount() ), "", QgsMessageBar::INFO, 5 );
 }
 
 void QgsMilXPlugin::saveMilx()

@@ -538,14 +538,17 @@ void QgsMilxEditBottomBar::updateStatus()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* layerItem )
+QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, QgsMilXItem* milxItem )
     : QgsMapTool( iface->mapCanvas() ), mIface( iface ), mLayer( layer ), mDraggingRect( false ), mActiveAnnotation( 0 ), mAnnotationMoveAction( QgsAnnotationItem::NoAction ), mInputWidget( 0 ), mMoving( false )
 {
-  QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
-  item->fromMilxItem( layerItem );
-  mItems.append( item );
-  mActiveAnnotation = item;
-  connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
+  if ( milxItem )
+  {
+    QgsMilXAnnotationItem* item = new QgsMilXAnnotationItem( iface->mapCanvas() );
+    item->fromMilxItem( milxItem );
+    mItems.append( item );
+    mActiveAnnotation = item;
+    connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
+  }
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   // If layer is deleted or layers are changed, quit tool
   connect( mLayer, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
@@ -595,7 +598,10 @@ void QgsMilXEditTool::setLayer( QgsMilXLayer* layer )
 void QgsMilXEditTool::activate()
 {
   // Done here becase QgsMapToolPan deselects selected annotation items when it is deactived
-  mItems.front()->setSelected( true );
+  if ( !mItems.isEmpty() )
+  {
+    mItems.front()->setSelected( true );
+  }
 }
 
 void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )

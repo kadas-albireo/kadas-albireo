@@ -19,6 +19,7 @@
 #define QGS_MILX_PLUGIN_H
 
 #include "qgisplugin.h"
+#include "qgsclipboard.h"
 #include <QObject>
 #include <QPointer>
 
@@ -30,15 +31,19 @@ class QgsMapLayer;
 class QgsMessageBarItem;
 class QgsMilXLibrary;
 class QgsMilXEditTool;
+class QgsMilXPasteHandler;
 
 class QgsMilXPlugin: public QObject, public QgisPlugin
 {
     Q_OBJECT
   public:
     QgsMilXPlugin( QgisInterface * theInterface );
+    ~QgsMilXPlugin();
 
     void initGui();
     void unload();
+
+    void paste( const QString &mimeType, const QByteArray &data, const QgsPoint* mapPos );
 
   private:
     QgisInterface* mQGisIface;
@@ -51,6 +56,7 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     QSlider* mLineWidthSlider;
     QComboBox* mWorkModeCombo;
     QPointer<QgsMilXEditTool> mActiveEditTool;
+    QgsMilXPasteHandler* mPasteHandler;
 
   private slots:
     void createMilx();
@@ -62,8 +68,21 @@ class QgsMilXPlugin: public QObject, public QgisPlugin
     void stopEditing();
     void connectPickHandlers();
     void manageSymbolPick( int );
+    void manageSymbolCopy( QVector<int> );
     void setApprovedLayer( bool approved );
     void setApprovedActionState( QgsMapLayer*layer );
+};
+
+class QgsMilXPasteHandler : public QgsPasteHandler
+{
+  public:
+    QgsMilXPasteHandler( QgsMilXPlugin* milxPlugin ) : mMilxPlugin( milxPlugin ) {}
+    void paste( const QString &mimeData, const QByteArray &data, const QgsPoint* mapPos ) override
+    {
+      mMilxPlugin->paste( mimeData, data, mapPos );
+    }
+  private:
+    QgsMilXPlugin* mMilxPlugin;
 };
 
 #endif // QGS_MILX_PLUGIN_H
