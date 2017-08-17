@@ -890,7 +890,7 @@ void QgsRedliningEditTextMapTool::canvasPressEvent( QMouseEvent *e )
 void QgsRedliningEditTextMapTool::showContextMenu( QMouseEvent *e )
 {
   QMenu menu;
-  QAction* actionDelete = menu.addAction( tr( "Delete" ) );
+  QAction* actionDelete = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ) );
   if ( menu.exec( e->globalPos() ) == actionDelete )
   {
     mLayer->deleteFeature( mLabel.featureId );
