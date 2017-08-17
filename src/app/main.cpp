@@ -644,6 +644,8 @@ int main( int argc, char *argv[] )
     QgsCustomization::instance()->setEnabled( false );
   }
 
+  QgsApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
+
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
 
   //set stylesheet if there
