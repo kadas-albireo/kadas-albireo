@@ -156,12 +156,12 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     QgsAbstractGeometryV2* mGeometry;
     QList<QgsVertexId> mHiddenNodes;
     double mTranslationOffset[2];
-    QBrush mBrush;
     QPen mPen;
+    QBrush mBrush;
     int mIconSize;
     IconType mIconType;
-    QBrush mIconBrush;
     QPen mIconPen;
+    QBrush mIconBrush;
     QGis::GeometryType mGeometryType;
     QgsDistanceArea mDa;
     MeasurementMode mMeasurementMode;
