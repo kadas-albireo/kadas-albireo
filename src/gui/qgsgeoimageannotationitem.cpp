@@ -60,7 +60,8 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   }
   item->setFilePath( filePath );
   item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-  QgsAnnotationLayer::getLayer( canvas, "geoImage", tr( "Camera pictures" ) )->addItem( item );
+  item->setSelected( true );
+  QgsAnnotationLayer::getLayer( canvas, "geoImage", tr( "Pictures" ) )->addItem( item );
   return item;
 }
 
