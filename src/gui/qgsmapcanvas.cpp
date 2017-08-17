@@ -1351,14 +1351,18 @@ void QgsMapCanvas::mousePressEvent( QMouseEvent * e )
     return;
   }
 
-  mCanvasProperties->mouseButtonDown = true;
-  mCanvasProperties->rubberStartPoint = e->pos();
+  if(e->button() == Qt::LeftButton) {
+    mCanvasProperties->mouseButtonDown = true;
+    mCanvasProperties->rubberStartPoint = e->pos();
+  }
 
 } // mousePressEvent
 
 
 void QgsMapCanvas::mouseReleaseEvent( QMouseEvent * e )
 {
+  mCanvasProperties->mouseButtonDown = false;
+
   //use middle mouse button for panning, map tools won't receive any events in that case
   if ( e->button() == Qt::MidButton )
   {
@@ -1371,7 +1375,6 @@ void QgsMapCanvas::mouseReleaseEvent( QMouseEvent * e )
     mMapTool->canvasReleaseEvent( e );
   }
 
-  mCanvasProperties->mouseButtonDown = false;
 } // mouseReleaseEvent
 
 void QgsMapCanvas::resizeEvent( QResizeEvent * e )
