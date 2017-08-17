@@ -150,9 +150,12 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     }
   }
 
-  addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
-  addAction( QIcon( ":/images/themes/default/mActionSaveMapToClipboard.png" ), tr( "Copy map" ), this, SLOT( copyMap() ) );
-  addAction( QIcon( ":/images/themes/default/mActionFilePrint.png" ), tr( "Print" ), this, SLOT( print() ) );
+  if ( mPickResult.isEmpty() )
+  {
+    addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
+    addAction( QIcon( ":/images/themes/default/mActionSaveMapToClipboard.png" ), tr( "Copy map" ), this, SLOT( copyMap() ) );
+    addAction( QIcon( ":/images/themes/default/mActionFilePrint.png" ), tr( "Print" ), this, SLOT( print() ) );
+  }
 }
 
 QgsMapCanvasContextMenu::~QgsMapCanvasContextMenu()
