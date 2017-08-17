@@ -231,7 +231,9 @@ QgsGlobeTileSource::QgsGlobeTileSource( QgsMapCanvas* canvas, const osgEarth::Ti
   osgEarth::DataExtentList extents;
   extents.push_back( geoextent );
   getDataExtents() = extents;
+#if OSGEARTH_VERSION_LESS_THAN(2, 9, 0)
   dirtyDataExtents();
+#endif
 }
 
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)

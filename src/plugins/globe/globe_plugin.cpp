@@ -380,6 +380,8 @@ void GlobePlugin::run()
     osgEarth::MapOptions mapOptions;
     mapOptions.cache() = cacheOptions;
     osgEarth::Map *map = new osgEarth::Map( /*mapOptions*/ );
+    const osgEarth::Profile* profile = map->getProfile();
+    QgsDebugMsg( profile->getSRS()->getName().c_str() );
 
     // The MapNode will render the Map object in the scene graph.
     osgEarth::MapNodeOptions mapNodeOptions;
@@ -393,11 +395,16 @@ void GlobePlugin::run()
     // Add draped layer
     osgEarth::TileSourceOptions opts;
     opts.L2CacheSize() = 0;
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
     opts.tileSize() = 128;
+#endif
     mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
     osgEarth::ImageLayerOptions options( "QGIS" );
     options.driver()->L2CacheSize() = 0;
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+    options.tileSize() = 128;
+#endif
     options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
     mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
     map->addImageLayer( mQgisMapLayer );
@@ -515,18 +522,21 @@ void GlobePlugin::applyProjectSettings()
       QgsDebugMsg( "imageryLayersChanged: Globe Running, executing" );
       osg::ref_ptr<osgEarth::Map> map = mMapNode->getMap();
 
-      if ( map->getNumImageLayers() > 1 )
-      {
-        mOsgViewer->getDatabasePager()->clear();
-      }
-
       // Remove image layers
       osgEarth::ImageLayerVector list;
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+      map->getLayers( list );
+#else
       map->getImageLayers( list );
+#endif
       for ( osgEarth::ImageLayerVector::iterator i = list.begin(); i != list.end(); ++i )
       {
         if ( *i != mQgisMapLayer )
           map->removeImageLayer( *i );
+      }
+      if ( !list.empty() )
+      {
+        mOsgViewer->getDatabasePager()->clear();
       }
 
       // Add image layers
@@ -563,17 +573,20 @@ void GlobePlugin::applyProjectSettings()
       QgsDebugMsg( "elevationLayersChanged: Globe Running, executing" );
       osg::ref_ptr<osgEarth::Map> map = mMapNode->getMap();
 
-      if ( map->getNumElevationLayers() > 1 )
-      {
-        mOsgViewer->getDatabasePager()->clear();
-      }
-
       // Remove elevation layers
       osgEarth::ElevationLayerVector list;
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+      map->getLayers( list );
+#else
       map->getElevationLayers( list );
+#endif
       for ( osgEarth::ElevationLayerVector::iterator i = list.begin(); i != list.end(); ++i )
       {
         map->removeElevationLayer( *i );
+      }
+      if ( !list.empty() )
+      {
+        mOsgViewer->getDatabasePager()->clear();
       }
 
       // Add elevation layers
@@ -944,7 +957,11 @@ void GlobePlugin::updateLayers()
         disconnect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
     }
     osgEarth::ModelLayerVector modelLayers;
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+    mMapNode->getMap()->getLayers( modelLayers );
+#else
     mMapNode->getMap()->getModelLayers( modelLayers );
+#endif
     foreach ( const osg::ref_ptr<osgEarth::ModelLayer>& modelLayer, modelLayers )
     {
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( QString::fromStdString( modelLayer->getName() ) );
@@ -970,7 +987,11 @@ void GlobePlugin::updateLayers()
 
       if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
       {
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+        if ( !mMapNode->getMap()->getLayerByName( mapLayer->id().toStdString() ) )
+#else
         if ( !mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) )
+#endif
           addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
       }
       else
@@ -1032,7 +1053,11 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
         mLayerExtents.remove( mapLayer->id() );
         refreshQGISMapLayer( dirtyExtent );
       }
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+      mMapNode->getMap()->removeLayer( mMapNode->getMap()->getLayerByName( mapLayer->id().toStdString() ) );
+#else
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
+#endif
       addModelLayer( static_cast<QgsVectorLayer*>( mapLayer ), layerConfig );
     }
     else
@@ -1043,7 +1068,11 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
         QStringList layerSet;
         foreach ( const QString& layer, mDockWidget->getSelectedLayers() )
         {
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+          if ( ! mMapNode->getMap()->getLayerByName( layer.toStdString() ) )
+#else
           if ( ! mMapNode->getMap()->getModelLayerByName( layer.toStdString() ) )
+#endif
           {
             layerSet.append( layer );
           }
@@ -1053,7 +1082,11 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
         mLayerExtents.insert( mapLayer->id(), extent );
       }
       // Remove any model layer of that layer, in case one existed
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+      mMapNode->getMap()->removeLayer( mMapNode->getMap()->getLayerByName( mapLayer->id().toStdString() ) );
+#else
       mMapNode->getMap()->removeModelLayer( mMapNode->getMap()->getModelLayerByName( mapLayer->id().toStdString() ) );
+#endif
       QgsRectangle layerExtent = QgsCoordinateTransformCache::instance()->transform( mapLayer->crs().authid(), GEO_EPSG_CRS_AUTHID )->transform( mapLayer->extent() );
       QgsRectangle dirtyExtent = layerExtent;
       if ( mLayerExtents.contains( mapLayer->id() ) )
@@ -1078,11 +1111,16 @@ void GlobePlugin::rebuildQGISLayer()
 
     osgEarth::TileSourceOptions opts;
     opts.L2CacheSize() = 0;
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
     opts.tileSize() = 128;
+#endif
     mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 
     osgEarth::ImageLayerOptions options( "QGIS" );
     options.driver()->L2CacheSize() = 0;
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+    options.tileSize() = 128;
+#endif
     options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
     mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
     mMapNode->getMap()->addImageLayer( mQgisMapLayer );
