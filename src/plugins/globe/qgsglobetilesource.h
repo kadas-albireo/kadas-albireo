@@ -121,6 +121,7 @@ class QgsGlobeTileSource : public osgEarth::TileSource
     osg::HeightField* createHeightField( const osgEarth::TileKey &/*key*/, osgEarth::ProgressCallback* /*progress*/ ) { return 0; }
 
     bool isDynamic() const { return true; }
+    osgEarth::CachePolicy getCachePolicyHint( const osgEarth::Profile* /*profile*/ ) const { return osgEarth::CachePolicy::NO_CACHE; }
 
     void refresh( const QgsRectangle &dirtyExtent );
     void setLayerSet( const QStringList& layerSet );
