@@ -188,7 +188,6 @@ void QgsMilXPlugin::paste( const QString &mimeType, const QByteArray &data, cons
   mQGisIface->mapCanvas()->setMapTool( tool );
   mActiveEditTool = tool;
   tool->paste( data, mapPos );
-  mQGisIface->messageBar()->pushMessage( tr( "%1 MilX Symbol(s) Pasted" ).arg( tool->itemCount() ), "", QgsMessageBar::INFO, 5 );
 }
 
 void QgsMilXPlugin::saveMilx()

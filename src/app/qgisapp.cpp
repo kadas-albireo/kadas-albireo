@@ -5259,17 +5259,11 @@ void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer, const QgsPoint* mapP
   if ( nCopiedFeatures == 0 )
   {
     messageBar()->pushMessage( tr( "Paste features" ),
-                               tr( "no features could be successfully pasted." ),
+                               tr( "No features could be successfully pasted." ),
                                QgsMessageBar::WARNING, messageTimeout() );
 
   }
-  else if ( nCopiedFeatures == nTotalFeatures )
-  {
-    messageBar()->pushMessage( tr( "Paste features" ),
-                               tr( "%1 features were successfully pasted." ).arg( nCopiedFeatures ),
-                               QgsMessageBar::INFO, messageTimeout() );
-  }
-  else
+  else if ( nCopiedFeatures != nTotalFeatures )
   {
     messageBar()->pushMessage( tr( "Paste features" ),
                                tr( "%1 of %2 features could be successfully pasted." ).arg( nCopiedFeatures ).arg( nTotalFeatures ),
@@ -5292,7 +5286,6 @@ void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
     item->setFilePath( filename );
     item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
     item->setSelected( true );
-    messageBar()->pushMessage( tr( "Image Pasted" ), "", QgsMessageBar::INFO, 5 );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
   }
 }
