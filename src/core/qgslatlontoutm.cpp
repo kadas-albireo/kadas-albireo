@@ -710,7 +710,7 @@ void QgsLatLonToUTM::computeGrid( const QgsRectangle &bbox, double mapScale,
   da.setEllipsoid( "WGS84" );
 
   double lats[] = { -90, -80, -72, -64, -56, -48, -40, -32, -24, -16, -8, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84, 90 };
-  for ( int iy = 0, ny = sizeof( lats ) / sizeof( lats[0] ); iy < ny; ++iy )
+  for ( int iy = 0, ny = sizeof( lats ) / sizeof( lats[0] ); iy < ny - 1; ++iy )
   {
     for ( int ix = -30; ix < 30; ++ix )
     {
