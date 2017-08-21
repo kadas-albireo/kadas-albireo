@@ -39,7 +39,6 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   }
   QgsPoint wgs84Pos;
   bool locked = true;
-#if 0
   // Fall back to canvas center position if image has no geotags
   if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
   {
@@ -47,12 +46,6 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
     const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( canvas->mapSettings().destinationCrs().authid(), "EPSG:4326" );
     wgs84Pos = crst->transform( canvas->mapSettings().extent().center() );
   }
-#else
-  if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
-  {
-    return 0;
-  }
-#endif
   QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( canvas );
   if ( locked )
   {
