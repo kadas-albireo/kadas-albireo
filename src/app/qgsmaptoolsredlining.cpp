@@ -124,6 +124,10 @@ class QgsRedliningMapToolT<T>::AddFeatureCommand : public QgsStateStack::StateCh
 template <class T>
 void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningAttribEditor *editor )
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  T::connect( this, &T::finished, this, &QgsRedliningMapToolT<T>::onFinished );
+#endif
+
   T::setSnapPoints( QSettings().value( "/qgis/snapping/enabled", false ).toBool() );
   mStandaloneEditor = 0;
   mBottomBar = new QgsRedliningBottomBar( this, editFeature ? editor : 0 );

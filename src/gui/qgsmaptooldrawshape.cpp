@@ -77,9 +77,6 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea, Sta
   connect( &mStateStack, SIGNAL( canUndoChanged( bool ) ), this, SIGNAL( canUndo( bool ) ) );
   connect( &mStateStack, SIGNAL( canRedoChanged( bool ) ), this, SIGNAL( canRedo( bool ) ) );
   connect( &mStateStack, SIGNAL( stateChanged() ), this, SLOT( update() ) );
-
-  // Hack for QgsRedliningMapToolT template which MOC can't hanlde...
-  connect( this, SIGNAL( finished() ), this, SLOT( onFinished() ) );
 }
 
 QgsMapToolDrawShape::~QgsMapToolDrawShape()

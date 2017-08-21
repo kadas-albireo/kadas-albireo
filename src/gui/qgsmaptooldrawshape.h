@@ -108,7 +108,6 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 
   protected slots:
     void acceptInput();
-    virtual void onFinished() {}
 
   private:
     bool mSnapPoints;

@@ -77,7 +77,6 @@ class QgsMapToolDrawShape : public QgsMapTool
 
   protected slots:
     void acceptInput();
-    virtual void onFinished();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -87,7 +87,7 @@ class QgsRedliningMapToolT : public T
 
     void init( const QgsFeature* editFeature, QgsRedliningAttribEditor* editor );
     QgsFeature createFeature() const;
-    void onFinished() override;
+    void onFinished();
 };
 
 template<>
