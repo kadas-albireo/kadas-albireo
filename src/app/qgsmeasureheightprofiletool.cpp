@@ -83,7 +83,6 @@ void QgsMeasureHeightProfileTool::setGeometry( QgsGeometry* geometry, QgsVectorL
 void QgsMeasureHeightProfileTool::pickLine()
 {
   mPicking = true;
-  mDrawTool->reset();
   setCursor( QCursor( Qt::CrossCursor ) );
 }
 
