@@ -32,6 +32,10 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # set path to additional CMake modules
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
+IF(MINGW)
+  SET(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
+ENDIF(MINGW)
+
 # in generated makefiles use relative paths so the project dir is moveable
 # Note commented out since it cause problems but it would be nice to resolve these and enable
 #
