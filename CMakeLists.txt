@@ -488,8 +488,8 @@ IF (WIN32)
 
     IF (CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
       IF (NOT USING_NMAKE)
-        MESSAGE (STATUS "Generating browse files")
-        ADD_DEFINITIONS( /FR )
+        #MESSAGE (STATUS "Generating browse files")
+        #ADD_DEFINITIONS( /FR )
       ENDIF (NOT USING_NMAKE)
     ENDIF (CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
 
