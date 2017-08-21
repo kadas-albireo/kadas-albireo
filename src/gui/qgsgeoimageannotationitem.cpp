@@ -99,7 +99,7 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
   }
   QString latRef = QString::fromStdString( itLatRef->value().toString() );
   QStringList latVals = QString::fromStdString( itLatVal->value().toString() ).split( QRegExp( "\\s+" ) );
-//  QString lonRef = QString::fromStdString(itLonRef->value().toString());
+  QString lonRef = QString::fromStdString( itLonRef->value().toString() );
   QStringList lonVals = QString::fromStdString( itLonVal->value().toString() ).split( QRegExp( "\\s+" ) );
 
   double lat = 0, lon = 0;
@@ -126,6 +126,10 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
   if ( latRef.compare( "S", Qt::CaseInsensitive ) == 0 )
   {
     lat *= -1;
+  }
+  if ( lonRef.compare( "W", Qt::CaseInsensitive ) == 0 )
+  {
+    lon *= -1;
   }
   wgs84Pos = QgsPoint( lon, lat );
   return true;
