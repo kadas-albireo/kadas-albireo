@@ -490,6 +490,8 @@ IF (WIN32)
       IF (NOT USING_NMAKE)
         #MESSAGE (STATUS "Generating browse files")
         #ADD_DEFINITIONS( /FR )
+        # Not needed with VS2010 and newer:
+        # https://connect.microsoft.com/VisualStudio/feedback/details/595752/bk1505-error-during-c-build
       ENDIF (NOT USING_NMAKE)
     ENDIF (CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
 
