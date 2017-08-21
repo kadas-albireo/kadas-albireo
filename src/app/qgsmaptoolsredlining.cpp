@@ -194,6 +194,52 @@ void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
 }
 
 template <class T>
+void QgsRedliningMapToolT<T>::keyPressEvent( QKeyEvent *e )
+{
+  if ( e->key() == Qt::Key_C && e->modifiers() == Qt::ControlModifier )
+  {
+    copy();
+  }
+  else if ( e->key() == Qt::Key_X && e->modifiers() == Qt::ControlModifier )
+  {
+    cut();
+  }
+  else
+  {
+    T::keyPressEvent( e );
+  }
+}
+
+template <class T>
+void QgsRedliningMapToolT<T>::copy()
+{
+  QgsFeatureStore featureStore( mLayer->pendingFields(), mLayer->crs() );
+  featureStore.addFeature( createFeature() );
+  QgisApp::instance()->clipboard()->setStoredFeatures( featureStore );
+}
+
+template <class T>
+void QgsRedliningMapToolT<T>::cut()
+{
+  copy();
+  T::deleteShape();
+}
+
+template <class T>
+void QgsRedliningMapToolT<T>::addContextMenuActions( const QgsMapToolDrawShape::EditContext* context, QMenu& menu ) const
+{
+  T::addContextMenuActions( context, menu );
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if ( !menu.isEmpty() )
+  {
+    menu.addSeparator();
+  }
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), T::tr( "Copy" ), this, &QgsRedliningMapToolT<T>::copy );
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), T::tr( "Cut" ), this, &QgsRedliningMapToolT<T>::cut );
+#endif
+}
+
+template <class T>
 QgsFeature QgsRedliningMapToolT<T>::createFeature() const
 {
   QgsAbstractGeometryV2* geom = T::createGeometry( mLayer->crs() );
@@ -389,6 +435,7 @@ void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
   {
     QMenu menu;
     menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
+    menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cut() ) );
     menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
     menu.exec( e->globalPos() );
   }
@@ -538,6 +585,10 @@ void QgsRedliningEditGroupMapTool::keyPressEvent( QKeyEvent *e )
   else if ( e->key() == Qt::Key_C && e->modifiers() == Qt::ControlModifier )
   {
     copy();
+  }
+  else if ( e->key() == Qt::Key_X && e->modifiers() == Qt::ControlModifier )
+  {
+    cut();
   }
 }
 
@@ -726,8 +777,10 @@ void QgsRedliningEditGroupMapTool::copy()
     if ( item.labelFeature != -1 )
     {
       QgsFeature f;
-      mLayer->getFeatures( QgsFeatureRequest( item.labelFeature ) ).nextFeature( f );
-      featureStore.addFeature( f );
+      if ( mLayer->getFeatures( QgsFeatureRequest( item.labelFeature ) ).nextFeature( f ) )
+      {
+        featureStore.addFeature( f );
+      }
     }
     else
     {
@@ -894,13 +947,10 @@ void QgsRedliningEditTextMapTool::canvasPressEvent( QMouseEvent *e )
 void QgsRedliningEditTextMapTool::showContextMenu( QMouseEvent *e )
 {
   QMenu menu;
-  QAction* actionDelete = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ) );
-  if ( menu.exec( e->globalPos() ) == actionDelete )
-  {
-    mLayer->deleteFeature( mLabel.featureId );
-    mLayer->triggerRepaint();
-    canvas()->unsetMapTool( this );
-  }
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cut() ) );
+  menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLabel() ) );
+  menu.exec( e->globalPos() );
 }
 
 void QgsRedliningEditTextMapTool::canvasMoveEvent( QMouseEvent *e )
@@ -960,8 +1010,7 @@ void QgsRedliningEditTextMapTool::keyPressEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Delete || e->key() == Qt::Key_Backspace )
   {
-    mLayer->deleteFeature( mLabel.featureId );
-    canvas()->unsetMapTool( this );
+    deleteLabel();
   }
   else if ( e->key() == Qt::Key_Escape )
   {
@@ -975,6 +1024,32 @@ void QgsRedliningEditTextMapTool::keyPressEvent( QKeyEvent *e )
   {
     redo();
   }
+  else if ( e->key() == Qt::Key_C && e->modifiers() == Qt::ControlModifier )
+  {
+    copy();
+  }
+  else if ( e->key() == Qt::Key_X && e->modifiers() == Qt::ControlModifier )
+  {
+    cut();
+  }
+}
+
+void QgsRedliningEditTextMapTool::copy()
+{
+  QgsFeatureStore featureStore( mLayer->pendingFields(), mLayer->crs() );
+  QgsFeature f;
+  if ( mLayer->getFeatures( QgsFeatureRequest( mLabel.featureId ) ).nextFeature( f ) )
+  {
+    featureStore.addFeature( f );
+    QgisApp::instance()->clipboard()->setStoredFeatures( featureStore );
+  }
+}
+
+void QgsRedliningEditTextMapTool::deleteLabel()
+{
+  mLayer->deleteFeature( mLabel.featureId );
+  mLayer->triggerRepaint();
+  canvas()->unsetMapTool( this );
 }
 
 void QgsRedliningEditTextMapTool::updateStyle( int /*outlineWidth*/, const QColor& outlineColor, const QColor& fillColor, Qt::PenStyle lineStyle, Qt::BrushStyle brushStyle )

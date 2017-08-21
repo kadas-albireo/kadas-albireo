@@ -72,6 +72,10 @@ class QgsMilXAnnotationItem : public QgsAnnotationItem
   public slots:
     void updateSymbol( bool updatePoints = false );
 
+  signals:
+    void copy();
+    void cut();
+
   protected:
     QgsMilXAnnotationItem( QgsMapCanvas* canvas, QgsMilXAnnotationItem* source );
 

@@ -76,6 +76,8 @@ class QgsRedliningMapToolT : public T
   protected:
     void canvasPressEvent( QMouseEvent* ev ) override;
     void canvasReleaseEvent( QMouseEvent* ev ) override;
+    void keyPressEvent( QKeyEvent *e ) override;
+    void addContextMenuActions( const QgsMapToolDrawShape::EditContext* context, QMenu& menu ) const override;
 
   private:
     QgsRedliningManager* mRedlining;
@@ -88,6 +90,8 @@ class QgsRedliningMapToolT : public T
     void init( const QgsFeature* editFeature, QgsRedliningAttribEditor* editor );
     QgsFeature createFeature() const;
     void onFinished();
+    void copy();
+    void cut();
 };
 
 template<>
@@ -178,6 +182,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
 
   private slots:
     void copy();
+    void cut() { copy(); deleteAll(); }
     void deleteAll();
     void updateRect();
     void updateLabelBoundingBoxes();
@@ -224,6 +229,9 @@ class QgsRedliningEditTextMapTool : public QgsMapTool
     bool labelClicked( const QgsPoint& mapPos ) const;
 
   private slots:
+    void copy();
+    void cut() { copy(); deleteLabel(); }
+    void deleteLabel();
     void update();
     void updateLabelBoundingBox();
     void applyEditorChanges();

@@ -501,6 +501,12 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   {
     actionClearOffset = menu.addAction( QIcon( ":/images/themes/default/clear.svg" ), tr( "Reset offset" ) );
   }
+  if ( !menu.isEmpty() )
+  {
+    menu.addSeparator();
+  }
+  QAction* actionCopy = menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ) );
+  QAction* actionCut = menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ) );
   QAction* actionRemove = menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete symbol" ) );
   QAction* clickedAction = menu.exec( screenPos );
   if ( !clickedAction )
@@ -533,6 +539,14 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   else if ( clickedAction == actionEdit )
   {
     _showItemEditor();
+  }
+  else if ( clickedAction == actionCopy )
+  {
+    emit copy();
+  }
+  else if ( clickedAction == actionCut )
+  {
+    emit cut();
   }
   else if ( clickedAction == actionRemove )
   {

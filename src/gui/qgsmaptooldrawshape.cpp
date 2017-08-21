@@ -173,10 +173,7 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
         }
         else if ( clickedAction == deleteAction )
         {
-          State* state = emptyState();
-          state->status = StatusEditingReady;
-          mStateStack.updateState( state );
-          canvas()->unsetMapTool( mParentTool ? mParentTool : this ); // unset
+          deleteShape();
         }
         else
         {
@@ -289,6 +286,14 @@ void QgsMapToolDrawShape::keyPressEvent( QKeyEvent* e )
   {
     redo();
   }
+}
+
+void QgsMapToolDrawShape::deleteShape()
+{
+  State* state = emptyState();
+  state->status = StatusEditingReady;
+  mStateStack.updateState( state );
+  canvas()->unsetMapTool( mParentTool ? mParentTool : this ); // unset
 }
 
 void QgsMapToolDrawShape::acceptInput()

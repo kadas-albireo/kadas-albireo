@@ -548,6 +548,8 @@ QgsMilXEditTool::QgsMilXEditTool( QgisInterface *iface, QgsMilXLayer* layer, Qgs
     mItems.append( item );
     mActiveAnnotation = item;
     connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
+    connect( item, SIGNAL( copy() ), this, SLOT( copy() ) );
+    connect( item, SIGNAL( cut() ), this, SLOT( cut() ) );
   }
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
   // If layer is deleted or layers are changed, quit tool
@@ -624,6 +626,7 @@ void QgsMilXEditTool::canvasPressEvent( QMouseEvent* e )
     {
       QMenu menu;
       menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
+      menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cut() ) );
       menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
       menu.exec( e->globalPos() );
     }
@@ -787,6 +790,8 @@ void QgsMilXEditTool::canvasReleaseEvent( QMouseEvent * e )
         item->fromMilxItem( layerItem );
         item->setSelected( true );
         connect( item, SIGNAL( destroyed( QObject* ) ), this, SLOT( removeItemFromList() ) );
+        connect( item, SIGNAL( copy() ), this, SLOT( copy() ) );
+        connect( item, SIGNAL( cut() ), this, SLOT( cut() ) );
         delete layerItem;
         if (( e->modifiers() & Qt::ControlModifier ) == 0 )
         {
@@ -837,6 +842,10 @@ void QgsMilXEditTool::keyPressEvent( QKeyEvent *e )
   {
     copy();
   }
+  else if ( e->key() == Qt::Key_X && e->modifiers() == Qt::ControlModifier )
+  {
+    cut();
+  }
 }
 
 void QgsMilXEditTool::canvasDoubleClickEvent( QMouseEvent */*e*/ )
@@ -860,9 +869,16 @@ void QgsMilXEditTool::deleteAll()
 void QgsMilXEditTool::copy()
 {
   QList<QgsMilXItem*> milxItems;
-  foreach ( QgsMilXAnnotationItem* item, mItems )
+  if ( mActiveAnnotation && QObject::sender() == mActiveAnnotation )
   {
-    milxItems.append( item->toMilxItem() );
+    milxItems.append( mActiveAnnotation->toMilxItem() );
+  }
+  else
+  {
+    foreach ( QgsMilXAnnotationItem* item, mItems )
+    {
+      milxItems.append( item->toMilxItem() );
+    }
   }
   QgsMilXIO::copyToClipboard( milxItems, mIface );
   qDeleteAll( milxItems );

@@ -382,7 +382,7 @@ void QgsRedlining::setTextTool( bool active )
 
 void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
 {
-  if ( active && ( mApp->mapCanvas()->mapTool() == 0 || mApp->mapCanvas()->mapTool()->action() != action ) )
+  if ( active )
   {
     tool->setAction( action );
     mUi.buttonNewObject->setDefaultAction( action );

@@ -150,6 +150,7 @@ class QgsMilXEditTool : public QgsMapTool
 
   private slots:
     void copy();
+    void cut() { copy(); deleteAll(); }
     void deleteAll();
     void removeItemFromList();
     void updateRect();
