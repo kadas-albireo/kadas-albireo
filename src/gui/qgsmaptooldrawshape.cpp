@@ -161,7 +161,7 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
       {
         QMenu menu;
         addContextMenuActions( mEditContext, menu );
-        if ( menu.isEmpty() )
+        if ( !menu.isEmpty() )
         {
           menu.addSeparator();
         }
