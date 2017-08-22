@@ -1004,16 +1004,11 @@ void GlobePlugin::updateLayers()
         mLayerExtents.insert( mapLayer->id(), extent );
       }
     }
-    foreach ( const QString& layerId, mAnnotations.keys() )
+
+    for ( AnnotationMap_t::iterator it = mAnnotations.begin(), itEnd = mAnnotations.end(); it != itEnd; ++it )
     {
-      if ( !layerId.isEmpty() )
-      {
-        bool visible = selectedLayers.contains( layerId );
-        foreach ( const osg::ref_ptr<osgEarth::Annotation::PlaceNode>& node, mAnnotations[layerId].values() )
-        {
-          node->setNodeMask( visible ? ~0 : 0 );
-        }
-      }
+      bool visible = selectedLayers.contains( it.key()->layerId );
+      it.value()->setNodeMask( visible ? ~0 : 0 );
     }
 
     mTileSource->setLayerSet( drapedLayers );
@@ -1138,10 +1133,10 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 {
   if ( mAnnotationsGroup )
   {
-    if ( mAnnotations.contains( item->layerId ) )
+    if ( mAnnotations.contains( item ) )
     {
-      mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
-      mAnnotations[item->layerId].take( item ) = 0;
+      mAnnotationsGroup->removeChild( mAnnotations[item] );
+      mAnnotations.remove( item );
     }
     const QgsPoint& p = item->worldPos;
     osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
@@ -1158,17 +1153,17 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
 
     osg::ref_ptr<osgEarth::Annotation::PlaceNode> placeNode = new osgEarth::Annotation::PlaceNode( mMapNode, geop, "", pin );
     placeNode->setOcclusionCulling( true );
-    mAnnotations[item->layerId][item] = placeNode;
+    mAnnotations[item] = placeNode;
     mAnnotationsGroup->addChild( placeNode );
   }
 }
 
 void GlobePlugin::removeBillboard( QgsBillBoardItem* item )
 {
-  if ( mAnnotationsGroup && mAnnotations.contains( item->layerId ) )
+  if ( mAnnotationsGroup && mAnnotations.contains( item ) )
   {
-    mAnnotationsGroup->removeChild( mAnnotations[item->layerId][item] );
-    mAnnotations[item->layerId].take( item ) = 0;
+    mAnnotationsGroup->removeChild( mAnnotations[item] );
+    mAnnotations.remove( item );
   }
 }
 
