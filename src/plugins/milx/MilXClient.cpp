@@ -19,6 +19,7 @@
 #include "MilXCommands.hpp"
 #include <QApplication>
 #include <QDataStream>
+#include <QDir>
 #include <QEventLoop>
 #include <QHostAddress>
 #include <QNetworkConfigurationManager>
@@ -76,7 +77,12 @@ bool MilXClientWorker::initialize()
     mProcess = new QProcess( this );
     connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
     {
-      mProcess->start( "milxserver" );
+#ifdef __MINGW32__
+      QString serverPath = QDir( QString( "%1/../opt/mss/milxserver.exe" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
+#else
+      QString serverPath = "milxserver";
+#endif
+      mProcess->start( serverPath );
       mProcess->waitForReadyRead( 10000 );
       QByteArray out = mProcess->readAllStandardOutput();
       if ( !mProcess->isOpen() )

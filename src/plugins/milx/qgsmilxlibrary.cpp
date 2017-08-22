@@ -270,7 +270,11 @@ QStandardItem* QgsMilXLibrary::addItem( QStandardItem* parent, const QString& va
 
 void QgsMilXLibraryLoader::run()
 {
+#ifdef __MINGW32__
+  QString galleryPath = QDir( QString( "%1/../opt/mss/MilXGalleryFiles" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
+#else
   QString galleryPath = QDir( QgsApplication::applicationDirPath() ).absoluteFilePath( "MilXGalleryFiles" );
+#endif
   if ( !QDir( galleryPath ).exists() )
   {
     galleryPath = QSettings().value( "/milx/milx_gallery_path", "" ).toString();
