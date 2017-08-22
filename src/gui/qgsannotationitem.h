@@ -147,11 +147,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
   protected:
     QgsAnnotationItem( QgsMapCanvas* canvas, QgsAnnotationItem* source );
 
-    static QList< QPair<QString, AnnotationItemFactory_t> >& _registeredAnnotations()
-    {
-      static QList< QPair<QString, AnnotationItemFactory_t> > registry;
-      return registry;
-    }
+    static QList< QPair<QString, AnnotationItemFactory_t> >& _registeredAnnotations();
 
     struct AnnotationItemRegisterer
     {

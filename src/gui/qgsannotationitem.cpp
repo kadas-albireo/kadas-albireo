@@ -737,3 +737,9 @@ void QgsAnnotationItem::notifyItemUpdated()
     mMapCanvas->notifyAnnotationItemChanged( this );
   }
 }
+
+QList< QPair<QString, QgsAnnotationItem::AnnotationItemFactory_t> >& QgsAnnotationItem::_registeredAnnotations()
+{
+  static QList< QPair<QString, AnnotationItemFactory_t> > registry;
+  return registry;
+}
