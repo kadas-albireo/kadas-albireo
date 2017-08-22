@@ -453,35 +453,6 @@ QT4_ADD_RESOURCES(TEST_RCC_SRCS ${TEST_RCCS})
 
 QT4_WRAP_CPP(QGIS_APP_MOC_SRCS ${QGIS_APP_MOC_HDRS})
 
-IF (WIN32)
-  IF (MSVC)
-	SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} main.cpp)
-    SET (QGIS_APPMAIN_SRCS mainwin.cpp ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
-    ADD_DEFINITIONS("\"-DSPLASH_IMPORT=__declspec(dllimport)\"")
-  ELSE(MSVC)
-    SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
-    ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
-
-    # Icon for windows MINGW
-    # Note: can't include .rc directly to source files
-    # as it's ignored when used MinGW
-
-    IF (NOT WINDRES)
-      FIND_PROGRAM(WINDRES windres)
-      IF (NOT WINDRES)
-        MESSAGE(FATAL_ERROR "windres not found - aborting")
-      ENDIF (NOT WINDRES)
-    ENDIF (NOT WINDRES)
-    #############################################################
-    # application icon
-    # resource compilation for MinGW
-    ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon.o
-      COMMAND ${WINDRES} -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc
-      -o ${CMAKE_CURRENT_BINARY_DIR}/icon.o )
-    SET(QGIS_APP_SRCS ${QGIS_APP_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/icon.o)
-  ENDIF (MSVC)
-ENDIF (WIN32)
-
 IF(PEDANTIC)
   # disable deprecation warnings
   IF(MSVC)
@@ -554,13 +525,18 @@ ENDIF (POSTGRES_FOUND)
 #############
 IF (ANDROID)
   ADD_LIBRARY(${QGIS_APP_NAME} SHARED main.cpp ${QGIS_APP_SRCS} ${QGIS_APP_MOC_SRCS} ${QGIS_APP_HDRS} ${QGIS_APP_MOC_HDRS} ${IMAGE_RCC_SRCS} ${TEST_RCC_SRCS})
-ELSE(ANDROID)
-	IF(MSVC)
-		ADD_EXECUTABLE(${QGIS_APP_NAME} WIN32 ${QGIS_APPMAIN_SRCS})
-	ELSE(MSVC)
-		ADD_EXECUTABLE(${QGIS_APP_NAME} MACOSX_BUNDLE WIN32 main.cpp ${IMAGE_RCC_SRCS} ${TEST_RCC_SRCS})
-	ENDIF(MSVC)
-ENDIF(ANDROID)
+ELSEIF(MSVC)
+  SET (QGIS_APP_SRCS ${QGIS_APP_SRCS} main.cpp)
+  ADD_EXECUTABLE(${QGIS_APP_NAME} WIN32 mainwin.cpp ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
+ELSE()
+  IF(MINGW)
+    ENABLE_LANGUAGE(RC)
+    SET(CMAKE_RC_COMPILER_INIT ${CMAKE_GENERATOR_RC})
+    SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -i <SOURCE> -o <OBJECT>")
+    SET(QGIS_RC_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/qgis_win32.rc)
+  ENDIF(MINGW)
+  ADD_EXECUTABLE(${QGIS_APP_NAME} MACOSX_BUNDLE WIN32 main.cpp ${QGIS_RC_SRCS} ${IMAGE_RCC_SRCS} ${TEST_RCC_SRCS})
+ENDIF()
 
 QT4_WRAP_CPP(tst_moc_srcs maprenderertest.h)
 ADD_EXECUTABLE(maprenderertest maprenderertest.cpp ${tst_moc_srcs})
@@ -569,8 +545,10 @@ TARGET_LINK_LIBRARIES(maprenderertest qgis_core qgis_gui)
 IF (WIN32)
   IF (MSVC)
     ADD_DEFINITIONS("-DAPP_EXPORT=${DLLEXPORT}")
+    ADD_DEFINITIONS("\"-DSPLASH_IMPORT=__declspec(dllimport)\"")
   ELSE (MSVC)
     ADD_DEFINITIONS("-UAPP_EXPORT \"-DAPP_EXPORT=${DLLEXPORT}\"")
+    ADD_DEFINITIONS("-USPLASH_IMPORT \"-DSPLASH_IMPORT=__declspec(dllimport)\"")
   ENDIF (MSVC)
 ELSE(WIN32)
   ADD_DEFINITIONS("-DAPP_EXPORT=")
