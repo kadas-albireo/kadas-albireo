@@ -48,6 +48,8 @@ if [ ! -e $builddir ]; then
   (
       cd $builddir
       mingw$bits-cmake \
+          -DFULL_RELEASE_NAME="KADAS Albireo" \
+          -DRELEASE_NAME="KADAS" \
           -DENABLE_QT5=$useqt5 \
           -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
           -DWINDRES=$arch-w64-mingw32-windres \
@@ -59,7 +61,12 @@ if [ ! -e $builddir ]; then
           -DQGIS_LIBEXEC_SUBDIR=bin \
           -DQGIS_DATA_SUBDIR=share/qgis \
           -DQGIS_PLUGIN_SUBDIR=bin/qgisplugins \
-          -DBINDINGS_GLOBAL_INSTALL=TRUE ..
+          -DBINDINGS_GLOBAL_INSTALL=TRUE \
+          -DPYUIC4_PROGRAM=/usr/bin/pyuic5 \
+          -DPYRCC4_PROGRAM=/usr/bin/pyrcc5 \
+          -DQUAZIP_INCLUDE_DIR=$MINGWROOT/include/quazip5 \
+          -DQSCINTILLA_INCLUDE_DIR=$MINGWROOT/include/qt5 \
+          ..
   )
 fi
 
@@ -106,7 +113,7 @@ function linkDep {
     [ ! -e "$MINGWROOT/$1" ] && (echo "Error: missing $MINGWROOT/$1"; return 1)
     mkdir -p "$destdir" || return 1
     ln -sf "$MINGWROOT/$1" "$destdir/$name" || return 1
-    autoLinkDeps "$destdir/$name" "${2:-bin}" "${indent}  " || return 1
+    autoLinkDeps "$destdir/$name" "${indent}  " || return 1
     [ -e "$MINGWROOT/$1.debug" ] && ln -sf "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
     return 0
 }
@@ -117,7 +124,7 @@ function autoLinkDeps {
         if ! isnativedll "$dep"; then
             # HACK fix incorrect libpq case
             dep=${dep/LIBPQ/libpq}
-            linkDep bin/$dep "$2" "$3" || return 1
+            linkDep bin/$dep bin "$2" || return 1
         fi
     done
     return 0
@@ -129,8 +136,8 @@ for binary in $binaries; do
 done
 linkDep bin/gdb.exe
 
-linkDep $(ls $MINGWROOT/bin/libssl-*.dll)
-linkDep $(ls $MINGWROOT/bin/libcrypto-*.dll)
+linkDep $(ls $MINGWROOT/bin/libssl-*.dll | sed "s|$MINGWROOT/||")
+linkDep $(ls $MINGWROOT/bin/libcrypto-*.dll | sed "s|$MINGWROOT/||")
 # Additional qt4 dependencies
 if [ "$qt" == "qt4" ]; then
   linkDep lib/qt4/plugins/imageformats/qgif4.dll  bin/imageformats
