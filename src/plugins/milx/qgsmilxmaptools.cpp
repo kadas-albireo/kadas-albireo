@@ -64,6 +64,7 @@ QgsMilxCreateBottomBar::QgsMilxCreateBottomBar( QgsMilXCreateTool *tool, QgsMilX
 
   QgsMilXLayerSelectionWidget* layerWidget = new QgsMilXLayerSelectionWidget( mTool->mIface, this );
   connect( layerWidget, SIGNAL( targetLayerChanged( QgsMilXLayer* ) ), mTool, SLOT( setTargetLayer( QgsMilXLayer* ) ) );
+  mTool->setTargetLayer( layerWidget->getTargetLayer() );
   layout->addWidget( layerWidget );
 
   layout->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
