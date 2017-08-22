@@ -1,6 +1,11 @@
 # See ../CMakeLists.txt for info on staged-plugins* and clean-staged-plugins targets
 
-SET (QGIS_PYTHON_DIR ${QGIS_DATA_DIR}/python)
+IF(MINGW)
+  SET (QGIS_PYTHON_DIR ${PYTHON_SITE_PACKAGES_DIR})
+ELSE(MINGW)
+  SET (QGIS_PYTHON_DIR ${QGIS_DATA_DIR}/python)
+ENDIF(MINGW)
+
 SET (PYTHON_OUTPUT_DIRECTORY ${QGIS_OUTPUT_DIRECTORY}/python)
 
 SET (WITH_PYSPATIALITE FALSE CACHE BOOL "Determines whether PYSPATIALITE should be built")
