@@ -442,14 +442,18 @@ void GlobePlugin::run()
   mOsgViewer->getDatabasePager()->setDoPreCompile( true );
 
   mViewerWidget = new osgEarth::QtGui::ViewerWidget( mOsgViewer );
+  QGLFormat glf = QGLFormat::defaultFormat();
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+  glf.setVersion( 4, 0 );
+  glf.setProfile( QGLFormat::CoreProfile );
+#endif
   if ( settings.value( "/Plugin-Globe/anti-aliasing", true ).toBool() &&
        settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() > 0 )
   {
-    QGLFormat glf = QGLFormat::defaultFormat();
     glf.setSampleBuffers( true );
     glf.setSamples( settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() );
-    mViewerWidget->setFormat( glf );
   }
+  mViewerWidget->setFormat( glf );
 
   mDockWidget->setWidget( mViewerWidget );
   mViewerWidget->setParent( mDockWidget );
