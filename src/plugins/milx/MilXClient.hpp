@@ -42,6 +42,7 @@ public slots:
   bool initialize();
   bool getCurrentLibraryVersionTag(QString& versionTag);
   bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
+  void cleanup();
 
 private:
   QProcess* mProcess;
@@ -52,7 +53,6 @@ private:
 
 private slots:
   void handleSocketError();
-  void cleanup();
 };
 
 
@@ -134,7 +134,10 @@ public:
   static bool downgradeMilXFile(const QString& inputXml, QString& outputXml, const QString &mssVersion, bool& valid, QString& messages);
   static bool validateSymbolXml(const QString& symbolXml, const QString &mssVersion, QString &adjustedSymbolXml, bool& valid, QString& messages);
 
+  static void quit(){ delete instance(); }
+
 private:
+  static MilXClient* sInstance;
   MilXClientWorker mWorker;
   int mSymbolSize;
   int mLineWidth;
@@ -142,7 +145,7 @@ private:
 
   MilXClient();
   ~MilXClient();
-  static MilXClient* instance(){ static MilXClient i; return &i; }
+  static MilXClient* instance();
   static QImage renderSvg(const QByteArray& xml);
 
   bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );

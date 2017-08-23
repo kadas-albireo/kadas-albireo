@@ -43,12 +43,17 @@ MilXClientWorker::MilXClientWorker( QObject* parent )
 
 void MilXClientWorker::cleanup()
 {
-  if ( mProcess )
-    mProcess->deleteLater();
-  mProcess = 0;
   if ( mTcpSocket )
+  {
     mTcpSocket->deleteLater();
-  mTcpSocket = 0;
+    mTcpSocket = 0;
+  }
+  if ( mProcess )
+  {
+    mProcess->waitForFinished();
+    mProcess->deleteLater();
+    mProcess = 0;
+  }
   delete mNetworkSession;
   mNetworkSession = 0;
 }
@@ -290,6 +295,17 @@ void MilXClientWorker::handleSocketError()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MilXClient* MilXClient::sInstance = 0;
+
+MilXClient* MilXClient::instance()
+{
+  if ( !sInstance )
+  {
+    sInstance = new MilXClient();
+  }
+  return sInstance;
+}
+
 MilXClient::MilXClient()
 {
   mWorker.moveToThread( this );
@@ -298,7 +314,8 @@ MilXClient::MilXClient()
 
 MilXClient::~MilXClient()
 {
-  quit();
+  mWorker.cleanup();
+  QThread::quit();
   wait();
 }
 

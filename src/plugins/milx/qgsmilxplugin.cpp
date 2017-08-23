@@ -54,6 +54,7 @@ QgsMilXPlugin::QgsMilXPlugin( QgisInterface * theQgisInterface )
 
 QgsMilXPlugin::~QgsMilXPlugin()
 {
+  MilXClient::quit();
   delete mPasteHandler;
 }
 
