@@ -502,7 +502,7 @@ int main( int argc, char *argv[] )
   QgsDebugMsg( QString( "Android: configpath set to %1" ).arg( configpath ) );
 #endif
 #ifdef Q_OS_WIN32
-  configpath = QDir(qgetenv("APPDATA")).absoluteFilePath("Sourcepole/kadas-albireo");
+  configpath = QDir( qgetenv( "APPDATA" ) ).absoluteFilePath( "Sourcepole/kadas-albireo" );
 #endif
 
   QStringList args;
@@ -741,22 +741,43 @@ int main( int argc, char *argv[] )
     }
   }
 #endif
+#ifndef _MSC_VER
+  QString dataDir = QDir( QString( "%1/../share/" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
 #ifdef __MINGW32__
-  qputenv( "GDAL_DATA", QDir( QString( "%1/../share/gdal/" ).arg( QApplication::applicationDirPath() ) ).absolutePath().toLocal8Bit() );
+  qputenv( "GDAL_DATA", QDir( dataDir ).absoluteFilePath( "gdal" ).toLocal8Bit() );
+#endif
 #endif
 
   QSettings mySettings;
 
+#ifdef _MSC_VER
   QByteArray osgGeo4WRoot = qgetenv( "OSGEO4W_ROOT" );
   if ( !osgGeo4WRoot.isEmpty() )
   {
-    QFile newSettingsFile( QDir( osgGeo4WRoot ).absoluteFilePath( "appdata/settings.ini" ) );
-    if ( newSettingsFile.exists() )
+    QString srcSettingsPath = QDir( osgGeo4WRoot ).absoluteFilePath( "appdata" );
+#else
+  {
+    QString srcSettingsPath = QDir( dataDir ).absoluteFilePath( "qgis" );
+#endif
+    QFile srcSettings;
+    bool full = false;
+    if ( QFile( mySettings.fileName() ).exists() )
     {
-      QSettings newSettings( newSettingsFile.fileName(), QSettings::IniFormat );
+      QgsDebugMsg( "Patching settings" );
+      srcSettings.setFileName( QDir( srcSettingsPath ).absoluteFilePath( "settings_patch.ini" ) );
+    }
+    else
+    {
+      QgsDebugMsg( "Copying full settings" );
+      full = true;
+      srcSettings.setFileName( QDir( srcSettingsPath ).absoluteFilePath( "settings_full.ini" ) );
+    }
+    if ( srcSettings.exists() )
+    {
+      QSettings newSettings( srcSettings.fileName(), QSettings::IniFormat );
       QString timestamp = mySettings.value( "timestamp", "0" ).toString();
       QString newtimestamp = newSettings.value( "timestamp" ).toString();
-      if ( newtimestamp > timestamp )
+      if ( full || newtimestamp > timestamp )
       {
         mySettings.setValue( "timestamp", newtimestamp );
         // Merge new settings to old settings
@@ -919,9 +940,9 @@ int main( int argc, char *argv[] )
     QString translationsPath = QDir( qgetenv( "OSGEO4W_ROOT" ) ).absoluteFilePath( "apps/Qt4/translations" );
 # endif
 #else
-    QString translationsPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QString translationsPath = QLibraryInfo::location( QLibraryInfo::TranslationsPath );
 # ifdef Q_OS_WIN
-    translationsPath = QgsApplication::prefixPath() + translationsPath.mid(QLibraryInfo::location(QLibraryInfo::PrefixPath).length());
+    translationsPath = QgsApplication::prefixPath() + translationsPath.mid( QLibraryInfo::location( QLibraryInfo::PrefixPath ).length() );
 # endif
 #endif
     if ( !qttor.load( QString( "qt_" ) + myTranslationCode, translationsPath ) )
