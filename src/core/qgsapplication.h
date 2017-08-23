@@ -151,6 +151,12 @@ class CORE_EXPORT QgsApplication : public QApplication
     //! Returns the path to the default theme directory.
     static const QString defaultThemePath();
 
+    //! Returns the path to the project templates
+    static const QString projectTemplatesDir();
+
+    //! Returns thepath to the cache
+    static const QString cacheDir();
+
     //! Returns path to the desired icon file.
     //! First it tries to use the active theme path, then default theme path
     static QString iconPath( QString iconFile );

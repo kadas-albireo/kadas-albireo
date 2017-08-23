@@ -365,7 +365,33 @@ const QString QgsApplication::activeThemePath()
 {
   return ":/images/themes/" + themeName() + "/";
 }
-
+const QString QgsApplication::projectTemplatesDir()
+{
+  QString applicationTemplatesDir = QDir( prefixPath() ).absoluteFilePath( "share/qgis/project_templates" );
+  QString templatesDir = QSettings().value( "/qgis/projectTemplatesDir" ).toString();
+  if ( templatesDir.isEmpty() && QDir( applicationTemplatesDir ).exists() )
+  {
+    return applicationTemplatesDir;
+  }
+  return QDir( QgsApplication::qgisSettingsDirPath() ).absoluteFilePath( "project_templates" );
+}
+const QString QgsApplication::cacheDir()
+{
+  QString defaultCacheDir = QDir( QgsApplication::qgisSettingsDirPath() ).absoluteFilePath( "cache" );
+#ifdef Q_OS_WIN
+  QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
+  if ( !localappdata.isEmpty() )
+  {
+    defaultCacheDir = QDir( localappdata ).absoluteFilePath( QString( "qgis_%1_cache" ).arg( RELEASE_NAME ) );
+  }
+#endif
+  QString cacheDirectory = QSettings().value( "cache/directory", defaultCacheDir ).toString();
+  if ( cacheDirectory.isEmpty() )
+  {
+    cacheDirectory = defaultCacheDir;
+  }
+  return cacheDirectory;
+}
 
 QString QgsApplication::iconPath( QString iconFile )
 {

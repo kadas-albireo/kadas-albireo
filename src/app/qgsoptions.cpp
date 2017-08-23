@@ -676,8 +676,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
 
   // templates
   cbxProjectDefaultNew->setChecked( settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() );
-  QString templateDirName = settings.value( "/qgis/projectTemplateDir",
-                            QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString();
+  QString templateDirName = QgsApplication::projectTemplatesDir();
   // make dir if it doesn't exists - should just be called once
   QDir templateDir;
   if ( ! templateDir.exists( templateDirName ) )
@@ -1155,11 +1154,11 @@ void QgsOptions::saveOptions()
   settings.setValue( "/qgis/askToSaveProjectChanges", chbAskToSaveProjectChanges->isChecked() );
   settings.setValue( "qgis/askToDeleteLayers", mLayerDeleteConfirmationChkBx->isChecked() );
   settings.setValue( "/qgis/warnOldProjectVersion", chbWarnOldProjectVersion->isChecked() );
-  if (( settings.value( "/qgis/projectTemplateDir" ).toString() != leTemplateFolder->text() ) ||
+  if (( settings.value( "/qgis/projectTemplatesDir" ).toString() != leTemplateFolder->text() ) ||
       ( settings.value( "/qgis/newProjectDefault" ).toBool() != cbxProjectDefaultNew->isChecked() ) )
   {
     settings.setValue( "/qgis/newProjectDefault", cbxProjectDefaultNew->isChecked() );
-    settings.setValue( "/qgis/projectTemplateDir", leTemplateFolder->text() );
+    settings.setValue( "/qgis/projectTemplatesDir", leTemplateFolder->text() );
     QgisApp::instance()->updateProjectFromTemplates();
   }
   settings.setValue( "/qgis/enableMacros", cmbEnableMacros->currentIndex() );

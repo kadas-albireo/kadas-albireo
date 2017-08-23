@@ -1496,8 +1496,7 @@ void QgisApp::updateProjectFromTemplates()
 {
   // get list of project files in template dir
   QSettings settings;
-  QString templateDirName = settings.value( "/qgis/projectTemplateDir",
-                            QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString();
+  QString templateDirName = QgsApplication::projectTemplatesDir();
   QDir templateDir( templateDirName );
   QStringList filters( "*.qgs" );
   templateDir.setNameFilters( filters );
@@ -2753,8 +2752,7 @@ void QgisApp::fileNewFromTemplateAction( QAction * qAction )
   else
   {
     QSettings settings;
-    QString templateDirName = settings.value( "/qgis/projectTemplateDir",
-                              QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString();
+    QString templateDirName = QgsApplication::projectTemplatesDir();
     fileNewFromTemplate( templateDirName + QDir::separator() + qAction->text() );
   }
 }

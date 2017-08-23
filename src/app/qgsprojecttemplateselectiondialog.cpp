@@ -35,7 +35,7 @@ QgsProjectTemplateSelectionDialog::QgsProjectTemplateSelectionDialog( QWidget *p
   mModel->setReadOnly( true );
 
   mTreeView->setModel( mModel );
-  mTreeView->setRootIndex( mModel->setRootPath( QSettings().value( "/qgis/projectTemplateDir", QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString() ) );
+  mTreeView->setRootIndex( mModel->setRootPath( QgsApplication::projectTemplatesDir() ) );
   for ( int i = 1, n = mModel->columnCount(); i < n; ++i )
   {
     mTreeView->setColumnHidden( i, true );

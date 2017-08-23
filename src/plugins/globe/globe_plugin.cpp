@@ -361,21 +361,8 @@ void GlobePlugin::run()
   }
   else
   {
-    QString defaultCacheDir = QgsApplication::qgisSettingsDirPath() + "cache";
-#ifdef Q_OS_WIN
-    QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
-    if ( !localappdata.isEmpty() )
-    {
-      defaultCacheDir = QDir( localappdata ).absoluteFilePath( QString( "qgis_%1_cache" ).arg( RELEASE_NAME ) );
-    }
-#endif
-    QString cacheDirectory = settings.value( "cache/directory", defaultCacheDir ).toString();
-    if ( cacheDirectory.isEmpty() )
-    {
-      cacheDirectory = defaultCacheDir;
-    }
     osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
-    cacheOptions.rootPath() = cacheDirectory.toStdString();
+    cacheOptions.rootPath() = QgsApplication::cacheDir().toStdString();
 
     osgEarth::MapOptions mapOptions;
     mapOptions.cache() = cacheOptions;

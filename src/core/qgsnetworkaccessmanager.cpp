@@ -478,24 +478,10 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
   QgsNetworkDiskCache *newcache = qobject_cast<QgsNetworkDiskCache*>( cache() );
   if ( !newcache )
     newcache = new QgsNetworkDiskCache( this );
-
-  QString defaultCacheDir = QgsApplication::qgisSettingsDirPath() + "cache";
-#ifdef Q_OS_WIN
-  QByteArray localappdata = qgetenv( "LOCALAPPDATA" );
-  if ( !localappdata.isEmpty() )
-  {
-    defaultCacheDir = QDir( localappdata ).absoluteFilePath( QString( "qgis_%1_cache" ).arg( RELEASE_NAME ) );
-  }
-#endif
-  QString cacheDirectory = settings.value( "cache/directory", defaultCacheDir ).toString();
-  if ( cacheDirectory.isEmpty() )
-  {
-    cacheDirectory = defaultCacheDir;
-  }
   qint64 cacheSize = settings.value( "cache/size", 50 * 1024 * 1024 ).toULongLong();
-  QgsDebugMsg( QString( "setCacheDirectory: %1" ).arg( cacheDirectory ) );
+  QgsDebugMsg( QString( "setCacheDirectory: %1" ).arg( QgsApplication::cacheDir() ) );
   QgsDebugMsg( QString( "setMaximumCacheSize: %1" ).arg( cacheSize ) );
-  newcache->setCacheDirectory( cacheDirectory );
+  newcache->setCacheDirectory( QgsApplication::cacheDir() );
   newcache->setMaximumCacheSize( cacheSize );
   QgsDebugMsg( QString( "cacheDirectory: %1" ).arg( newcache->cacheDirectory() ) );
   QgsDebugMsg( QString( "maximumCacheSize: %1" ).arg( newcache->maximumCacheSize() ) );

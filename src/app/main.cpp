@@ -1021,7 +1021,7 @@ int main( int argc, char *argv[] )
     QString testUrl = mySettings.value( "/qgis/onlineTestUrl" ).toString();
     if ( !testUrl.isEmpty() )
     {
-      QString templateDirPath = mySettings.value( "/qgis/projectTemplateDir", QgsApplication::qgisSettingsDirPath() + "project_templates" ).toString();
+      QString templateDirPath = QgsApplication::projectTemplatesDir();
       QString offlineProject = mySettings.value( "/qgis/offlineDefaultProject" ).toString();
       QString onlineProject = mySettings.value( "/qgis/onlineDefaultProject" ).toString();
 
