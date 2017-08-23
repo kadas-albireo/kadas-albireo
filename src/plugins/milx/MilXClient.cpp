@@ -78,7 +78,9 @@ bool MilXClientWorker::initialize()
     connect( mProcess, SIGNAL( finished( int ) ), this, SLOT( cleanup() ) );
     {
 #ifdef __MINGW32__
-      QString serverPath = QDir( QString( "%1/../opt/mss/milxserver.exe" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
+      QString serverDir = QDir( QString( "%1/../opt/mss/" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
+      QString serverPath = QDir( serverDir ).absoluteFilePath( "milxserver.exe" );
+      mProcess->setWorkingDirectory( serverDir );
 #else
       QString serverPath = "milxserver";
 #endif
