@@ -165,6 +165,7 @@ elif [ "$qt" == "qt5" ]; then
 
   mkdir -p $installprefix/share/qt5/translations/
   cp -a $MINGWROOT/share/qt5/translations/qt_*.qm  $installprefix/share/qt5/translations
+  cp -a $MINGWROOT/share/qt5/translations/qtbase_*.qm  $installprefix/share/qt5/translations
 fi
 
 # Install python libs

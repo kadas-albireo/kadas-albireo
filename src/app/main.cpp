@@ -501,6 +501,9 @@ int main( int argc, char *argv[] )
   configpath = QgsApplication::qgisSettingsDirPath();
   QgsDebugMsg( QString( "Android: configpath set to %1" ).arg( configpath ) );
 #endif
+#ifdef Q_OS_WIN32
+  configpath = QDir(qgetenv("APPDATA")).absoluteFilePath("Sourcepole/kadas-albireo");
+#endif
 
   QStringList args;
 
@@ -908,19 +911,28 @@ int main( int argc, char *argv[] )
      * the About, Preferences and Quit items to the Mac Application menu.
      * These items must be translated identically in both qt_ and qgis_ files.
      */
-#ifdef Q_OS_WIN
+
+#ifdef _MSC_VER
+# if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QString translationsPath = QDir( qgetenv( "OSGEO4W_ROOT" ) ).absoluteFilePath( "apps/Qt5/translations" );
+# else
     QString translationsPath = QDir( qgetenv( "OSGEO4W_ROOT" ) ).absoluteFilePath( "apps/Qt4/translations" );
+# endif
 #else
-    QString translationsPath = QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+    QString translationsPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+# ifdef Q_OS_WIN
+    translationsPath = QgsApplication::prefixPath() + translationsPath.mid(QLibraryInfo::location(QLibraryInfo::PrefixPath).length());
+# endif
 #endif
-    if ( qttor.load( QString( "qt_" ) + myTranslationCode, translationsPath ) )
-    {
-      myApp.installTranslator( &qttor );
-    }
-    else
+    if ( !qttor.load( QString( "qt_" ) + myTranslationCode, translationsPath ) )
     {
       QgsDebugMsg( QString( "loading of qt translation failed [%1/qt_%2]" ).arg( translationsPath ).arg( myTranslationCode ).toLocal8Bit().constData() );
     }
+    if ( !qttor.load( QString( "qtbase_" ) + myTranslationCode, translationsPath ) )
+    {
+      QgsDebugMsg( QString( "loading of qtbase translation failed [%1/qtbase_%2]" ).arg( translationsPath ).arg( myTranslationCode ).toLocal8Bit().constData() );
+    }
+    myApp.installTranslator( &qttor );
   }
   else
   {
