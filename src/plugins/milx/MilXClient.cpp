@@ -222,7 +222,7 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
     for ( int i = 0; i < 10; ++i )
     {
       Sleep( 100 );
-      HWND hWnd = FindWindow( NULL, "MSS Symbol Editor" );
+      HWND hWnd = FindWindow( "TfrmMssSymbolEditorBaseGS", NULL );
       if ( hWnd )
       {
         SetForegroundWindow( hWnd );
