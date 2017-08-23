@@ -472,7 +472,7 @@ int main( int argc, char *argv[] )
   bool myRestoreDefaultWindowState = false;
   bool myRestorePlugins = true;
   bool myCustomization = true;
-  bool ribbonGui = false;
+  bool ribbonGui = true;
 
   // This behaviour will set initial extent of map canvas, but only if
   // there are no command line arguments. This gives a usable map
