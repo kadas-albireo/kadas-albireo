@@ -42,6 +42,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void paint( QPainter* painter ) override;
     QString filePath() const { return mFilePath; }
 
+    void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
     void showContextMenu( const QPoint& screenPos ) override;
 
   protected:
@@ -53,6 +54,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 
     static bool readGeoPos( const QString& filePath, QgsPoint& wgs84Pos , QString *errMsg = 0 );
 
+    void updateImage();
     bool createBillboard() const override { return true; }
     QImage billboardImage() const override { return mImage; }
 

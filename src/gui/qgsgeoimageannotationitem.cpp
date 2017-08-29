@@ -139,7 +139,7 @@ bool QgsGeoImageAnnotationItem::readGeoPos( const QString &filePath, QgsPoint &w
 QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas *canvas )
     : QgsAnnotationItem( canvas )
 {
-  setItemFlags( ItemIsNotResizeable );
+  setItemFlags( QgsAnnotationItem::ItemKeepsAspectRatio );
 }
 
 QgsGeoImageAnnotationItem::~QgsGeoImageAnnotationItem()
@@ -216,7 +216,8 @@ void QgsGeoImageAnnotationItem::readXML( const QDomDocument& doc, const QDomElem
     _readXML( doc, annotationElem );
   }
 
-  setFilePath( filePath );
+  mFilePath = filePath;
+  updateImage();
   setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
 }
 
@@ -237,9 +238,26 @@ void QgsGeoImageAnnotationItem::paint( QPainter* painter )
   }
 }
 
+void QgsGeoImageAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos )
+{
+  QgsAnnotationItem::handleMoveAction( moveAction, newPos, oldPos );
+  if ( moveAction >= ResizeFrameUp && moveAction <= ResizeFrameRightDown )
+  {
+    updateImage();
+  }
+}
+
 void QgsGeoImageAnnotationItem::_showItemEditor()
 {
   QDesktopServices::openUrl( QUrl::fromLocalFile( mFilePath ) );
+}
+
+void QgsGeoImageAnnotationItem::updateImage()
+{
+  QImageReader reader( mFilePath );
+  reader.setBackgroundColor( Qt::white );
+  reader.setScaledSize( QSize( mFrameSize.width() - 4, mFrameSize.height() - 4 ) );
+  mImage = reader.read().convertToFormat( QImage::Format_RGB32 );
 }
 
 void QgsGeoImageAnnotationItem::toggleLocked()
