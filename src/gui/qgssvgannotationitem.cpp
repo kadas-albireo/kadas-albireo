@@ -20,7 +20,11 @@
 #include "qgsproject.h"
 #include <QDomDocument>
 #include <QDomElement>
+#include <QFile>
 #include <qmath.h>
+#include <svg2svgt/processorengine.h>
+#include <svg2svgt/ruleengine.h>
+#include <svg2svgt/logger.h>
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsSvgAnnotationItem )
 
@@ -114,10 +118,20 @@ void QgsSvgAnnotationItem::_showItemEditor()
   QgsSvgAnnotationDialog( this ).exec();
 }
 
-void QgsSvgAnnotationItem::setFilePath( const QString& file )
+void QgsSvgAnnotationItem::setFilePath( const QString& filepath )
 {
-  mFilePath = file;
-  mSvgRenderer.load( mFilePath );
+  mFilePath = filepath;
+  svg2svgt::Logger logger;
+  svg2svgt::RuleEngine ruleEngine( logger );
+  ruleEngine.setDefaultRules();
+  svg2svgt::ProcessorEngine processor( ruleEngine, logger );
+
+  QFile file( filepath );
+  if ( file.open( QIODevice::ReadOnly ) )
+  {
+    mSvgRenderer.load( processor.process( file.readAll() ) );
+  }
+
   QRect viewBox = mSvgRenderer.viewBox();
   if ( !mIsClone )
   {

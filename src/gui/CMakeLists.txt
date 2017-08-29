@@ -666,6 +666,7 @@ TARGET_LINK_LIBRARIES(qgis_gui
   ${qjson_LIBRARIES}
   ${QUAZIP_LIBRARIES}
   ${GeographicLib_LIBRARIES}
+  -lsvg2svgt
 )
 
 IF(WIN32)

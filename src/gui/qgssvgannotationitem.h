@@ -35,7 +35,7 @@ class GUI_EXPORT QgsSvgAnnotationItem: public QgsAnnotationItem
 
     void paint( QPainter* painter ) override;
 
-    void setFilePath( const QString& file );
+    void setFilePath( const QString& filepath );
     QString filePath() const { return mFilePath; }
 
   protected:
