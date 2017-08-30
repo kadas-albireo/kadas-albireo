@@ -683,11 +683,13 @@ int main( int argc, char *argv[] )
   QCoreApplication::setAttribute( Qt::AA_DontShowIconsInMenus, false );
 
   // This is as early as possible (need settings environment initialized)
-#ifdef _MSC_VER
   QgsCrashRpt crashReporter;
   if ( !crashReporter.install() )
+  {
+#ifdef _MSC_VER
     SetUnhandledExceptionFilter( QgisApp::qgisCrashDump );
 #endif
+  }
 
   QSettings* customizationsettings;
   if ( !optionpath.isEmpty() || !configpath.isEmpty() )

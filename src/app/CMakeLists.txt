@@ -1,6 +1,9 @@
 IF(MSVC)
-SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
-SET(CRASHRPT_LIBRARY "CrashRpt1403.lib" CACHE FILEPATH "Path to CrashRpt library")
+    SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
+    SET(CRASHRPT_LIBRARY "CrashRpt1403.lib" CACHE FILEPATH "Path to CrashRpt library")
+ELSE(MSVC)
+    SET(CRASHRPT_INCLUDE_DIR "" CACHE PATH "Path to CrashRpt headers")
+    SET(CRASHRPT_LIBRARY "GdbCrashHandler" CACHE FILEPATH "Path to CrashRpt library")
 ENDIF(MSVC)
 
 SET(QGIS_APP_SRCS

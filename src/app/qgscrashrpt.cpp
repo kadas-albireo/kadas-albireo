@@ -21,6 +21,8 @@
 #include "qgslogger.h"
 #ifdef _MSC_VER
 #include <CrashRpt.h>
+#else
+#include <GdbCrashHandler/GdbCrashHandler.hpp>
 #endif
 #include <QSettings>
 
@@ -91,6 +93,14 @@ bool QgsCrashRpt::install()
     mHandlerInstalled = true;
     return true;
   }
+#else
+  GdbCrashHandler::Configuration config;
+  config.applicationName = QString( "%1" ).arg( QGis::QGIS_FULL_RELEASE_NAME );
+  config.applicationVersion = QString( "%1 (%2)" ).arg( QGis::QGIS_BUILD_DATE ).arg( QGis::QGIS_DEV_VERSION );
+  config.applicationIcon = ":/images/icons/qgis-icon-60x60.png";
+  config.submitAddress = QSettings().value( "/Qgis/crashrpt_url" ).toString();
+  config.submitMethod = GdbCrashHandler::Configuration::SubmitService;
+  GdbCrashHandler::init( config );
+  return true;
 #endif
-  return false;
 }
