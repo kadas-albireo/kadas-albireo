@@ -390,7 +390,11 @@ void QgsNetworkAccessManager::setupDefaultProxyAndCache()
   else
   {
     // Look for certificates in <appDataDir>/certificates to add to the SSL socket CA certificate database
+#ifdef _MSC_VER
     QDir certDir( QDir( QApplication::applicationDirPath() ).absoluteFilePath( "certificates" ) );
+#else
+    QDir certDir( QgsApplication::prefixPath() + "/share/qgis/certificates" );
+#endif
     QgsDebugMsg( QString( "Looking for certificates in %1" ).arg( certDir.absolutePath() ) );
     foreach ( const QString& certFilename, certDir.entryList( QStringList() << "*.pem", QDir::Files ) )
     {
