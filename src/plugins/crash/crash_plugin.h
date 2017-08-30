@@ -34,29 +34,33 @@ static const QString sPluginIcon = ":/crash/crash.svg";
 class QgsCrashPlugin: public QObject, public QgisPlugin
 {
     Q_OBJECT
-public:
-    QgsCrashPlugin(QgisInterface* iface)
-	: QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType ),
-	  mIface(iface) {}
-    
+  public:
+    QgsCrashPlugin( QgisInterface* iface )
+        : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType ),
+        mIface( iface ) {}
+
     void initGui()
     {
-        mCrashAction = new QAction(QIcon(sPluginIcon), tr("Crash"), this);
-        mIface->pluginToolBar()->addAction(mCrashAction);
-        connect(mCrashAction, SIGNAL(triggered()), this, SLOT(crash()));
+      mCrashAction = new QAction( QIcon( sPluginIcon ), tr( "Crash" ), this );
+      if ( mIface->pluginToolBar() )
+      {
+        mIface->pluginToolBar()->addAction( mCrashAction );
+      }
+      connect( mCrashAction, SIGNAL( triggered() ), this, SLOT( crash() ) );
     }
     void unload()
     {
-        delete mCrashAction;
-		mCrashAction = 0;
+      delete mCrashAction;
+      mCrashAction = 0;
     }
-private:
+  private:
     QgisInterface* mIface;
     QAction* mCrashAction;
 
-private slots:
-    void crash(){
-        QTextStream(stdout) << (*((int*)0)) << endl;
+  private slots:
+    void crash()
+    {
+      QTextStream( stdout ) << ( *(( int* )0 ) ) << endl;
     }
 };
 
