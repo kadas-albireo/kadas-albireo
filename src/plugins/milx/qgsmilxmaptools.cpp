@@ -454,8 +454,12 @@ QgsMilxEditBottomBar::QgsMilxEditBottomBar( QgsMilXEditTool *tool )
 
   connect( mTool, SIGNAL( itemsChanged() ), this, SLOT( updateStatus() ) );
 
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
+
   show();
   updateStatus();
+  repopulateLayers();
 }
 
 void QgsMilxEditBottomBar::onClose()
