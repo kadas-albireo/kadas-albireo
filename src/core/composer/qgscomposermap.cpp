@@ -2300,6 +2300,7 @@ void QgsComposerMap::drawCanvasItem( QGraphicsItem* item, QPainter* painter, con
   painter->translate( itemX, itemY );
 
   painter->scale( scaleFactor, scaleFactor );
+  painter->setOpacity( item->opacity() );
 
   //a little trick to let the item know that the paint request comes from the composer
   item->setData( 1, "composer" );
