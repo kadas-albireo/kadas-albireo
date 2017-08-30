@@ -144,9 +144,9 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     {
       analysisMenu->addAction( QIcon( ":/images/themes/default/viewshed.svg" ), tr( "Viewshed" ), this, SLOT( terrainViewshed() ) );
     }
-    if ( !mPickResult.feature.isValid() || mPickResult.feature.geometry()->type() != QGis::Point )
+    if ( !mPickResult.feature.isValid() || ( mPickResult.feature.geometry()->type() == QGis::Line && mPickResult.feature.geometry()->geometry()->vertexCount() == 2 ) )
     {
-      analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( terrainLineOfSight() ) );
+      analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( measureHeightProfile() ) );
     }
   }
 
@@ -415,11 +415,6 @@ void QgsMapCanvasContextMenu::terrainHillshade()
 void QgsMapCanvasContextMenu::terrainViewshed()
 {
   mCanvas->setMapTool( QgisApp::instance()->mapTools()->mViewshed );
-}
-
-void QgsMapCanvasContextMenu::terrainLineOfSight()
-{
-  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureHeightProfile );
 }
 
 void QgsMapCanvasContextMenu::copyCoordinates()

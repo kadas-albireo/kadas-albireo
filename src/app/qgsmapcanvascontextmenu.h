@@ -66,7 +66,6 @@ class QgsMapCanvasContextMenu : public QMenu
     void terrainSlope();
     void terrainHillshade();
     void terrainViewshed();
-    void terrainLineOfSight();
     void copyCoordinates();
     void copyMap();
     void print();
