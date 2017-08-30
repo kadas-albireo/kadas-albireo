@@ -21,6 +21,7 @@
 //used in main.cpp and anywhere else where the release name is needed
 #define RELEASE_NAME "${RELEASE_NAME}"
 #define FULL_RELEASE_NAME "${FULL_RELEASE_NAME}"
+#define RELEASE_VERSION "${RELEASE_VERSION}"
 
 #define BUILD_DATE "${BUILD_DATE}"
 

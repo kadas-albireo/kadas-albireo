@@ -50,6 +50,7 @@ if [ ! -e $builddir ]; then
       mingw$bits-cmake \
           -DFULL_RELEASE_NAME="KADAS Albireo" \
           -DRELEASE_NAME="KADAS" \
+          -DRELEASE_VERSION="1.1" \
           -DENABLE_QT5=$useqt5 \
           -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
           -DWINDRES=$arch-w64-mingw32-windres \

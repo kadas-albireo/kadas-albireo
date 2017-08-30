@@ -46,6 +46,8 @@ class CORE_EXPORT QGis
     static const char* QGIS_RELEASE_NAME;
     // Full release name
     static const char* QGIS_FULL_RELEASE_NAME;
+    // A version for the custom product
+    static const char* QGIS_RELEASE_VERSION;
     // The development version
     static const char* QGIS_DEV_VERSION;
     // The build date

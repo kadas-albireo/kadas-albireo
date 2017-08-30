@@ -56,6 +56,8 @@ const char* QGis::QGIS_RELEASE_NAME = RELEASE_NAME;
 // Full release name
 const char* QGis::QGIS_FULL_RELEASE_NAME = FULL_RELEASE_NAME;
 
+const char* QGis::QGIS_RELEASE_VERSION = RELEASE_VERSION;
+
 // Build date
 const char* QGis::QGIS_BUILD_DATE = BUILD_DATE;
 
