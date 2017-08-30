@@ -19,6 +19,7 @@ if PYQT5:
     from PyQt5.QtCore import pyqtSlot as Slot
     from PyQt5.QtCore import pyqtProperty as Property
     from PyQt5.QtCore import QT_VERSION_STR as __version__
+    QDir.convertSeparators = QDir.toNativeSeparators
 
 elif PYQT4:
     from PyQt4.QtCore import *
