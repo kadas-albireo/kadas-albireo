@@ -100,6 +100,9 @@ void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
   mimeData->setData( "text/plain", textLines.join( "\n" ).toLocal8Bit() );
   QApplication::clipboard()->setMimeData( mimeData );
 
+  // Make QApplication::clipboard() emit the dataChanged signal
+  QApplication::processEvents( QEventLoop::ExcludeUserInputEvents );
+
   // After plaintext version, because dataChanged clears the internal feature store
   mFeatureStore = featureStore;
 }
