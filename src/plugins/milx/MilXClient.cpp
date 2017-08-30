@@ -15,6 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef _MSC_VER
+#include <rsvgrenderer.h>
+#else
+#include <librsvg/rsvg.h>
+#include <cairo.h>
+#endif
+
 #include "MilXClient.hpp"
 #include "MilXCommands.hpp"
 #include <QApplication>
@@ -31,7 +38,6 @@
 #include <QThread>
 #include <QTimer>
 #include <QWidget>
-#include <rsvgrenderer.h>
 #ifdef Q_OS_WIN32
 #include <windows.h>
 #endif
@@ -857,6 +863,7 @@ QImage MilXClient::renderSvg( const QByteArray& xml )
   {
     return QImage();
   }
+#ifdef _MSC_VER
   RSvgRendererHandle* handle = rsvgrenderer_read_data( reinterpret_cast<const unsigned char*>( xml.constData() ), xml.length() );
   if ( !handle )
   {
@@ -866,5 +873,24 @@ QImage MilXClient::renderSvg( const QByteArray& xml )
   image.fill( Qt::transparent );
   rsvgrenderer_write_pixmap( handle, image.bits(), image.width(), image.height(), image.bytesPerLine() );
   rsvgrenderer_destroy( handle );
+#else
+  RsvgHandle* handle = rsvg_handle_new_from_data( reinterpret_cast<const unsigned char*>( xml.constData() ), xml.length(), 0 );
+  if ( handle == 0 )
+  {
+    return QImage();
+  }
+  RsvgDimensionData dimension_data;
+  rsvg_handle_get_dimensions( handle, &dimension_data );
+
+  QImage image( dimension_data.width, dimension_data.height, QImage::Format_ARGB32 );
+  image.fill( Qt::transparent );
+  cairo_surface_t* surface = cairo_image_surface_create_for_data( image.bits(), CAIRO_FORMAT_ARGB32, image.width(), image.height(), image.bytesPerLine() );
+  cairo_t* cr = cairo_create( surface );
+  rsvg_handle_render_cairo( handle, cr );
+  cairo_destroy( cr );
+  cairo_surface_destroy( surface );
+  rsvg_handle_close( handle, 0 );
+  g_object_unref( handle );
+#endif
   return image;
 }

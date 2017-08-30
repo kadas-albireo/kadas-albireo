@@ -1,7 +1,14 @@
 FIND_PACKAGE(QuaZip REQUIRED)
 
-SET(RSVGRENDERER_INCLUDE_DIR "" CACHE PATH "Path to rsvgrenderer header")
-SET(RSVGRENDERER_LIBRARY "rsvgrenderer" CACHE FILEPATH "Path to rsvgrenderer library")
+IF(MSVC)
+    SET(RSVGRENDERER_INCLUDE_DIR "" CACHE PATH "Path to rsvgrenderer header")
+    SET(RSVGRENDERER_LIBRARY "rsvgrenderer" CACHE FILEPATH "Path to rsvgrenderer library")
+ELSE(MSVC)
+    find_package(PkgConfig)
+    pkg_check_modules(RSVG REQUIRED librsvg-2.0)
+    SET(RSVGRENDERER_INCLUDE_DIR ${RSVG_INCLUDE_DIRS})
+    SET(RSVGRENDERER_LIBRARY ${RSVG_LDFLAGS})
+ENDIF(MSVC)
 
 ########################################################
 # Files
