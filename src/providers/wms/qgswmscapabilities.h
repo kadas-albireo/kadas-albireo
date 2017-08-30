@@ -1,8 +1,10 @@
 #ifndef QGSWMSCAPABILITIES_H
 #define QGSWMSCAPABILITIES_H
 
+#include <QCache>
 #include <QHash>
 #include <QMap>
+#include <QMutex>
 #include <QNetworkRequest>
 #include <QStringList>
 #include <QVector>
@@ -11,6 +13,7 @@
 #include "qgsrectangle.h"
 
 class QNetworkReply;
+class QgsWmsCapabilities;
 
 /*
  * The following structs reflect the WMS XML schema,
@@ -550,6 +553,18 @@ class QgsWmsSettings
     friend class QgsWmsProvider;
 };
 
+/** A cache for parsed capabilities, to avoid repetedly parsing the same document */
+class QgsWmsCapabilitiesCache
+{
+  public:
+    static QgsWmsCapabilitiesCache* instance();
+    QgsWmsCapabilities* getCapabilities( const QString& baseUrl );
+    void addCapabilities( const QString& baseUrl, const QgsWmsCapabilities& caps );
+  private:
+    QgsWmsCapabilitiesCache();
+    QMutex mMutex;
+    QCache<QString, QgsWmsCapabilities> mCapabilitiesCache;
+};
 
 /** Keeps information about capabilities of particular URI */
 class QgsWmsCapabilities

@@ -105,6 +105,30 @@ bool QgsWmsSettings::parseUri( QString uriString )
 
 // ----------------------
 
+QgsWmsCapabilitiesCache* QgsWmsCapabilitiesCache::instance()
+{
+  static QgsWmsCapabilitiesCache instance;
+  return &instance;
+}
+
+QgsWmsCapabilities* QgsWmsCapabilitiesCache::getCapabilities( const QString& baseUrl )
+{
+  QMutexLocker locker( &mMutex );
+  return mCapabilitiesCache.object( baseUrl );
+}
+
+void QgsWmsCapabilitiesCache::addCapabilities( const QString& baseUrl, const QgsWmsCapabilities& caps )
+{
+  QMutexLocker locker( &mMutex );
+  mCapabilitiesCache.insert( baseUrl, new QgsWmsCapabilities( caps ) );
+}
+
+QgsWmsCapabilitiesCache::QgsWmsCapabilitiesCache()
+{
+  mCapabilitiesCache.setMaxCost( 20 );
+}
+
+// ----------------------
 
 QgsWmsCapabilities::QgsWmsCapabilities()
     : mValid( false )

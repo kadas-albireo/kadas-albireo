@@ -1052,23 +1052,32 @@ bool QgsWmsProvider::retrieveServerCapabilities( bool /*forceRefresh*/ )
 
   if ( !mCaps.isValid() )
   {
-    QgsWmsCapabilitiesDownload downloadCaps( mSettings.baseUrl(), mSettings.authorization() );
-    if ( !downloadCaps.downloadCapabilities() )
+    QgsWmsCapabilities* cachedCapabilities = QgsWmsCapabilitiesCache::instance()->getCapabilities( mSettings.baseUrl() );
+    if ( !cachedCapabilities )
     {
-      mErrorFormat = "text/plain";
-      mError = downloadCaps.lastError();
-      return false;
-    }
+      QgsWmsCapabilitiesDownload downloadCaps( mSettings.baseUrl(), mSettings.authorization() );
+      if ( !downloadCaps.downloadCapabilities() )
+      {
+        mErrorFormat = "text/plain";
+        mError = downloadCaps.lastError();
+        return false;
+      }
 
-    QgsWmsCapabilities caps;
-    if ( !caps.parseResponse( downloadCaps.response(), mSettings.parserSettings() ) )
+      QgsWmsCapabilities caps;
+      if ( !caps.parseResponse( downloadCaps.response(), mSettings.parserSettings() ) )
+      {
+        mErrorFormat = caps.lastErrorFormat();
+        mError = caps.lastError();
+        return false;
+      }
+
+      mCaps = caps;
+      QgsWmsCapabilitiesCache::instance()->addCapabilities( mSettings.baseUrl(), caps );
+    }
+    else
     {
-      mErrorFormat = caps.lastErrorFormat();
-      mError = caps.lastError();
-      return false;
+      mCaps = *cachedCapabilities;
     }
-
-    mCaps = caps;
   }
 
   Q_ASSERT( mCaps.isValid() );
