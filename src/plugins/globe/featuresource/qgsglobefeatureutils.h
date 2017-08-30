@@ -156,7 +156,8 @@ class QgsGlobeFeatureUtils
     static osgEarth::Features::Feature* featureFromQgsFeature( QgsVectorLayer* layer, QgsFeature& feat )
     {
       osgEarth::Features::Geometry* nGeom = geometryFromQgsGeometry( *feat.geometry() );
-      osgEarth::Features::Feature* retFeat = new osgEarth::Features::Feature( nGeom, 0, osgEarth::Style(), feat.id() );
+      osgEarth::SpatialReference* ref = osgEarth::SpatialReference::create( layer->crs().toWkt().toStdString() );
+      osgEarth::Features::Feature* retFeat = new osgEarth::Features::Feature( nGeom, ref, osgEarth::Style(), feat.id() );
 
       const QgsFields& fields = layer->pendingFields();
       const QgsAttributes& attrs = feat.attributes();
