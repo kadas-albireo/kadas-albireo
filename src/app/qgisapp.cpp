@@ -4684,19 +4684,11 @@ bool QgisApp::loadComposersFromProject( const QDomDocument& doc )
     composer->readXML( composerElement, doc );
     mPrintComposers.insert( composer );
     printComposersMenu()->addAction( composer->windowAction() );
-#ifndef Q_OS_MACX
-    composer->setWindowState( Qt::WindowMinimized );
-    composer->show();
-#endif
     composer->zoomFull();
     QgsComposerView* composerView = composer->view();
     if ( composerView )
     {
       composerView->updateRulers();
-    }
-    if ( composerElement.attribute( "visible", "1" ).toInt() < 1 )
-    {
-      composer->close();
     }
     emit composerAdded( composer->view() );
     connect( composer, SIGNAL( composerAdded( QgsComposerView* ) ), this, SIGNAL( composerAdded( QgsComposerView* ) ) );
