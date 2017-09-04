@@ -96,7 +96,7 @@ bool QgsCrashRpt::install()
 #else
   GdbCrashHandler::Configuration config;
   config.applicationName = QString( "%1" ).arg( QGis::QGIS_FULL_RELEASE_NAME );
-  config.applicationVersion = QString( "%1 (%2/)" ).arg( QGis::QGIS_RELEASE_VERSION ).arg( QGis::QGIS_BUILD_DATE );
+  config.applicationVersion = QString( "%1 (%2/3)" ).arg( QGis::QGIS_RELEASE_VERSION ).arg( QGis::QGIS_BUILD_DATE ).arg( QGis::QGIS_DEV_VERSION );
   config.applicationIcon = ":/images/icons/qgis-icon-60x60.png";
   config.submitAddress = QSettings().value( "/Qgis/crashrpt_url" ).toString();
   config.submitMethod = GdbCrashHandler::Configuration::SubmitService;
