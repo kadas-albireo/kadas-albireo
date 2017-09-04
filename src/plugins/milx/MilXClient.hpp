@@ -113,17 +113,17 @@ public:
   static bool getControlPointIndices(const QString& symbolXml, int nPoints, QList<int>& controlPoints);
   static bool getControlPoints(const QString& symbolXml, QList<QPoint>& points, const QList<QPair<int, double> > &attributes, QList<int>& controlPoints, bool isCorridor);
 
-  static bool appendPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
-  static bool insertPoint(const QRect &visibleExtent, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
-  static bool movePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result);
-  static bool moveAttributePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int attr, const QPoint& newPos, NPointSymbolGraphic& result);
+  static bool appendPoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
+  static bool insertPoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, const QPoint& newPoint, NPointSymbolGraphic& result);
+  static bool movePoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, int index, const QPoint& newPos, NPointSymbolGraphic& result);
+  static bool moveAttributePoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, int attr, const QPoint& newPos, NPointSymbolGraphic& result);
   static bool canDeletePoint(const NPointSymbol& symbol, int index, bool& canDelete);
-  static bool deletePoint(const QRect &visibleExtent, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result);
-  static bool editSymbol(const QRect &visibleExtent, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result);
+  static bool deletePoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result);
+  static bool editSymbol(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result);
   static bool createSymbol(QString& symbolId, SymbolDesc& result);
 
-  static bool updateSymbol(const QRect& visibleExtent, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
-  static bool updateSymbols(const QRect& visibleExtent, const QList<NPointSymbol>& symbols, double scaleFactor, QList<NPointSymbolGraphic>& result);
+  static bool updateSymbol(const QRect& visibleExtent, int dpi, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
+  static bool updateSymbols(const QRect& visibleExtent, int dpi, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);
 
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
   static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol, QRect &boundingBox);

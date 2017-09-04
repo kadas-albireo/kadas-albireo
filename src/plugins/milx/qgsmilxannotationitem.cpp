@@ -23,6 +23,8 @@
 #include "qgsmapcanvas.h"
 #include "qgscoordinatetransform.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QPainter>
 #include <QMenu>
 #include <QVector2D>
@@ -249,7 +251,8 @@ void QgsMilXAnnotationItem::_showItemEditor()
   QString symbolMilitaryName;
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
-  if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), symbol, symbolId, symbolMilitaryName, result ) )
+  int dpi = QApplication::desktop()->logicalDpiX();
+  if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), dpi, symbol, symbolId, symbolMilitaryName, result ) )
   {
     setSymbolXml( symbolId, symbolMilitaryName );
     setGraphic( result, true );
@@ -292,7 +295,8 @@ void QgsMilXAnnotationItem::appendPoint( const QPoint& newPoint )
 {
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
-  if ( MilXClient::appendPoint( mMapCanvas->sceneRect().toRect(), symbol, newPoint, result ) )
+  int dpi = QApplication::desktop()->logicalDpiX();
+  if ( MilXClient::appendPoint( mMapCanvas->sceneRect().toRect(), dpi, symbol, newPoint, result ) )
   {
     setGraphic( result, true );
   }
@@ -302,7 +306,8 @@ void QgsMilXAnnotationItem::movePoint( int index, const QPoint& newPos )
 {
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
-  if ( MilXClient::movePoint( mMapCanvas->sceneRect().toRect(), symbol, index, newPos, result ) )
+  int dpi = QApplication::desktop()->logicalDpiX();
+  if ( MilXClient::movePoint( mMapCanvas->sceneRect().toRect(), dpi, symbol, index, newPos, result ) )
   {
     setGraphic( result, true );
   }
@@ -312,7 +317,8 @@ void QgsMilXAnnotationItem::moveAttributePoint( int attr, const QPoint& newPos )
 {
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
-  if ( MilXClient::moveAttributePoint( mMapCanvas->sceneRect().toRect(), symbol, attr, newPos, result ) )
+  int dpi = QApplication::desktop()->logicalDpiX();
+  if ( MilXClient::moveAttributePoint( mMapCanvas->sceneRect().toRect(), dpi, symbol, attr, newPos, result ) )
   {
     setGraphic( result, true );
   }
@@ -517,7 +523,8 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
   {
     MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributes(), mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
-    if ( MilXClient::insertPoint( mMapCanvas->sceneRect().toRect(), symbol, canvasPos, result ) )
+    int dpi = QApplication::desktop()->logicalDpiX();
+    if ( MilXClient::insertPoint( mMapCanvas->sceneRect().toRect(), dpi, symbol, canvasPos, result ) )
     {
       setGraphic( result, true );
     }
@@ -527,7 +534,8 @@ void QgsMilXAnnotationItem::showContextMenu( const QPoint &screenPos )
     int index = actionRemovePoint->data().toInt();
     MilXClient::NPointSymbol symbol( mSymbolXml, pts, mControlPoints, screenAttributes(), mFinalized, true );
     MilXClient::NPointSymbolGraphic result;
-    if ( MilXClient::deletePoint( mMapCanvas->sceneRect().toRect(), symbol, index, result ) )
+    int dpi = QApplication::desktop()->logicalDpiX();
+    if ( MilXClient::deletePoint( mMapCanvas->sceneRect().toRect(), dpi, symbol, index, result ) )
     {
       setGraphic( result, true );
     }
@@ -591,7 +599,8 @@ void QgsMilXAnnotationItem::updateSymbol( bool updatePoints )
 {
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
-  if ( MilXClient::updateSymbol( mMapCanvas->sceneRect().toRect(), symbol, result, updatePoints ) )
+  int dpi = QApplication::desktop()->logicalDpiX();
+  if ( MilXClient::updateSymbol( mMapCanvas->sceneRect().toRect(), dpi, symbol, result, updatePoints ) )
   {
     setGraphic( result, updatePoints );
   }

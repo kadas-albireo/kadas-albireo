@@ -276,8 +276,8 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
         return true;
       }
       QList<MilXClient::NPointSymbolGraphic> result;
-      double scaleFactor = double( mRendererContext.painter()->device()->logicalDpiX() ) / double( QApplication::desktop()->logicalDpiX() );
-      if ( !MilXClient::updateSymbols( screenExtent(), symbols, scaleFactor, result ) )
+      int dpi = mRendererContext.painter()->device()->logicalDpiX();
+      if ( !MilXClient::updateSymbols( screenExtent(), dpi, symbols, result ) )
       {
         return false;
       }
@@ -353,7 +353,8 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
     int symbolSize = MilXClient::getSymbolSize();
     MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, double> >(), true, true );
     MilXClient::NPointSymbolGraphic graphic;
-    if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+    // FIXME: hardcoded dpi 72 for billboards
+    if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), 72, symbol, graphic, false ) )
     {
       QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
     }
@@ -449,7 +450,8 @@ void QgsMilXLayer::invalidateBillboards()
       int symbolSize = MilXClient::getSymbolSize();
       MilXClient::NPointSymbol symbol( item->mssString(), QList<QPoint>() << QPoint( 0, 0 ), QList<int>(), QList< QPair<int, double> >(), true, true );
       MilXClient::NPointSymbolGraphic graphic;
-      if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), symbol, graphic, false ) )
+      // FIXME: hardcoded dpi 72 for billboards
+      if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), 72, symbol, graphic, false ) )
       {
         QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id() );
       }
