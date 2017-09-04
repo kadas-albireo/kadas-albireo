@@ -354,7 +354,8 @@ void QgsRibbonApp::mouseMoveEvent( QMouseEvent* event )
 
 void QgsRibbonApp::dragEnterEvent( QDragEnterEvent* event )
 {
-  if ( event->mimeData()->hasFormat( "application/qgis-ribbon-button" ) )
+  QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
+  if ( event->mimeData()->hasFormat( "application/qgis-ribbon-button" ) && button && button->objectName().startsWith( "mFavoriteButton" ) )
   {
     event->acceptProposedAction();
   }
@@ -371,7 +372,7 @@ void QgsRibbonApp::dropEvent( QDropEvent* event )
     QString actionName = QString::fromLocal8Bit( event->mimeData()->data( "application/qgis-ribbon-button" ).data() );
     QAction* action = findChild<QAction*>( actionName );
     QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
-    if ( action && button )
+    if ( action && button && button->objectName().startsWith( "mFavoriteButton" ) )
     {
       button->setEnabled( true );
       setActionToButton( action, button );
