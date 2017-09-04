@@ -67,6 +67,7 @@ if [ ! -e $builddir ]; then
           -DPYRCC4_PROGRAM=/usr/bin/pyrcc5 \
           -DQUAZIP_INCLUDE_DIR=$MINGWROOT/include/quazip5 \
           -DQSCINTILLA_INCLUDE_DIR=$MINGWROOT/include/qt5 \
+          -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
           ..
   )
 fi
