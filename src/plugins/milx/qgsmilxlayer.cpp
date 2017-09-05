@@ -277,7 +277,8 @@ class QgsMilXLayer::Renderer : public QgsMapLayerRenderer
       }
       QList<MilXClient::NPointSymbolGraphic> result;
       int dpi = mRendererContext.painter()->device()->logicalDpiX();
-      if ( !MilXClient::updateSymbols( screenExtent(), dpi, symbols, result ) )
+      double scaleFactor = double( mRendererContext.painter()->device()->logicalDpiX() ) / double( QApplication::desktop()->logicalDpiX() );
+      if ( !MilXClient::updateSymbols( screenExtent(), dpi, scaleFactor, symbols, result ) )
       {
         return false;
       }

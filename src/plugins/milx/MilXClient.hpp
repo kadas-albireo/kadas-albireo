@@ -123,7 +123,7 @@ public:
   static bool createSymbol(QString& symbolId, SymbolDesc& result);
 
   static bool updateSymbol(const QRect& visibleExtent, int dpi, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
-  static bool updateSymbols(const QRect& visibleExtent, int dpi, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);
+  static bool updateSymbols(const QRect& visibleExtent, int dpi, double scaleFactor, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);
 
   static bool hitTest(const NPointSymbol& symbol, const QPoint& clickPos, bool& hitTestResult);
   static bool pickSymbol(const QList<NPointSymbol>& symbols, const QPoint& clickPos, int& selectedSymbol, QRect &boundingBox);
