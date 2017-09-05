@@ -39,6 +39,7 @@ class QuaZip;
 
 class GUI_EXPORT QgsKMLExport : public QObject
 {
+    Q_OBJECT
   public:
     bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, const QgsMapSettings& settings );
     static QString convertColor( const QColor& c );

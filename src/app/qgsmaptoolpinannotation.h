@@ -22,6 +22,7 @@
 
 class APP_EXPORT QgsMapToolPinAnnotation: public QgsMapToolAnnotation
 {
+    Q_OBJECT
   public:
     QgsMapToolPinAnnotation( QgsMapCanvas* canvas )
         : QgsMapToolAnnotation( canvas ) {}

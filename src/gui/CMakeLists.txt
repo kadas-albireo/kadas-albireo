@@ -318,6 +318,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgshtmlannotationitem.h
   qgsgeoimageannotationitem.h
   qgsidentifymenu.h
+  qgskmlexport.h
   qgslegendinterface.h
   qgslonglongvalidator.h
   qgsludialog.h

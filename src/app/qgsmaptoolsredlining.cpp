@@ -234,8 +234,8 @@ void QgsRedliningMapToolT<T>::addContextMenuActions( const QgsMapToolDrawShape::
   {
     menu.addSeparator();
   }
-  menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), T::tr( "Copy" ), this, &QgsRedliningMapToolT<T>::copy );
-  menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), T::tr( "Cut" ), this, &QgsRedliningMapToolT<T>::cut );
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), QApplication::translate( "QgsRedliningMapTool", "Copy" ), this, &QgsRedliningMapToolT<T>::copy );
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), QApplication::translate( "QgsRedliningMapTool", "Cut" ), this, &QgsRedliningMapToolT<T>::cut );
 #endif
 }
 

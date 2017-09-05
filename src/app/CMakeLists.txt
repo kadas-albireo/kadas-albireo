@@ -232,6 +232,7 @@ SET (QGIS_APP_MOC_HDRS
   qgscoordinatedisplayer.h
   qgscrsselection.h
   qgsmapcanvascontextmenu.h
+  qgsmaptoolpinannotation.h
   qgsprojecttemplateselectiondialog.h
 
   qgsidentifyresultsdialog.h
