@@ -923,11 +923,6 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   osgEarth::ModelLayer* nLayer = new osgEarth::ModelLayer( modelOptions );
 
   mMapNode->getMap()->addModelLayer( nLayer );
-#if 0
-  osgEarth::Features::FeatureModelSource *ms = dynamic_cast<osgEarth::Features::FeatureModelSource*>(
-        map->getModelLayerByName( nLayer->getName() )->getModelSource() );
-  QgsDebugMsg( QString( "Model source: %1" ).arg( ms->getFeatureSource()-> ) );
-#endif
 }
 
 void GlobePlugin::updateLayers()
