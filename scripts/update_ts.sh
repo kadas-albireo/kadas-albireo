@@ -16,14 +16,7 @@
 
 set -e
 
-case "$1" in
-pull|push)
-	;;
-
-*)
-	echo "usage: $(basename $0) {push|pull}"
-	exit 1
-esac
+scriptsdir=$(readlink -f $(dirname $0))
 
 cleanup() {
 	if [ -f i18n/backup.tar ]; then
@@ -47,72 +40,48 @@ cleanup() {
 
 PATH=$QTDIR/bin:$PATH
 
-if type qmake-qt4 >/dev/null 2>&1; then
-	QMAKE=qmake-qt4
+if type qmake-qt5 >/dev/null 2>&1; then
+	QMAKE=qmake-qt5
 else
 	QMAKE=qmake
 fi
 
-if ! type pylupdate4 >/dev/null 2>&1; then
-      echo "pylupdate4 not found"
-      exit 1
+if ! type pylupdate5 >/dev/null 2>&1; then
+	echo "pylupdate5 not found"
+	exit 1
 fi
 
-if type lupdate-qt4 >/dev/null 2>&1; then
-	LUPDATE=lupdate-qt4
+if type lupdate-qt5 >/dev/null 2>&1; then
+	LUPDATE=lupdate-qt5
 else
 	LUPDATE=lupdate
 fi
 
-if ! type tx >/dev/null 2>&1; then
-	echo "tx not found"
-	exit 1
-fi
-
 trap cleanup EXIT
-
-echo Saving translations
-files="$(find python -name "*.ts") src/plugins/plugin_template/plugingui.cpp src/plugins/plugin_template/plugin.cpp"
-[ $1 = push ] && files="$files i18n/qgis_*.ts"
-tar --remove-files -cf i18n/backup.tar $files
-
-if [ $1 = push ]; then
-	echo Pulling source from transifex...
-	tx pull -s -l none
-else
-	rm i18n/qgis_*.ts
-
-	echo Pulling new translations...
-	tx pull -a -s --minimum-perc=35
-fi
 
 echo Updating python translations
 cd python
-pylupdate4 utils.py {console,pyplugin_installer}/*.{py,ui} -ts python-i18n.ts
-perl ../scripts/ts2cpp.pl python-i18n.ts python-i18n.cpp
+pylupdate5 utils.py {console,pyplugin_installer}/*.{py,ui} -ts python-i18n.ts
+perl $scriptsdir/ts2cpp.pl python-i18n.ts python-i18n.cpp
 rm python-i18n.ts
 cd ..
 for i in python/plugins/*/CMakeLists.txt; do
+	(
 	cd ${i%/*}
-	pylupdate4 $(find . -name "*.py" -o -name "*.ui") -ts python-i18n.ts
-	perl ../../../scripts/ts2cpp.pl python-i18n.ts python-i18n.cpp
+	pylupdate5 $(find . -name "*.py" -o -name "*.ui") -ts python-i18n.ts
+	perl $scriptsdir/ts2cpp.pl python-i18n.ts python-i18n.cpp
 	rm python-i18n.ts
-	cd ../../..
+	)
 done
 
 echo Updating GRASS module translations
-perl scripts/qgm2cpp.pl >src/plugins/grass/grasslabels-i18n.cpp
+perl scripts/qgm2cpp.pl > src/plugins/grass/grasslabels-i18n.cpp
 
 echo Creating qmake project file
-$QMAKE -project -o qgis_ts.pro -nopwd src python i18n
+$QMAKE -project -o qgis_ts.pro -nopwd $PWD/src $PWD/python $PWD/i18n
 
 echo Updating translations
 $LUPDATE -locations absolute -verbose qgis_ts.pro
 
-if [ $1 = push ]; then
-	echo Pushing translation...
-	tx push -s
-else
-	echo Updating TRANSLATORS File
-	./scripts/tsstat.pl >doc/TRANSLATORS
-fi
+echo Updating TRANSLATORS File
+$scriptsdir/tsstat.pl > doc/TRANSLATORS

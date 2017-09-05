@@ -126,7 +126,7 @@ for my $i (<i18n/qgis_*.ts>) {
 
 	$name .= $charset;
 
-	open F, "lrelease $i|";
+	open F, "lrelease-qt5 $i|";
 
 	my($translations,$finished,$unfinished);
 	my $untranslated=0;
