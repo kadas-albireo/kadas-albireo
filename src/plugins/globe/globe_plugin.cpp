@@ -848,10 +848,10 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   else
   {
     osgEarth::PolygonSymbol* poly = style.getOrCreateSymbol<osgEarth::PolygonSymbol>();
-    poly->fill()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 255.f );
+    poly->fill()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 100.f );
     style.addSymbol( poly );
     osgEarth::LineSymbol* ls = style.getOrCreateSymbol<osgEarth::LineSymbol>();
-    ls->stroke()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 255.f );
+    ls->stroke()->color() = osg::Vec4f( 1.f, 0, 0, 1.f - vLayer->layerTransparency() / 100.f );
     ls->stroke()->width() = 1.0f;
   }
 
