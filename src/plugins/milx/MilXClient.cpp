@@ -639,7 +639,6 @@ bool MilXClient::updateSymbols( const QRect& visibleExtent, int dpi, double scal
   istream << visibleExtent;
   istream << dpi;
   istream << scaleFactor;
-  QTextStream( stdout ) << scaleFactor << endl;
   istream << nSymbols;
   foreach ( const NPointSymbol& symbol, symbols )
   {
