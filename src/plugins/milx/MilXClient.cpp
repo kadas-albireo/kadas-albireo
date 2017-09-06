@@ -94,7 +94,7 @@ bool MilXClientWorker::initialize()
 #else
       QString serverPath = "milxserver";
 #endif
-      mProcess->start( serverPath );
+      mProcess->start( QString( "\"%1\"" ).arg( serverPath ) );
       mProcess->waitForReadyRead( 10000 );
       QByteArray out = mProcess->readAllStandardOutput();
       if ( !mProcess->isOpen() )
