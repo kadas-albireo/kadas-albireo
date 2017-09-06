@@ -127,15 +127,31 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     addAction( QIcon( ":/images/themes/default/mIconSelectRemove.svg" ), tr( "Delete items" ), this, SLOT( deleteItems() ) );
   }
   addSeparator();
-  if (( mPickResult.isEmpty() || mPickResult.feature.isValid() ) )
+  if (( mPickResult.isEmpty() || ( mPickResult.feature.isValid() && mPickResult.feature.geometry()->type() != QGis::Point ) ) )
   {
+    bool isCircle = mPickResult.feature.isValid() && mPickResult.feature.geometry()->geometry()->wkbType() == QgsWKBTypes::CurvePolygon;
     QMenu* measureMenu = new QMenu();
     addAction( tr( "Measure" ) )->setMenu( measureMenu );
-    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Length" ), this, SLOT( measureLine() ) );
-    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureArea.png" ), tr( "Area" ), this, SLOT( measurePolygon() ) );
-    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureCircle.png" ), tr( "Circle" ), this, SLOT( measureCircle() ) );
-    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
-    measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
+    if ( !mPickResult.feature.isValid() || !isCircle )
+    {
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Length" ), this, SLOT( measureLine() ) );
+    }
+    if ( !mPickResult.feature.isValid() || ( !isCircle && mPickResult.feature.geometry()->type() == QGis::Polygon ) )
+    {
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureArea.png" ), tr( "Area" ), this, SLOT( measurePolygon() ) );
+    }
+    if ( !mPickResult.feature.isValid() || isCircle )
+    {
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureCircle.png" ), tr( "Circle" ), this, SLOT( measureCircle() ) );
+    }
+    if ( !mPickResult.feature.isValid() )
+    {
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
+    }
+    if ( !mPickResult.feature.isValid() || !isCircle )
+    {
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Height profile" ), this, SLOT( measureHeightProfile() ) );
+    }
     QMenu* analysisMenu = new QMenu();
     addAction( tr( "Terrain analysis" ) )->setMenu( analysisMenu );
     analysisMenu->addAction( QIcon( ":/images/themes/default/slope.svg" ), tr( "Slope" ), this, SLOT( terrainSlope() ) );
