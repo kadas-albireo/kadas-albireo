@@ -377,14 +377,7 @@ void QgsClassicApp::setTheme( QString theThemeName )
   mActionDecorationGrid->setIcon( QgsApplication::getThemeIcon( "/transformed.png" ) );
   mActionAddMapView->setIcon( QgsApplication::getThemeIcon( "/mActionAddMap.png" ) );
 
-  //change themes of all composers
-  QSet<QgsComposer*>::iterator composerIt = mPrintComposers.begin();
-  for ( ; composerIt != mPrintComposers.end(); ++composerIt )
-  {
-    ( *composerIt )->setupTheme();
-  }
-
-  emit currentThemeChanged( theThemeName );
+  QgisApp::setTheme( theThemeName );
 }
 
 void QgsClassicApp::createActions()

@@ -67,7 +67,6 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     QMenu *printComposersMenu() const override { return mPrintComposersMenu; }
     QMenu *panelMenu() const override { return mPanelMenu; }
     QMenu *featureActionMenu() const override { return mFeatureActionMenu; }
-    void setTheme( QString themeName ) override;
 
   public slots:
     virtual void attributeTable();

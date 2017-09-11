@@ -225,18 +225,6 @@ QgsRibbonApp::~QgsRibbonApp()
   destroy();
 }
 
-void QgsRibbonApp::setTheme( QString themeName )
-{
-  //change themes of all composers
-  QSet<QgsComposer*>::iterator composerIt = mPrintComposers.begin();
-  for ( ; composerIt != mPrintComposers.end(); ++composerIt )
-  {
-    ( *composerIt )->setupTheme();
-  }
-
-  emit currentThemeChanged( themeName );
-}
-
 bool QgsRibbonApp::eventFilter( QObject *obj, QEvent *ev )
 {
   if ( obj == mMapCanvas && ev->type() == QEvent::Resize )

@@ -284,7 +284,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     virtual QgsMessageBar *messageBar() const = 0;
 
     //! Set theme (icons)
-    virtual void setTheme( QString themeName = "default" ) = 0;
+    virtual void setTheme( QString themeName = "default" );
 
     virtual QMenu *projectMenu() const = 0;
     virtual QMenu *editMenu() const = 0;

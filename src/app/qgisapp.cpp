@@ -3473,6 +3473,18 @@ void QgisApp::removeAllFromOverview()
   markDirty();
 }
 
+void QgisApp::setTheme( QString themeName )
+{
+  //change themes of all composers
+  QSet<QgsComposer*>::iterator composerIt = mPrintComposers.begin();
+  for ( ; composerIt != mPrintComposers.end(); ++composerIt )
+  {
+    ( *composerIt )->setupTheme();
+  }
+
+  emit currentThemeChanged( themeName );
+}
+
 void QgisApp::toggleFullScreen()
 {
   if ( mFullScreenMode )
