@@ -29,6 +29,7 @@
 #include "qgsdistancearea.h"
 #include "qgsproject.h"
 #include "qgsvectorlayer.h"
+#include "qgspluginlayer.h"
 
 #include <QDomDocument>
 #include <QDomNode>
@@ -517,15 +518,20 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
         mRenderContext.painter()->restore();
       }
 
-      //apply layer transparency for vector layers
-      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer ) )
+      //apply layer transparency for vector and plugin layers
+      if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer || ml->type() == QgsMapLayer::PluginLayer ) )
       {
-        QgsVectorLayer* vl = qobject_cast<QgsVectorLayer *>( ml );
-        if ( vl->layerTransparency() != 0 )
+        int transparency = 0;
+        if(qobject_cast<QgsVectorLayer *>( ml )) {
+          transparency = static_cast<QgsVectorLayer*>(ml)->layerTransparency();
+        } else if(qobject_cast<QgsPluginLayer*>(ml)) {
+          transparency = static_cast<QgsPluginLayer*>(ml)->layerTransparency();
+        }
+        if ( transparency != 0 )
         {
           // a layer transparency has been set, so update the alpha for the flattened layer
           // by combining it with the layer transparency
-          QColor transparentFillColor = QColor( 0, 0, 0, 255 - ( 255 * vl->layerTransparency() / 100 ) );
+          QColor transparentFillColor = QColor( 0, 0, 0, 255 - ( 255 * transparency / 100 ) );
           // use destination in composition mode to merge source's alpha with destination
           mRenderContext.painter()->setCompositionMode( QPainter::CompositionMode_DestinationIn );
           mRenderContext.painter()->fillRect( 0, 0, mRenderContext.painter()->device()->width(),
