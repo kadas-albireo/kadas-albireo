@@ -347,7 +347,7 @@ void QgsGPSRouteEditor::importGpx()
     double lat = wptEl.attribute( "lat" ).toDouble();
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
-    QString flags( "symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
+    QString flags( "shape=point,symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
     mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nWpts;
   }
@@ -368,7 +368,7 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    QString flags = QString( "routeNumber=%1" ).arg( number );
+    QString flags = QString( "shape=line,routeNumber=%1" ).arg( number );
     mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nRtes;
   }
@@ -389,7 +389,7 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    QString flags = QString( "routeNumber=%1" ).arg( number );
+    QString flags = QString( "shape=line,routeNumber=%1" ).arg( number );
     mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nTracks;
   }
