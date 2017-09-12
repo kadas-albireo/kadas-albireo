@@ -272,7 +272,8 @@ void QgsRedliningMapToolT<T>::onFinished()
   }
   if ( mStandaloneEditor )
   {
-    QDialog dialog;
+    QDialog dialog(T::canvas());
+    dialog.setModal(true);
     dialog.setLayout( new QVBoxLayout() );
     dialog.layout()->addWidget( mStandaloneEditor );
     dialog.setWindowTitle( mStandaloneEditor->windowTitle() );
