@@ -167,6 +167,8 @@ ENDIF (NOT BISON_EXECUTABLE)
 #############################################################
 # search for dependencies
 
+SET (ENABLE_QT5 TRUE CACHE BOOL "If enabled will try to find Qt5 before looking for Qt4")
+
 IF(NOT WIN32 AND NOT ANDROID)
   INCLUDE(CheckFunctionExists)
   CHECK_FUNCTION_EXISTS(openpty OPENPTY_IN_LIBC)
@@ -242,7 +244,6 @@ SET (HAVE_MSSQL TRUE)
 #############################################################
 # search for Qt4
 SET(QT_MIN_VERSION 4.7.0)
-SET (ENABLE_QT5 FALSE CACHE BOOL "If enabled will try to find Qt5 before looking for Qt4")
 IF (ENABLE_QT5)
   FIND_PACKAGE(Qt5Core QUIET)
   FIND_PACKAGE(Qt5Gui REQUIRED)
