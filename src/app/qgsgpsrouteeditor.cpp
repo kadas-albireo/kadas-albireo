@@ -62,7 +62,7 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
       QFont font;
       flagsMap["family"] = font.family();
       flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
-      flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
+      flagsMap["bold"] = "1";
       flagsMap["rotation"] = QString( "%1" ).arg( 0. );
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
@@ -109,7 +109,7 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
       QFont font;
       flagsMap["family"] = font.family();
       flagsMap["italic"] = QString( "%1" ).arg( font.italic() );
-      flagsMap["bold"] = QString( "%1" ).arg( font.bold() );
+      flagsMap["bold"] = "1";
       flagsMap["rotation"] = QString( "%1" ).arg( 0. );
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       flagsMap["routeNumber"] = mNumberEdit->text();
@@ -347,7 +347,7 @@ void QgsGPSRouteEditor::importGpx()
     double lat = wptEl.attribute( "lat" ).toDouble();
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
-    QString flags( "shape=point,symbol=circle,w=2*\"size\",h=2*\"size\",r=0" );
+    QString flags( "shape=point,symbol=circle,w=2*\"size\",h=2*\"size\",r=0,bold=1" );
     mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nWpts;
   }
@@ -368,7 +368,7 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    QString flags = QString( "shape=line,routeNumber=%1" ).arg( number );
+    QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
     mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nRtes;
   }
@@ -389,7 +389,7 @@ void QgsGPSRouteEditor::importGpx()
     }
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
-    QString flags = QString( "shape=line,routeNumber=%1" ).arg( number );
+    QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
     mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nTracks;
   }

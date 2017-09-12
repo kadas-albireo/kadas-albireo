@@ -69,7 +69,13 @@ bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, 
   f.setAttribute( "fill", QgsSymbolLayerV2Utils::encodeColor( fill ) );
   f.setAttribute( "outline_style", QgsSymbolLayerV2Utils::encodePenStyle( outlineStyle ) );
   f.setAttribute( "fill_style" , QgsSymbolLayerV2Utils::encodeBrushStyle( fillStyle ) );
-  f.setAttribute( "flags", QString( "family=%1,italic=%2,bold=%3,rotation=0,fontSize=%4,%5" ).arg( font.family() ).arg( font.italic() ).arg( font.bold() ).arg( font.pointSize() ).arg( flags ) );
+  QMap<QString,QString> flagsMap = deserializeFlags(flags);
+  flagsMap["family"] = flagsMap.value("family", font.family());
+  flagsMap["italic"] = flagsMap.value("italic", QString("%1").arg(font.italic()));
+  flagsMap["bold"] = flagsMap.value("bold", QString("%1").arg(font.bold()));
+  flagsMap["rotation"] = flagsMap.value("rotation", "0");
+  flagsMap["fontSize"] = flagsMap.value("fontSize", QString::number(font.pointSize()));
+  f.setAttribute( "flags", serializeFlags( flagsMap) );
   f.setAttribute( "tooltip", tooltip );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
