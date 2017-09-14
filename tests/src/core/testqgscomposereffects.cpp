@@ -64,11 +64,11 @@ void TestQgsComposerEffects::initTestCase()
   mComposerRect1 = new QgsComposerShape( 20, 20, 150, 100, mComposition );
   mComposerRect1->setShapeType( QgsComposerShape::Rectangle );
   mComposerRect1->setBackgroundColor( QColor::fromRgb( 255, 150, 0 ) );
-  mComposition->addComposerShape( mComposerRect1 );
+  mComposition->addComposerItem( mComposerRect1 );
   mComposerRect2 = new QgsComposerShape( 50, 50, 150, 100, mComposition );
   mComposerRect2->setBackgroundColor( QColor::fromRgb( 0, 100, 150 ) );
   mComposerRect2->setShapeType( QgsComposerShape::Rectangle );
-  mComposition->addComposerShape( mComposerRect2 );
+  mComposition->addComposerItem( mComposerRect2 );
 
   mReport = "<h1>Composer Effects Tests</h1>\n";
 }

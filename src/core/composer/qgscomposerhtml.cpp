@@ -336,7 +336,7 @@ void QgsComposerHtml::addFrame( QgsComposerFrame* frame, bool recalcFrameSizes )
   QObject::connect( frame, SIGNAL( sizeChanged() ), this, SLOT( recalculateFrameSizes() ) );
   if ( mComposition )
   {
-    mComposition->addComposerHtmlFrame( this, frame );
+    mComposition->addComposerItem( frame );
   }
 
   if ( recalcFrameSizes )

@@ -44,29 +44,23 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QScrollArea" name="scrollArea">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>110</y>
-         <width>120</width>
-         <height>80</height>
-        </rect>
+      <layout class="QGridLayout" name="mViewLayout">
+       <property name="leftMargin">
+        <number>0</number>
        </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
+       <property name="topMargin">
+        <number>0</number>
        </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>118</width>
-          <height>78</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -170,6 +164,144 @@
    <addaction name="mActionPrintAtlas"/>
    <addaction name="mActionAtlasSettings"/>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1333</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mComposerMenu">
+    <property name="title">
+     <string>&amp;Composer</string>
+    </property>
+    <addaction name="mActionSaveProject"/>
+    <addaction name="separator"/>
+    <addaction name="mActionNewComposer"/>
+    <addaction name="mActionDuplicateComposer"/>
+    <addaction name="mActionComposerManager"/>
+    <addaction name="separator"/>
+    <addaction name="mActionLoadFromTemplate"/>
+    <addaction name="mActionSaveAsTemplate"/>
+    <addaction name="separator"/>
+    <addaction name="mActionExportAsImage"/>
+    <addaction name="mActionExportAsPDF"/>
+    <addaction name="mActionExportAsSVG"/>
+    <addaction name="separator"/>
+    <addaction name="mActionPageSetup"/>
+    <addaction name="mActionPrint"/>
+    <addaction name="separator"/>
+    <addaction name="mActionQuit"/>
+   </widget>
+   <widget class="QMenu" name="mEditMenu">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="mActionUndo"/>
+    <addaction name="mActionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="mActionDeleteSelection"/>
+    <addaction name="separator"/>
+    <addaction name="mActionCut"/>
+    <addaction name="mActionCopy"/>
+    <addaction name="mActionPaste"/>
+    <addaction name="mActionPasteInPlace"/>
+    <addaction name="separator"/>
+    <addaction name="mActionSelectAll"/>
+    <addaction name="mActionDeselectAll"/>
+    <addaction name="mActionInvertSelection"/>
+    <addaction name="mActionSelectNextBelow"/>
+    <addaction name="mActionSelectNextAbove"/>
+   </widget>
+   <widget class="QMenu" name="mViewMenu">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="mActionPreviewModeOff"/>
+    <addaction name="mActionPreviewModeGrayscale"/>
+    <addaction name="mActionPreviewModeMono"/>
+    <addaction name="mActionPreviewProtanope"/>
+    <addaction name="mActionPreviewDeuteranope"/>
+    <addaction name="separator"/>
+    <addaction name="mActionZoomIn"/>
+    <addaction name="mActionZoomOut"/>
+    <addaction name="mActionZoomAll"/>
+    <addaction name="mActionZoomActual"/>
+    <addaction name="separator"/>
+    <addaction name="mActionRefreshView"/>
+    <addaction name="separator"/>
+    <addaction name="mActionShowGrid"/>
+    <addaction name="mActionSnapGrid"/>
+    <addaction name="separator"/>
+    <addaction name="mActionShowGuides"/>
+    <addaction name="mActionSnapGuides"/>
+    <addaction name="mActionSmartGuides"/>
+    <addaction name="mActionClearGuides"/>
+    <addaction name="separator"/>
+    <addaction name="mActionShowBoxes"/>
+    <addaction name="mActionShowRulers"/>
+    <addaction name="separator"/>
+    <addaction name="mActionToggleFullScreen"/>
+    <addaction name="mActionHidePanels"/>
+   </widget>
+   <widget class="QMenu" name="mLayoutMenu">
+    <property name="title">
+     <string>&amp;Layout</string>
+    </property>
+    <addaction name="mActionAddNewMap"/>
+    <addaction name="mActionAddNewLabel"/>
+    <addaction name="mActionAddNewScalebar"/>
+    <addaction name="mActionAddNewLegend"/>
+    <addaction name="mActionAddImage"/>
+    <addaction name="mActionAddArrow"/>
+    <addaction name="mActionAddAttributeTable"/>
+    <addaction name="mActionAddHtml"/>
+    <addaction name="separator"/>
+    <addaction name="mActionSelectMoveItem"/>
+    <addaction name="mActionMoveItemContent"/>
+    <addaction name="separator"/>
+    <addaction name="mActionGroupItems"/>
+    <addaction name="mActionUngroupItems"/>
+    <addaction name="separator"/>
+    <addaction name="mActionRaiseItems"/>
+    <addaction name="mActionLowerItems"/>
+    <addaction name="mActionMoveItemsToTop"/>
+    <addaction name="mActionMoveItemsToBottom"/>
+    <addaction name="mActionLockItems"/>
+    <addaction name="mActionUnlockAll"/>
+   </widget>
+   <widget class="QMenu" name="mAtlasMenu">
+    <property name="title">
+     <string>&amp;Atlas</string>
+    </property>
+    <addaction name="mActionAtlasPreview"/>
+    <addaction name="mActionAtlasFirst"/>
+    <addaction name="mActionAtlasPrev"/>
+    <addaction name="mActionAtlasNext"/>
+    <addaction name="mActionAtlasLast"/>
+    <addaction name="separator"/>
+    <addaction name="mActionPrintAtlas"/>
+    <addaction name="mActionExportAtlasAsImage"/>
+    <addaction name="mActionExportAtlasAsPDF"/>
+    <addaction name="mActionExportAtlasAsSVG"/>
+    <addaction name="separator"/>
+    <addaction name="mActionAtlasSettings"/>
+   </widget>
+   <widget class="QMenu" name="mSettingsMenu">
+    <property name="title">
+     <string>&amp;Settings</string>
+    </property>
+    <addaction name="mActionOptions"/>
+   </widget>
+   <addaction name="mComposerMenu"/>
+   <addaction name="mEditMenu"/>
+   <addaction name="mViewMenu"/>
+   <addaction name="mLayoutMenu"/>
+   <addaction name="mAtlasMenu"/>
+   <addaction name="mSettingsMenu"/>
+  </widget>
   <action name="mActionPrint">
    <property name="checkable">
     <bool>false</bool>
@@ -246,6 +378,9 @@
    </property>
   </action>
   <action name="mActionMouseZoom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionZoomToSelected.svg</normaloff>:/images/themes/default/mActionZoomToSelected.svg</iconset>
@@ -261,6 +396,9 @@
    </property>
   </action>
   <action name="mActionAddNewMap">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionAddMap.png</normaloff>:/images/themes/default/mActionAddMap.png</iconset>
@@ -273,6 +411,9 @@
    </property>
   </action>
   <action name="mActionAddNewLabel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionLabel.png</normaloff>:/images/themes/default/mActionLabel.png</iconset>
@@ -285,6 +426,9 @@
    </property>
   </action>
   <action name="mActionAddNewLegend">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionAddLegend.png</normaloff>:/images/themes/default/mActionAddLegend.png</iconset>
@@ -297,6 +441,9 @@
    </property>
   </action>
   <action name="mActionSelectMoveItem">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionPan.svg</normaloff>:/images/themes/default/mActionPan.svg</iconset>
@@ -342,6 +489,9 @@
    </property>
   </action>
   <action name="mActionAddNewScalebar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionScaleBar.png</normaloff>:/images/themes/default/mActionScaleBar.png</iconset>
@@ -369,8 +519,11 @@
    </property>
   </action>
   <action name="mActionShowGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
-    <iconset resource="../../python/plugins/fTools/resources.qrc">
+    <iconset>
      <normaloff>:/icons/default/vector_grid.png</normaloff>:/icons/default/vector_grid.png</iconset>
    </property>
    <property name="text">
@@ -384,6 +537,9 @@
    </property>
   </action>
   <action name="mActionSnapGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>S&amp;nap to Grid</string>
    </property>
@@ -395,6 +551,9 @@
    </property>
   </action>
   <action name="mActionShowGuides">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Show G&amp;uides</string>
    </property>
@@ -406,6 +565,9 @@
    </property>
   </action>
   <action name="mActionSnapGuides">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;Snap to Guides</string>
    </property>
@@ -417,6 +579,9 @@
    </property>
   </action>
   <action name="mActionSmartGuides">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>S&amp;mart Guides</string>
    </property>
@@ -436,6 +601,9 @@
    </property>
   </action>
   <action name="mActionAddImage">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionAddImage.png</normaloff>:/images/themes/default/mActionAddImage.png</iconset>
@@ -448,6 +616,13 @@
    </property>
   </action>
   <action name="mActionMoveItemContent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMoveItemContent.png</normaloff>:/images/themes/default/mActionMoveItemContent.png</iconset>
+   </property>
    <property name="text">
     <string>Move &amp;Content</string>
    </property>
@@ -459,6 +634,10 @@
    </property>
   </action>
   <action name="mActionGroupItems">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionGroupItems.png</normaloff>:/images/themes/default/mActionGroupItems.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Group</string>
    </property>
@@ -470,6 +649,10 @@
    </property>
   </action>
   <action name="mActionUngroupItems">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionUngroupItems.png</normaloff>:/images/themes/default/mActionUngroupItems.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Ungroup</string>
    </property>
@@ -481,6 +664,10 @@
    </property>
   </action>
   <action name="mActionRaiseItems">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionRaiseItems.png</normaloff>:/images/themes/default/mActionRaiseItems.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Raise</string>
    </property>
@@ -492,6 +679,10 @@
    </property>
   </action>
   <action name="mActionLowerItems">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionLowerItems.png</normaloff>:/images/themes/default/mActionLowerItems.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Lower</string>
    </property>
@@ -503,6 +694,10 @@
    </property>
   </action>
   <action name="mActionMoveItemsToTop">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMoveItemsToTop.png</normaloff>:/images/themes/default/mActionMoveItemsToTop.png</iconset>
+   </property>
    <property name="text">
     <string>Bring to &amp;Front</string>
    </property>
@@ -514,6 +709,10 @@
    </property>
   </action>
   <action name="mActionMoveItemsToBottom">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionMoveItemsToBottom.png</normaloff>:/images/themes/default/mActionMoveItemsToBottom.png</iconset>
+   </property>
    <property name="text">
     <string>Send to &amp;Back</string>
    </property>
@@ -525,6 +724,10 @@
    </property>
   </action>
   <action name="mActionLoadFromTemplate">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionFileOpen.svg</normaloff>:/images/themes/default/mActionFileOpen.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Add Items from Template...</string>
    </property>
@@ -533,6 +736,10 @@
    </property>
   </action>
   <action name="mActionSaveAsTemplate">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionFileSaveAs.svg</normaloff>:/images/themes/default/mActionFileSaveAs.svg</iconset>
+   </property>
    <property name="text">
     <string>Save as &amp;Template...</string>
    </property>
@@ -541,6 +748,10 @@
    </property>
   </action>
   <action name="mActionAlignLeft">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignLeft.png</normaloff>:/images/themes/default/mActionAlignLeft.png</iconset>
+   </property>
    <property name="text">
     <string>Align Left</string>
    </property>
@@ -549,6 +760,10 @@
    </property>
   </action>
   <action name="mActionAlignHCenter">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignHCenter.png</normaloff>:/images/themes/default/mActionAlignHCenter.png</iconset>
+   </property>
    <property name="text">
     <string>Align Center</string>
    </property>
@@ -557,6 +772,10 @@
    </property>
   </action>
   <action name="mActionAlignRight">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignRight.png</normaloff>:/images/themes/default/mActionAlignRight.png</iconset>
+   </property>
    <property name="text">
     <string>Align Right</string>
    </property>
@@ -565,6 +784,10 @@
    </property>
   </action>
   <action name="mActionAlignTop">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignTop.png</normaloff>:/images/themes/default/mActionAlignTop.png</iconset>
+   </property>
    <property name="text">
     <string>Align Top</string>
    </property>
@@ -573,6 +796,10 @@
    </property>
   </action>
   <action name="mActionAlignVCenter">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignVCenter.png</normaloff>:/images/themes/default/mActionAlignVCenter.png</iconset>
+   </property>
    <property name="text">
     <string>Align Center Vertical</string>
    </property>
@@ -581,6 +808,10 @@
    </property>
   </action>
   <action name="mActionAlignBottom">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAlignBottom.png</normaloff>:/images/themes/default/mActionAlignBottom.png</iconset>
+   </property>
    <property name="text">
     <string>Align Bottom</string>
    </property>
@@ -589,6 +820,10 @@
    </property>
   </action>
   <action name="mActionQuit">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionFileExit.png</normaloff>:/images/themes/default/mActionFileExit.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -603,6 +838,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddArrow.png</normaloff>:/images/themes/default/mActionAddArrow.png</iconset>
+   </property>
    <property name="text">
     <string>Add Arro&amp;w</string>
    </property>
@@ -610,20 +849,13 @@
     <string>Add arrow</string>
    </property>
   </action>
-  <action name="mActionAddTable">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Add Table</string>
-   </property>
-   <property name="toolTip">
-    <string>Add table</string>
-   </property>
-  </action>
   <action name="mActionAddAttributeTable">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionOpenTable.png</normaloff>:/images/themes/default/mActionOpenTable.png</iconset>
    </property>
    <property name="text">
     <string>Add Attribute &amp;Table</string>
@@ -644,6 +876,9 @@
    </property>
   </action>
   <action name="mActionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normalon>:/images/themes/default/mActionUndo.png</normalon>
@@ -660,6 +895,9 @@
    </property>
   </action>
   <action name="mActionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionRedo.png</normaloff>:/images/themes/default/mActionRedo.png</iconset>
@@ -678,6 +916,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddBasicShape.png</normaloff>:/images/themes/default/mActionAddBasicShape.png</iconset>
+   </property>
    <property name="text">
     <string>Add Rectangle</string>
    </property>
@@ -688,6 +930,10 @@
   <action name="mActionAddTriangle">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddBasicShape.png</normaloff>:/images/themes/default/mActionAddBasicShape.png</iconset>
    </property>
    <property name="text">
     <string>Add Triangle</string>
@@ -700,6 +946,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddBasicShape.png</normaloff>:/images/themes/default/mActionAddBasicShape.png</iconset>
+   </property>
    <property name="text">
     <string>Add Ellipse</string>
    </property>
@@ -711,6 +961,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionAddHtml.png</normaloff>:/images/themes/default/mActionAddHtml.png</iconset>
+   </property>
    <property name="text">
     <string>Add &amp;HTML</string>
    </property>
@@ -719,6 +973,10 @@
    </property>
   </action>
   <action name="mActionComposerManager">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionComposerManager.svg</normaloff>:/images/themes/default/mActionComposerManager.svg</iconset>
+   </property>
    <property name="text">
     <string>Composer &amp;Manager...</string>
    </property>
@@ -727,6 +985,10 @@
    </property>
   </action>
   <action name="mActionNewComposer">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionNewComposer.svg</normaloff>:/images/themes/default/mActionNewComposer.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;New Composer...</string>
    </property>
@@ -738,6 +1000,10 @@
    </property>
   </action>
   <action name="mActionSaveProject">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionFileSave.svg</normaloff>:/images/themes/default/mActionFileSave.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Save Project</string>
    </property>
@@ -749,6 +1015,10 @@
    </property>
   </action>
   <action name="mActionDuplicateComposer">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionDuplicateComposer.svg</normaloff>:/images/themes/default/mActionDuplicateComposer.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Duplicate Composer...</string>
    </property>
@@ -825,6 +1095,10 @@
    </property>
   </action>
   <action name="mActionSelectAll">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mIconSelected.svg</normaloff>:/images/themes/default/mIconSelected.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Select All</string>
    </property>
@@ -870,6 +1144,9 @@
    </property>
   </action>
   <action name="mActionPan">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mActionPan.svg</normaloff>:/images/themes/default/mActionPan.svg</iconset>
@@ -894,6 +1171,9 @@
    </property>
   </action>
   <action name="mActionShowRulers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Show Ru&amp;lers</string>
    </property>
@@ -953,6 +1233,9 @@
    </property>
   </action>
   <action name="mActionAtlasPreview">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../images/images.qrc">
      <normaloff>:/images/themes/default/mIconAtlas.svg</normaloff>:/images/themes/default/mIconAtlas.svg</iconset>
@@ -1013,6 +1296,9 @@
    </property>
   </action>
   <action name="mActionShowBoxes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Show Bounding Boxes</string>
    </property>
@@ -1051,9 +1337,114 @@
     <string>F10</string>
    </property>
   </action>
+  <action name="mPrintComposersMenu">
+   <property name="text">
+    <string>Print &amp;Composers</string>
+   </property>
+  </action>
+  <action name="mActionCut">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionEditCut.png</normaloff>:/images/themes/default/mActionEditCut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut</string>
+   </property>
+  </action>
+  <action name="mActionCopy">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionEditCopy.png</normaloff>:/images/themes/default/mActionEditCopy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="mActionPaste">
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/themes/default/mActionEditPaste.png</normaloff>:/images/themes/default/mActionEditPaste.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="mActionPreviewModeOff">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Normal</string>
+   </property>
+  </action>
+  <action name="mActionPreviewModeGrayscale">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simulate Photocopy (&amp;Grayscale)</string>
+   </property>
+   <property name="toolTip">
+    <string>Simulate photocopy (grayscale)</string>
+   </property>
+  </action>
+  <action name="mActionPreviewModeMono">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simulate Fax (&amp;Mono)</string>
+   </property>
+  </action>
+  <action name="mActionPreviewProtanope">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simulate Color Blindness (&amp;Protanope)</string>
+   </property>
+   <property name="toolTip">
+    <string>Simulate color blindness (Protanope)</string>
+   </property>
+  </action>
+  <action name="mActionPreviewDeuteranope">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simulate Color Blindness (&amp;Deuteranope)</string>
+   </property>
+   <property name="toolTip">
+    <string>Simulate color blindness (Deuteranope)</string>
+   </property>
+  </action>
+  <action name="mPanelMenu">
+   <property name="text">
+    <string>P&amp;anels</string>
+   </property>
+  </action>
+  <action name="mToolbarMenu">
+   <property name="text">
+    <string>&amp;Toolbars</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="../../python/plugins/fTools/resources.qrc"/>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
   <include location="../../images/images.qrc"/>
  </resources>
  <connections/>

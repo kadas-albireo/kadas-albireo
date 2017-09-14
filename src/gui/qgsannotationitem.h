@@ -81,7 +81,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     virtual QgsAnnotationItem* clone( QgsMapCanvas* /*canvas*/ ) = 0;
 
     const QString& id() const { return mId; }
-    void setLayerId( const QString& layerId ) { mLayerId = layerId; }
+    void setLayerId( const QString& layerId );
     const QString& layerId() const { return mLayerId; }
 
     void updatePosition() override;

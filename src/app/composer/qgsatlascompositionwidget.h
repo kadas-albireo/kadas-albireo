@@ -40,7 +40,6 @@ class QgsAtlasCompositionWidget:
     void on_mAtlasFilenamePatternEdit_editingFinished();
     void on_mAtlasFilenameExpressionButton_clicked();
     void on_mAtlasHideCoverageCheckBox_stateChanged( int state );
-    void on_mAtlasSingleFileCheckBox_stateChanged( int state );
 
     void on_mAtlasSortFeatureCheckBox_stateChanged( int state );
     void changesSortFeatureField( QString fieldName );

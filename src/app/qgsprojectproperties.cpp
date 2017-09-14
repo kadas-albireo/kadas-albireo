@@ -22,7 +22,7 @@
 #include "qgsapplication.h"
 #include "qgsdistancearea.h"
 #include "qgisapp.h"
-#include "qgscomposer.h"
+#include "qgscomposition.h"
 #include "qgscontexthelp.h"
 #include "qgscoordinatetransform.h"
 #include "qgslogger.h"
@@ -1207,12 +1207,10 @@ void QgsProjectProperties::on_pbnWMSSetUsedSRS_clicked()
 
 void QgsProjectProperties::on_mAddWMSComposerButton_clicked()
 {
-  QSet<QgsComposer*> projectComposers = QgisApp::instance()->printComposers();
   QStringList composerTitles;
-  QSet<QgsComposer*>::const_iterator cIt = projectComposers.constBegin();
-  for ( ; cIt != projectComposers.constEnd(); ++cIt )
+  foreach ( const QgsComposition* composition, QgisApp::instance()->printCompositions() )
   {
-    composerTitles << ( *cIt )->title();
+    composerTitles.append( composition->title() );
   }
 
   bool ok;

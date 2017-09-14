@@ -181,7 +181,7 @@ void TestQgsAtlasComposition::init()
 
   // header label
   mLabel1 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( mLabel1 );
+  mComposition->addComposerItem( mLabel1 );
   mLabel1->setText( "[% \"NAME_1\" %] area" );
   mLabel1->setFont( QgsFontUtils::getStandardTestFont() );
   //need to explictly set width, since expression hasn't been evaluated against
@@ -190,7 +190,7 @@ void TestQgsAtlasComposition::init()
 
   // feature number label
   mLabel2 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( mLabel2 );
+  mComposition->addComposerItem( mLabel2 );
   mLabel2->setText( "# [%$feature || ' / ' || $numfeatures%]" );
   mLabel2->setFont( QgsFontUtils::getStandardTestFont() );
   mLabel2->setSceneRect( QRectF( 150, 200, 60, 15 ) );

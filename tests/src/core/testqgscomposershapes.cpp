@@ -70,7 +70,7 @@ void TestQgsComposerShapes::initTestCase()
   mComposition->setPaperSize( 297, 210 ); //A4 landscape
   mComposerShape = new QgsComposerShape( 20, 20, 150, 100, mComposition );
   mComposerShape->setBackgroundColor( QColor::fromRgb( 255, 150, 0 ) );
-  mComposition->addComposerShape( mComposerShape );
+  mComposition->addComposerItem( mComposerShape );
 
   //setup simple fill
   mSimpleFill = new QgsSimpleFillSymbolLayerV2();

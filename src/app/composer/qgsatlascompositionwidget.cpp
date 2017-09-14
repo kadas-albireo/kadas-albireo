@@ -149,26 +149,6 @@ void QgsAtlasCompositionWidget::on_mAtlasHideCoverageCheckBox_stateChanged( int 
   atlasMap->setHideCoverage( state == Qt::Checked );
 }
 
-void QgsAtlasCompositionWidget::on_mAtlasSingleFileCheckBox_stateChanged( int state )
-{
-  QgsAtlasComposition* atlasMap = &mComposition->atlasComposition();
-  if ( !atlasMap )
-  {
-    return;
-  }
-  if ( state == Qt::Checked )
-  {
-    mAtlasFilenamePatternEdit->setEnabled( false );
-    mAtlasFilenameExpressionButton->setEnabled( false );
-  }
-  else
-  {
-    mAtlasFilenamePatternEdit->setEnabled( true );
-    mAtlasFilenameExpressionButton->setEnabled( true );
-  }
-  atlasMap->setSingleFile( state == Qt::Checked );
-}
-
 void QgsAtlasCompositionWidget::on_mAtlasSortFeatureCheckBox_stateChanged( int state )
 {
   QgsAtlasComposition* atlasMap = &mComposition->atlasComposition();
@@ -320,10 +300,6 @@ void QgsAtlasCompositionWidget::updateGuiElements()
   mAtlasFilenamePatternEdit->setText( atlasMap->filenamePattern() );
   mAtlasHideCoverageCheckBox->setCheckState( atlasMap->hideCoverage() ? Qt::Checked : Qt::Unchecked );
 
-  mAtlasSingleFileCheckBox->setCheckState( atlasMap->singleFile() ? Qt::Checked : Qt::Unchecked );
-  mAtlasFilenamePatternEdit->setEnabled( !atlasMap->singleFile() );
-  mAtlasFilenameExpressionButton->setEnabled( !atlasMap->singleFile() );
-
   mAtlasSortFeatureCheckBox->setCheckState( atlasMap->sortFeatures() ? Qt::Checked : Qt::Unchecked );
   mAtlasSortFeatureDirectionButton->setEnabled( atlasMap->sortFeatures() );
   mAtlasSortFeatureKeyComboBox->setEnabled( atlasMap->sortFeatures() );
@@ -347,7 +323,6 @@ void QgsAtlasCompositionWidget::blockAllSignals( bool b )
   mAtlasSortFeatureKeyComboBox->blockSignals( b );
   mAtlasFilenamePatternEdit->blockSignals( b );
   mAtlasHideCoverageCheckBox->blockSignals( b );
-  mAtlasSingleFileCheckBox->blockSignals( b );
   mAtlasSortFeatureCheckBox->blockSignals( b );
   mAtlasSortFeatureDirectionButton->blockSignals( b );
   mAtlasFeatureFilterEdit->blockSignals( b );

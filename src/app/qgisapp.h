@@ -41,6 +41,7 @@ class QgsBrowserDockWidget;
 class QgsClipboard;
 class QgsComposer;
 class QgsComposerView;
+class QgsComposition;
 class QgsComposerManager;
 class QgsCoordinateReferenceSystem;
 class QgsCustomLayerOrderWidget;
@@ -341,20 +342,17 @@ class APP_EXPORT QgisApp : public QMainWindow
     void removeWindow( QAction *action );
 
     /**Returns the print composers*/
-    QSet<QgsComposer*> printComposers() const {return mPrintComposers;}
+    const QList<QgsComposition*>& printCompositions() const { return mPrintCompositions; }
     /** Get a unique title from user for new and duplicate composers
      * @param acceptEmpty whether to accept empty titles (one will be generated)
      * @param currentTitle base name for initial title choice
      * @return QString::null if user cancels input dialog
      */
-    QString uniqueComposerTitle( QWidget *parent, bool acceptEmpty, const QString& currentTitle = QString( "" ) );
-    /**Creates a new composer and returns a pointer to it*/
-    QgsComposer* createNewComposer( QString title = QString( "" ) , bool show = true );
-    /**Deletes a composer and removes entry from Set*/
-    void deleteComposer( QgsComposer *c );
-    /** Duplicates a composer and adds it to Set
-     */
-    QgsComposer *duplicateComposer( QgsComposer *currentComposer, QString title = QString( "" ) );
+    QString uniqueComposerTitle( QWidget *parent, bool acceptEmpty, const QString& suggestedTitle = "" );
+    QgsComposition* createNewComposition( const QString& title = "" );
+    QgsComposition *duplicateComposition( QgsComposition *composition, const QString& title = "" );
+    void deleteComposition( QgsComposition *c );
+    QgsComposer* showComposer( QgsComposition* composition );
 
     /** overloaded function used to sort menu entries alphabetically */
     QMenu* createPopupMenu() override;
@@ -612,6 +610,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     /**Returns all annotation items in the canvas*/
     QList<QgsAnnotationItem*> annotationItems();
 
+    void showComposerManager();
+
   protected:
 
     //! Handle state changes (WindowTitleChange)
@@ -761,7 +761,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     void newSpatialiteLayer();
     //! Print the current map view frame
     void newPrintComposer();
-    void showComposerManager();
     //! Add all loaded layers into the overview - overides qgisappbase method
     void addAllToOverview();
     //! Remove all loaded layers from the overview - overides qgisappbase method
@@ -1024,9 +1023,7 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     /**Creates the composer instances in a project file and adds them to the menu*/
     bool loadComposersFromProject( const QDomDocument& doc );
-
-    /** Slot to handle display of composers menu, e.g. sorting */
-    void preparePrintComposersMenu();
+    void addComposerAction( QAction* newAction );
 
     bool loadAnnotationItemsFromProject( const QDomDocument& doc );
     void loadItemCouplingsFromProject( const QDomDocument& doc );
@@ -1121,15 +1118,15 @@ class APP_EXPORT QgisApp : public QMainWindow
 
     /**This signal is emitted when a new composer instance has been created
        */
-    void composerAdded( QgsComposerView* v );
+    void compositionAdded( QgsComposition* c );
 
     /**This signal is emitted before a new composer instance is going to be removed
       */
-    void composerWillBeRemoved( QgsComposerView* v );
+    void compositionWillBeRemoved( QgsComposition* v );
 
     /**This signal is emitted when a composer instance has been removed
        @note added in version 2.3*/
-    void composerRemoved( QgsComposerView* v );
+    void compositionRemoved( QgsComposition* v );
 
     /**This signal is emitted when QGIS' initialization is complete */
     void initializationCompleted();
@@ -1191,7 +1188,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsGeometry* unionGeometries( const QgsVectorLayer* vl, QgsFeatureList& featureList, bool &canceled );
 
     /**Deletes all the composer objects and clears mPrintComposers*/
-    void deletePrintComposers();
+    void deletePrintCompositions();
 
     void saveAsVectorFileGeneral( QgsVectorLayer* vlayer = 0, bool symbologyOption = true );
 
@@ -1265,8 +1262,12 @@ class APP_EXPORT QgisApp : public QMainWindow
     QSplashScreen *mSplash;
     //! list of recently opened/saved project files
     QStringList mRecentProjectPaths;
-    //! Print composers of this project, accessible by id string
-    QSet<QgsComposer*> mPrintComposers;
+    //! Print compositions of this project
+    QList<QgsComposition*> mPrintCompositions;
+    //! Menu actions to open composers
+    QMap<QgsComposition*, QAction*> mPrintComposerActions;
+    //! Print composers
+    QMap<QgsComposition*, QgsComposer*> mPrintComposers;
     //! The number of decimal places to use if not automatic
     unsigned int mMousePrecisionDecimalPlaces;
     /** QGIS-internal vector feature clipboard */
@@ -1331,8 +1332,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     QgsDecorationScaleBar* mDecorationScaleBar;
     QgsDecorationGrid* mDecorationGrid;
     QList<QgsDecorationItem*> mDecorationItems;
-
-    int mLastComposerId;
 
     //! Persistent GPS toolbox
     QgsGPSInformationWidget *mpGpsWidget;

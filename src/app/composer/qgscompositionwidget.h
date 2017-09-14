@@ -40,7 +40,6 @@ class QgsCompositionWidget: public QWidget, private Ui::QgsCompositionWidgetBase
     Q_OBJECT
   public:
     QgsCompositionWidget( QWidget* parent, QgsComposition* c );
-    ~QgsCompositionWidget();
 
   public slots:
     void on_mPaperSizeComboBox_currentIndexChanged( const QString& text );
@@ -73,7 +72,7 @@ class QgsCompositionWidget: public QWidget, private Ui::QgsCompositionWidgetBase
 
   private slots:
     /* when a new map is added */
-    void onComposerMapAdded( QgsComposerMap* );
+    void onComposerMapAdded( QgsComposerItem *item );
     /* when a map is deleted */
     void onItemRemoved( QgsComposerItem* );
 

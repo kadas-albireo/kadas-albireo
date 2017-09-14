@@ -53,7 +53,7 @@ QgsComposerMap::QgsComposerMap( QgsComposition *composition, int x, int y, int w
     , mKeepLayerSet( false )
     , mKeepLayerStyles( false )
     , mUpdatesEnabled( true )
-    , mMapCanvas( 0 )
+    , mMapCanvas( mComposition->mapCanvas() )
     , mDrawCanvasItems( true )
     , mAtlasDriven( false )
     , mAtlasScalingMode( Auto )
@@ -101,7 +101,7 @@ QgsComposerMap::QgsComposerMap( QgsComposition *composition )
     , mKeepLayerSet( false )
     , mKeepLayerStyles( false )
     , mUpdatesEnabled( true )
-    , mMapCanvas( 0 )
+    , mMapCanvas( mComposition->mapCanvas() )
     , mDrawCanvasItems( true )
     , mAtlasDriven( false )
     , mAtlasScalingMode( Auto )
@@ -540,13 +540,6 @@ void QgsComposerMap::renderModeUpdateCachedImage()
 void QgsComposerMap::setCacheUpdated( bool u )
 {
   mCacheUpdated = u;
-}
-
-const QgsMapRenderer *QgsComposerMap::mapRenderer() const
-{
-  Q_NOWARN_DEPRECATED_PUSH
-  return mComposition->mapRenderer();
-  Q_NOWARN_DEPRECATED_POP
 }
 
 QStringList QgsComposerMap::layersToRender() const
@@ -2242,26 +2235,42 @@ void QgsComposerMap::connectMapOverviewSignals()
 
 void QgsComposerMap::drawCanvasItems( QPainter* painter, const QStyleOptionGraphicsItem* itemStyle )
 {
-  if ( !mMapCanvas || !mDrawCanvasItems )
+  if ( !mMapCanvas || !mDrawCanvasItems || mMapCanvas->items().isEmpty() )
   {
     return;
+  }
+
+  QStringList theLayerSet = layersToRender();
+  if ( -1 != mCurrentExportLayer )
+  {
+    //exporting with separate layers (eg, to svg layers), so we only want to render a single map layer
+    const int layerIdx = mCurrentExportLayer - ( hasBackground() ? 1 : 0 );
+    theLayerSet =
+      ( layerIdx >= 0 && layerIdx < theLayerSet.length() )
+      ? QStringList( theLayerSet[ theLayerSet.length() - layerIdx - 1 ] )
+      : QStringList(); //exporting decorations such as map frame/grid/overview, so no map layers required
   }
 
   QList<QGraphicsItem*> itemList = mMapCanvas->items();
-  if ( itemList.size() < 1 )
-  {
-    return;
-  }
-  QGraphicsItem* currentItem = 0;
-
   for ( int i = itemList.size() - 1; i >= 0; --i )
   {
-    currentItem = itemList.at( i );
+    QGraphicsItem* currentItem = itemList.at( i );
+
     //don't draw mapcanvasmap (has z value -10)
     if ( !currentItem || currentItem->data( 0 ).toString() != "AnnotationItem" )
     {
       continue;
     }
+
+    // Skip annotation items part of a non-visible layer
+    // Ugly ugly ugly.. see QgsAnnotationItem::setLayerId
+    QString annotationLayerId = currentItem->data( 999 ).toString();
+    if ( !annotationLayerId.isEmpty() && !theLayerSet.contains( annotationLayerId ) )
+    {
+      QTextStream( stdout ) << "Skipping annotation item of invisible layer " << annotationLayerId << endl;
+      continue;
+    }
+
     drawCanvasItem( currentItem, painter, itemStyle );
   }
 }

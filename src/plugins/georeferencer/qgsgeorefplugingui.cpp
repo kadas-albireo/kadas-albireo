@@ -1547,7 +1547,7 @@ bool QgsGeorefPluginGui::writePDFReportFile( const QString& fileName, const QgsG
   printer.setOutputFileName( fileName );
 
   //create composition A4 with 300 dpi
-  QgsComposition* composition = new QgsComposition( mCanvas->mapSettings() );
+  QgsComposition* composition = new QgsComposition( mCanvas->mapSettings(), "", mCanvas );
   composition->setPaperSize( 210, 297 ); //A4
   composition->setPrintResolution( 300 );
   printer.setPaperSize( QSizeF( composition->paperWidth(), composition->paperHeight() ), QPrinter::Millimeter );
@@ -1596,7 +1596,6 @@ bool QgsGeorefPluginGui::writePDFReportFile( const QString& fileName, const QgsG
   QgsComposerMap* composerMap = new QgsComposerMap( composition, leftMargin, titleLabel->rect().bottom() + titleLabel->pos().y(), mapWidthMM, mapHeightMM );
   composerMap->setLayerSet( mCanvas->mapSettings().layers() );
   composerMap->setNewExtent( mCanvas->extent() );
-  composerMap->setMapCanvas( mCanvas );
   composition->addItem( composerMap );
   printer.setFullPage( true );
   printer.setColorMode( QPrinter::Color );

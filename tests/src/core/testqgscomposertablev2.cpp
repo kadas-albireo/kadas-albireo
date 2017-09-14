@@ -110,8 +110,8 @@ void TestQgsComposerTableV2::initTestCase()
   mComposerAttributeTable->addFrame( mFrame1 );
   mComposerAttributeTable->addFrame( mFrame2 );
 
-  mComposition->addComposerTableFrame( mComposerAttributeTable, mFrame1 );
-  mComposition->addComposerTableFrame( mComposerAttributeTable, mFrame2 );
+  mComposition->addComposerItem( mFrame1 );
+  mComposition->addComposerItem( mFrame2 );
   mComposerAttributeTable->setVectorLayer( mVectorLayer );
   mComposerAttributeTable->setDisplayOnlyVisibleFeatures( false );
   mComposerAttributeTable->setMaximumNumberOfFeatures( 10 );

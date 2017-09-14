@@ -225,9 +225,6 @@ class QgsComposerMap : QgsComposerItem
 
     QgsRectangle extent() const;
 
-    //! @deprecated since 2.4 - use mapSettings() - may return 0 if not initialized with QgsMapRenderer
-    const QgsMapRenderer* mapRenderer() const /Deprecated/;
-
     /**Sets offset values to shift image (useful for live updates when moving item content)*/
     void setOffset( double xOffset, double yOffset );
 
@@ -567,9 +564,6 @@ class QgsComposerMap : QgsComposerItem
     double mapRotation( QgsComposerObject::PropertyValueType valueType = QgsComposerObject::EvaluatedValue ) const;
 
     void updateItem();
-
-    /**Sets canvas pointer (necessary to query and draw map canvas items)*/
-    void setMapCanvas( QGraphicsView* canvas /Transfer/ );
 
     void setDrawCanvasItems( bool b );
     bool drawCanvasItems() const;

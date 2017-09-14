@@ -22,7 +22,6 @@
 #include "ui_qgscomposermanagerbase.h"
 
 class QListWidgetItem;
-class QgsComposer;
 
 /**Delegate for a line edit for renaming a composer. Prevents entry of duplicate composer names.*/
 class QgsComposerNameDelegate : public QItemDelegate
@@ -30,7 +29,7 @@ class QgsComposerNameDelegate : public QItemDelegate
     Q_OBJECT
 
   public:
-    QgsComposerNameDelegate( QObject *parent = 0 );
+    QgsComposerNameDelegate( QObject *parent = 0 ) : QItemDelegate( parent ) {}
 
     QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
                            const QModelIndex &index ) const override;
@@ -57,10 +56,6 @@ class QgsComposerManager: public QDialog, private Ui::QgsComposerManagerBase
     void activate();
 
   private:
-    /**Stores the relation between items and composer pointers. A 0 pointer for the composer means that
-      this composer needs to be created from a default template*/
-    QMap<QListWidgetItem*, QgsComposer*> mItemComposerMap;
-
     /** Returns the default templates (key: template name, value: absolute path to template file)
      * @param fromUser whether to return user templates from ~/.qgis/composer_templates
      */

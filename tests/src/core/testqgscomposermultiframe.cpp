@@ -194,7 +194,7 @@ void TestQgsComposerMultiFrame::addRemovePage()
 
   //get a bit more complicated - add another item to page 3
   QgsComposerLabel* label1 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label1 );
+  mComposition->addComposerItem( label1 );
   label1->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 3 );
 
   //long content, so we require 4 pages

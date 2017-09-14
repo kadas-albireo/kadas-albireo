@@ -99,25 +99,25 @@ void TestQgsComposition::itemsOnPage()
 {
   //add some items to the composition
   QgsComposerLabel* label1 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label1 );
+  mComposition->addComposerItem( label1 );
   label1->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 1 );
   QgsComposerLabel* label2 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label2 );
+  mComposition->addComposerItem( label2 );
   label2->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 1 );
   QgsComposerLabel* label3 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label3 );
+  mComposition->addComposerItem( label3 );
   label3->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 2 );
   QgsComposerShape* shape1 = new QgsComposerShape( mComposition );
-  mComposition->addComposerShape( shape1 );
+  mComposition->addComposerItem( shape1 );
   shape1->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 1 );
   QgsComposerShape* shape2 = new QgsComposerShape( mComposition );
-  mComposition->addComposerShape( shape2 );
+  mComposition->addComposerItem( shape2 );
   shape2->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 2 );
   QgsComposerArrow* arrow1 = new QgsComposerArrow( mComposition );
-  mComposition->addComposerArrow( arrow1 );
+  mComposition->addComposerItem( arrow1 );
   arrow1->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 3 );
   QgsComposerArrow* arrow2 = new QgsComposerArrow( mComposition );
-  mComposition->addComposerArrow( arrow2 );
+  mComposition->addComposerItem( arrow2 );
   arrow2->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 3 );
 
   //fetch items - remember that these numbers include the paper item!
@@ -226,13 +226,13 @@ void TestQgsComposition::pageIsEmpty()
 {
   //add some items to the composition
   QgsComposerLabel* label1 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label1 );
+  mComposition->addComposerItem( label1 );
   label1->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 1 );
   QgsComposerLabel* label2 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label2 );
+  mComposition->addComposerItem( label2 );
   label2->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 1 );
   QgsComposerLabel* label3 = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( label3 );
+  mComposition->addComposerItem( label3 );
   label3->setItemPosition( 10, 10, 50, 50, QgsComposerItem::UpperLeft, false, 3 );
 
   //only page 2 should be empty

@@ -37,45 +37,34 @@
 #include "qgspaintenginehack.h"
 #include "qgspaperitem.h"
 #include "qgsproject.h"
-#include "qgsgeometry.h"
 #include "qgsvectorlayer.h"
-#include "qgsvectordataprovider.h"
 #include "qgsexpression.h"
 #include "qgssymbolv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsdatadefined.h"
 #include "qgslogger.h"
 
+#include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
 #include <QPainter>
 #include <QPrinter>
+#include <QPrintDialog>
+#include <QProgressDialog>
 #include <QSettings>
-#include <QDir>
+#include <QSvgGenerator>
 
 #include <limits>
 
-QgsComposition::QgsComposition( QgsMapRenderer* mapRenderer )
+QgsComposition::QgsComposition( const QgsMapSettings& mapSettings , const QString &title , QGraphicsView *mapCanvas )
     : QGraphicsScene( 0 )
-    , mMapRenderer( mapRenderer )
-    , mMapSettings( mapRenderer->mapSettings() )
-    , mAtlasComposition( this )
-{
-  init();
-}
-
-QgsComposition::QgsComposition( const QgsMapSettings& mapSettings )
-    : QGraphicsScene( 0 )
-    , mMapRenderer( 0 )
+    , mTitle( title )
     , mMapSettings( mapSettings )
+    , mMapCanvas( mapCanvas )
     , mAtlasComposition( this )
-{
-  init();
-}
-
-void QgsComposition::init()
+    , mPrinter( 0 )
 {
   // these members should be ideally in constructor's initialization list, but now we have two constructors...
   mPlotStyle = QgsComposition::Preview;
@@ -104,6 +93,8 @@ void QgsComposition::init()
   mPreventCursorChange = false;
   mItemsModel = 0;
   mUndoStack = new QUndoStack();
+
+  connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( writeToProject( QDomDocument& ) ) );
 
   //data defined strings
   mDataDefinedNames.insert( QgsComposerObject::PresetPaperSize, QString( "dataDefinedPaperSize" ) );
@@ -145,44 +136,6 @@ void QgsComposition::init()
   mItemsModel = new QgsComposerModel( this );
 }
 
-
-/*
-QgsComposition::QgsComposition()
-    : QGraphicsScene( 0 ),
-    mMapRenderer( 0 ),
-    mPlotStyle( QgsComposition::Preview ),
-    mPageWidth( 297 ),
-    mPageHeight( 210 ),
-    mSpaceBetweenPages( 10 ),
-    mPageStyleSymbol( 0 ),
-    mPrintAsRaster( false ),
-    mGenerateWorldFile( false ),
-    mWorldFileMap( 0 ),
-    mUseAdvancedEffects( true ),
-    mSnapToGrid( false ),
-    mGridVisible( false ),
-    mSnapGridResolution( 0 ),
-    mSnapGridTolerance( 0 ),
-    mSnapGridOffsetX( 0 ),
-    mSnapGridOffsetY( 0 ),
-    mAlignmentSnap( true ),
-    mGuidesVisible( true ),
-    mSmartGuides( true ),
-    mAlignmentSnapTolerance( 0 ),
-    mSelectionHandles( 0 ),
-    mActiveItemCommand( 0 ),
-    mActiveMultiFrameCommand( 0 ),
-    mAtlasComposition( this ),
-    mAtlasMode( QgsComposition::AtlasOff ),
-    mPreventCursorChange( false ),
-    mItemsModel( 0 )
-{
-  //load default composition settings
-  loadDefaults();
-  loadSettings();
-  mItemsModel = new QgsComposerModel( this );
-}*/
-
 QgsComposition::~QgsComposition()
 {
   removePaperItems();
@@ -207,7 +160,15 @@ QgsComposition::~QgsComposition()
   delete mActiveMultiFrameCommand;
   delete mPageStyleSymbol;
   delete mItemsModel;
+  delete mPrinter;
 }
+
+void QgsComposition::setTitle( const QString& title )
+{
+  mTitle = title;
+  emit titleChanged( title );
+}
+
 
 void QgsComposition::loadDefaults()
 {
@@ -363,16 +324,6 @@ void QgsComposition::setPaperSize( const double width, const double height )
   emit paperSizeChanged();
 }
 
-double QgsComposition::paperHeight() const
-{
-  return mPageHeight;
-}
-
-double QgsComposition::paperWidth() const
-{
-  return mPageWidth;
-}
-
 void QgsComposition::setNumPages( const int pages )
 {
   int currentPages = numPages();
@@ -430,11 +381,6 @@ void QgsComposition::setNumPages( const int pages )
   updateBounds();
 
   emit nPagesChanged();
-}
-
-int QgsComposition::numPages() const
-{
-  return mPages.size();
 }
 
 bool QgsComposition::pageIsEmpty( const int page ) const
@@ -672,43 +618,6 @@ const QgsComposerItem* QgsComposition::getComposerItemById( const QString theId 
   return 0;
 }
 
-#if 0
-const QgsComposerItem* QgsComposition::getComposerItemByUuid( QString theUuid, bool inAllComposers ) const
-{
-  //This does not work since it seems impossible to get the QgisApp::instance() from here... Is there a workaround ?
-  QSet<QgsComposer*> composers = QSet<QgsComposer*>();
-
-  if ( inAllComposers )
-  {
-    composers = QgisApp::instance()->printComposers();
-  }
-  else
-  {
-    composers.insert( this )
-  }
-
-  QSet<QgsComposer*>::const_iterator it = composers.constBegin();
-  for ( ; it != composers.constEnd(); ++it )
-  {
-    QList<QGraphicsItem *> itemList = ( *it )->items();
-    QList<QGraphicsItem *>::iterator itemIt = itemList.begin();
-    for ( ; itemIt != itemList.end(); ++itemIt )
-    {
-      const QgsComposerItem* mypItem = dynamic_cast<const QgsComposerItem *>( *itemIt );
-      if ( mypItem )
-      {
-        if ( mypItem->uuid() == theUuid )
-        {
-          return mypItem;
-        }
-      }
-    }
-  }
-
-  return 0;
-}
-#endif
-
 const QgsComposerItem* QgsComposition::getComposerItemByUuid( const QString theUuid ) const
 {
   QList<QGraphicsItem *> itemList = items();
@@ -724,7 +633,6 @@ const QgsComposerItem* QgsComposition::getComposerItemByUuid( const QString theU
       }
     }
   }
-
   return 0;
 }
 
@@ -737,6 +645,10 @@ void QgsComposition::setPrintResolution( const int dpi )
 
 void QgsComposition::setUseAdvancedEffects( const bool effectsEnabled )
 {
+  if ( effectsEnabled == mUseAdvancedEffects )
+  {
+    return;
+  }
   mUseAdvancedEffects = effectsEnabled;
 
   //toggle effects for all composer items
@@ -762,12 +674,17 @@ double QgsComposition::pointFontSize( int pixelSize ) const
   return QgsComposerUtils::mmToPoints( pixelSize );
 }
 
-bool QgsComposition::writeXML( QDomElement& composerElem, QDomDocument& doc )
+bool QgsComposition::writeToProject( QDomDocument &doc )
 {
-  if ( composerElem.isNull() )
-  {
-    return false;
-  }
+  QDomElement qgis = doc.firstChildElement( "qgis" );
+  return writeXML( qgis, doc );
+}
+
+bool QgsComposition::writeXML( QDomNode& parentNode, QDomDocument& doc )
+{
+  QDomElement composerElem = doc.createElement( "Composer" );
+  parentNode.appendChild( composerElem );
+  composerElem.setAttribute( "title", mTitle );
 
   QDomElement compositionElem = doc.createElement( "Composition" );
   compositionElem.setAttribute( "paperWidth", QString::number( mPageWidth ) );
@@ -851,12 +768,40 @@ bool QgsComposition::writeXML( QDomElement& composerElem, QDomDocument& doc )
   //data defined properties
   QgsComposerUtils::writeDataDefinedPropertyMap( compositionElem, doc, &mDataDefinedNames, &mDataDefinedProperties );
 
+  // atlas
+  mAtlasComposition.writeXML( composerElem, doc );
+
   return true;
 }
 
-bool QgsComposition::readXML( const QDomElement& compositionElem, const QDomDocument& doc )
+bool QgsComposition::readXML( QDomElement composerElem, bool fromTemplate )
 {
-  Q_UNUSED( doc );
+  if ( !fromTemplate )
+  {
+    setTitle( composerElem.attribute( "title" ) );
+  }
+
+  // Look for template
+  QString templatePath = composerElem.attribute( "template" );
+  if ( !templatePath.isEmpty() )
+  {
+    QFileInfo finfo( templatePath );
+    if ( !finfo.isAbsolute() )
+    {
+      templatePath = QFileInfo( QgsProject::instance()->fileName() ).dir().absoluteFilePath( templatePath );
+    }
+    QFile file( templatePath );
+    if ( !file.open( QIODevice::ReadOnly ) )
+    {
+      return false;
+    }
+    QDomDocument doc;
+    doc.setContent( &file );
+    composerElem = doc.firstChildElement( "Composer" );
+  }
+
+  QDomElement compositionElem = composerElem.firstChildElement( "Composition" );
+  QDomElement atlasElem = composerElem.firstChildElement( "Atlas" );
   if ( compositionElem.isNull() )
   {
     return false;
@@ -923,10 +868,33 @@ bool QgsComposition::readXML( const QDomElement& compositionElem, const QDomDocu
 
   updateBounds();
 
+  // atlas
+  mAtlasComposition.readXML( atlasElem );
+
+  // Add items
+  addItemsFromXML( composerElem, composerElem.ownerDocument() );
+
+  // look for world file composer map, if needed
+  // Note: this must be done after maps have been added by addItemsFromXML
+  if ( mGenerateWorldFile )
+  {
+    int worldFileMapId = compositionElem.attribute( "worldFileMap" ).toInt();
+    foreach ( const QgsComposerMap* map, composerMapItems() )
+    {
+      if ( map->id() == worldFileMapId )
+      {
+        mWorldFileMap = map;
+      }
+    }
+  }
+
+  //make sure z values are consistent
+  refreshZList();
+
   return true;
 }
 
-bool QgsComposition::loadFromTemplate( const QDomDocument& doc, QMap<QString, QString>* substitutionMap, bool addUndoCommands, const bool clearComposition )
+bool QgsComposition::loadFromTemplate( const QDomDocument& doc, QMap<QString, QString>* substitutionMap, bool clearComposition )
 {
   if ( clearComposition )
   {
@@ -959,7 +927,7 @@ bool QgsComposition::loadFromTemplate( const QDomDocument& doc, QMap<QString, QS
     QMap<QString, QString>::const_iterator sIt = substitutionMap->constBegin();
     for ( ; sIt != substitutionMap->constEnd(); ++sIt )
     {
-      xmlString = xmlString.replace( "[" + sIt.key() + "]", encodeStringForXML( sIt.value() ) );
+      xmlString = xmlString.replace( "[" + sIt.key() + "]", sIt.value().toHtmlEscaped() );
     }
 
     QString errorMsg;
@@ -974,27 +942,6 @@ bool QgsComposition::loadFromTemplate( const QDomDocument& doc, QMap<QString, QS
     importDoc = doc;
   }
 
-  //read general settings
-  QDomElement atlasElem;
-  if ( clearComposition )
-  {
-    QDomElement compositionElem = importDoc.documentElement().firstChildElement( "Composition" );
-    if ( compositionElem.isNull() )
-    {
-      return false;
-    }
-
-    bool ok = readXML( compositionElem, importDoc );
-    if ( !ok )
-    {
-      return false;
-    }
-
-    // read atlas parameters - must be done before adding items
-    atlasElem = importDoc.documentElement().firstChildElement( "Atlas" );
-    atlasComposition().readXML( atlasElem, importDoc );
-  }
-
   // remove all uuid attributes since we don't want duplicates UUIDS
   QDomNodeList composerItemsNodes = importDoc.elementsByTagName( "ComposerItem" );
   for ( int i = 0; i < composerItemsNodes.count(); ++i )
@@ -1007,14 +954,17 @@ bool QgsComposition::loadFromTemplate( const QDomDocument& doc, QMap<QString, QS
     }
   }
 
-  //addItemsFromXML
-  addItemsFromXML( importDoc.documentElement(), importDoc, 0, addUndoCommands, 0 );
-
-  //read atlas map parameters (for pre 2.2 templates)
-  //this can only be done after items have been added
+  //read general settings
   if ( clearComposition )
   {
-    atlasComposition().readXMLMapSettings( atlasElem, importDoc );
+    if ( !readXML( importDoc.documentElement(), true ) )
+    {
+      return false;
+    }
+  }
+  else
+  {
+    addItemsFromXML( importDoc.documentElement(), importDoc );
   }
   return true;
 }
@@ -1048,7 +998,7 @@ QPointF QgsComposition::minPointFromXml( const QDomElement& elem ) const
   }
 }
 
-void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocument& doc, QMap< QgsComposerMap*, int >* mapsToRestore,
+void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocument& doc,
                                       bool addUndoCommands, QPointF* pos, bool pasteInPlace )
 {
   QPointF* pasteInPlacePt = 0;
@@ -1098,7 +1048,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newLabel->setSelected( true );
       lastPastedItem = newLabel;
     }
-    addComposerLabel( newLabel );
+    addComposerItem( newLabel );
     newLabel->setZValue( newLabel->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1112,20 +1062,9 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
     QDomElement currentComposerMapElem = composerMapList.at( i ).toElement();
     QgsComposerMap* newMap = new QgsComposerMap( this );
 
-    if ( mapsToRestore )
-    {
-      newMap->setUpdatesEnabled( false );
-    }
-
     newMap->readXML( currentComposerMapElem, doc );
     newMap->assignFreeId();
 
-    if ( mapsToRestore )
-    {
-      mapsToRestore->insert( newMap, ( int )( newMap->previewMode() ) );
-      newMap->setPreviewMode( QgsComposerMap::Rectangle );
-      newMap->setUpdatesEnabled( true );
-    }
     addComposerMap( newMap, false );
     newMap->setZValue( newMap->zValue() + zOrderOffset );
     if ( pos )
@@ -1186,7 +1125,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newArrow->setSelected( true );
       lastPastedItem = newArrow;
     }
-    addComposerArrow( newArrow );
+    addComposerItem( newArrow );
     newArrow->setZValue( newArrow->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1214,7 +1153,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newScaleBar->setSelected( true );
       lastPastedItem = newScaleBar;
     }
-    addComposerScaleBar( newScaleBar );
+    addComposerItem( newScaleBar );
     newScaleBar->setZValue( newScaleBar->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1244,7 +1183,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newShape->setSelected( true );
       lastPastedItem = newShape;
     }
-    addComposerShape( newShape );
+    addComposerItem( newShape );
     newShape->setZValue( newShape->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1272,7 +1211,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newPicture->setSelected( true );
       lastPastedItem = newPicture;
     }
-    addComposerPicture( newPicture );
+    addComposerItem( newPicture );
     newPicture->setZValue( newPicture->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1300,7 +1239,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newLegend->setSelected( true );
       lastPastedItem = newLegend;
     }
-    addComposerLegend( newLegend );
+    addComposerItem( newLegend );
     newLegend->setZValue( newLegend->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1328,7 +1267,7 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
       newTable->setSelected( true );
       lastPastedItem = newTable;
     }
-    addComposerTable( newTable );
+    addComposerItem( newTable );
     newTable->setZValue( newTable->zValue() + zOrderOffset );
     if ( addUndoCommands )
     {
@@ -1401,24 +1340,20 @@ void QgsComposition::addItemsFromXML( const QDomElement& elem, const QDomDocumen
 
 void QgsComposition::addItemToZList( QgsComposerItem* item )
 {
-  if ( !item )
+  if ( item )
   {
-    return;
+    //model handles changes to z list
+    mItemsModel->addItemAtTop( item );
   }
-
-  //model handles changes to z list
-  mItemsModel->addItemAtTop( item );
 }
 
 void QgsComposition::removeItemFromZList( QgsComposerItem* item )
 {
-  if ( !item )
+  if ( item )
   {
-    return;
+    //model handles changes to z list
+    mItemsModel->removeItem( item );
   }
-
-  //model handles changes to z list
-  mItemsModel->removeItem( item );
 }
 
 void QgsComposition::raiseSelectedItems()
@@ -2302,27 +2237,17 @@ void QgsComposition::removeMultiFrame( QgsComposerMultiFrame* multiFrame )
   updateBounds();
 }
 
-void QgsComposition::addComposerArrow( QgsComposerArrow* arrow )
+void QgsComposition::addComposerItem( QgsComposerItem* item )
 {
-  addItem( arrow );
+  addItem( item );
 
   updateBounds();
-  connect( arrow, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
+  connect( item, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
 
-  emit composerArrowAdded( arrow );
+  emit composerItemAdded( item );
 }
 
-void QgsComposition::addComposerLabel( QgsComposerLabel* label )
-{
-  addItem( label );
-
-  updateBounds();
-  connect( label, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerLabelAdded( label );
-}
-
-void QgsComposition::addComposerMap( QgsComposerMap* map, const bool setDefaultPreviewStyle )
+void QgsComposition::addComposerMap( QgsComposerMap* map, bool setDefaultPreviewStyle )
 {
   addItem( map );
   if ( setDefaultPreviewStyle )
@@ -2339,77 +2264,7 @@ void QgsComposition::addComposerMap( QgsComposerMap* map, const bool setDefaultP
   updateBounds();
   connect( map, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
 
-  emit composerMapAdded( map );
-}
-
-void QgsComposition::addComposerScaleBar( QgsComposerScaleBar* scaleBar )
-{
-  addItem( scaleBar );
-
-  updateBounds();
-  connect( scaleBar, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerScaleBarAdded( scaleBar );
-}
-
-void QgsComposition::addComposerLegend( QgsComposerLegend* legend )
-{
-  addItem( legend );
-
-  updateBounds();
-  connect( legend, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerLegendAdded( legend );
-}
-
-void QgsComposition::addComposerPicture( QgsComposerPicture* picture )
-{
-  addItem( picture );
-
-  updateBounds();
-  connect( picture, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerPictureAdded( picture );
-}
-
-void QgsComposition::addComposerShape( QgsComposerShape* shape )
-{
-  addItem( shape );
-
-  updateBounds();
-  connect( shape, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerShapeAdded( shape );
-}
-
-void QgsComposition::addComposerTable( QgsComposerAttributeTable* table )
-{
-  addItem( table );
-
-  updateBounds();
-  connect( table, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerTableAdded( table );
-}
-
-void QgsComposition::addComposerHtmlFrame( QgsComposerHtml* html, QgsComposerFrame* frame )
-{
-  addItem( frame );
-
-  updateBounds();
-  connect( frame, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerHtmlFrameAdded( html, frame );
-}
-
-void QgsComposition::addComposerTableFrame( QgsComposerAttributeTableV2 *table, QgsComposerFrame *frame )
-{
-  addItem( frame );
-
-  updateBounds();
-  connect( frame, SIGNAL( sizeChanged() ), this, SLOT( updateBounds() ) );
-
-  emit composerTableFrameAdded( table, frame );
+  emit composerItemAdded( map );
 }
 
 void QgsComposition::removeComposerItem( QgsComposerItem* item, const bool createCommand, const bool removeGroupItems )
@@ -2498,93 +2353,18 @@ void QgsComposition::pushAddRemoveCommand( QgsComposerItem* item, const QString&
 
 void QgsComposition::connectAddRemoveCommandSignals( QgsAddRemoveItemCommand* c )
 {
-  if ( !c )
+  if ( c )
   {
-    return;
+    QObject::connect( c, SIGNAL( itemRemoved( QgsComposerItem* ) ), this, SIGNAL( itemRemoved( QgsComposerItem* ) ) );
+    QObject::connect( c, SIGNAL( itemAdded( QgsComposerItem* ) ), this, SLOT( sendItemAddedSignal( QgsComposerItem* ) ) );
   }
-
-  QObject::connect( c, SIGNAL( itemRemoved( QgsComposerItem* ) ), this, SIGNAL( itemRemoved( QgsComposerItem* ) ) );
-  QObject::connect( c, SIGNAL( itemAdded( QgsComposerItem* ) ), this, SLOT( sendItemAddedSignal( QgsComposerItem* ) ) );
 }
 
 void QgsComposition::sendItemAddedSignal( QgsComposerItem* item )
 {
-  //cast and send proper signal
   item->setSelected( true );
-  QgsComposerArrow* arrow = dynamic_cast<QgsComposerArrow*>( item );
-  if ( arrow )
-  {
-    emit composerArrowAdded( arrow );
-    emit selectedItemChanged( arrow );
-    return;
-  }
-  QgsComposerLabel* label = dynamic_cast<QgsComposerLabel*>( item );
-  if ( label )
-  {
-    emit composerLabelAdded( label );
-    emit selectedItemChanged( label );
-    return;
-  }
-  QgsComposerMap* map = dynamic_cast<QgsComposerMap*>( item );
-  if ( map )
-  {
-    emit composerMapAdded( map );
-    emit selectedItemChanged( map );
-    return;
-  }
-  QgsComposerScaleBar* scalebar = dynamic_cast<QgsComposerScaleBar*>( item );
-  if ( scalebar )
-  {
-    emit composerScaleBarAdded( scalebar );
-    emit selectedItemChanged( scalebar );
-    return;
-  }
-  QgsComposerLegend* legend = dynamic_cast<QgsComposerLegend*>( item );
-  if ( legend )
-  {
-    emit composerLegendAdded( legend );
-    emit selectedItemChanged( legend );
-    return;
-  }
-  QgsComposerPicture* picture = dynamic_cast<QgsComposerPicture*>( item );
-  if ( picture )
-  {
-    emit composerPictureAdded( picture );
-    emit selectedItemChanged( picture );
-    return;
-  }
-  QgsComposerShape* shape = dynamic_cast<QgsComposerShape*>( item );
-  if ( shape )
-  {
-    emit composerShapeAdded( shape );
-    emit selectedItemChanged( shape );
-    return;
-  }
-  QgsComposerAttributeTable* table = dynamic_cast<QgsComposerAttributeTable*>( item );
-  if ( table )
-  {
-    emit composerTableAdded( table );
-    emit selectedItemChanged( table );
-    return;
-  }
-  QgsComposerFrame* frame = dynamic_cast<QgsComposerFrame*>( item );
-  if ( frame )
-  {
-    //emit composerFrameAdded( multiframe, frame, );
-    QgsComposerMultiFrame* mf = frame->multiFrame();
-    QgsComposerHtml* html = dynamic_cast<QgsComposerHtml*>( mf );
-    if ( html )
-    {
-      emit composerHtmlFrameAdded( html, frame );
-    }
-    QgsComposerAttributeTableV2* table = dynamic_cast<QgsComposerAttributeTableV2*>( mf );
-    if ( table )
-    {
-      emit composerTableFrameAdded( table, frame );
-    }
-    emit selectedItemChanged( frame );
-    return;
-  }
+  emit composerItemAdded( item );
+  emit selectedItemChanged( item );
 }
 
 void QgsComposition::updatePaperItems()
@@ -2627,9 +2407,135 @@ void QgsComposition::deleteAndRemoveMultiFrames()
   mMultiFrames.clear();
 }
 
-void QgsComposition::beginPrintAsPDF( QPrinter& printer, const QString& file )
+
+QPrinter *QgsComposition::defaultPrinter()
 {
-  printer.setOutputFileName( file );
+  // Only create the printer on demand - creating a printer object can be very slow due to QTBUG-3033
+  if ( !mPrinter )
+  {
+    mPrinter = new QPrinter();
+    mPrinter->setOrientation( paperWidth() > paperHeight() ? QPrinter::Landscape : QPrinter::Portrait );
+  }
+  return mPrinter;
+}
+
+bool QgsComposition::print( QPrinter* printer, OutputMode mode, bool evaluateDDPageSize, QProgressDialog* progressDialog, QString* errorMsg )
+{
+  // If not printing as raster, temporarily disable advanced effects as QPrinter
+  // does not support composition modes, which can result in items missing in the output
+  setUseAdvancedEffects( printAsRaster() );
+
+  if ( mode == OutputMode::Atlas )
+  {
+    //prepare for first feature, so that we know paper size to begin with
+    mAtlasComposition.prepareForFeature( 0 );
+  }
+
+  if ( !printer )
+  {
+    printer = defaultPrinter();
+
+    QPrintDialog printDialog( printer, 0 );
+    if ( printDialog.exec() != QDialog::Accepted )
+    {
+      return false;
+    }
+  }
+
+  //set resolution based on composer setting
+  printer->setFullPage( true );
+  printer->setColorMode( QPrinter::Color );
+
+  //set user-defined resolution
+  printer->setResolution( printResolution() );
+
+  if ( evaluateDDPageSize && ddPageSizeActive() )
+  {
+    //set data defined page size
+    refreshPageSize();
+    //must set orientation to portrait before setting paper size, otherwise size will be flipped
+    //for landscape sized outputs (#11352)
+    printer->setOrientation( QPrinter::Portrait );
+    printer->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
+  }
+
+  if ( mode == OutputMode::Single )
+  {
+    QPainter p;
+    if ( !p.begin( printer ) )
+    {
+      if ( errorMsg )
+      {
+        *errorMsg = tr( "Print error" );
+      }
+      setUseAdvancedEffects( true );
+      return false;
+    }
+    printPages( printer, p );
+  }
+  else
+  {
+    mAtlasComposition.loadPredefinedScalesFromProject();;
+    if ( !mAtlasComposition.beginRender() && !mAtlasComposition.featureFilterErrorString().isEmpty() )
+    {
+      if ( errorMsg )
+      {
+        *errorMsg = tr( "Atlas feature filter parser error: %1" ).arg( mAtlasComposition.featureFilterErrorString() );
+      }
+      setUseAdvancedEffects( true );
+      mAtlasComposition.endRender();
+      return false;
+    }
+
+    if ( progressDialog )
+    {
+      progressDialog->setLabelText( tr( "Rendering maps..." ) );
+      progressDialog->setCancelButtonText( tr( "Abort" ) );
+      progressDialog->setRange( 0, mAtlasComposition.numFeatures() );
+    }
+
+    QPainter painter( printer );
+    for ( int i = 0, n = mAtlasComposition.numFeatures(); i < n; ++i )
+    {
+      if ( progressDialog )
+      {
+        progressDialog->setValue( i );
+        // Determine if user canceled
+        QCoreApplication::processEvents();
+        if ( progressDialog->wasCanceled() )
+        {
+          mAtlasComposition.endRender();
+          setUseAdvancedEffects( true );
+          mAtlasComposition.endRender();
+          return false;
+        }
+      }
+      if ( !mAtlasComposition.prepareForFeature( i ) )
+      {
+        if ( errorMsg )
+        {
+          *errorMsg = tr( "Atlas processing error" );
+        }
+        setUseAdvancedEffects( true );
+        mAtlasComposition.endRender();
+        return false;
+      }
+
+      //start print on a new page if we're not on the first feature
+      printPages( printer, painter, i > 0 );
+    }
+    mAtlasComposition.endRender();
+  }
+
+  setUseAdvancedEffects( true );
+  return true;
+}
+
+bool QgsComposition::printToPdf( const QString& output, OutputMode mode, QProgressDialog *progressDialog, QString *errorMsg )
+{
+  QPrinter printer;
+
+  printer.setOutputFileName( output );
   // setOutputFormat should come after setOutputFileName, which auto-sets format to QPrinter::PdfFormat.
   // [LS] This should be QPrinter::NativeFormat for Mac, otherwise fonts are not embed-able
   // and text is not searchable; however, there are several bugs with <= Qt 4.8.5, 5.1.1, 5.2.0:
@@ -2649,145 +2555,338 @@ void QgsComposition::beginPrintAsPDF( QPrinter& printer, const QString& file )
   //printer.setFontEmbeddingEnabled( true );
 
   QgsPaintEngineHack::fixEngineFlags( printer.paintEngine() );
+
+  return print( &printer, mode, false, progressDialog, errorMsg );
 }
 
-bool QgsComposition::exportAsPDF( const QString& file )
+bool QgsComposition::printToImage( const QString& output, const QString& format, bool groupLayers, OutputMode mode, QProgressDialog *progressDialog, QString *errorMsg )
 {
-  QPrinter printer;
-  beginPrintAsPDF( printer, file );
-  return print( printer );
-}
-
-void QgsComposition::doPrint( QPrinter& printer, QPainter& p, bool startNewPage )
-{
-  if ( ddPageSizeActive() )
+  if ( mode == OutputMode::Single )
   {
-    //set the page size again so that data defined page size takes effect
-    refreshPageSize();
-    //must set orientation to portrait before setting paper size, otherwise size will be flipped
-    //for landscape sized outputs (#11352)
-    printer.setOrientation( QPrinter::Portrait );
-    printer.setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
-  }
-
-  //QgsComposition starts page numbering at 0
-  int fromPage = ( printer.fromPage() < 1 ) ? 0 : printer.fromPage() - 1;
-  int toPage = ( printer.toPage() < 1 ) ? numPages() - 1 : printer.toPage() - 1;
-
-  bool pageExported = false;
-  if ( mPrintAsRaster )
-  {
-    for ( int i = fromPage; i <= toPage; ++i )
+    bool success = false;
+    if ( format == "svg" )
     {
-      if ( !shouldExportPage( i + 1 ) )
-      {
-        continue;
-      }
-      if (( pageExported && i > fromPage ) || startNewPage )
-      {
-        printer.newPage();
-      }
-
-      QImage image = printPageAsRaster( i );
-      if ( !image.isNull() )
-      {
-        QRectF targetArea( 0, 0, image.width(), image.height() );
-        p.drawImage( targetArea, image, targetArea );
-      }
-      pageExported = true;
+      success = renderPagesToSvg( output, groupLayers, errorMsg );
+    }
+    else
+    {
+      success = renderPagesToImages( output, format, errorMsg );
+    }
+    if ( !success )
+    {
+      return false;
     }
   }
-
-  if ( !mPrintAsRaster )
+  else
   {
-    for ( int i = fromPage; i <= toPage; ++i )
+    if ( mAtlasComposition.filenamePattern().isEmpty() )
     {
-      if ( !shouldExportPage( i + 1 ) )
-      {
-        continue;
-      }
-      if (( pageExported && i > fromPage ) || startNewPage )
-      {
-        printer.newPage();
-      }
-      renderPage( &p, i );
-      pageExported = true;
+      QgsDebugMsg( "Setting default atlas composition filename pattern" );
+      mAtlasComposition.setFilenamePattern( "'output_'||$feature" );
     }
+    QDir outputDir( output );
+
+    mAtlasComposition.loadPredefinedScalesFromProject();
+    if ( !mAtlasComposition.beginRender() && !mAtlasComposition.featureFilterErrorString().isEmpty() )
+    {
+      if ( errorMsg )
+      {
+        *errorMsg = tr( "Atlas feature filter parser error: %1" ).arg( mAtlasComposition.featureFilterErrorString() );
+      }
+      return false;
+    }
+
+    if ( progressDialog )
+    {
+      progressDialog->setLabelText( tr( "Rendering maps..." ) );
+      progressDialog->setCancelButtonText( tr( "Abort" ) );
+      progressDialog->setRange( 0, mAtlasComposition.numFeatures() );
+    }
+
+    for ( int i = 0, n = mAtlasComposition.numFeatures(); i < n; ++i )
+    {
+      if ( progressDialog )
+      {
+        progressDialog->setValue( i );
+        // Determine if user canceled
+        QCoreApplication::processEvents();
+        if ( progressDialog->wasCanceled() )
+        {
+          mAtlasComposition.endRender();
+          return false;
+        }
+      }
+      if ( !mAtlasComposition.prepareForFeature( i ) )
+      {
+        if ( errorMsg )
+        {
+          *errorMsg = tr( "Atlas processing error" );
+        }
+        return false;
+      }
+
+      QString currentOutput = outputDir.absoluteFilePath( QString( "%1.%2" ).arg( mAtlasComposition.currentFilename() ).arg( format ) );
+      bool success = false;
+      if ( format == "svg" )
+      {
+        success = renderPagesToSvg( currentOutput, groupLayers, errorMsg );
+      }
+      else
+      {
+        success = renderPagesToImages( currentOutput, format, errorMsg );
+      }
+      if ( !success )
+      {
+        mAtlasComposition.endRender();
+        return false;
+      }
+    }
+    mAtlasComposition.endRender();
   }
-}
-
-void QgsComposition::beginPrint( QPrinter &printer, const bool evaluateDDPageSize )
-{
-  //set resolution based on composer setting
-  printer.setFullPage( true );
-  printer.setColorMode( QPrinter::Color );
-
-  //set user-defined resolution
-  printer.setResolution( printResolution() );
-
-  if ( evaluateDDPageSize && ddPageSizeActive() )
-  {
-    //set data defined page size
-    refreshPageSize();
-    //must set orientation to portrait before setting paper size, otherwise size will be flipped
-    //for landscape sized outputs (#11352)
-    printer.setOrientation( QPrinter::Portrait );
-    printer.setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
-  }
-}
-
-bool QgsComposition::print( QPrinter &printer, const bool evaluateDDPageSize )
-{
-  beginPrint( printer, evaluateDDPageSize );
-  QPainter p;
-  bool ready = p.begin( &printer );
-  if ( !ready )
-  {
-    //error beginning print
-    return false;
-  }
-  doPrint( printer, p );
-  p.end();
   return true;
 }
 
-QImage QgsComposition::printPageAsRaster( int page )
+bool QgsComposition::renderPagesToImages( const QString& fileName, const QString& format, QString *errorMsg )
 {
-  //print out via QImage, code copied from on_mActionExportAsImage_activated
+  QFileInfo fi( fileName );
+  QString fileNamePattern = fi.absoluteDir().absoluteFilePath( fi.baseName() + "_%1." + format );
+
+  // Image for rasterization
   int width = ( int )( printResolution() * paperWidth() / 25.4 );
   int height = ( int )( printResolution() * paperHeight() / 25.4 );
   QImage image( QSize( width, height ), QImage::Format_ARGB32 );
-  if ( !image.isNull() )
+  image.setDotsPerMeterX( printResolution() / 25.4 * 1000 );
+  image.setDotsPerMeterY( printResolution() / 25.4 * 1000 );
+
+  for ( int iPage = 0, nPages = numPages(); iPage < nPages; ++iPage )
   {
-    image.setDotsPerMeterX( printResolution() / 25.4 * 1000 );
-    image.setDotsPerMeterY( printResolution() / 25.4 * 1000 );
+    if ( !shouldExportPage( iPage + 1 ) )
+    {
+      continue;
+    }
     image.fill( 0 );
     QPainter imagePainter( &image );
-    renderPage( &imagePainter, page );
-    if ( !imagePainter.isActive() ) return QImage();
+    renderPage( &imagePainter, iPage );
+    QString saveName = iPage == 0 ? fileName : fileNamePattern.arg( iPage + 1 );
+    bool saveOk = image.save( saveName, format.toLocal8Bit() );
+    if ( !saveOk )
+    {
+      if ( errorMsg )
+      {
+        *errorMsg = tr( "Failed to save image to %1." ).arg( saveName );
+      }
+      return false;
+    }
   }
-  return image;
+
+  if ( mGenerateWorldFile )
+  {
+    writeWorldFile( QString( "%1w" ).arg( fileName.left( fileName.length() - 1 ) ) );
+  }
+  return true;
+}
+
+bool QgsComposition::renderPagesToSvg( const QString& fileName, bool groupLayers, QString *errorMsg )
+{
+  QFileInfo fi( fileName );
+  QString fileNamePattern = fi.absoluteDir().absoluteFilePath( fi.baseName() + "_%1.svg" );
+
+  // Dimensions in pixels
+  int width = ( int )( paperWidth() * printResolution() / 25.4 );
+  int height = ( int )( paperHeight() * printResolution() / 25.4 );
+
+  for ( int iPage = 0, nPages = numPages(); iPage < nPages; ++iPage )
+  {
+    if ( !shouldExportPage( iPage + 1 ) )
+    {
+      continue;
+    }
+    if ( !groupLayers )
+    {
+      QString saveName = iPage == 0 ? fileName : fileNamePattern.arg( iPage + 1 );
+      QSvgGenerator generator;
+      generator.setTitle( QgsProject::instance()->title() );
+      generator.setSize( QSize( width, height ) );
+      generator.setViewBox( QRect( 0, 0, width, height ) );
+      generator.setResolution( printResolution() ); //because the rendering is done in mm, convert the dpi
+      generator.setFileName( saveName );
+
+      QPainter p;
+      if ( !p.begin( &generator ) )
+      {
+        if ( errorMsg )
+        {
+          *errorMsg = tr( "Error creating %1" ).arg( saveName );
+        }
+        return false;
+      }
+
+      renderPage( &p, iPage );
+      p.end();
+    }
+    else
+    {
+      QRectF paperRect = QRectF( pages()[iPage]->pos(), pages()[iPage]->rect().size() );
+      QList<QGraphicsItem *> graphicitems = items( paperRect, Qt::IntersectsItemBoundingRect, Qt::AscendingOrder );
+      if ( !graphicitems.isEmpty() && dynamic_cast<QgsPaperGrid*>( graphicitems.last() ) && !gridVisible() )
+      {
+        graphicitems.pop_back();
+      }
+      QHash<QGraphicsItem*, bool> itemVisibility;
+      QList<QgsComposerItem*> separateLayerItems; // Items which need a separate layer
+      foreach ( QGraphicsItem* item, graphicitems )
+      {
+        itemVisibility[item] = item->isVisible();
+        QgsComposerItem * composerItem = dynamic_cast<QgsComposerItem*>( item );
+        if ( composerItem && composerItem->numberExportLayers() > 0 )
+        {
+          separateLayerItems.append( composerItem );
+          item->hide(); // Hide items which need a separate layer
+        }
+      }
+      QDomDocument svgDoc;
+      QDomElement svgRootElement;
+      int layerId = 0;
+
+      // First, render all items which don't need a separate layer
+      {
+        QBuffer svgBuffer;
+        QSvgGenerator generator;
+        generator.setTitle( QgsProject::instance()->title() );
+        generator.setSize( QSize( width, height ) );
+        generator.setViewBox( QRect( 0, 0, width, height ) );
+        generator.setResolution( printResolution() ); //because the rendering is done in mm, convert the dpi
+        generator.setOutputDevice( &svgBuffer );
+        QPainter p;
+        p.begin( &generator );
+        renderPage( &p, iPage );
+        p.end();
+        svgBuffer.close();
+        svgBuffer.open( QIODevice::ReadOnly );
+        svgDoc.setContent( &svgBuffer, false );
+        svgRootElement = svgDoc.firstChildElement( "svg" );
+        svgRootElement.setAttribute( "xmlns:inkscape", "http://www.inkscape.org/namespaces/inkscape" );
+        QDomNode mainGroup = svgDoc.elementsByTagName( "g" ).at( 0 );
+        QString layerName( QString( "Layer %1" ).arg( ++layerId ) );
+        mainGroup.toElement().setAttribute( "id", layerName );
+        mainGroup.toElement().setAttribute( "inkscape:label", layerName );
+        mainGroup.toElement().setAttribute( "inkscape:groupmode", "layer" );
+      }
+
+      // Hide all items, then selectively show the specific item which needs to be rendered
+      foreach ( QGraphicsItem* item, graphicitems )
+      {
+        item->hide();
+      }
+
+      // Selectively render one item per layer
+      foreach ( QgsComposerItem* item, separateLayerItems )
+      {
+        item->show();
+        for ( int iItemLayer = 0, nItemLayers = item->numberExportLayers(); iItemLayer < nItemLayers; ++iItemLayer )
+        {
+          item->setCurrentExportLayer( iItemLayer );
+
+          QBuffer svgBuffer;
+          QSvgGenerator generator;
+          generator.setTitle( QgsProject::instance()->title() );
+          generator.setSize( QSize( width, height ) );
+          generator.setViewBox( QRect( 0, 0, width, height ) );
+          generator.setResolution( printResolution() ); //because the rendering is done in mm, convert the dpi
+          generator.setOutputDevice( &svgBuffer );
+          QPainter p;
+          p.begin( &generator );
+          renderPage( &p, iPage );
+          p.end();
+          svgBuffer.close();
+          svgBuffer.open( QIODevice::ReadOnly );
+          QDomDocument doc;
+          doc.setContent( &svgBuffer, false );
+          QDomNode mainGroup = svgDoc.importNode( doc.elementsByTagName( "g" ).at( 0 ), true );
+          QString layerName( QString( "Layer %1" ).arg( ++layerId ) );
+          mainGroup.toElement().setAttribute( "id", layerName );
+          mainGroup.toElement().setAttribute( "inkscape:label", layerName );
+          mainGroup.toElement().setAttribute( "inkscape:groupmode", "layer" );
+          svgRootElement.appendChild( svgDoc.importNode( doc.elementsByTagName( "defs" ).at( 0 ), true ) );
+          svgRootElement.appendChild( mainGroup );
+        }
+        item->setCurrentExportLayer();
+        item->hide();
+      }
+
+      // Reset item visibility
+      for ( QHash<QGraphicsItem*, bool>::iterator it = itemVisibility.begin(), itEnd = itemVisibility.end(); it != itEnd; ++it )
+      {
+        it.key()->setVisible( it.value() );
+      }
+
+      QString saveName = iPage == 0 ? fileName : fileNamePattern.arg( iPage + 1 );
+      QFile file( saveName );
+      if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) )
+      {
+        if ( errorMsg )
+        {
+          *errorMsg = tr( "Error creating %1" ).arg( saveName );
+        }
+        return false;
+      }
+      file.write( svgDoc.toByteArray() );
+    }
+  }
+  return true;
+}
+
+void QgsComposition::printPages( QPrinter* printer, QPainter& p, bool startNewPage )
+{
+  // Image for rasterization
+  int width = ( int )( printResolution() * paperWidth() / 25.4 );
+  int height = ( int )( printResolution() * paperHeight() / 25.4 );
+  QImage image( QSize( width, height ), QImage::Format_ARGB32 );
+  image.setDotsPerMeterX( printResolution() / 25.4 * 1000 );
+  image.setDotsPerMeterY( printResolution() / 25.4 * 1000 );
+
+  //QgsComposition starts page numbering at 0
+  int fromPage = ( printer->fromPage() < 1 ) ? 0 : printer->fromPage() - 1;
+  int toPage = ( printer->toPage() < 1 ) ? numPages() - 1 : printer->toPage() - 1;
+
+  bool pageExported = false;
+  for ( int iPage = fromPage; iPage <= toPage; ++iPage )
+  {
+    if ( !shouldExportPage( iPage + 1 ) )
+    {
+      continue;
+    }
+    if (( pageExported && iPage > fromPage ) || startNewPage )
+    {
+      printer->newPage();
+    }
+
+    if ( mPrintAsRaster )
+    {
+      image.fill( 0 );
+      QPainter imagePainter( &image );
+      renderPage( &imagePainter, iPage );
+      QRectF targetArea( 0, 0, image.width(), image.height() );
+      p.drawImage( targetArea, image, targetArea );
+      pageExported = true;
+    }
+    else
+    {
+      renderPage( &p, iPage );
+      pageExported = true;
+    }
+  }
 }
 
 void QgsComposition::renderPage( QPainter* p, int page )
 {
-  if ( mPages.size() <= page )
+  if ( page >= mPages.size() || !mPages[page] || !p->device() )
   {
     return;
   }
 
   QgsPaperItem* paperItem = mPages[page];
-  if ( !paperItem )
-  {
-    return;
-  }
-
   QPaintDevice* paintDevice = p->device();
-  if ( !paintDevice )
-  {
-    return;
-  }
-
   QRectF paperRect = QRectF( paperItem->pos().x(), paperItem->pos().y(), paperItem->rect().width(), paperItem->rect().height() );
 
   QgsComposition::PlotStyle savedPlotStyle = mPlotStyle;
@@ -2802,17 +2901,6 @@ void QgsComposition::renderPage( QPainter* p, int page )
   setSnapLinesVisible( true );
 
   mPlotStyle = savedPlotStyle;
-}
-
-QString QgsComposition::encodeStringForXML( const QString& str )
-{
-  QString modifiedStr( str );
-  modifiedStr.replace( "&", "&amp;" );
-  modifiedStr.replace( "\"", "&quot;" );
-  modifiedStr.replace( "'", "&apos;" );
-  modifiedStr.replace( "<", "&lt;" );
-  modifiedStr.replace( ">", "&gt;" );
-  return modifiedStr;
 }
 
 QGraphicsView *QgsComposition::graphicsView() const
@@ -2888,6 +2976,27 @@ void QgsComposition::computeWorldFileParameters( double& a, double& b, double& c
   d = r[3] * s[0] + r[4] * s[3];
   e = r[3] * s[1] + r[4] * s[4];
   f = r[3] * s[2] + r[4] * s[5] + r[5];
+}
+
+bool QgsComposition::writeWorldFile( QString worldFileName ) const
+{
+  double a, b, c, d, e, f;
+  computeWorldFileParameters( a, b, c, d, e, f );
+
+  QFile worldFile( worldFileName );
+  if ( worldFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
+  {
+    // QString::number does not use locale settings (for the decimal point)
+    // which is what we want here
+    QTextStream( &worldFile ) << QString::number( a, 'f' ) << "\r\n"
+    << QString::number( d, 'f' ) << "\r\n"
+    << QString::number( b, 'f' ) << "\r\n"
+    << QString::number( e, 'f' ) << "\r\n"
+    << QString::number( c, 'f' ) << "\r\n"
+    << QString::number( f, 'f' ) << "\r\n";
+    return true;
+  }
+  return false;
 }
 
 bool QgsComposition::setAtlasMode( const AtlasMode mode )

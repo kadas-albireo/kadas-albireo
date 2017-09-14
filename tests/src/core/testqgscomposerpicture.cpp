@@ -124,7 +124,7 @@ void TestQgsComposerPicture::cleanup()
 void TestQgsComposerPicture::pictureRotation()
 {
   //test picture rotation
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setPictureRotation( 45 );
 
   QgsCompositionChecker checker( "composerpicture_rotation", mComposition );
@@ -137,7 +137,7 @@ void TestQgsComposerPicture::pictureRotation()
 void TestQgsComposerPicture::pictureItemRotation()
 {
   //test picture item rotation
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setItemRotation( 45, true );
 
   QgsCompositionChecker checker( "composerpicture_itemrotation", mComposition );
@@ -151,7 +151,7 @@ void TestQgsComposerPicture::pictureItemRotation()
 void TestQgsComposerPicture::oldPictureRotationApi()
 {
   //test old style deprecated rotation api - remove test after 2.0 series
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setRotation( 45 );
 
   QgsCompositionChecker checker( "composerpicture_rotation_oldapi", mComposition );
@@ -165,7 +165,7 @@ void TestQgsComposerPicture::oldPictureRotationApi()
 void TestQgsComposerPicture::pictureResizeZoom()
 {
   //test picture resize Zoom mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Zoom );
 
   QgsCompositionChecker checker( "composerpicture_resize_zoom", mComposition );
@@ -177,7 +177,7 @@ void TestQgsComposerPicture::pictureResizeZoom()
 void TestQgsComposerPicture::pictureResizeStretch()
 {
   //test picture resize Stretch mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Stretch );
 
   QgsCompositionChecker checker( "composerpicture_resize_stretch", mComposition );
@@ -190,7 +190,7 @@ void TestQgsComposerPicture::pictureResizeStretch()
 void TestQgsComposerPicture::pictureResizeClip()
 {
   //test picture resize Clip mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Clip );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 30, 50 ) );
 
@@ -205,7 +205,7 @@ void TestQgsComposerPicture::pictureResizeClip()
 void TestQgsComposerPicture::pictureResizeZoomAndResize()
 {
   //test picture resize ZoomResizeFrame mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::ZoomResizeFrame );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 50, 300 ) );
 
@@ -220,7 +220,7 @@ void TestQgsComposerPicture::pictureResizeZoomAndResize()
 void TestQgsComposerPicture::pictureResizeFrameToImage()
 {
   //test picture resize FrameToImageSize mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::FrameToImageSize );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 50, 300 ) );
 
@@ -235,7 +235,7 @@ void TestQgsComposerPicture::pictureResizeFrameToImage()
 void TestQgsComposerPicture::pictureClipAnchor()
 {
   //test picture anchor in Clip mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Clip );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 30, 50 ) );
   mComposerPicture->setPictureAnchor( QgsComposerItem::LowerRight );
@@ -252,7 +252,7 @@ void TestQgsComposerPicture::pictureClipAnchor()
 void TestQgsComposerPicture::pictureClipAnchorOversize()
 {
   //test picture anchor in Clip mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Clip );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 150, 120 ) );
   mComposerPicture->setPictureAnchor( QgsComposerItem::LowerMiddle );
@@ -269,7 +269,7 @@ void TestQgsComposerPicture::pictureClipAnchorOversize()
 void TestQgsComposerPicture::pictureZoomAnchor()
 {
   //test picture anchor in Zoom mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Zoom );
   mComposerPicture->setSceneRect( QRectF( 70, 10, 30, 100 ) );
   mComposerPicture->setPictureAnchor( QgsComposerItem::LowerMiddle );
@@ -285,7 +285,7 @@ void TestQgsComposerPicture::pictureZoomAnchor()
 void TestQgsComposerPicture::pictureSvgZoom()
 {
   //test picture resize Zoom mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Zoom );
   mComposerPicture->setPicturePath( mSvgImage );
 
@@ -299,7 +299,7 @@ void TestQgsComposerPicture::pictureSvgZoom()
 void TestQgsComposerPicture::pictureSvgStretch()
 {
   //test picture resize Stretch mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::Stretch );
   mComposerPicture->setPicturePath( mSvgImage );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 20, 100 ) );
@@ -316,7 +316,7 @@ void TestQgsComposerPicture::pictureSvgStretch()
 void TestQgsComposerPicture::pictureSvgZoomAndResize()
 {
   //test picture resize ZoomResizeFrame mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::ZoomResizeFrame );
   mComposerPicture->setPicturePath( mSvgImage );
   mComposerPicture->setSceneRect( QRectF( 70, 70, 50, 300 ) );
@@ -333,7 +333,7 @@ void TestQgsComposerPicture::pictureSvgZoomAndResize()
 void TestQgsComposerPicture::pictureSvgFrameToImage()
 {
   //test picture resize FrameToImageSize mode
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
   mComposerPicture->setResizeMode( QgsComposerPicture::FrameToImageSize );
   mComposerPicture->setPicturePath( mSvgImage );
 
@@ -349,7 +349,7 @@ void TestQgsComposerPicture::pictureSvgFrameToImage()
 void TestQgsComposerPicture::pictureExpression()
 {
   //test picture source via expression
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
 
   QString expr = QString( "'" ) + QString( TEST_DATA_DIR ) + QDir::separator()
                  + QString( "' || 'sample_svg.svg'" );
@@ -366,7 +366,7 @@ void TestQgsComposerPicture::pictureExpression()
 void TestQgsComposerPicture::pictureInvalidExpression()
 {
   //test picture source via bad expression
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
 
   QString expr = QString( "bad expression" );
   mComposerPicture->setPictureExpression( expr );
@@ -382,7 +382,7 @@ void TestQgsComposerPicture::pictureInvalidExpression()
 void TestQgsComposerPicture::pictureRemoteUrl()
 {
   //test picture source via bad expression
-  mComposition->addComposerPicture( mComposerPicture );
+  mComposition->addComposerItem( mComposerPicture );
 
   mComposerPicture->setPicturePath( "http://www.qgis.org/en/_static/logo.png" );
 

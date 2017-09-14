@@ -172,26 +172,20 @@ class QgisInterface : QObject
     /** Return the message bar of the main app */
     virtual QgsMessageBar * messageBar() = 0;
 
-    /** Return mainwindows / composer views of running composer instances (currently only one) */
-    virtual QList<QgsComposerView*> activeComposers() = 0;
+    /** Return all compositions */
+    virtual const QList<QgsComposition*>& printCompositions() = 0;
 
-    /** Create a new composer
-     * @param title window title for new composer (one will be generated if empty)
-     * @return pointer to composer's view
-     * @note new composer window will be shown and activated
-     */
-    virtual QgsComposerView* createNewComposer( QString title = QString( "" ), bool show = true ) = 0;
+    /** Create a new composition, optionally displaying it in a QgsComposer */
+    virtual QgsComposition* createNewComposition( QString title = "") = 0;
 
-    /** Duplicate an existing parent composer from composer view
-     * @param composerView pointer to existing composer view
-     * @param title window title for duplicated composer (one will be generated if empty)
-     * @return pointer to duplicate composer's view
-     * @note dupicate composer window will be hidden until loaded, then shown and activated
-     */
-    virtual QgsComposerView* duplicateComposer( QgsComposerView* composerView, QString title = QString( "" ) ) = 0;
+    /** Duplicate an existing composition */
+    virtual QgsComposition* duplicateComposition( QgsComposition* composition, QString title = "" ) = 0;
 
-    /** Deletes parent composer of composer view, after closing composer window */
-    virtual void deleteComposer( QgsComposerView* composerView ) = 0;
+    /** Open a QgsComposer window displaying the composition */
+    virtual QMainWindow* showComposer(QgsComposition* composition) = 0;
+
+    /** Delete composition */
+    virtual void deleteComposition( QgsComposition* composition ) = 0;
 
     /** Return changeable options built from settings and/or defaults */
     virtual QMap<QString, QVariant> defaultStyleSheetOptions() = 0;
@@ -514,14 +508,14 @@ class QgisInterface : QObject
     void currentLayerChanged( QgsMapLayer * layer );
 
     /**
-     * This signal is emitted when a new composer instance has been created
+     * This signal is emitted when a composition is created
      */
-    void composerAdded( QgsComposerView* v );
+    void compositionAdded( QgsComposition* c );
 
     /**
-     * This signal is emitted before a new composer instance is going to be removed
+     * This signal is emitted before a composition is going to be removed
      */
-    void composerWillBeRemoved( QgsComposerView* v );
+    void compositionWillBeRemoved( QgsComposition* v );
     /**
      * This signal is emitted when the initialization is complete
      */

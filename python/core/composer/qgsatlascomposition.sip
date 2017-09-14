@@ -75,7 +75,6 @@ public:
      * @returns filename pattern
      * @see setFilenamePattern
      * @see filenamePatternErrorString
-     * @note This property has no effect when exporting to PDF if singleFile() is true
      */
     QString filenamePattern() const;
 
@@ -85,7 +84,6 @@ public:
      * @param pattern expression to use for output filenames
      * @see filenamePattern
      * @see filenamePatternErrorString
-     * @note This method has no effect when exporting to PDF if singleFile() is true
      */
     bool setFilenamePattern( const QString& pattern );
 
@@ -107,22 +105,6 @@ public:
      * @see coverageLayer
      */
     void setCoverageLayer( QgsVectorLayer* layer );
-
-    /**Returns whether the atlas will be exported to a single file. This is only
-     * applicable for PDF exports.
-     * @returns true if atlas will be exported to a single file
-     * @see setSingleFile
-     * @note This property is only used for PDF exports.
-     */
-    bool singleFile() const;
-
-    /**Sets whether the atlas should be exported to a single file. This is only
-     * applicable for PDF exports.
-     * @param single set to true to export atlas to a single file.
-     * @see singleFile
-     * @note This method is only used for PDF exports.
-     */
-    void setSingleFile( bool single );
 
     bool sortFeatures() const;
     void setSortFeatures( bool doSort );
@@ -193,20 +175,9 @@ public:
 
     /**Reads general atlas settings from xml
      * @param elem a QDomElement holding the atlas properties.
-     * @param doc QDomDocument for the source xml.
-     * @see readXMLMapSettings
      * @note This method should be called before restoring composer item properties
      */
-    void readXML( const QDomElement& elem, const QDomDocument& doc );
-
-    /**Reads old (pre 2.2) map related atlas settings from xml
-     * @param elem a QDomElement holding the atlas map properties.
-     * @param doc QDomDocument for the source xml.
-     * @see readXMLMapSettings
-     * @note This method should be called after restoring composer item properties
-     * @note added in version 2.5
-     */
-    void readXMLMapSettings( const QDomElement& elem, const QDomDocument& doc );
+    void readXML( const QDomElement& elem );
 
     QgsComposition* composition();
 

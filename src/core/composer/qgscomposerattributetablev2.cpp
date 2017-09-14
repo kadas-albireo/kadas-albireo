@@ -780,7 +780,7 @@ void QgsComposerAttributeTableV2::addFrame( QgsComposerFrame *frame, bool recalc
   connect( frame, SIGNAL( sizeChanged() ), this, SLOT( recalculateFrameSizes() ) );
   if ( mComposition )
   {
-    mComposition->addComposerTableFrame( this, frame );
+    mComposition->addComposerItem( frame );
   }
 
   if ( recalcFrameSizes )

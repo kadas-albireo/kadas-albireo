@@ -78,7 +78,7 @@ void TestQgsComposerLabel::initTestCase()
   mComposition->setPaperSize( 297, 210 ); //A4 landscape
 
   mComposerLabel = new QgsComposerLabel( mComposition );
-  mComposition->addComposerLabel( mComposerLabel );
+  mComposition->addComposerItem( mComposerLabel );
 
   qWarning() << "composer label font: " << mComposerLabel->font().toString() << " exactMatch:" << mComposerLabel->font().exactMatch();
 }

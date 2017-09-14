@@ -92,7 +92,7 @@ void TestQgsComposerScaleBar::initTestCase()
 
   mComposerScaleBar = new QgsComposerScaleBar( mComposition );
   mComposerScaleBar->setSceneRect( QRectF( 20, 180, 50, 20 ) );
-  mComposition->addComposerScaleBar( mComposerScaleBar );
+  mComposition->addComposerItem( mComposerScaleBar );
   mComposerScaleBar->setComposerMap( mComposerMap );
   mComposerScaleBar->setFont( QgsFontUtils::getStandardTestFont() );
   mComposerScaleBar->setUnits( QgsComposerScaleBar::Meters );

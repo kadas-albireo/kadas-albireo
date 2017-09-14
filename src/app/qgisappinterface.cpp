@@ -57,10 +57,10 @@ QgisAppInterface::QgisAppInterface( QgisApp *_qgis )
            this, SIGNAL( currentLayerChanged( QgsMapLayer * ) ) );
   connect( qgis, SIGNAL( currentThemeChanged( QString ) ),
            this, SIGNAL( currentThemeChanged( QString ) ) );
-  connect( qgis, SIGNAL( composerAdded( QgsComposerView* ) ),
-           this, SIGNAL( composerAdded( QgsComposerView* ) ) );
-  connect( qgis, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ),
-           this, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ) );
+  connect( qgis, SIGNAL( compositionAdded( QgsComposition* ) ),
+           this, SIGNAL( compositionAdded( QgsComposition* ) ) );
+  connect( qgis, SIGNAL( compositionWillBeRemoved( QgsComposition* ) ),
+           this, SIGNAL( compositionWillBeRemoved( QgsComposition* ) ) );
   connect( qgis, SIGNAL( initializationCompleted() ),
            this, SIGNAL( initializationCompleted() ) );
   connect( qgis, SIGNAL( newProject() ),
@@ -325,64 +325,29 @@ QgsMessageBar * QgisAppInterface::messageBar()
   return qgis->messageBar();
 }
 
-QList<QgsComposerView*> QgisAppInterface::activeComposers()
+const QList<QgsComposition*>& QgisAppInterface::printCompositions()
 {
-  QList<QgsComposerView*> composerViewList;
-  if ( qgis )
-  {
-    const QSet<QgsComposer*> composerList = qgis->printComposers();
-    QSet<QgsComposer*>::const_iterator it = composerList.constBegin();
-    for ( ; it != composerList.constEnd(); ++it )
-    {
-      if ( *it )
-      {
-        QgsComposerView* v = ( *it )->view();
-        if ( v )
-        {
-          composerViewList.push_back( v );
-        }
-      }
-    }
-  }
-  return composerViewList;
+  return qgis->printCompositions();
 }
 
-QgsComposerView* QgisAppInterface::createNewComposer( QString title , bool show )
+QgsComposition* QgisAppInterface::createNewComposition( QString title )
 {
-  QgsComposer* composerObj = 0;
-  composerObj = qgis->createNewComposer( title, show );
-  if ( composerObj )
-  {
-    return composerObj->view();
-  }
-  return 0;
+  return qgis->createNewComposition( title );
 }
 
-QgsComposerView* QgisAppInterface::duplicateComposer( QgsComposerView* composerView, QString title )
+QgsComposition* QgisAppInterface::duplicateComposition( QgsComposition* composition, QString title )
 {
-  QgsComposer* composerObj = 0;
-  composerObj = qobject_cast<QgsComposer *>( composerView->composerWindow() );
-  if ( composerObj )
-  {
-    QgsComposer* dupComposer = qgis->duplicateComposer( composerObj, title );
-    if ( dupComposer )
-    {
-      return dupComposer->view();
-    }
-  }
-  return 0;
+  return qgis->duplicateComposition( composition, title );
 }
 
-void QgisAppInterface::deleteComposer( QgsComposerView* composerView )
+QMainWindow* QgisAppInterface::showComposer( QgsComposition* composition )
 {
-  composerView->composerWindow()->close();
+  return qgis->showComposer( composition );
+}
 
-  QgsComposer* composerObj = 0;
-  composerObj = qobject_cast<QgsComposer *>( composerView->composerWindow() );
-  if ( composerObj )
-  {
-    qgis->deleteComposer( composerObj );
-  }
+void QgisAppInterface::deleteComposition( QgsComposition* composition )
+{
+  return qgis->deleteComposition( composition );
 }
 
 QMap<QString, QVariant> QgisAppInterface::defaultStyleSheetOptions()

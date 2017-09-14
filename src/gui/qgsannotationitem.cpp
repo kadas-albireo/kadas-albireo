@@ -128,6 +128,12 @@ void QgsAnnotationItem::setMapPositionFixed( bool fixed )
   update();
 }
 
+void QgsAnnotationItem::setLayerId( const QString &layerId )
+{
+  mLayerId = layerId;
+  setData( 999, mLayerId );
+}
+
 void QgsAnnotationItem::updatePosition()
 {
   if ( mMapPositionFixed )
@@ -649,7 +655,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
     return;
   }
   mId = annotationElem.attribute( "id", "" );
-  mLayerId = annotationElem.attribute( "layerId", "" );
+  setLayerId( annotationElem.attribute( "layerId", "" ) );
   QPointF pos;
   pos.setX( annotationElem.attribute( "canvasPosX", "0" ).toDouble() );
   pos.setY( annotationElem.attribute( "canvasPosY", "0" ).toDouble() );

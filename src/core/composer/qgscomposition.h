@@ -18,30 +18,27 @@
 
 #include <memory>
 
-#include <QDomDocument>
 #include <QGraphicsScene>
-#include <QLinkedList>
 #include <QList>
 #include <QPair>
 #include <QSet>
-#include <QUndoStack>
-#include <QPrinter>
 #include <QPainter>
 
 #include "qgsaddremoveitemcommand.h"
-#include "qgscomposeritemcommand.h"
-#include "qgscomposermultiframecommand.h"
 #include "qgsatlascomposition.h"
-#include "qgspaperitem.h"
-#include "qgscomposerobject.h"
 #include "qgscomposeritem.h"
+#include "qgscomposerobject.h"
+#include "qgscomposermultiframecommand.h"
 
-class QgisApp;
+class QDomDocument;
+class QDomElement;
+class QPainter;
+class QPrinter;
+class QProgressDialog;
+class QUndoStack;
+class QgsComposerItemCommand;
 class QgsComposerFrame;
 class QgsComposerMap;
-class QGraphicsRectItem;
-class QgsMapRenderer;
-class QDomElement;
 class QgsComposerArrow;
 class QgsComposerMouseHandles;
 class QgsComposerHtml;
@@ -57,12 +54,11 @@ class QgsComposerShape;
 class QgsComposerAttributeTable;
 class QgsComposerAttributeTableV2;
 class QgsComposerMultiFrame;
-class QgsComposerMultiFrameCommand;
-class QgsVectorLayer;
-class QgsComposer;
-class QgsFillSymbolV2;
-class QgsDataDefined;
 class QgsComposerModel;
+class QgsDataDefined;
+class QgsFillSymbolV2;
+class QgsMapSettings;
+class QgsPaperItem;
 
 /** \ingroup MapComposer
  * Graphics scene for map printing. The class manages the paper item which always
@@ -103,9 +99,13 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
       Landscape
     };
 
-    //! @deprecated since 2.4 - use the constructor with QgsMapSettings
-    Q_DECL_DEPRECATED QgsComposition( QgsMapRenderer* mapRenderer );
-    explicit QgsComposition( const QgsMapSettings& mapSettings );
+    enum OutputMode
+    {
+      Single = 0,
+      Atlas
+    };
+
+    explicit QgsComposition( const QgsMapSettings& mapSettings, const QString& title = "", QGraphicsView* mapCanvas = 0 );
 
     /**Composition atlas modes*/
     enum AtlasMode
@@ -116,6 +116,9 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     };
 
     ~QgsComposition();
+
+    void setTitle( const QString& title );
+    const QString& title() const { return mTitle; }
 
     /**Changes size of paper item. Also moves all items so that they retain
      * their same relative position to the top left corner of their current page.
@@ -131,14 +134,14 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
      * @see paperWidth
      * @see setPaperSize
     */
-    double paperHeight() const;
+    double paperHeight() const { return mPageHeight; }
 
     /**Width of paper item
      * @returns width in mm
      * @see paperHeight
      * @see setPaperSize
     */
-    double paperWidth() const;
+    double paperWidth() const { return mPageWidth; }
 
     /**Returns the vertical space between pages in a composer view
      * @returns space between pages in mm
@@ -155,7 +158,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
      * @returns number of pages
      * @see setNumPages
     */
-    int numPages() const;
+    int numPages() const { return mPages.size(); }
 
     /**Returns whether a page is empty, ie, it contains no items except for the background
      * paper item.
@@ -380,7 +383,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     bool generateWorldFile() const { return mGenerateWorldFile; }
     void setGenerateWorldFile( const bool enabled ) { mGenerateWorldFile = enabled; }
 
-    QgsComposerMap* worldFileMap() const { return mWorldFileMap; }
+    const QgsComposerMap* worldFileMap() const { return mWorldFileMap; }
     void setWorldFileMap( QgsComposerMap* map ) { mWorldFileMap = map; }
 
     /**Returns true if a composition should use advanced effects such as blend modes */
@@ -388,13 +391,13 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     /**Used to enable or disable advanced effects such as blend modes in a composition */
     void setUseAdvancedEffects( const bool effectsEnabled );
 
-    /**Returns pointer to map renderer of qgis map canvas*/
-    //! @deprecated since 2.4 - use mapSettings() instead. May return null if not initialized with QgsMapRenderer
-    Q_DECL_DEPRECATED QgsMapRenderer* mapRenderer() { return mMapRenderer; }
-
     //! Return setting of QGIS map canvas
     //! @note added in 2.4
     const QgsMapSettings& mapSettings() const { return mMapSettings; }
+
+    //! Return the QGraphicsView which is actually the QgsMapCanvas.
+    //! @note null if QgsComposition was constructed without the mapCanvas passed.
+    QGraphicsView* mapCanvas() const { return mMapCanvas; }
 
     QgsComposition::PlotStyle plotStyle() const { return mPlotStyle; }
     void setPlotStyle( const QgsComposition::PlotStyle style ) { mPlotStyle = style; }
@@ -410,22 +413,18 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     */
     Q_DECL_DEPRECATED double pointFontSize( int pixelSize ) const;
 
-    /**Writes settings to xml (paper dimension)*/
-    bool writeXML( QDomElement& composerElem, QDomDocument& doc );
-
-    /**Reads settings from xml file*/
-    bool readXML( const QDomElement& compositionElem, const QDomDocument& doc );
+    /**Reads settings from xml file
+     * @note if fromTemplate is true, the title is not read from the XML*/
+    bool readXML( QDomElement composerElem , bool fromTemplate = false );
 
     /**Load a template document
         @param doc template document
         @param substitutionMap map with text to replace. Text needs to be enclosed by brackets (e.g. '[text]' )
-        @param addUndoCommands whether or not to add undo commands
         @param clearComposition set to true to clear the existing composition and read all composition and
         atlas properties from the template. Set to false to only add new items from the template, without
         overwriting the existing items or composition settings.
       */
-    bool loadFromTemplate( const QDomDocument& doc, QMap<QString, QString>* substitutionMap = 0,
-                           bool addUndoCommands = false, const bool clearComposition = true );
+    bool loadFromTemplate( const QDomDocument& doc, QMap<QString, QString>* substitutionMap = 0, bool clearComposition = true );
 
     /**Add items from XML representation to the graphics scene (for project file reading, pasting items from clipboard)
       @param elem items parent element, e.g. \verbatim <Composer> \endverbatim or \verbatim <ComposerItemClipboard> \endverbatim
@@ -436,7 +435,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
       @param pasteInPlace whether the position should be kept but mapped to the page origin. (the page is the page under to the mouse cursor)
       @note parameters mapsToRestore, addUndoCommands pos and pasteInPlace not available in python bindings
      */
-    void addItemsFromXML( const QDomElement& elem, const QDomDocument& doc, QMap< QgsComposerMap*, int >* mapsToRestore = 0,
+    void addItemsFromXML( const QDomElement& elem, const QDomDocument& doc,
                           bool addUndoCommands = false, QPointF* pos = 0, bool pasteInPlace = false );
 
     /**Adds item to z list. Usually called from constructor of QgsComposerItem*/
@@ -498,7 +497,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
      * after reading all the items from xml file
      * @deprecated use refreshZList instead
     */
-    Q_DECL_DEPRECATED void sortZList() {};
+    Q_DECL_DEPRECATED void sortZList() {}
 
     /**Rebuilds the z order list by adding any item which are present in the composition
      * but missing from the z order list.
@@ -545,27 +544,10 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     void addMultiFrame( QgsComposerMultiFrame* multiFrame );
     /**Removes multi frame (but does not delete it)*/
     void removeMultiFrame( QgsComposerMultiFrame* multiFrame );
-    /**Adds an arrow item to the graphics scene and advices composer to create a widget for it (through signal)
-      @note not available in python bindings*/
-    void addComposerArrow( QgsComposerArrow* arrow );
-    /**Adds label to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerLabel( QgsComposerLabel* label );
+    /**Adds a composer item to the graphics scene*/
+    void addComposerItem( QgsComposerItem* item );
     /**Adds map to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerMap( QgsComposerMap* map, const bool setDefaultPreviewStyle = true );
-    /**Adds scale bar to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerScaleBar( QgsComposerScaleBar* scaleBar );
-    /**Adds legend to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerLegend( QgsComposerLegend* legend );
-    /**Adds picture to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerPicture( QgsComposerPicture* picture );
-    /**Adds a composer shape to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerShape( QgsComposerShape* shape );
-    /**Adds a composer table to the graphics scene and advices composer to create a widget for it (through signal)*/
-    void addComposerTable( QgsComposerAttributeTable* table );
-    /**Adds composer html frame and advises composer to create a widget for it (through signal)*/
-    void addComposerHtmlFrame( QgsComposerHtml* html, QgsComposerFrame* frame );
-    /**Adds composer tablev2 frame and advises composer to create a widget for it (through signal)*/
-    void addComposerTableFrame( QgsComposerAttributeTableV2* table, QgsComposerFrame* frame );
+    void addComposerMap( QgsComposerMap* map, bool setDefaultPreviewStyle = true );
 
     /**Remove item from the graphics scene. Additionally to QGraphicsScene::removeItem, this function considers undo/redo command*/
     void removeComposerItem( QgsComposerItem* item, const bool createCommand = true, const bool removeGroupItems = true );
@@ -578,41 +560,48 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     void setPreventCursorChange( const bool preventChange ) { mPreventCursorChange = preventChange; }
     bool preventCursorChange() const { return mPreventCursorChange; }
 
-    //printing
+    QPrinter* defaultPrinter();
 
-    /** Prepare the printer for printing */
-    void beginPrint( QPrinter& printer, const bool evaluateDDPageSize = false );
-    /** Prepare the printer for printing in a PDF */
-    void beginPrintAsPDF( QPrinter& printer, const QString& file );
-
-    /**Print on a preconfigured printer
-     * @param printer QPrinter destination
-     * @param painter QPainter source
-     * @param startNewPage set to true to begin the print on a new page
+    /**
+     * @brief Print composition with specified printer
+     * @param printer A printer, if null the default printer is used, @see defaultPrinter
+     * @param mode Either Single or Atlas
+     * @param evaluateDDPageSize Whether to honour data defined page sizes
+     * @param progressDialog Optional string for returning error messages
+     * @param errorMsg  Optional string for returning error messages
+     * @return Whether the operation succeeded
      */
-    void doPrint( QPrinter& printer, QPainter& painter, bool startNewPage = false );
-
-    /**Convenience function that prepares the printer and prints
-     * @returns true if print was successful
-    */
-    bool print( QPrinter &printer, const bool evaluateDDPageSize = false );
-
-    /**Convenience function that prepares the printer for printing in PDF and prints
-     * @returns true if export was successful
-    */
-    bool exportAsPDF( const QString& file );
-
-    //! print composer page to image
-    //! If the image does not fit into memory, a null image is returned
-    QImage printPageAsRaster( int page );
-
-    /**Render a page to a paint device
-     * @param p destination painter
-     * @param page page number, 0 based such that the first page is page 0 */
+    bool print( QPrinter* printer = 0, OutputMode mode = Single, bool evaluateDDPageSize = true, QProgressDialog *progressDialog = 0, QString *errorMsg = 0 );
+    /**
+     * @brief Print composition to PDF
+     * @param output The output filename
+     * @param mode Either Single or Atlas
+     * @param progressDialog Optional progress dialog
+     * @param errorMsg Optional string for returning error messages
+     * @return Whether the operation succeeded
+     */
+    bool printToPdf( const QString& output, OutputMode mode = Single, QProgressDialog *progressDialog = 0, QString *errorMsg = 0 );
+    /**
+     * @brief Print composition to image
+     * @param output A filename if mode is Single, a folder if mode is Atlas
+     * @param format An image format supported by QImageReader, or "svg"
+     * @param groupLayers Only if format is "svg": whether to export map layers as svg groups
+     * @param mode Either Single or Atlas
+     * @param progressDialog Optional progress dialog
+     * @param errorMsg Optional string for returning error messages
+     * @return Whether the operation succeeded
+     */
+    bool printToImage( const QString& output, const QString &format, bool groupLayers = false, OutputMode mode = Single, QProgressDialog *progressDialog = 0, QString *errorMsg = 0 );
+    /**
+     * @brief Render the specified page
+     * @param p The painter
+     * @param page The page
+     */
     void renderPage( QPainter* p, int page );
 
     /** Compute world file parameters */
     void computeWorldFileParameters( double& a, double& b, double& c, double& d, double& e, double& f ) const;
+    bool writeWorldFile( QString worldFileName ) const;
 
     QgsAtlasComposition& atlasComposition() { return mAtlasComposition; }
 
@@ -642,7 +631,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     /** Return pages in the correct order
      @note composerItems(QList< QgsPaperItem* > &) may not return pages in the correct order
      @note added in version 2.4*/
-    QList< QgsPaperItem* > pages() { return mPages; }
+    const QList< QgsPaperItem* >& pages() { return mPages; }
 
     /**Returns a reference to the data defined settings for one of the composition's data defined properties.
      * @param property data defined property to return
@@ -701,14 +690,15 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     */
     void refreshDataDefinedProperty( const QgsComposerObject::DataDefinedProperty property = QgsComposerObject::AllProperties );
 
-  protected:
-    void init();
-
+    /**Writes settings to xml */
+    bool writeXML( QDomNode &parentNode , QDomDocument &doc );
+    bool writeToProject( QDomDocument& doc );
 
   private:
-    /**Pointer to map renderer of QGIS main map*/
-    QgsMapRenderer* mMapRenderer;
+    QString mTitle;
+
     const QgsMapSettings& mMapSettings;
+    QGraphicsView* mMapCanvas;
 
     QgsComposition::PlotStyle mPlotStyle;
     double mPageWidth;
@@ -732,7 +722,7 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     /**Flag if a world file should be generated on raster export */
     bool mGenerateWorldFile;
     /** Composer map to use for the world file generation */
-    QgsComposerMap* mWorldFileMap;
+    const QgsComposerMap* mWorldFileMap;
 
     /**Flag if advanced visual effects such as blend modes should be used. True by default*/
     bool mUseAdvancedEffects;
@@ -777,6 +767,9 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     /**Map of current data defined properties to QgsDataDefined for the composition*/
     QMap< QgsComposerObject::DataDefinedProperty, QgsDataDefined* > mDataDefinedProperties;
 
+    //! Page & Printer Setup
+    QPrinter* mPrinter;
+
     QgsComposition(); //default constructor is forbidden
 
     /**Calculates the bounds of all non-gui items in the composition. Ignores snap lines and mouse handles*/
@@ -804,8 +797,6 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     void addPaperItem();
     void removePaperItems();
     void deleteAndRemoveMultiFrames();
-
-    static QString encodeStringForXML( const QString& str );
 
     //tries to return the current QGraphicsView attached to the composition
     QGraphicsView* graphicsView() const;
@@ -855,11 +846,16 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     */
     bool ddPageSizeActive() const;
 
+    void printPages( QPrinter *printer, QPainter& painter, bool startNewPage = false );
+    bool renderPagesToImages( const QString& fileName, const QString &format, QString *errorMsg );
+    bool renderPagesToSvg( const QString& fileName, bool groupLayers, QString *errorMsg );
+
   private slots:
     /*Prepares all data defined expressions*/
     void prepareAllDataDefinedExpressions();
 
   signals:
+    void titleChanged( const QString& newTitle );
     void paperSizeChanged();
     void nPagesChanged();
 
@@ -868,26 +864,8 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
 
     /**Is emitted when selected item changed. If 0, no item is selected*/
     void selectedItemChanged( QgsComposerItem* selected );
-    /**Is emitted when new composer arrow has been added to the view*/
-    void composerArrowAdded( QgsComposerArrow* arrow );
-    /**Is emitted when a new composer html has been added to the view*/
-    void composerHtmlFrameAdded( QgsComposerHtml* html, QgsComposerFrame* frame );
-    /**Is emitted when new composer label has been added to the view*/
-    void composerLabelAdded( QgsComposerLabel* label );
-    /**Is emitted when new composer map has been added to the view*/
-    void composerMapAdded( QgsComposerMap* map );
-    /**Is emitted when new composer scale bar has been added*/
-    void composerScaleBarAdded( QgsComposerScaleBar* scalebar );
-    /**Is emitted when a new composer legend has been added*/
-    void composerLegendAdded( QgsComposerLegend* legend );
-    /**Is emitted when a new composer picture has been added*/
-    void composerPictureAdded( QgsComposerPicture* picture );
-    /**Is emitted when a new composer shape has been added*/
-    void composerShapeAdded( QgsComposerShape* shape );
-    /**Is emitted when a new composer table has been added*/
-    void composerTableAdded( QgsComposerAttributeTable* table );
-    /**Is emitted when a new composer table frame has been added to the view*/
-    void composerTableFrameAdded( QgsComposerAttributeTableV2* table, QgsComposerFrame* frame );
+    /**Is emitted when an item is added to the view*/
+    void composerItemAdded( QgsComposerItem* item );
     /**Is emitted when a composer item has been removed from the scene*/
     void itemRemoved( QgsComposerItem* );
 
@@ -900,6 +878,8 @@ class CORE_EXPORT QgsComposition : public QGraphicsScene
     friend class QgsComposerObject; //for accessing dataDefinedEvaluate, readDataDefinedPropertyMap and writeDataDefinedPropertyMap
     friend class QgsComposerModel; //for accessing updateZValues (should not be public)
 };
+
+Q_DECLARE_METATYPE( QgsComposition* )
 
 template<class T> void QgsComposition::composerItems( QList<T*>& itemList )
 {
@@ -931,8 +911,4 @@ template<class T> void QgsComposition::composerItemsOnPage( QList<T*>& itemList,
   }
 }
 
-
 #endif
-
-
-

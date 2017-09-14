@@ -131,7 +131,7 @@ void TestQgsComposerRotation::cleanup()
 
 void TestQgsComposerRotation::shapeRotation()
 {
-  mComposition->addComposerShape( mComposerRect );
+  mComposition->addComposerItem( mComposerRect );
 
   mComposerRect->setItemRotation( 45, true );
 
@@ -146,7 +146,7 @@ void TestQgsComposerRotation::shapeRotation()
 void TestQgsComposerRotation::oldShapeRotationApi()
 {
   //test old style deprecated rotation api - remove after 2.0 series
-  mComposition->addComposerShape( mComposerRect );
+  mComposition->addComposerItem( mComposerRect );
 
   mComposerRect->setRotation( 45 );
 
@@ -159,7 +159,7 @@ void TestQgsComposerRotation::oldShapeRotationApi()
 
 void TestQgsComposerRotation::labelRotation()
 {
-  mComposition->addComposerLabel( mComposerLabel );
+  mComposition->addComposerItem( mComposerLabel );
   mComposerLabel->setItemRotation( 135, true );
 
   QgsCompositionChecker checker( "composerrotation_label", mComposition );
@@ -175,7 +175,7 @@ void TestQgsComposerRotation::labelRotation()
 void TestQgsComposerRotation::oldLabelRotationApi()
 {
   //test old style deprecated rotation api - remove test after 2.0 series
-  mComposition->addComposerLabel( mComposerLabel );
+  mComposition->addComposerItem( mComposerLabel );
 
   mComposerLabel->setRotation( 135 );
 

@@ -557,8 +557,6 @@ void QgisApp::init( bool restorePlugins )
   connect( QgsProject::instance(), SIGNAL( snapSettingsChanged() ), mSnappingUtils, SLOT( readConfigFromProject() ) );
   connect( this, SIGNAL( projectRead() ), mSnappingUtils, SLOT( readConfigFromProject() ) );
 
-  connect( printComposersMenu(), SIGNAL( aboutToShow() ), this, SLOT( preparePrintComposersMenu() ) );
-
   createCanvasTools();
   mapCanvas()->freeze();
   createOverview();
@@ -745,7 +743,6 @@ void QgisApp::init( bool restorePlugins )
 
   mapCanvas()->freeze( false );
   mapCanvas()->clearExtentHistory(); // reset zoomnext/zoomlast
-  mLastComposerId = 0;
 
   mItemCouplingManager = new QgsItemCouplingManager( this );
 
@@ -814,7 +811,6 @@ QgisApp::QgisApp()
     , mPluginManager( 0 )
     , mComposerManager( 0 )
     , mpTileScaleWidget( 0 )
-    , mLastComposerId( 0 )
     , mpGpsWidget( 0 )
     , mLastMapToolMessage( 0 )
     , mLogViewer( 0 )
@@ -900,7 +896,7 @@ void QgisApp::destroy()
   delete mRedlining;
   delete mGpsRouteEditor;
 
-  deletePrintComposers();
+  deletePrintCompositions();
   removeAnnotationItems();
 
   // cancel request for FileOpen events
@@ -1075,7 +1071,7 @@ void QgisApp::setAppStyleSheet( const QString& stylesheet )
   setStyleSheet( stylesheet );
 
   // cascade styles to any current project composers
-  foreach ( QgsComposer *c, mPrintComposers )
+  foreach ( QgsComposer *c, mPrintComposers.values() )
   {
     c->setStyleSheet( stylesheet );
   }
@@ -1104,7 +1100,7 @@ void QgisApp::setIconSizes( int size )
     toolbar->setIconSize( QSize( size, size ) );
   }
 
-  foreach ( QgsComposer *c, mPrintComposers )
+  foreach ( QgsComposer *c, mPrintComposers.values() )
   {
     c->setIconSizes( size );
   }
@@ -3325,11 +3321,10 @@ void QgisApp::openFile( const QString & fileName )
 void QgisApp::newPrintComposer()
 {
   QString title = uniqueComposerTitle( this, true );
-  if ( title.isNull() )
+  if ( !title.isNull() )
   {
-    return;
+    showComposer( createNewComposition( title ) );
   }
-  createNewComposer( title );
 }
 
 void QgisApp::showComposerManager()
@@ -3475,13 +3470,6 @@ void QgisApp::removeAllFromOverview()
 
 void QgisApp::setTheme( QString themeName )
 {
-  //change themes of all composers
-  QSet<QgsComposer*>::iterator composerIt = mPrintComposers.begin();
-  for ( ; composerIt != mPrintComposers.end(); ++composerIt )
-  {
-    ( *composerIt )->setupTheme();
-  }
-
   emit currentThemeChanged( themeName );
 }
 
@@ -4503,159 +4491,147 @@ QgsGeometry* QgisApp::unionGeometries( const QgsVectorLayer* vl, QgsFeatureList&
   return unionGeom;
 }
 
-QString QgisApp::uniqueComposerTitle( QWidget* parent, bool acceptEmpty, const QString& currentName )
+QString QgisApp::uniqueComposerTitle( QWidget* parent, bool acceptEmpty, const QString& suggestedTitle )
 {
-  if ( !parent )
+  QStringList cNames;
+  foreach ( QgsComposition* c, printCompositions() )
   {
-    parent = this;
+    cNames << c->title();
   }
+  QString newTitle = suggestedTitle;
+
   bool ok = false;
-  bool titleValid = false;
-  QString newTitle = QString( currentName );
   QString chooseMsg = tr( "Create unique print composer title" );
   if ( acceptEmpty )
   {
     chooseMsg += "\n" + tr( "(title generated if left empty)" );
   }
-  QString titleMsg = chooseMsg;
+  QString labelMsg = chooseMsg;
 
-  QStringList cNames;
-  cNames << newTitle;
-  foreach ( QgsComposer* c, printComposers() )
+  while ( true )
   {
-    cNames << c->title();
-  }
-
-  while ( !titleValid )
-  {
-    newTitle = QInputDialog::getItem( parent,
+    newTitle = QInputDialog::getText( parent ? parent : this,
                                       tr( "Composer title" ),
-                                      titleMsg,
-                                      cNames,
-                                      cNames.indexOf( newTitle ),
-                                      true,
+                                      labelMsg,
+                                      QLineEdit::Normal,
+                                      newTitle,
                                       &ok );
     if ( !ok )
     {
       return QString::null;
     }
-
     if ( newTitle.isEmpty() )
     {
       if ( !acceptEmpty )
       {
-        titleMsg = chooseMsg + "\n\n" + tr( "Title can not be empty!" );
+        labelMsg = chooseMsg + "\n\n" + tr( "Title can not be empty!" );
       }
       else
       {
-        newTitle = QString( "" );
-        titleValid = true;
+        break;
       }
     }
-    else if ( cNames.indexOf( newTitle, 1 ) >= 0 )
+    else if ( cNames.contains( newTitle ) )
     {
-      cNames[0] = QString( "" ); // clear non-unique name
-      titleMsg = chooseMsg + "\n\n" + tr( "Title already exists!" );
+      labelMsg = chooseMsg + "\n\n" + tr( "Title already exists!" );
     }
     else
     {
-      titleValid = true;
+      break;
     }
   }
 
   return newTitle;
 }
 
-QgsComposer* QgisApp::createNewComposer( QString title, bool show )
+QgsComposition *QgisApp::createNewComposition( const QString& title )
 {
-  //ask user about name
-  mLastComposerId++;
-  if ( title.isEmpty() )
+  // Ensure title is unique
+  QStringList cNames;
+  foreach ( QgsComposition* c, printCompositions() )
   {
-    title = tr( "Composer %1" ).arg( mLastComposerId );
+    cNames << c->title();
   }
-  //create new composer object
-  QgsComposer* newComposerObject = new QgsComposer( this, title );
+  QString baseTitle = title.isEmpty() ? tr( "Composer" ) : title;
+  QString newTitle = baseTitle;
+  for ( int i = 1; cNames.contains( newTitle ); ++i )
+  {
+    newTitle = QString( "%1 (%2)" ).arg( baseTitle ).arg( i );
+  }
 
-  //add it to the map of existing print composers
-  mPrintComposers.insert( newComposerObject );
-  //and place action into print composers menu
-  printComposersMenu()->addAction( newComposerObject->windowAction() );
-  if ( show )
+  QgsComposition* newComposition = new QgsComposition( mapCanvas()->mapSettings(), newTitle, mapCanvas() );
+  mPrintCompositions.append( newComposition );
+
+  QAction* composerAction = new QAction( newTitle );
+  connect( composerAction, &QAction::triggered, [this, newComposition] { showComposer( newComposition ); } );
+  connect( newComposition, &QgsComposition::titleChanged, [this, composerAction]( const QString& newTitle )
   {
-    newComposerObject->open();
+    printComposersMenu()->removeAction( composerAction );
+    composerAction->setText( newTitle );
+    addComposerAction( composerAction );
   }
-  emit composerAdded( newComposerObject->view() );
-  connect( newComposerObject, SIGNAL( composerAdded( QgsComposerView* ) ), this, SIGNAL( composerAdded( QgsComposerView* ) ) );
-  connect( newComposerObject, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ), this, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ) );
-  connect( newComposerObject, SIGNAL( atlasPreviewFeatureChanged() ), this, SLOT( refreshMapCanvas() ) );
+         );
+
+  addComposerAction( composerAction );
+  mPrintComposerActions.insert( newComposition, composerAction );
+
+  emit compositionAdded( newComposition );
   markDirty();
-  return newComposerObject;
+  return newComposition;
 }
 
-void QgisApp::deleteComposer( QgsComposer* c )
+void QgisApp::addComposerAction( QAction* newAction )
 {
-  emit composerWillBeRemoved( c->view() );
-  mPrintComposers.remove( c );
-  printComposersMenu()->removeAction( c->windowAction() );
-  markDirty();
-  emit composerRemoved( c->view() );
+  // Add action ensuring order is alphabetical
+  bool added = false;
+  foreach ( QAction* action, printComposersMenu()->actions() )
+  {
+    if ( newAction->text().localeAwareCompare( action->text() ) < 0 )
+    {
+      printComposersMenu()->insertAction( action, newAction );
+      added = true;
+      break;
+    }
+  }
+  if ( !added )
+  {
+    printComposersMenu()->addAction( newAction );
+  }
+}
 
-  //save a reference to the composition
-  QgsComposition* composition = c->composition();
-
-  //first, delete the composer. This must occur before deleting the composition as some of the cleanup code in
-  //composer or in composer item widgets may require the composition to still be around
+void QgisApp::deleteComposition( QgsComposition *c )
+{
+  emit compositionWillBeRemoved( c );
+  delete mPrintComposers.take( c );
+  delete mPrintComposerActions.take( c );
+  mPrintCompositions.removeAll( c );
+  emit compositionRemoved( c );
   delete c;
-
-  //next, delete the composition
-  if ( composition )
-  {
-    delete composition;
-  }
+  markDirty();
 }
 
-QgsComposer* QgisApp::duplicateComposer( QgsComposer* currentComposer, QString title )
+QgsComposition *QgisApp::duplicateComposition( QgsComposition* composition, const QString &title )
 {
-  QgsComposer* newComposer = 0;
+  QDomDocument doc;
+  composition->writeXML( doc, doc );
 
-  // test that current composer template write is valid
-  QDomDocument currentDoc;
-  currentComposer->templateXML( currentDoc );
-  QDomElement compositionElem = currentDoc.documentElement().firstChildElement( "Composition" );
-  if ( compositionElem.isNull() )
+  QgsComposition* newComposition = createNewComposition( title );
+  newComposition->loadFromTemplate( doc, 0 , false );
+  return newComposition;
+}
+
+QgsComposer* QgisApp::showComposer( QgsComposition* composition )
+{
+  QgsComposer* composer = mPrintComposers.value( composition, 0 );
+  if ( !composer )
   {
-    QgsDebugMsg( "selected composer could not be stored as temporary template" );
-    return newComposer;
+    composer = new QgsComposer( new QgsComposerView( composition ) );
+    mPrintComposers.insert( composition, composer );
   }
-
-  if ( title.isEmpty() )
-  {
-    // TODO: inject a bit of randomness in auto-titles?
-    title = currentComposer->title() + tr( " copy" );
-  }
-
-  newComposer = createNewComposer( title );
-  if ( !newComposer )
-  {
-    QgsDebugMsg( "could not create new composer" );
-    return newComposer;
-  }
-
-  // hiding composer until template is loaded is much faster, provide feedback to user
-  newComposer->hide();
-  QApplication::setOverrideCursor( Qt::BusyCursor );
-  if ( !newComposer->composition()->loadFromTemplate( currentDoc, 0, false ) )
-  {
-    deleteComposer( newComposer );
-    newComposer = 0;
-    QgsDebugMsg( "Error, composer could not be duplicated" );
-    return newComposer;
-  }
-  newComposer->activate();
-  QApplication::restoreOverrideCursor();
-
-  return newComposer;
+  composer->show();
+  composer->raise();
+  composer->zoomFull();
+  return composer;
 }
 
 bool QgisApp::loadComposersFromProject( const QDomDocument& doc )
@@ -4670,83 +4646,22 @@ bool QgisApp::loadComposersFromProject( const QDomDocument& doc )
   for ( int i = 0; i < composerNodes.size(); ++i )
   {
     QDomElement composerElement = composerNodes.at( i ).toElement();
-    QString path = composerElement.attribute( "template" );
-    if ( !path.isEmpty() )
+    QgsComposition* composition = createNewComposition( "" );
+    if ( !composition->readXML( composerElement ) )
     {
-      QFileInfo finfo( path );
-      if ( !finfo.isAbsolute() )
-      {
-        path = QFileInfo( QgsProject::instance()->fileName() ).dir().absoluteFilePath( path );
-      }
-      QFile file( path );
-      if ( file.open( QIODevice::ReadOnly ) )
-      {
-        QDomDocument qptdoc;
-        qptdoc.setContent( &file );
-        QDomNodeList composerNodeList = qptdoc.elementsByTagName( "Composer" );
-        if ( !composerNodeList.isEmpty() )
-        {
-          composerElement = composerNodeList.at( 0 ).toElement();
-        }
-      }
+      deleteComposition( composition );
+      QgsDebugMsg( "Failed to load composition" );
     }
-
-    ++mLastComposerId;
-    QgsComposer* composer = new QgsComposer( this, tr( "Composer %1" ).arg( mLastComposerId ) );
-    composer->readXML( composerElement, doc );
-    mPrintComposers.insert( composer );
-    printComposersMenu()->addAction( composer->windowAction() );
-    composer->zoomFull();
-    QgsComposerView* composerView = composer->view();
-    if ( composerView )
-    {
-      composerView->updateRulers();
-    }
-    emit composerAdded( composer->view() );
-    connect( composer, SIGNAL( composerAdded( QgsComposerView* ) ), this, SIGNAL( composerAdded( QgsComposerView* ) ) );
-    connect( composer, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ), this, SIGNAL( composerWillBeRemoved( QgsComposerView* ) ) );
-    connect( composer, SIGNAL( atlasPreviewFeatureChanged() ), this, SLOT( refreshMapCanvas() ) );
   }
   return true;
 }
 
-void QgisApp::deletePrintComposers()
+void QgisApp::deletePrintCompositions()
 {
-  QSet<QgsComposer*>::iterator it = mPrintComposers.begin();
-  while ( it != mPrintComposers.end() )
+  while ( !mPrintCompositions.isEmpty() )
   {
-    QgsComposer* c = ( *it );
-    emit composerWillBeRemoved( c->view() );
-    it = mPrintComposers.erase( it );
-    emit composerRemoved( c->view() );
-
-    //save a reference to the composition
-    QgsComposition* composition = c->composition();
-
-    //first, delete the composer. This must occur before deleting the composition as some of the cleanup code in
-    //composer or in composer item widgets may require the composition to still be around
-    delete( c );
-
-    //next, delete the composition
-    if ( composition )
-    {
-      delete composition;
-    }
+    deleteComposition( mPrintCompositions.front() );
   }
-  mLastComposerId = 0;
-  markDirty();
-}
-
-void QgisApp::preparePrintComposersMenu()
-{
-  QList<QAction*> acts = printComposersMenu()->actions();
-  printComposersMenu()->clear();
-  if ( acts.size() > 1 )
-  {
-    // sort actions by text
-    qSort( acts.begin(), acts.end(), cmpByText_ );
-  }
-  printComposersMenu()->addActions( acts );
 }
 
 bool QgisApp::loadAnnotationItemsFromProject( const QDomDocument& doc )
@@ -6615,11 +6530,8 @@ void QgisApp::showOptionsDialog( QWidget *parent, QString currentPage )
     //update any open compositions so they reflect new composer settings
     //we have to push the changes to the compositions here, because compositions
     //have no access to qgisapp and accordingly can't listen in to changes
-    QSet<QgsComposer*> composers = instance()->printComposers();
-    QSet<QgsComposer*>::iterator composer_it = composers.begin();
-    for ( ; composer_it != composers.end(); ++composer_it )
+    foreach ( QgsComposition* composition, mPrintCompositions )
     {
-      QgsComposition* composition = ( *composer_it )->composition();
       composition->updateSettings();
     }
 
@@ -7124,7 +7036,7 @@ void QgisApp::closeProject()
 
   setFilterLegendByMapEnabled( false );
 
-  deletePrintComposers();
+  deletePrintCompositions();
   removeAnnotationItems();
   // clear out any stuff from project
   mapCanvas()->freeze( true );

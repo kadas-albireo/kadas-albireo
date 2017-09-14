@@ -16,6 +16,7 @@
  ***************************************************************************/
 #include <stdexcept>
 #include <QtAlgorithms>
+#include <QSettings>
 
 #include "qgsatlascomposition.h"
 #include "qgsvectorlayer.h"
@@ -32,8 +33,8 @@ QgsAtlasComposition::QgsAtlasComposition( QgsComposition* composition ) :
     mComposition( composition ),
     mEnabled( false ),
     mHideCoverage( false ), mFilenamePattern( "'output_'||$feature" ),
-    mCoverageLayer( 0 ), mSingleFile( false ),
-    mSortFeatures( false ), mSortAscending( true ), mCurrentFeatureNo( 0 ),
+    mCoverageLayer( 0 ), mSortFeatures( false ),
+    mSortAscending( true ), mCurrentFeatureNo( 0 ),
     mFilterFeatures( false ), mFeatureFilter( "" ),
     mFilenameParserError( QString() ),
     mFilterParserError( QString() )
@@ -628,7 +629,7 @@ const QString& QgsAtlasComposition::currentFilename() const
   return mCurrentFilename;
 }
 
-void QgsAtlasComposition::writeXML( QDomElement& elem, QDomDocument& doc ) const
+void QgsAtlasComposition::writeXML( QDomNode& parentNode, QDomDocument& doc ) const
 {
   QDomElement atlasElem = doc.createElement( "Atlas" );
   atlasElem.setAttribute( "enabled", mEnabled ? "true" : "false" );
@@ -647,7 +648,6 @@ void QgsAtlasComposition::writeXML( QDomElement& elem, QDomDocument& doc ) const
   }
 
   atlasElem.setAttribute( "hideCoverage", mHideCoverage ? "true" : "false" );
-  atlasElem.setAttribute( "singleFile", mSingleFile ? "true" : "false" );
   atlasElem.setAttribute( "filenamePattern", mFilenamePattern );
 
   atlasElem.setAttribute( "sortFeatures", mSortFeatures ? "true" : "false" );
@@ -662,10 +662,10 @@ void QgsAtlasComposition::writeXML( QDomElement& elem, QDomDocument& doc ) const
     atlasElem.setAttribute( "featureFilter", mFeatureFilter );
   }
 
-  elem.appendChild( atlasElem );
+  parentNode.appendChild( atlasElem );
 }
 
-void QgsAtlasComposition::readXML( const QDomElement& atlasElem, const QDomDocument& )
+void QgsAtlasComposition::readXML( const QDomElement& atlasElem )
 {
   mEnabled = atlasElem.attribute( "enabled", "false" ) == "true" ? true : false;
   emit toggled( mEnabled );
@@ -687,7 +687,6 @@ void QgsAtlasComposition::readXML( const QDomElement& atlasElem, const QDomDocum
     }
   }
 
-  mSingleFile = atlasElem.attribute( "singleFile", "false" ) == "true" ? true : false;
   mFilenamePattern = atlasElem.attribute( "filenamePattern", "" );
 
   mSortFeatures = atlasElem.attribute( "sortFeatures", "false" ) == "true" ? true : false;
@@ -718,40 +717,6 @@ void QgsAtlasComposition::readXML( const QDomElement& atlasElem, const QDomDocum
   mHideCoverage = atlasElem.attribute( "hideCoverage", "false" ) == "true" ? true : false;
 
   emit parameterChanged();
-}
-
-void QgsAtlasComposition::readXMLMapSettings( const QDomElement &elem, const QDomDocument &doc )
-{
-  Q_UNUSED( doc );
-  //look for stored composer map, to upgrade pre 2.1 projects
-  int composerMapNo = elem.attribute( "composerMap", "-1" ).toInt();
-  QgsComposerMap * composerMap = 0;
-  if ( composerMapNo != -1 )
-  {
-    QList<QgsComposerMap*> maps;
-    mComposition->composerItems( maps );
-    for ( QList<QgsComposerMap*>::iterator it = maps.begin(); it != maps.end(); ++it )
-    {
-      if (( *it )->id() == composerMapNo )
-      {
-        composerMap = ( *it );
-        composerMap->setAtlasDriven( true );
-        break;
-      }
-    }
-  }
-
-  //upgrade pre 2.1 projects
-  double margin = elem.attribute( "margin", "0.0" ).toDouble();
-  if ( composerMap && margin != 0 )
-  {
-    composerMap->setAtlasMargin( margin );
-  }
-  bool fixedScale = elem.attribute( "fixedScale", "false" ) == "true" ? true : false;
-  if ( composerMap && fixedScale )
-  {
-    composerMap->setAtlasScalingMode( QgsComposerMap::Fixed );
-  }
 }
 
 void QgsAtlasComposition::setHideCoverage( bool hide )
@@ -827,6 +792,29 @@ void QgsAtlasComposition::setPredefinedScales( const QVector<qreal>& scales )
   mPredefinedScales = scales;
   // make sure the list is sorted
   qSort( mPredefinedScales.begin(), mPredefinedScales.end() );
+}
+
+void QgsAtlasComposition::loadPredefinedScalesFromProject()
+{
+  // first look at project's scales
+  QStringList scales( QgsProject::instance()->readListEntry( "Scales", "/ScalesList" ) );
+  bool hasProjectScales( QgsProject::instance()->readBoolEntry( "Scales", "/useProjectScales" ) );
+  if ( !hasProjectScales || scales.isEmpty() )
+  {
+    // default to global map tool scales
+    scales = QSettings().value( "Map/scales", PROJECT_SCALES ).toString().split( "," );
+  }
+
+  QVector<qreal> pScales;
+  foreach ( const QString& scale, scales )
+  {
+    QStringList parts( scale.split( ':' ) );
+    if ( parts.size() == 2 )
+    {
+      pScales.push_back( parts[1].toDouble() );
+    }
+  }
+  setPredefinedScales( pScales );
 }
 
 Q_NOWARN_DEPRECATED_PUSH

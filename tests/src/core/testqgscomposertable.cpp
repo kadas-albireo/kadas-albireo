@@ -93,7 +93,7 @@ void TestQgsComposerTable::initTestCase()
   mComposition->addItem( mComposerTextTable );
 
   mComposerAttributeTable = new QgsComposerAttributeTable( mComposition );
-  mComposition->addComposerTable( mComposerAttributeTable );
+  mComposition->addComposerItem( mComposerAttributeTable );
   mComposerAttributeTable->setVectorLayer( mVectorLayer );
   mComposerAttributeTable->setDisplayOnlyVisibleFeatures( false );
   mComposerAttributeTable->setMaximumNumberOfFeatures( 10 );
