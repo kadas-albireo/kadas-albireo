@@ -476,8 +476,16 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
       case MEASURE_AZIMUTH:
         if ( dynamic_cast<QgsCurveV2*>( geometry ) )
         {
+          QgsVertexId vid;
+          QgsPointV2 p;
           QList<QgsPointV2> points;
-          static_cast<QgsCurveV2*>( geometry )->points( points );
+          while ( geometry->nextVertex( vid, p ) )
+          {
+            if ( !mHiddenNodes.contains( vid ) )
+            {
+              points.append( p );
+            }
+          }
           for ( int i = 0, n = points.size() - 1; i < n; ++i )
           {
             QgsPoint p1( points[i].x(), points[i].y() );
