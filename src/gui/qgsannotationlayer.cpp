@@ -77,19 +77,20 @@ QgsRectangle QgsAnnotationLayer::extent()
     QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
     if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
     {
+      const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( annotationItem->mapGeoPosCrs().authid(), crs().authid() );
+      QgsPoint p = t->transform(annotationItem->mapGeoPos());
       if ( empty )
       {
-        extent = QgsRectangle( annotationItem->mapPosition(), annotationItem->mapPosition() );
+        extent = QgsRectangle( p, p );
         empty = false;
       }
       else
       {
-        extent.include( annotationItem->mapPosition() );
+        extent.include( p );
       }
     }
   }
-  const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( mCanvas->mapSettings().destinationCrs().authid(), crs().authid() );
-  return t->transformBoundingBox( extent );
+  return extent;
 }
 
 int QgsAnnotationLayer::margin() const
