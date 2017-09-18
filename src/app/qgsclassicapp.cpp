@@ -22,6 +22,7 @@
 #include "qgsapplayertreeviewmenuprovider.h"
 #include "qgsapplication.h"
 #include "qgsattributeaction.h"
+#include "qgsbrowserdockwidget.h"
 #include "qgscolorbuttonv2.h"
 #include "qgsclipboard.h"
 #include "qgscomposer.h"
@@ -118,6 +119,11 @@ QgsClassicApp::QgsClassicApp( QSplashScreen *splash, bool restorePlugins, QWidge
   createStatusBar();
   setToolActions();
 
+  mBrowserWidget = new QgsBrowserDockWidget( tr( "Browser" ), this );
+  mBrowserWidget->setObjectName( "Browser" );
+  addDockWidget( Qt::LeftDockWidgetArea, mBrowserWidget );
+  mBrowserWidget->hide();
+
   connect( mMapCanvas, SIGNAL( zoomLastStatusChanged( bool ) ), mActionZoomLast, SLOT( setEnabled( bool ) ) );
   connect( mMapCanvas, SIGNAL( zoomNextStatusChanged( bool ) ), mActionZoomNext, SLOT( setEnabled( bool ) ) );
   connect( mMapCanvas, SIGNAL( xyCoordinates( const QgsPoint & ) ), this, SLOT( showMouseCoordinate( const QgsPoint & ) ) );
@@ -186,6 +192,7 @@ QgsClassicApp::QgsClassicApp()
     , mWebMenu( 0 )
     , mToolPopupOverviews( 0 )
     , mToolPopupDisplay( 0 )
+    , mBrowserWidget( 0 )
 {
   setupUi( this );
   mMapCanvas = new QgsMapCanvas();

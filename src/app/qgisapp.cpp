@@ -86,7 +86,6 @@
 #include "qgsattributeaction.h"
 #include "qgsattributetabledialog.h"
 #include "qgsbookmarks.h"
-#include "qgsbrowserdockwidget.h"
 #include "qgsadvanceddigitizingdockwidget.h"
 #include "qgsclipboard.h"
 #include "qgscomposer.h"
@@ -580,16 +579,6 @@ void QgisApp::init( bool restorePlugins )
   mSnappingDialog = new QgsSnappingDialog( this, mapCanvas() );
   mSnappingDialog->setObjectName( "SnappingOption" );
 
-  mBrowserWidget = new QgsBrowserDockWidget( tr( "Browser" ), this );
-  mBrowserWidget->setObjectName( "Browser" );
-  addDockWidget( Qt::LeftDockWidgetArea, mBrowserWidget );
-  mBrowserWidget->hide();
-
-  mBrowserWidget2 = new QgsBrowserDockWidget( tr( "Browser (2)" ), this );
-  mBrowserWidget2->setObjectName( "Browser2" );
-  addDockWidget( Qt::LeftDockWidgetArea, mBrowserWidget2 );
-  mBrowserWidget2->hide();
-
   addDockWidget( Qt::LeftDockWidgetArea, mAdvancedDigitizingDockWidget );
   mAdvancedDigitizingDockWidget->hide();
 
@@ -804,8 +793,6 @@ QgisApp::QgisApp()
     , mPrevScreenModeMaximized( false )
     , mSaveRollbackInProgress( false )
     , mPythonUtils( 0 )
-    , mBrowserWidget( 0 )
-    , mBrowserWidget2( 0 )
     , mAdvancedDigitizingDockWidget( 0 )
     , mSnappingDialog( 0 )
     , mPluginManager( 0 )

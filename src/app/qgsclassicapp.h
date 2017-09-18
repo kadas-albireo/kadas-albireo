@@ -19,6 +19,7 @@
 #define QGSCLASSICAPP_H
 
 class QCheckBox;
+class QgsBrowserDockWidget;
 class QgsDoubleSpinBox;
 class QgsScaleComboBox;
 
@@ -412,6 +413,8 @@ class APP_EXPORT QgsClassicApp : public QgisApp, private Ui::MainWindow
     QMenu *mToolPopupOverviews;
     //! Popup menu for the display tools
     QMenu *mToolPopupDisplay;
+
+    QgsBrowserDockWidget *mBrowserWidget;
 
     void createActions();
     void createActionGroups();

@@ -37,7 +37,6 @@ class QgisAppInterface;
 class QgisAppStyleSheet;
 class QgsAdvancedDigitizingDockWidget;
 class QgsAnnotationItem;
-class QgsBrowserDockWidget;
 class QgsClipboard;
 class QgsComposer;
 class QgsComposerView;
@@ -1312,9 +1311,6 @@ class APP_EXPORT QgisApp : public QMainWindow
     static QgisApp *smInstance;
 
     QgsUndoWidget *mUndoWidget;
-
-    QgsBrowserDockWidget *mBrowserWidget;
-    QgsBrowserDockWidget *mBrowserWidget2;
 
     QgsAdvancedDigitizingDockWidget *mAdvancedDigitizingDockWidget;
 
