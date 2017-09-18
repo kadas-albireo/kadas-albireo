@@ -79,20 +79,24 @@ binaries=$(find $installprefix -name '*.exe' -or -name '*.dll' -or -name '*.pyd'
 # Strip debuginfo
 for f in $binaries
 do
-	case $(mingw-objdump -h $f 2>/dev/null | egrep -o '(debug[\.a-z_]*|gnu.version)') in
-	    *debuglink*) continue ;;
-	    *debug*) ;;
-	    *gnu.version*)
-		echo "WARNING: $(basename $f) is already stripped!"
-		continue
-		;;
-	    *) continue ;;
-	esac
+    case $(mingw-objdump -h $f 2>/dev/null | egrep -o '(debug[\.a-z_]*|gnu.version)') in
+        *debuglink*) continue ;;
+        *debug*) ;;
+        *gnu.version*)
+        echo "WARNING: $(basename $f) is already stripped!"
+        continue
+        ;;
+        *) continue ;;
+    esac
 
-	echo extracting debug info from $f
-	mingw-objcopy --only-keep-debug $f $f.debug || :
-	pushd $(dirname $f)
-	mingw-objcopy --add-gnu-debuglink=$(basename $f.debug) --strip-unneeded $(basename $f) || :
+    echo extracting debug info from $f
+    mingw-objcopy --only-keep-debug $f $f.debug || :
+    pushd $(dirname $f)
+    keep_symbols=`mktemp`
+    mingw-nm $f.debug --format=sysv --defined-only | awk -F \| '{ if ($4 ~ "Function") print $1 }' | sort > "$keep_symbols"
+    mingw-objcopy --add-gnu-debuglink=`basename $f.debug` --strip-unneeded `basename $f` --keep-symbols="$keep_symbols" || :
+    rm -f "$keep_symbols"
+# 	mingw-objcopy --add-gnu-debuglink=$(basename $f.debug) --strip-unneeded $(basename $f) || :
 	popd
 done
 
@@ -164,6 +168,7 @@ elif [ "$qt" == "qt5" ]; then
   linkDep lib/qt5/plugins/imageformats/qwebp.dll bin/imageformats
   linkDep lib/qt5/plugins/imageformats/qsvg.dll  bin/imageformats
   linkDep lib/qt5/plugins/platforms/qwindows.dll bin/platforms
+  linkDep lib/qt5/plugins/printsupport/windowsprintersupport.dll bin/printsupport
 
   mkdir -p $installprefix/share/qt5/translations/
   cp -a $MINGWROOT/share/qt5/translations/qt_*.qm  $installprefix/share/qt5/translations
@@ -173,10 +178,13 @@ fi
 # Install python libs
 (
 cd $MINGWROOT
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
 for file in $(find lib/python2.7 -type f); do
-    mkdir -p $p $installprefix/$(dirname $file)
-    ln -sf $MINGWROOT/$file $installprefix/$file
+    mkdir -p "$installprefix/$(dirname $file)"
+    ln -sf "$MINGWROOT/$file" "$installprefix/$file"
 done
+IFS=$SAVEIFS
 )
 
 # Osg plugins
