@@ -776,11 +776,6 @@ bool QgsComposition::writeXML( QDomNode& parentNode, QDomDocument& doc )
 
 bool QgsComposition::readXML( QDomElement composerElem, bool fromTemplate )
 {
-  if ( !fromTemplate )
-  {
-    setTitle( composerElem.attribute( "title" ) );
-  }
-
   // Look for template
   QString templatePath = composerElem.attribute( "template" );
   if ( !templatePath.isEmpty() )
@@ -798,6 +793,11 @@ bool QgsComposition::readXML( QDomElement composerElem, bool fromTemplate )
     QDomDocument doc;
     doc.setContent( &file );
     composerElem = doc.firstChildElement( "Composer" );
+  }
+
+  if ( !fromTemplate )
+  {
+    setTitle( composerElem.attribute( "title" ) );
   }
 
   QDomElement compositionElem = composerElem.firstChildElement( "Composition" );
