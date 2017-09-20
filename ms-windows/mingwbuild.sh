@@ -65,6 +65,7 @@ if [ ! -e $builddir ]; then
           -DBINDINGS_GLOBAL_INSTALL=TRUE \
           -DPYUIC4_PROGRAM=/usr/bin/pyuic5 \
           -DPYRCC4_PROGRAM=/usr/bin/pyrcc5 \
+          -DQUAZIP_LIBRARIES=$MINGWROOT/bin/libquazip5.dll \
           -DQUAZIP_INCLUDE_DIR=$MINGWROOT/include/quazip5 \
           -DQSCINTILLA_INCLUDE_DIR=$MINGWROOT/include/qt5 \
           -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
