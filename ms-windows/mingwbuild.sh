@@ -78,7 +78,8 @@ else
   )
 fi
 
-mingw$bits-make -C$builddir -j12 DESTDIR="${installroot}" install
+njobs=$(($(grep -c ^processor /proc/cpuinfo) * 3 / 2))
+mingw$bits-make -C$builddir -j$njobs DESTDIR="${installroot}" install
 
 binaries=$(find $installprefix -name '*.exe' -or -name '*.dll' -or -name '*.pyd')
 
