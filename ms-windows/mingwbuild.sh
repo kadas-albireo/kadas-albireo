@@ -105,8 +105,7 @@ do
     mingw-nm $f.debug --format=sysv --defined-only | awk -F \| '{ if ($4 ~ "Function") print $1 }' | sort > "$keep_symbols"
     mingw-objcopy --add-gnu-debuglink=`basename $f.debug` --strip-unneeded `basename $f` --keep-symbols="$keep_symbols" || :
     rm -f "$keep_symbols"
-# 	mingw-objcopy --add-gnu-debuglink=$(basename $f.debug) --strip-unneeded $(basename $f) || :
-	popd
+    popd
 done
 
 # Collect dependencies
