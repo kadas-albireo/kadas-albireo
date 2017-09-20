@@ -55,7 +55,7 @@ mkdir -p $builddir
     -DWINDRES=$arch-w64-mingw32-windres \
     -DWITH_INTERNAL_QWTPOLAR=1 \
     -DWITH_GLOBE=1 \
-    -DNATIVE_CRSSYNC_BIN=$builddir/native_crssync/crssync \
+    -DNATIVE_CRSSYNC_BIN=$(readlink -f $builddir)/native_crssync/crssync \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DQGIS_BIN_SUBDIR=bin \
     -DQGIS_LIBEXEC_SUBDIR=bin \
@@ -70,6 +70,15 @@ mkdir -p $builddir
     -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
     ..
   )
+
+# Compile native crssync
+mkdir -p $builddir/native_crssync
+(
+cd $builddir/native_crssync
+echo "Building native crssync..."
+moc-qt5 $srcdir/src/core/qgsapplication.h > moc_qgsapplication.cpp
+g++ -Wall -g -O2 -fPIC -o crssync $srcdir/src/crssync/main.cpp $srcdir/src/crssync/qgscrssync.cpp moc_qgsapplication.cpp $srcdir/src/core/qgsapplication.cpp -DCORE_EXPORT= -DCOMPILING_CRSSYNC -I$srcdir/src/core/ -I$srcdir/src/core/geometry -I$builddir $(pkg-config --cflags --libs Qt5Widgets gdal sqlite3 proj)
+)
 
 njobs=$(($(grep -c ^processor /proc/cpuinfo) * 3 / 2))
 mingw$bits-make -C$builddir -j$njobs DESTDIR="${installroot}" install
