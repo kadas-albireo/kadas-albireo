@@ -70,6 +70,11 @@ if [ ! -e $builddir ]; then
           -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
           ..
   )
+else
+  (
+    cd $builddir
+    mingw$bits-cmake  ..
+  )
 fi
 
 mingw$bits-make -C$builddir -j12 DESTDIR="${installroot}" install
