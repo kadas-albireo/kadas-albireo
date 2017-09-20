@@ -43,40 +43,33 @@ installprefix="$installroot/usr/$arch-w64-mingw32/sys-root/mingw"
 rm -rf "$installroot"
 
 # Build
-if [ ! -e $builddir ]; then
-  mkdir -p $builddir
-  (
-      cd $builddir
-      mingw$bits-cmake \
-          -DFULL_RELEASE_NAME="KADAS Albireo" \
-          -DRELEASE_NAME="KADAS" \
-          -DRELEASE_VERSION="1.1" \
-          -DENABLE_QT5=$useqt5 \
-          -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
-          -DWINDRES=$arch-w64-mingw32-windres \
-          -DWITH_INTERNAL_QWTPOLAR=1 \
-          -DWITH_GLOBE=1 \
-          -DNATIVE_CRSSYNC_BIN=$srcdir/build_qt5/output/bin/crssync \
-          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-          -DQGIS_BIN_SUBDIR=bin \
-          -DQGIS_LIBEXEC_SUBDIR=bin \
-          -DQGIS_DATA_SUBDIR=share/qgis \
-          -DQGIS_PLUGIN_SUBDIR=bin/qgisplugins \
-          -DBINDINGS_GLOBAL_INSTALL=TRUE \
-          -DPYUIC4_PROGRAM=/usr/bin/pyuic5 \
-          -DPYRCC4_PROGRAM=/usr/bin/pyrcc5 \
-          -DQUAZIP_LIBRARIES=$MINGWROOT/bin/libquazip5.dll \
-          -DQUAZIP_INCLUDE_DIR=$MINGWROOT/include/quazip5 \
-          -DQSCINTILLA_INCLUDE_DIR=$MINGWROOT/include/qt5 \
-          -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
-          ..
+mkdir -p $builddir
+(
+  cd $builddir
+  mingw$bits-cmake \
+    -DFULL_RELEASE_NAME="KADAS Albireo" \
+    -DRELEASE_NAME="KADAS" \
+    -DRELEASE_VERSION="1.1" \
+    -DENABLE_QT5=$useqt5 \
+    -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
+    -DWINDRES=$arch-w64-mingw32-windres \
+    -DWITH_INTERNAL_QWTPOLAR=1 \
+    -DWITH_GLOBE=1 \
+    -DNATIVE_CRSSYNC_BIN=$builddir/native_crssync/crssync \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DQGIS_BIN_SUBDIR=bin \
+    -DQGIS_LIBEXEC_SUBDIR=bin \
+    -DQGIS_DATA_SUBDIR=share/qgis \
+    -DQGIS_PLUGIN_SUBDIR=bin/qgisplugins \
+    -DBINDINGS_GLOBAL_INSTALL=TRUE \
+    -DPYUIC4_PROGRAM=/usr/bin/pyuic5 \
+    -DPYRCC4_PROGRAM=/usr/bin/pyrcc5 \
+    -DQUAZIP_LIBRARIES=$MINGWROOT/bin/libquazip5.dll \
+    -DQUAZIP_INCLUDE_DIR=$MINGWROOT/include/quazip5 \
+    -DQSCINTILLA_INCLUDE_DIR=$MINGWROOT/include/qt5 \
+    -DPYTHON_EXECUTABLE=/usr/$arch-w64-mingw32/bin/python2 \
+    ..
   )
-else
-  (
-    cd $builddir
-    mingw$bits-cmake  ..
-  )
-fi
 
 njobs=$(($(grep -c ^processor /proc/cpuinfo) * 3 / 2))
 mingw$bits-make -C$builddir -j$njobs DESTDIR="${installroot}" install
