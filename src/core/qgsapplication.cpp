@@ -16,10 +16,11 @@
 #include "qgsapplication.h"
 #include "qgscrscache.h"
 #include "qgsexception.h"
+#ifndef COMPILING_CRSSYNC
 #include "qgsgeometry.h"
+#endif
 #include "qgslogger.h"
 #include "qgsmaplayerregistry.h"
-#include "qgsnetworkaccessmanager.h"
 #include "qgsproviderregistry.h"
 
 #include <QDir>
@@ -99,12 +100,14 @@ void QgsApplication::init( QString customConfigPath )
     }
     else
     {
-      customConfigPath = QString( "%1/.qgis%2/" ).arg( QDir::homePath() ).arg( QGis::QGIS_VERSION_INT / 10000 );
+      customConfigPath = QString( "%1/.qgis%2/" ).arg( QDir::homePath() ).arg( VERSION_INT / 10000 );
     }
   }
 
+#ifndef COMPILING_CRSSYNC
   qRegisterMetaType<QgsGeometry::Error>( "QgsGeometry::Error" );
   qRegisterMetaType<QgsFeatureId>( "QgsFeatureId" );
+#endif
 
   QString prefixPath( getenv( "QGIS_PREFIX_PATH" ) ? getenv( "QGIS_PREFIX_PATH" ) : applicationDirPath() );
   // QgsDebugMsg( QString( "prefixPath(): %1" ).arg( prefixPath ) );
@@ -654,21 +657,25 @@ QgsApplication::endian_t QgsApplication::endian()
 
 void QgsApplication::initQgis()
 {
+#ifndef COMPILING_CRSSYNC
   // set the provider plugin path (this creates provider registry)
   QgsProviderRegistry::instance( pluginPath() );
 
   // create map layer registry if doesn't exist
   QgsMapLayerRegistry::instance();
+#endif
 }
 
 void QgsApplication::exitQgis()
 {
+#ifndef COMPILING_CRSSYNC
   // Cleanup known singletons
   QgsMapLayerRegistry::cleanup();
   QgsCoordinateTransformCache::cleanup();
 
   // Cleanup providers
   delete QgsProviderRegistry::instance();
+#endif
 }
 
 QString QgsApplication::showSettings()

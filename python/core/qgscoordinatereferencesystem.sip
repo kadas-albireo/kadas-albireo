@@ -290,12 +290,6 @@ class QgsCoordinateReferenceSystem
     /*! Get user hint for validation
      */
     QString validationHint();
-    /*! Update proj.4 parameters in our database from proj.4
-     * @returns number of updated CRS on success and
-     *   negative number of failed updates in case of errors.
-     */
-    static int syncDb();
-
 
     /*! Save the proj4-string as a custom CRS
      * @returns bool true if success else false

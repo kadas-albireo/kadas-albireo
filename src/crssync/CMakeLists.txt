@@ -1,4 +1,4 @@
-ADD_EXECUTABLE(crssync main.cpp)
+ADD_EXECUTABLE(crssync main.cpp qgscrssync.cpp)
 
 INCLUDE_DIRECTORIES(
   ../core
@@ -19,7 +19,7 @@ IF(MSVC AND NOT USING_NMAKE)
 	)
 ELSEIF(CMAKE_CROSSCOMPILING)
 	SET(NATIVE_CRSSYNC_BIN CACHE PATH "Path to a natively compiled synccrsdb binary")
-	IF(NOT EXISTS ${NATIVE_CRSSYNC_BIN})
+	IF(NOT NATIVE_CRSSYNC_BIN)
 		MESSAGE(FATAL_ERROR "NATIVE_CRSSYNC_BIN needs to be defined when cross-compiling")
 	ENDIF()
 	ADD_CUSTOM_TARGET(synccrsdb

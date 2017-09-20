@@ -16,7 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "qgsapplication.h"
-#include "qgscoordinatereferencesystem.h"
+#include "qgscrssync.h"
 #include "qgsconfig.h"
 
 #include <QRegExp>
@@ -50,7 +50,7 @@ int main( int argc, char ** argv )
 
   CPLPushErrorHandler( showError );
 
-  int res = QgsCoordinateReferenceSystem::syncDb();
+  int res = QgsCrsSync::syncDb();
 
   CPLPopErrorHandler();
 

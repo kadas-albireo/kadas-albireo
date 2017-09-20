@@ -908,7 +908,7 @@ void QgsCoordinateTransform::searchDatumTransform( const QString& sql, QList< in
   }
 
   sqlite3_stmt* stmt;
-  int prepareRes = sqlite3_prepare( db, sql.toAscii(), sql.size(), &stmt, NULL );
+  int prepareRes = sqlite3_prepare( db, sql.toLatin1(), sql.size(), &stmt, NULL );
   if ( prepareRes != SQLITE_OK )
   {
     sqlite3_finalize( stmt ); sqlite3_close( db );
@@ -939,7 +939,7 @@ QString QgsCoordinateTransform::datumTransformString( int datumTransform )
 
   sqlite3_stmt* stmt;
   QString sql = QString( "SELECT coord_op_method_code,p1,p2,p3,p4,p5,p6,p7 FROM tbl_datum_transform WHERE coord_op_code=%1" ).arg( datumTransform );
-  int prepareRes = sqlite3_prepare( db, sql.toAscii(), sql.size(), &stmt, NULL );
+  int prepareRes = sqlite3_prepare( db, sql.toLatin1(), sql.size(), &stmt, NULL );
   if ( prepareRes != SQLITE_OK )
   {
     sqlite3_finalize( stmt ); sqlite3_close( db );
@@ -992,7 +992,7 @@ bool QgsCoordinateTransform::datumTransformCrsInfo( int datumTransform, int& eps
 
   sqlite3_stmt* stmt;
   QString sql = QString( "SELECT epsg_nr,source_crs_code,target_crs_code,remarks,scope,preferred,deprecated FROM tbl_datum_transform WHERE coord_op_code=%1" ).arg( datumTransform );
-  int prepareRes = sqlite3_prepare( db, sql.toAscii(), sql.size(), &stmt, NULL );
+  int prepareRes = sqlite3_prepare( db, sql.toLatin1(), sql.size(), &stmt, NULL );
   if ( prepareRes != SQLITE_OK )
   {
     sqlite3_finalize( stmt ); sqlite3_close( db );
