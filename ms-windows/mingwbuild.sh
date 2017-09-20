@@ -77,7 +77,7 @@ mkdir -p $builddir/native_crssync
 cd $builddir/native_crssync
 echo "Building native crssync..."
 moc-qt5 $srcdir/src/core/qgsapplication.h > moc_qgsapplication.cpp
-g++ -Wall -g -O2 -fPIC -o crssync $srcdir/src/crssync/main.cpp $srcdir/src/crssync/qgscrssync.cpp moc_qgsapplication.cpp $srcdir/src/core/qgsapplication.cpp -DCORE_EXPORT= -DCOMPILING_CRSSYNC -I$srcdir/src/core/ -I$srcdir/src/core/geometry -I$builddir $(pkg-config --cflags --libs Qt5Widgets gdal sqlite3 proj)
+g++ $optflags -o crssync $srcdir/src/crssync/main.cpp $srcdir/src/crssync/qgscrssync.cpp moc_qgsapplication.cpp $srcdir/src/core/qgsapplication.cpp -DCORE_EXPORT= -DCOMPILING_CRSSYNC -I$srcdir/src/core/ -I$srcdir/src/core/geometry -I$builddir $(pkg-config --cflags --libs Qt5Widgets gdal sqlite3 proj)
 )
 
 njobs=$(($(grep -c ^processor /proc/cpuinfo) * 3 / 2))
