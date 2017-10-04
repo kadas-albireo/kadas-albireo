@@ -294,6 +294,71 @@ bool QgsOgrFeatureIterator::readFeature( OGRFeatureH fet, QgsFeature& feature )
       unsigned char *wkb = new unsigned char[memorySize];
       OGR_G_ExportToWkb( geom, ( OGRwkbByteOrder ) QgsApplication::endian(), wkb );
 
+      // Read original geometry type
+      uint32_t origGeomType;
+      memcpy( &origGeomType, wkb + 1, sizeof( uint32_t ) );
+      bool hasZ = ( origGeomType >= 1000 && origGeomType < 2000 ) || ( origGeomType >= 3000 && origGeomType < 4000 );
+      bool hasM = ( origGeomType >= 2000 && origGeomType < 3000 ) || ( origGeomType >= 3000 && origGeomType < 4000 );
+
+      // Triangles and TINs are not supported, convert triangles to polygons and TINs to multipolygons
+      if ( origGeomType % 1000 == 16 ) // is TIN, TINZ, TINM or TINZM
+      {
+        // TIN has the same wkb layout as a multipolygon, just need to overwrite the geom types...
+        int nDims = 2 + hasZ + hasM;
+        uint32_t newMultiType = static_cast<uint32_t>( QgsWKBTypes::zmType( QgsWKBTypes::MultiPolygon, hasZ, hasM ) );
+        uint32_t newSingleType = static_cast<uint32_t>( QgsWKBTypes::zmType( QgsWKBTypes::Polygon, hasZ, hasM ) );
+        unsigned char *wkbptr = wkb;
+
+        // Endianness
+        wkbptr += 1;
+
+        // Overwrite geom type
+        memcpy( wkbptr, &newMultiType, sizeof( uint32_t ) );
+        wkbptr += 4;
+
+        // Geom count
+        uint32_t numGeoms;
+        memcpy( &numGeoms, wkb + 5, sizeof( uint32_t ) );
+        wkbptr += 4;
+
+        // For each part, overwrite the geometry type to polygon (Z|M)
+        for ( uint32_t i = 0; i < numGeoms; ++i )
+        {
+          // Endianness
+          wkbptr += 1;
+
+          // Overwrite geom type
+          memcpy( wkbptr, &newSingleType, sizeof( uint32_t ) );
+          wkbptr += sizeof( uint32_t );
+
+          // skip coordinates
+          uint32_t nRings;
+          memcpy( &nRings, wkbptr, sizeof( uint32_t ) );
+          wkbptr += sizeof( uint32_t );
+
+          for ( uint32_t j = 0; j < nRings; ++j )
+          {
+            uint32_t nPoints;
+            memcpy( &nPoints, wkbptr, sizeof( uint32_t ) );
+            wkbptr += sizeof( uint32_t ) + sizeof( double ) * nDims * nPoints;
+          }
+        }
+      }
+      else if ( origGeomType % 1000 == 17 ) // Triangle, TriangleZ, TriangleM or TriangleZM
+      {
+        // Triangle has the same wkb layout as a triangle, just need to overwrite the geom type...
+        uint32_t newType = static_cast<uint32_t>( QgsWKBTypes::zmType( QgsWKBTypes::Polygon, hasZ, hasM ) );
+        // Overwrite geom type
+        memcpy( wkb + 1, &newType, sizeof( uint32_t ) );
+      }
+      else if ( origGeomType % 1000 == 15 ) // PolyhedralSurface, PolyhedralSurfaceZ, PolyhedralSurfaceM or PolyhedralSurfaceZM
+      {
+        // PolyhedralSurface has the same wkb layout as a MultiPolygon, just need to overwrite the geom type...
+        uint32_t newType = static_cast<uint32_t>( QgsWKBTypes::zmType( QgsWKBTypes::MultiPolygon, hasZ, hasM ) );
+        // Overwrite geom type
+        memcpy( wkb + 1, &newType, sizeof( uint32_t ) );
+      }
+
       QgsGeometry* geometry = feature.geometry();
       if ( !geometry ) feature.setGeometryAndOwnership( wkb, memorySize ); else geometry->fromWkb( wkb, memorySize );
     }

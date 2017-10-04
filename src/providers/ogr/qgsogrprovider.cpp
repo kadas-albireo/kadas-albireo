@@ -687,6 +687,25 @@ QStringList QgsOgrProvider::subLayers() const
       {
         fCount[wkbUnknown] = 0;
       }
+
+      // List Triangle as Polygon
+      if ( fCount.contains( wkbTriangle ) )
+      {
+        fCount[wkbPolygon] = fCount.value( wkbPolygon ) + fCount[wkbTriangle];
+        fCount.remove( wkbTriangle );
+      }
+      // List TIN and PolyhedralSurface as MultiPolygon
+      if ( fCount.contains( wkbTIN ) )
+      {
+        fCount[wkbMultiPolygon] = fCount.value( wkbMultiPolygon ) + fCount[wkbTIN];
+        fCount.remove( wkbTIN );
+      }
+      if ( fCount.contains( wkbPolyhedralSurface ) )
+      {
+        fCount[wkbMultiPolygon] = fCount.value( wkbMultiPolygon ) + fCount[wkbPolyhedralSurface];
+        fCount.remove( wkbPolyhedralSurface );
+      }
+
       bool bIs25D = (( layerGeomType & wkb25DBit ) != 0 );
       foreach ( OGRwkbGeometryType gType, fCount.keys() )
       {
@@ -974,7 +993,20 @@ size_t QgsOgrProvider::layerCount() const
  */
 QGis::WkbType QgsOgrProvider::geometryType() const
 {
-  return static_cast<QGis::WkbType>( geomType );
+  QGis::WkbType wkb = static_cast<QGis::WkbType>( geomType );
+  if ( wkb % 1000 == 15 ) // is PolyhedralSurface, PolyhedralSurfaceZ, PolyhedralSurfaceM or PolyhedralSurfaceZM => map to MultiPolygon
+  {
+    wkb = static_cast<QGis::WkbType>( wkb - 9 );
+  }
+  else if ( wkb % 1000 == 16 ) // is TIN, TINZ, TINM or TINZM => map to MultiPolygon
+  {
+    wkb = static_cast<QGis::WkbType>( wkb - 10 );
+  }
+  else if ( wkb % 1000 == 17 ) // is Triangle, TriangleZ, TriangleM or TriangleZM => map to Polygon
+  {
+    wkb = static_cast<QGis::WkbType>( wkb - 14 );
+  }
+  return wkb;
 }
 
 /**
