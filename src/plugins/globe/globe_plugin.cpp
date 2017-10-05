@@ -97,6 +97,9 @@
 #include <osgEarthDrivers/model_feature_geom/FeatureGeomModelOptions>
 #include <osgEarthUtil/FeatureQueryTool>
 #include <osgEarthFeatures/FeatureDisplayLayout>
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+#include <osgEarthFeatures/FeatureModelLayer>
+#endif
 
 #define MOVE_OFFSET 0.05
 
@@ -899,11 +902,26 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
     textSymbol->haloOffset() = lyr.bufferSize;
   }
 
-  osgEarth::RenderSymbol* renderSymbol = style.getOrCreateSymbol<osgEarth::RenderSymbol>();
-  renderSymbol->lighting() = layerConfig->lightingEnabled;
-  renderSymbol->backfaceCulling() = false;
-  style.addSymbol( renderSymbol );
+//  osgEarth::RenderSymbol* renderSymbol = style.getOrCreateSymbol<osgEarth::RenderSymbol>();
+//  renderSymbol->lighting() = layerConfig->lightingEnabled;
+//  renderSymbol->backfaceCulling() = false;
+//  style.addSymbol( renderSymbol );
 
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+  osgEarth::Features::FeatureModelLayerOptions opts;
+  opts.enableLighting() = true;
+  opts.featureSource() = featureOpt;
+  opts.styles() = new osgEarth::StyleSheet();
+  opts.styles()->addStyle( style );
+  opts.backfaceCulling() = false;
+  opts.featureIndexing()->enabled() = false;
+  opts.mergeGeometry() = false;
+  opts.optimize() = false;
+
+  osgEarth::Features::FeatureModelLayer* nLayer = new osgEarth::Features::FeatureModelLayer( opts );
+  nLayer->setName( vLayer->id().toStdString() );
+  mMapNode->getMap()->addLayer( nLayer );
+#else
   osgEarth::Drivers::FeatureGeomModelOptions geomOpt;
   geomOpt.featureOptions() = featureOpt;
   geomOpt.styles() = new osgEarth::StyleSheet();
@@ -912,17 +930,19 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   geomOpt.featureIndexing() = osgEarth::Features::FeatureSourceIndexOptions();
 
 #if 0
-  FeatureDisplayLayout layout;
+  osgEarth::Features::FeatureDisplayLayout layout;
   layout.tileSizeFactor() = 45.0;
-  layout.addLevel( FeatureLevel( 0.0f, 200000.0f ) );
+  layout.addLevel( osgEarth::Features::FeatureLevel( 0.0f, 200000.0f ) );
   geomOpt.layout() = layout;
 #endif
 
   osgEarth::ModelLayerOptions modelOptions( vLayer->id().toStdString(), geomOpt );
+  modelOptions.lightingEnabled() = layerConfig->lightingEnabled;
 
   osgEarth::ModelLayer* nLayer = new osgEarth::ModelLayer( modelOptions );
 
   mMapNode->getMap()->addModelLayer( nLayer );
+#endif
 }
 
 void GlobePlugin::updateLayers()
@@ -945,13 +965,15 @@ void GlobePlugin::updateLayers()
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
         disconnect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
     }
-    osgEarth::ModelLayerVector modelLayers;
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+    std::vector<osg::ref_ptr<osgEarth::Features::FeatureModelLayer>> modelLayers;
     mMapNode->getMap()->getLayers( modelLayers );
+    foreach ( const osg::ref_ptr<osgEarth::Features::FeatureModelLayer>& modelLayer, modelLayers )
 #else
+    osgEarth::ModelLayerVector modelLayers;
     mMapNode->getMap()->getModelLayers( modelLayers );
-#endif
     foreach ( const osg::ref_ptr<osgEarth::ModelLayer>& modelLayer, modelLayers )
+#endif
     {
       QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( QString::fromStdString( modelLayer->getName() ) );
       if ( mapLayer )
@@ -959,7 +981,11 @@ void GlobePlugin::updateLayers()
       if ( dynamic_cast<QgsVectorLayer*>( mapLayer ) )
         disconnect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
       if ( !selectedLayers.contains( QString::fromStdString( modelLayer->getName() ) ) )
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+        mMapNode->getMap()->removeLayer( modelLayer );
+#else
         mMapNode->getMap()->removeModelLayer( modelLayer );
+#endif
     }
 
     Q_FOREACH ( const QString& layerId, selectedLayers )
