@@ -516,17 +516,10 @@ void QgsArcGisRestUtils::addToken( QUrl &url )
     QByteArray data = QUrl::fromPercentEncoding( cookie.toRawForm() ).toLocal8Bit();
     if ( data.startsWith( "esri_auth=" ) )
     {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      QJson::Parser parser;
-      QVariantMap map = parser.parse( data.mid( 10 ) ).toMap();
-#else
-      QJsonDocument doc = QJsonDocument::fromJson( data.mid( 10 ) );
-      QVariantMap map = doc.object().toVariantMap();
-#endif
-      QString token = map["token"].toString();
-      if ( !token.isEmpty() )
+      QRegExp tokenRe( "\"token\":\\s*\"([A-Za-z0-9-_]+)\"" );
+      if ( tokenRe.indexIn( QString( data ) ) != -1 )
       {
-        url.addQueryItem( "token", token );
+        url.addQueryItem( "token", tokenRe.cap( 1 ) );
         break;
       }
     }
