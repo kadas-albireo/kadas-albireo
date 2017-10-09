@@ -45,6 +45,7 @@ void QgsVBSCatalogProvider::load()
 {
   mPendingTasks = 1;
   QUrl url( mBaseUrl );
+  QgsArcGisRestUtils::addToken( url );
   QString lang = QSettings().value( "/locale/currentLang", "en" ).toString().left( 2 ).toUpper();
   url.addQueryItem( "lang", lang );
   QNetworkRequest req( url );
