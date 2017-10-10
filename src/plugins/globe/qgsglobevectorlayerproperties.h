@@ -42,7 +42,7 @@ public:
       , renderingMode( RenderingModeRasterized )
       , altitudeClamping( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN )
       , altitudeTechnique( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_DRAPE )
-      , altitudeBinding( osgEarth::Symbology::AltitudeSymbol::BINDING_VERTEX )
+      , altitudeBinding( osgEarth::Symbology::AltitudeSymbol::BINDING_CENTROID )
       , verticalOffset( 0.0 )
       , verticalScale( 1.0 )
       , clampingResolution( 0.0 )
