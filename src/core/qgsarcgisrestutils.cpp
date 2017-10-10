@@ -516,7 +516,7 @@ void QgsArcGisRestUtils::addToken( QUrl &url )
     QByteArray data = QUrl::fromPercentEncoding( cookie.toRawForm() ).toLocal8Bit();
     if ( data.startsWith( "esri_auth=" ) )
     {
-      QRegExp tokenRe( "\"token\":\\s*\"([A-Za-z0-9-_]+)\"" );
+      QRegExp tokenRe( "\"token\":\\s*\"([A-Za-z0-9-_\\.]+)\"" );
       if ( tokenRe.indexIn( QString( data ) ) != -1 )
       {
         url.addQueryItem( "token", tokenRe.cap( 1 ) );
