@@ -694,15 +694,15 @@ QStringList QgsOgrProvider::subLayers() const
         fCount[wkbPolygon] = fCount.value( wkbPolygon ) + fCount[wkbTriangle];
         fCount.remove( wkbTriangle );
       }
-      // List TIN and PolyhedralSurface as MultiPolygon
+      // List TIN and PolyhedralSurface as Polygon
       if ( fCount.contains( wkbTIN ) )
       {
-        fCount[wkbMultiPolygon] = fCount.value( wkbMultiPolygon ) + fCount[wkbTIN];
+        fCount[wkbPolygon] = fCount.value( wkbPolygon ) + fCount[wkbTIN];
         fCount.remove( wkbTIN );
       }
       if ( fCount.contains( wkbPolyhedralSurface ) )
       {
-        fCount[wkbMultiPolygon] = fCount.value( wkbMultiPolygon ) + fCount[wkbPolyhedralSurface];
+        fCount[wkbPolygon] = fCount.value( wkbPolygon ) + fCount[wkbPolyhedralSurface];
         fCount.remove( wkbPolyhedralSurface );
       }
 
