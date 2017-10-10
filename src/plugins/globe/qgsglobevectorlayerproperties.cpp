@@ -153,8 +153,6 @@ void QgsGlobeVectorLayerPropertiesPage::onAltituteTechniqueChanged( int index )
   osgEarth::Symbology::AltitudeSymbol::Technique technique = static_cast<osgEarth::Symbology::AltitudeSymbol::Technique>( comboBoxAltitudeTechnique->itemData( index ).toInt() );
 
   bool mapTechnique = technique == osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_MAP && clamping == osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN;
-  labelAltitudeBinding->setVisible( mapTechnique );
-  comboBoxAltitudeBinding->setVisible( mapTechnique );
   labelAltitudeResolution->setVisible( mapTechnique );
   spinBoxAltitudeResolution->setVisible( mapTechnique );
 }
