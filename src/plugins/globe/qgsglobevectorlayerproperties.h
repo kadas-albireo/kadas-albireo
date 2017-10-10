@@ -33,7 +33,8 @@ public:
   enum RenderingMode
   {
     RenderingModeRasterized,
-    RenderingModeModelSimple,
+    RenderingModeModel25D,
+    RenderingModeModel3D,
     RenderingModeModelAdvanced
   };
 
@@ -41,8 +42,7 @@ public:
       : QObject( parent )
       , renderingMode( RenderingModeRasterized )
       , altitudeClamping( osgEarth::Symbology::AltitudeSymbol::CLAMP_TO_TERRAIN )
-      , altitudeTechnique( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_DRAPE )
-      , altitudeBinding( osgEarth::Symbology::AltitudeSymbol::BINDING_CENTROID )
+      , altitudeBinding( osgEarth::Symbology::AltitudeSymbol::BINDING_VERTEX )
       , verticalOffset( 0.0 )
       , verticalScale( 1.0 )
       , clampingResolution( 0.0 )
@@ -58,7 +58,6 @@ public:
 
   RenderingMode renderingMode;
   osgEarth::Symbology::AltitudeSymbol::Clamping altitudeClamping;
-  osgEarth::Symbology::AltitudeSymbol::Technique altitudeTechnique;
   osgEarth::Symbology::AltitudeSymbol::Binding altitudeBinding;
 
   float verticalOffset;
@@ -92,7 +91,6 @@ class QgsGlobeVectorLayerPropertiesPage : public QgsVectorLayerPropertiesPage, p
 
   private slots:
     void onAltitudeClampingChanged( int index );
-    void onAltituteTechniqueChanged( int index );
     void showRenderingModeWidget( int index );
 
   signals:

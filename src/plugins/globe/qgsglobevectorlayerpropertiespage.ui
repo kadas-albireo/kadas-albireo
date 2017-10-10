@@ -36,7 +36,7 @@
              <string>Terrain following behaviour</string>
             </property>
             <property name="text">
-             <string>Clamping</string>
+             <string>Placement</string>
             </property>
            </widget>
           </item>
@@ -48,16 +48,6 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="labelAltitudeTechnique">
-            <property name="toolTip">
-             <string>Terrain following technique</string>
-            </property>
-            <property name="text">
-             <string>Technique</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
            <widget class="QLabel" name="labelAltitudeBinding">
             <property name="toolTip">
              <string>Granularity at which to sample the terrain</string>
@@ -67,7 +57,14 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBoxAltitudeBinding">
+            <property name="toolTip">
+             <string>Granularity at which to sample the terrain</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
            <widget class="QLabel" name="labelAltitudeResolution">
             <property name="toolTip">
              <string>Elevation data resolution at which to sample terrain height</string>
@@ -77,7 +74,14 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="spinBoxAltitudeResolution">
+            <property name="toolTip">
+             <string>Elevation data resolution at which to sample terrain height</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
            <widget class="QLabel" name="labelAltitudeOffset">
             <property name="toolTip">
              <string>Vertical offset to apply to geometry Z</string>
@@ -87,7 +91,14 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="spinBoxAltitudeOffset">
+            <property name="toolTip">
+             <string>Vertical offset to apply to geometry Z</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
            <widget class="QLabel" name="labelAltitudeScale">
             <property name="toolTip">
              <string>Scale factor to apply to geometry Z</string>
@@ -97,35 +108,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="comboBoxAltitudeTechnique">
-            <property name="toolTip">
-             <string>Terrain following technique</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBoxAltitudeBinding">
-            <property name="toolTip">
-             <string>Granularity at which to sample the terrain</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="spinBoxAltitudeResolution">
-            <property name="toolTip">
-             <string>Elevation data resolution at which to sample terrain height</string>
-            </property>
-           </widget>
-          </item>
           <item row="4" column="1">
-           <widget class="QDoubleSpinBox" name="spinBoxAltitudeOffset">
-            <property name="toolTip">
-             <string>Vertical offset to apply to geometry Z</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
            <widget class="QDoubleSpinBox" name="spinBoxAltitudeScale">
             <property name="toolTip">
              <string>Scale factor to apply to geometry Z</string>

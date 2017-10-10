@@ -860,7 +860,6 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
 
   osgEarth::AltitudeSymbol* altitudeSymbol = style.getOrCreateSymbol<osgEarth::AltitudeSymbol>();
   altitudeSymbol->clamping() = layerConfig->altitudeClamping;
-  altitudeSymbol->technique() = layerConfig->altitudeTechnique;
   altitudeSymbol->binding() = layerConfig->altitudeBinding;
   altitudeSymbol->verticalOffset() = layerConfig->verticalOffset;
   altitudeSymbol->verticalScale() = layerConfig->verticalScale;
@@ -1000,7 +999,7 @@ void GlobePlugin::updateLayers()
         connect( static_cast<QgsVectorLayer*>( mapLayer ), SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( layerChanged() ) );
       }
 
-      if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
+      if ( layerConfig && layerConfig->renderingMode != QgsGlobeVectorLayerConfig::RenderingModeRasterized )
       {
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
         if ( !mMapNode->getMap()->getLayerByName( mapLayer->id().toStdString() ) )
@@ -1051,7 +1050,7 @@ void GlobePlugin::layerChanged( QgsMapLayer* mapLayer )
       layerConfig = QgsGlobeVectorLayerConfig::getConfig( static_cast<QgsVectorLayer*>( mapLayer ) );
     }
 
-    if ( layerConfig && ( layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelSimple || layerConfig->renderingMode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced ) )
+    if ( layerConfig && layerConfig->renderingMode != QgsGlobeVectorLayerConfig::RenderingModeRasterized )
     {
       // If was previously a draped layer, refresh the draped layer
       if ( mTileSource->layerSet().contains( mapLayer->id() ) )
