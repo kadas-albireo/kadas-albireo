@@ -130,6 +130,9 @@
             <property name="toolTip">
              <string>Scale factor to apply to geometry Z</string>
             </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
            </widget>
           </item>
          </layout>

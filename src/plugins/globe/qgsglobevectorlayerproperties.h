@@ -44,7 +44,7 @@ public:
       , altitudeTechnique( osgEarth::Symbology::AltitudeSymbol::TECHNIQUE_DRAPE )
       , altitudeBinding( osgEarth::Symbology::AltitudeSymbol::BINDING_VERTEX )
       , verticalOffset( 0.0 )
-      , verticalScale( 0.0 )
+      , verticalScale( 1.0 )
       , clampingResolution( 0.0 )
       , extrusionEnabled( false )
       , extrusionHeight( "10" )
