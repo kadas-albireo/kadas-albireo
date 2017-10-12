@@ -31,8 +31,8 @@ REGISTER_QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem )
 
 QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, QString* errMsg )
 {
-  QByteArray format = QImageReader::imageFormat( filePath );
-  if ( format.isEmpty() )
+  QImageReader reader( filePath );
+  if ( reader.format().isEmpty() || reader.size().isEmpty() )
   {
     // Image format not supported
     return 0;
