@@ -51,6 +51,7 @@ mkdir -p $builddir
     -DRELEASE_NAME="KADAS" \
     -DRELEASE_VERSION="1.1" \
     -DENABLE_QT5=$useqt5 \
+    -DENABLE_TESTS=FALSE \
     -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
     -DWINDRES=$arch-w64-mingw32-windres \
     -DWITH_INTERNAL_QWTPOLAR=1 \
@@ -79,6 +80,9 @@ echo "Building native crssync..."
 moc-qt5 $srcdir/src/core/qgsapplication.h > moc_qgsapplication.cpp
 g++ $optflags -fPIC -o crssync $srcdir/src/crssync/main.cpp $srcdir/src/crssync/qgscrssync.cpp moc_qgsapplication.cpp $srcdir/src/core/qgsapplication.cpp -DCORE_EXPORT= -DCOMPILING_CRSSYNC -I$srcdir/src/core/ -I$srcdir/src/core/geometry -I$builddir $(pkg-config --cflags --libs Qt5Widgets gdal sqlite3 proj)
 )
+# crssync needs X at runtime
+Xvfb :99 &
+export DISPLAY=:99
 
 njobs=$(($(grep -c ^processor /proc/cpuinfo) * 3 / 2))
 mingw$bits-make -C$builddir -j$njobs DESTDIR="${installroot}" install
@@ -127,6 +131,7 @@ function linkDep {
     [ ! -e "$MINGWROOT/$1" ] && (echo "Error: missing $MINGWROOT/$1"; return 1)
     mkdir -p "$destdir" || return 1
     ln -sf "$MINGWROOT/$1" "$destdir/$name" || return 1
+    echo "${2:-bin}/$name: $(rpm -qf "$MINGWROOT/$1")" >> $installprefix/origins.txt
     autoLinkDeps "$destdir/$name" "${indent}  " || return 1
     [ -e "$MINGWROOT/$1.debug" ] && ln -sf "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
     return 0
@@ -201,3 +206,6 @@ ln -sf $MINGWROOT/bin/osgPlugins-3.5.5 $installprefix/bin/osgPlugins-3.5.5
 # Data files
 mkdir -p $installprefix/share/
 ln -sf /usr/share/gdal $installprefix/share/gdal
+
+# Sort origins file
+cat $installprefix/origins.txt | sort | uniq > $installprefix/origins.new && mv $installprefix/origins.new $installprefix/origins.txt
