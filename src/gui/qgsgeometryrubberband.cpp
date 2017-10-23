@@ -355,11 +355,12 @@ void QgsGeometryRubberBand::setIconBrushStyle( Qt::BrushStyle brushStyle )
   mIconBrush.setStyle( brushStyle );
 }
 
-void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits , AngleUnit angleUnit )
+void QgsGeometryRubberBand::setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits , AngleUnit angleUnit , AzimuthNorth azimuthNorth )
 {
   mMeasurementMode = measurementMode;
   mDisplayUnits = displayUnits;
   mAngleUnit = angleUnit;
+  mAzimuthNorth = azimuthNorth;
   redrawMeasurements();
 }
 
@@ -491,8 +492,18 @@ void QgsGeometryRubberBand::measureGeometry( QgsAbstractGeometryV2 *geometry, in
             QgsPoint p1( points[i].x(), points[i].y() );
             QgsPoint p2( points[i+1].x(), points[i+1].y() );
 
-            double angle = mDa.bearing( p1, p2 );
+            double angle = 0;
+            if ( mAzimuthNorth == AZIMUTH_NORTH_GEOGRAPHIC )
+            {
+              angle = mDa.bearing( p1, p2 );
+            }
+            else
+            {
+              angle = qAtan2( p2.x() - p1.x(), p2.y() - p1.y() );
+            }
+            angle = qRound( angle *  1000 ) / 1000.;
             angle = angle < 0 ? angle + 2 * M_PI : angle;
+            angle = angle >= 2 * M_PI ? angle - 2 * M_PI : angle;
             mPartMeasurements.append( angle );
             QString segmentLength = formatAngle( angle );
             addMeasurements( QStringList() << segmentLength, QgsPointV2( 0.5 * ( p1.x() + p2.x() ), 0.5 * ( p1.y() + p2.y() ) ) );

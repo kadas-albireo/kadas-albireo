@@ -118,9 +118,9 @@ void QgsMapToolDrawShape::editGeometry( const QgsAbstractGeometryV2 *geometry, c
   setShowInputWidget( false );
 }
 
-void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits , QgsGeometryRubberBand::AngleUnit angleUnits )
+void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits , QgsGeometryRubberBand::AngleUnit angleUnits , QgsGeometryRubberBand::AzimuthNorth azimuthNorth )
 {
-  mRubberBand->setMeasurementMode( measurementMode, displayUnits, angleUnits );
+  mRubberBand->setMeasurementMode( measurementMode, displayUnits, angleUnits, azimuthNorth );
   emit geometryChanged();
 }
 

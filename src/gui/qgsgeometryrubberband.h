@@ -87,6 +87,13 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
       ANGLE_GRADIANS,
       ANGLE_MIL
     };
+
+    enum AzimuthNorth
+    {
+      AZIMUTH_NORTH_GEOGRAPHIC,
+      AZIMUTH_NORTH_MAP
+    };
+
     QgsGeometryRubberBand( QgsMapCanvas* mapCanvas, QGis::GeometryType geomType = QGis::Line );
     ~QgsGeometryRubberBand();
 
@@ -129,7 +136,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     Qt::PenStyle iconLineStyle() const { return mIconPen.style(); }
     void setIconBrushStyle( Qt::BrushStyle brushStyle );
     Qt::BrushStyle iconBrushStyle() const { return mIconBrush.style(); }
-    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES );
+    void setMeasurementMode( MeasurementMode measurementMode, QGis::UnitType displayUnits, AngleUnit angleUnit = ANGLE_DEGREES, AzimuthNorth azimuthNorth = AZIMUTH_NORTH_GEOGRAPHIC );
 
     // Custom measurement handler for cases where default measurement method does not work
     class Measurer
@@ -167,6 +174,7 @@ class GUI_EXPORT QgsGeometryRubberBand: public QObject, public QgsMapCanvasItem
     MeasurementMode mMeasurementMode;
     QGis::UnitType mDisplayUnits;
     AngleUnit mAngleUnit;
+    AzimuthNorth mAzimuthNorth;
     QList<double> mPartMeasurements;
     QList<QGraphicsTextItem*> mMeasurementLabels;
     Measurer* mMeasurer;

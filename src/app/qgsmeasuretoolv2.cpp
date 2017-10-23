@@ -26,7 +26,7 @@
 #include <QMouseEvent>
 
 QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::MeasureMode measureMode )
-    : QgsBottomBar( canvas ), mMeasureMode( measureMode )
+    : QgsBottomBar( canvas ), mNorthComboBox( 0 ), mMeasureMode( measureMode )
 {
   bool measureAngle = measureMode == QgsMeasureToolV2::MeasureAngle || measureMode == QgsMeasureToolV2::MeasureAzimuth;
   setLayout( new QHBoxLayout() );
@@ -68,6 +68,19 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
   connect( mUnitComboBox, SIGNAL( currentIndexChanged( const QString & ) ), this, SIGNAL( unitsChanged( ) ) );
   connect( mUnitComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveDefaultUnits( int ) ) );
   layout()->addWidget( mUnitComboBox );
+
+  if ( measureMode == QgsMeasureToolV2::MeasureAzimuth )
+  {
+    layout()->addWidget( new QLabel( "North:" ) );
+    mNorthComboBox = new QComboBox();
+    mNorthComboBox->addItem( tr( "Geographic" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) );
+    mNorthComboBox->addItem( tr( "Map" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_MAP ) );
+    int defNorth = QSettings().value( "/qgis/measure/last_azimuth_north", static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) ).toInt();
+    mNorthComboBox->setCurrentIndex( defNorth );
+    connect( mNorthComboBox, SIGNAL( currentIndexChanged( const QString & ) ), this, SIGNAL( unitsChanged( ) ) );
+    connect( mNorthComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveAzimuthNorth( int ) ) );
+    layout()->addWidget( mNorthComboBox );
+  }
 
   if ( measureMode != QgsMeasureToolV2::MeasureAngle )
   {
@@ -119,6 +132,11 @@ void QgsMeasureWidget::saveDefaultUnits( int index )
   }
 }
 
+void QgsMeasureWidget::saveAzimuthNorth( int index )
+{
+  QSettings().setValue( "/qgis/measure/last_azimuth_north", mNorthComboBox->itemData( index ).toInt() );
+}
+
 void QgsMeasureWidget::updateMeasurement( const QString& measurement )
 {
   mMeasurementLabel->setText( QString( "<b>%1</b>" ).arg( measurement ) );
@@ -132,6 +150,11 @@ QGis::UnitType QgsMeasureWidget::currentUnit() const
 QgsGeometryRubberBand::AngleUnit QgsMeasureWidget::currentAngleUnit() const
 {
   return static_cast<QgsGeometryRubberBand::AngleUnit>( mUnitComboBox->itemData( mUnitComboBox->currentIndex() ).toInt() );
+}
+
+QgsGeometryRubberBand::AzimuthNorth QgsMeasureWidget::currentAzimuthNorth() const
+{
+  return static_cast<QgsGeometryRubberBand::AzimuthNorth>( mNorthComboBox->itemData( mNorthComboBox->currentIndex() ).toInt() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -214,7 +237,7 @@ void QgsMeasureToolV2::setUnits()
     case MeasureAngle:
       mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_ANGLE, QGis::Meters, mMeasureWidget->currentAngleUnit() ); break;
     case MeasureAzimuth:
-      mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_AZIMUTH, QGis::Meters, mMeasureWidget->currentAngleUnit() ); break;
+      mDrawTool->setMeasurementMode( QgsGeometryRubberBand::MEASURE_AZIMUTH, QGis::Meters, mMeasureWidget->currentAngleUnit(), mMeasureWidget->currentAzimuthNorth() ); break;
   }
 }
 

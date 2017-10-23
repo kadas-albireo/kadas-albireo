@@ -62,6 +62,7 @@ class APP_EXPORT QgsMeasureWidget : public QgsBottomBar
     void updateMeasurement( const QString& measurement );
     QGis::UnitType currentUnit() const;
     QgsGeometryRubberBand::AngleUnit currentAngleUnit() const;
+    QgsGeometryRubberBand::AzimuthNorth currentAzimuthNorth() const;
 
   signals:
     void clearRequested();
@@ -72,10 +73,12 @@ class APP_EXPORT QgsMeasureWidget : public QgsBottomBar
   private:
     QLabel* mMeasurementLabel;
     QComboBox* mUnitComboBox;
+    QComboBox* mNorthComboBox;
     QgsMeasureToolV2::MeasureMode mMeasureMode;
 
   private slots:
     void saveDefaultUnits( int index );
+    void saveAzimuthNorth( int index );
 };
 
 #endif // QGSMEASURETOOLV2_H

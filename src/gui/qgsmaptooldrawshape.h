@@ -52,7 +52,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     void setSnapPoints( bool snapPoints ) { mSnapPoints = snapPoints; }
     void setShowInputWidget( bool showInput ) { mShowInput = showInput; }
     void setResetOnDeactivate( bool resetOnDeactivate ) { mResetOnDeactivate = resetOnDeactivate; }
-    void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES );
+    void setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits, QgsGeometryRubberBand::AngleUnit angleUnits = QgsGeometryRubberBand::ANGLE_DEGREES, QgsGeometryRubberBand::AzimuthNorth azimuthNorth = QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC );
     QgsGeometryRubberBand* getRubberBand() const { return mRubberBand; }
     Status getStatus() const { return state()->status; }
 
