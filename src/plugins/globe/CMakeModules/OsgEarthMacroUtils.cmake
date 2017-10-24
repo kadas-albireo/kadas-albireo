@@ -3,72 +3,78 @@
 #######################################################################################################
 MACRO(DETECT_OSG_VERSION)
 
+    # Fall back to OSG_DIR if OSG_INCLUDE_DIR is not defined
+    if(OSG_DIR AND NOT OSG_INCLUDE_DIR AND EXISTS "${OSG_DIR}/include/osg/Version")
+        set(OSG_INCLUDE_DIR "${OSG_DIR}/include")
+    endif()
+
     OPTION(APPEND_OPENSCENEGRAPH_VERSION "Append the OSG version number to the osgPlugins directory" ON)
-  
-    # detect if osgversion can be found
-    FIND_PROGRAM(OSG_VERSION_EXE NAMES osgversion)
-    IF(OSG_VERSION_EXE AND NOT OPENSCENEGRAPH_MAJOR_VERSION AND NOT OPENSCENEGRAPH_MINOR_VERSION AND NOT OPENSCENEGRAPH_PATCH_VERSION)
-        #MESSAGE("OSGVERSION IS AT ${OSG_VERSION_EXE}")
-        # get parameters out of the osgversion
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} --major-number OUTPUT_VARIABLE OPENSCENEGRAPH_MAJOR_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} --minor-number OUTPUT_VARIABLE OPENSCENEGRAPH_MINOR_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} --patch-number OUTPUT_VARIABLE OPENSCENEGRAPH_PATCH_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} Matrix::value_type OUTPUT_VARIABLE OSG_USE_FLOAT_MATRIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} Plane::value_type OUTPUT_VARIABLE OSG_USE_FLOAT_PLANE OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} BoundingSphere::value_type OUTPUT_VARIABLE OSG_USE_FLOAT_BOUNDINGSPHERE OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND ${OSG_VERSION_EXE} BoundingBox::value_type OUTPUT_VARIABLE OSG_USE_FLOAT_BOUNDINGBOX OUTPUT_STRIP_TRAILING_WHITESPACE)
+	
+    # Try to ascertain the version...
+    # (Taken from CMake's FindOpenSceneGraph.cmake)
+    if(OSG_INCLUDE_DIR)
+        if(OpenSceneGraph_DEBUG)
+            message(STATUS "[ FindOpenSceneGraph.cmake:${CMAKE_CURRENT_LIST_LINE} ] "
+                "Detected OSG_INCLUDE_DIR = ${OSG_INCLUDE_DIR}")
+        endif()
 
-        # setup version numbers if we have osgversion
-        SET(OPENSCENEGRAPH_MAJOR_VERSION "${OPENSCENEGRAPH_MAJOR_VERSION}" CACHE STRING "OpenSceneGraph major version number")
-        SET(OPENSCENEGRAPH_MINOR_VERSION "${OPENSCENEGRAPH_MINOR_VERSION}" CACHE STRING "OpenSceneGraph minor version number")
-        SET(OPENSCENEGRAPH_PATCH_VERSION "${OPENSCENEGRAPH_PATCH_VERSION}" CACHE STRING "OpenSceneGraph patch version number")
-        SET(OPENSCENEGRAPH_SOVERSION "${OPENSCENEGRAPH_SOVERSION}" CACHE STRING "OpenSceneGraph so version number")
-    
-        # just debug info
-        #MESSAGE(STATUS "Detected OpenSceneGraph v${OPENSCENEGRAPH_VERSION}.")
+        set(_osg_Version_file "${OSG_INCLUDE_DIR}/osg/Version")
+        if("${OSG_INCLUDE_DIR}" MATCHES "\\.framework$" AND NOT EXISTS "${_osg_Version_file}")
+            set(_osg_Version_file "${OSG_INCLUDE_DIR}/Headers/Version")
+        endif()
 
-        # setup float and double definitions
-        IF(OSG_USE_FLOAT_MATRIX MATCHES "float")
-            ADD_DEFINITIONS(-DOSG_USE_FLOAT_MATRIX)
-        ENDIF(OSG_USE_FLOAT_MATRIX MATCHES "float")
-        IF(OSG_USE_FLOAT_PLANE MATCHES "float")
-            ADD_DEFINITIONS(-DOSG_USE_FLOAT_PLANE)
-        ENDIF(OSG_USE_FLOAT_PLANE MATCHES "float")
-        IF(OSG_USE_FLOAT_BOUNDINGSPHERE MATCHES "double")
-            ADD_DEFINITIONS(-DOSG_USE_DOUBLE_BOUNDINGSPHERE)
-        ENDIF(OSG_USE_FLOAT_BOUNDINGSPHERE MATCHES "double")
-        IF(OSG_USE_FLOAT_BOUNDINGBOX MATCHES "double")
-            ADD_DEFINITIONS(-DOSG_USE_DOUBLE_BOUNDINGBOX)
-        ENDIF(OSG_USE_FLOAT_BOUNDINGBOX MATCHES "double")
+        if(EXISTS "${_osg_Version_file}")
+          file(STRINGS "${_osg_Version_file}" _osg_Version_contents
+               REGEX "#define (OSG_VERSION_[A-Z]+|OPENSCENEGRAPH_[A-Z]+_VERSION)[ \t]+[0-9]+")
+        else()
+          set(_osg_Version_contents "unknown")
+        endif()
 
-    ENDIF(OSG_VERSION_EXE AND NOT OPENSCENEGRAPH_MAJOR_VERSION AND NOT OPENSCENEGRAPH_MINOR_VERSION AND NOT OPENSCENEGRAPH_PATCH_VERSION)
-  
-    #Initialize the version numbers to being empty.  If they were set by osgversion, they will be left alone
-  SET(OPENSCENEGRAPH_MAJOR_VERSION "" CACHE STRING "OpenSceneGraph major version number")
-    SET(OPENSCENEGRAPH_MINOR_VERSION "" CACHE STRING "OpenSceneGraph minor version number")
-    SET(OPENSCENEGRAPH_PATCH_VERSION "" CACHE STRING "OpenSceneGraph patch version number")
-    SET(OPENSCENEGRAPH_SOVERSION "" CACHE STRING "OpenSceneGraph so version number")
-  
-    if (OPENSCENEGRAPH_MAJOR_VERSION AND NOT OPENSCENEGRAPH_MINOR_VERSION STREQUAL "" AND NOT OPENSCENEGRAPH_PATCH_VERSION STREQUAL "")
-    SET(OPENSCENEGRAPH_VERSION ${OPENSCENEGRAPH_MAJOR_VERSION}.${OPENSCENEGRAPH_MINOR_VERSION}.${OPENSCENEGRAPH_PATCH_VERSION})
-  else (OPENSCENEGRAPH_MAJOR_VERSION AND NOT OPENSCENEGRAPH_MINOR_VERSION STREQUAL "" AND NOT OPENSCENEGRAPH_PATCH_VERSION STREQUAL "")
-    #MESSAGE("osgversion was found at ${OSG_VERSION_EXE} but failed to run")
-    SET(OPENSCENEGRAPH_VERSION)
-  endif (OPENSCENEGRAPH_MAJOR_VERSION AND NOT OPENSCENEGRAPH_MINOR_VERSION STREQUAL "" AND NOT OPENSCENEGRAPH_PATCH_VERSION STREQUAL "")
-  
-  MARK_AS_ADVANCED(OPENSCENEGRAPH_VERSION)
+        string(REGEX MATCH ".*#define OSG_VERSION_MAJOR[ \t]+[0-9]+.*"
+            _osg_old_defines "${_osg_Version_contents}")
+        string(REGEX MATCH ".*#define OPENSCENEGRAPH_MAJOR_VERSION[ \t]+[0-9]+.*"
+            _osg_new_defines "${_osg_Version_contents}")
+        if(_osg_old_defines)
+            string(REGEX REPLACE ".*#define OSG_VERSION_MAJOR[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_MAJOR ${_osg_Version_contents})
+            string(REGEX REPLACE ".*#define OSG_VERSION_MINOR[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_MINOR ${_osg_Version_contents})
+            string(REGEX REPLACE ".*#define OSG_VERSION_PATCH[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_PATCH ${_osg_Version_contents})
+        elseif(_osg_new_defines)
+            string(REGEX REPLACE ".*#define OPENSCENEGRAPH_MAJOR_VERSION[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_MAJOR ${_osg_Version_contents})
+            string(REGEX REPLACE ".*#define OPENSCENEGRAPH_MINOR_VERSION[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_MINOR ${_osg_Version_contents})
+            string(REGEX REPLACE ".*#define OPENSCENEGRAPH_PATCH_VERSION[ \t]+([0-9]+).*"
+                "\\1" _osg_VERSION_PATCH ${_osg_Version_contents})
+        else()
+            message(WARNING "[ FindOpenSceneGraph.cmake:${CMAKE_CURRENT_LIST_LINE} ] "
+                "Failed to parse version number, please report this as a bug")
+        endif()
+        unset(_osg_Version_contents)
+
+        set(OPENSCENEGRAPH_VERSION "${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.${_osg_VERSION_PATCH}"
+                                    CACHE INTERNAL "The version of OSG which was detected")
+        if(OpenSceneGraph_DEBUG)
+            message(STATUS "[ FindOpenSceneGraph.cmake:${CMAKE_CURRENT_LIST_LINE} ] "
+                "Detected version ${OPENSCENEGRAPH_VERSION}")
+        endif()
+    endif()
+	
+	MARK_AS_ADVANCED(OPENSCENEGRAPH_VERSION)
 
 
     IF (APPEND_OPENSCENEGRAPH_VERSION AND OPENSCENEGRAPH_VERSION)
         SET(OSG_PLUGINS "osgPlugins-${OPENSCENEGRAPH_VERSION}"  CACHE STRING "" FORCE)
         MESSAGE(STATUS "Plugins will be installed under osgPlugins-${OPENSCENEGRAPH_VERSION} directory.")
-  else (APPEND_OPENSCENEGRAPH_VERSION AND OPENSCENEGRAPH_VERSION)
-    SET(OSG_PLUGINS  CACHE STRING "" FORCE)
+	else (APPEND_OPENSCENEGRAPH_VERSION AND OPENSCENEGRAPH_VERSION)
+		SET(OSG_PLUGINS  CACHE STRING "" FORCE)
     ENDIF(APPEND_OPENSCENEGRAPH_VERSION AND OPENSCENEGRAPH_VERSION)
-  
-  MARK_AS_ADVANCED(OSG_PLUGINS)
-  
-  #MESSAGE("OSG_PLUGINS=${OSG_PLUGINS}")
+	
+	MARK_AS_ADVANCED(OSG_PLUGINS)
+	
+	#MESSAGE("OSG_PLUGINS=${OSG_PLUGINS}")
 
 ENDMACRO(DETECT_OSG_VERSION)
 
@@ -88,7 +94,11 @@ ENDMACRO(DETECT_OSG_VERSION)
 MACRO(LINK_WITH_VARIABLES TRGTNAME)
     FOREACH(varname ${ARGN})
         IF(${varname}_DEBUG)
-            TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${${varname}}" debug "${${varname}_DEBUG}")
+            IF(${varname})
+                TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${${varname}}" debug "${${varname}_DEBUG}")
+            ELSE(${varname})
+                TARGET_LINK_LIBRARIES(${TRGTNAME} debug "${${varname}_DEBUG}")
+            ENDIF(${varname})
         ELSE(${varname}_DEBUG)
             TARGET_LINK_LIBRARIES(${TRGTNAME} "${${varname}}" )
         ENDIF(${varname}_DEBUG)
@@ -96,9 +106,9 @@ MACRO(LINK_WITH_VARIABLES TRGTNAME)
 ENDMACRO(LINK_WITH_VARIABLES TRGTNAME)
 
 MACRO(LINK_INTERNAL TRGTNAME)
-    IF(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
+    IF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
         TARGET_LINK_LIBRARIES(${TRGTNAME} ${ARGN})
-    ELSE(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
+    ELSE("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
         FOREACH(LINKLIB ${ARGN})
             IF(MSVC AND OSG_MSVC_VERSIONED_DLL)
                 #when using versioned names, the .dll name differ from .lib name, there is a problem with that:
@@ -111,7 +121,7 @@ MACRO(LINK_INTERNAL TRGTNAME)
                 TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${LINKLIB}${CMAKE_RELEASE_POSTFIX}" debug "${LINKLIB}${CMAKE_DEBUG_POSTFIX}")
             ENDIF(MSVC AND OSG_MSVC_VERSIONED_DLL)
         ENDFOREACH(LINKLIB)
-    ENDIF(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
+    ENDIF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 ENDMACRO(LINK_INTERNAL TRGTNAME)
 
 MACRO(LINK_EXTERNAL TRGTNAME)
@@ -192,8 +202,10 @@ MACRO(SETUP_PLUGIN PLUGIN_NAME)
     SET(TARGET_NAME ${PLUGIN_NAME} )
 
     #MESSAGE("in -->SETUP_PLUGIN<-- ${TARGET_NAME}-->${TARGET_SRC} <--> ${TARGET_H}<--")
-
-    SOURCE_GROUP( "Header Files" FILES ${TARGET_H} )
+    
+    SOURCE_GROUP( "Header Files"   FILES ${TARGET_H} )
+    SOURCE_GROUP( "Shader Files"   FILES ${TARGET_GLSL} )
+    SOURCe_GROUP( "Template Files" FILES ${TARGET_IN} )
 
     ## we have set up the target label and targetname by taking into account global prfix (osgdb_)
 
@@ -207,44 +219,131 @@ MACRO(SETUP_PLUGIN PLUGIN_NAME)
 # here we use the command to generate the library
 
     IF   (DYNAMIC_OSGEARTH)
-        ADD_LIBRARY(${TARGET_TARGETNAME} MODULE ${TARGET_SRC} ${TARGET_H})
+        ADD_LIBRARY(${TARGET_TARGETNAME} MODULE ${TARGET_SRC} ${TARGET_H} ${TARGET_GLSL} ${TARGET_IN})
     ELSE (DYNAMIC_OSGEARTH)
-        ADD_LIBRARY(${TARGET_TARGETNAME} STATIC ${TARGET_SRC} ${TARGET_H})
+        ADD_LIBRARY(${TARGET_TARGETNAME} STATIC ${TARGET_SRC} ${TARGET_H} ${TARGET_GLSL} ${TARGET_IN})
     ENDIF(DYNAMIC_OSGEARTH)
 
-    #not sure if needed, but for plugins only msvc need the d suffix
-    IF(NOT MSVC)
-      IF(NOT UNIX)
-           SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES DEBUG_POSTFIX "")
-      ENDIF(NOT UNIX)
-    ENDIF(NOT MSVC)
     SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES PROJECT_LABEL "${TARGET_LABEL}")
+    IF(WIN32)
+      SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES PREFIX "")
+    ENDIF(WIN32)
 
     SETUP_LINK_LIBRARIES()
 
 #the installation path are differentiated for win32 that install in bib versus other architecture that install in lib${LIB_POSTFIX}/${VPB_PLUGINS}
     IF(WIN32)
         INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib/${OSG_PLUGINS} LIBRARY DESTINATION bin/${OSG_PLUGINS} )
-
-    #Install to the OSG_DIR as well
-    IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-      INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS} LIBRARY DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS} )
-    ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-
+	    
+		#Install to the OSG_DIR as well
+		IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		  INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS} LIBRARY DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS} )
+		ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		
     ELSE(WIN32)
         INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib${LIB_POSTFIX}/${OSG_PLUGINS} LIBRARY DESTINATION lib${LIB_POSTFIX}/${OSG_PLUGINS} )
 
-    #Install to the OSG_DIR as well
-    IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-      INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin LIBRARY DESTINATION lib${LIB_POSTFIX}/bin)
-    ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-
+		#Install to the OSG_DIR as well
+		IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		  INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin LIBRARY DESTINATION lib${LIB_POSTFIX}/bin)
+		ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		
     ENDIF(WIN32)
 
+    # install the shader source files
+    if(OSGEARTH_INSTALL_SHADERS)
+        INSTALL(
+            FILES ${TARGET_GLSL} 
+            DESTINATION resources/shaders )
+    endif(OSGEARTH_INSTALL_SHADERS)
+    
 #finally, set up the solution folder -gw
-    SET_PROPERTY(TARGET ${TARGET_TARGETNAME} PROPERTY FOLDER "Plugins")
-
+    SET_PROPERTY(TARGET ${TARGET_TARGETNAME} PROPERTY FOLDER "Plugins")    
+    
 ENDMACRO(SETUP_PLUGIN)
+
+
+
+
+
+MACRO(SETUP_EXTENSION PLUGIN_NAME)
+
+    SET(TARGET_NAME ${PLUGIN_NAME} )
+
+    #MESSAGE("in -->SETUP_EXTENSION<-- ${TARGET_NAME}-->${TARGET_SRC} <--> ${TARGET_H}<--")
+    
+    SOURCE_GROUP( "Header Files"   FILES ${TARGET_H} )
+    SOURCE_GROUP( "Shader Files"   FILES ${TARGET_GLSL} )
+    SOURCe_GROUP( "Template Files" FILES ${TARGET_IN} )
+
+    ## we have set up the target label and targetname by taking into account global prefix (osgdb_)
+
+    IF(NOT TARGET_TARGETNAME)
+            SET(TARGET_TARGETNAME "${TARGET_DEFAULT_PREFIX}${TARGET_NAME}")
+    ENDIF(NOT TARGET_TARGETNAME)
+    IF(NOT TARGET_LABEL)
+            SET(TARGET_LABEL "${TARGET_DEFAULT_LABEL_PREFIX} ${TARGET_NAME}")
+    ENDIF(NOT TARGET_LABEL)
+
+# here we use the command to generate the library
+
+    IF   (DYNAMIC_OSGEARTH)
+        ADD_LIBRARY(${TARGET_TARGETNAME} MODULE ${TARGET_SRC} ${TARGET_H} ${TARGET_GLSL} ${TARGET_IN})
+    ELSE (DYNAMIC_OSGEARTH)
+        ADD_LIBRARY(${TARGET_TARGETNAME} STATIC ${TARGET_SRC} ${TARGET_H} ${TARGET_GLSL} ${TARGET_IN})
+    ENDIF(DYNAMIC_OSGEARTH)
+
+    SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES PROJECT_LABEL "${TARGET_LABEL}")
+
+    SETUP_LINK_LIBRARIES()
+
+#the installation path are differentiated for win32 that install in bib versus other architecture that install in lib${LIB_POSTFIX}/${VPB_PLUGINS}
+    IF(WIN32)
+        INSTALL(
+            TARGETS ${TARGET_TARGETNAME}
+            RUNTIME DESTINATION bin
+            ARCHIVE DESTINATION lib/${OSG_PLUGINS}
+            LIBRARY DESTINATION bin/${OSG_PLUGINS} )
+	    
+		#Install to the OSG_DIR as well
+		IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		    INSTALL(
+                TARGETS ${TARGET_TARGETNAME} 
+                RUNTIME DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS}
+                LIBRARY DESTINATION ${OSG_DIR}/bin/${OSG_PLUGINS} )
+		ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		
+    ELSE(WIN32)
+        INSTALL(
+            TARGETS ${TARGET_TARGETNAME} 
+            RUNTIME DESTINATION bin 
+            ARCHIVE DESTINATION lib${LIB_POSTFIX}/${OSG_PLUGINS} 
+            LIBRARY DESTINATION lib${LIB_POSTFIX}/${OSG_PLUGINS} )
+
+		#Install to the OSG_DIR as well
+		IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		    INSTALL(
+                TARGETS ${TARGET_TARGETNAME}
+                RUNTIME DESTINATION ${OSG_DIR}/bin
+                LIBRARY DESTINATION lib${LIB_POSTFIX}/bin )
+		ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+		
+    ENDIF(WIN32)
+    
+    # install the shader source files
+    if(OSGEARTH_INSTALL_SHADERS)
+        INSTALL(
+            FILES ${TARGET_GLSL} 
+            DESTINATION resources/shaders )
+    endif(OSGEARTH_INSTALL_SHADERS)
+    
+#finally, set up the solution folder -gw
+    SET_PROPERTY(TARGET ${TARGET_TARGETNAME} PROPERTY FOLDER "Extensions")    
+    
+ENDMACRO(SETUP_EXTENSION)
+
+
+
 
 
 #################################################################################################################
@@ -295,7 +394,7 @@ MACRO(SETUP_EXE IS_COMMANDLINE_APP)
         ADD_EXECUTABLE(${TARGET_TARGETNAME} ${PLATFORM_SPECIFIC_CONTROL} ${TARGET_SRC} ${TARGET_H})
 
     ENDIF(${IS_COMMANDLINE_APP})
-
+    
     SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES PROJECT_LABEL "${TARGET_LABEL}")
     SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES OUTPUT_NAME ${TARGET_NAME})
     SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES DEBUG_OUTPUT_NAME "${TARGET_NAME}${CMAKE_DEBUG_POSTFIX}")
@@ -307,26 +406,39 @@ MACRO(SETUP_EXE IS_COMMANDLINE_APP)
 
 ENDMACRO(SETUP_EXE)
 
-# Takes optional second argument (is_commandline_app?) in ARGV1
+# Taked optional second arg: APPLICATION_FOLDER
+# Takes optional third arg:  (is_commandline_app?) in ARGV2
 MACRO(SETUP_APPLICATION APPLICATION_NAME)
 
-        SET(TARGET_NAME ${APPLICATION_NAME} )
+    SET(TARGET_NAME ${APPLICATION_NAME} )
+    
+    # 2nd arguemnt: application folder name for IDE?
+    IF(${ARGC} GREATER 1)
+        SET(APPLICATION_FOLDER ${ARGV1})
+    ELSE(${ARGC} GREATER 1)
+        SET(APPLICATION_FOLDER ${TARGET_DEFAULT_APPLICATION_FOLDER})
+    ENDIF(${ARGC} GREATER 1)
 
-        IF(${ARGC} GREATER 1)
-            SET(IS_COMMANDLINE_APP ${ARGV1})
-        ELSE(${ARGC} GREATER 1)
-            SET(IS_COMMANDLINE_APP 0)
-        ENDIF(${ARGC} GREATER 1)
+    # 3rd argument: is it a command-line app?
+    IF(${ARGC} GREATER 2)
+        SET(IS_COMMANDLINE_APP ${ARGV2})
+    ELSE(${ARGC} GREATER 2)
+        SET(IS_COMMANDLINE_APP 0)
+    ENDIF(${ARGC} GREATER 2)
 
-        SETUP_EXE(${IS_COMMANDLINE_APP})
-
+    SETUP_EXE(${IS_COMMANDLINE_APP})
+        
     INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION bin  )
-  #Install to the OSG_DIR as well
-  IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-    INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin)
-  ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
-
-  SET_PROPERTY(TARGET ${TARGET_TARGETNAME} PROPERTY FOLDER "Samples")
+	#Install to the OSG_DIR as well
+	IF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+	  INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION ${OSG_DIR}/bin)
+	ENDIF(OSGEARTH_INSTALL_TO_OSG_DIR AND OSG_DIR)
+	
+	IF(NOT APPLICATION_FOLDER)
+	    SET(APPLICATION_FOLDER "Examples")
+	ENDIF(NOT APPLICATION_FOLDER)
+	
+	SET_PROPERTY(TARGET ${TARGET_TARGETNAME} PROPERTY FOLDER ${APPLICATION_FOLDER})
 
 ENDMACRO(SETUP_APPLICATION)
 
@@ -349,7 +461,7 @@ MACRO(SETUP_EXAMPLE EXAMPLE_NAME)
 
         SETUP_EXE(${IS_COMMANDLINE_APP})
 
-    INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION share/OpenSceneGraph/bin  )
+    INSTALL(TARGETS ${TARGET_TARGETNAME} RUNTIME DESTINATION share/OpenSceneGraph/bin BUNDLE DESTINATION share/OpenSceneGraph/bin  )
 
 ENDMACRO(SETUP_EXAMPLE)
 
@@ -359,3 +471,50 @@ MACRO(SETUP_COMMANDLINE_EXAMPLE EXAMPLE_NAME)
     SETUP_EXAMPLE(${EXAMPLE_NAME} 1)
 
 ENDMACRO(SETUP_COMMANDLINE_EXAMPLE)
+
+
+# -----------------------------------------------------------------------
+# configure_shaders -gw
+#
+# Bakes GLSL shaders to make into a CPP file at runtime.
+# Example:
+#
+#   configure_shaders( MyTemplate.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/AutoGen.cpp file1.glsl file2.glsl )
+#
+macro(configure_shaders templateFile autoGenCppFile)
+	
+	# set up configure variables:
+	set(TEMPLATE_FILE   ${templateFile} )
+	set(GLSL_FILES      ${ARGN} )
+	set(OUTPUT_CPP_FILE ${autoGenCppFile})
+	
+	# generate the build-time script that will create out cpp file with inline shaders:
+	configure_file(
+		"${CMAKE_SOURCE_DIR}/CMakeModules/ConfigureShaders.cmake.in"
+		"${CMAKE_CURRENT_BINARY_DIR}/ConfigureShaders.cmake"
+		@ONLY)
+	
+	# add the custom build-time command to run the script:
+	add_custom_command(
+		OUTPUT
+			"${autoGenCppFile}"
+		COMMAND
+			"${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/ConfigureShaders.cmake"
+		DEPENDS
+			${GLSL_FILES}
+			"${TEMPLATE_FILE}"
+			"${CMAKE_SOURCE_DIR}/CMakeModules/ConfigureShaders.cmake.in" )
+	
+endmacro(configure_shaders)
+
+# http://stackoverflow.com/questions/7787823/cmake-how-to-get-the-name-of-all-subdirectories-of-a-directory
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+        LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
