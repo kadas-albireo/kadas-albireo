@@ -33,6 +33,7 @@ class GUI_EXPORT QgsStateStack : public QObject
     {
       public:
         StateChangeCommand( QgsStateStack* stateStack, State* newState, bool compress );
+        virtual ~StateChangeCommand() {}
         virtual void undo();
         virtual void redo();
         virtual bool compress() const { return mCompress; }
