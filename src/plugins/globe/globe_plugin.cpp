@@ -53,6 +53,7 @@
 #include <QDockWidget>
 #include <QStringList>
 
+#include <osg/GL>
 #include <osg/Light>
 #include <osgDB/ReadFile>
 #include <osgDB/Registry>
@@ -433,7 +434,7 @@ void GlobePlugin::run()
 
   mViewerWidget = new osgEarth::QtGui::ViewerWidget( mOsgViewer );
   QGLFormat glf = QGLFormat::defaultFormat();
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+#ifdef OSG_GL3_FEATURES
   glf.setVersion( 4, 0 );
   glf.setProfile( QGLFormat::CoreProfile );
 #endif
