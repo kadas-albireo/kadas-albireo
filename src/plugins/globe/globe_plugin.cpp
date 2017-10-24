@@ -710,7 +710,6 @@ void GlobePlugin::syncExtent()
   QgsPoint ll = QgsPoint( extent.xMinimum(), extent.yMinimum() );
   QgsPoint ul = QgsPoint( extent.xMinimum(), extent.yMaximum() );
   double height = dist.measureLine( ll, ul );
-//  double height = dist.computeDistanceBearing( ll, ul );
 
   double camViewAngle = 30;
   double camDistance = height / tan( camViewAngle * osg::PI / 180 ); //c = b*cotan(B(rad))
@@ -724,11 +723,7 @@ void GlobePlugin::syncExtent()
   viewpoint.range() = camDistance;
 #endif
 
-  OE_NOTICE << "map extent: " << height << " camera distance: " << camDistance << std::endl;
-
-  osgEarth::Util::EarthManipulator* manip = dynamic_cast<osgEarth::Util::EarthManipulator*>( mOsgViewer->getCameraManipulator() );
-  manip->setRotation( osg::Quat() );
-  manip->setViewpoint( viewpoint, 4.0 );
+  dynamic_cast<osgEarth::Util::EarthManipulator*>( mOsgViewer->getCameraManipulator() )->setViewpoint( viewpoint, 4.0 );
 }
 
 void GlobePlugin::addControl( osgEarth::Util::Controls::Control* control, int x, int y, int w, int h, osgEarth::Util::Controls::ControlEventHandler* handler )
