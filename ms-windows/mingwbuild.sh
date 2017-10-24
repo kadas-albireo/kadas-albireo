@@ -201,7 +201,8 @@ IFS=$SAVEIFS
 )
 
 # Osg plugins
-ln -sf $MINGWROOT/bin/osgPlugins-3.5.5 $installprefix/bin/osgPlugins-3.5.5
+osgPlugins=$(basename $MINGWROOT/bin/osgPlugins-*)
+ln -sf $MINGWROOT/bin/$osgPlugins $installprefix/bin/$osgPlugins
 
 # Data files
 mkdir -p $installprefix/share/
