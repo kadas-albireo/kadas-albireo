@@ -401,7 +401,11 @@ void GlobePlugin::run()
 #endif
     options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
     mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+    map->addLayer( mQgisMapLayer );
+#else
     map->addImageLayer( mQgisMapLayer );
+#endif
 
 
     // Create the frustum highlight callback
@@ -530,7 +534,11 @@ void GlobePlugin::applyProjectSettings()
       for ( osgEarth::ImageLayerVector::iterator i = list.begin(); i != list.end(); ++i )
       {
         if ( *i != mQgisMapLayer )
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
           map->removeImageLayer( *i );
+#else
+          map->removeLayer( *i );
+#endif
       }
       if ( !list.empty() )
       {
@@ -1113,7 +1121,11 @@ void GlobePlugin::rebuildQGISLayer()
 {
   if ( mMapNode )
   {
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
     mMapNode->getMap()->removeImageLayer( mQgisMapLayer );
+#else
+    mMapNode->getMap()->removeLayer( mQgisMapLayer );
+#endif
     mLayerExtents.clear();
 
     osgEarth::TileSourceOptions opts;
@@ -1133,7 +1145,11 @@ void GlobePlugin::rebuildQGISLayer()
 #endif
     options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
     mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
     mMapNode->getMap()->addImageLayer( mQgisMapLayer );
+#else
+    mMapNode->getMap()->addLayer( mQgisMapLayer );
+#endif
     updateLayers();
   }
 }
@@ -1194,7 +1210,11 @@ void GlobePlugin::reset()
   mActionToggleGlobe->blockSignals( true );
   mActionToggleGlobe->setChecked( false );
   mActionToggleGlobe->blockSignals( false );
+#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
   mMapNode->getMap()->removeImageLayer( mQgisMapLayer ); // abort any rendering
+#else
+  mMapNode->getMap()->removeLayer( mQgisMapLayer ); // abort any rendering
+#endif
   mTileSource->waitForFinished();
   mOsgViewer = 0;
   mMapNode = 0;
