@@ -631,9 +631,11 @@ void GlobePlugin::applyProjectSettings()
         mRootNode->removeChild( mMapNode );
       }
 
-      mSkyNode->setLighting( mSettingsDialog->getSkyAutoAmbience() ? osg::StateAttribute::ON : osg::StateAttribute::OFF );
-      double ambient = mSettingsDialog->getSkyMinAmbient();
+      mSkyNode->setLighting( osg::StateAttribute::ON );
+      double ambient = mSettingsDialog->getSkyAmbient();
+      double diffuse = mSettingsDialog->getSkyDiffuse();
       mSkyNode->getSunLight()->setAmbient( osg::Vec4( ambient, ambient, ambient, 1 ) );
+      mSkyNode->getSunLight()->setDiffuse( osg::Vec4( diffuse, diffuse, diffuse, 1 ) );
 
       QDateTime dateTime = mSettingsDialog->getSkyDateTime();
       mSkyNode->setDateTime( osgEarth::DateTime(

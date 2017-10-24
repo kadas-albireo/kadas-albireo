@@ -39,8 +39,8 @@ class QgsGlobePluginDialog: public QDialog, private Ui::QgsGlobePluginDialogGuiB
     QString getBaseLayerUrl() const;
     bool getSkyEnabled() const;
     QDateTime getSkyDateTime() const;
-    bool getSkyAutoAmbience() const;
-    double getSkyMinAmbient() const;
+    double getSkyAmbient() const;
+    double getSkyDiffuse() const;
     float getScrollSensitivity() const;
     bool getInvertScrollWheel() const;
     QList<LayerDataSource> getImageryDataSources() const;

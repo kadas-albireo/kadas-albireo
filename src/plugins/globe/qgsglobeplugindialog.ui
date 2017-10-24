@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>748</width>
-    <height>519</height>
+    <height>549</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -88,23 +88,13 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="checkBoxSkyAutoAmbient">
-            <property name="text">
-             <string>Ambient lighting</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
-           <widget class="QSlider" name="horizontalSliderMinAmbient">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
+           <widget class="QSlider" name="horizontalSliderAmbient">
             <property name="maximum">
              <number>100</number>
             </property>
             <property name="value">
-             <number>50</number>
+             <number>70</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -114,6 +104,33 @@
             </property>
             <property name="tickPosition">
              <enum>QSlider::NoTicks</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSlider" name="horizontalSliderDiffuse">
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>30</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Ambient lighting:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Diffuse lighting:</string>
             </property>
            </widget>
           </item>
