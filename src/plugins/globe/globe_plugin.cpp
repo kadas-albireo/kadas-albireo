@@ -438,9 +438,11 @@ void GlobePlugin::run()
 
   mViewerWidget = new osgEarth::QtGui::ViewerWidget( mOsgViewer );
   QGLFormat glf = QGLFormat::defaultFormat();
+#ifdef Q_OS_LINUX
 #ifdef OSG_GL3_FEATURES
   glf.setVersion( 4, 0 );
   glf.setProfile( QGLFormat::CoreProfile );
+#endif
 #endif
   if ( settings.value( "/Plugin-Globe/anti-aliasing", true ).toBool() &&
        settings.value( "/Plugin-Globe/anti-aliasing-level", "" ).toInt() > 0 )
