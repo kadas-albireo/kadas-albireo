@@ -907,21 +907,24 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
     textSymbol->haloOffset() = lyr.bufferSize;
   }
 
-//  osgEarth::RenderSymbol* renderSymbol = style.getOrCreateSymbol<osgEarth::RenderSymbol>();
-//  renderSymbol->lighting() = layerConfig->lightingEnabled;
-//  renderSymbol->backfaceCulling() = false;
-//  style.addSymbol( renderSymbol );
+  osgEarth::RenderSymbol* renderSymbol = style.getOrCreateSymbol<osgEarth::RenderSymbol>();
+#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
+  renderSymbol->transparent() = true;
+#endif
+  renderSymbol->backfaceCulling() = false;
+  style.addSymbol( renderSymbol );
 
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
   osgEarth::Features::FeatureModelLayerOptions opts;
-  opts.enableLighting() = true;
+  opts.enableLighting() = layerConfig->lightingEnabled;
   opts.featureSource() = featureOpt;
   opts.styles() = new osgEarth::StyleSheet();
   opts.styles()->addStyle( style );
-  opts.backfaceCulling() = false;
-  opts.featureIndexing()->enabled() = false;
-  opts.mergeGeometry() = false;
-  opts.optimize() = false;
+  opts.layout()->tileSize() = 1000;
+  opts.fading()->duration() = 2;
+  opts.fading()->maxRange() = 10000;
+  opts.fading()->attenuationDistance() = 1000;
+  opts.layout()->minExpiryTime() = -1;
 
   osgEarth::Features::FeatureModelLayer* nLayer = new osgEarth::Features::FeatureModelLayer( opts );
   nLayer->setName( vLayer->id().toStdString() );
@@ -931,15 +934,6 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   geomOpt.featureOptions() = featureOpt;
   geomOpt.styles() = new osgEarth::StyleSheet();
   geomOpt.styles()->addStyle( style );
-
-  geomOpt.featureIndexing() = osgEarth::Features::FeatureSourceIndexOptions();
-
-#if 0
-  osgEarth::Features::FeatureDisplayLayout layout;
-  layout.tileSizeFactor() = 45.0;
-  layout.addLevel( osgEarth::Features::FeatureLevel( 0.0f, 200000.0f ) );
-  geomOpt.layout() = layout;
-#endif
 
   osgEarth::ModelLayerOptions modelOptions( vLayer->id().toStdString(), geomOpt );
   modelOptions.lightingEnabled() = layerConfig->lightingEnabled;
