@@ -28,12 +28,12 @@ QgsMapRendererCustomPainterJob::QgsMapRendererCustomPainterJob( const QgsMapSett
     , mActive( false )
     , mRenderSynchronously( false )
 {
-  QgsDebugMsg( "QPAINTER construct" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER construct" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
 }
 
 QgsMapRendererCustomPainterJob::~QgsMapRendererCustomPainterJob()
 {
-  QgsDebugMsg( "QPAINTER destruct" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER destruct" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
   Q_ASSERT( !mFutureWatcher.isRunning() );
   //cancel();
 
@@ -52,9 +52,9 @@ void QgsMapRendererCustomPainterJob::start()
 
   mErrors.clear();
 
-  QgsDebugMsg( "QPAINTER run!" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER run!" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
 
-  QgsDebugMsg( "Preparing list of layer jobs for rendering" );
+  QgsDebugMsg( QString( "0x%1: Preparing list of layer jobs for rendering" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
   QTime prepareTime;
   prepareTime.start();
 
@@ -89,7 +89,7 @@ void QgsMapRendererCustomPainterJob::start()
   if ( !isActive() )
     return;
 
-  QgsDebugMsg( "Rendering prepared in (seconds): " + QString( "%1" ).arg( prepareTime.elapsed() / 1000.0 ) );
+  QgsDebugMsg( QString( "0x%1: Rendering prepared in (seconds): %2" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( prepareTime.elapsed() / 1000.0 ) );
 
   if ( mRenderSynchronously )
   {
@@ -110,11 +110,11 @@ void QgsMapRendererCustomPainterJob::cancel()
 {
   if ( !isActive() )
   {
-    QgsDebugMsg( "QPAINTER not running!" );
+    QgsDebugMsg( QString( "0x%1: QPAINTER not running!" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
     return;
   }
 
-  QgsDebugMsg( "QPAINTER cancelling" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER cancelling" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
   disconnect( &mFutureWatcher, SIGNAL( finished() ), this, SLOT( futureFinished() ) );
 
   mLabelingRenderContext.setRenderingStopped( true );
@@ -131,11 +131,11 @@ void QgsMapRendererCustomPainterJob::cancel()
   connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
   loop.exec();
 
-  QgsDebugMsg( QString( "QPAINER cancel waited %1 ms" ).arg( t.elapsed() / 1000.0 ) );
+  QgsDebugMsg( QString( "0x%1: QPAINER cancel waited %2 ms" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( t.elapsed() / 1000.0 ) );
 
   futureFinished();
 
-  QgsDebugMsg( "QPAINTER cancelled" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER cancelled" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
 }
 
 void QgsMapRendererCustomPainterJob::waitForFinished()
@@ -153,7 +153,7 @@ void QgsMapRendererCustomPainterJob::waitForFinished()
   connect( &mFutureWatcher, SIGNAL( finished() ), &loop, SLOT( quit() ) );
   loop.exec();
 
-  QgsDebugMsg( QString( "waitForFinished: %1 ms" ).arg( t.elapsed() / 1000.0 ) );
+  QgsDebugMsg( QString( "0x%1: waitForFinished: %2 ms" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( t.elapsed() / 1000.0 ) );
 
   futureFinished();
 }
@@ -191,7 +191,7 @@ void QgsMapRendererCustomPainterJob::futureFinished()
 {
   mActive = false;
   mRenderingTime = mRenderingStart.elapsed();
-  QgsDebugMsg( "QPAINTER futureFinished" );
+  QgsDebugMsg( QString( "0x%1: QPAINTER futureFinished" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
 
   // final cleanup
   cleanupJobs( mLayerJobs );
@@ -208,21 +208,21 @@ void QgsMapRendererCustomPainterJob::staticRender( QgsMapRendererCustomPainterJo
   }
   catch ( QgsException & e )
   {
-    QgsDebugMsg( "Caught unhandled QgsException: " + e.what() );
+    QgsDebugMsg( QString( "0x%1: Caught unhandled QgsException: %2" ).arg(( quintptr )self, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( e.what() ) );
   }
   catch ( std::exception & e )
   {
-    QgsDebugMsg( "Caught unhandled std::exception: " + QString::fromAscii( e.what() ) );
+    QgsDebugMsg( QString( "0x%1: Caught unhandled std::exception: %2" ).arg(( quintptr )self, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( QString::fromAscii( e.what() ) ) );
   }
   catch ( ... )
   {
-    QgsDebugMsg( "Caught unhandled unknown exception" );
+    QgsDebugMsg( QString( "0x%1: Caught unhandled unknown exception" ).arg(( quintptr )self, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
   }
 }
 
 void QgsMapRendererCustomPainterJob::doRender()
 {
-  QgsDebugMsg( "Starting to render layer stack." );
+  QgsDebugMsg( QString( "0x%1: Starting to render layer stack." ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
   QTime renderTime;
   renderTime.start();
 
@@ -251,12 +251,12 @@ void QgsMapRendererCustomPainterJob::doRender()
 
   }
 
-  QgsDebugMsg( "Done rendering map layers" );
+  QgsDebugMsg( QString( "0x%1: Done rendering map layers" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ) );
 
   if ( mSettings.testFlag( QgsMapSettings::DrawLabeling ) && !mLabelingRenderContext.renderingStopped() )
     drawLabeling( mSettings, mLabelingRenderContext, mLabelingEngine, mPainter );
 
-  QgsDebugMsg( "Rendering completed in (seconds): " + QString( "%1" ).arg( renderTime.elapsed() / 1000.0 ) );
+  QgsDebugMsg( QString( "0x%1: Rendering completed in (seconds): %2" ).arg(( quintptr )this, QT_POINTER_SIZE * 2, 16, QChar( '0' ) ).arg( renderTime.elapsed() / 1000.0 ) );
 }
 
 
