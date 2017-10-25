@@ -936,6 +936,10 @@ void GlobePlugin::addModelLayer( QgsVectorLayer* vLayer, QgsGlobeVectorLayerConf
   geomOpt.featureOptions() = featureOpt;
   geomOpt.styles() = new osgEarth::StyleSheet();
   geomOpt.styles()->addStyle( style );
+  geomOpt.layout()->tileSize() = 1000;
+  geomOpt.fading()->duration() = 2;
+  geomOpt.fading()->maxRange() = 10000;
+  geomOpt.fading()->attentuationDistance() = 1000;
 
   osgEarth::ModelLayerOptions modelOptions( vLayer->id().toStdString(), geomOpt );
   modelOptions.lightingEnabled() = layerConfig->lightingEnabled;
