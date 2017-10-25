@@ -2267,7 +2267,6 @@ void QgsComposerMap::drawCanvasItems( QPainter* painter, const QStyleOptionGraph
     QString annotationLayerId = currentItem->data( 999 ).toString();
     if ( !annotationLayerId.isEmpty() && !theLayerSet.contains( annotationLayerId ) )
     {
-      QTextStream( stdout ) << "Skipping annotation item of invisible layer " << annotationLayerId << endl;
       continue;
     }
 
