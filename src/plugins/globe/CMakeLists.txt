@@ -16,7 +16,6 @@ SET (GLOBE_PLUGIN_SRCS
     globe_plugin.cpp
     qgsglobetilesource.cpp
     qgsglobeplugindialog.cpp
-    qgsglobeinterface.cpp
     qgsglobevectorlayerproperties.cpp
     qgsglobefeatureidentify.cpp
     qgsglobefrustumhighlight.cpp
@@ -31,14 +30,12 @@ SET (GLOBE_PLUGIN_UIS
 SET (GLOBE_PLUGIN_MOC_HDRS
     globe_plugin.h
     qgsglobeplugindialog.h
-    qgsglobeinterface.h
     qgsglobevectorlayerproperties.h
     qgsglobetilesource.h
     qgsglobewidget.h
 )
 
 SET (GLOBE_PLUGIN_HDRS
-    qgsglobeinterface.h
     qgsglobevectorlayerproperties.h
     qgsglobefeatureidentify.h
     qgsglobefrustumhighlight.h
@@ -55,13 +52,13 @@ ELSE(WIN32)
     ADD_DEFINITIONS("-DGLOBE_EXPORT=")
 ENDIF(WIN32)
 
-QT4_WRAP_UI (GLOBE_PLUGIN_UIS_H  ${GLOBE_PLUGIN_UIS})
+QT4_WRAP_UI (GLOBE_PLUGIN_UIS_H ${GLOBE_PLUGIN_UIS})
 
-QT4_WRAP_CPP (GLOBE_PLUGIN_MOC_SRCS  ${GLOBE_PLUGIN_MOC_HDRS})
+QT4_WRAP_CPP (GLOBE_PLUGIN_MOC_SRCS ${GLOBE_PLUGIN_MOC_HDRS})
 
 QT4_ADD_RESOURCES(GLOBE_PLUGIN_RCC_SRCS ${GLOBE_PLUGIN_RCCS})
 
-ADD_LIBRARY (globeplugin SHARED ${GLOBE_PLUGIN_SRCS} ${GLOBE_PLUGIN_MOC_SRCS} ${GLOBE_PLUGIN_RCC_SRCS} ${GLOBE_PLUGIN_UIS_H} ${GLOBE_PLUGIN_HDRS})
+ADD_LIBRARY (globeplugin SHARED ${GLOBE_PLUGIN_SRCS} ${GLOBE_PLUGIN_MOC_HDRS} ${GLOBE_PLUGIN_MOC_SRCS} ${GLOBE_PLUGIN_RCC_SRCS} ${GLOBE_PLUGIN_UIS_H} ${GLOBE_PLUGIN_HDRS})
 
 INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
@@ -95,9 +92,6 @@ TARGET_LINK_LIBRARIES(globeplugin
   ${OPENTHREADS_LIBRARY}
 )
 
-#IF (WITH_BINDINGS)
-#    ADD_SUBDIRECTORY(python)
-#ENDIF (WITH_BINDINGS)
 ADD_SUBDIRECTORY(featuresource)
 
 ########################################################

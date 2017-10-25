@@ -24,39 +24,26 @@
 #include <osg/ref_ptr>
 #include <osgEarth/Version>
 
-#include "qgsglobeinterface.h"
 #include "qgsglobeplugindialog.h"
 #include "qgsrectangle.h"
 
 class QAction;
-class QDateTime;
-class QDockWidget;
-class QgsAnnotationItem;
 class QgsBillBoardItem;
-class QgsGlobeAnnotation;
 class QgsGlobeLayerPropertiesFactory;
-class QgsGlobeInterface;
 class QgsGlobePluginDialog;
 class QgsGlobeWidget;
 class QgsMapLayer;
-class QgsPoint;
-class QgsRectangle;
 class QgsGlobeFrustumHighlightCallback;
 class QgsGlobeFeatureIdentifyCallback;
 class QgsGlobeTileSource;
 class QgsGlobeVectorLayerConfig;
 
-namespace osg
-{
-  class Group;
-  class Vec3d;
-}
+namespace osg { class Group; }
 namespace osgViewer { class Viewer; }
 
 namespace osgEarth
 {
   class GeoPoint;
-  class GeoExtent;
   class ImageLayer;
   class MapNode;
   namespace Annotation { class PlaceNode; }
@@ -85,37 +72,21 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     GlobePlugin( QgisInterface* theQgisInterface );
     ~GlobePlugin();
 
-    //! offer an interface for python plugins
-    virtual QgsPluginInterface* pluginInterface();
     //! init the gui
     virtual void initGui() override;
     //! unload the plugin
     void unload() override;
+
+    //! Get OSG map node
+    osgEarth::MapNode* mapNode() { return mMapNode; }
 
     //! Enable or disable frustum highlight
     void enableFrustumHighlight( bool statu );
     //! Enable or disable feature identification
     void enableFeatureIdentification( bool status );
 
-    //! set the globe coordinates of a user right-click on the globe
-    void setSelectedCoordinates( const osg::Vec3d& coords );
-    //! get a coordinates vector
-    osg::Vec3d getSelectedCoordinates();
     //! emits signal with current mouse coordinates
     void showCurrentCoordinates( const osgEarth::GeoPoint &geoPoint );
-    //! get longitude of user right click
-    double getSelectedLon() const { return mSelectedLon; }
-    //! get latitude of user right click
-    double getSelectedLat() const { return mSelectedLat; }
-    //! get elevation of user right click
-    double getSelectedElevation() { return mSelectedElevation; }
-
-    //! Get the OSG viewer
-    osgViewer::Viewer* osgViewer() { return mOsgViewer; }
-    //! Get OSG map node
-    osgEarth::MapNode* mapNode() { return mMapNode; }
-
-    QgisInterface* qgisIface() const { return mQGisIface; }
 
   public slots:
     void run();
@@ -131,8 +102,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     QgsGlobeWidget* mDockWidget;
     QgsGlobePluginDialog* mSettingsDialog;
 
-    QgsGlobeInterface mGlobeInterface;
-    QString mBaseLayerUrl;
     QList<QgsGlobePluginDialog::LayerDataSource> mImagerySources;
     QList<QgsGlobePluginDialog::LayerDataSource> mElevationSources;
     double mSelectedLat, mSelectedLon, mSelectedElevation;
@@ -141,7 +110,6 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
     osg::ref_ptr<osgEarth::MapNode> mMapNode;
     osg::ref_ptr<osg::Group> mRootNode;
     osg::ref_ptr<osgEarth::Util::SkyNode> mSkyNode;
-    osg::ref_ptr<osgEarth::ImageLayer> mBaseLayer;
     osg::ref_ptr<osgEarth::ImageLayer> mQgisMapLayer;
     osg::ref_ptr<QgsGlobeTileSource> mTileSource;
     QMap<QString, QgsRectangle> mLayerExtents;

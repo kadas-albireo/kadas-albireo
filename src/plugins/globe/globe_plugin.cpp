@@ -16,10 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-// Include this first to avoid _POSIX_C_SOURCE redefined warnings
-// see http://bytes.com/topic/python/answers/30009-warning-_posix_c_source-redefined
-#include "qgsglobeinterface.h"
-
 #include "globe_plugin.h"
 #include "qgsglobeplugindialog.h"
 #include "qgsglobefeatureidentify.h"
@@ -31,22 +27,17 @@
 
 #include <qgisinterface.h>
 #include <qgisgui.h>
+#include <qgsapplication.h>
+#include <qgsbillboardregistry.h>
 #include <qgscrscache.h>
 #include <qgslogger.h>
-#include <qgsapplication.h>
 #include <qgsmapcanvas.h>
-#include <qgsvectorlayer.h>
 #include <qgsmaplayerregistry.h>
-#include <qgsfeature.h>
-#include <qgsgeometry.h>
-#include <qgspoint.h>
+#include <qgspallabeling.h>
 #include <qgsdistancearea.h>
+#include <qgsvectorlayer.h>
 #include <symbology-ng/qgsrendererv2.h>
 #include <symbology-ng/qgssymbolv2.h>
-#include <qgspallabeling.h>
-#include <qgssvgannotationitem.h>
-#include <qgsgeoimageannotationitem.h>
-#include <qgsbillboardregistry.h>
 
 #include <QAction>
 #include <QDir>
@@ -55,7 +46,6 @@
 
 #include <osg/GL>
 #include <osg/Light>
-#include <osgDB/ReadFile>
 #include <osgDB/Registry>
 
 #include <osgGA/StateSetManipulator>
@@ -65,39 +55,25 @@
 #include <osgViewer/ViewerEventHandlers>
 #include <osgEarthQt/ViewerWidget>
 #include <osgEarth/ElevationQuery>
+#include <osgEarth/ImageLayer>
 #include <osgEarth/Notify>
 #include <osgEarth/Map>
 #include <osgEarth/MapNode>
 #include <osgEarth/Registry>
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL(2, 8, 0)
-#include <osgEarth/TerrainEngineNode>
-#endif
-#include <osgEarth/TileSource>
-#include <osgEarth/Version>
 #include <osgEarthAnnotation/AnnotationSettings>
 #include <osgEarthAnnotation/PlaceNode>
-#include <osgEarthDrivers/engine_mp/MPTerrainEngineOptions>
+#include <osgEarthUtil/AutoClipPlaneHandler>
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
-#if OSGEARTH_VERSION_LESS_THAN( 2, 6, 0 )
-#include <osgEarthUtil/SkyNode>
-#else
+#include <osgEarthUtil/FeatureQueryTool>
 #include <osgEarthUtil/Sky>
-#endif
-#include <osgEarthUtil/AutoClipPlaneHandler>
+#include <osgEarthUtil/VerticalScale>
+#include <osgEarthDrivers/engine_mp/MPTerrainEngineNode>
 #include <osgEarthDrivers/gdal/GDALOptions>
+#include <osgEarthDrivers/model_feature_geom/FeatureGeomModelOptions>
 #include <osgEarthDrivers/tms/TMSOptions>
 #include <osgEarthDrivers/wms/WMSOptions>
 
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 2, 0 )
-#include <osgEarthDrivers/cache_filesystem/FileSystemCache>
-#endif
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 5, 0 )
-#include <osgEarthUtil/VerticalScale>
-#endif
-#include <osgEarthDrivers/model_feature_geom/FeatureGeomModelOptions>
-#include <osgEarthUtil/FeatureQueryTool>
-#include <osgEarthFeatures/FeatureDisplayLayout>
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
 #include <osgEarthFeatures/FeatureModelLayer>
 #endif
@@ -145,18 +121,6 @@ class HomeControlHandler : public NavigationControlHandler
     }
   private:
     osg::observer_ptr<osgEarth::Util::EarthManipulator> _manip;
-};
-
-class SyncExtentControlHandler : public NavigationControlHandler
-{
-  public:
-    SyncExtentControlHandler( GlobePlugin* globe ) : mGlobe( globe ) { }
-    virtual void onClick( const osgGA::GUIEventAdapter& /*ea*/, osgGA::GUIActionAdapter& /*aa*/ ) override
-    {
-      mGlobe->syncExtent();
-    }
-  private:
-    GlobePlugin* mGlobe;
 };
 
 class PanControlHandler : public NavigationControlHandler
@@ -246,7 +210,6 @@ GlobePlugin::GlobePlugin( QgisInterface* theQgisInterface )
     , mViewerWidget( 0 )
     , mDockWidget( 0 )
     , mSettingsDialog( 0 )
-    , mGlobeInterface( this )
     , mSelectedLat( 0. )
     , mSelectedLon( 0. )
     , mSelectedElevation( 0. )
@@ -365,12 +328,7 @@ void GlobePlugin::run()
   }
   else
   {
-    osgEarth::Drivers::FileSystemCacheOptions cacheOptions;
-    cacheOptions.rootPath() = QgsApplication::cacheDir().toStdString();
-
-    osgEarth::MapOptions mapOptions;
-    mapOptions.cache() = cacheOptions;
-    osgEarth::Map *map = new osgEarth::Map( /*mapOptions*/ );
+    osgEarth::Map *map = new osgEarth::Map();
     const osgEarth::Profile* profile = map->getProfile();
     QgsDebugMsg( profile->getSRS()->getName().c_str() );
 
@@ -681,19 +639,6 @@ void GlobePlugin::showCurrentCoordinates( const osgEarth::GeoPoint& geoPoint )
 {
   osg::Vec3d pos = geoPoint.vec3d();
   emit xyCoordinates( QgsCoordinateTransformCache::instance()->transform( GEO_EPSG_CRS_AUTHID, mQGisIface->mapCanvas()->mapSettings().destinationCrs().authid() )->transform( QgsPoint( pos.x(), pos.y() ) ) );
-}
-
-void GlobePlugin::setSelectedCoordinates( const osg::Vec3d &coords )
-{
-  mSelectedLon = coords.x();
-  mSelectedLat = coords.y();
-  mSelectedElevation = coords.z();
-  emit newCoordinatesSelected( QgsPoint( mSelectedLon, mSelectedLat ) );
-}
-
-osg::Vec3d GlobePlugin::getSelectedCoordinates()
-{
-  return osg::Vec3d( mSelectedLon, mSelectedLat, mSelectedElevation );
 }
 
 void GlobePlugin::syncExtent()
@@ -1220,8 +1165,6 @@ void GlobePlugin::reset()
   mMapNode = 0;
   mRootNode = 0;
   mSkyNode = 0;
-  mBaseLayer = 0;
-  mBaseLayerUrl.clear();
   mQgisMapLayer = 0;
   mTileSource = 0;
   mVerticalScale = 0;
@@ -1414,9 +1357,4 @@ QGISEXTERN QString experimental()
 QGISEXTERN void unload( QgisPlugin * thePluginPointer )
 {
   delete thePluginPointer;
-}
-
-QgsPluginInterface* GlobePlugin::pluginInterface()
-{
-  return &mGlobeInterface;
 }
