@@ -312,64 +312,47 @@ void GlobePlugin::run()
   connect( mDockWidget, SIGNAL( syncExtent() ), this, SLOT( syncExtent() ) );
   mQGisIface->addDockWidget( Qt::RightDockWidgetArea, mDockWidget );
 
-  if ( getenv( "GLOBE_MAPXML" ) )
-  {
-    char* mapxml = getenv( "GLOBE_MAPXML" );
-    QgsDebugMsg( mapxml );
-    osg::Node* node = osgDB::readNodeFile( mapxml );
-    if ( !node )
-    {
-      QgsDebugMsg( "Failed to load earth file " );
-      return;
-    }
-    mMapNode = osgEarth::MapNode::findMapNode( node );
-    mRootNode = new osg::Group();
-    mRootNode->addChild( node );
-  }
-  else
-  {
-    osgEarth::Map *map = new osgEarth::Map();
-    const osgEarth::Profile* profile = map->getProfile();
-    QgsDebugMsg( profile->getSRS()->getName().c_str() );
 
-    // The MapNode will render the Map object in the scene graph.
-    osgEarth::MapNodeOptions mapNodeOptions;
-    mMapNode = new osgEarth::MapNode( map, mapNodeOptions );
+  osgEarth::Map *map = new osgEarth::Map();
+  const osgEarth::Profile* profile = map->getProfile();
+  QgsDebugMsg( profile->getSRS()->getName().c_str() );
 
-    mRootNode = new osg::Group();
-    mRootNode->addChild( mMapNode );
+  // The MapNode will render the Map object in the scene graph.
+  osgEarth::MapNodeOptions mapNodeOptions;
+  mMapNode = new osgEarth::MapNode( map, mapNodeOptions );
 
-    osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
+  mRootNode = new osg::Group();
+  mRootNode->addChild( mMapNode );
 
-    // Add draped layer
-    osgEarth::TileSourceOptions opts;
-    opts.L2CacheSize() = 0;
+  osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
+
+  // Add draped layer
+  osgEarth::TileSourceOptions opts;
+  opts.L2CacheSize() = 0;
 #if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
-    opts.tileSize() = 128;
+  opts.tileSize() = 128;
 #endif
-    mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
+  mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-    mTileSource->open();
+  mTileSource->open();
 #endif
 
-    osgEarth::ImageLayerOptions options( "QGIS" );
-    options.driver()->L2CacheSize() = 0;
+  osgEarth::ImageLayerOptions options( "QGIS" );
+  options.driver()->L2CacheSize() = 0;
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-    options.tileSize() = 128;
+  options.tileSize() = 128;
 #endif
-    options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
-    mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
+  options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
+  mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
 #if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-    map->addLayer( mQgisMapLayer );
+  map->addLayer( mQgisMapLayer );
 #else
-    map->addImageLayer( mQgisMapLayer );
+  map->addImageLayer( mQgisMapLayer );
 #endif
 
-
-    // Create the frustum highlight callback
-    mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
-      mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
-  }
+  // Create the frustum highlight callback
+  mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
+    mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
 
   mRootNode->addChild( osgEarth::Util::Controls::ControlCanvas::get( mOsgViewer ) );
 
@@ -474,7 +457,7 @@ void GlobePlugin::applySettings()
 
 void GlobePlugin::applyProjectSettings()
 {
-  if ( mOsgViewer && !getenv( "GLOBE_MAPXML" ) )
+  if ( mOsgViewer )
   {
     // Imagery settings
     QList<QgsGlobePluginDialog::LayerDataSource> imageryDataSources = mSettingsDialog->getImageryDataSources();
