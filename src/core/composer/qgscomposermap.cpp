@@ -173,6 +173,13 @@ void QgsComposerMap::adjustExtentToItemShape( double itemWidth, double itemHeigh
 
 QgsComposerMap::~QgsComposerMap()
 {
+  if ( mPainterJob )
+  {
+    disconnect( mPainterJob, SIGNAL( finished() ), this, SLOT( painterJobFinished() ) );
+    mPainterJob->cancel();
+    delete mPainterJob;
+    delete mPainter;
+  }
   delete mOverviewStack;
   delete mGridStack;
 }
