@@ -326,30 +326,6 @@ void GlobePlugin::run()
 
   osgEarth::Registry::instance()->unRefImageDataAfterApply() = false;
 
-  // Add draped layer
-  osgEarth::TileSourceOptions opts;
-  opts.L2CacheSize() = 0;
-#if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
-  opts.tileSize() = 128;
-#endif
-  mTileSource = new QgsGlobeTileSource( mQGisIface->mapCanvas(), opts );
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-  mTileSource->open();
-#endif
-
-  osgEarth::ImageLayerOptions options( "QGIS" );
-  options.driver()->L2CacheSize() = 0;
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-  options.tileSize() = 128;
-#endif
-  options.cachePolicy() = osgEarth::CachePolicy::USAGE_NO_CACHE;
-  mQgisMapLayer = new osgEarth::ImageLayer( options, mTileSource );
-#if OSGEARTH_VERSION_GREATER_OR_EQUAL( 2, 9, 0 )
-  map->addLayer( mQgisMapLayer );
-#else
-  map->addImageLayer( mQgisMapLayer );
-#endif
-
   // Create the frustum highlight callback
   mFrustumHighlightCallback = new QgsGlobeFrustumHighlightCallback(
     mOsgViewer, mMapNode->getTerrain(), mQGisIface->mapCanvas(), QColor( 0, 0, 0, 50 ) );
@@ -410,7 +386,7 @@ void GlobePlugin::run()
   connect( timer, SIGNAL( timeout() ), timer, SLOT( deleteLater() ) );
   connect( timer2, SIGNAL( timeout() ), timer2, SLOT( deleteLater() ) );
   connect( timer, SIGNAL( timeout() ), this, SLOT( applySettings() ) );
-  connect( timer2, SIGNAL( timeout() ), this, SLOT( updateLayers() ) );
+  connect( timer2, SIGNAL( timeout() ), this, SLOT( rebuildQGISLayer() ) );
   timer->start( 0 );
   timer2->start( 100 );
 }
@@ -1049,11 +1025,14 @@ void GlobePlugin::rebuildQGISLayer()
 {
   if ( mMapNode )
   {
+    if ( mQgisMapLayer )
+    {
 #if OSGEARTH_VERSION_LESS_THAN( 2, 9, 0 )
-    mMapNode->getMap()->removeImageLayer( mQgisMapLayer );
+      mMapNode->getMap()->removeImageLayer( mQgisMapLayer );
 #else
-    mMapNode->getMap()->removeLayer( mQgisMapLayer );
+      mMapNode->getMap()->removeLayer( mQgisMapLayer );
 #endif
+    }
     mLayerExtents.clear();
 
     osgEarth::TileSourceOptions opts;
