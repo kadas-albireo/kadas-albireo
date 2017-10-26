@@ -9516,7 +9516,7 @@ Chyba GEOS geoprocessingu: jeden nebo více vstupních prvků mají neplatnou ge
 <context>
     <name>GlobePlugin</name>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="287"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="250"/>
         <source>Launch Globe</source>
         <translation>Spustit glóbus</translation>
     </message>
@@ -9541,8 +9541,8 @@ Chyba GEOS geoprocessingu: jeden nebo více vstupních prvků mají neplatnou ge
         <translation type="obsolete">Vypnout glóbus</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="290"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1249"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="253"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1160"/>
         <source>&amp;Globe</source>
         <translation>&amp;Glóbus</translation>
     </message>
@@ -16646,7 +16646,7 @@ Tuto zprávu vidíte nejspíš proto, že nemáte nastavenou proměnnou DISPLAY.
         <location filename="../src/app/qgspluginregistry.cpp" line="559"/>
         <location filename="../src/app/qgspluginregistry.cpp" line="591"/>
         <location filename="../src/plugins/compass/qgscompassplugin.cpp" line="37"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="109"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="85"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="990"/>
         <source>Plugins</source>
         <translation>Zásuvné moduly</translation>
@@ -18260,7 +18260,7 @@ Pouze %1 z %2 prvků zapsáno.</translation>
         <location filename="../src/plugins/coordinate_capture/coordinatecapture.cpp" line="54"/>
         <location filename="../src/plugins/crash/crash_plugin.h" line="30"/>
         <location filename="../src/plugins/dxf2shp_converter/dxf2shpconverter.cpp" line="39"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="110"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="86"/>
         <location filename="../src/plugins/gps_importer/qgsgpsplugin.cpp" line="54"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="51"/>
         <location filename="../src/plugins/iam_auth/iamauth_plugin.h" line="24"/>
@@ -18414,12 +18414,12 @@ Pouze %1 z %2 prvků zapsáno.</translation>
         <translation>Aplikace projektivní transformace vyžaduje alespoň 4 odpovídající body.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="107"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="83"/>
         <source>Globe</source>
         <translation>Globus</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="108"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="84"/>
         <source>Overlay data on a 3D globe</source>
         <translation>Překrýt data přes 3D globus</translation>
     </message>
@@ -28775,24 +28775,24 @@ Měly by být existující třídy před klasifikací smazány?</translation>
     <name>QgsComposerMap</name>
     <message>
         <location filename="../src/core/composer/qgscomposermap.cpp" line="148"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="2057"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="2064"/>
         <source>Map %1</source>
         <translation>Mapa %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="369"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="376"/>
         <source>Map will be printed here</source>
         <translation>Zde bude vytištěna mapa</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1430"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1603"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1437"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1610"/>
         <source>Grid %1</source>
         <translation>Mřížka %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1492"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1920"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1499"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1927"/>
         <source>Overview %1</source>
         <translation>Náhled %1</translation>
     </message>
@@ -47835,6 +47835,11 @@ To může být problém vašeho síťového nastavení nebo WMS serveru.</numeru
     <message>
         <location filename="../src/app/qgsmeasuretoolv2.cpp" line="55"/>
         <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmeasuretoolv2.cpp" line="74"/>
+        <source>North:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

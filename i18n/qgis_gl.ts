@@ -9523,7 +9523,7 @@ Erro de xeoprocesamento GEOS: unha ou máis entidades de entrada teñen xeometr�
 <context>
     <name>GlobePlugin</name>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="287"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="250"/>
         <source>Launch Globe</source>
         <translation>Comezar Globo</translation>
     </message>
@@ -9548,8 +9548,8 @@ Erro de xeoprocesamento GEOS: unha ou máis entidades de entrada teñen xeometr�
         <translation type="obsolete">Non cargar Globo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="290"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1249"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="253"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1160"/>
         <source>&amp;Globe</source>
         <translation>&amp;Globo</translation>
     </message>
@@ -16665,7 +16665,7 @@ Está vendo esta mensaxe porque seguramente non estableceu o conxunto das variab
         <location filename="../src/app/qgspluginregistry.cpp" line="559"/>
         <location filename="../src/app/qgspluginregistry.cpp" line="591"/>
         <location filename="../src/plugins/compass/qgscompassplugin.cpp" line="37"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="109"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="85"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="990"/>
         <source>Plugins</source>
         <translation>Plugins</translation>
@@ -18280,7 +18280,7 @@ Só %1 de %2 entidades escritas.</translation>
         <location filename="../src/plugins/coordinate_capture/coordinatecapture.cpp" line="54"/>
         <location filename="../src/plugins/crash/crash_plugin.h" line="30"/>
         <location filename="../src/plugins/dxf2shp_converter/dxf2shpconverter.cpp" line="39"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="110"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="86"/>
         <location filename="../src/plugins/gps_importer/qgsgpsplugin.cpp" line="54"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="51"/>
         <location filename="../src/plugins/iam_auth/iamauth_plugin.h" line="24"/>
@@ -18434,12 +18434,12 @@ Só %1 de %2 entidades escritas.</translation>
         <translation>Axustar unha transformación proxectiva require polo menos 4 puntos correspondentes.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="107"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="83"/>
         <source>Globe</source>
         <translation>Globo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="108"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="84"/>
         <source>Overlay data on a 3D globe</source>
         <translation>Suporpoñer datos nun globo 3D</translation>
     </message>
@@ -28860,24 +28860,24 @@ Ténteo cunha resolución baixa ou cun tamaño de papel menor</translation>
     <name>QgsComposerMap</name>
     <message>
         <location filename="../src/core/composer/qgscomposermap.cpp" line="148"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="2057"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="2064"/>
         <source>Map %1</source>
         <translation>Mapa %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="369"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="376"/>
         <source>Map will be printed here</source>
         <translation>O mapa será impreso aquí</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1430"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1603"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1437"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1610"/>
         <source>Grid %1</source>
         <translation>Grade %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1492"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1920"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1499"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1927"/>
         <source>Overview %1</source>
         <translation>Vista xeral %1</translation>
     </message>
@@ -47993,6 +47993,11 @@ Isto pode ser un problema de conexión da súa rede ou do servidor WMS.</numerus
     <message>
         <location filename="../src/app/qgsmeasuretoolv2.cpp" line="55"/>
         <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmeasuretoolv2.cpp" line="74"/>
+        <source>North:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

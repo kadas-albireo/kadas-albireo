@@ -9501,7 +9501,7 @@ GEOS geoprocessing error: One or more input features have invalid geometry.</sou
 <context>
     <name>GlobePlugin</name>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="287"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="250"/>
         <source>Launch Globe</source>
         <translation>Pokreni Globus</translation>
     </message>
@@ -9526,8 +9526,8 @@ GEOS geoprocessing error: One or more input features have invalid geometry.</sou
         <translation type="obsolete">Zatvori Globus</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="290"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1249"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="253"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1160"/>
         <source>&amp;Globe</source>
         <translation>&amp;Globus</translation>
     </message>
@@ -16539,7 +16539,7 @@ Vjerovatno vidite ovu poruku jer niste postavili varijablu DISPLAY .</translatio
         <location filename="../src/app/qgspluginregistry.cpp" line="559"/>
         <location filename="../src/app/qgspluginregistry.cpp" line="591"/>
         <location filename="../src/plugins/compass/qgscompassplugin.cpp" line="37"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="109"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="85"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="990"/>
         <source>Plugins</source>
         <translation>Dodaci</translation>
@@ -18154,7 +18154,7 @@ Samo %1 od %2 objekata je zapisano.</translation>
         <location filename="../src/plugins/coordinate_capture/coordinatecapture.cpp" line="54"/>
         <location filename="../src/plugins/crash/crash_plugin.h" line="30"/>
         <location filename="../src/plugins/dxf2shp_converter/dxf2shpconverter.cpp" line="39"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="110"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="86"/>
         <location filename="../src/plugins/gps_importer/qgsgpsplugin.cpp" line="54"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="51"/>
         <location filename="../src/plugins/iam_auth/iamauth_plugin.h" line="24"/>
@@ -18308,12 +18308,12 @@ Samo %1 od %2 objekata je zapisano.</translation>
         <translation>Projekcijska transformacija zahtijeva najmanje 4 odgovarajuće tačke.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="107"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="83"/>
         <source>Globe</source>
         <translation>Globus</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="108"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="84"/>
         <source>Overlay data on a 3D globe</source>
         <translation>Preklopi podatke preko 3D globusa</translation>
     </message>
@@ -28608,24 +28608,24 @@ Pokušajte sa nižom rezolucijom ili manjom veličinom papira</translation>
     <name>QgsComposerMap</name>
     <message>
         <location filename="../src/core/composer/qgscomposermap.cpp" line="148"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="2057"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="2064"/>
         <source>Map %1</source>
         <translation>Karta %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="369"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="376"/>
         <source>Map will be printed here</source>
         <translation>Karta će se ovdje štampati</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1430"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1603"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1437"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1610"/>
         <source>Grid %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1492"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1920"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1499"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1927"/>
         <source>Overview %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -47665,6 +47665,11 @@ Ovo može biti problem do vaše mrežne konekcije ili na WMS serveru.</numerusfo
     <message>
         <location filename="../src/app/qgsmeasuretoolv2.cpp" line="55"/>
         <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmeasuretoolv2.cpp" line="74"/>
+        <source>North:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

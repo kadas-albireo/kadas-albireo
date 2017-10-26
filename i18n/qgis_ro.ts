@@ -9521,7 +9521,7 @@ GEOS Eroare de geoprocesare: Una sau mai multe entități de intrare au geometri
 <context>
     <name>GlobePlugin</name>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="287"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="250"/>
         <source>Launch Globe</source>
         <translation>Lansare glob</translation>
     </message>
@@ -9546,8 +9546,8 @@ GEOS Eroare de geoprocesare: Una sau mai multe entități de intrare au geometri
         <translation type="obsolete">Descărcare glob</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="290"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1249"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="253"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1160"/>
         <source>&amp;Globe</source>
         <translation>&amp;Glob</translation>
     </message>
@@ -16659,7 +16659,7 @@ Vedeți acest mesaj pentru că, cel mai probabil, nu ați setat variabila de med
         <location filename="../src/app/qgspluginregistry.cpp" line="559"/>
         <location filename="../src/app/qgspluginregistry.cpp" line="591"/>
         <location filename="../src/plugins/compass/qgscompassplugin.cpp" line="37"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="109"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="85"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="990"/>
         <source>Plugins</source>
         <translation>Plugin-uri</translation>
@@ -18275,7 +18275,7 @@ Doar %1 din %2 entități au fost scrise.</translation>
         <location filename="../src/plugins/coordinate_capture/coordinatecapture.cpp" line="54"/>
         <location filename="../src/plugins/crash/crash_plugin.h" line="30"/>
         <location filename="../src/plugins/dxf2shp_converter/dxf2shpconverter.cpp" line="39"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="110"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="86"/>
         <location filename="../src/plugins/gps_importer/qgsgpsplugin.cpp" line="54"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="51"/>
         <location filename="../src/plugins/iam_auth/iamauth_plugin.h" line="24"/>
@@ -18429,12 +18429,12 @@ Doar %1 din %2 entități au fost scrise.</translation>
         <translation>Potrivirea unei transformări proiective necesită cel puțin 4 puncte corespunzătoare.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="107"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="83"/>
         <source>Globe</source>
         <translation>Glob</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="108"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="84"/>
         <source>Overlay data on a 3D globe</source>
         <translation>Suprapunere date pe un glob 3D</translation>
     </message>
@@ -28858,24 +28858,24 @@ Vă rog să încercați cu o rezoluție minimă sau mai mică a hârtiei</transl
     <name>QgsComposerMap</name>
     <message>
         <location filename="../src/core/composer/qgscomposermap.cpp" line="148"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="2057"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="2064"/>
         <source>Map %1</source>
         <translation>Harta %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="369"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="376"/>
         <source>Map will be printed here</source>
         <translation>Harta va fi imprimată aici</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1430"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1603"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1437"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1610"/>
         <source>Grid %1</source>
         <translation>Grila %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1492"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1920"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1499"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1927"/>
         <source>Overview %1</source>
         <translation>Vedere generală %1</translation>
     </message>
@@ -47964,6 +47964,11 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <location filename="../src/app/qgsmeasuretoolv2.cpp" line="55"/>
         <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmeasuretoolv2.cpp" line="74"/>
+        <source>North:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

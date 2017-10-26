@@ -9515,7 +9515,7 @@ GEOS 공간 연산 오류: 하나 이상의 객체의 지오메트리가 잘못�
 <context>
     <name>GlobePlugin</name>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="287"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="250"/>
         <source>Launch Globe</source>
         <translation>지구본 띠우기</translation>
     </message>
@@ -9540,8 +9540,8 @@ GEOS 공간 연산 오류: 하나 이상의 객체의 지오메트리가 잘못�
         <translation type="obsolete">지구본 내리기</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="290"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1249"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="253"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1160"/>
         <source>&amp;Globe</source>
         <translation>지구본(&amp;G)</translation>
     </message>
@@ -16640,7 +16640,7 @@ You are seeing this message most likely because you have no DISPLAY environment 
         <location filename="../src/app/qgspluginregistry.cpp" line="559"/>
         <location filename="../src/app/qgspluginregistry.cpp" line="591"/>
         <location filename="../src/plugins/compass/qgscompassplugin.cpp" line="37"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="109"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="85"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="990"/>
         <source>Plugins</source>
         <translation>플러그인</translation>
@@ -18253,7 +18253,7 @@ Only %1 of %2 features written.</source>
         <location filename="../src/plugins/coordinate_capture/coordinatecapture.cpp" line="54"/>
         <location filename="../src/plugins/crash/crash_plugin.h" line="30"/>
         <location filename="../src/plugins/dxf2shp_converter/dxf2shpconverter.cpp" line="39"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="110"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="86"/>
         <location filename="../src/plugins/gps_importer/qgsgpsplugin.cpp" line="54"/>
         <location filename="../src/plugins/grass/qgsgrassplugin.cpp" line="51"/>
         <location filename="../src/plugins/iam_auth/iamauth_plugin.h" line="24"/>
@@ -18407,12 +18407,12 @@ Only %1 of %2 features written.</source>
         <translation>투영 변환을 위해서는 위해서는 적어도 4개의 대응점이 필요합니다.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="107"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="83"/>
         <source>Globe</source>
         <translation>지구본</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="108"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="84"/>
         <source>Overlay data on a 3D globe</source>
         <translation>3차원 지구본에 데이터 보이기</translation>
     </message>
@@ -28824,24 +28824,24 @@ Please try a lower resolution or a smaller papersize</source>
     <name>QgsComposerMap</name>
     <message>
         <location filename="../src/core/composer/qgscomposermap.cpp" line="148"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="2057"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="2064"/>
         <source>Map %1</source>
         <translation>지도 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="369"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="376"/>
         <source>Map will be printed here</source>
         <translation>여기에 지도 인쇄 예정</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1430"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1603"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1437"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1610"/>
         <source>Grid %1</source>
         <translation>격자 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1492"/>
-        <location filename="../src/core/composer/qgscomposermap.cpp" line="1920"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1499"/>
+        <location filename="../src/core/composer/qgscomposermap.cpp" line="1927"/>
         <source>Overview %1</source>
         <translation>오버뷰 %1</translation>
     </message>
@@ -47899,6 +47899,11 @@ This may be a problem in your network connection or at the WMS server.</source>
     <message>
         <location filename="../src/app/qgsmeasuretoolv2.cpp" line="55"/>
         <source>Angular Mil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmeasuretoolv2.cpp" line="74"/>
+        <source>North:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
