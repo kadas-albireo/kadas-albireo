@@ -71,7 +71,7 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
 
   if ( measureMode == QgsMeasureToolV2::MeasureAzimuth )
   {
-    layout()->addWidget( new QLabel( "North:" ) );
+    layout()->addWidget( new QLabel( tr( "North:" ) ) );
     mNorthComboBox = new QComboBox();
     mNorthComboBox->addItem( tr( "Geographic" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) );
     mNorthComboBox->addItem( tr( "Map" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_MAP ) );
