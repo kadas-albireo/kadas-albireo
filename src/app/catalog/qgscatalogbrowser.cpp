@@ -212,7 +212,7 @@ QgsCatalogBrowser::QgsCatalogBrowser( QWidget *parent )
   offlineItem->setEnabled( false );
   mOfflineModel->appendRow( offlineItem );
 
-  QStringList catalogUris = QSettings().value( "/qgis/geodatacatalogs" ).toString().split( ";;" );
+  QStringList catalogUris = QSettings().value( "/Qgis/geodatacatalogs" ).toString().split( ";;" );
   foreach ( const QString& catalogUri, catalogUris )
   {
     QUrl u = QUrl::fromEncoded( "?" + catalogUri.toLocal8Bit() );
