@@ -176,9 +176,10 @@ void QgsVBSCatalogProvider::readWMSCapabilitiesDo()
     QDomDocument doc;
     doc.setContent( reply->readAll() );
     QStringList imgFormats = parseWMSFormats( doc );
+    QStringList parentCrs;
     foreach ( const QDomNode& layerItem, childrenByTagName( doc.firstChildElement( "WMS_Capabilities" ).firstChildElement( "Capability" ), "Layer" ) )
     {
-      searchMatchingWMSLayer( layerItem, *entries, url, imgFormats );
+      searchMatchingWMSLayer( layerItem, *entries, url, imgFormats, parentCrs );
     }
   }
 
@@ -273,7 +274,7 @@ void QgsVBSCatalogProvider::readAMSCapabilitiesDo()
   endTask();
 }
 
-void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString& url, const QStringList& imgFormats )
+void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, const EntryMap& entries, const QString& url, const QStringList& imgFormats, QStringList parentCrs )
 {
   QString layerid = layerItem.firstChildElement( "Name" ).text();
   if ( entries.contains( layerid ) )
@@ -281,12 +282,27 @@ void QgsVBSCatalogProvider::searchMatchingWMSLayer( const QDomNode& layerItem, c
     QString title;
     QMimeData* mimeData;
     const ResultEntry& entry = entries[layerid];
-    parseWMSLayerCapabilities( layerItem, imgFormats, url, entry.metadataUrl, title, mimeData );
-    QStringList sortIndices = entry.sortIndices.split( "/" );
-    mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entries[layerid].title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
+    if ( parseWMSLayerCapabilities( layerItem, imgFormats, parentCrs, url, entry.metadataUrl, title, mimeData ) )
+    {
+      QStringList sortIndices = entry.sortIndices.split( "/" );
+      mBrowser->addItem( getCategoryItem( entry.category.split( "/" ), sortIndices ), entries[layerid].title, sortIndices.isEmpty() ? -1 : sortIndices.last().toInt(), true, mimeData );
+    }
+  }
+  foreach ( const QDomNode& crsItem, childrenByTagName( layerItem.toElement(), "CRS" ) )
+  {
+    parentCrs.append( crsItem.toElement().text() );
+  }
+  QDomElement srsElement = layerItem.firstChildElement( "SRS" );
+  if ( !srsElement.isNull() )
+  {
+    foreach ( const QString& authId, srsElement.text().split( "", QString::SkipEmptyParts ) )
+    {
+      parentCrs.append( authId );
+    }
   }
   foreach ( const QDomNode& subLayerItem, childrenByTagName( layerItem.toElement(), "Layer" ) )
   {
-    searchMatchingWMSLayer( subLayerItem, entries, url, imgFormats );
+
+    searchMatchingWMSLayer( subLayerItem, entries, url, imgFormats, parentCrs );
   }
 }

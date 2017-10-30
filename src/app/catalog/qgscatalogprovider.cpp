@@ -111,7 +111,7 @@ QString QgsCatalogProvider::parseWMSNestedLayer( const QDomNode& layerItem ) con
   return subLayerParams;
 }
 
-void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, const QString& layerInfoUrl, QString& title, QMimeData*& mimeData ) const
+bool QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QStringList& parentCrs, const QString& url, const QString& layerInfoUrl, QString& title, QMimeData*& mimeData ) const
 {
   title = layerItem.firstChildElement( "Title" ).text();
   QString layerid = layerItem.firstChildElement( "Name" ).text();
@@ -130,7 +130,14 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
     }
   }
   if ( supportedCrs.isEmpty() )
-    supportedCrs.append( "EPSG:4326" );
+  {
+    supportedCrs.append( parentCrs );
+  }
+  if ( supportedCrs.isEmpty() )
+  {
+    // Don't list layer if not crs is found
+    return false;
+  }
 
   QString imgFormat = imgFormats[0];
   // Prefer png or jpeg
@@ -155,6 +162,7 @@ void QgsCatalogProvider::parseWMSLayerCapabilities( const QDomNode& layerItem, c
                       "%3&url=%4" ).arg( supportedCrs[0] ).arg( imgFormat ).arg( subLayerParams ).arg( url );
   mimeDataUri.layerInfoUrl = layerInfoUrl;
   mimeData = QgsMimeDataUtils::encodeUriList( QgsMimeDataUtils::UriList() << mimeDataUri );
+  return true;
 }
 
 QStandardItem* QgsCatalogProvider::getCategoryItem( const QStringList& titles, const QStringList& sortIndices )

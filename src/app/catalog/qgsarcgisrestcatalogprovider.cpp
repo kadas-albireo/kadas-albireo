@@ -208,11 +208,12 @@ void QgsArcGisRestCatalogProvider::parseWMSDo()
     QDomDocument doc;
     doc.setContent( reply->readAll() );
     QStringList imgFormats = parseWMSFormats( doc );
+    QStringList parentCrs;
     foreach ( const QDomNode& layerItem, childrenByTagName( doc.firstChildElement( "WMS_Capabilities" ).firstChildElement( "Capability" ), "Layer" ) )
     {
       QString title;
       QMimeData* mimeData;
-      parseWMSLayerCapabilities( layerItem, imgFormats, url, "", title, mimeData );
+      parseWMSLayerCapabilities( layerItem, imgFormats, parentCrs, url, "", title, mimeData );
       mBrowser->addItem( getCategoryItem( catTitles, QStringList() ), title, -1, mimeData );
     }
   }

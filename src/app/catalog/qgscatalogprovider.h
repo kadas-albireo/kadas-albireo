@@ -46,7 +46,7 @@ class APP_EXPORT QgsCatalogProvider : public QObject
     void parseWMTSLayerCapabilities( const QDomNode& layerItem, const QMap<QString, QString>& tileMatrixSetMap, const QString& url, const QString &layerInfoUrl, const QString& extraParams, QString& title, QString& layerid, QMimeData*& mimeData ) const;
     QStringList parseWMSFormats( const QDomDocument& doc ) const;
     QString parseWMSNestedLayer( const QDomNode& layerItem ) const;
-    void parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QString& url, const QString& layerInfoUrl, QString& title, QMimeData*& mimeData ) const;
+    bool parseWMSLayerCapabilities( const QDomNode& layerItem, const QStringList& imgFormats, const QStringList &parentCrs, const QString& url, const QString& layerInfoUrl, QString& title, QMimeData*& mimeData ) const;
     QStandardItem* getCategoryItem( const QStringList& titles , const QStringList &sortIndices );
 };
 
