@@ -14,7 +14,27 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
+   <item row="0" column="1">
+    <widget class="QComboBox" name="comboBoxRenderingMode">
+     <property name="toolTip">
+      <string>Rendering method for the layer</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0" colspan="2">
     <widget class="QStackedWidget" name="stackedWidgetRenderingMode">
      <property name="currentIndex">
       <number>1</number>
@@ -223,25 +243,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="comboBoxRenderingMode">
-     <property name="toolTip">
-      <string>Rendering method for the layer</string>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="label2DWarning">
+     <property name="styleSheet">
+      <string notr="true">QLabel {background: orange; font-weight: bold; border-radius: 5px; padding: 5px }</string>
+     </property>
+     <property name="text">
+      <string>This layer only contains 2D geometries.</string>
      </property>
     </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

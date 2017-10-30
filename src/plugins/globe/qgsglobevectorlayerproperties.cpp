@@ -144,6 +144,7 @@ void QgsGlobeVectorLayerPropertiesPage::onAltitudeClampingChanged( int index )
 void QgsGlobeVectorLayerPropertiesPage::showRenderingModeWidget( int index )
 {
   stackedWidgetRenderingMode->setCurrentIndex( index != 0 );
+  label2DWarning->setVisible( false );
   QgsGlobeVectorLayerConfig::RenderingMode mode = static_cast<QgsGlobeVectorLayerConfig::RenderingMode>( comboBoxRenderingMode->currentData().toInt() );
   QStandardItem* clampTerrainItem = qobject_cast<QStandardItemModel*>( comboBoxAltitudeClamping->model() )->item( 0 );
   if ( mode == QgsGlobeVectorLayerConfig::RenderingModeModel25D )
@@ -179,6 +180,7 @@ void QgsGlobeVectorLayerPropertiesPage::showRenderingModeWidget( int index )
 
     checkBoxLighting->setChecked( true );
     checkBoxLighting->setVisible( false );
+    label2DWarning->setVisible( !QgsWKBTypes::hasZ( static_cast<QgsWKBTypes::Type>( mLayer->wkbType() ) ) );
   }
   else if ( mode == QgsGlobeVectorLayerConfig::RenderingModeModelAdvanced )
   {
@@ -191,6 +193,7 @@ void QgsGlobeVectorLayerPropertiesPage::showRenderingModeWidget( int index )
     spinBoxAltitudeScale->setVisible( true );
     groupBoxExtrusion->setVisible( true );
     checkBoxLighting->setVisible( true );
+    label2DWarning->setVisible( !QgsWKBTypes::hasZ( static_cast<QgsWKBTypes::Type>( mLayer->wkbType() ) ) );
   }
 }
 
