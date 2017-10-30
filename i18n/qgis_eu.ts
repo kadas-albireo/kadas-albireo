@@ -39492,7 +39492,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QgsGlobeLayerPropertiesFactory</name>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerproperties.cpp" line="216"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerproperties.cpp" line="219"/>
         <source>Globe</source>
         <translation type="unfinished">Globoa</translation>
     </message>
@@ -39878,115 +39878,120 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Inprimakia</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="30"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="50"/>
         <source>Altitude</source>
         <translation type="unfinished">Altitudea</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="39"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="59"/>
         <source>Placement</source>
         <translation type="unfinished">Kokapena</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="46"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="66"/>
         <source>Terrain following behavior</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="70"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="80"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="90"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="100"/>
         <source>Elevation data resolution at which to sample terrain height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="73"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="93"/>
         <source>Resolution</source>
         <translation type="unfinished">Bereizmena</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="87"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="97"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="107"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="117"/>
         <source>Vertical offset to apply to geometry Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="90"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="110"/>
         <source>Offset</source>
         <translation type="unfinished">Desplazamendua</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="104"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="114"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="124"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="134"/>
         <source>Scale factor to apply to geometry Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="107"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="127"/>
         <source>Scale</source>
         <translation type="unfinished">Eskala</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="127"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="147"/>
         <source>E&amp;xtrusion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="139"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="159"/>
         <source>Height [m]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="146"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="166"/>
         <source>Extrusion height, either a numeric value, or a field expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="149"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="169"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="156"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="176"/>
         <source>Wall gradient</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="163"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="183"/>
         <source>Wall coloring gradient</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="179"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="199"/>
         <source>Whether the top cap of the extruded geometry should be flat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="182"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="202"/>
         <source>Flatten</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="192"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="212"/>
         <source>Enable &amp;labeling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="201"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="221"/>
         <source>Declutter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="211"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="231"/>
         <source>Lighting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="222"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="242"/>
         <source>Rendering mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="229"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="252"/>
+        <source>This layer only contains 2D geometries.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="20"/>
         <source>Rendering method for the layer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -40019,18 +40024,18 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Zentroidea</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="36"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="56"/>
         <source>Terrain following behaviour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="53"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="63"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="73"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="83"/>
         <source>Granularity at which to sample the terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="56"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="76"/>
         <source>Binding</source>
         <translation type="unfinished"></translation>
     </message>

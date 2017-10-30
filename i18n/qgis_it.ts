@@ -39563,7 +39563,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QgsGlobeLayerPropertiesFactory</name>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerproperties.cpp" line="216"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerproperties.cpp" line="219"/>
         <source>Globe</source>
         <translation>Globo</translation>
     </message>
@@ -39953,7 +39953,7 @@ p, li { white-space: pre-wrap; }
         <translation>Modulo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="30"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="50"/>
         <source>Altitude</source>
         <translation>Altitudine</translation>
     </message>
@@ -39962,7 +39962,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Clamping</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="46"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="66"/>
         <source>Terrain following behavior</source>
         <translation>Comportamento di seguimento del terreno</translation>
     </message>
@@ -39979,116 +39979,121 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Granularità con la quale campionare il terreno</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="39"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="59"/>
         <source>Placement</source>
         <translation>Posizionamento</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="53"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="63"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="73"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="83"/>
         <source>Granularity at which to sample the terrain</source>
         <translation>Granularità con la quale campionare il terreno</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="56"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="76"/>
         <source>Binding</source>
         <translation>Binding</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="70"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="80"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="90"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="100"/>
         <source>Elevation data resolution at which to sample terrain height</source>
         <translation>Elevation data resolution at which to sample terrain height</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="73"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="93"/>
         <source>Resolution</source>
         <translation>Risoluzione</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="87"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="97"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="107"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="117"/>
         <source>Vertical offset to apply to geometry Z</source>
         <translation>Offset verticale da applicare alla coordinata Z delle geometrie</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="90"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="110"/>
         <source>Offset</source>
         <translation>Offset</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="104"/>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="114"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="124"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="134"/>
         <source>Scale factor to apply to geometry Z</source>
         <translation>Fattore di scala da applicare alla coordinata Z delle geometrie</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="107"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="127"/>
         <source>Scale</source>
         <translation>Scala</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="127"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="147"/>
         <source>E&amp;xtrusion</source>
         <translation>Estrusione</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="139"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="159"/>
         <source>Height [m]</source>
         <translation>Altezza [m]</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="146"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="166"/>
         <source>Extrusion height, either a numeric value, or a field expression</source>
         <translation>Altezza di estrusione: un valore numerico o un&apos;espressione di attributi</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="149"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="169"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="156"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="176"/>
         <source>Wall gradient</source>
         <translation>Gradiente pareti</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="163"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="183"/>
         <source>Wall coloring gradient</source>
         <translation>Gradiente pareti</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="179"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="199"/>
         <source>Whether the top cap of the extruded geometry should be flat</source>
         <translation>Appattire le geometrie estruse</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="182"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="202"/>
         <source>Flatten</source>
         <translation>Appiattire</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="192"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="212"/>
         <source>Enable &amp;labeling</source>
         <translation>Attivare illuminazione</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="201"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="221"/>
         <source>Declutter</source>
         <translation>Declutter</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="211"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="231"/>
         <source>Lighting</source>
         <translation>Illuminazione</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="222"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="242"/>
         <source>Rendering mode:</source>
         <translation>Modalità di disegno:</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="229"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="252"/>
+        <source>This layer only contains 2D geometries.</source>
+        <translation>Questo layer contiene solamente geometrie 2D.</translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="20"/>
         <source>Rendering method for the layer</source>
         <translation>Modalità di disegno per il layer</translation>
     </message>
@@ -40255,7 +40260,7 @@ p, li { white-space: pre-wrap; }
         <translation>Confinare il centroide di tutta la geometria</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="36"/>
+        <location filename="../src/plugins/globe/qgsglobevectorlayerpropertiespage.ui" line="56"/>
         <source>Terrain following behaviour</source>
         <translation>Comportamento di seguimento del terreno</translation>
     </message>
