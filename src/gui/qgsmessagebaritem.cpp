@@ -121,6 +121,7 @@ void QgsMessageBarItem::writeContent()
     icon = QgsApplication::getThemeIcon( msgIcon );
   }
   mLblIcon->setPixmap( icon.pixmap( 24 ) );
+  mLblIcon->setMaximumWidth( 24 );
 
   // TITLE AND TEXT
   if ( mTitle.isEmpty() && mText.isEmpty() )
