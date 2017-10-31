@@ -93,15 +93,10 @@ QgsOWSSourceSelect::QgsOWSSourceSelect( QString service, QWidget * parent, Qt::W
   {
     connect( mAddButton, SIGNAL( clicked() ), this, SLOT( addClicked() ) );
     //set the current project CRS if available
-    long currentCRS = QgsProject::instance()->readNumEntry( "SpatialRefSys", "/ProjectCRSID", -1 );
-    if ( currentCRS != -1 )
+    QString authid = QgsProject::instance()->readEntry( "SpatialRefSys", "/ProjectCrs" );
+    if ( !authid.isEmpty() )
     {
-      //convert CRS id to epsg
-      QgsCoordinateReferenceSystem currentRefSys( currentCRS, QgsCoordinateReferenceSystem::InternalCrsId );
-      if ( currentRefSys.isValid() )
-      {
-        mSelectedCRS = currentRefSys.authid();
-      }
+      mSelectedCRS = authid;
     }
   }
   else

@@ -190,18 +190,11 @@ QString QgsSourceSelectDialog::getPreferredCrs( const QSet<QString>& crsSet ) co
   }
 
   //first: project CRS
-  long ProjectCRSID = QgsProject::instance()->readNumEntry( "SpatialRefSys", "/ProjectCRSID", -1 );
-  //convert to EPSG
-  QgsCoordinateReferenceSystem projectRefSys( ProjectCRSID, QgsCoordinateReferenceSystem::InternalCrsId );
-  QString ProjectCRS;
-  if ( projectRefSys.isValid() )
-  {
-    ProjectCRS = projectRefSys.authid();
-  }
+  QString authid = QgsProject::instance()->readEntry( "SpatialRefSys", "/ProjectCrs" );
 
-  if ( !ProjectCRS.isEmpty() && crsSet.contains( ProjectCRS ) )
+  if ( !authid.isEmpty() && crsSet.contains( authid ) )
   {
-    return ProjectCRS;
+    return authid;
   }
 
   //second: WGS84

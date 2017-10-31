@@ -606,10 +606,10 @@ void QgsGrassNewMapset::setGrassRegionDefaults()
 {
   QgsDebugMsg( QString( "mCellHead.proj = %1" ).arg( mCellHead.proj ) );
 
-  int srsid = QgsProject::instance()->readNumEntry(
-                "SpatialRefSys", "/ProjectCRSID", 0 );
+  QString authid = QgsProject::instance()->readEntry(
+                     "SpatialRefSys", "/ProjectCrs" );
 
-  QgsDebugMsg( QString( "current project srsid = %1" ).arg( srsid ) );
+  QgsDebugMsg( QString( "current project authid = %1" ).arg( authid ) );
 
   QgsRectangle ext = mIface->mapCanvas()->extent();
   bool extSet = false;
@@ -621,7 +621,7 @@ void QgsGrassNewMapset::setGrassRegionDefaults()
   if ( extSet &&
        ( mNoProjRadioButton->isChecked() ||
          ( mProjRadioButton->isChecked()
-           && srsid == mProjectionSelector->selectedCrsId() )
+           && authid == mProjectionSelector->selectedAuthId() )
        )
      )
   {
@@ -949,11 +949,11 @@ void QgsGrassNewMapset::setCurrentRegion()
 
   QgsRectangle ext = mIface->mapCanvas()->extent();
 
-  int srsid = QgsProject::instance()->readNumEntry(
-                "SpatialRefSys", "/ProjectCRSID", 0 );
+  QString authid = QgsProject::instance()->readEntry(
+                     "SpatialRefSys", "/ProjectCrs" );
 
-  QgsCoordinateReferenceSystem srs( srsid, QgsCoordinateReferenceSystem::InternalCrsId );
-  QgsDebugMsg( QString( "current project srsid = %1" ).arg( srsid ) );
+  QgsCoordinateReferenceSystem srs( authid, QgsCoordinateReferenceSystem::InternalCrsId );
+  QgsDebugMsg( QString( "current project authid = %1" ).arg( authid ) );
   QgsDebugMsg( QString( "srs.isValid() = %1" ).arg( srs.isValid() ) );
 
   std::vector<QgsPoint> points;
@@ -964,7 +964,7 @@ void QgsGrassNewMapset::setCurrentRegion()
 
   // TODO add a method, this code is copy-paste from setSelectedRegion
   if ( srs.isValid() && mSrs.isValid()
-       && srs.srsid() != mSrs.srsid() )
+       && srs.authid() != mSrs.authid() )
   {
     QgsCoordinateTransform trans( srs, mSrs );
 
@@ -1429,15 +1429,15 @@ void QgsGrassNewMapset::pageSelected( int index )
                  this, SLOT( sridSelected( QString ) ) );
 
         // Se current QGIS projection
-        int srsid = QgsProject::instance()->readNumEntry(
-                      "SpatialRefSys", "/ProjectCRSID", 0 );
+        QString authid = QgsProject::instance()->readEntry(
+                           "SpatialRefSys", "/ProjectCrs" );
 
-        QgsCoordinateReferenceSystem srs( srsid, QgsCoordinateReferenceSystem::InternalCrsId );
-        QgsDebugMsg( QString( "current project srsid = %1" ).arg( srsid ) );
+        QgsCoordinateReferenceSystem srs( authid );
+        QgsDebugMsg( QString( "current project authid = %1" ).arg( authid ) );
         QgsDebugMsg( QString( "srs.isValid() = %1" ).arg( srs.isValid() ) );
         if ( srs.isValid() )
         {
-          mProjectionSelector->setSelectedCrsId( srsid );
+          mProjectionSelector->setSelectedAuthId( authid );
           mProjRadioButton->setChecked( true );
           projRadioSwitched();
         }

@@ -89,20 +89,6 @@ void QgsOpenRasterDialog::on_tbnSelectRaster_clicked()
 
   QString modifiedFileName = generateModifiedRasterFileName();
   leModifiedRasterFileName->setText( modifiedFileName );
-
-  // What DOING this code?
-  QgsProject* prj = QgsProject::instance();
-  QString projBehaviour = settings.value( "/Projections/defaultBehaviour", "prompt" ).toString();
-  QString projectCRS = prj->readEntry( "SpatialRefSys", "/ProjectCRSProj4String" );
-  int projectCrsId = prj->readNumEntry( "SpatialRefSys", "/ProjectCrsId" );
-
-  settings.setValue( "/Projections/defaultBehaviour", "useProject" );
-  prj->writeEntry( "SpatialRefSys", "/ProjectCRSProj4String", GEOPROJ4 );
-  prj->writeEntry( "SpatialRefSys", "/ProjectCrsId", int( GEOCRS_ID ) );
-
-  settings.setValue( "/Projections/defaultBehaviour", projBehaviour );
-  prj->writeEntry( "SpatialRefSys", "/ProjectCRSProj4String", projectCRS );
-  prj->writeEntry( "SpatialRefSys", "/ProjectCrsId", projectCrsId );
 }
 
 void QgsOpenRasterDialog::on_tbnSelectModifiedRaster_clicked()

@@ -897,7 +897,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void displayMapToolMessage( QString message, QgsMessageBar::MessageLevel level = QgsMessageBar::INFO );
     void removeMapToolMessage();
     void updateMouseCoordinatePrecision();
-    void hasCrsTransformEnabled( bool theFlag );
+    void hasCrsTransformEnabled( bool transformEnabled );
     void destinationCrsChanged();
     //    void debugHook();
     //! Add a Layer Definition file

@@ -2535,9 +2535,7 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   srs.createFromOgcWmsCrs( defCrs );
   mapCanvas()->setDestinationCrs( srs );
   // write the projections _proj string_ to project settings
-  prj->writeEntry( "SpatialRefSys", "/ProjectCRSProj4String", srs.toProj4() );
   prj->writeEntry( "SpatialRefSys", "/ProjectCrs", srs.authid() );
-  prj->writeEntry( "SpatialRefSys", "/ProjectCRSID", ( int ) srs.srsid() );
   prj->dirty( false );
   if ( srs.mapUnits() != QGis::UnknownUnit )
   {
@@ -3178,11 +3176,6 @@ void QgisApp::openProject( QAction *action )
   {
     addProject( debugme );
   }
-
-  //set the projections enabled icon in the status bar
-  int myProjectionEnabledFlag =
-    QgsProject::instance()->readNumEntry( "SpatialRefSys", "/ProjectionsEnabled", 0 );
-  mapCanvas()->setCrsTransformEnabled( myProjectionEnabledFlag );
 }
 
 void QgisApp::runScript( const QString &filePath )
@@ -7080,15 +7073,13 @@ void QgisApp::whatsThis()
 
 void QgisApp::destinationCrsChanged()
 {
-  // save this information to project
-  long srsid = mapCanvas()->mapSettings().destinationCrs().srsid();
-  QgsProject::instance()->writeEntry( "SpatialRefSys", "/ProjectCRSID", ( int )srsid );
+  QString authid = mapCanvas()->mapSettings().destinationCrs().authid();
+  QgsProject::instance()->writeEntry( "SpatialRefSys", "/ProjectCrs", authid );
 }
 
-void QgisApp::hasCrsTransformEnabled( bool theFlag )
+void QgisApp::hasCrsTransformEnabled( bool transformEnabled )
 {
-  // save this information to project
-  QgsProject::instance()->writeEntry( "SpatialRefSys", "/ProjectionsEnabled", ( theFlag ? 1 : 0 ) );
+  QgsProject::instance()->writeEntry( "SpatialRefSys", "/ProjectionsEnabled", transformEnabled );
 }
 
 void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
