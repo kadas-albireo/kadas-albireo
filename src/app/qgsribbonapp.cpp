@@ -199,6 +199,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   connect( mZoomOutButton, SIGNAL( clicked( bool ) ), mapCanvas(), SLOT( zoomOut() ) );
   connect( mHomeButton, SIGNAL( clicked( bool ) ), this, SLOT( zoomFull() ) );
   connect( clipboard(), SIGNAL( dataChanged() ), this, SLOT( checkCanPaste() ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWasAdded( QgsMapLayer* ) ), this, SLOT( checkLayerProjection( QgsMapLayer* ) ) );
 }
 
 QgsRibbonApp::QgsRibbonApp()
@@ -545,7 +546,7 @@ void QgsRibbonApp::checkOnTheFlyProjection( const QStringList& prevLayers )
   // the user can actually see
   foreach ( QgsMapLayer* layer, mMapCanvas->layers() )
   {
-    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->type() != QgsMapLayer::PluginLayer && layer->crs().authid() != destAuthId && !prevLayers.contains( layer->id() ) )
+    if ( layer->type() != QgsMapLayer::RedliningLayer && layer->type() != QgsMapLayer::PluginLayer && !layer->crs().authid().startsWith( "USER:" ) && layer->crs().authid() != destAuthId && !prevLayers.contains( layer->id() ) )
     {
       reprojLayers.append( layer->name() );
     }
@@ -783,4 +784,25 @@ void QgsRibbonApp::saveProject()
 void QgsRibbonApp::checkCanPaste()
 {
   mActionPaste->setEnabled( canPaste() );
+}
+
+void QgsRibbonApp::checkLayerProjection( QgsMapLayer* layer )
+{
+  if ( layer->crs().authid().startsWith( "USER:" ) )
+  {
+    QPushButton* btn = new QPushButton( tr( "Manually set projection" ) );
+    btn->setFlat( true );
+    QgsMessageBarItem* item = new QgsMessageBarItem(
+      tr( "Unknown layer projection" ),
+      tr( "The projection of the layer %1 could not be recognized, its and features might be misplaced." ).arg( layer->name() ),
+      btn,
+      QgsMessageBar::WARNING,
+      10 );
+    connect( btn, &QPushButton::clicked, [=]
+    {
+      messageBar()->popWidget( item );
+      showLayerProperties( layer );
+    } );
+    messageBar()->pushItem( item );
+  }
 }

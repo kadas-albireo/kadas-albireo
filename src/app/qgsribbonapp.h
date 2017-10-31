@@ -88,6 +88,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     void showFavoriteContextMenu( const QPoint& pos );
     void saveProject();
     void checkCanPaste();
+    void checkLayerProjection( QgsMapLayer* layer );
 
     //! Enables / disables GPS tracking
     void enableGPS( bool enabled );
