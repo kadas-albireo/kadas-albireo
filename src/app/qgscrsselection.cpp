@@ -53,10 +53,7 @@ void QgsCrsSelection::setMapCanvas( QgsMapCanvas* canvas )
   mMapCanvas = canvas;
   if ( mMapCanvas )
   {
-    QgsCoordinateReferenceSystem crs( "EPSG:21781" );
-    mMapCanvas->setDestinationCrs( crs );
-    mMapCanvas->setMapUnits( crs.mapUnits() );
-    setText( crs.description() );
+    syncCrsButton();
 
     connect( mMapCanvas, SIGNAL( destinationCrsChanged() ), this, SLOT( syncCrsButton() ) );
     connect( QgisApp::instance(), SIGNAL( newProject() ), this, SLOT( syncCrsButton() ) );
