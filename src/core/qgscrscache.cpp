@@ -187,6 +187,24 @@ const QgsCoordinateReferenceSystem& QgsCRSCache::crsByProj4( const QString& proj
   }
 }
 
+const QgsCoordinateReferenceSystem& QgsCRSCache::crsByWkt( const QString& wkt )
+{
+  QHash< QString, QgsCoordinateReferenceSystem >::const_iterator crsIt = mCRSWkt.find( wkt );
+  if ( crsIt == mCRSWkt.constEnd() )
+  {
+    QgsCoordinateReferenceSystem s;
+    if ( ! s.createFromString( wkt ) )
+    {
+      return mCRSWkt.insert( wkt, mInvalidCRS ).value();
+    }
+    return mCRSWkt.insert( wkt, s ).value();
+  }
+  else
+  {
+    return crsIt.value();
+  }
+}
+
 const QgsCoordinateReferenceSystem& QgsCRSCache::crsByOgcWms( const QString& ogcwms )
 {
   QHash< QString, QgsCoordinateReferenceSystem >::const_iterator crsIt = mCRSOgcWms.find( ogcwms );

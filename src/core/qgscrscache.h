@@ -63,6 +63,7 @@ class CORE_EXPORT QgsCRSCache
     const QgsCoordinateReferenceSystem& crsByEpsgId( long epsg );
     const QgsCoordinateReferenceSystem& crsBySrsId( long srsid );
     const QgsCoordinateReferenceSystem& crsByProj4( const QString& proj4 );
+    const QgsCoordinateReferenceSystem& crsByWkt( const QString& wkt );
     const QgsCoordinateReferenceSystem& crsByOgcWms( const QString& ogcwms );
 
     void updateCRSCache( const QString &authid );
@@ -74,6 +75,7 @@ class CORE_EXPORT QgsCRSCache
     QHash< QString, QgsCoordinateReferenceSystem > mCRS;
     QHash< long, QgsCoordinateReferenceSystem > mCRSSrsId;
     QHash< QString, QgsCoordinateReferenceSystem > mCRSProj4;
+    QHash< QString, QgsCoordinateReferenceSystem > mCRSWkt;
     QHash< QString, QgsCoordinateReferenceSystem > mCRSOgcWms;
     /**CRS that is not initialised (returned in case of error)*/
     QgsCoordinateReferenceSystem mInvalidCRS;

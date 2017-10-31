@@ -141,7 +141,7 @@ double QgsCoordinateFormat::getHeightAtPos( const QgsPoint& p, const QgsCoordina
   }
 
   QString proj( GDALGetProjectionRef( raster ) );
-  QgsCoordinateReferenceSystem rasterCrs( proj );
+  const QgsCoordinateReferenceSystem& rasterCrs = QgsCRSCache::instance()->crsByWkt( proj );
   if ( !rasterCrs.isValid() )
   {
     if ( errMsg )
