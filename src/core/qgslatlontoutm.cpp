@@ -991,7 +991,7 @@ void QgsLatLonToUTM::utmGridLabelCallback( double lon, double lat, double cellSi
 
 void QgsLatLonToUTM::mgrsGridLabelCallback( double lon, double lat, double cellSize, bool horiz , int lineIdx, QList<GridLabel>& gridLabels )
 {
-  UTMCoo utmcoo = LL2UTM( QgsPoint( lon + 0.01, lat + 0.01 ) );
+  UTMCoo utmcoo = LL2UTM( QgsPoint( lon + 0.0001, lat + 0.0001 ) );
   GridLabel label;
   if ( horiz )
   {
