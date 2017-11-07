@@ -16592,22 +16592,22 @@ Käytä iface päästäksesi QGIS API rajapinnalle tai kirjoita help(iface) saad
         <translation>Arvioidaan normaalin derivaattoja...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8126"/>
+        <location filename="../src/app/qgisapp.cpp" line="8117"/>
         <source>minidump written to %1</source>
         <translation>pienoisdumppi kirjoitettiin %1:teen</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8130"/>
+        <location filename="../src/app/qgisapp.cpp" line="8121"/>
         <source>writing of minidump to %1 failed (%2)</source>
         <translation>pienoisdumpin kirjoittaminen %1:teen epäonnistui (%2)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8137"/>
+        <location filename="../src/app/qgisapp.cpp" line="8128"/>
         <source>creation of minidump to %1 failed (%2)</source>
         <translation>pienoisdumpin luominen %1:teen epäonnistui (%2)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8140"/>
+        <location filename="../src/app/qgisapp.cpp" line="8131"/>
         <source>Crash dumped</source>
         <translation>Ohjelman epäonnistuminen dumppiin</translation>
     </message>
@@ -16773,7 +16773,7 @@ Virhe(%2): %3</translation>
         <translation>Tuotiin GDALista</translation>
     </message>
     <message>
-        <location filename="../src/core/qgscrscache.cpp" line="237"/>
+        <location filename="../src/core/qgscrscache.cpp" line="255"/>
         <source>Can&apos;t open database: %1</source>
         <translation>Ei voida avata tietokantaa: %1</translation>
     </message>
@@ -20478,13 +20478,13 @@ Vastaus oli:
     </message>
     <message>
         <location filename="../src/app/qgisapp.cpp" line="1046"/>
-        <location filename="../src/app/qgisapp.cpp" line="4102"/>
-        <location filename="../src/app/qgisapp.cpp" line="5391"/>
-        <location filename="../src/app/qgisapp.cpp" line="5419"/>
-        <location filename="../src/app/qgisapp.cpp" line="5431"/>
-        <location filename="../src/app/qgisapp.cpp" line="5567"/>
-        <location filename="../src/app/qgisapp.cpp" line="5650"/>
-        <location filename="../src/app/qgisapp.cpp" line="7480"/>
+        <location filename="../src/app/qgisapp.cpp" line="4095"/>
+        <location filename="../src/app/qgisapp.cpp" line="5384"/>
+        <location filename="../src/app/qgisapp.cpp" line="5412"/>
+        <location filename="../src/app/qgisapp.cpp" line="5424"/>
+        <location filename="../src/app/qgisapp.cpp" line="5560"/>
+        <location filename="../src/app/qgisapp.cpp" line="5643"/>
+        <location filename="../src/app/qgisapp.cpp" line="7471"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
@@ -20628,7 +20628,7 @@ Ota yhteyttä kehittäjiin.</translation>
     </message>
     <message>
         <location filename="../src/app/qgisapp.cpp" line="1499"/>
-        <location filename="../src/app/qgisapp.cpp" line="2731"/>
+        <location filename="../src/app/qgisapp.cpp" line="2729"/>
         <source>&lt; Blank &gt;</source>
         <translation>&lt; Tyhjä &gt;</translation>
     </message>
@@ -20741,45 +20741,45 @@ Ota yhteyttä kehittäjiin.</translation>
         <translation>%1 on virheellinen taso eikä sitä voida ladata. Ole ystävällinen ja tarkista &lt;a href=&quot;#messageLog&quot;&gt;virhe loki&lt;/a&gt; lisäinformaation saamiseksi.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2820"/>
-        <location filename="../src/app/qgisapp.cpp" line="2979"/>
-        <location filename="../src/app/qgisapp.cpp" line="3044"/>
+        <location filename="../src/app/qgisapp.cpp" line="2818"/>
+        <location filename="../src/app/qgisapp.cpp" line="2977"/>
+        <location filename="../src/app/qgisapp.cpp" line="3042"/>
         <source>QGIS files</source>
         <translation>QGIS tiedostot</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4542"/>
+        <location filename="../src/app/qgisapp.cpp" line="4535"/>
         <source>Composer</source>
         <translation type="unfinished">Tulosteen muodostaja</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4786"/>
-        <location filename="../src/app/qgisapp.cpp" line="4845"/>
+        <location filename="../src/app/qgisapp.cpp" line="4779"/>
+        <location filename="../src/app/qgisapp.cpp" line="4838"/>
         <source>Merging features can only be done for layers in editing mode. To use the merge tool, go to Layer-&gt;Toggle editing</source>
         <translation>Ominaisuuksien yhdistäminen voidaan tehdä vain tasoille jotka muokkaustilassa. Käyttääksesi yhdistämistyökalua, mene Tasot-&gt;Vaihda muokkauksen toimntatilaa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5166"/>
+        <location filename="../src/app/qgisapp.cpp" line="5159"/>
         <source>No features could be successfully pasted.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5915"/>
+        <location filename="../src/app/qgisapp.cpp" line="5908"/>
         <source>No legend entries selected</source>
         <translation>Selitteitä ei ole valittu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5916"/>
+        <location filename="../src/app/qgisapp.cpp" line="5909"/>
         <source>Select the layers and groups you want to remove in the legend.</source>
         <translation>Valitse tasot ja ryhmät jotka haluat poistaa selitteestä.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5923"/>
+        <location filename="../src/app/qgisapp.cpp" line="5916"/>
         <source>Remove layers and groups</source>
         <translation>Poista tasot ja ryhmät</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/qgisapp.cpp" line="5923"/>
+        <location filename="../src/app/qgisapp.cpp" line="5916"/>
         <source>Remove %n legend entries?</source>
         <comment>number of legend items to remove</comment>
         <translation>
@@ -20788,7 +20788,7 @@ Ota yhteyttä kehittäjiin.</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/qgisapp.cpp" line="5935"/>
+        <location filename="../src/app/qgisapp.cpp" line="5928"/>
         <source>%n legend entries removed.</source>
         <comment>number of removed legend entries</comment>
         <translation>
@@ -20797,22 +20797,22 @@ Ota yhteyttä kehittäjiin.</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6015"/>
+        <location filename="../src/app/qgisapp.cpp" line="6008"/>
         <source>%1 (%2 type unsupported)</source>
         <translation>%1 (%2 tyyppiä ei tueta)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6692"/>
+        <location filename="../src/app/qgisapp.cpp" line="6685"/>
         <source>http://qgis.org/en/site/forusers/commercial_support.html</source>
         <translation>http://qgis.org/en/site/forusers/commercial_support.html</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6993"/>
+        <location filename="../src/app/qgisapp.cpp" line="6986"/>
         <source>Do you want to save the current project? %1</source>
         <translation>Haluatko tallentaa nykyisen projektin? %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7460"/>
+        <location filename="../src/app/qgisapp.cpp" line="7451"/>
         <source>Invalid Layer</source>
         <translation>Viallinen taso</translation>
     </message>
@@ -20887,150 +20887,150 @@ Ota yhteyttä kehittäjiin.</translation>
         <translation>Ei saada WFS valintadialogia tajoajalta.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2601"/>
+        <location filename="../src/app/qgisapp.cpp" line="2599"/>
         <source>Default failed to open: %1</source>
         <translation>Oletus epäonnistui avauksessa: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2605"/>
+        <location filename="../src/app/qgisapp.cpp" line="2603"/>
         <source>Default not found: %1</source>
         <translation>Oletusta ei löydy: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2607"/>
+        <location filename="../src/app/qgisapp.cpp" line="2605"/>
         <source>Open Template Project</source>
         <translation>Avaa Malli Projekti</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2632"/>
+        <location filename="../src/app/qgisapp.cpp" line="2630"/>
         <source>Auto-open Project</source>
         <translation>Automaattinen Projektin avaus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2665"/>
+        <location filename="../src/app/qgisapp.cpp" line="2663"/>
         <source>Failed to open: %1</source>
         <translation>Avaus epäonnistui: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2688"/>
+        <location filename="../src/app/qgisapp.cpp" line="2686"/>
         <source>Not valid project file: %1</source>
         <translation>Virheellinen projektitiedosto: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2701"/>
+        <location filename="../src/app/qgisapp.cpp" line="2699"/>
         <source>Project failed to open: %1</source>
         <translation>Projektitiedoston avaus epäonnistui: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2708"/>
+        <location filename="../src/app/qgisapp.cpp" line="2706"/>
         <source>Default template has been reopened: %1</source>
         <translation>Oletusmalli on avattu uudelleen: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2715"/>
+        <location filename="../src/app/qgisapp.cpp" line="2713"/>
         <source>File not found: %1</source>
         <translation>Tiedostoa ei löydy: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2797"/>
+        <location filename="../src/app/qgisapp.cpp" line="2795"/>
         <source>Calculating...</source>
         <translation>Lasketaan...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2797"/>
-        <location filename="../src/app/qgisapp.cpp" line="4028"/>
+        <location filename="../src/app/qgisapp.cpp" line="2795"/>
+        <location filename="../src/app/qgisapp.cpp" line="4021"/>
         <source>Abort...</source>
         <translation>Keskeytä...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2818"/>
+        <location filename="../src/app/qgisapp.cpp" line="2816"/>
         <source>Choose a QGIS project file to open</source>
         <translation>Valitse QGIS projekti tiedosto jonka haluat avata</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2854"/>
+        <location filename="../src/app/qgisapp.cpp" line="2852"/>
         <source>Loading project: %1</source>
         <translation>Ladataan projektia: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2868"/>
+        <location filename="../src/app/qgisapp.cpp" line="2866"/>
         <source>Unable to open project</source>
         <translation>Projektia ei voida avata</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2926"/>
+        <location filename="../src/app/qgisapp.cpp" line="2924"/>
         <source>Security warning</source>
         <translation>Turvallisuus varoitus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2927"/>
+        <location filename="../src/app/qgisapp.cpp" line="2925"/>
         <source>project macros have been disabled.</source>
         <translation>Projektin makrot on poistettu käytöstä.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2918"/>
+        <location filename="../src/app/qgisapp.cpp" line="2916"/>
         <source>Enable macros</source>
         <translation>Ota makrot käyttöön</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2950"/>
+        <location filename="../src/app/qgisapp.cpp" line="2948"/>
         <source>Project loaded</source>
         <translation>Projekti ladattu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2977"/>
+        <location filename="../src/app/qgisapp.cpp" line="2975"/>
         <source>Choose a QGIS project file</source>
         <translation>Valitse QGIS projekti tiedosto</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3009"/>
-        <location filename="../src/app/qgisapp.cpp" line="3086"/>
+        <location filename="../src/app/qgisapp.cpp" line="3007"/>
+        <location filename="../src/app/qgisapp.cpp" line="3084"/>
         <source>Saved project to: %1</source>
         <translation>Projekti tallennettiin nimellä %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3021"/>
-        <location filename="../src/app/qgisapp.cpp" line="3093"/>
+        <location filename="../src/app/qgisapp.cpp" line="3019"/>
+        <location filename="../src/app/qgisapp.cpp" line="3091"/>
         <source>Unable to save project %1</source>
         <translation>Projektia %1 ei voida tallentaa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3042"/>
+        <location filename="../src/app/qgisapp.cpp" line="3040"/>
         <source>Choose a file name to save the QGIS project file as</source>
         <translation>Valitse tallennettavan QGIS projektitiedoston nimi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3275"/>
+        <location filename="../src/app/qgisapp.cpp" line="3268"/>
         <source>Unable to load %1</source>
         <translation>Ei voida ladata %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3397"/>
+        <location filename="../src/app/qgisapp.cpp" line="3390"/>
         <source>Choose a file name to save the map image as</source>
         <translation>Valitse tallennettavan karttakuvan nimi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3402"/>
+        <location filename="../src/app/qgisapp.cpp" line="3395"/>
         <source>Saved map image to %1</source>
         <translation>Karttakuva tallennettiin nimellä %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3830"/>
+        <location filename="../src/app/qgisapp.cpp" line="3823"/>
         <source>Default system font substituted.</source>
         <translation>Järjestelmän oletus kirjasinlaji korvattu.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3849"/>
+        <location filename="../src/app/qgisapp.cpp" line="3842"/>
         <source>Labeling</source>
         <translation>Nimiöinti</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3850"/>
+        <location filename="../src/app/qgisapp.cpp" line="3843"/>
         <source>Font for layer &lt;b&gt;&lt;u&gt;%1&lt;/u&gt;&lt;/b&gt; was not found (&lt;i&gt;%2&lt;/i&gt;). %3</source>
         <translation>Kirjasinlajia tasolle &lt;b&gt;&lt;u&gt;%1&lt;/u&gt;&lt;/b&gt; ei löytynyt (&lt;i&gt;%2&lt;/i&gt;). %3</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3841"/>
+        <location filename="../src/app/qgisapp.cpp" line="3834"/>
         <source>Open labeling dialog</source>
         <translation>Avaa nimiöinti ikkuna</translation>
     </message>
@@ -21081,159 +21081,159 @@ Ota yhteyttä kehittäjiin.</translation>
         <translation>Suoritetaan käyttäen GEOS</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2759"/>
+        <location filename="../src/app/qgisapp.cpp" line="2757"/>
         <source>Layer creation failed. Please check the &lt;a href=&quot;#messageLog&quot;&gt;message log&lt;/a&gt; for further information.</source>
         <translation>Tason luonti epäonnistui. Ole ystävällinen ja tarkista &lt;a href=&quot;#messageLog&quot;&gt;viestiloki &lt;/a&gt; lisäinformaation saamiseksi.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="2999"/>
+        <location filename="../src/app/qgisapp.cpp" line="2997"/>
         <source>Insufficient permissions</source>
         <translation>Riittämättömät käyttöoikeudet</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3000"/>
+        <location filename="../src/app/qgisapp.cpp" line="2998"/>
         <source>The project file is not writable.</source>
         <translation>Projektitiedosto ei ole kirjoitettavissa.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3126"/>
+        <location filename="../src/app/qgisapp.cpp" line="3124"/>
         <source>DXF export completed</source>
         <translation>DXF vienti suoritettu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3130"/>
+        <location filename="../src/app/qgisapp.cpp" line="3128"/>
         <source>DXF export failed</source>
         <translation>DXF vienti epäonnistui</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3861"/>
-        <location filename="../src/app/qgisapp.cpp" line="3882"/>
+        <location filename="../src/app/qgisapp.cpp" line="3854"/>
+        <location filename="../src/app/qgisapp.cpp" line="3875"/>
         <source>Commit errors</source>
         <translation>Vahvistus (commit) virheet</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3862"/>
-        <location filename="../src/app/qgisapp.cpp" line="3883"/>
+        <location filename="../src/app/qgisapp.cpp" line="3855"/>
+        <location filename="../src/app/qgisapp.cpp" line="3876"/>
         <source>Could not commit changes to layer %1</source>
         <translation>Ei voitu vahvistaa muutoksia tasolle %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3864"/>
+        <location filename="../src/app/qgisapp.cpp" line="3857"/>
         <source>Errors: %1
 </source>
         <translation>Virheet: %1
 </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3871"/>
+        <location filename="../src/app/qgisapp.cpp" line="3864"/>
         <source>Show more</source>
         <translation>Näytä lisää</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3921"/>
+        <location filename="../src/app/qgisapp.cpp" line="3914"/>
         <source>Labeling Options</source>
         <translation>Nimiöinnin vaihtoehdot</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3922"/>
+        <location filename="../src/app/qgisapp.cpp" line="3915"/>
         <source>Please select a vector layer first</source>
         <translation>Ole hyvä ja valitse vektoritaso ensin</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3930"/>
+        <location filename="../src/app/qgisapp.cpp" line="3923"/>
         <source>Layer labeling settings</source>
         <translation>Tason nimiöiden asetukset</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4030"/>
+        <location filename="../src/app/qgisapp.cpp" line="4023"/>
         <source>Reading raster</source>
         <translation>Luetaan rasteria</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4103"/>
+        <location filename="../src/app/qgisapp.cpp" line="4096"/>
         <source>Cannot write raster error code: %1</source>
         <translation>Ei voida kirjoittaa rasterin virhe koodia: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4234"/>
+        <location filename="../src/app/qgisapp.cpp" line="4227"/>
         <source>Saving done</source>
         <translation>Tallennus valmis</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4235"/>
+        <location filename="../src/app/qgisapp.cpp" line="4228"/>
         <source>Export to vector file has been completed</source>
         <translation>Vienti vektoritiedostoon suoritettu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4241"/>
+        <location filename="../src/app/qgisapp.cpp" line="4234"/>
         <source>Save error</source>
         <translation>Tallennus virhe</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4242"/>
+        <location filename="../src/app/qgisapp.cpp" line="4235"/>
         <source>Export to vector file failed.
 Error: %1</source>
         <translation>Vienti vektoritiedostoon epäonnistui.
 Virhe: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4335"/>
-        <location filename="../src/app/qgisapp.cpp" line="6568"/>
-        <location filename="../src/app/qgisapp.cpp" line="6577"/>
-        <location filename="../src/app/qgisapp.cpp" line="6638"/>
-        <location filename="../src/app/qgisapp.cpp" line="6647"/>
+        <location filename="../src/app/qgisapp.cpp" line="4328"/>
+        <location filename="../src/app/qgisapp.cpp" line="6561"/>
+        <location filename="../src/app/qgisapp.cpp" line="6570"/>
+        <location filename="../src/app/qgisapp.cpp" line="6631"/>
+        <location filename="../src/app/qgisapp.cpp" line="6640"/>
         <source>No Layer Selected</source>
         <translation>Tasoa ei valittuna</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4336"/>
+        <location filename="../src/app/qgisapp.cpp" line="4329"/>
         <source>To delete features, you must select a vector layer in the legend</source>
         <translation>Poistaaksesi kohteet, sinun täytyy valita vektoritaso selitteestä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4344"/>
+        <location filename="../src/app/qgisapp.cpp" line="4337"/>
         <source>No Vector Layer Selected</source>
         <translation>Ei vektoritasoa valittuna</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4345"/>
+        <location filename="../src/app/qgisapp.cpp" line="4338"/>
         <source>Deleting features only works on vector layers</source>
         <translation>Kohteiden poisto onnistuu vain vektoritasoilla</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4352"/>
+        <location filename="../src/app/qgisapp.cpp" line="4345"/>
         <source>Provider does not support deletion</source>
         <translation>Tarjoaja ei tue poistamista</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4353"/>
+        <location filename="../src/app/qgisapp.cpp" line="4346"/>
         <source>Data provider does not support deleting features</source>
         <translation>Tiedontarjoaja ei tue kohteiden poistamista</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4360"/>
-        <location filename="../src/app/qgisapp.cpp" line="4786"/>
-        <location filename="../src/app/qgisapp.cpp" line="4845"/>
+        <location filename="../src/app/qgisapp.cpp" line="4353"/>
+        <location filename="../src/app/qgisapp.cpp" line="4779"/>
+        <location filename="../src/app/qgisapp.cpp" line="4838"/>
         <source>Layer not editable</source>
         <translation>Taso ei ole muokattavissa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4361"/>
+        <location filename="../src/app/qgisapp.cpp" line="4354"/>
         <source>The current layer is not editable. Choose &apos;Start editing&apos; in the digitizing toolbar.</source>
         <translation>Nykyinen taso ei ole muokattavissa. Valitse &apos;aloita muokkaus&apos; digitointi työkalussa.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4370"/>
+        <location filename="../src/app/qgisapp.cpp" line="4363"/>
         <source>No Features Selected</source>
         <translation>Ominaisuuksia ei valittu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4376"/>
+        <location filename="../src/app/qgisapp.cpp" line="4369"/>
         <source>Delete features</source>
         <translation>Poista kohteet</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/qgisapp.cpp" line="4376"/>
+        <location filename="../src/app/qgisapp.cpp" line="4369"/>
         <source>Delete %n feature(s)?</source>
         <comment>number of features to delete</comment>
         <translation>
@@ -21242,17 +21242,17 @@ Virhe: %1</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4381"/>
+        <location filename="../src/app/qgisapp.cpp" line="4374"/>
         <source>Features deleted</source>
         <translation>Kohteet poistettu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4385"/>
+        <location filename="../src/app/qgisapp.cpp" line="4378"/>
         <source>Problem deleting features</source>
         <translation>Ongelma kohteita poistettaessa</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/qgisapp.cpp" line="4391"/>
+        <location filename="../src/app/qgisapp.cpp" line="4384"/>
         <source>%n feature(s) deleted.</source>
         <comment>number of features deleted</comment>
         <translation>
@@ -21261,37 +21261,37 @@ Virhe: %1</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4437"/>
+        <location filename="../src/app/qgisapp.cpp" line="4430"/>
         <source>Merging features...</source>
         <translation>Yhdistetään kohteita...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4437"/>
+        <location filename="../src/app/qgisapp.cpp" line="4430"/>
         <source>Abort</source>
         <translation>Keskeytä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4491"/>
+        <location filename="../src/app/qgisapp.cpp" line="4484"/>
         <source>Create unique print composer title</source>
         <translation>Luo yksilöllinen tulosteen muodostajan otsikko</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4494"/>
+        <location filename="../src/app/qgisapp.cpp" line="4487"/>
         <source>(title generated if left empty)</source>
         <translation>(generoitava otsikko jos jätetään tyhjäksi)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4501"/>
+        <location filename="../src/app/qgisapp.cpp" line="4494"/>
         <source>Composer title</source>
         <translation>Tulosteen muodostajan otsikko</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4514"/>
+        <location filename="../src/app/qgisapp.cpp" line="4507"/>
         <source>Title can not be empty!</source>
         <translation>Otsikko ei voi olla tyhjä!</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4523"/>
+        <location filename="../src/app/qgisapp.cpp" line="4516"/>
         <source>Title already exists!</source>
         <translation>Otsikko on jo olemassa!</translation>
     </message>
@@ -21304,104 +21304,104 @@ Virhe: %1</translation>
         <translation type="vanished">kopioi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4771"/>
-        <location filename="../src/app/qgisapp.cpp" line="4834"/>
+        <location filename="../src/app/qgisapp.cpp" line="4764"/>
+        <location filename="../src/app/qgisapp.cpp" line="4827"/>
         <source>No active layer</source>
         <translation>Ei aktiivista tasoa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4772"/>
-        <location filename="../src/app/qgisapp.cpp" line="4834"/>
+        <location filename="../src/app/qgisapp.cpp" line="4765"/>
+        <location filename="../src/app/qgisapp.cpp" line="4827"/>
         <source>No active layer found. Please select a layer in the layer list</source>
         <translation>Aktiivista tasoa ei löydy. Valitse taso tasolistasta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4780"/>
-        <location filename="../src/app/qgisapp.cpp" line="4840"/>
+        <location filename="../src/app/qgisapp.cpp" line="4773"/>
+        <location filename="../src/app/qgisapp.cpp" line="4833"/>
         <source>Active layer is not vector</source>
         <translation>Aktiivinen taso ei ole vektoritaso</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4780"/>
-        <location filename="../src/app/qgisapp.cpp" line="4840"/>
+        <location filename="../src/app/qgisapp.cpp" line="4773"/>
+        <location filename="../src/app/qgisapp.cpp" line="4833"/>
         <source>The merge features tool only works on vector layers. Please select a vector layer from the layer list</source>
         <translation>Kohteiden yhdistämien toimii vain vektoritasoilla. Valitse vektoritaso tasolistasta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4794"/>
-        <location filename="../src/app/qgisapp.cpp" line="4860"/>
-        <location filename="../src/app/qgisapp.cpp" line="4898"/>
+        <location filename="../src/app/qgisapp.cpp" line="4787"/>
+        <location filename="../src/app/qgisapp.cpp" line="4853"/>
+        <location filename="../src/app/qgisapp.cpp" line="4891"/>
         <source>Not enough features selected</source>
         <translation>Kohteita ei ole valittu riittävästi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4794"/>
-        <location filename="../src/app/qgisapp.cpp" line="4860"/>
-        <location filename="../src/app/qgisapp.cpp" line="4898"/>
+        <location filename="../src/app/qgisapp.cpp" line="4787"/>
+        <location filename="../src/app/qgisapp.cpp" line="4853"/>
+        <location filename="../src/app/qgisapp.cpp" line="4891"/>
         <source>The merge tool requires at least two selected features</source>
         <translation>Yhdistämistyökalu vaatii vähintään kaksi valittua kohdetta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4808"/>
+        <location filename="../src/app/qgisapp.cpp" line="4801"/>
         <source>Merged feature attributes</source>
         <translation>Yhdistettiin kohteiden ominaisuustietoja</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4873"/>
-        <location filename="../src/app/qgisapp.cpp" line="4914"/>
+        <location filename="../src/app/qgisapp.cpp" line="4866"/>
+        <location filename="../src/app/qgisapp.cpp" line="4907"/>
         <source>Merge failed</source>
         <translation>Yhdistäminen epäonnistui</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4873"/>
-        <location filename="../src/app/qgisapp.cpp" line="4914"/>
+        <location filename="../src/app/qgisapp.cpp" line="4866"/>
+        <location filename="../src/app/qgisapp.cpp" line="4907"/>
         <source>An error occured during the merge operation</source>
         <translation>Virhe yhdistettäessä </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4881"/>
+        <location filename="../src/app/qgisapp.cpp" line="4874"/>
         <source>Union operation canceled</source>
         <translation>Yhdistävä operaatio peruutettiin</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4881"/>
-        <location filename="../src/app/qgisapp.cpp" line="4921"/>
+        <location filename="../src/app/qgisapp.cpp" line="4874"/>
+        <location filename="../src/app/qgisapp.cpp" line="4914"/>
         <source>The union operation would result in a geometry type that is not compatible with the current layer and therefore is canceled</source>
         <translation>Liitto-operaatio johtaisi geometriaan jota nykyinen taso ei tue. Operaatio peruttiin</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4927"/>
+        <location filename="../src/app/qgisapp.cpp" line="4920"/>
         <source>Merged features</source>
         <translation>Kohteet yhdistettiin</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5043"/>
+        <location filename="../src/app/qgisapp.cpp" line="5036"/>
         <source>No active vector layer</source>
         <translation>Ei aktiivista vektoritasoa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5044"/>
+        <location filename="../src/app/qgisapp.cpp" line="5037"/>
         <source>To select features, choose a vector layer in the legend</source>
         <translation>Valitaksesi ominaisuuksia, valitse vektoritaso selitteessä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5081"/>
+        <location filename="../src/app/qgisapp.cpp" line="5074"/>
         <source>Features cut</source>
         <translation>Kohteet leikattiin</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5121"/>
+        <location filename="../src/app/qgisapp.cpp" line="5114"/>
         <source>No supported data in clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5157"/>
+        <location filename="../src/app/qgisapp.cpp" line="5150"/>
         <source>Features pasted</source>
         <translation>Kohteet liitettiin</translation>
     </message>
     <message>
+        <location filename="../src/app/qgisapp.cpp" line="5158"/>
         <location filename="../src/app/qgisapp.cpp" line="5165"/>
-        <location filename="../src/app/qgisapp.cpp" line="5172"/>
         <source>Paste features</source>
         <translation>Liitä ominaisuudet</translation>
     </message>
@@ -21414,97 +21414,97 @@ Virhe: %1</translation>
         <translation type="vanished">%1 ominaisuutta liitettiin onnistuneesti.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5173"/>
+        <location filename="../src/app/qgisapp.cpp" line="5166"/>
         <source>%1 of %2 features could be successfully pasted.</source>
         <translation>%1 ominaisuutta kaikkiaan %2 liitettiin onnistuneesti.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5193"/>
+        <location filename="../src/app/qgisapp.cpp" line="5186"/>
         <source>SVG graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5222"/>
+        <location filename="../src/app/qgisapp.cpp" line="5215"/>
         <source>Pasted</source>
         <translation>Liitetty</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5223"/>
+        <location filename="../src/app/qgisapp.cpp" line="5216"/>
         <source>New memory layer name</source>
         <translation>Uuden muistitason nimi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5224"/>
+        <location filename="../src/app/qgisapp.cpp" line="5217"/>
         <source>Layer name</source>
         <translation>Tason nimi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5297"/>
+        <location filename="../src/app/qgisapp.cpp" line="5290"/>
         <source>No features in clipboard.</source>
         <translation>Leikepöydällä ei ominaisuuksia.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5301"/>
+        <location filename="../src/app/qgisapp.cpp" line="5294"/>
         <source>No features with geometry found, point type layer will be created.</source>
         <translation>Ei löydetty ominaisuuksia geometrialla, pistetyypin taso luodaan.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5305"/>
+        <location filename="../src/app/qgisapp.cpp" line="5298"/>
         <source>Multiple geometry types found, features with geometry different from %1 will be created without geometry.</source>
         <translation>Useita geometriatyyppejä löydetty, ominaisuudet joiden geometria erilainen kuin %1 luodaan ilman geometriaa.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5319"/>
+        <location filename="../src/app/qgisapp.cpp" line="5312"/>
         <source>Cannot create new layer</source>
         <translation>Uutta tasoa ei voida luoda</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5332"/>
+        <location filename="../src/app/qgisapp.cpp" line="5325"/>
         <source>Cannot create field %1 (%2,%3)</source>
         <translation>Ei voida luoda tietoa %1 (%2,%3)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5392"/>
+        <location filename="../src/app/qgisapp.cpp" line="5385"/>
         <source>Cannot copy style: %1</source>
         <translation>Ei voida kopioida tyyliä: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5420"/>
+        <location filename="../src/app/qgisapp.cpp" line="5413"/>
         <source>Cannot parse style: %1:%2:%3</source>
         <translation>Ei voida jäsentää tyyliä: %1:%2:%3</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5432"/>
+        <location filename="../src/app/qgisapp.cpp" line="5425"/>
         <source>Cannot read style: %1</source>
         <translation>Ei voida lukea tyyliä: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5506"/>
+        <location filename="../src/app/qgisapp.cpp" line="5499"/>
         <source>Start editing failed</source>
         <translation>Muokkaamisen aloittaminen epäonnistui</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5507"/>
+        <location filename="../src/app/qgisapp.cpp" line="5500"/>
         <source>Provider cannot be opened for editing</source>
         <translation>Tarjoajaa ei voi muokata</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5536"/>
+        <location filename="../src/app/qgisapp.cpp" line="5529"/>
         <source>Stop editing</source>
         <translation>Lopeta muokkaus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5537"/>
+        <location filename="../src/app/qgisapp.cpp" line="5530"/>
         <source>Do you want to save the changes to layer %1?</source>
         <translation>Haluatko tallentaa muutokset tasolle %1?</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5568"/>
+        <location filename="../src/app/qgisapp.cpp" line="5561"/>
         <source>Problems during roll back</source>
         <translation>Ongelmia palautuksessa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5651"/>
+        <location filename="../src/app/qgisapp.cpp" line="5644"/>
         <source>Could not %1 changes to layer %2
 
 Errors: %3
@@ -21514,194 +21514,194 @@ Errors: %3
 Virheet: %3</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5652"/>
+        <location filename="../src/app/qgisapp.cpp" line="5645"/>
         <source>rollback</source>
         <translation>palautus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5652"/>
+        <location filename="../src/app/qgisapp.cpp" line="5645"/>
         <source>cancel</source>
         <translation>peruuta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5682"/>
+        <location filename="../src/app/qgisapp.cpp" line="5675"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5682"/>
-        <location filename="../src/app/qgisapp.cpp" line="5708"/>
-        <location filename="../src/app/qgisapp.cpp" line="5734"/>
+        <location filename="../src/app/qgisapp.cpp" line="5675"/>
+        <location filename="../src/app/qgisapp.cpp" line="5701"/>
+        <location filename="../src/app/qgisapp.cpp" line="5727"/>
         <source>all</source>
         <translation>kaikki</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5708"/>
+        <location filename="../src/app/qgisapp.cpp" line="5701"/>
         <source>Rollback</source>
         <translation>Palautus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5734"/>
+        <location filename="../src/app/qgisapp.cpp" line="5727"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5750"/>
+        <location filename="../src/app/qgisapp.cpp" line="5743"/>
         <source>Current edits</source>
         <translation>Nykyiset muokkaukset</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5751"/>
+        <location filename="../src/app/qgisapp.cpp" line="5744"/>
         <source>%1 current changes for %2 layer(s)?</source>
         <translation>%1 nykyisiä muutoksia %2 tasolle(tasoille)?</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5962"/>
+        <location filename="../src/app/qgisapp.cpp" line="5955"/>
         <source>copy</source>
         <translation>kopioi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5966"/>
+        <location filename="../src/app/qgisapp.cpp" line="5959"/>
         <source>Plugin layer</source>
         <translation>Liitännäistaso</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5978"/>
+        <location filename="../src/app/qgisapp.cpp" line="5971"/>
         <source>Memory layer</source>
         <translation>Muistitaso</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6003"/>
-        <location filename="../src/app/qgisapp.cpp" line="6014"/>
+        <location filename="../src/app/qgisapp.cpp" line="5996"/>
+        <location filename="../src/app/qgisapp.cpp" line="6007"/>
         <source>Duplicate layer: </source>
         <translation>Duplikaattitaso:</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6004"/>
+        <location filename="../src/app/qgisapp.cpp" line="5997"/>
         <source>%1 (duplication resulted in invalid layer)</source>
         <translation>%1 (tuplaaminen johti virheelliseen tasoon)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6077"/>
+        <location filename="../src/app/qgisapp.cpp" line="6070"/>
         <source>Set scale visibility for selected layers</source>
         <translation>Aseta mittakaavan näkyvyys valituille tasoille</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6327"/>
+        <location filename="../src/app/qgisapp.cpp" line="6320"/>
         <source>Couldn&apos;t load Python support library: %1</source>
         <translation>Ei voida ladata Python tukikirjastoa: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6338"/>
+        <location filename="../src/app/qgisapp.cpp" line="6331"/>
         <source>Couldn&apos;t resolve python support library&apos;s instance() symbol.</source>
         <translation>Ei voida ratkaista Python tukikirjaston instance() symbolia.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6356"/>
+        <location filename="../src/app/qgisapp.cpp" line="6349"/>
         <source>Python support ENABLED :-) </source>
         <translation>Python tuki MAHDOLLISTETTU. :-)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6399"/>
+        <location filename="../src/app/qgisapp.cpp" line="6392"/>
         <source>There is a new version of QGIS available</source>
         <translation>Uusi versio QGIS:stä löytyi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6403"/>
+        <location filename="../src/app/qgisapp.cpp" line="6396"/>
         <source>You are running a development version of QGIS</source>
         <translation>Tämä on QGIS kehitysversio</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6407"/>
+        <location filename="../src/app/qgisapp.cpp" line="6400"/>
         <source>You are running the current version of QGIS</source>
         <translation>Tämä on uusin versio</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6412"/>
+        <location filename="../src/app/qgisapp.cpp" line="6405"/>
         <source>Would you like more information?</source>
         <translation>Haluaisitko lisätietoa?</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6415"/>
-        <location filename="../src/app/qgisapp.cpp" line="6428"/>
-        <location filename="../src/app/qgisapp.cpp" line="6433"/>
-        <location filename="../src/app/qgisapp.cpp" line="6454"/>
+        <location filename="../src/app/qgisapp.cpp" line="6408"/>
+        <location filename="../src/app/qgisapp.cpp" line="6421"/>
+        <location filename="../src/app/qgisapp.cpp" line="6426"/>
+        <location filename="../src/app/qgisapp.cpp" line="6447"/>
         <source>QGIS Version Information</source>
         <translation>QGIS Version tietoja</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6421"/>
+        <location filename="../src/app/qgisapp.cpp" line="6414"/>
         <source>QGIS - Changes since last release</source>
         <translation>QGIS - Muutokset edellisestä julkaisusta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6433"/>
+        <location filename="../src/app/qgisapp.cpp" line="6426"/>
         <source>Unable to get current version information from server</source>
         <translation>Versiotietoa ei saada haettua palvelimelta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6443"/>
+        <location filename="../src/app/qgisapp.cpp" line="6436"/>
         <source>Connection refused - server may be down</source>
         <translation>Yhteys epäonnistui - palvelin voi olla alhaalla</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6446"/>
+        <location filename="../src/app/qgisapp.cpp" line="6439"/>
         <source>QGIS server was not found</source>
         <translation>QGIS palvelinta ei löydy</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6449"/>
+        <location filename="../src/app/qgisapp.cpp" line="6442"/>
         <source>Unknown network socket error: %1</source>
         <translation>Tuntematon verkon  socket error: %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6454"/>
+        <location filename="../src/app/qgisapp.cpp" line="6447"/>
         <source>Unable to communicate with QGIS Version server
 %1</source>
         <translation>QGIS versio palvelimen kanssa kommunikointi epäonnistui
 %1</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6569"/>
-        <location filename="../src/app/qgisapp.cpp" line="6578"/>
+        <location filename="../src/app/qgisapp.cpp" line="6562"/>
+        <location filename="../src/app/qgisapp.cpp" line="6571"/>
         <source>To perform a full histogram stretch, you need to have a raster layer selected.</source>
         <translation>Suorittaaksesi täyden histogrammin laajentamisen, Sinulla tulee olla rasteritaso valittuna.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6639"/>
-        <location filename="../src/app/qgisapp.cpp" line="6648"/>
+        <location filename="../src/app/qgisapp.cpp" line="6632"/>
+        <location filename="../src/app/qgisapp.cpp" line="6641"/>
         <source>To change brightness or contrast, you need to have a raster layer selected.</source>
         <translation>Muuttaaksesi kirkkautta tai kontrastia, Sinulla tulee olla rasteritaso valittuna.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6674"/>
+        <location filename="../src/app/qgisapp.cpp" line="6667"/>
         <source>en</source>
         <comment>documentation language</comment>
         <translation>en</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6837"/>
-        <location filename="../src/app/qgisapp.cpp" line="6880"/>
+        <location filename="../src/app/qgisapp.cpp" line="6830"/>
+        <location filename="../src/app/qgisapp.cpp" line="6873"/>
         <source>Layer is not valid</source>
         <translation>Taso virheellinen</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6836"/>
+        <location filename="../src/app/qgisapp.cpp" line="6829"/>
         <source>The layer %1 is not a valid layer and can not be added to the map</source>
         <translation>Taso %1 ei ole hyväksyttävä taso eikä sitä voida lisätä kartalle</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6879"/>
+        <location filename="../src/app/qgisapp.cpp" line="6872"/>
         <source>The layer is not a valid layer and can not be added to the map</source>
         <translation>Tämä taso on virheellinen eikä sitä voida lisätä kartalle</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6968"/>
+        <location filename="../src/app/qgisapp.cpp" line="6961"/>
         <source>Project has layer(s) in edit mode with unsaved edits, which will NOT be saved!</source>
         <translation>Projektissa on tasoja muokkaustilassa joiden muokkauksia ei ole tallennettu, joita EI tulla tallentamaan!</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="6992"/>
+        <location filename="../src/app/qgisapp.cpp" line="6985"/>
         <source>Save?</source>
         <translation>Tallenna?</translation>
     </message>
@@ -21726,12 +21726,12 @@ Virheet: %3</translation>
         <translation type="obsolete">Rajat:</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7261"/>
+        <location filename="../src/app/qgisapp.cpp" line="7252"/>
         <source>Maptips require an active layer</source>
         <translation>Vinkit tarvitsevat aktiivisen tason</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/app/qgisapp.cpp" line="7331"/>
+        <location filename="../src/app/qgisapp.cpp" line="7322"/>
         <source>%n feature(s) selected on layer %1.</source>
         <comment>number of selected features</comment>
         <translation>
@@ -21740,79 +21740,79 @@ Virheet: %3</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7367"/>
+        <location filename="../src/app/qgisapp.cpp" line="7358"/>
         <source>Open a GDAL Supported Raster Data Source</source>
         <translation>Avaa GDAL tuettu rasteri tietolähde</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7478"/>
+        <location filename="../src/app/qgisapp.cpp" line="7469"/>
         <source>Error adding valid layer to map canvas</source>
         <translation>Virhe lisättäessä kelvollinen taso kartan näyttöalalle</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7479"/>
-        <location filename="../src/app/qgisapp.cpp" line="7617"/>
+        <location filename="../src/app/qgisapp.cpp" line="7470"/>
+        <location filename="../src/app/qgisapp.cpp" line="7608"/>
         <source>Raster layer</source>
         <translation>Rasteritaso</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7614"/>
+        <location filename="../src/app/qgisapp.cpp" line="7605"/>
         <source>%1 is not a supported raster data source</source>
         <translation>%1 rasteri tietuetta ei tueta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7619"/>
+        <location filename="../src/app/qgisapp.cpp" line="7610"/>
         <source>Unsupported Data Source</source>
         <translation>Tukematon tietue</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7660"/>
+        <location filename="../src/app/qgisapp.cpp" line="7651"/>
         <source>Exit QGIS</source>
         <translation>Poistu QGIS:tä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7661"/>
+        <location filename="../src/app/qgisapp.cpp" line="7652"/>
         <source>Do you really want to quit QGIS?</source>
         <translation>Haluatko todella poistua QGIS ohjelmasta?</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7760"/>
+        <location filename="../src/app/qgisapp.cpp" line="7751"/>
         <source>This project file was saved by an older version of QGIS. When saving this project file, QGIS will update it to the latest version, possibly rendering it useless for older versions of QGIS.</source>
         <translation>Tämä projektitiedosto on tallennettu vanhemmalla QGIS versiolla. Kun talletat tämän projektitiedoston QGIS päivittää sen viimeisimpään versioon, mahdollisesti tehden sen käyttökelvottomaksi vanhemmille QGIS versioille.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7764"/>
+        <location filename="../src/app/qgisapp.cpp" line="7755"/>
         <source>&lt;p&gt;This project file was saved by an older version of QGIS. When saving this project file, QGIS will update it to the latest version, possibly rendering it useless for older versions of QGIS.&lt;p&gt;Even though QGIS developers try to maintain backwards compatibility, some of the information from the old project file might be lost. To improve the quality of QGIS, we appreciate if you file a bug report at %3. Be sure to include the old project file, and state the version of QGIS you used to discover the error.&lt;p&gt;To remove this warning when opening an older project file, uncheck the box &apos;%5&apos; in the %4 menu.&lt;p&gt;Version of the project file: %1&lt;br&gt;Current version of QGIS: %2</source>
         <translation>&lt;p&gt;Tämä projektitiedosto on tallennettu QGIS:n vanhemmalla versiolla. Kun tämä projekti tallennetaan QGIS päivittää sen uusimmalle versiolle, ja on mahdollista että sitä ei voi enään avata QGIS:n vanhemmilla versioilla. &lt;p&gt; QGIS kehittäjät pyrkivät säilyttämään taaksepäinyhteensopivuuden, mutta osa vanhan projektin tiedoista voi kadota. Parantaaksemme QGIS ohjelmiston laatua, olisimme kiitollisia jos raportoit kaikista bugeista mitä löydät. Bugit voit ilmoittaa kohteeseen %3. Muista myös liittää mukaan vanha projektitiedosto, sekä ilmoittaa mitä QGIS versiota käytit virheen löytämiseen.&lt;p&gt; Poistaaksesi tämän varoituksen vanhoja projekteja aukaistessa, ota ruksi pois valintaruudusta &apos;%5&apos; valikossa %4.&lt;p&gt; Projektitiedoston versionumero: %1 &lt;br&gt; Nykyisen QGIS installaation versio: %2</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7780"/>
+        <location filename="../src/app/qgisapp.cpp" line="7771"/>
         <source>&lt;tt&gt;Settings:Options:General&lt;/tt&gt;</source>
         <comment>Menu path to setting options</comment>
         <translation>&lt;tt&gt;Muokkaa:Asetukset:Yleiset&lt;/tt&gt;</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7781"/>
+        <location filename="../src/app/qgisapp.cpp" line="7772"/>
         <source>Warn me when opening a project file saved with an older version of QGIS</source>
         <translation>Varoita minua kun avaan projektin joka on tallennettu vanhemmalla QGIS versiolla</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7782"/>
+        <location filename="../src/app/qgisapp.cpp" line="7773"/>
         <source>Project file is older</source>
         <translation>Projektitiedosto on vanhempi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7786"/>
+        <location filename="../src/app/qgisapp.cpp" line="7777"/>
         <source>This project file was saved by an older version of QGIS</source>
         <translation>Tämä projektitiedosto tallennettiin vanhemmalla QGIS versiolla</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8007"/>
+        <location filename="../src/app/qgisapp.cpp" line="7998"/>
         <source>A network request for %1 timed out, any data received is likely incomplete.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="8008"/>
+        <location filename="../src/app/qgisapp.cpp" line="7999"/>
         <source> Please check the &lt;a href=&quot;#messageLog&quot;&gt;message log&lt;/a&gt; for further info.</source>
         <translation>Ole ystävällinen ja tarkista &lt;a href=&quot;#messageLog&quot;&gt;viestiloki &lt;/a&gt; lisäinformaation saamiseksi.</translation>
     </message>
@@ -21821,15 +21821,15 @@ Virheet: %3</translation>
         <translation type="obsolete">Verkkopyyntö on vanhentunut. Vastaanotettu data on todennäköisesti epätäydellistä.</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="5310"/>
-        <location filename="../src/app/qgisapp.cpp" line="5319"/>
-        <location filename="../src/app/qgisapp.cpp" line="5331"/>
-        <location filename="../src/app/qgisapp.cpp" line="7955"/>
+        <location filename="../src/app/qgisapp.cpp" line="5303"/>
+        <location filename="../src/app/qgisapp.cpp" line="5312"/>
+        <location filename="../src/app/qgisapp.cpp" line="5324"/>
+        <location filename="../src/app/qgisapp.cpp" line="7946"/>
         <source>Warning</source>
         <translation>Varoitus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7956"/>
+        <location filename="../src/app/qgisapp.cpp" line="7947"/>
         <source>This layer doesn&apos;t have a properties dialog.</source>
         <translation>Tällä tasolla ei ole asetus dialogia.</translation>
     </message>
@@ -21842,12 +21842,12 @@ Virheet: %3</translation>
         <translation type="obsolete">Proxy todennusta tarvitaan</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7990"/>
+        <location filename="../src/app/qgisapp.cpp" line="7981"/>
         <source>SSL errors occured accessing URL %1:</source>
         <translation>SSL virheitä tapahtui käytettäessä URL %1:</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7995"/>
+        <location filename="../src/app/qgisapp.cpp" line="7986"/>
         <source>
 
 Always ignore these errors?</source>
@@ -21864,12 +21864,12 @@ Ohita nämä virheet aina?</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3196"/>
+        <location filename="../src/app/qgisapp.cpp" line="3189"/>
         <source>Failed to run Python script:</source>
         <translation>Python skriptin suoritus epäonnistui:</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4371"/>
+        <location filename="../src/app/qgisapp.cpp" line="4364"/>
         <source>The current layer has no selected features</source>
         <translation>Nykyisellä tasolla ei ole valittuja ominaisuuksia</translation>
     </message>
@@ -21894,17 +21894,17 @@ Ohita nämä virheet aina?</translation>
         <translation type="obsolete">Viestit</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3163"/>
+        <location filename="../src/app/qgisapp.cpp" line="3161"/>
         <source>Error loading layer definition</source>
         <translation>Virhe ladattaessa tason määrityksiä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4143"/>
+        <location filename="../src/app/qgisapp.cpp" line="4136"/>
         <source>Error saving layer definintion file</source>
         <translation>Virhe tallennettaessa tason määritysten tiedostoa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="4386"/>
+        <location filename="../src/app/qgisapp.cpp" line="4379"/>
         <source>A problem occured during deletion of %1 feature(s)</source>
         <translation>Ongelma tapahtui poistettaessa %1 ominaisuutta</translation>
     </message>
@@ -21929,23 +21929,23 @@ Ohita nämä virheet aina?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3147"/>
+        <location filename="../src/app/qgisapp.cpp" line="3145"/>
         <source>KML export completed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3151"/>
+        <location filename="../src/app/qgisapp.cpp" line="3149"/>
         <source>KML export failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="7997"/>
+        <location filename="../src/app/qgisapp.cpp" line="7988"/>
         <source>%1 SSL errors occured</source>
         <comment>number of errors</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgisapp.cpp" line="3431"/>
+        <location filename="../src/app/qgisapp.cpp" line="3424"/>
         <source>Map saved to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37357,27 +37357,17 @@ Ole ystävällinen ja valise uudelleen hyväksyttävä tiedosto.</translation>
 <context>
     <name>QgsGPSRouteEditor</name>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="45"/>
-        <source>Waypoint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="82"/>
-        <source>Route</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="407"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="409"/>
         <source>Export to GPX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="149"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="151"/>
         <source>GPS Routes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="322"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="324"/>
         <source>Import GPX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37386,15 +37376,9 @@ Ole ystävällinen ja valise uudelleen hyväksyttävä tiedosto.</translation>
         <translation type="obsolete">Virhe</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="322"/>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="407"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="324"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="409"/>
         <source>GPX Files (*.gpx)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="50"/>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="89"/>
-        <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -37402,32 +37386,32 @@ Ole ystävällinen ja valise uudelleen hyväksyttävä tiedosto.</translation>
         <translation type="obsolete">Nimi</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="332"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="334"/>
         <source>GPX import failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="332"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="334"/>
         <source>Cannot read file</source>
         <translation type="unfinished">Ei voida lukea tiedostoa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="397"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="399"/>
         <source>GPX import complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="397"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="399"/>
         <source>%1 waypoints, %2 routes and %3 tracks were read.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="421"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="423"/>
         <source>GPX export failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="421"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="423"/>
         <source>Cannot write to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -48323,6 +48307,16 @@ Tämä voi johtua ongelmasta verkkoyhteydessä, tai WMS palvelimesta. </numerusf
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/plugins/milx/qgsmilxio.cpp" line="70"/>
+        <source>Add cartouche to layer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/milx/qgsmilxio.cpp" line="72"/>
+        <source>MilX version:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/plugins/milx/qgsmilxio.cpp" line="108"/>
         <source>Select Output</source>
         <translation type="unfinished"></translation>
@@ -50292,27 +50286,27 @@ Virheilmoitus:
         <translation>Aina verkko</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="274"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="269"/>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
         <translation>Oletko varma että haluat poistaa yhteyden %1 ja kaikki siihen liittyvät asetukset?</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="276"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="271"/>
         <source>Confirm Delete</source>
         <translation>Vahvista poisto</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="294"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="289"/>
         <source>Load connections</source>
         <translation>Lataa yhteydet</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="295"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="290"/>
         <source>XML files (*.xml *XML)</source>
         <translation>XML tiedostot (*.xml *.XML)</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="422"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="417"/>
         <source>Coordinate Reference System (%n available)</source>
         <comment>crs count</comment>
         <translation>
@@ -50321,34 +50315,34 @@ Virheilmoitus:
         </translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="459"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="454"/>
         <source>Coordinate Reference System</source>
         <translation>Koordinaattijärjestelmä</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="576"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="571"/>
         <source>Could not understand the response:
 %1</source>
         <translation>Ei voitu ymmärtää vastausta:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="627"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="622"/>
         <source>WMS proxies</source>
         <translation>WMS proxyt</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="627"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="622"/>
         <source>Several WMS servers have been added to the server list. Note that if you access the internet via a web proxy, you will need to set the proxy settings in the QGIS options dialog.</source>
         <translation>Useita WMS palvelimia on lisätty palvelin listaan. Jos olet yhteydessä verkkoon proxyn välityksellä, sinun täytyy asettaa proxy asetukset QGIS asetus dialogissa.</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="708"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="703"/>
         <source>parse error at row %1, column %2: %3</source>
         <translation>jäsennysvirhe rivillä %1, sarakkeessa %2: %3</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsowssourceselect.cpp" line="713"/>
+        <location filename="../src/gui/qgsowssourceselect.cpp" line="708"/>
         <source>network error: %1</source>
         <translation>verkkovirhe: %1</translation>
     </message>
@@ -51031,23 +51025,23 @@ Aina verkosta: lataa aina verkosta äläkä tarkista onko välimuistin merkintä
     </message>
     <message>
         <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="81"/>
-        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="122"/>
+        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="108"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
     <message>
         <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="82"/>
-        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="123"/>
+        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="109"/>
         <source>The selected file is not a valid raster file.</source>
         <translation>Valittu tiedosto ei ole validi rasteritiedosto.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="115"/>
+        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="101"/>
         <source>Choose a name for the modified raster</source>
         <translation>Valitse nimi muokatulle rasterille</translation>
     </message>
     <message>
-        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="148"/>
+        <location filename="../src/plugins/georeferencer/qgsopenrasterdialog.cpp" line="134"/>
         <source>-modified</source>
         <comment>Georeferencer:QgsOpenRasterDialog.cpp - used to modify a user given file name</comment>
         <translation>-muokattu</translation>
@@ -56861,13 +56855,13 @@ Valitse Ohita jatkaaksesi lataamista ilman puuttuvia tasoja. Valitse Peruuta pal
         <translation>Rasteri</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="796"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1165"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="790"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1159"/>
         <source>Coordinate System Restriction</source>
         <translation>Koordinaattijärjestelmän rajoitus</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="796"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="790"/>
         <source>No coordinate systems selected. Disabling restriction.</source>
         <translation>Koordinaattijärjestelmää ei valittu. Poistetaan rajoitukset.</translation>
     </message>
@@ -56877,161 +56871,161 @@ Valitse Ohita jatkaaksesi lataamista ilman puuttuvia tasoja. Valitse Peruuta pal
         <translation>Valinnan väri</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1002"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="996"/>
         <source>Measure tool (CRS transformation: %1)</source>
         <translation>Mittatyökalu (CRS muunnos: %1)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1003"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="997"/>
         <source>Canvas units (CRS transformation: %1)</source>
         <translation>Karttanäytön yksiköt (CRS muunnos: %1)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1036"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1037"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1030"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1031"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1047"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1048"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1041"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1042"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1165"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1159"/>
         <source>CRS %1 was already selected</source>
         <translation>CRS %1 oli jo valittu</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1185"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1179"/>
         <source>Coordinate System Restrictions</source>
         <translation>Koordinaattijärjestelmän rajoitukset</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1186"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1180"/>
         <source>The current selection of coordinate systems will be lost.
 Proceed?</source>
         <translation>Nykyinen koordinaattijärjestelmän valita menetetään.
  Jatkatko?</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1217"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1211"/>
         <source>Select print composer</source>
         <translation>Valitse tulostettava tulosteen muodostaja</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1217"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1211"/>
         <source>Composer Title</source>
         <translation>Tulosteen muodostajan otsikko</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1239"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1233"/>
         <source>Select restricted layers and groups</source>
         <translation>Valitse rajoitetut tasot ja ryhmät</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1396"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1390"/>
         <source>Enter scale</source>
         <translation>Anna mittakaava</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1397"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1391"/>
         <source>Scale denominator</source>
         <translation>Mittakaavan nimittäjä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1421"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1415"/>
         <source>Load scales</source>
         <translation>Lataa mittakaavat</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1422"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1448"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1416"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1442"/>
         <source>XML files (*.xml *.XML)</source>
         <translation>XML tiedostot (*.xml *.XML)</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1447"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1441"/>
         <source>Save scales</source>
         <translation>Talleta mittakaavat</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1596"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1590"/>
         <source>Select a valid symbol</source>
         <translation>Valitse oikea symboli</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1602"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1596"/>
         <source>Invalid symbol : </source>
         <translation>Virheellinen symboli : </translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1648"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1752"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1753"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1642"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1746"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1747"/>
         <source>Parameters:</source>
         <translation>Parametrit:</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1752"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1753"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1746"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1747"/>
         <source>Select %1 from pull-down menu to adjust radii</source>
         <translation>Valitse %1 alasvetovalikosta asettaaksesi säteen</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1764"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1758"/>
         <source>Can only use ellipsoidal calculations when CRS transformation is enabled</source>
         <translation>Ellipsoidin laskentaa voidaan käyttää ainoastaan kun CRS muunnos on käytössä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1798"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1792"/>
         <source>Select Color</source>
         <translation>Valitse väri</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1812"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1806"/>
         <source>Select palette file</source>
         <translation>Valitse palettitiedosto</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1823"/>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1832"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1817"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1826"/>
         <source>Invalid file</source>
         <translation>Virheellinen tiedosto</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1823"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1817"/>
         <source>Error, file does not exist or is not readable</source>
         <translation>Virhe, tiedostoa ei joko ole tai se ei ole luettavissa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1832"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1826"/>
         <source>Error, no colors found in palette file</source>
         <translation>Virhe, ei löytynyt värejä palettitiedostosta</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1841"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1835"/>
         <source>Palette file</source>
         <translation>Palettitiedosto</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1861"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1855"/>
         <source>Error exporting</source>
         <translation>Virhe viennissä</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1861"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1855"/>
         <source>Error writing palette file</source>
         <translation>Virhe kirjoitettaessa palettitiedostoa</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1303"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1297"/>
         <source>Publish group as single layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsprojectproperties.cpp" line="1303"/>
+        <location filename="../src/app/qgsprojectproperties.cpp" line="1297"/>
         <source>Select group name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61175,73 +61169,88 @@ keskihajonta ×</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="555"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="556"/>
         <source>On the fly projection enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="555"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="556"/>
         <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="573"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="574"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="587"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="588"/>
         <source>SVG graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="591"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="592"/>
         <source>Could not add image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="659"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="660"/>
         <source>Language Changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="659"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="660"/>
         <source>The language will be changed at the next program launch.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="688"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="689"/>
         <source>Connecting to GPS device...</source>
         <translation type="unfinished">Yhdistetään GPS laitteeseen...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="694"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="695"/>
         <source>GPS connection closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="701"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="702"/>
         <source>GPS device successfully connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="712"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="713"/>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="763"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="764"/>
         <source>Remove</source>
         <translation type="unfinished">Poista</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="767"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="768"/>
         <source>Favorite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="779"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="780"/>
         <source>Project saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="793"/>
+        <source>Manually set projection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="796"/>
+        <source>Unknown layer projection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="797"/>
+        <source>The projection of the layer %1 could not be recognized, its and features might be misplaced.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -63355,42 +63364,42 @@ lisäys</translation>
         <translation type="unfinished">&amp;Rakenna kysely</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="221"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="214"/>
         <source>Create a new %1 connection</source>
         <translation type="unfinished">Luo uusi %1 yhteys</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="233"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="226"/>
         <source>Modify %1 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="244"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="237"/>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
         <translation type="unfinished">Oletko varma että haluat poistaa yhteyden %1 ja kaikki siihen liittyvät asetukset?</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="246"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="239"/>
         <source>Confirm Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="291"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="284"/>
         <source>No Layers</source>
         <translation type="unfinished">Ei tasoja</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="291"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="284"/>
         <source>The query returned no layers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="421"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="414"/>
         <source>Load connections</source>
         <translation type="unfinished">Lataa yhteydet</translation>
     </message>
     <message>
-        <location filename="../src/gui/qgssourceselectdialog.cpp" line="422"/>
+        <location filename="../src/gui/qgssourceselectdialog.cpp" line="415"/>
         <source>XML files (*.xml *XML)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -68193,55 +68202,55 @@ Virhe oli:%2</translation>
         <translation>Lisää valitut tasot kartalle</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="197"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="192"/>
         <source>Are you sure you want to remove the %1 connection and all associated settings?</source>
         <translation>Oletko varma että haluat poistaa yhteyden %1 ja kaikki siihen liittyvät asetukset?</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="199"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="194"/>
         <source>Confirm Delete</source>
         <translation>Vahvista poisto</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="217"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="212"/>
         <source>Load connections</source>
         <translation>Lataa yhteydet</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="218"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="213"/>
         <source>XML files (*.xml *XML)</source>
         <translation>XML tiedosto (*.xml *.XML)</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="399"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="394"/>
         <source>encoding %1 not supported.</source>
         <translation>koodausta %1 ei tueta.</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="444"/>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="461"/>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="470"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="439"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="456"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="465"/>
         <source>WMS Provider</source>
         <translation>WMS tarjoaja</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="445"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="440"/>
         <source>Failed to parse WMS URI</source>
         <translation>Epäonnistuminen jäsennettäessä WMS URI </translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="462"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="457"/>
         <source>Failed to download capabilities:
 </source>
         <translation>Epäonnistuminen ladattessa ominaisuuksia:</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="471"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="466"/>
         <source>The server you are trying to connect to does not seem to be a WMS server. Please check the URL.</source>
         <translation>Palvelin johon yrität yhteyttä ei näytä olevan WMS palvelin. Ole hyvä ja tarkista URL.</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="473"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="468"/>
         <source>Instead of the capabilities string that was expected, the following response has been received:
 
 %1</source>
@@ -68250,7 +68259,7 @@ Virhe oli:%2</translation>
 %1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="821"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="816"/>
         <source>Options (%n coordinate reference systems available)</source>
         <comment>crs count</comment>
         <translation>
@@ -68259,22 +68268,22 @@ Virhe oli:%2</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="911"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="906"/>
         <source>Select layer(s)</source>
         <translation>Valitse taso(t)</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="913"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="908"/>
         <source>Select layer(s) or a tileset</source>
         <translation>Valitse taso(t) tai kuvakejoukko</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="918"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="913"/>
         <source>Select either layer(s) or a tileset</source>
         <translation>Valitse joka taso(t) tai kuvakejoukko</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="923"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="918"/>
         <source>Coordinate Reference System (%n available)</source>
         <comment>crs count</comment>
         <translation>
@@ -68283,22 +68292,22 @@ Virhe oli:%2</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="930"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="925"/>
         <source>No common CRS for selected layers.</source>
         <translation>Ei yhteistä CRS valituille tasoille.</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="935"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="930"/>
         <source>No CRS selected</source>
         <translation>CRS ei valittu</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="940"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="935"/>
         <source>No image encoding selected</source>
         <translation>Kuvan koodausta ei valittu</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="945"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="940"/>
         <source>%n Layer(s) selected</source>
         <comment>selected layer count</comment>
         <translation>
@@ -68307,44 +68316,44 @@ Virhe oli:%2</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="951"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="946"/>
         <source>Tileset selected</source>
         <translation>Kuvakejoukko valittu</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1069"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1064"/>
         <source>Could not understand the response. The %1 provider said:
 %2</source>
         <translation>Ei ymmärretty vastausta. Tarjoaja %1 sanoi :
 %2</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1120"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1115"/>
         <source>WMS proxies</source>
         <translation>WMS proxyt</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1120"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1115"/>
         <source>Several WMS servers have been added to the server list. Note that if you access the internet via a web proxy, you will need to set the proxy settings in the QGIS options dialog.</source>
         <translation>Useita WMS palvelimia on lisätty palvelin listaan. Jos olet yhteydessä verkkoon proxyn välityksellä, sinun täytyy asettaa proxy asetukset QGIS asetus dialogissa.</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1200"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1195"/>
         <source>parse error at row %1, column %2: %3</source>
         <translation>jäsennysvirhe rivillä %1, sarakkeessa %2: %3</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1205"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1200"/>
         <source>network error: %1</source>
         <translation>verkkovirhe: %1</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1228"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1223"/>
         <source>The %1 connection already exists. Do you want to overwrite it?</source>
         <translation>Yhteys nimellä %1 on jo olemassa. Korvaa se?</translation>
     </message>
     <message>
-        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1229"/>
+        <location filename="../src/providers/wms/qgswmssourceselect.cpp" line="1224"/>
         <source>Confirm Overwrite</source>
         <translation>Vahvista korvaaminen</translation>
     </message>
@@ -70973,6 +70982,24 @@ Ole ystävällinen ja aseta ennenkuin suoritat R skriptejä.</translation>
     </message>
 </context>
 <context>
+    <name>RouteEditor</name>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="84"/>
+        <source>Route</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="91"/>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="95"/>
+        <source>Number:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SLDatabase</name>
     <message>
         <location filename="../python/plugins/db_manager/python-i18n.cpp" line="389"/>
@@ -72729,6 +72756,19 @@ Ongelma rivillä: %d</translation>
         <location filename="../python/plugins/processing/python-i18n.cpp" line="2257"/>
         <source>Input file should contain at least 3 points. Choose another file and try again.</source>
         <translation>Syötettävän tiedoston tulee sisältää vähintäin 3 pistettä. Valitse toinen tiedosto ja yritä uudelleen.</translation>
+    </message>
+</context>
+<context>
+    <name>WaypointEditor</name>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="46"/>
+        <source>Waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="51"/>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -154,6 +154,8 @@ for binary in $binaries; do
     autoLinkDeps $binary
 done
 linkDep bin/gdb.exe
+linkDep bin/python2.exe
+linkDep bin/python2w.exe
 
 linkDep $(ls $MINGWROOT/bin/libssl-*.dll | sed "s|$MINGWROOT/||")
 linkDep $(ls $MINGWROOT/bin/libcrypto-*.dll | sed "s|$MINGWROOT/||")

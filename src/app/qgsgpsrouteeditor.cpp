@@ -41,6 +41,7 @@ int QgsGPSRouteEditor::sFeatureSize = 2;
 
 class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
 {
+    Q_DECLARE_TR_FUNCTIONS( WaypointEditor )
   public:
     WaypointEditor() : QgsRedliningAttribEditor( tr( "Waypoint" ) )
     {
@@ -78,6 +79,7 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
 
 class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
 {
+    Q_DECLARE_TR_FUNCTIONS( RouteEditor )
   public:
     RouteEditor() : QgsRedliningAttribEditor( tr( "Route" ) )
     {
@@ -90,7 +92,7 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
       mNameEdit = new QLineEdit();
       layout->addWidget( mNameEdit, 0, 1, 1, 1 );
 
-      layout->addWidget( new QLabel( "Number:" ), 1, 0, 1, 1 );
+      layout->addWidget( new QLabel( tr( "Number:" ) ), 1, 0, 1, 1 );
       mNumberEdit = new QLineEdit();
       mNumberEdit->setValidator( new QIntValidator( 0, std::numeric_limits<int>::max() ) );
       layout->addWidget( mNumberEdit, 1, 1, 1, 1 );
