@@ -48,11 +48,10 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
   private:
     QString mRemarks;
 
-    void _showItemEditor() override;
-
   private slots:
     void copyPosition();
     void updateToolTip();
+    void _showItemEditor() override;
 };
 
 #endif // QGSPINANNOTATIONITEM_H

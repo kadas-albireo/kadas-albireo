@@ -135,6 +135,7 @@ void QgsPinAnnotationItem::setMapPosition( const QgsPoint& pos, const QgsCoordin
 void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )
 {
   QMenu menu;
+  menu.addAction( QIcon( ":/images/themes/default/mActionEditor.svg" ), tr( "Attribute editor..." ), this, SLOT( _showItemEditor() ) );
   menu.addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy position" ), this, SLOT( copyPosition() ) );
   menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
