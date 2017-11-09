@@ -21,6 +21,7 @@
 #include <librsvg/rsvg.h>
 #include <cairo.h>
 #endif
+#include <memory>
 
 #include "MilXClient.hpp"
 #include "MilXCommands.hpp"
@@ -42,8 +43,8 @@
 #include <windows.h>
 #endif
 
-MilXClientWorker::MilXClientWorker( QObject* parent )
-    : QObject( parent ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
+MilXClientWorker::MilXClientWorker( bool sync )
+    : mSync( sync ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
 {
 }
 
@@ -74,12 +75,13 @@ bool MilXClientWorker::initialize()
   mLastError = QString();
 
   // Start process
+  QByteArray portEnv = mSync ? "MILIX_SERVER_PORT_SYNC" : "MILIX_SERVER_PORT_ASYNC";
 #ifdef Q_OS_WIN
   int port;
   QHostAddress addr( QHostAddress::LocalHost );
-  if ( !qgetenv( "MILIX_SERVER_PORT" ).isEmpty() && !qgetenv( "MILIX_SERVER_ADDR" ).isEmpty() )
+  if ( !qgetenv( portEnv ).isEmpty() && !qgetenv( "MILIX_SERVER_ADDR" ).isEmpty() )
   {
-    port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
+    port = atoi( qgetenv( portEnv ) );
     addr = QHostAddress( QString( qgetenv( "MILIX_SERVER_ADDR" ) ) );
   }
   else
@@ -113,7 +115,7 @@ bool MilXClientWorker::initialize()
     }
   }
 #else
-  int port = atoi( qgetenv( "MILIX_SERVER_PORT" ) );
+  int port = atoi( qgetenv( portEnv ) );
   QHostAddress addr = QHostAddress( QString( qgetenv( "MILIX_SERVER_ADDR" ) ) );
 #endif
 
@@ -183,7 +185,6 @@ bool MilXClientWorker::initialize()
   istream << MILX_REQUEST_INIT;
   istream << lang;
   istream << MILX_INTERFACE_VERSION;
-  istream << 0; // Used to be wid, but too fragile
   QByteArray response;
   if ( !processRequest( request, response, MILX_REPLY_INIT_OK ) )
   {
@@ -225,25 +226,21 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
   mTcpSocket->write( request );
   mTcpSocket->flush();
 
-#ifdef Q_OS_WIN32
-  // Attempt to bring editor window in foreground
-  if ( expectedReply == MILX_REPLY_EDIT_SYMBOL || expectedReply == MILX_REPLY_CREATE_SYMBOL )
-  {
-    for ( int i = 0; i < 10; ++i )
-    {
-      Sleep( 100 );
-      HWND hWnd = FindWindow( "TfrmMssSymbolEditorBaseGS", NULL );
-      if ( hWnd )
-      {
-        SetForegroundWindow( hWnd );
-        break;
-      }
-    }
-  }
-#endif
   do
   {
-    mTcpSocket->waitForReadyRead( 3600000 );
+    if ( mSync )
+    {
+      mTcpSocket->waitForReadyRead( 3600000 );
+    }
+    else
+    {
+      if ( !mTcpSocket->bytesAvailable() )
+      {
+        QEventLoop evLoop;
+        connect( mTcpSocket, SIGNAL( readyRead() ), &evLoop, SLOT( quit() ) );
+        evLoop.exec( QEventLoop::ExcludeUserInputEvents );
+      }
+    }
 
     if ( !mLastError.isEmpty() || !mTcpSocket->isValid() )
     {
@@ -272,6 +269,13 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
     return false;
   }
   return true;
+}
+
+void MilXClientWorker::processRequestAsync( const QByteArray& request, quint8 expectedReply )
+{
+  QByteArray response;
+  bool success = processRequest( request, response, expectedReply );
+  emit requestCompleted( success, response );
 }
 
 void MilXClientWorker::handleSocketError()
@@ -312,23 +316,35 @@ MilXClient* MilXClient::instance()
 }
 
 MilXClient::MilXClient()
+    : mAsyncWorker( false ), mSyncWorker( true )
 {
-  mWorker.moveToThread( this );
+  ;
+  mSyncWorker.moveToThread( this );
   start();
 }
 
 MilXClient::~MilXClient()
 {
-  mWorker.cleanup();
+  mAsyncWorker.cleanup();
+  mSyncWorker.cleanup();
   QThread::quit();
   wait();
 }
 
-bool MilXClient::processRequest( const QByteArray& request, QByteArray& response, MilXServerReply expectedReply )
+bool MilXClient::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply, bool async )
 {
-  bool result;
-  QMetaObject::invokeMethod( &mWorker, "processRequest", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
-  return result;
+  // If not running in GUI thread, post synchronous request
+  if ( QThread::currentThread() != qApp->thread() || !async )
+  {
+    QTextStream( stdout ) << "Process request: processing synchronously in non-gui thread" << endl;
+    bool result;
+    QMetaObject::invokeMethod( &mSyncWorker, "processRequest", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
+    return result;
+  }
+  else
+  {
+    return mAsyncWorker.processRequest( request, response, expectedReply );
+  }
 }
 
 QString MilXClient::attributeName( int idx )
@@ -360,8 +376,8 @@ int MilXClient::attributeIdx( const QString& name )
 bool MilXClient::init()
 {
   bool result;
-  QMetaObject::invokeMethod( &instance()->mWorker, "initialize", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ) );
-  return result;
+  QMetaObject::invokeMethod( &instance()->mSyncWorker, "initialize", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ) );
+  return result && instance()->mAsyncWorker.initialize();
 }
 
 bool MilXClient::getSymbolMetadata( const QString& symbolId, SymbolDesc &result )
@@ -557,12 +573,18 @@ bool MilXClient::deletePoint( const QRect &visibleExtent, int dpi, const NPointS
 
 bool MilXClient::editSymbol( const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result )
 {
+#ifdef Q_OS_WIN32
+  WId wid = qApp->topLevelWidgets().front()->winId();
+#else
+  WId wid = 0;
+#endif
+
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_EDIT_SYMBOL << visibleExtent << dpi << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored;
+  istream << MILX_REQUEST_EDIT_SYMBOL << visibleExtent << dpi << symbol.xml << symbol.points << symbol.controlPoints << symbol.attributes << symbol.finalized << symbol.colored << wid;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_EDIT_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_EDIT_SYMBOL, true ) )
   {
     return false;
   }
@@ -583,12 +605,18 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, int dpi, const NPointSy
 
 bool MilXClient::createSymbol( QString& symbolId, SymbolDesc& result )
 {
+#ifdef Q_OS_WIN32
+  WId wid = qApp->topLevelWidgets().front()->winId();
+#else
+  WId wid = 0;
+#endif
+
   QByteArray request;
   QDataStream istream( &request, QIODevice::WriteOnly );
-  istream << MILX_REQUEST_CREATE_SYMBOL;
+  istream << MILX_REQUEST_CREATE_SYMBOL << wid;
 
   QByteArray response;
-  if ( !instance()->processRequest( request, response, MILX_REPLY_CREATE_SYMBOL ) )
+  if ( !instance()->processRequest( request, response, MILX_REPLY_CREATE_SYMBOL, true ) )
   {
     return false;
   }
@@ -790,7 +818,7 @@ bool MilXClient::getSupportedLibraryVersionTags( QStringList& versionTags, QStri
 bool MilXClient::getCurrentLibraryVersionTag( QString& versionTag )
 {
   bool result;
-  QMetaObject::invokeMethod( &instance()->mWorker, "getCurrentLibraryVersionTag", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( QString&, versionTag ) );
+  QMetaObject::invokeMethod( &instance()->mSyncWorker, "getCurrentLibraryVersionTag", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( QString&, versionTag ) );
   return result;
 }
 

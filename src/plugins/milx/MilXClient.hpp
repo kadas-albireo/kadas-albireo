@@ -36,15 +36,20 @@ class QTcpSocket;
 class MilXClientWorker : public QObject {
   Q_OBJECT
 public:
-  MilXClientWorker(QObject* parent = 0);
+  MilXClientWorker(bool sync);
 
 public slots:
   bool initialize();
   bool getCurrentLibraryVersionTag(QString& versionTag);
   bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
+  void processRequestAsync(const QByteArray& request, quint8 expectedReply);
   void cleanup();
 
+signals:
+  void requestCompleted(bool success, const QByteArray& response);
+
 private:
+  bool mSync;
   QProcess* mProcess;
   QNetworkSession* mNetworkSession;
   QTcpSocket* mTcpSocket;
@@ -136,9 +141,13 @@ public:
 
   static void quit(){ delete instance(); }
 
+signals:
+  void requestCompleted();
+
 private:
   static MilXClient* sInstance;
-  MilXClientWorker mWorker;
+  MilXClientWorker mAsyncWorker;
+  MilXClientWorker mSyncWorker;
   int mSymbolSize;
   int mLineWidth;
   int mWorkMode;
@@ -148,7 +157,7 @@ private:
   static MilXClient* instance();
   static QImage renderSvg(const QByteArray& xml);
 
-  bool processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply );
+  bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply, bool async = false);
   bool setSymbolOptions(int symbolSize, int lineWidth, int workMode );
 };
 
