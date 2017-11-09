@@ -230,7 +230,7 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
   {
     if ( mSync )
     {
-      mTcpSocket->waitForReadyRead( 3600000 );
+      mTcpSocket->waitForReadyRead( 5000 );
     }
     else
     {
