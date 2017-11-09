@@ -59,7 +59,7 @@ QT4_WRAP_CPP (qgs_milx_MOC_SRCS  ${qgs_milx_MOC_HDRS})
 
 QT4_ADD_RESOURCES(qgs_milx_RCC_SRCS ${qgs_milx_RCCS})
 
-ADD_LIBRARY (qgs_milx   SHARED ${qgs_milx_SRCS} ${qgs_milx_HDRS} ${qgs_milx_MOC_SRCS} ${qgs_milx_RCC_SRCS} ${qgs_milx_UIS_H})
+ADD_LIBRARY (qgs_milx   SHARED ${qgs_milx_SRCS} ${qgs_milx_HDRS} ${qgs_milx_MOC_HDRS} ${qgs_milx_MOC_SRCS} ${qgs_milx_RCC_SRCS} ${qgs_milx_UIS_H})
 
 INCLUDE_DIRECTORIES(
      ${CMAKE_CURRENT_BINARY_DIR}
