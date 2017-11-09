@@ -39,9 +39,6 @@
 #include <QThread>
 #include <QTimer>
 #include <QWidget>
-#ifdef Q_OS_WIN32
-#include <windows.h>
-#endif
 
 MilXClientWorker::MilXClientWorker( bool sync )
     : mSync( sync ), mProcess( 0 ), mNetworkSession( 0 ), mTcpSocket( 0 )
