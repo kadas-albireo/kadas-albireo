@@ -194,6 +194,13 @@ class QgsMapSettings
      */
     QgsRectangle computeExtentForScale(const QgsPoint& point, double scale, const QgsCoordinateReferenceSystem& sourceCrs) const;
 
+    /**
+     * @brief Compute the scale that corresponds to the specified extent
+     * @param extent The extent, as passed to QgsMapCanvas::setExtent
+     * @return The scale denominator
+     */
+    double computeScaleForExtent(const QgsRectangle &extent) const;
+
     //! returns current extent of layer set
     QgsRectangle fullExtent() const;
 

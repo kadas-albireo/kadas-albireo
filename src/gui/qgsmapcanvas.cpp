@@ -919,6 +919,10 @@ void QgsMapCanvas::setExtent( QgsRectangle const & r, bool adjustForOptimalScale
   if ( r == current )
     return;
 
+  // Don't allow too small extents
+  if ( !r.isEmpty() && mapSettings().computeScaleForExtent( r ) < 0.003 )
+    return;
+
   if ( r.isEmpty() )
   {
     if ( !mSettings.hasValidSettings() )

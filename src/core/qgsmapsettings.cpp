@@ -47,6 +47,7 @@ QgsMapSettings::QgsMapSettings()
     , mMapUnitsPerPixel( 1 )
     , mScale( 1 )
 {
+  mScaleCalculator.setDpi( mDpi );
   updateDerived();
 
   // set default map units - we use WGS 84 thus use degrees
@@ -158,7 +159,6 @@ void QgsMapSettings::updateDerived()
   mVisibleExtent.set( dxmin, dymin, dxmax, dymax );
 
   // update the scale
-  mScaleCalculator.setDpi( mDpi );
   mScale = mScaleCalculator.calculate( mVisibleExtent, mSize.width() );
 
   mMapToPixel.setParameters( mapUnitsPerPixel(),
@@ -216,6 +216,7 @@ int QgsMapSettings::outputDpi() const
 void QgsMapSettings::setOutputDpi( int dpi )
 {
   mDpi = dpi;
+  mScaleCalculator.setDpi( dpi );
 
   updateDerived();
 }
@@ -379,6 +380,11 @@ QgsRectangle QgsMapSettings::computeExtentForScale( const QgsPoint& point, doubl
 
   double delta = 0.5 * scaledWIn / conversionFactor;
   return QgsRectangle( center.x() - delta, center.y() - delta, center.x() + delta, center.y() + delta );
+}
+
+double QgsMapSettings::computeScaleForExtent( const QgsRectangle &extent ) const
+{
+  return mScaleCalculator.calculate( extent, outputSize().width() );
 }
 
 double QgsMapSettings::layerToMapUnits( QgsMapLayer *theLayer, const QgsRectangle& referenceExtent ) const
