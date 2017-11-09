@@ -976,7 +976,7 @@ bool QgsApplication::createDB( QString *errorMessage )
     myDir.mkpath( myPamPath ); //fail silently
   }
 
-#if defined(Q_OS_WIN32) || defined(WIN32)
+#if defined(Q_OS_WIN) || defined(WIN32)
   CPLSetConfigOption( "GDAL_PAM_PROXY_DIR", myPamPath.toUtf8() );
 #else
   //under other OS's we use an environment var so the user can

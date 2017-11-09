@@ -501,7 +501,7 @@ int main( int argc, char *argv[] )
   configpath = QgsApplication::qgisSettingsDirPath();
   QgsDebugMsg( QString( "Android: configpath set to %1" ).arg( configpath ) );
 #endif
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   configpath = QDir( qgetenv( "APPDATA" ) ).absoluteFilePath( "Sourcepole/kadas-albireo" );
 #endif
 
