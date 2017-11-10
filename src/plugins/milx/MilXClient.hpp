@@ -41,7 +41,7 @@ public:
 public slots:
   bool initialize();
   bool getCurrentLibraryVersionTag(QString& versionTag);
-  bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply);
+  bool processRequest(const QByteArray& request, QByteArray& response, quint8 expectedReply, bool forceSync = false);
   void cleanup();
 
 private:

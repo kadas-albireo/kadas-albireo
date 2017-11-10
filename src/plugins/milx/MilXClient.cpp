@@ -205,7 +205,7 @@ bool MilXClientWorker::getCurrentLibraryVersionTag( QString& versionTag )
   return false;
 }
 
-bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply )
+bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& response, quint8 expectedReply, bool forceSync )
 {
   mLastError = QString();
 
@@ -225,7 +225,7 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
 
   do
   {
-    if ( mSync )
+    if ( mSync || forceSync )
     {
       mTcpSocket->waitForReadyRead( 5000 );
     }
@@ -819,6 +819,11 @@ bool MilXClient::setSymbolOptions( int symbolSize, int lineWidth , int workMode 
 
   QByteArray response;
   if ( !processRequest( request, response, MILX_REPLY_SET_SYMBOL_OPTIONS ) )
+  {
+    return false;
+  }
+  // Also set the options for the async worker
+  if ( !mAsyncWorker.processRequest( request, response, MILX_REPLY_SET_SYMBOL_OPTIONS, true ) )
   {
     return false;
   }
