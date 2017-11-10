@@ -326,7 +326,6 @@ bool MilXClient::processRequest( const QByteArray& request, QByteArray& response
   // If not running in GUI thread, post synchronous request
   if ( QThread::currentThread() != qApp->thread() || !async )
   {
-    QTextStream( stdout ) << "Process request: processing synchronously in non-gui thread" << endl;
     bool result;
     QMetaObject::invokeMethod( &mSyncWorker, "processRequest", Qt::BlockingQueuedConnection, Q_RETURN_ARG( bool, result ), Q_ARG( const QByteArray&, request ), Q_ARG( QByteArray&, response ), Q_ARG( quint8, expectedReply ) );
     return result;
