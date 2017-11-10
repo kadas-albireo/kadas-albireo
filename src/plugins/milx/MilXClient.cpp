@@ -268,13 +268,6 @@ bool MilXClientWorker::processRequest( const QByteArray& request, QByteArray& re
   return true;
 }
 
-void MilXClientWorker::processRequestAsync( const QByteArray& request, quint8 expectedReply )
-{
-  QByteArray response;
-  bool success = processRequest( request, response, expectedReply );
-  emit requestCompleted( success, response );
-}
-
 void MilXClientWorker::handleSocketError()
 {
   if ( !mTcpSocket )
