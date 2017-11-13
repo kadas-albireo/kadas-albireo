@@ -18,9 +18,11 @@
 #include "qgssvgannotationitem.h"
 #include "qgssvgannotationdialog.h"
 #include "qgsproject.h"
+#include <QDesktopServices>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QFile>
+#include <QUrl>
 #include <qmath.h>
 #include <svg2svgt/processorengine.h>
 #include <svg2svgt/ruleengine.h>
@@ -115,7 +117,7 @@ void QgsSvgAnnotationItem::paint( QPainter* painter )
 
 void QgsSvgAnnotationItem::_showItemEditor()
 {
-  QgsSvgAnnotationDialog( this ).exec();
+  QDesktopServices::openUrl( QUrl::fromLocalFile( mFilePath ) );
 }
 
 void QgsSvgAnnotationItem::setFilePath( const QString& filepath )
