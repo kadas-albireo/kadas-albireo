@@ -277,8 +277,8 @@ void QgsVectorGradientColorRampV2Dialog::stopDoubleClicked( QTreeWidgetItem* ite
 
     QSettings settings;
     //using native color dialogs?
-    bool useNative = settings.value( "/qgis/native_color_dialogs", false ).toBool();
-    if ( settings.value( "/qgis/live_color_dialogs", false ).toBool() )
+    bool useNative = settings.value( "/Qgis/native_color_dialogs", false ).toBool();
+    if ( settings.value( "/Qgis/live_color_dialogs", false ).toBool() )
     {
       mCurrentItem = item;
       if ( useNative )

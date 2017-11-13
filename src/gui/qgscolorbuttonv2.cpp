@@ -94,12 +94,12 @@ void QgsColorButtonV2::showColorDialog()
   QSettings settings;
 
   //using native color dialogs?
-  bool useNative = settings.value( "/qgis/native_color_dialogs", false ).toBool();
+  bool useNative = settings.value( "/Qgis/native_color_dialogs", false ).toBool();
 
   if ( useNative )
   {
     // use native o/s dialogs
-    if ( mAcceptLiveUpdates && settings.value( "/qgis/live_color_dialogs", false ).toBool() )
+    if ( mAcceptLiveUpdates && settings.value( "/Qgis/live_color_dialogs", false ).toBool() )
     {
       newColor = QgsColorDialog::getLiveColor(
                    color(), this, SLOT( setValidColor( const QColor& ) ),
@@ -113,7 +113,7 @@ void QgsColorButtonV2::showColorDialog()
   else
   {
     //use QGIS style color dialogs
-    if ( mAcceptLiveUpdates && settings.value( "/qgis/live_color_dialogs", false ).toBool() )
+    if ( mAcceptLiveUpdates && settings.value( "/Qgis/live_color_dialogs", false ).toBool() )
     {
       newColor = QgsColorDialogV2::getLiveColor(
                    color(), this, SLOT( setValidColor( const QColor& ) ),

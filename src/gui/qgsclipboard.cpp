@@ -62,7 +62,7 @@ void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
 {
   // Also store plaintext version
   QSettings settings;
-  bool copyWKT = settings.value( "qgis/copyGeometryAsWKT", true ).toBool();
+  bool copyWKT = settings.value( "Qgis/copyGeometryAsWKT", true ).toBool();
 
   QStringList textLines;
   QStringList textFields;
@@ -87,7 +87,7 @@ void QgsClipboard::setStoredFeatures( const QgsFeatureStore &featureStore )
       if ( feature.geometry() )
         textFields.append( feature.geometry()->exportToWkt() );
       else
-        textFields.append( settings.value( "qgis/nullValue", "NULL" ).toString() );
+        textFields.append( settings.value( "Qgis/nullValue", "NULL" ).toString() );
     }
     foreach ( const QVariant& attr, feature.attributes() )
     {

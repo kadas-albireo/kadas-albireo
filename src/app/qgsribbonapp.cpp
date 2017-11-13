@@ -115,10 +115,10 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   }
   connect( mLanguageCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onLanguageChanged( int ) ) );
 
-  mSpinBoxDecimalPlaces->setValue( QSettings().value( "/qgis/measure/decimalplaces", "2" ).toInt() );
+  mSpinBoxDecimalPlaces->setValue( QSettings().value( "/Qgis/measure/decimalplaces", "2" ).toInt() );
   connect( mSpinBoxDecimalPlaces, SIGNAL( valueChanged( int ) ), this, SLOT( onDecimalPlacesChanged( int ) ) );
 
-  mSnappingCheckbox->setChecked( QSettings().value( "/qgis/snapping/enabled", false ).toBool() );
+  mSnappingCheckbox->setChecked( QSettings().value( "/Qgis/snapping/enabled", false ).toBool() );
   connect( mSnappingCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onSnappingChanged( bool ) ) );
 
   mInfoBar = new QgsMessageBar( mMapCanvas );
@@ -142,7 +142,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
 
   connect( mScaleComboBox, SIGNAL( scaleChanged() ), this, SLOT( userScale() ) );
 
-  mNumericInputCheckbox->setChecked( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  mNumericInputCheckbox->setChecked( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   connect( mNumericInputCheckbox, SIGNAL( toggled( bool ) ), this, SLOT( onNumericInputCheckboxToggled( bool ) ) );
 
   initLayerTreeView();
@@ -150,7 +150,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   // Base class init
   init( restorePlugins );
   mMapCanvas->snappingUtils()->setReadDefaultConfigFromProject( false );
-  int snappingRadius = QSettings().value( "/qgis/snapping/radius", 10 ).toInt();
+  int snappingRadius = QSettings().value( "/Qgis/snapping/radius", 10 ).toInt();
   mMapCanvas->snappingUtils()->setDefaultSettings( QgsPointLocator::Vertex, snappingRadius, QgsTolerance::Pixels );
   mMapCanvas->snappingUtils()->setSnapToMapMode( QgsSnappingUtils::SnapAllLayers );
 
@@ -662,17 +662,17 @@ void QgsRibbonApp::onLanguageChanged( int idx )
 
 void QgsRibbonApp::onDecimalPlacesChanged( int places )
 {
-  QSettings().setValue( "/qgis/measure/decimalplaces", places );
+  QSettings().setValue( "/Qgis/measure/decimalplaces", places );
 }
 
 void QgsRibbonApp::onSnappingChanged( bool enabled )
 {
-  QSettings().setValue( "/qgis/snapping/enabled", enabled );
+  QSettings().setValue( "/Qgis/snapping/enabled", enabled );
 }
 
 void QgsRibbonApp::onNumericInputCheckboxToggled( bool checked )
 {
-  QSettings().setValue( "/qgis/showNumericInput", checked );
+  QSettings().setValue( "/Qgis/showNumericInput", checked );
 }
 
 void QgsRibbonApp::enableGPS( bool enabled )

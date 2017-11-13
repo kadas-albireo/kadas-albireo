@@ -279,7 +279,7 @@ void QgsRelationReferenceWidget::setForeignKey( const QVariant& value )
 
 void QgsRelationReferenceWidget::deleteForeignKey()
 {
-  QVariant nullValue = QSettings().value( "qgis/nullValue", "NULL" );
+  QVariant nullValue = QSettings().value( "Qgis/nullValue", "NULL" );
   if ( mReadOnlySelector )
   {
     QString nullText = "";
@@ -406,7 +406,7 @@ void QgsRelationReferenceWidget::init()
     QApplication::setOverrideCursor( Qt::WaitCursor );
     if ( mAllowNull )
     {
-      const QString nullValue = QSettings().value( "qgis/nullValue", "NULL" ).toString();
+      const QString nullValue = QSettings().value( "Qgis/nullValue", "NULL" ).toString();
 
       mComboBox->addItem( tr( "%1 (no selection)" ).arg( nullValue ), QVariant( QVariant::Int ) );
       mComboBox->setItemData( 0, QColor( Qt::gray ), Qt::ForegroundRole );

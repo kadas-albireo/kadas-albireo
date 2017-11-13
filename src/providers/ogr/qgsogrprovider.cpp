@@ -398,7 +398,7 @@ QgsOgrProvider::QgsOgrProvider( QString const & uri )
   QgsApplication::registerOgrDrivers();
 
   QSettings settings;
-  CPLSetConfigOption( "SHAPE_ENCODING", settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() ? "" : 0 );
+  CPLSetConfigOption( "SHAPE_ENCODING", settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() ? "" : 0 );
 
   // make connection to the data source
 
@@ -725,7 +725,7 @@ void QgsOgrProvider::setEncoding( const QString& e )
 {
 #if defined(OLCStringsAsUTF8)
   QSettings settings;
-  if (( ogrDriverName == "ESRI Shapefile" && settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() ) || !OGR_L_TestCapability( ogrLayer, OLCStringsAsUTF8 ) )
+  if (( ogrDriverName == "ESRI Shapefile" && settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() ) || !OGR_L_TestCapability( ogrLayer, OLCStringsAsUTF8 ) )
   {
     QgsVectorDataProvider::setEncoding( e );
   }
@@ -1932,7 +1932,7 @@ QString createFilters( QString type )
     // This does not work for some file types, see VSIFileHandler doc.
 #if defined(GDAL_VERSION_NUM) && GDAL_VERSION_NUM >= 1600
     QSettings settings;
-    if ( settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString() != "no" )
+    if ( settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString() != "no" )
     {
       myFileFilters.prepend( createFileFilter_( QObject::tr( "GDAL/OGR VSIFileHandler" ), "*.zip *.gz *.tar *.tar.gz *.tgz" ) );
       myExtensions << "zip" << "gz" << "tar" << "tar.gz" << "tgz";
@@ -2193,7 +2193,7 @@ QGISEXTERN bool createEmptyDataSource( const QString &uri,
   CSLDestroy( papszOptions );
 
   QSettings settings;
-  if ( !settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() )
+  if ( !settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() )
   {
     CPLSetConfigOption( "SHAPE_ENCODING", 0 );
   }

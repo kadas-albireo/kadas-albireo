@@ -44,7 +44,7 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
     mUnitComboBox->addItem( tr( "Imperial" ), static_cast<int>( QGis::Feet ) );
 //    mUnitComboBox->addItem( QGis::tr( QGis::Degrees ), static_cast<int>( QGis::Degrees ) );
     mUnitComboBox->addItem( tr( "Nautical" ), static_cast<int>( QGis::NauticalMiles ) );
-    int defUnit = QSettings().value( "/qgis/measure/last_measure_unit", QGis::Meters ).toInt();
+    int defUnit = QSettings().value( "/Qgis/measure/last_measure_unit", QGis::Meters ).toInt();
     mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
   }
   else
@@ -55,12 +55,12 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
     mUnitComboBox->addItem( tr( "Angular Mil" ), static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) );
     if ( measureMode == QgsMeasureToolV2::MeasureAngle )
     {
-      int defUnit = QSettings().value( "/qgis/measure/last_angle_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_DEGREES ) ).toInt();
+      int defUnit = QSettings().value( "/Qgis/measure/last_angle_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_DEGREES ) ).toInt();
       mUnitComboBox->setCurrentIndex( mUnitComboBox->findData( defUnit ) );
     }
     else
     {
-      int defUnit = QSettings().value( "/qgis/measure/last_azimuth_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) ).toInt();
+      int defUnit = QSettings().value( "/Qgis/measure/last_azimuth_unit", static_cast<int>( QgsGeometryRubberBand::ANGLE_MIL ) ).toInt();
       mUnitComboBox->setCurrentIndex( defUnit );
     }
   }
@@ -75,7 +75,7 @@ QgsMeasureWidget::QgsMeasureWidget( QgsMapCanvas *canvas, QgsMeasureToolV2::Meas
     mNorthComboBox = new QComboBox();
     mNorthComboBox->addItem( tr( "Geographic" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) );
     mNorthComboBox->addItem( tr( "Map" ), static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_MAP ) );
-    int defNorth = QSettings().value( "/qgis/measure/last_azimuth_north", static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) ).toInt();
+    int defNorth = QSettings().value( "/Qgis/measure/last_azimuth_north", static_cast<int>( QgsGeometryRubberBand::AZIMUTH_NORTH_GEOGRAPHIC ) ).toInt();
     mNorthComboBox->setCurrentIndex( defNorth );
     connect( mNorthComboBox, SIGNAL( currentIndexChanged( const QString & ) ), this, SIGNAL( unitsChanged( ) ) );
     connect( mNorthComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( saveAzimuthNorth( int ) ) );
@@ -120,21 +120,21 @@ void QgsMeasureWidget::saveDefaultUnits( int index )
 {
   if ( mMeasureMode == QgsMeasureToolV2::MeasureAzimuth )
   {
-    QSettings().setValue( "/qgis/measure/last_azimuth_unit", mUnitComboBox->itemData( index ).toInt() );
+    QSettings().setValue( "/Qgis/measure/last_azimuth_unit", mUnitComboBox->itemData( index ).toInt() );
   }
   else if ( mMeasureMode == QgsMeasureToolV2::MeasureAngle )
   {
-    QSettings().setValue( "/qgis/measure/last_angle_unit", mUnitComboBox->itemData( index ).toInt() );
+    QSettings().setValue( "/Qgis/measure/last_angle_unit", mUnitComboBox->itemData( index ).toInt() );
   }
   else
   {
-    QSettings().setValue( "/qgis/measure/last_measure_unit", mUnitComboBox->itemData( index ).toInt() );
+    QSettings().setValue( "/Qgis/measure/last_measure_unit", mUnitComboBox->itemData( index ).toInt() );
   }
 }
 
 void QgsMeasureWidget::saveAzimuthNorth( int index )
 {
-  QSettings().setValue( "/qgis/measure/last_azimuth_north", mNorthComboBox->itemData( index ).toInt() );
+  QSettings().setValue( "/Qgis/measure/last_azimuth_north", mNorthComboBox->itemData( index ).toInt() );
 }
 
 void QgsMeasureWidget::updateMeasurement( const QString& measurement )
@@ -205,7 +205,7 @@ void QgsMeasureToolV2::activate()
   connect( mMeasureWidget, SIGNAL( pickRequested() ), this, SLOT( requestPick() ) );
   setCursor( Qt::ArrowCursor );
   mDrawTool->getRubberBand()->setVisible( true );
-  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  mDrawTool->setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   mDrawTool->activate();
   QgsMapTool::activate();
 }

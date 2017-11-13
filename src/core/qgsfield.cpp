@@ -120,7 +120,7 @@ QString QgsField::displayString( const QVariant& v ) const
   if ( v.isNull() )
   {
     QSettings settings;
-    return settings.value( "qgis/nullValue", "NULL" ).toString();
+    return settings.value( "Qgis/nullValue", "NULL" ).toString();
   }
 
   if ( mType == QVariant::Double && mPrecision > 0 )

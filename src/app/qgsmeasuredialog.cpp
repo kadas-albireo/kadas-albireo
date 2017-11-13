@@ -52,7 +52,7 @@ QgsMeasureDialog::QgsMeasureDialog( QgsMeasureTool* tool, Qt::WindowFlags f )
   mUnitsCombo->addItem( QGis::tr( QGis::NauticalMiles ) );
 
   QSettings settings;
-  QString units = settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
+  QString units = settings.value( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString();
   mUnitsCombo->setCurrentIndex( mUnitsCombo->findText( QGis::tr( QGis::fromLiteral( units ) ), Qt::MatchFixedString ) );
   connect( mUnitsCombo, SIGNAL( currentIndexChanged( const QString & ) ), this, SLOT( unitsChanged( const QString & ) ) );
 
@@ -67,7 +67,7 @@ void QgsMeasureDialog::updateSettings()
 {
   QSettings settings;
 
-  mDecimalPlaces = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
+  mDecimalPlaces = settings.value( "/Qgis/measure/decimalplaces", "2" ).toInt();
   mCanvasUnits = mTool->canvas()->mapUnits();
   // Configure QgsDistanceArea
   mDisplayUnits = QGis::fromTr( mUnitsCombo->currentText() );
@@ -123,7 +123,7 @@ void QgsMeasureDialog::removePoint()
 
 QString QgsMeasureDialog::formatValue( double value, bool measureArea )
 {
-  bool baseUnit = QSettings().value( "/qgis/measure/keepbaseunit", false ).toBool();
+  bool baseUnit = QSettings().value( "/Qgis/measure/keepbaseunit", false ).toBool();
 
   QGis::UnitType newDisplayUnits;
   convertMeasurement( value, newDisplayUnits, measureArea );

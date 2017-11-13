@@ -128,13 +128,13 @@ void QgsRedliningMapToolT<T>::init( const QgsFeature* editFeature, QgsRedliningA
   T::connect( this, &T::finished, this, &QgsRedliningMapToolT<T>::onFinished );
 #endif
 
-  T::setSnapPoints( QSettings().value( "/qgis/snapping/enabled", false ).toBool() );
+  T::setSnapPoints( QSettings().value( "/Qgis/snapping/enabled", false ).toBool() );
   mStandaloneEditor = 0;
   mBottomBar = new QgsRedliningBottomBar( this, editFeature ? editor : 0 );
   T::getRubberBand()->setIconType( QgsGeometryRubberBand::ICON_FULL_BOX );
   T::getRubberBand()->setIconOutlineColor( Qt::red );
   T::getRubberBand()->setIconFillColor( Qt::white );
-  T::setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  T::setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   if ( editFeature )
   {
     mEditMode = true;
@@ -272,8 +272,8 @@ void QgsRedliningMapToolT<T>::onFinished()
   }
   if ( mStandaloneEditor )
   {
-    QDialog dialog(T::canvas());
-    dialog.setModal(true);
+    QDialog dialog( T::canvas() );
+    dialog.setModal( true );
     dialog.setLayout( new QVBoxLayout() );
     dialog.layout()->addWidget( mStandaloneEditor );
     dialog.setWindowTitle( mStandaloneEditor->windowTitle() );

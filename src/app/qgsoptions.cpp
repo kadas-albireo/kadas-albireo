@@ -126,7 +126,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mIdentifyHighlightMinWidthSpinBox->setValue( highlightMinWidth );
 
   // custom environment variables
-  bool useCustomVars = settings.value( "qgis/customEnvVarsUse", QVariant( false ) ).toBool();
+  bool useCustomVars = settings.value( "Qgis/customEnvVarsUse", QVariant( false ) ).toBool();
   mCustomVariablesChkBx->setChecked( useCustomVars );
   if ( !useCustomVars )
   {
@@ -134,7 +134,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
     mRemoveCustomVarBtn->setEnabled( false );
     mCustomVariablesTable->setEnabled( false );
   }
-  QStringList customVarsList = settings.value( "qgis/customEnvVars", "" ).toStringList();
+  QStringList customVarsList = settings.value( "Qgis/customEnvVars", "" ).toStringList();
   foreach ( const QString &varStr, customVarsList )
   {
     int pos = varStr.indexOf( QLatin1Char( '|' ) );
@@ -217,7 +217,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
     mCurrentVariablesTable->resizeColumnToContents( 0 );
 
   //local directories to search when loading c++ plugins
-  QString myPaths = settings.value( "plugins/searchPathsForPlugins", "" ).toString();
+  QString myPaths = settings.value( "Plugins/searchPathsForPlugins", "" ).toString();
   if ( !myPaths.isEmpty() )
   {
     QStringList myPathList = myPaths.split( "|" );
@@ -247,17 +247,17 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
 
   //Network timeout
-  mNetworkTimeoutSpinBox->setValue( settings.value( "/qgis/networkAndProxy/networkTimeout", "60000" ).toInt() );
-  leUserAgent->setText( settings.value( "/qgis/networkAndProxy/userAgent", "Mozilla/5.0" ).toString() );
+  mNetworkTimeoutSpinBox->setValue( settings.value( "/Qgis/networkAndProxy/networkTimeout", "60000" ).toInt() );
+  leUserAgent->setText( settings.value( "/Qgis/networkAndProxy/userAgent", "Mozilla/5.0" ).toString() );
 
   // WMS/WMS-C tile expiry time
-  mDefaultTileExpirySpinBox->setValue( settings.value( "/qgis/defaultTileExpiry", "24" ).toInt() );
+  mDefaultTileExpirySpinBox->setValue( settings.value( "/Qgis/defaultTileExpiry", "24" ).toInt() );
 
   // WMS/WMS-C default max retry in case of tile request errors
-  mDefaultTileMaxRetrySpinBox->setValue( settings.value( "/qgis/defaultTileMaxRetry", "3" ).toInt() );
+  mDefaultTileMaxRetrySpinBox->setValue( settings.value( "/Qgis/defaultTileMaxRetry", "3" ).toInt() );
 
   // SSO checkbox
-  mSSOCheckBox->setChecked( settings.value( "/qgis/networkAndProxy/attemptSSO", false ).toBool() );
+  mSSOCheckBox->setChecked( settings.value( "/Qgis/networkAndProxy/attemptSSO", false ).toBool() );
 
   //Web proxy settings
   grpProxy->setChecked( settings.value( "proxy/proxyEnabled", "0" ).toBool() );
@@ -303,7 +303,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
 
   //wms search server
-  leWmsSearch->setText( settings.value( "/qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString() );
+  leWmsSearch->setText( settings.value( "/Qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString() );
 
   // set the current theme
   cmbTheme->setItemText( cmbTheme->currentIndex(), settings.value( "/Themes" ).toString() );
@@ -313,10 +313,10 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   cmbAttrTableBehaviour->addItem( tr( "Show all features" ), QgsAttributeTableFilterModel::ShowAll );
   cmbAttrTableBehaviour->addItem( tr( "Show selected features" ), QgsAttributeTableFilterModel::ShowSelected );
   cmbAttrTableBehaviour->addItem( tr( "Show features visible on map" ), QgsAttributeTableFilterModel::ShowVisible );
-  cmbAttrTableBehaviour->setCurrentIndex( cmbAttrTableBehaviour->findData( settings.value( "/qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt() ) );
+  cmbAttrTableBehaviour->setCurrentIndex( cmbAttrTableBehaviour->findData( settings.value( "/Qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt() ) );
 
 
-  spinBoxAttrTableRowCache->setValue( settings.value( "/qgis/attributeTableRowCache", 10000 ).toInt() );
+  spinBoxAttrTableRowCache->setValue( settings.value( "/Qgis/attributeTableRowCache", 10000 ).toInt() );
   spinBoxAttrTableRowCache->setSpecialValueText( tr( "All" ) );
 
   // set the prompt for raster sublayers
@@ -329,13 +329,13 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   cmbPromptRasterSublayers->addItem( tr( "If needed" ) ); //this means, prompt if there are sublayers but no band in the main dataset
   cmbPromptRasterSublayers->addItem( tr( "Never" ) );
   cmbPromptRasterSublayers->addItem( tr( "Load all" ) );
-  cmbPromptRasterSublayers->setCurrentIndex( settings.value( "/qgis/promptForRasterSublayers", 0 ).toInt() );
+  cmbPromptRasterSublayers->setCurrentIndex( settings.value( "/Qgis/promptForRasterSublayers", 0 ).toInt() );
 
   // Scan for valid items in the browser dock
   cmbScanItemsInBrowser->clear();
   cmbScanItemsInBrowser->addItem( tr( "Check file contents" ), "contents" ); // 0
   cmbScanItemsInBrowser->addItem( tr( "Check extension" ), "extension" );    // 1
-  int index = cmbScanItemsInBrowser->findData( settings.value( "/qgis/scanItemsInBrowser2", "" ) );
+  int index = cmbScanItemsInBrowser->findData( settings.value( "/Qgis/scanItemsInBrowser2", "" ) );
   if ( index == -1 ) index = 1;
   cmbScanItemsInBrowser->setCurrentIndex( index );
 
@@ -345,7 +345,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   // cmbScanZipInBrowser->addItem( tr( "Passthru" ) );     // 1 - removed
   cmbScanZipInBrowser->addItem( tr( "Basic scan" ), QVariant( "basic" ) );
   cmbScanZipInBrowser->addItem( tr( "Full scan" ), QVariant( "full" ) );
-  index = cmbScanZipInBrowser->findData( settings.value( "/qgis/scanZipInBrowser2", "" ) );
+  index = cmbScanZipInBrowser->findData( settings.value( "/Qgis/scanZipInBrowser2", "" ) );
   if ( index == -1 ) index = 1;
   cmbScanZipInBrowser->setCurrentIndex( index );
 
@@ -439,7 +439,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
 
   // Set the units for measuring
-  QGis::UnitType myDisplayUnits = QGis::fromLiteral( settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
+  QGis::UnitType myDisplayUnits = QGis::fromLiteral( settings.value( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
   if ( myDisplayUnits == QGis::Feet )
   {
     radFeet->setChecked( true );
@@ -463,7 +463,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   angleButtonGroup->addButton( mGonRadioButton );
   angleButtonGroup->addButton( mMilRadioButton );
 
-  QString myAngleUnitsTxt = settings.value( "/qgis/measure/angleunits", "degrees" ).toString();
+  QString myAngleUnitsTxt = settings.value( "/Qgis/measure/angleunits", "degrees" ).toString();
   if ( myAngleUnitsTxt == "mil" )
   {
     mMilRadioButton->setChecked( true );
@@ -482,12 +482,12 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
 
   // set decimal places of the measure tool
-  int decimalPlaces = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
+  int decimalPlaces = settings.value( "/Qgis/measure/decimalplaces", "2" ).toInt();
   mDecimalPlacesSpinBox->setRange( 0, 12 );
   mDecimalPlacesSpinBox->setValue( decimalPlaces );
 
   // set if base unit of measure tool should be changed
-  bool baseUnit = settings.value( "qgis/measure/keepbaseunit", false ).toBool();
+  bool baseUnit = settings.value( "Qgis/measure/keepbaseunit", false ).toBool();
   if ( baseUnit )
   {
     mKeepBaseUnitCheckBox->setChecked( true );
@@ -548,59 +548,59 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mCustomSideBarSide->setChecked( mStyleSheetOldOpts.value( "sidebarStyle" ).toBool() );
   mBoldGroupBoxTitleChkBx->setChecked( mStyleSheetOldOpts.value( "groupBoxBoldTitle" ).toBool() );
 
-  mMessageTimeoutSpnBx->setValue( settings.value( "/qgis/messageTimeout", 5 ).toInt() );
+  mMessageTimeoutSpnBx->setValue( settings.value( "/Qgis/messageTimeout", 5 ).toInt() );
 
   QString name = QApplication::style()->objectName();
   cmbStyle->setCurrentIndex( cmbStyle->findText( name, Qt::MatchFixedString ) );
 
-  mNativeColorDialogsChkBx->setChecked( settings.value( "/qgis/native_color_dialogs", false ).toBool() );
-  mLiveColorDialogsChkBx->setChecked( settings.value( "/qgis/live_color_dialogs", false ).toBool() );
+  mNativeColorDialogsChkBx->setChecked( settings.value( "/Qgis/native_color_dialogs", false ).toBool() );
+  mLiveColorDialogsChkBx->setChecked( settings.value( "/Qgis/live_color_dialogs", false ).toBool() );
 
   //set the state of the checkboxes
   //Changed to default to true as of QGIS 1.7
-  chkAntiAliasing->setChecked( settings.value( "/qgis/enable_anti_aliasing", true ).toBool() );
-  chkUseRenderCaching->setChecked( settings.value( "/qgis/enable_render_caching", true ).toBool() );
-  chkParallelRendering->setChecked( settings.value( "/qgis/parallel_rendering", true ).toBool() );
-  spinMapUpdateInterval->setValue( settings.value( "/qgis/map_update_interval", 250 ).toInt() );
+  chkAntiAliasing->setChecked( settings.value( "/Qgis/enable_anti_aliasing", true ).toBool() );
+  chkUseRenderCaching->setChecked( settings.value( "/Qgis/enable_render_caching", true ).toBool() );
+  chkParallelRendering->setChecked( settings.value( "/Qgis/parallel_rendering", true ).toBool() );
+  spinMapUpdateInterval->setValue( settings.value( "/Qgis/map_update_interval", 250 ).toInt() );
   chkMaxThreads->setChecked( QgsApplication::maxThreads() != -1 );
   spinMaxThreads->setEnabled( chkMaxThreads->isChecked() );
   spinMaxThreads->setRange( 1, QThread::idealThreadCount() );
   spinMaxThreads->setValue( QgsApplication::maxThreads() );
 
   // Default simplify drawing configuration
-  mSimplifyDrawingGroupBox->setChecked( settings.value( "/qgis/simplifyDrawingHints", ( int )QgsVectorSimplifyMethod::GeometrySimplification ).toInt() != QgsVectorSimplifyMethod::NoSimplification );
-  mSimplifyDrawingSpinBox->setValue( settings.value( "/qgis/simplifyDrawingTol", QGis::DEFAULT_MAPTOPIXEL_THRESHOLD ).toFloat() );
-  mSimplifyDrawingAtProvider->setChecked( !settings.value( "/qgis/simplifyLocal", true ).toBool() );
+  mSimplifyDrawingGroupBox->setChecked( settings.value( "/Qgis/simplifyDrawingHints", ( int )QgsVectorSimplifyMethod::GeometrySimplification ).toInt() != QgsVectorSimplifyMethod::NoSimplification );
+  mSimplifyDrawingSpinBox->setValue( settings.value( "/Qgis/simplifyDrawingTol", QGis::DEFAULT_MAPTOPIXEL_THRESHOLD ).toFloat() );
+  mSimplifyDrawingAtProvider->setChecked( !settings.value( "/Qgis/simplifyLocal", true ).toBool() );
 
   QStringList myScalesList = PROJECT_SCALES.split( "," );
   myScalesList.append( "1:1" );
   mSimplifyMaximumScaleComboBox->updateScales( myScalesList );
-  mSimplifyMaximumScaleComboBox->setScale( 1.0 / settings.value( "/qgis/simplifyMaxScale", 1 ).toFloat() );
+  mSimplifyMaximumScaleComboBox->setScale( 1.0 / settings.value( "/Qgis/simplifyMaxScale", 1 ).toFloat() );
 
   // Slightly awkard here at the settings value is true to use QImage,
   // but the checkbox is true to use QPixmap
-  chkAddedVisibility->setChecked( settings.value( "/qgis/new_layers_visible", true ).toBool() );
-  cbxLegendClassifiers->setChecked( settings.value( "/qgis/showLegendClassifiers", false ).toBool() );
-  mLegendLayersBoldChkBx->setChecked( settings.value( "/qgis/legendLayersBold", true ).toBool() );
-  mLegendGroupsBoldChkBx->setChecked( settings.value( "/qgis/legendGroupsBold", false ).toBool() );
-  cbxHideSplash->setChecked( settings.value( "/qgis/hideSplash", false ).toBool() );
-  cbxShowTips->setChecked( settings.value( QString( "/qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() );
-  cbxAttributeTableDocked->setChecked( settings.value( "/qgis/dockAttributeTable", false ).toBool() );
-  cbxSnappingOptionsDocked->setChecked( settings.value( "/qgis/dockSnapping", false ).toBool() );
-  cbxAddPostgisDC->setChecked( settings.value( "/qgis/addPostgisDC", false ).toBool() );
-  cbxAddOracleDC->setChecked( settings.value( "/qgis/addOracleDC", false ).toBool() );
-  cbxCreateRasterLegendIcons->setChecked( settings.value( "/qgis/createRasterLegendIcons", false ).toBool() );
-  cbxCopyWKTGeomFromTable->setChecked( settings.value( "/qgis/copyGeometryAsWKT", true ).toBool() );
-  leNullValue->setText( settings.value( "qgis/nullValue", "NULL" ).toString() );
-  cbxIgnoreShapeEncoding->setChecked( settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() );
+  chkAddedVisibility->setChecked( settings.value( "/Qgis/new_layers_visible", true ).toBool() );
+  cbxLegendClassifiers->setChecked( settings.value( "/Qgis/showLegendClassifiers", false ).toBool() );
+  mLegendLayersBoldChkBx->setChecked( settings.value( "/Qgis/legendLayersBold", true ).toBool() );
+  mLegendGroupsBoldChkBx->setChecked( settings.value( "/Qgis/legendGroupsBold", false ).toBool() );
+  cbxHideSplash->setChecked( settings.value( "/Qgis/hideSplash", false ).toBool() );
+  cbxShowTips->setChecked( settings.value( QString( "/Qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() );
+  cbxAttributeTableDocked->setChecked( settings.value( "/Qgis/dockAttributeTable", false ).toBool() );
+  cbxSnappingOptionsDocked->setChecked( settings.value( "/Qgis/dockSnapping", false ).toBool() );
+  cbxAddPostgisDC->setChecked( settings.value( "/Qgis/addPostgisDC", false ).toBool() );
+  cbxAddOracleDC->setChecked( settings.value( "/Qgis/addOracleDC", false ).toBool() );
+  cbxCreateRasterLegendIcons->setChecked( settings.value( "/Qgis/createRasterLegendIcons", false ).toBool() );
+  cbxCopyWKTGeomFromTable->setChecked( settings.value( "/Qgis/copyGeometryAsWKT", true ).toBool() );
+  leNullValue->setText( settings.value( "Qgis/nullValue", "NULL" ).toString() );
+  cbxIgnoreShapeEncoding->setChecked( settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() );
   cbxCanvasRotation->setChecked( QgsMapCanvas::rotationEnabled() );
 
-  cmbLegendDoubleClickAction->setCurrentIndex( settings.value( "/qgis/legendDoubleClickAction", 0 ).toInt() );
+  cmbLegendDoubleClickAction->setCurrentIndex( settings.value( "/Qgis/legendDoubleClickAction", 0 ).toInt() );
 
-  mComboBoxAddLayerMode->setCurrentIndex( settings.value( "/qgis/layerLegendAddMode", 0 ).toInt() );
+  mComboBoxAddLayerMode->setCurrentIndex( settings.value( "/Qgis/layerLegendAddMode", 0 ).toInt() );
 
   // WMS getLegendGraphic setting
-  mLegendGraphicResolutionSpinBox->setValue( settings.value( "/qgis/defaultLegendGraphicResolution", 0 ).toInt() );
+  mLegendGraphicResolutionSpinBox->setValue( settings.value( "/Qgis/defaultLegendGraphicResolution", 0 ).toInt() );
 
   //
   // Raster properties
@@ -631,10 +631,10 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mRasterCumulativeCutUpperDoubleSpinBox->setValue( 100.0 * settings.value( "/Raster/cumulativeCutUpper", QString::number( QgsRasterLayer::CUMULATIVE_CUT_UPPER ) ).toDouble() );
 
   //set the color for selections
-  int myRed = settings.value( "/qgis/default_selection_color_red", 255 ).toInt();
-  int myGreen = settings.value( "/qgis/default_selection_color_green", 255 ).toInt();
-  int myBlue = settings.value( "/qgis/default_selection_color_blue", 0 ).toInt();
-  int myAlpha = settings.value( "/qgis/default_selection_color_alpha", 255 ).toInt();
+  int myRed = settings.value( "/Qgis/default_selection_color_red", 255 ).toInt();
+  int myGreen = settings.value( "/Qgis/default_selection_color_green", 255 ).toInt();
+  int myBlue = settings.value( "/Qgis/default_selection_color_blue", 0 ).toInt();
+  int myAlpha = settings.value( "/Qgis/default_selection_color_alpha", 255 ).toInt();
   pbnSelectionColor->setColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
   pbnSelectionColor->setColorDialogTitle( tr( "Set selection color" ) );
   pbnSelectionColor->setAllowAlpha( true );
@@ -642,10 +642,10 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   pbnSelectionColor->setDefaultColor( QColor( 255, 255, 0, 255 ) );
 
   //set the default color for canvas background
-  myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
-  myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
-  myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  myRed = settings.value( "/Qgis/default_canvas_color_red", 255 ).toInt();
+  myGreen = settings.value( "/Qgis/default_canvas_color_green", 255 ).toInt();
+  myBlue = settings.value( "/Qgis/default_canvas_color_blue", 255 ).toInt();
+  myAlpha = settings.value( "/Qgis/default_canvas_color_alpha", 0 ).toInt();
   pbnCanvasColor->setAllowAlpha( true );
   pbnCanvasColor->setColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
   pbnCanvasColor->setColorDialogTitle( tr( "Set canvas color" ) );
@@ -653,29 +653,29 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   pbnCanvasColor->setDefaultColor( Qt::white );
 
   // set the default color for the measure tool
-  myRed = settings.value( "/qgis/default_measure_color_red", 222 ).toInt();
-  myGreen = settings.value( "/qgis/default_measure_color_green", 155 ).toInt();
-  myBlue = settings.value( "/qgis/default_measure_color_blue", 67 ).toInt();
+  myRed = settings.value( "/Qgis/default_measure_color_red", 222 ).toInt();
+  myGreen = settings.value( "/Qgis/default_measure_color_green", 155 ).toInt();
+  myBlue = settings.value( "/Qgis/default_measure_color_blue", 67 ).toInt();
   pbnMeasureColor->setColor( QColor( myRed, myGreen, myBlue ) );
   pbnMeasureColor->setColorDialogTitle( tr( "Set measuring tool color" ) );
   pbnMeasureColor->setContext( "gui" );
   pbnMeasureColor->setDefaultColor( QColor( 222, 155, 67 ) );
 
-  capitaliseCheckBox->setChecked( settings.value( "/qgis/capitaliseLayerName", QVariant( false ) ).toBool() );
+  capitaliseCheckBox->setChecked( settings.value( "/Qgis/capitaliseLayerName", QVariant( false ) ).toBool() );
 
-  int projOpen = settings.value( "/qgis/projOpenAtLaunch", 0 ).toInt();
+  int projOpen = settings.value( "/Qgis/projOpenAtLaunch", 0 ).toInt();
   mProjectOnLaunchCmbBx->setCurrentIndex( projOpen );
-  mProjectOnLaunchLineEdit->setText( settings.value( "/qgis/projOpenAtLaunchPath" ).toString() );
+  mProjectOnLaunchLineEdit->setText( settings.value( "/Qgis/projOpenAtLaunchPath" ).toString() );
   mProjectOnLaunchLineEdit->setEnabled( projOpen == 2 );
   mProjectOnLaunchPushBtn->setEnabled( projOpen == 2 );
 
-  chbAskToSaveProjectChanges->setChecked( settings.value( "qgis/askToSaveProjectChanges", QVariant( true ) ).toBool() );
-  mLayerDeleteConfirmationChkBx->setChecked( settings.value( "qgis/askToDeleteLayers", true ).toBool() );
-  chbWarnOldProjectVersion->setChecked( settings.value( "/qgis/warnOldProjectVersion", QVariant( true ) ).toBool() );
-  cmbEnableMacros->setCurrentIndex( settings.value( "/qgis/enableMacros", 1 ).toInt() );
+  chbAskToSaveProjectChanges->setChecked( settings.value( "Qgis/askToSaveProjectChanges", QVariant( true ) ).toBool() );
+  mLayerDeleteConfirmationChkBx->setChecked( settings.value( "Qgis/askToDeleteLayers", true ).toBool() );
+  chbWarnOldProjectVersion->setChecked( settings.value( "/Qgis/warnOldProjectVersion", QVariant( true ) ).toBool() );
+  cmbEnableMacros->setCurrentIndex( settings.value( "/Qgis/enableMacros", 1 ).toInt() );
 
   // templates
-  cbxProjectDefaultNew->setChecked( settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() );
+  cbxProjectDefaultNew->setChecked( settings.value( "/Qgis/newProjectDefault", QVariant( false ) ).toBool() );
   QString templateDirName = QgsApplication::projectTemplatesDir();
   // make dir if it doesn't exists - should just be called once
   QDir templateDir;
@@ -685,9 +685,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   }
   leTemplateFolder->setText( templateDirName );
 
-  cmbWheelAction->setCurrentIndex( settings.value( "/qgis/wheel_action", 2 ).toInt() );
-  spinZoomFactor->setValue( settings.value( "/qgis/zoom_factor", 2 ).toDouble() );
-  mOptimalScalesCheckBox->setChecked( settings.value( "/qgis/useWmtsScales", 0 ).toInt() );
+  cmbWheelAction->setCurrentIndex( settings.value( "/Qgis/wheel_action", 2 ).toInt() );
+  spinZoomFactor->setValue( settings.value( "/Qgis/zoom_factor", 2 ).toDouble() );
+  mOptimalScalesCheckBox->setChecked( settings.value( "/Qgis/useWmtsScales", 0 ).toInt() );
 
   // predefined scales for scale combobox
   myPaths = settings.value( "Map/scales", PROJECT_SCALES ).toString();
@@ -797,12 +797,12 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   grpLocale->setChecked( myLocaleOverrideFlag );
 
   //set elements in digitizing tab
-  mLineWidthSpinBox->setValue( settings.value( "/qgis/digitizing/line_width", 1 ).toInt() );
+  mLineWidthSpinBox->setValue( settings.value( "/Qgis/digitizing/line_width", 1 ).toInt() );
   QColor digitizingColor;
-  myRed = settings.value( "/qgis/digitizing/line_color_red", 255 ).toInt();
-  myGreen = settings.value( "/qgis/digitizing/line_color_green", 0 ).toInt();
-  myBlue = settings.value( "/qgis/digitizing/line_color_blue", 0 ).toInt();
-  myAlpha = settings.value( "/qgis/digitizing/line_color_alpha", 200 ).toInt();
+  myRed = settings.value( "/Qgis/digitizing/line_color_red", 255 ).toInt();
+  myGreen = settings.value( "/Qgis/digitizing/line_color_green", 0 ).toInt();
+  myBlue = settings.value( "/Qgis/digitizing/line_color_blue", 0 ).toInt();
+  myAlpha = settings.value( "/Qgis/digitizing/line_color_alpha", 200 ).toInt();
   mLineColorToolButton->setColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
   mLineColorToolButton->setAllowAlpha( true );
   mLineColorToolButton->setContext( "gui" );
@@ -813,11 +813,11 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mDefaultSnapModeComboBox->insertItem( 1, tr( "To segment" ), "to segment" );
   mDefaultSnapModeComboBox->insertItem( 2, tr( "To vertex and segment" ), "to vertex and segment" );
   mDefaultSnapModeComboBox->insertItem( 3, tr( "Off" ), "off" );
-  QString defaultSnapString = settings.value( "/qgis/digitizing/default_snap_mode", "off" ).toString();
+  QString defaultSnapString = settings.value( "/Qgis/digitizing/default_snap_mode", "off" ).toString();
   mDefaultSnapModeComboBox->setCurrentIndex( mDefaultSnapModeComboBox->findData( defaultSnapString ) );
-  mDefaultSnappingToleranceSpinBox->setValue( settings.value( "/qgis/digitizing/default_snapping_tolerance", 0 ).toDouble() );
-  mSearchRadiusVertexEditSpinBox->setValue( settings.value( "/qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble() );
-  int defSnapUnits = settings.value( "/qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
+  mDefaultSnappingToleranceSpinBox->setValue( settings.value( "/Qgis/digitizing/default_snapping_tolerance", 0 ).toDouble() );
+  mSearchRadiusVertexEditSpinBox->setValue( settings.value( "/Qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble() );
+  int defSnapUnits = settings.value( "/Qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
   if ( defSnapUnits == QgsTolerance::ProjectUnits || defSnapUnits == QgsTolerance::LayerUnits )
   {
     index = mDefaultSnappingToleranceComboBox->findText( tr( "map units" ) );
@@ -827,7 +827,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
     index = mDefaultSnappingToleranceComboBox->findText( tr( "pixels" ) );
   }
   mDefaultSnappingToleranceComboBox->setCurrentIndex( index );
-  int defRadiusUnits = settings.value( "/qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
+  int defRadiusUnits = settings.value( "/Qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
   if ( defRadiusUnits == QgsTolerance::ProjectUnits || defRadiusUnits == QgsTolerance::LayerUnits )
   {
     index = mSearchRadiusVertexEditComboBox->findText( tr( "map units" ) );
@@ -839,7 +839,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mSearchRadiusVertexEditComboBox->setCurrentIndex( index );
 
   //vertex marker
-  mMarkersOnlyForSelectedCheckBox->setChecked( settings.value( "/qgis/digitizing/marker_only_for_selected", false ).toBool() );
+  mMarkersOnlyForSelectedCheckBox->setChecked( settings.value( "/Qgis/digitizing/marker_only_for_selected", false ).toBool() );
 
   mMarkerStyleComboBox->addItem( tr( "Semi transparent circle" ) );
   mMarkerStyleComboBox->addItem( tr( "Cross" ) );
@@ -853,7 +853,7 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   mValidateGeometries->addItem( tr( "GEOS" ) );
 #endif
 
-  QString markerStyle = settings.value( "/qgis/digitizing/marker_style", "Cross" ).toString();
+  QString markerStyle = settings.value( "/Qgis/digitizing/marker_style", "Cross" ).toString();
   if ( markerStyle == "SemiTransparentCircle" )
   {
     mMarkerStyleComboBox->setCurrentIndex( mMarkerStyleComboBox->findText( tr( "Semi transparent circle" ) ) );
@@ -866,25 +866,25 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   {
     mMarkerStyleComboBox->setCurrentIndex( mMarkerStyleComboBox->findText( tr( "None" ) ) );
   }
-  mMarkerSizeSpinBox->setValue( settings.value( "/qgis/digitizing/marker_size", 3 ).toInt() );
+  mMarkerSizeSpinBox->setValue( settings.value( "/Qgis/digitizing/marker_size", 3 ).toInt() );
 
-  chkReuseLastValues->setChecked( settings.value( "/qgis/digitizing/reuseLastValues", false ).toBool() );
-  chkDisableAttributeValuesDlg->setChecked( settings.value( "/qgis/digitizing/disable_enter_attribute_values_dialog", false ).toBool() );
-  mValidateGeometries->setCurrentIndex( settings.value( "/qgis/digitizing/validate_geometries", 1 ).toInt() );
+  chkReuseLastValues->setChecked( settings.value( "/Qgis/digitizing/reuseLastValues", false ).toBool() );
+  chkDisableAttributeValuesDlg->setChecked( settings.value( "/Qgis/digitizing/disable_enter_attribute_values_dialog", false ).toBool() );
+  mValidateGeometries->setCurrentIndex( settings.value( "/Qgis/digitizing/validate_geometries", 1 ).toInt() );
 
   mOffsetJoinStyleComboBox->addItem( tr( "Round" ), 0 );
   mOffsetJoinStyleComboBox->addItem( tr( "Mitre" ), 1 );
   mOffsetJoinStyleComboBox->addItem( tr( "Bevel" ), 2 );
-  mOffsetJoinStyleComboBox->setCurrentIndex( settings.value( "/qgis/digitizing/offset_join_style", 0 ).toInt() );
-  mOffsetQuadSegSpinBox->setValue( settings.value( "/qgis/digitizing/offset_quad_seg", 8 ).toInt() );
-  mCurveOffsetMiterLimitComboBox->setValue( settings.value( "/qgis/digitizing/offset_miter_limit", 5.0 ).toDouble() );
+  mOffsetJoinStyleComboBox->setCurrentIndex( settings.value( "/Qgis/digitizing/offset_join_style", 0 ).toInt() );
+  mOffsetQuadSegSpinBox->setValue( settings.value( "/Qgis/digitizing/offset_quad_seg", 8 ).toInt() );
+  mCurveOffsetMiterLimitComboBox->setValue( settings.value( "/Qgis/digitizing/offset_miter_limit", 5.0 ).toDouble() );
 
   // load gdal driver list only when gdal tab is first opened
   mLoadedGdalDriverList = false;
 
-  mOnlineTestUrlLineEdit->setText( settings.value( "/qgis/onlineTestUrl" ).toString() );
-  mOnlineProjectLineEdit->setText( settings.value( "/qgis/onlineDefaultProject" ).toString() );
-  mOfflineProjectLineEdit->setText( settings.value( "/qgis/offlineDefaultProject" ).toString() );
+  mOnlineTestUrlLineEdit->setText( settings.value( "/Qgis/onlineTestUrl" ).toString() );
+  mOnlineProjectLineEdit->setText( settings.value( "/Qgis/onlineDefaultProject" ).toString() );
+  mOfflineProjectLineEdit->setText( settings.value( "/Qgis/offlineDefaultProject" ).toString() );
 
   // restore window and widget geometry/state
   restoreOptionsBaseUi();
@@ -1010,7 +1010,7 @@ void QgsOptions::saveOptions()
   QSettings settings;
 
   // custom environment variables
-  settings.setValue( "qgis/customEnvVarsUse", QVariant( mCustomVariablesChkBx->isChecked() ) );
+  settings.setValue( "Qgis/customEnvVarsUse", QVariant( mCustomVariablesChkBx->isChecked() ) );
   QStringList customVars;
   for ( int i = 0; i < mCustomVariablesTable->rowCount(); ++i )
   {
@@ -1024,7 +1024,7 @@ void QgsOptions::saveOptions()
     customVar += mCustomVariablesTable->item( i, 2 )->text();
     customVars << customVar;
   }
-  settings.setValue( "qgis/customEnvVars", QVariant( customVars ) );
+  settings.setValue( "Qgis/customEnvVars", QVariant( customVars ) );
 
   //search directories for user plugins
   QString myPaths;
@@ -1036,7 +1036,7 @@ void QgsOptions::saveOptions()
     }
     myPaths += mListPluginPaths->item( i )->text();
   }
-  settings.setValue( "plugins/searchPathsForPlugins", myPaths );
+  settings.setValue( "Plugins/searchPathsForPlugins", myPaths );
 
   //search directories for svgs
   myPaths.clear();
@@ -1051,14 +1051,14 @@ void QgsOptions::saveOptions()
   settings.setValue( "svg/searchPathsForSVG", myPaths );
 
   //Network timeout
-  settings.setValue( "/qgis/networkAndProxy/networkTimeout", mNetworkTimeoutSpinBox->value() );
-  settings.setValue( "/qgis/networkAndProxy/userAgent", leUserAgent->text() );
+  settings.setValue( "/Qgis/networkAndProxy/networkTimeout", mNetworkTimeoutSpinBox->value() );
+  settings.setValue( "/Qgis/networkAndProxy/userAgent", leUserAgent->text() );
 
   // WMS/WMS-C tile expiry time
-  settings.setValue( "/qgis/defaultTileExpiry", mDefaultTileExpirySpinBox->value() );
+  settings.setValue( "/Qgis/defaultTileExpiry", mDefaultTileExpirySpinBox->value() );
 
   // WMS/WMS-C default max retry in case of tile request errors
-  settings.setValue( "/qgis/defaultTileMaxRetry", mDefaultTileMaxRetrySpinBox->value() );
+  settings.setValue( "/Qgis/defaultTileMaxRetry", mDefaultTileMaxRetrySpinBox->value() );
 
   //Web proxy settings
   settings.setValue( "proxy/proxyEnabled", grpProxy->isChecked() );
@@ -1086,7 +1086,7 @@ void QgsOptions::saveOptions()
   QgisApp::instance()->namUpdate();
 
   //wms search url
-  settings.setValue( "/qgis/WMSSearchUrl", leWmsSearch->text() );
+  settings.setValue( "/Qgis/WMSSearchUrl", leWmsSearch->text() );
 
   //general settings
   settings.setValue( "/Map/searchRadiusMM", spinBoxIdentifyValue->value() );
@@ -1095,44 +1095,44 @@ void QgsOptions::saveOptions()
   settings.setValue( "/Map/highlight/buffer", mIdentifyHighlightBufferSpinBox->value() );
   settings.setValue( "/Map/highlight/minWidth", mIdentifyHighlightMinWidthSpinBox->value() );
 
-  bool showLegendClassifiers = settings.value( "/qgis/showLegendClassifiers", false ).toBool();
-  settings.setValue( "/qgis/showLegendClassifiers", cbxLegendClassifiers->isChecked() );
-  bool legendLayersBold = settings.value( "/qgis/legendLayersBold", true ).toBool();
-  settings.setValue( "/qgis/legendLayersBold", mLegendLayersBoldChkBx->isChecked() );
-  bool legendGroupsBold = settings.value( "/qgis/legendGroupsBold", false ).toBool();
-  settings.setValue( "/qgis/legendGroupsBold", mLegendGroupsBoldChkBx->isChecked() );
-  settings.setValue( "/qgis/hideSplash", cbxHideSplash->isChecked() );
-  settings.setValue( QString( "/qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), cbxShowTips->isChecked() );
-  settings.setValue( "/qgis/dockAttributeTable", cbxAttributeTableDocked->isChecked() );
-  settings.setValue( "/qgis/attributeTableBehaviour", cmbAttrTableBehaviour->itemData( cmbAttrTableBehaviour->currentIndex() ) );
-  settings.setValue( "/qgis/attributeTableRowCache", spinBoxAttrTableRowCache->value() );
-  settings.setValue( "/qgis/promptForRasterSublayers", cmbPromptRasterSublayers->currentIndex() );
-  settings.setValue( "/qgis/scanItemsInBrowser2",
+  bool showLegendClassifiers = settings.value( "/Qgis/showLegendClassifiers", false ).toBool();
+  settings.setValue( "/Qgis/showLegendClassifiers", cbxLegendClassifiers->isChecked() );
+  bool legendLayersBold = settings.value( "/Qgis/legendLayersBold", true ).toBool();
+  settings.setValue( "/Qgis/legendLayersBold", mLegendLayersBoldChkBx->isChecked() );
+  bool legendGroupsBold = settings.value( "/Qgis/legendGroupsBold", false ).toBool();
+  settings.setValue( "/Qgis/legendGroupsBold", mLegendGroupsBoldChkBx->isChecked() );
+  settings.setValue( "/Qgis/hideSplash", cbxHideSplash->isChecked() );
+  settings.setValue( QString( "/Qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), cbxShowTips->isChecked() );
+  settings.setValue( "/Qgis/dockAttributeTable", cbxAttributeTableDocked->isChecked() );
+  settings.setValue( "/Qgis/attributeTableBehaviour", cmbAttrTableBehaviour->itemData( cmbAttrTableBehaviour->currentIndex() ) );
+  settings.setValue( "/Qgis/attributeTableRowCache", spinBoxAttrTableRowCache->value() );
+  settings.setValue( "/Qgis/promptForRasterSublayers", cmbPromptRasterSublayers->currentIndex() );
+  settings.setValue( "/Qgis/scanItemsInBrowser2",
                      cmbScanItemsInBrowser->itemData( cmbScanItemsInBrowser->currentIndex() ).toString() );
-  settings.setValue( "/qgis/scanZipInBrowser2",
+  settings.setValue( "/Qgis/scanZipInBrowser2",
                      cmbScanZipInBrowser->itemData( cmbScanZipInBrowser->currentIndex() ).toString() );
-  settings.setValue( "/qgis/ignoreShapeEncoding", cbxIgnoreShapeEncoding->isChecked() );
-  settings.setValue( "/qgis/dockSnapping", cbxSnappingOptionsDocked->isChecked() );
-  settings.setValue( "/qgis/addPostgisDC", cbxAddPostgisDC->isChecked() );
-  settings.setValue( "/qgis/addOracleDC", cbxAddOracleDC->isChecked() );
-  settings.setValue( "/qgis/defaultLegendGraphicResolution", mLegendGraphicResolutionSpinBox->value() );
-  bool createRasterLegendIcons = settings.value( "/qgis/createRasterLegendIcons", false ).toBool();
-  settings.setValue( "/qgis/createRasterLegendIcons", cbxCreateRasterLegendIcons->isChecked() );
-  settings.setValue( "/qgis/copyGeometryAsWKT", cbxCopyWKTGeomFromTable->isChecked() );
-  settings.setValue( "/qgis/new_layers_visible", chkAddedVisibility->isChecked() );
-  settings.setValue( "/qgis/enable_anti_aliasing", chkAntiAliasing->isChecked() );
-  settings.setValue( "/qgis/enable_render_caching", chkUseRenderCaching->isChecked() );
-  settings.setValue( "/qgis/parallel_rendering", chkParallelRendering->isChecked() );
+  settings.setValue( "/Qgis/ignoreShapeEncoding", cbxIgnoreShapeEncoding->isChecked() );
+  settings.setValue( "/Qgis/dockSnapping", cbxSnappingOptionsDocked->isChecked() );
+  settings.setValue( "/Qgis/addPostgisDC", cbxAddPostgisDC->isChecked() );
+  settings.setValue( "/Qgis/addOracleDC", cbxAddOracleDC->isChecked() );
+  settings.setValue( "/Qgis/defaultLegendGraphicResolution", mLegendGraphicResolutionSpinBox->value() );
+  bool createRasterLegendIcons = settings.value( "/Qgis/createRasterLegendIcons", false ).toBool();
+  settings.setValue( "/Qgis/createRasterLegendIcons", cbxCreateRasterLegendIcons->isChecked() );
+  settings.setValue( "/Qgis/copyGeometryAsWKT", cbxCopyWKTGeomFromTable->isChecked() );
+  settings.setValue( "/Qgis/new_layers_visible", chkAddedVisibility->isChecked() );
+  settings.setValue( "/Qgis/enable_anti_aliasing", chkAntiAliasing->isChecked() );
+  settings.setValue( "/Qgis/enable_render_caching", chkUseRenderCaching->isChecked() );
+  settings.setValue( "/Qgis/parallel_rendering", chkParallelRendering->isChecked() );
   int maxThreads = chkMaxThreads->isChecked() ? spinMaxThreads->value() : -1;
   QgsApplication::setMaxThreads( maxThreads );
-  settings.setValue( "/qgis/max_threads", maxThreads );
+  settings.setValue( "/Qgis/max_threads", maxThreads );
 
-  settings.setValue( "/qgis/map_update_interval", spinMapUpdateInterval->value() );
-  settings.setValue( "/qgis/legendDoubleClickAction", cmbLegendDoubleClickAction->currentIndex() );
-  settings.setValue( "/qgis/layerLegendAddMode", mComboBoxAddLayerMode->currentIndex() );
+  settings.setValue( "/Qgis/map_update_interval", spinMapUpdateInterval->value() );
+  settings.setValue( "/Qgis/legendDoubleClickAction", cmbLegendDoubleClickAction->currentIndex() );
+  settings.setValue( "/Qgis/layerLegendAddMode", mComboBoxAddLayerMode->currentIndex() );
 
-  bool legendLayersCapitalise = settings.value( "/qgis/capitaliseLayerName", false ).toBool();
-  settings.setValue( "/qgis/capitaliseLayerName", capitaliseCheckBox->isChecked() );
+  bool legendLayersCapitalise = settings.value( "/Qgis/capitaliseLayerName", false ).toBool();
+  settings.setValue( "/Qgis/capitaliseLayerName", capitaliseCheckBox->isChecked() );
   QgsMapCanvas::enableRotation( cbxCanvasRotation->isChecked() );
 
   // Default simplify drawing configuration
@@ -1142,29 +1142,29 @@ void QgsOptions::saveOptions()
     simplifyHints |= QgsVectorSimplifyMethod::GeometrySimplification;
     if ( mSimplifyDrawingSpinBox->value() > 1 ) simplifyHints |= QgsVectorSimplifyMethod::AntialiasingSimplification;
   }
-  settings.setValue( "/qgis/simplifyDrawingHints", ( int ) simplifyHints );
-  settings.setValue( "/qgis/simplifyDrawingTol", mSimplifyDrawingSpinBox->value() );
-  settings.setValue( "/qgis/simplifyLocal", !mSimplifyDrawingAtProvider->isChecked() );
-  settings.setValue( "/qgis/simplifyMaxScale", 1.0 / mSimplifyMaximumScaleComboBox->scale() );
+  settings.setValue( "/Qgis/simplifyDrawingHints", ( int ) simplifyHints );
+  settings.setValue( "/Qgis/simplifyDrawingTol", mSimplifyDrawingSpinBox->value() );
+  settings.setValue( "/Qgis/simplifyLocal", !mSimplifyDrawingAtProvider->isChecked() );
+  settings.setValue( "/Qgis/simplifyMaxScale", 1.0 / mSimplifyMaximumScaleComboBox->scale() );
 
   // project
-  settings.setValue( "/qgis/projOpenAtLaunch", mProjectOnLaunchCmbBx->currentIndex() );
-  settings.setValue( "/qgis/projOpenAtLaunchPath", mProjectOnLaunchLineEdit->text() );
+  settings.setValue( "/Qgis/projOpenAtLaunch", mProjectOnLaunchCmbBx->currentIndex() );
+  settings.setValue( "/Qgis/projOpenAtLaunchPath", mProjectOnLaunchLineEdit->text() );
 
-  settings.setValue( "/qgis/askToSaveProjectChanges", chbAskToSaveProjectChanges->isChecked() );
-  settings.setValue( "qgis/askToDeleteLayers", mLayerDeleteConfirmationChkBx->isChecked() );
-  settings.setValue( "/qgis/warnOldProjectVersion", chbWarnOldProjectVersion->isChecked() );
-  if (( settings.value( "/qgis/projectTemplatesDir" ).toString() != leTemplateFolder->text() ) ||
-      ( settings.value( "/qgis/newProjectDefault" ).toBool() != cbxProjectDefaultNew->isChecked() ) )
+  settings.setValue( "/Qgis/askToSaveProjectChanges", chbAskToSaveProjectChanges->isChecked() );
+  settings.setValue( "Qgis/askToDeleteLayers", mLayerDeleteConfirmationChkBx->isChecked() );
+  settings.setValue( "/Qgis/warnOldProjectVersion", chbWarnOldProjectVersion->isChecked() );
+  if (( settings.value( "/Qgis/projectTemplatesDir" ).toString() != leTemplateFolder->text() ) ||
+      ( settings.value( "/Qgis/newProjectDefault" ).toBool() != cbxProjectDefaultNew->isChecked() ) )
   {
-    settings.setValue( "/qgis/newProjectDefault", cbxProjectDefaultNew->isChecked() );
-    settings.setValue( "/qgis/projectTemplatesDir", leTemplateFolder->text() );
+    settings.setValue( "/Qgis/newProjectDefault", cbxProjectDefaultNew->isChecked() );
+    settings.setValue( "/Qgis/projectTemplatesDir", leTemplateFolder->text() );
     QgisApp::instance()->updateProjectFromTemplates();
   }
-  settings.setValue( "/qgis/enableMacros", cmbEnableMacros->currentIndex() );
+  settings.setValue( "/Qgis/enableMacros", cmbEnableMacros->currentIndex() );
 
-  settings.setValue( "/qgis/nullValue", leNullValue->text() );
-  settings.setValue( "/qgis/style", cmbStyle->currentText() );
+  settings.setValue( "/Qgis/nullValue", leNullValue->text() );
+  settings.setValue( "/Qgis/style", cmbStyle->currentText() );
 
   if ( cmbTheme->currentText().length() == 0 )
   {
@@ -1177,10 +1177,10 @@ void QgsOptions::saveOptions()
 
   settings.setValue( "/IconSize", cmbIconSize->currentText() );
 
-  settings.setValue( "/qgis/messageTimeout", mMessageTimeoutSpnBx->value() );
+  settings.setValue( "/Qgis/messageTimeout", mMessageTimeoutSpnBx->value() );
 
-  settings.setValue( "/qgis/native_color_dialogs", mNativeColorDialogsChkBx->isChecked() );
-  settings.setValue( "/qgis/live_color_dialogs", mLiveColorDialogsChkBx->isChecked() );
+  settings.setValue( "/Qgis/native_color_dialogs", mNativeColorDialogsChkBx->isChecked() );
+  settings.setValue( "/Qgis/live_color_dialogs", mLiveColorDialogsChkBx->isChecked() );
 
   // rasters settings
   settings.setValue( "/Raster/defaultRedBand", spnRed->value() );
@@ -1231,19 +1231,19 @@ void QgsOptions::saveOptions()
 
   if ( radFeet->isChecked() )
   {
-    settings.setValue( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Feet ) );
+    settings.setValue( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Feet ) );
   }
   else if ( radNautical->isChecked() )
   {
-    settings.setValue( "/qgis/measure/displayunits", QGis::toLiteral( QGis::NauticalMiles ) );
+    settings.setValue( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::NauticalMiles ) );
   }
   else if ( radDegrees->isChecked() )
   {
-    settings.setValue( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Degrees ) );
+    settings.setValue( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Degrees ) );
   }
   else
   {
-    settings.setValue( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) );
+    settings.setValue( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) );
   }
 
   QString angleUnitString = "degrees";
@@ -1259,80 +1259,80 @@ void QgsOptions::saveOptions()
   {
     angleUnitString = "mil";
   }
-  settings.setValue( "/qgis/measure/angleunits", angleUnitString );
+  settings.setValue( "/Qgis/measure/angleunits", angleUnitString );
 
   int decimalPlaces = mDecimalPlacesSpinBox->value();
-  settings.setValue( "/qgis/measure/decimalplaces", decimalPlaces );
+  settings.setValue( "/Qgis/measure/decimalplaces", decimalPlaces );
 
   bool baseUnit = mKeepBaseUnitCheckBox->isChecked();
-  settings.setValue( "/qgis/measure/keepbaseunit", baseUnit );
+  settings.setValue( "/Qgis/measure/keepbaseunit", baseUnit );
 
   //set the color for selections
   QColor myColor = pbnSelectionColor->color();
-  settings.setValue( "/qgis/default_selection_color_red", myColor.red() );
-  settings.setValue( "/qgis/default_selection_color_green", myColor.green() );
-  settings.setValue( "/qgis/default_selection_color_blue", myColor.blue() );
-  settings.setValue( "/qgis/default_selection_color_alpha", myColor.alpha() );
+  settings.setValue( "/Qgis/default_selection_color_red", myColor.red() );
+  settings.setValue( "/Qgis/default_selection_color_green", myColor.green() );
+  settings.setValue( "/Qgis/default_selection_color_blue", myColor.blue() );
+  settings.setValue( "/Qgis/default_selection_color_alpha", myColor.alpha() );
 
   //set the default color for canvas background
   myColor = pbnCanvasColor->color();
-  settings.setValue( "/qgis/default_canvas_color_red", myColor.red() );
-  settings.setValue( "/qgis/default_canvas_color_green", myColor.green() );
-  settings.setValue( "/qgis/default_canvas_color_blue", myColor.blue() );
-  settings.setValue( "/qgis/default_canvas_color_alpha", myColor.alpha() );
+  settings.setValue( "/Qgis/default_canvas_color_red", myColor.red() );
+  settings.setValue( "/Qgis/default_canvas_color_green", myColor.green() );
+  settings.setValue( "/Qgis/default_canvas_color_blue", myColor.blue() );
+  settings.setValue( "/Qgis/default_canvas_color_alpha", myColor.alpha() );
 
   //set the default color for the measure tool
   myColor = pbnMeasureColor->color();
-  settings.setValue( "/qgis/default_measure_color_red", myColor.red() );
-  settings.setValue( "/qgis/default_measure_color_green", myColor.green() );
-  settings.setValue( "/qgis/default_measure_color_blue", myColor.blue() );
+  settings.setValue( "/Qgis/default_measure_color_red", myColor.red() );
+  settings.setValue( "/Qgis/default_measure_color_green", myColor.green() );
+  settings.setValue( "/Qgis/default_measure_color_blue", myColor.blue() );
 
-  settings.setValue( "/qgis/wheel_action", cmbWheelAction->currentIndex() );
-  settings.setValue( "/qgis/zoom_factor", spinZoomFactor->value() );
-  settings.setValue( "/qgis/useWmtsScales", mOptimalScalesCheckBox->isChecked() );
+  settings.setValue( "/Qgis/wheel_action", cmbWheelAction->currentIndex() );
+  settings.setValue( "/Qgis/zoom_factor", spinZoomFactor->value() );
+  settings.setValue( "/Qgis/useWmtsScales", mOptimalScalesCheckBox->isChecked() );
 
   //digitizing
-  settings.setValue( "/qgis/digitizing/line_width", mLineWidthSpinBox->value() );
+  settings.setValue( "/Qgis/digitizing/line_width", mLineWidthSpinBox->value() );
   QColor digitizingColor = mLineColorToolButton->color();
-  settings.setValue( "/qgis/digitizing/line_color_red", digitizingColor.red() );
-  settings.setValue( "/qgis/digitizing/line_color_green", digitizingColor.green() );
-  settings.setValue( "/qgis/digitizing/line_color_blue", digitizingColor.blue() );
-  settings.setValue( "/qgis/digitizing/line_color_alpha", digitizingColor.alpha() );
+  settings.setValue( "/Qgis/digitizing/line_color_red", digitizingColor.red() );
+  settings.setValue( "/Qgis/digitizing/line_color_green", digitizingColor.green() );
+  settings.setValue( "/Qgis/digitizing/line_color_blue", digitizingColor.blue() );
+  settings.setValue( "/Qgis/digitizing/line_color_alpha", digitizingColor.alpha() );
 
   //default snap mode
   QString defaultSnapModeString = mDefaultSnapModeComboBox->itemData( mDefaultSnapModeComboBox->currentIndex() ).toString();
-  settings.setValue( "/qgis/digitizing/default_snap_mode", defaultSnapModeString );
-  settings.setValue( "/qgis/digitizing/default_snapping_tolerance", mDefaultSnappingToleranceSpinBox->value() );
-  settings.setValue( "/qgis/digitizing/search_radius_vertex_edit", mSearchRadiusVertexEditSpinBox->value() );
-  settings.setValue( "/qgis/digitizing/default_snapping_tolerance_unit",
+  settings.setValue( "/Qgis/digitizing/default_snap_mode", defaultSnapModeString );
+  settings.setValue( "/Qgis/digitizing/default_snapping_tolerance", mDefaultSnappingToleranceSpinBox->value() );
+  settings.setValue( "/Qgis/digitizing/search_radius_vertex_edit", mSearchRadiusVertexEditSpinBox->value() );
+  settings.setValue( "/Qgis/digitizing/default_snapping_tolerance_unit",
                      ( mDefaultSnappingToleranceComboBox->currentIndex() == 0 ? QgsTolerance::ProjectUnits : QgsTolerance::Pixels ) );
-  settings.setValue( "/qgis/digitizing/search_radius_vertex_edit_unit",
+  settings.setValue( "/Qgis/digitizing/search_radius_vertex_edit_unit",
                      ( mSearchRadiusVertexEditComboBox->currentIndex()  == 0 ? QgsTolerance::ProjectUnits : QgsTolerance::Pixels ) );
 
-  settings.setValue( "/qgis/digitizing/marker_only_for_selected", mMarkersOnlyForSelectedCheckBox->isChecked() );
+  settings.setValue( "/Qgis/digitizing/marker_only_for_selected", mMarkersOnlyForSelectedCheckBox->isChecked() );
 
   QString markerComboText = mMarkerStyleComboBox->currentText();
   if ( markerComboText == tr( "Semi transparent circle" ) )
   {
-    settings.setValue( "/qgis/digitizing/marker_style", "SemiTransparentCircle" );
+    settings.setValue( "/Qgis/digitizing/marker_style", "SemiTransparentCircle" );
   }
   else if ( markerComboText == tr( "Cross" ) )
   {
-    settings.setValue( "/qgis/digitizing/marker_style", "Cross" );
+    settings.setValue( "/Qgis/digitizing/marker_style", "Cross" );
   }
   else if ( markerComboText == tr( "None" ) )
   {
-    settings.setValue( "/qgis/digitizing/marker_style", "None" );
+    settings.setValue( "/Qgis/digitizing/marker_style", "None" );
   }
-  settings.setValue( "/qgis/digitizing/marker_size", ( mMarkerSizeSpinBox->value() ) );
+  settings.setValue( "/Qgis/digitizing/marker_size", ( mMarkerSizeSpinBox->value() ) );
 
-  settings.setValue( "/qgis/digitizing/reuseLastValues", chkReuseLastValues->isChecked() );
-  settings.setValue( "/qgis/digitizing/disable_enter_attribute_values_dialog", chkDisableAttributeValuesDlg->isChecked() );
-  settings.setValue( "/qgis/digitizing/validate_geometries", mValidateGeometries->currentIndex() );
+  settings.setValue( "/Qgis/digitizing/reuseLastValues", chkReuseLastValues->isChecked() );
+  settings.setValue( "/Qgis/digitizing/disable_enter_attribute_values_dialog", chkDisableAttributeValuesDlg->isChecked() );
+  settings.setValue( "/Qgis/digitizing/validate_geometries", mValidateGeometries->currentIndex() );
 
-  settings.setValue( "/qgis/digitizing/offset_join_style", mOffsetJoinStyleComboBox->itemData( mOffsetJoinStyleComboBox->currentIndex() ).toInt() );
-  settings.setValue( "/qgis/digitizing/offset_quad_seg", mOffsetQuadSegSpinBox->value() );
-  settings.setValue( "/qgis/digitizing/offset_miter_limit", mCurveOffsetMiterLimitComboBox->value() );
+  settings.setValue( "/Qgis/digitizing/offset_join_style", mOffsetJoinStyleComboBox->itemData( mOffsetJoinStyleComboBox->currentIndex() ).toInt() );
+  settings.setValue( "/Qgis/digitizing/offset_quad_seg", mOffsetQuadSegSpinBox->value() );
+  settings.setValue( "/Qgis/digitizing/offset_miter_limit", mCurveOffsetMiterLimitComboBox->value() );
 
   // default scale list
   myPaths.clear();
@@ -1419,9 +1419,9 @@ void QgsOptions::saveOptions()
     mStyleSheetBuilder->saveToSettings( mStyleSheetNewOpts );
   }
 
-  settings.setValue( "/qgis/onlineTestUrl", mOnlineTestUrlLineEdit->text() );
-  settings.setValue( "/qgis/onlineDefaultProject", mOnlineProjectLineEdit->text() );
-  settings.setValue( "/qgis/offlineDefaultProject", mOfflineProjectLineEdit->text() );
+  settings.setValue( "/Qgis/onlineTestUrl", mOnlineTestUrlLineEdit->text() );
+  settings.setValue( "/Qgis/onlineDefaultProject", mOnlineProjectLineEdit->text() );
+  settings.setValue( "/Qgis/offlineDefaultProject", mOfflineProjectLineEdit->text() );
 
   saveDefaultDatumTransformations();
 }
@@ -1586,7 +1586,7 @@ void QgsOptions::on_mRestoreDefaultWindowStateBtn_clicked()
   QSettings mySettings;
   if ( QMessageBox::warning( this, tr( "Restore UI defaults" ), tr( "Are you sure to reset the UI to default (needs restart)?" ), QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Cancel )
     return;
-  mySettings.setValue( "/qgis/restoreDefaultWindowState", true );
+  mySettings.setValue( "/Qgis/restoreDefaultWindowState", true );
 }
 
 void QgsOptions::on_mCustomVariablesChkBx_toggled( bool chkd )
@@ -2157,7 +2157,7 @@ void QgsOptions::on_mButtonExportColors_clicked()
 
 void QgsOptions::on_mSSOCheckBox_toggled( bool state )
 {
-  QSettings().setValue( "/qgis/networkAndProxy/attemptSSO", state );
+  QSettings().setValue( "/Qgis/networkAndProxy/attemptSSO", state );
 }
 
 void QgsOptions::on_mSelectOnlineProjectButton_clicked()

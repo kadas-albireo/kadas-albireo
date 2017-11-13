@@ -320,7 +320,7 @@ void QgsCollapsibleGroupBoxBasic::updateStyle()
 
   QSettings settings;
   // NOTE: QGIS-Style groupbox styled in app stylesheet
-  bool usingQgsStyle = settings.value( "qgis/stylesheet/groupBoxCustom", QVariant( false ) ).toBool();
+  bool usingQgsStyle = settings.value( "Qgis/stylesheet/groupBoxCustom", QVariant( false ) ).toBool();
 
   QStyleOptionGroupBox box;
   initStyleOption( &box );

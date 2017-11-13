@@ -1151,7 +1151,7 @@ void QgsWMSSourceSelect::on_btnSearch_clicked()
   QApplication::setOverrideCursor( Qt::WaitCursor );
 
   QSettings settings;
-  QString mySearchUrl = settings.value( "/qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString();
+  QString mySearchUrl = settings.value( "/Qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString();
   QUrl url( mySearchUrl.arg( leSearchTerm->text() ) );
   QgsDebugMsg( url.toString() );
 

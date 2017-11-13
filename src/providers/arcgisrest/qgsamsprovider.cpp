@@ -145,7 +145,7 @@ QgsAmsProvider::QgsAmsProvider( const QString & uri )
   mServiceInfo = QgsArcGisRestUtils::getServiceInfo( dataSource.param( "url" ), mErrorTitle, mError );
   mLayerInfo = QgsArcGisRestUtils::getLayerInfo( dataSource.param( "url" ) + "/" + dataSource.param( "layer" ), mErrorTitle, mError );
 
-  bool useServiceExtent = QSettings().value( "/qgis/amsUseServiceExtent", false ).toBool();
+  bool useServiceExtent = QSettings().value( "/Qgis/amsUseServiceExtent", false ).toBool();
   QVariantMap extentData = useServiceExtent ? mServiceInfo["fullExtent"].toMap() : mLayerInfo["extent"].toMap();
   mExtent.setXMinimum( extentData["xmin"].toDouble() );
   mExtent.setYMinimum( extentData["ymin"].toDouble() );

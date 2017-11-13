@@ -53,7 +53,7 @@ QgsShapeFile::QgsShapeFile( QString name, QString encoding )
   QgsApplication::registerOgrDrivers();
 
   QSettings settings;
-  CPLSetConfigOption( "SHAPE_ENCODING", settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() ? "" : 0 );
+  CPLSetConfigOption( "SHAPE_ENCODING", settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() ? "" : 0 );
 
   ogrDataSource = OGROpen( TO8F( fileName ), false, NULL );
   if ( ogrDataSource != NULL )

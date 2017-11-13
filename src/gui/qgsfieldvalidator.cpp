@@ -84,7 +84,7 @@ QgsFieldValidator::QgsFieldValidator( QObject *parent, const QgsField &field, QS
   }
 
   QSettings settings;
-  mNullValue = settings.value( "qgis/nullValue", "NULL" ).toString();
+  mNullValue = settings.value( "Qgis/nullValue", "NULL" ).toString();
 }
 
 QgsFieldValidator::~QgsFieldValidator()

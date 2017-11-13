@@ -294,7 +294,7 @@ QgsVectorFileWriter::QgsVectorFileWriter(
   }
 
   QSettings settings;
-  if ( !settings.value( "/qgis/ignoreShapeEncoding", true ).toBool() )
+  if ( !settings.value( "/Qgis/ignoreShapeEncoding", true ).toBool() )
   {
     CPLSetConfigOption( "SHAPE_ENCODING", 0 );
   }

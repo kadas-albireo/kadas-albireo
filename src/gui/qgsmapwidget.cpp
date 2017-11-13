@@ -89,8 +89,8 @@ QgsMapWidget::QgsMapWidget( int number, const QString &title, QgsMapCanvas *mast
   mMapCanvas = new QgsMapCanvas( this );
   mMapCanvas->setCanvasColor( Qt::transparent );
   mMapCanvas->enableAntiAliasing( mMasterCanvas->antiAliasingEnabled() );
-  QgsMapCanvas::WheelAction wheelAction = static_cast<QgsMapCanvas::WheelAction>( settings.value( "/qgis/wheel_action", "0" ).toInt() );
-  double zoomFactor = settings.value( "/qgis/zoom_factor", "2.0" ).toDouble();
+  QgsMapCanvas::WheelAction wheelAction = static_cast<QgsMapCanvas::WheelAction>( settings.value( "/Qgis/wheel_action", "0" ).toInt() );
+  double zoomFactor = settings.value( "/Qgis/zoom_factor", "2.0" ).toDouble();
   mMapCanvas->setWheelAction( wheelAction, zoomFactor );
   setWidget( mMapCanvas );
 

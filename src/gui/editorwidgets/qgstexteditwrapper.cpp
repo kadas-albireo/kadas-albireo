@@ -56,7 +56,7 @@ QVariant QgsTextEditWrapper::value()
   }
 
   if (( v.isEmpty() && ( field().type() == QVariant::Int || field().type() == QVariant::Double || field().type() == QVariant::LongLong || field().type() == QVariant::Date ) ) ||
-      v == QSettings().value( "qgis/nullValue", "NULL" ).toString() )
+      v == QSettings().value( "Qgis/nullValue", "NULL" ).toString() )
     return QVariant( field().type() );
 
   if ( !defaultValue().isNull() && v == defaultValue().toString() )
@@ -109,7 +109,7 @@ void QgsTextEditWrapper::initWidget( QWidget* editor )
     QVariant defVal = defaultValue();
     if ( defVal.isNull() )
     {
-      defVal = QSettings().value( "qgis/nullValue", "NULL" );
+      defVal = QSettings().value( "Qgis/nullValue", "NULL" );
     }
 
     QgsFilterLineEdit *fle = qobject_cast<QgsFilterLineEdit*>( mLineEdit );
@@ -136,7 +136,7 @@ void QgsTextEditWrapper::setValue( const QVariant& val )
   if ( val.isNull() )
   {
     if ( !( field().type() == QVariant::Int || field().type() == QVariant::Double || field().type() == QVariant::LongLong || field().type() == QVariant::Date ) )
-      v = QSettings().value( "qgis/nullValue", "NULL" ).toString();
+      v = QSettings().value( "Qgis/nullValue", "NULL" ).toString();
   }
   else
     v = val.toString();

@@ -462,7 +462,7 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
           }
           mypFlattenedImage->fill( 0 );
           QPainter * mypPainter = new QPainter( mypFlattenedImage );
-          if ( mySettings.value( "/qgis/enable_anti_aliasing", true ).toBool() )
+          if ( mySettings.value( "/Qgis/enable_anti_aliasing", true ).toBool() )
           {
             mypPainter->setRenderHint( QPainter::Antialiasing );
           }
@@ -522,10 +522,13 @@ void QgsMapRenderer::render( QPainter* painter, double* forceWidthScale, bool lo
       if (( mRenderContext.useAdvancedEffects() ) && ( ml->type() == QgsMapLayer::VectorLayer || ml->type() == QgsMapLayer::RedliningLayer || ml->type() == QgsMapLayer::PluginLayer ) )
       {
         int transparency = 0;
-        if(qobject_cast<QgsVectorLayer *>( ml )) {
-          transparency = static_cast<QgsVectorLayer*>(ml)->layerTransparency();
-        } else if(qobject_cast<QgsPluginLayer*>(ml)) {
-          transparency = static_cast<QgsPluginLayer*>(ml)->layerTransparency();
+        if ( qobject_cast<QgsVectorLayer *>( ml ) )
+        {
+          transparency = static_cast<QgsVectorLayer*>( ml )->layerTransparency();
+        }
+        else if ( qobject_cast<QgsPluginLayer*>( ml ) )
+        {
+          transparency = static_cast<QgsPluginLayer*>( ml )->layerTransparency();
         }
         if ( transparency != 0 )
         {

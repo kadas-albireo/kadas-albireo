@@ -78,7 +78,7 @@ QgsCoordinateDisplayer::QgsCoordinateDisplayer( QToolButton* crsButton, QLineEdi
   connect( mHeightSelectionCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( heightUnitChanged( int ) ) );
   connect( QgisApp::instance(), SIGNAL( projectRead() ), this, SLOT( readProjectSettings() ) );
 
-  mHeightSelectionCombo->setCurrentIndex( QSettings().value( "/qgis/heightUnit", 0 ).toInt() );
+  mHeightSelectionCombo->setCurrentIndex( QSettings().value( "/Qgis/heightUnit", 0 ).toInt() );
 
   syncProjectCrs();
   int displayFormat = QgsProject::instance()->readNumEntry( "crsdisplay", "format" );
@@ -188,7 +188,7 @@ void QgsCoordinateDisplayer::displayFormatChanged( QAction *action )
 
 void QgsCoordinateDisplayer::heightUnitChanged( int idx )
 {
-  QSettings().setValue( "/qgis/heightUnit", idx );
+  QSettings().setValue( "/Qgis/heightUnit", idx );
   QgsCoordinateFormat::instance()->setHeightDisplayUnit( static_cast<QGis::UnitType>( mHeightSelectionCombo->itemData( idx ).toInt() ) );
   updateHeight();
 }

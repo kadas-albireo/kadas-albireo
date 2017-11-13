@@ -1286,7 +1286,7 @@ QVector<QgsDataItem*> QgsZipItem::createChildren()
   QVector<QgsDataItem*> children;
   QString tmpPath;
   QSettings settings;
-  QString scanZipSetting = settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString();
+  QString scanZipSetting = settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString();
 
   mZipFileList.clear();
 
@@ -1359,7 +1359,7 @@ QgsDataItem* QgsZipItem::itemFromPath( QgsDataItem* parent, QString path, QStrin
 QgsDataItem* QgsZipItem::itemFromPath( QgsDataItem* parent, QString filePath, QString name, QString path )
 {
   QSettings settings;
-  QString scanZipSetting = settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString();
+  QString scanZipSetting = settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString();
   int zipFileCount = 0;
   QStringList zipFileList;
   QFileInfo fileInfo( filePath );
@@ -1462,7 +1462,7 @@ const QStringList &QgsZipItem::getZipFileList()
 
   QString tmpPath;
   QSettings settings;
-  QString scanZipSetting = settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString();
+  QString scanZipSetting = settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString();
 
   QgsDebugMsgLevel( QString( "mFilePath = %1 name= %2 scanZipSetting= %3 vsiPrefix= %4" ).arg( mFilePath ).arg( name() ).arg( scanZipSetting ).arg( mVsiPrefix ), 3 );
 

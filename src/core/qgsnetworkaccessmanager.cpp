@@ -192,7 +192,7 @@ QNetworkReply *QgsNetworkAccessManager::createRequest( QNetworkAccessManager::Op
 
   QNetworkRequest *pReq(( QNetworkRequest * ) &req ); // hack user agent
 
-  QString userAgent = s.value( "/qgis/networkAndProxy/userAgent", "Mozilla/5.0" ).toString();
+  QString userAgent = s.value( "/Qgis/networkAndProxy/userAgent", "Mozilla/5.0" ).toString();
   if ( !userAgent.isEmpty() )
     userAgent += " ";
   userAgent += QString( "QGIS/%1" ).arg( QGis::QGIS_VERSION );
@@ -207,7 +207,7 @@ QNetworkReply *QgsNetworkAccessManager::createRequest( QNetworkAccessManager::Op
   QTimer *timer = new QTimer( reply );
   connect( timer, SIGNAL( timeout() ), this, SLOT( abortRequest() ) );
   timer->setSingleShot( true );
-  timer->start( s.value( "/qgis/networkAndProxy/networkTimeout", "20000" ).toInt() );
+  timer->start( s.value( "/Qgis/networkAndProxy/networkTimeout", "20000" ).toInt() );
 
   connect( reply, SIGNAL( downloadProgress( qint64, qint64 ) ), timer, SLOT( start() ) );
   connect( reply, SIGNAL( uploadProgress( qint64, qint64 ) ), timer, SLOT( start() ) );
@@ -522,14 +522,14 @@ QNetworkRequest QgsNetworkAccessManager::requestWithUserInfo( const QNetworkRequ
   QNetworkRequest adjustedRequest( req );
   QUrl url = req.url();
 
-  bool trySSO = QSettings().value( "/qgis/networkAndProxy/attemptSSO", false ).toBool();
+  bool trySSO = QSettings().value( "/Qgis/networkAndProxy/attemptSSO", false ).toBool();
   if ( trySSO && url.userInfo().isEmpty() && req.rawHeader( "Authorization" ).isEmpty() )
   {
     url.setUserInfo( ":sso" );
   }
   adjustedRequest.setUrl( url );
 
-  bool disablePeerVerification = QSettings().value( "/qgis/networkAndProxy/disableSSLPeerVerification", false ).toBool();
+  bool disablePeerVerification = QSettings().value( "/Qgis/networkAndProxy/disableSSLPeerVerification", false ).toBool();
   if ( disablePeerVerification )
   {
     QgsDebugMsg( "Disabling SSL peer verification" );

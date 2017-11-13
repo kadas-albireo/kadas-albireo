@@ -813,10 +813,10 @@ int main( int argc, char *argv[] )
 
   // custom environment variables
   QMap<QString, QString> systemEnvVars = QgsApplication::systemEnvVars();
-  bool useCustomVars = mySettings.value( "qgis/customEnvVarsUse", QVariant( false ) ).toBool();
+  bool useCustomVars = mySettings.value( "Qgis/customEnvVarsUse", QVariant( false ) ).toBool();
   if ( useCustomVars )
   {
-    QStringList customVarsList = mySettings.value( "qgis/customEnvVars", "" ).toStringList();
+    QStringList customVarsList = mySettings.value( "Qgis/customEnvVars", "" ).toStringList();
     if ( !customVarsList.isEmpty() )
     {
       foreach ( const QString &varStr, customVarsList )
@@ -871,7 +871,7 @@ int main( int argc, char *argv[] )
 
   // Set the application style.  If it's not set QT will use the platform style except on Windows
   // as it looks really ugly so we use QPlastiqueStyle.
-  QString style = mySettings.value( "/qgis/style" ).toString();
+  QString style = mySettings.value( "/Qgis/style" ).toString();
   if ( !style.isNull() )
     QApplication::setStyle( style );
 #ifdef Q_OS_WIN
@@ -1001,16 +1001,16 @@ int main( int argc, char *argv[] )
 
   // optionally restore default window state
   // use restoreDefaultWindowState setting only if NOT using command line (then it is set already)
-  if ( myRestoreDefaultWindowState || mySettings.value( "/qgis/restoreDefaultWindowState", false ).toBool() )
+  if ( myRestoreDefaultWindowState || mySettings.value( "/Qgis/restoreDefaultWindowState", false ).toBool() )
   {
     QgsDebugMsg( "Resetting /UI/state settings!" );
     mySettings.remove( "/UI/state" );
-    mySettings.remove( "/qgis/restoreDefaultWindowState" );
+    mySettings.remove( "/Qgis/restoreDefaultWindowState" );
   }
 
   // set max. thread count
   // this should be done in QgsApplication::init() but it doesn't know the settings dir.
-  QgsApplication::setMaxThreads( QSettings().value( "/qgis/max_threads", -1 ).toInt() );
+  QgsApplication::setMaxThreads( QSettings().value( "/Qgis/max_threads", -1 ).toInt() );
 
   //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
   QgisApp* qgis = 0;
@@ -1034,19 +1034,19 @@ int main( int argc, char *argv[] )
   }
 
   // By default, assume offline. If online check succeeds below, set online
-  mySettings.setValue( "/qgis/isOffline", true );
+  mySettings.setValue( "/Qgis/isOffline", true );
 
   //open default online/offline project if no project on command line and online test url is set
   QString templatePath;
   if ( myProjectFileName.isEmpty() )
   {
     //check if online / offline and load the corresponding project
-    QString testUrl = mySettings.value( "/qgis/onlineTestUrl" ).toString();
+    QString testUrl = mySettings.value( "/Qgis/onlineTestUrl" ).toString();
     if ( !testUrl.isEmpty() )
     {
       QString templateDirPath = QgsApplication::projectTemplatesDir();
-      QString offlineProject = mySettings.value( "/qgis/offlineDefaultProject" ).toString();
-      QString onlineProject = mySettings.value( "/qgis/onlineDefaultProject" ).toString();
+      QString offlineProject = mySettings.value( "/Qgis/offlineDefaultProject" ).toString();
+      QString onlineProject = mySettings.value( "/Qgis/onlineDefaultProject" ).toString();
 
       QEventLoop eventLoop;
       QNetworkReply* reply = QgsNetworkAccessManager::instance()->head( QNetworkRequest( testUrl ) );
@@ -1059,7 +1059,7 @@ int main( int argc, char *argv[] )
         {
           templatePath = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
         }
-        mySettings.setValue( "/qgis/isOffline", false );
+        mySettings.setValue( "/Qgis/isOffline", false );
       }
       else
       {

@@ -971,7 +971,7 @@ QString QgsMapLayer::capitaliseLayerName( const QString& name )
   // Capitalise the first letter of the layer name if requested
   QSettings settings;
   bool capitaliseLayerName =
-    settings.value( "/qgis/capitaliseLayerName", QVariant( false ) ).toBool();
+    settings.value( "/Qgis/capitaliseLayerName", QVariant( false ) ).toBool();
 
   QString layerName( name );
 

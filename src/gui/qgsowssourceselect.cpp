@@ -659,7 +659,7 @@ void QgsOWSSourceSelect::on_mSearchButton_clicked()
 
   QSettings settings;
   // geopole.org (geopole.ch) 25.4.2012 : 503 Service Unavailable, archive: Recently added 20 Jul 2011
-  QString mySearchUrl = settings.value( "/qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString();
+  QString mySearchUrl = settings.value( "/Qgis/WMSSearchUrl", "http://geopole.org/wms/search?search=%1&type=rss" ).toString();
   QUrl url( mySearchUrl.arg( mSearchTermLineEdit->text() ) );
   QgsDebugMsg( url.toString() );
 

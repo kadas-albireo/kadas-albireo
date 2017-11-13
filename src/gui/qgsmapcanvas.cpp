@@ -940,7 +940,7 @@ void QgsMapCanvas::setExtent( QgsRectangle const & r, bool adjustForOptimalScale
   {
     mSettings.setExtent( r );
 
-    if ( adjustForOptimalScale && QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
+    if ( adjustForOptimalScale && QSettings().value( "/Qgis/useWmtsScales", 0 ).toBool() )
     {
 
       QList<double> resolutions = wmtsResolutions();
@@ -2061,12 +2061,12 @@ bool QgsMapCanvas::event( QEvent * e )
 
 bool QgsMapCanvas::rotationEnabled()
 {
-  return QSettings().value( "/qgis/canvasRotation", true ).toBool();
+  return QSettings().value( "/Qgis/canvasRotation", true ).toBool();
 }
 
 void QgsMapCanvas::enableRotation( bool enable )
 {
-  QSettings().setValue( "/qgis/canvasRotation", enable );
+  QSettings().setValue( "/Qgis/canvasRotation", enable );
 }
 
 QList<double> QgsMapCanvas::wmtsResolutions() const
@@ -2133,7 +2133,7 @@ int QgsMapCanvas::nextWMTSZoomLevel( const QList<double>& resolutions, bool zoom
 
 double QgsMapCanvas::zoomInFactor() const
 {
-  if ( QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
+  if ( QSettings().value( "/Qgis/useWmtsScales", 0 ).toBool() )
   {
     QList<double> resolutions = wmtsResolutions();
     if ( !resolutions.isEmpty() )
@@ -2150,7 +2150,7 @@ double QgsMapCanvas::zoomInFactor() const
 
 double QgsMapCanvas::zoomOutFactor() const
 {
-  if ( QSettings().value( "/qgis/useWmtsScales", 0 ).toBool() )
+  if ( QSettings().value( "/Qgis/useWmtsScales", 0 ).toBool() )
   {
     QList<double> resolutions = wmtsResolutions();
     if ( !resolutions.isEmpty() )

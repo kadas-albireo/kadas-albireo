@@ -197,7 +197,7 @@ QList<QgsLayerTreeModelLegendNode*> QgsDefaultVectorLayerLegend::createLayerTree
     mLayer->countSymbolFeatures();
 
   QSettings settings;
-  if ( settings.value( "/qgis/showLegendClassifiers", false ).toBool() && !r->legendClassificationAttribute().isEmpty() )
+  if ( settings.value( "/Qgis/showLegendClassifiers", false ).toBool() && !r->legendClassificationAttribute().isEmpty() )
   {
     nodes.append( new QgsSimpleLegendNode( nodeLayer, r->legendClassificationAttribute() ) );
   }

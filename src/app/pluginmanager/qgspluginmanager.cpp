@@ -304,7 +304,7 @@ void QgsPluginManager::getCppPluginsMetadata()
   QStringList myPathList( pr->libraryDirectory().path() );
 
   QSettings settings;
-  QString myPaths = settings.value( "plugins/searchPathsForPlugins", "" ).toString();
+  QString myPaths = settings.value( "Plugins/searchPathsForPlugins", "" ).toString();
   if ( !myPaths.isEmpty() )
   {
     myPathList.append( myPaths.split( "|" ) );

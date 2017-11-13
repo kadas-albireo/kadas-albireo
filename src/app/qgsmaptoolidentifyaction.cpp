@@ -187,7 +187,7 @@ QGis::UnitType QgsMapToolIdentifyAction::displayUnits()
 {
   // Get the units for display
   QSettings settings;
-  return QGis::fromLiteral( settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
+  return QGis::fromLiteral( settings.value( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
 }
 
 void QgsMapToolIdentifyAction::handleCopyToClipboard( QgsFeatureStore & featureStore )

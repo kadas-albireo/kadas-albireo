@@ -384,7 +384,7 @@ void QgisApp::layerTreeViewDoubleClicked( const QModelIndex& index )
 {
   Q_UNUSED( index )
   QSettings settings;
-  switch ( settings.value( "/qgis/legendDoubleClickAction", 0 ).toInt() )
+  switch ( settings.value( "/Qgis/legendDoubleClickAction", 0 ).toInt() )
   {
     case 0:
       QgisApp::instance()->layerProperties();
@@ -532,10 +532,10 @@ void QgisApp::init( bool restorePlugins )
                                  "layers are displayed when added to the map" ) );
 
   // set canvas color right away
-  int myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
-  int myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
-  int myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  int myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  int myRed = settings.value( "/Qgis/default_canvas_color_red", 255 ).toInt();
+  int myGreen = settings.value( "/Qgis/default_canvas_color_green", 255 ).toInt();
+  int myBlue = settings.value( "/Qgis/default_canvas_color_blue", 255 ).toInt();
+  int myAlpha = settings.value( "/Qgis/default_canvas_color_alpha", 0 ).toInt();
   mapCanvas()->setCanvasColor( QColor( myRed, myGreen, myBlue, myAlpha ) );
 
   //set the focus to the map canvas
@@ -664,7 +664,7 @@ void QgisApp::init( bool restorePlugins )
     QgsPluginRegistry::instance()->restoreSessionPlugins( QgsApplication::pluginPath() );
 
     // Also restore plugins from user specified plugin directories
-    QString myPaths = settings.value( "plugins/searchPathsForPlugins", "" ).toString();
+    QString myPaths = settings.value( "Plugins/searchPathsForPlugins", "" ).toString();
     if ( !myPaths.isEmpty() )
     {
       QStringList myPathList = myPaths.split( "|" );
@@ -736,7 +736,7 @@ void QgisApp::init( bool restorePlugins )
   mItemCouplingManager = new QgsItemCouplingManager( this );
 
   // Show a nice tip of the day
-  /*if ( settings.value( QString( "/qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() )
+  /*if ( settings.value( QString( "/Qgis/showTips%1" ).arg( QGis::QGIS_VERSION_INT / 100 ), true ).toBool() )
   {
     mSplash->hide();
     QgsTipGui myTip;
@@ -991,9 +991,9 @@ void QgisApp::readSettings()
 
   // this is a new session! reset enable macros value to "ask"
   // whether set to "just for this session"
-  if ( settings.value( "/qgis/enableMacros", 1 ).toInt() == 2 )
+  if ( settings.value( "/Qgis/enableMacros", 1 ).toInt() == 2 )
   {
-    settings.setValue( "/qgis/enableMacros", 1 );
+    settings.setValue( "/Qgis/enableMacros", 1 );
   }
 }
 
@@ -1067,7 +1067,7 @@ void QgisApp::setAppStyleSheet( const QString& stylesheet )
 int QgisApp::messageTimeout()
 {
   QSettings settings;
-  return settings.value( "/qgis/messageTimeout", 5 ).toInt();
+  return settings.value( "/Qgis/messageTimeout", 5 ).toInt();
 }
 
 QAction* QgisApp::findAction( const QString& name ) const
@@ -1262,17 +1262,17 @@ void QgisApp::createOverview()
   // moved here to set anti aliasing to both map canvas and overview
   QSettings mySettings;
   // Anti Aliasing enabled by default as of QGIS 1.7
-  mapCanvas()->enableAntiAliasing( mySettings.value( "/qgis/enable_anti_aliasing", true ).toBool() );
+  mapCanvas()->enableAntiAliasing( mySettings.value( "/Qgis/enable_anti_aliasing", true ).toBool() );
 
-  int action = mySettings.value( "/qgis/wheel_action", 2 ).toInt();
-  double zoomFactor = mySettings.value( "/qgis/zoom_factor", 2 ).toDouble();
+  int action = mySettings.value( "/Qgis/wheel_action", 2 ).toInt();
+  double zoomFactor = mySettings.value( "/Qgis/zoom_factor", 2 ).toDouble();
   mapCanvas()->setWheelAction(( QgsMapCanvas::WheelAction ) action, zoomFactor );
 
-  mapCanvas()->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
+  mapCanvas()->setCachingEnabled( mySettings.value( "/Qgis/enable_render_caching", true ).toBool() );
 
-  mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", true ).toBool() );
+  mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/Qgis/parallel_rendering", true ).toBool() );
 
-  mapCanvas()->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
+  mapCanvas()->setMapUpdateInterval( mySettings.value( "/Qgis/map_update_interval", 250 ).toInt() );
 }
 
 void QgisApp::addDockWidget( Qt::DockWidgetArea theArea, QDockWidget * thepDockWidget )
@@ -1320,11 +1320,11 @@ void QgisApp::setupLayerTreeViewFromSettings()
   QSettings s;
 
   QgsLayerTreeModel* model = layerTreeView()->layerTreeModel();
-  model->setFlag( QgsLayerTreeModel::ShowRasterPreviewIcon, s.value( "/qgis/createRasterLegendIcons", false ).toBool() );
+  model->setFlag( QgsLayerTreeModel::ShowRasterPreviewIcon, s.value( "/Qgis/createRasterLegendIcons", false ).toBool() );
 
   QFont fontLayer, fontGroup;
-  fontLayer.setBold( s.value( "/qgis/legendLayersBold", true ).toBool() );
-  fontGroup.setBold( s.value( "/qgis/legendGroupsBold", false ).toBool() );
+  fontLayer.setBold( s.value( "/Qgis/legendLayersBold", true ).toBool() );
+  fontGroup.setBold( s.value( "/Qgis/legendGroupsBold", false ).toBool() );
   model->setLayerTreeNodeFont( QgsLayerTreeNode::NodeLayer, fontLayer );
   model->setLayerTreeNodeFont( QgsLayerTreeNode::NodeGroup, fontGroup );
 }
@@ -1495,7 +1495,7 @@ void QgisApp::updateProjectFromTemplates()
   }
 
   // add <blank> entry, which loads a blank template (regardless of "default template")
-  if ( settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() )
+  if ( settings.value( "/Qgis/newProjectDefault", QVariant( false ) ).toBool() )
     projectFromTemplateMenu()->addAction( tr( "< Blank >" ) );
 
 } // QgisApp::updateProjectFromTemplates
@@ -1632,7 +1632,7 @@ QString QgisApp::crsAndFormatAdjustedLayerUri( const QString &uri, const QString
   }
 
   // Use the last used image format
-  QString lastImageEncoding = QSettings().value( "/qgis/lastWmsImageEncoding", "image/png" ).toString();
+  QString lastImageEncoding = QSettings().value( "/Qgis/lastWmsImageEncoding", "image/png" ).toString();
   foreach ( QString fmt, supportedFormats )
   {
     if ( fmt == lastImageEncoding )
@@ -1814,12 +1814,12 @@ bool QgisApp::askUserForZipItemLayers( QString path )
   QVector<QgsDataItem*> childItems;
   QgsZipItem *zipItem = 0;
   QSettings settings;
-  int promptLayers = settings.value( "/qgis/promptForRasterSublayers", 1 ).toInt();
+  int promptLayers = settings.value( "/Qgis/promptForRasterSublayers", 1 ).toInt();
 
   QgsDebugMsg( "askUserForZipItemLayers( " + path + ")" );
 
   // if scanZipBrowser == no: skip to the next file
-  if ( settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString() == "no" )
+  if ( settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString() == "no" )
   {
     return false;
   }
@@ -1928,7 +1928,7 @@ void QgisApp::askUserForGDALSublayers( QgsRasterLayer *layer )
 
   // if promptLayers=Load all, load all sublayers without prompting
   QSettings settings;
-  if ( settings.value( "/qgis/promptForRasterSublayers", 1 ).toInt() == 3 )
+  if ( settings.value( "/Qgis/promptForRasterSublayers", 1 ).toInt() == 3 )
   {
     loadGDALSublayers( layer->source(), sublayers );
     return;
@@ -1996,7 +1996,7 @@ bool QgisApp::shouldAskUserForGDALSublayers( QgsRasterLayer *layer )
     return false;
 
   QSettings settings;
-  int promptLayers = settings.value( "/qgis/promptForRasterSublayers", 1 ).toInt();
+  int promptLayers = settings.value( "/Qgis/promptForRasterSublayers", 1 ).toInt();
   // 0 = Always -> always ask (if there are existing sublayers)
   // 1 = If needed -> ask if layer has no bands, but has sublayers
   // 2 = Never -> never prompt, will not load anything
@@ -2484,17 +2484,17 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   QgsProject* prj = QgsProject::instance();
   prj->clear();
 
-  prj->layerTreeRegistryBridge()->setNewLayersVisible( settings.value( "/qgis/new_layers_visible", true ).toBool() );
+  prj->layerTreeRegistryBridge()->setNewLayersVisible( settings.value( "/Qgis/new_layers_visible", true ).toBool() );
 
   mLayerTreeCanvasBridge->clear();
 
   //set the color for selections
   //the default can be set in qgisoptions
   //use project properties to override the color on a per project basis
-  int myRed = settings.value( "/qgis/default_selection_color_red", 255 ).toInt();
-  int myGreen = settings.value( "/qgis/default_selection_color_green", 255 ).toInt();
-  int myBlue = settings.value( "/qgis/default_selection_color_blue", 0 ).toInt();
-  int myAlpha = settings.value( "/qgis/default_selection_color_alpha", 255 ).toInt();
+  int myRed = settings.value( "/Qgis/default_selection_color_red", 255 ).toInt();
+  int myGreen = settings.value( "/Qgis/default_selection_color_green", 255 ).toInt();
+  int myBlue = settings.value( "/Qgis/default_selection_color_blue", 0 ).toInt();
+  int myAlpha = settings.value( "/Qgis/default_selection_color_alpha", 255 ).toInt();
   prj->writeEntry( "Gui", "/SelectionColorRedPart", myRed );
   prj->writeEntry( "Gui", "/SelectionColorGreenPart", myGreen );
   prj->writeEntry( "Gui", "/SelectionColorBluePart", myBlue );
@@ -2504,10 +2504,10 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   //set the canvas to the default background color
   //the default can be set in qgisoptions
   //use project properties to override the color on a per project basis
-  myRed = settings.value( "/qgis/default_canvas_color_red", 255 ).toInt();
-  myGreen = settings.value( "/qgis/default_canvas_color_green", 255 ).toInt();
-  myBlue = settings.value( "/qgis/default_canvas_color_blue", 255 ).toInt();
-  myAlpha = settings.value( "/qgis/default_canvas_color_alpha", 0 ).toInt();
+  myRed = settings.value( "/Qgis/default_canvas_color_red", 255 ).toInt();
+  myGreen = settings.value( "/Qgis/default_canvas_color_green", 255 ).toInt();
+  myBlue = settings.value( "/Qgis/default_canvas_color_blue", 255 ).toInt();
+  myAlpha = settings.value( "/Qgis/default_canvas_color_alpha", 0 ).toInt();
   prj->writeEntry( "Gui", "/CanvasColorRedPart", myRed );
   prj->writeEntry( "Gui", "/CanvasColorGreenPart", myGreen );
   prj->writeEntry( "Gui", "/CanvasColorBluePart", myBlue );
@@ -2555,10 +2555,10 @@ void QgisApp::fileNew( bool thePromptToSaveFlag, bool forceBlank )
   // don't open template if last auto-opening of a project failed
   if ( ! forceBlank )
   {
-    forceBlank = ! settings.value( "/qgis/projOpenedOKAtLaunch", QVariant( true ) ).toBool();
+    forceBlank = ! settings.value( "/Qgis/projOpenedOKAtLaunch", QVariant( true ) ).toBool();
   }
 
-  if ( ! forceBlank && settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() )
+  if ( ! forceBlank && settings.value( "/Qgis/newProjectDefault", QVariant( false ) ).toBool() )
   {
     fileNewFromDefaultTemplate();
   }
@@ -2630,7 +2630,7 @@ void QgisApp::fileOpenAfterLaunch()
   QString autoOpenMsgTitle = tr( "Auto-open Project" );
 
   // what type of project to auto-open
-  int projOpen = settings.value( "/qgis/projOpenAtLaunch", 0 ).toInt();
+  int projOpen = settings.value( "/Qgis/projOpenAtLaunch", 0 ).toInt();
 
   // get path of project file to open, or was attempted
   QString projPath = QString();
@@ -2640,11 +2640,11 @@ void QgisApp::fileOpenAfterLaunch()
   }
   if ( projOpen == 2 ) // specific project
   {
-    projPath = settings.value( "/qgis/projOpenAtLaunchPath" ).toString();
+    projPath = settings.value( "/Qgis/projOpenAtLaunchPath" ).toString();
   }
 
   // whether last auto-opening of a project failed
-  bool projOpenedOK = settings.value( "/qgis/projOpenedOKAtLaunch", QVariant( true ) ).toBool();
+  bool projOpenedOK = settings.value( "/Qgis/projOpenedOKAtLaunch", QVariant( true ) ).toBool();
 
   // notify user if last attempt at auto-opening a project failed
   /** NOTE: Notification will not show if last auto-opened project failed but
@@ -2654,10 +2654,10 @@ void QgisApp::fileOpenAfterLaunch()
   if ( !projOpenedOK )
   {
     // only show the following 'auto-open project failed' message once, at launch
-    settings.setValue( "/qgis/projOpenedOKAtLaunch", QVariant( true ) );
+    settings.setValue( "/Qgis/projOpenedOKAtLaunch", QVariant( true ) );
 
     // set auto-open project back to 'New' to avoid re-opening bad project
-    settings.setValue( "/qgis/projOpenAtLaunch", QVariant( 0 ) );
+    settings.setValue( "/Qgis/projOpenAtLaunch", QVariant( 0 ) );
 
     messageBar()->pushMessage( autoOpenMsgTitle,
                                tr( "Failed to open: %1" ).arg( projPath ),
@@ -2668,7 +2668,7 @@ void QgisApp::fileOpenAfterLaunch()
   if ( projOpen == 0 ) // new project (default)
   {
     // open default template, if defined
-    if ( settings.value( "/qgis/newProjectDefault", QVariant( false ) ).toBool() )
+    if ( settings.value( "/Qgis/newProjectDefault", QVariant( false ) ).toBool() )
     {
       fileNewFromDefaultTemplate();
     }
@@ -2691,7 +2691,7 @@ void QgisApp::fileOpenAfterLaunch()
   if ( QFile::exists( projPath ) )
   {
     // set flag to check on next app launch if the following project opened OK
-    settings.setValue( "/qgis/projOpenedOKAtLaunch", QVariant( false ) );
+    settings.setValue( "/Qgis/projOpenedOKAtLaunch", QVariant( false ) );
 
     if ( !addProject( projPath ) )
     {
@@ -2718,7 +2718,7 @@ void QgisApp::fileOpenAfterLaunch()
 void QgisApp::fileOpenedOKAfterLaunch()
 {
   QSettings settings;
-  settings.setValue( "/qgis/projOpenedOKAtLaunch", QVariant( true ) );
+  settings.setValue( "/Qgis/projOpenedOKAtLaunch", QVariant( true ) );
 }
 
 void QgisApp::fileNewFromTemplateAction( QAction * qAction )
@@ -2900,7 +2900,7 @@ bool QgisApp::addProject( QString projectFile )
   {
     if ( !QgsProject::instance()->readEntry( "Macros", "/pythonCode", QString::null ).isEmpty() )
     {
-      int enableMacros = settings.value( "/qgis/enableMacros", 1 ).toInt();
+      int enableMacros = settings.value( "/Qgis/enableMacros", 1 ).toInt();
       // 0 = never, 1 = ask, 2 = just for this session, 3 = always
 
       if ( enableMacros == 3 || enableMacros == 2 )
@@ -5505,8 +5505,8 @@ bool QgisApp::toggleEditing( QgsMapLayer *layer, bool allowCancel )
     vlayer->startEditing();
 
     QSettings settings;
-    QString markerType = settings.value( "/qgis/digitizing/marker_style", "Cross" ).toString();
-    bool markSelectedOnly = settings.value( "/qgis/digitizing/marker_only_for_selected", false ).toBool();
+    QString markerType = settings.value( "/Qgis/digitizing/marker_style", "Cross" ).toString();
+    bool markSelectedOnly = settings.value( "/Qgis/digitizing/marker_only_for_selected", false ).toBool();
 
     // redraw only if markers will be drawn
     if (( !markSelectedOnly || vlayer->selectedFeatureCount() > 0 ) &&
@@ -5911,7 +5911,7 @@ void QgisApp::removeLayer()
     return;
   }
 
-  bool promptConfirmation = QSettings().value( "qgis/askToDeleteLayers", true ).toBool();
+  bool promptConfirmation = QSettings().value( "Qgis/askToDeleteLayers", true ).toBool();
   //display a warning
   if ( promptConfirmation && QMessageBox::warning( this, tr( "Remove layers and groups" ), tr( "Remove %n legend entries?", "number of legend items to remove", selectedNodes.count() ), QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Cancel )
   {
@@ -6471,7 +6471,7 @@ void QgisApp::showOptionsDialog( QWidget *parent, QString currentPage )
   QSettings mySettings;
   QString oldScales = mySettings.value( "Map/scales", PROJECT_SCALES ).toString();
 
-  bool oldCapitalise = mySettings.value( "/qgis/capitaliseLayerName", QVariant( false ) ).toBool();
+  bool oldCapitalise = mySettings.value( "/Qgis/capitaliseLayerName", QVariant( false ) ).toBool();
 
   QgsOptions *optionsDialog = new QgsOptions( parent );
   if ( !currentPage.isEmpty() )
@@ -6484,23 +6484,23 @@ void QgisApp::showOptionsDialog( QWidget *parent, QString currentPage )
     // set the theme if it changed
     setTheme( optionsDialog->theme() );
 
-    QgsProject::instance()->layerTreeRegistryBridge()->setNewLayersVisible( mySettings.value( "/qgis/new_layers_visible", true ).toBool() );
+    QgsProject::instance()->layerTreeRegistryBridge()->setNewLayersVisible( mySettings.value( "/Qgis/new_layers_visible", true ).toBool() );
 
     setupLayerTreeViewFromSettings();
 
-    mapCanvas()->enableAntiAliasing( mySettings.value( "/qgis/enable_anti_aliasing" ).toBool() );
+    mapCanvas()->enableAntiAliasing( mySettings.value( "/Qgis/enable_anti_aliasing" ).toBool() );
 
-    int action = mySettings.value( "/qgis/wheel_action", 2 ).toInt();
-    double zoomFactor = mySettings.value( "/qgis/zoom_factor", 2 ).toDouble();
+    int action = mySettings.value( "/Qgis/wheel_action", 2 ).toInt();
+    double zoomFactor = mySettings.value( "/Qgis/zoom_factor", 2 ).toDouble();
     mapCanvas()->setWheelAction(( QgsMapCanvas::WheelAction ) action, zoomFactor );
 
-    mapCanvas()->setCachingEnabled( mySettings.value( "/qgis/enable_render_caching", true ).toBool() );
+    mapCanvas()->setCachingEnabled( mySettings.value( "/Qgis/enable_render_caching", true ).toBool() );
 
-    mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/qgis/parallel_rendering", true ).toBool() );
+    mapCanvas()->setParallelRenderingEnabled( mySettings.value( "/Qgis/parallel_rendering", true ).toBool() );
 
-    mapCanvas()->setMapUpdateInterval( mySettings.value( "/qgis/map_update_interval", 250 ).toInt() );
+    mapCanvas()->setMapUpdateInterval( mySettings.value( "/Qgis/map_update_interval", 250 ).toInt() );
 
-    if ( oldCapitalise != mySettings.value( "/qgis/capitaliseLayerName", QVariant( false ) ).toBool() )
+    if ( oldCapitalise != mySettings.value( "/Qgis/capitaliseLayerName", QVariant( false ) ).toBool() )
     {
       // if the layer capitalization has changed, we need to update all layer names
       foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers() )
@@ -6971,7 +6971,7 @@ bool QgisApp::saveDirty()
   //QgsDebugMsg(QString("Map canvas is %1dirty").arg(mapCanvas()->isDirty() ? "" : "not "));
 
   QSettings settings;
-  bool askThem = settings.value( "qgis/askToSaveProjectChanges", true ).toBool();
+  bool askThem = settings.value( "Qgis/askToSaveProjectChanges", true ).toBool();
 
   if ( askThem && QgsProject::instance()->isDirty() && QgsMapLayerRegistry::instance()->count() > 0 )
   {
@@ -7746,7 +7746,7 @@ void QgisApp::oldProjectVersionWarning( QString oldVersion )
 {
   QSettings settings;
 
-  if ( settings.value( "/qgis/warnOldProjectVersion", QVariant( true ) ).toBool() )
+  if ( settings.value( "/Qgis/warnOldProjectVersion", QVariant( true ) ).toBool() )
   {
     QString smalltext = tr( "This project file was saved by an older version of QGIS."
                             " When saving this project file, QGIS will update it to the latest version, "

@@ -167,7 +167,7 @@ void QgsSelectedFeature::validateGeometry( QgsGeometry *g )
 {
   QgsDebugCall;
   QSettings settings;
-  if ( settings.value( "/qgis/digitizing/validate_geometries", 1 ).toInt() == 0 )
+  if ( settings.value( "/Qgis/digitizing/validate_geometries", 1 ).toInt() == 0 )
     return;
 
   if ( !g )

@@ -133,7 +133,7 @@ QgsMapToolViewshed::QgsMapToolViewshed( QgsMapCanvas* mapCanvas )
 
 void QgsMapToolViewshed::activate()
 {
-  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   QgsMapToolDrawShape::activate();
 }
 

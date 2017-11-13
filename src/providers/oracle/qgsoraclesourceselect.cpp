@@ -225,7 +225,7 @@ QgsOracleSourceSelect::QgsOracleSourceSelect( QWidget *parent, Qt::WindowFlags f
   mTablesTreeView->setItemDelegate( mTablesTreeDelegate );
 
   QSettings settings;
-  mTablesTreeView->setSelectionMode( settings.value( "/qgis/addOracleDC", false ).toBool() ?
+  mTablesTreeView->setSelectionMode( settings.value( "/Qgis/addOracleDC", false ).toBool() ?
                                      QAbstractItemView::ExtendedSelection :
                                      QAbstractItemView::MultiSelection );
 
@@ -356,7 +356,7 @@ void QgsOracleSourceSelect::on_mTablesTreeView_clicked( const QModelIndex &index
 void QgsOracleSourceSelect::on_mTablesTreeView_doubleClicked( const QModelIndex &index )
 {
   QSettings settings;
-  if ( settings.value( "/qgis/addOracleDC", false ).toBool() )
+  if ( settings.value( "/Qgis/addOracleDC", false ).toBool() )
   {
     addTables();
   }

@@ -174,7 +174,7 @@ QgsMssqlSourceSelect::QgsMssqlSourceSelect( QWidget *parent, Qt::WindowFlags fl,
   mTablesTreeView->setItemDelegate( new QgsMssqlSourceSelectDelegate( this ) );
 
   QSettings settings;
-  mTablesTreeView->setSelectionMode( settings.value( "/qgis/addMSSQLDC", false ).toBool() ?
+  mTablesTreeView->setSelectionMode( settings.value( "/Qgis/addMSSQLDC", false ).toBool() ?
                                      QAbstractItemView::ExtendedSelection :
                                      QAbstractItemView::MultiSelection );
 
@@ -310,7 +310,7 @@ void QgsMssqlSourceSelect::on_mTablesTreeView_clicked( const QModelIndex &index 
 void QgsMssqlSourceSelect::on_mTablesTreeView_doubleClicked( const QModelIndex &index )
 {
   QSettings settings;
-  if ( settings.value( "/qgis/addMSSQLDC", false ).toBool() )
+  if ( settings.value( "/Qgis/addMSSQLDC", false ).toBool() )
   {
     addTables();
   }

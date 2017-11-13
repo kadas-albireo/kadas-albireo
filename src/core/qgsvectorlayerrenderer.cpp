@@ -61,9 +61,9 @@ QgsVectorLayerRenderer::QgsVectorLayerRenderer( QgsVectorLayer* layer, QgsRender
   mSimplifyGeometry = layer->simplifyDrawingCanbeApplied( mContext, QgsVectorSimplifyMethod::GeometrySimplification );
 
   QSettings settings;
-  mVertexMarkerOnlyForSelection = settings.value( "/qgis/digitizing/marker_only_for_selected", false ).toBool();
+  mVertexMarkerOnlyForSelection = settings.value( "/Qgis/digitizing/marker_only_for_selected", false ).toBool();
 
-  QString markerTypeString = settings.value( "/qgis/digitizing/marker_style", "Cross" ).toString();
+  QString markerTypeString = settings.value( "/Qgis/digitizing/marker_style", "Cross" ).toString();
   if ( markerTypeString == "Cross" )
   {
     mVertexMarkerStyle = QgsVectorLayer::Cross;
@@ -77,7 +77,7 @@ QgsVectorLayerRenderer::QgsVectorLayerRenderer( QgsVectorLayer* layer, QgsRender
     mVertexMarkerStyle = QgsVectorLayer::NoMarker;
   }
 
-  mVertexMarkerSize = settings.value( "/qgis/digitizing/marker_size", 3 ).toInt();
+  mVertexMarkerSize = settings.value( "/Qgis/digitizing/marker_size", 3 ).toInt();
 
   if ( !mRendererV2 )
     return;

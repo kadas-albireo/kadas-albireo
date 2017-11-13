@@ -140,7 +140,7 @@ void QgsSublayersDialog::populateLayerTable( QStringList theList, QString delim 
 int QgsSublayersDialog::exec()
 {
   QSettings settings;
-  QString promptLayers = settings.value( "/qgis/promptForSublayers", 1 ).toString();
+  QString promptLayers = settings.value( "/Qgis/promptForSublayers", 1 ).toString();
 
   // make sure three are sublayers to choose
   if ( layersTable->topLevelItemCount() == 0 )

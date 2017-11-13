@@ -136,7 +136,7 @@ void QgsDecorationScaleBar::render( QPainter * theQPainter )
     int myMargin = 20;
 
     QSettings settings;
-    QGis::UnitType myPreferredUnits = QGis::fromLiteral( settings.value( "/qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
+    QGis::UnitType myPreferredUnits = QGis::fromLiteral( settings.value( "/Qgis/measure/displayunits", QGis::toLiteral( QGis::Meters ) ).toString() );
     QGis::UnitType myMapUnits = canvas->mapUnits();
 
     // Adjust units meter/feet/... or vice versa

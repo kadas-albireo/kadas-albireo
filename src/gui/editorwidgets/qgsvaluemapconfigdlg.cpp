@@ -130,7 +130,7 @@ void QgsValueMapConfigDlg::updateMap( const QMap<QString, QVariant> &map, bool i
   if ( insertNull )
   {
     QSettings settings;
-    tableWidget->setItem( row, 0, new QTableWidgetItem( settings.value( "qgis/nullValue", "NULL" ).toString() ) );
+    tableWidget->setItem( row, 0, new QTableWidgetItem( settings.value( "Qgis/nullValue", "NULL" ).toString() ) );
     tableWidget->setItem( row, 1, new QTableWidgetItem( "<NULL>" ) );
     ++row;
   }

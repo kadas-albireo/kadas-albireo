@@ -531,7 +531,7 @@ void QgsBrowser::setLayer( QgsVectorLayer* vLayer )
   {
     // Initialize the cache
     QSettings settings;
-    int cacheSize = qMax( 1, settings.value( "/qgis/attributeTableRowCache", "10000" ).toInt() );
+    int cacheSize = qMax( 1, settings.value( "/Qgis/attributeTableRowCache", "10000" ).toInt() );
     QgsVectorLayerCache* layerCache = new QgsVectorLayerCache( vLayer, cacheSize, this );
     layerCache->setCacheGeometry( false );
 

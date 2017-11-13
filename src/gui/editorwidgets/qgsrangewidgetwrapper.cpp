@@ -100,7 +100,7 @@ void QgsRangeWidgetWrapper::initWidget( QWidget* editor )
         min -= step;
       }
       mDoubleSpinBox->setValue( min );
-      mDoubleSpinBox->setSpecialValueText( QSettings().value( "qgis/nullValue", "NULL" ).toString() );
+      mDoubleSpinBox->setSpecialValueText( QSettings().value( "Qgis/nullValue", "NULL" ).toString() );
     }
     mDoubleSpinBox->setMinimum( min );
     mDoubleSpinBox->setMaximum( config( "Max" ).toDouble() );
@@ -123,7 +123,7 @@ void QgsRangeWidgetWrapper::initWidget( QWidget* editor )
     {
       min -= step;
       mIntSpinBox->setValue( min );
-      mIntSpinBox->setSpecialValueText( QSettings().value( "qgis/nullValue", "NULL" ).toString() );
+      mIntSpinBox->setSpecialValueText( QSettings().value( "Qgis/nullValue", "NULL" ).toString() );
     }
     mIntSpinBox->setMinimum( min );
     mIntSpinBox->setMaximum( config( "Max" ).toInt() );

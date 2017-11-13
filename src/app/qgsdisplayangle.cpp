@@ -30,7 +30,7 @@ QgsDisplayAngle::QgsDisplayAngle( QgsMapToolMeasureAngle * tool, Qt::WindowFlags
   mComboBoxUnit->addItem( tr( "Radians" ), "radians" );
   mComboBoxUnit->addItem( tr( "Gradians" ), "gon" );
   mComboBoxUnit->addItem( tr( "Angular Mil" ), "mil" );
-  mComboBoxUnit->setCurrentIndex( mComboBoxUnit->findData( QSettings().value( "/qgis/measure/angleunits", "degrees" ) ) );
+  mComboBoxUnit->setCurrentIndex( mComboBoxUnit->findData( QSettings().value( "/Qgis/measure/angleunits", "degrees" ) ) );
   connect( mComboBoxUnit, SIGNAL( currentIndexChanged( int ) ), this, SLOT( updateUi() ) );
 }
 
@@ -49,8 +49,8 @@ void QgsDisplayAngle::updateUi()
   QSettings settings;
 
   QString unitString = mComboBoxUnit->itemData( mComboBoxUnit->currentIndex() ).toString();
-  settings.setValue( "/qgis/measure/angleunits", unitString );
-  int decimals = settings.value( "/qgis/measure/decimalplaces", "2" ).toInt();
+  settings.setValue( "/Qgis/measure/angleunits", unitString );
+  int decimals = settings.value( "/Qgis/measure/decimalplaces", "2" ).toInt();
 
   if ( unitString == "degrees" )
   {

@@ -108,7 +108,7 @@ QString QgsValueRelationWidgetFactory::representValue( QgsVectorLayer* vl, int f
     if ( value.isNull() )
     {
       QSettings settings;
-      return settings.value( "qgis/nullValue", "NULL" ).toString();
+      return settings.value( "Qgis/nullValue", "NULL" ).toString();
     }
 
     Q_FOREACH ( const QgsValueRelationWidgetWrapper::ValueRelationItem& item, vrCache )

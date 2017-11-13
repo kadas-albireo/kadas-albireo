@@ -622,14 +622,14 @@ void QgsComposerMap::zoomContent( int delta, double x, double y )
   QSettings settings;
 
   //read zoom mode
-  QgsComposerItem::ZoomMode zoomMode = ( QgsComposerItem::ZoomMode )settings.value( "/qgis/wheel_action", 2 ).toInt();
+  QgsComposerItem::ZoomMode zoomMode = ( QgsComposerItem::ZoomMode )settings.value( "/Qgis/wheel_action", 2 ).toInt();
   if ( zoomMode == QgsComposerItem::NoZoom )
   {
     //do nothing
     return;
   }
 
-  double zoomFactor = settings.value( "/qgis/zoom_factor", 2.0 ).toDouble();
+  double zoomFactor = settings.value( "/Qgis/zoom_factor", 2.0 ).toDouble();
   zoomFactor = delta > 0 ? zoomFactor : 1 / zoomFactor;
 
   zoomContent( zoomFactor, QPointF( x, y ), zoomMode );

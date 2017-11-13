@@ -187,10 +187,10 @@ QgsVectorLayer::QgsVectorLayer( QString vectorLayerPath,
 
   // Default simplify drawing settings
   QSettings settings;
-  mSimplifyMethod.setSimplifyHints(( QgsVectorSimplifyMethod::SimplifyHints ) settings.value( "/qgis/simplifyDrawingHints", ( int ) mSimplifyMethod.simplifyHints() ).toInt() );
-  mSimplifyMethod.setThreshold( settings.value( "/qgis/simplifyDrawingTol", mSimplifyMethod.threshold() ).toFloat() );
-  mSimplifyMethod.setForceLocalOptimization( settings.value( "/qgis/simplifyLocal", mSimplifyMethod.forceLocalOptimization() ).toBool() );
-  mSimplifyMethod.setMaximumScale( settings.value( "/qgis/simplifyMaxScale", mSimplifyMethod.maximumScale() ).toFloat() );
+  mSimplifyMethod.setSimplifyHints(( QgsVectorSimplifyMethod::SimplifyHints ) settings.value( "/Qgis/simplifyDrawingHints", ( int ) mSimplifyMethod.simplifyHints() ).toInt() );
+  mSimplifyMethod.setThreshold( settings.value( "/Qgis/simplifyDrawingTol", mSimplifyMethod.threshold() ).toFloat() );
+  mSimplifyMethod.setForceLocalOptimization( settings.value( "/Qgis/simplifyLocal", mSimplifyMethod.forceLocalOptimization() ).toBool() );
+  mSimplifyMethod.setMaximumScale( settings.value( "/Qgis/simplifyMaxScale", mSimplifyMethod.maximumScale() ).toFloat() );
 } // QgsVectorLayer ctor
 
 

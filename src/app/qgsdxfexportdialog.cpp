@@ -397,11 +397,11 @@ QgsDxfExportDialog::QgsDxfExportDialog( QWidget *parent, Qt::WindowFlags f )
 
   //last dxf symbology mode
   QSettings s;
-  mSymbologyModeComboBox->setCurrentIndex( s.value( "qgis/lastDxfSymbologyMode", "2" ).toInt() );
+  mSymbologyModeComboBox->setCurrentIndex( s.value( "Qgis/lastDxfSymbologyMode", "2" ).toInt() );
   //last symbol scale
   mScaleWidget->setMapCanvas( QgisApp::instance()->mapCanvas() );
-  mScaleWidget->setScale( s.value( "qgis/lastSymbologyExportScale", "1/50000" ).toDouble() );
-  mMapExtentCheckBox->setChecked( s.value( "qgis/lastDxfMapRectangle", "false" ).toBool() );
+  mScaleWidget->setScale( s.value( "Qgis/lastSymbologyExportScale", "1/50000" ).toDouble() );
+  mMapExtentCheckBox->setChecked( s.value( "Qgis/lastDxfMapRectangle", "false" ).toBool() );
 
   QStringList ids = QgsVisibilityPresets::instance()->presets();
   ids.prepend( "" );
@@ -410,7 +410,7 @@ QgsDxfExportDialog::QgsDxfExportDialog( QWidget *parent, Qt::WindowFlags f )
   buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
   restoreGeometry( s.value( "/Windows/DxfExport/geometry" ).toByteArray() );
   mEncoding->addItems( QgsDxfExport::encodings() );
-  mEncoding->setCurrentIndex( mEncoding->findText( s.value( "qgis/lastDxfEncoding", "CP1252" ).toString() ) );
+  mEncoding->setCurrentIndex( mEncoding->findText( s.value( "Qgis/lastDxfEncoding", "CP1252" ).toString() ) );
 }
 
 
@@ -505,7 +505,7 @@ void QgsDxfExportDialog::on_mFileSelectionButton_clicked()
 {
   //get last dxf save directory
   QSettings s;
-  QString lastSavePath = s.value( "qgis/lastDxfDir" ).toString();
+  QString lastSavePath = s.value( "Qgis/lastDxfDir" ).toString();
 
   QString filePath = QFileDialog::getSaveFileName( 0, tr( "Export as DXF" ), lastSavePath, tr( "DXF files *.dxf *.DXF" ) );
   if ( !filePath.isEmpty() )
@@ -540,11 +540,11 @@ void QgsDxfExportDialog::saveSettings()
 {
   QSettings s;
   QFileInfo dxfFileInfo( mFileLineEdit->text() );
-  s.setValue( "qgis/lastDxfDir", dxfFileInfo.absolutePath() );
-  s.setValue( "qgis/lastDxfSymbologyMode", mSymbologyModeComboBox->currentIndex() );
-  s.setValue( "qgis/lastSymbologyExportScale", mScaleWidget->scale() );
-  s.setValue( "qgis/lastDxfMapRectangle", mMapExtentCheckBox->isChecked() );
-  s.setValue( "qgis/lastDxfEncoding", mEncoding->currentText() );
+  s.setValue( "Qgis/lastDxfDir", dxfFileInfo.absolutePath() );
+  s.setValue( "Qgis/lastDxfSymbologyMode", mSymbologyModeComboBox->currentIndex() );
+  s.setValue( "Qgis/lastSymbologyExportScale", mScaleWidget->scale() );
+  s.setValue( "Qgis/lastDxfMapRectangle", mMapExtentCheckBox->isChecked() );
+  s.setValue( "Qgis/lastDxfEncoding", mEncoding->currentText() );
 }
 
 QString QgsDxfExportDialog::encoding() const

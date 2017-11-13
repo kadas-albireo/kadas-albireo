@@ -41,7 +41,7 @@ QgsMapToolSlope::QgsMapToolSlope( QgsMapCanvas* mapCanvas )
 
 void QgsMapToolSlope::activate()
 {
-  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   QgsMapToolDrawShape::activate();
 }
 

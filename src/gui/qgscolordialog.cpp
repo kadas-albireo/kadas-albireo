@@ -331,7 +331,7 @@ QColor QgsColorDialogV2::getColor( const QColor &initialColor, QWidget *parent, 
 
   QSettings settings;
   //using native color dialogs?
-  bool useNative = settings.value( "/qgis/native_color_dialogs", false ).toBool();
+  bool useNative = settings.value( "/Qgis/native_color_dialogs", false ).toBool();
   if ( useNative )
   {
     return QColorDialog::getColor( initialColor, parent, dialogTitle, allowAlpha ? QColorDialog::ShowAlphaChannel : ( QColorDialog::ColorDialogOption )0 );

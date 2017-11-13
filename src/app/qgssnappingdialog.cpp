@@ -63,7 +63,7 @@ QgsSnappingDialog::QgsSnappingDialog( QWidget* parent, QgsMapCanvas* canvas )
   mDefaultSnapToComboBox->insertItem( 3, tr( "Off" ), "off" );
 
   QSettings myQsettings;
-  bool myDockFlag = myQsettings.value( "/qgis/dockSnapping", false ).toBool();
+  bool myDockFlag = myQsettings.value( "/Qgis/dockSnapping", false ).toBool();
   if ( myDockFlag )
   {
     mDock = new QgsSnappingDock( tr( "Snapping and Digitizing Options" ), QgisApp::instance() );
@@ -123,7 +123,7 @@ void QgsSnappingDialog::reload()
 
   int idx;
   QSettings settings;
-  QString snapType = settings.value( "/qgis/digitizing/default_snap_mode", "off" ).toString();
+  QString snapType = settings.value( "/Qgis/digitizing/default_snap_mode", "off" ).toString();
   snapType = QgsProject::instance()->readEntry( "Digitizing", "/DefaultSnapType", snapType );
   if ( snapType == "to segment" )
     idx = 1;
@@ -137,13 +137,13 @@ void QgsSnappingDialog::reload()
   mDefaultSnapToComboBox->setCurrentIndex( idx );
   mDefaultSnapToComboBox->blockSignals( false );
 
-  double tolerance = settings.value( "/qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
+  double tolerance = settings.value( "/Qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
   tolerance = QgsProject::instance()->readDoubleEntry( "Digitizing", "/DefaultSnapTolerance", tolerance );
   mDefaultSnappingToleranceSpinBox->blockSignals( true );
   mDefaultSnappingToleranceSpinBox->setValue( tolerance );
   mDefaultSnappingToleranceSpinBox->blockSignals( false );
 
-  int unit = settings.value( "/qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
+  int unit = settings.value( "/Qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
   unit = QgsProject::instance()->readNumEntry( "Digitizing", "/DefaultSnapToleranceUnit", unit );
   mDefaultSnappingToleranceComboBox->blockSignals( true );
   mDefaultSnappingToleranceComboBox->setCurrentIndex( unit == QgsTolerance::Pixels ? 1 : 0 );
@@ -186,11 +186,11 @@ void QgsSnappingDialog::initNewProject()
   QgsProject::instance()->writeEntry( "Digitizing", "/SnappingMode", QString( "current_layer" ) );
 
   QSettings settings;
-  QString snapType = settings.value( "/qgis/digitizing/default_snap_mode", "off" ).toString();
+  QString snapType = settings.value( "/Qgis/digitizing/default_snap_mode", "off" ).toString();
   QgsProject::instance()->writeEntry( "Digitizing", "/DefaultSnapType", snapType );
-  double tolerance = settings.value( "/qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
+  double tolerance = settings.value( "/Qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
   QgsProject::instance()->writeEntry( "Digitizing", "/DefaultSnapTolerance", tolerance );
-  int unit = settings.value( "/qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
+  int unit = settings.value( "/Qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
   QgsProject::instance()->writeEntry( "Digitizing", "/DefaultSnapToleranceUnit", unit );
 
   reload();
@@ -319,10 +319,10 @@ void QgsSnappingDialog::addLayer( QgsMapLayer *theMapLayer )
     return;
 
   QSettings myQsettings;
-  bool myDockFlag = myQsettings.value( "/qgis/dockSnapping", false ).toBool();
-  double defaultSnappingTolerance = myQsettings.value( "/qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
-  int defaultSnappingUnit = myQsettings.value( "/qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
-  QString defaultSnappingString = myQsettings.value( "/qgis/digitizing/default_snap_mode", "to vertex" ).toString();
+  bool myDockFlag = myQsettings.value( "/Qgis/dockSnapping", false ).toBool();
+  double defaultSnappingTolerance = myQsettings.value( "/Qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
+  int defaultSnappingUnit = myQsettings.value( "/Qgis/digitizing/default_snapping_tolerance_unit", QgsTolerance::ProjectUnits ).toInt();
+  QString defaultSnappingString = myQsettings.value( "/Qgis/digitizing/default_snap_mode", "to vertex" ).toString();
 
   int defaultSnappingStringIdx = 0;
   if ( defaultSnappingString == "to vertex" )

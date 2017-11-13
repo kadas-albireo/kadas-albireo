@@ -51,7 +51,7 @@ QgsWorldLocationSearchProvider::QgsWorldLocationSearchProvider( QgsMapCanvas* ma
 void QgsWorldLocationSearchProvider::startSearch( const QString &searchtext , const SearchRegion &/*searchRegion*/ )
 {
   QString serviceUrl;
-  if ( QSettings().value( "/qgis/isOffline" ).toBool() )
+  if ( QSettings().value( "/Qgis/isOffline" ).toBool() )
   {
     serviceUrl = QSettings().value( "search/worldlocationofflinesearchurl", "http://localhost:5000/SearchServerWld" ).toString();
   }

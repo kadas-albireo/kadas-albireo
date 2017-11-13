@@ -96,7 +96,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, bool
 
   QgsFeatureRequest r;
   if ( mLayer->geometryType() != QGis::NoGeometry &&
-       settings.value( "/qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt() == QgsAttributeTableFilterModel::ShowVisible )
+       settings.value( "/Qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt() == QgsAttributeTableFilterModel::ShowVisible )
   {
     QgsMapCanvas *mc = mapCanvas();
     QgsRectangle extent( mc->mapSettings().mapToLayerCoordinates( theLayer, mc->extent() ) );
@@ -151,7 +151,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, bool
   // info from table to application
   connect( this, SIGNAL( saveEdits( QgsMapLayer * ) ), QgisApp::instance(), SLOT( saveEdits( QgsMapLayer * ) ) );
 
-  bool myDockFlag = settings.value( "/qgis/dockAttributeTable", false ).toBool();
+  bool myDockFlag = settings.value( "/Qgis/dockAttributeTable", false ).toBool();
   if ( myDockFlag ) //not supported in ribbon gui
   {
     mDock = new QgsAttributeTableDock( tr( "Attribute table - %1 (%n Feature(s))", "feature count", mMainView->featureCount() ).arg( mLayer->name() ), QgisApp::instance() );
@@ -204,7 +204,7 @@ QgsAttributeTableDialog::QgsAttributeTableDialog( QgsVectorLayer *theLayer, bool
   mMainViewButtonGroup->setId( mAttributeViewButton, QgsDualView::AttributeEditor );
 
   // Load default attribute table filter
-  QgsAttributeTableFilterModel::FilterMode defaultFilterMode = ( QgsAttributeTableFilterModel::FilterMode ) settings.value( "/qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt();
+  QgsAttributeTableFilterModel::FilterMode defaultFilterMode = ( QgsAttributeTableFilterModel::FilterMode ) settings.value( "/Qgis/attributeTableBehaviour", QgsAttributeTableFilterModel::ShowAll ).toInt();
 
   switch ( defaultFilterMode )
   {
@@ -712,7 +712,7 @@ void QgsAttributeTableDialog::filterQueryChanged( const QString& query )
     }
 
     QSettings settings;
-    QString nullValue = settings.value( "qgis/nullValue", "NULL" ).toString();
+    QString nullValue = settings.value( "Qgis/nullValue", "NULL" ).toString();
 
     if ( mFilterQuery->displayText() == nullValue )
     {

@@ -57,9 +57,9 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea, Sta
   setCursor( Qt::CrossCursor );
 
   QSettings settings;
-  int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
-  int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();
-  int blue = settings.value( "/qgis/default_measure_color_blue", 0 ).toInt();
+  int red = settings.value( "/Qgis/default_measure_color_red", 255 ).toInt();
+  int green = settings.value( "/Qgis/default_measure_color_green", 0 ).toInt();
+  int blue = settings.value( "/Qgis/default_measure_color_blue", 0 ).toInt();
 
   mRubberBand = new QgsGeometryRubberBand( canvas, isArea ? QGis::Polygon : QGis::Line );
   mRubberBand->setFillColor( QColor( red, green, blue, 63 ) );

@@ -354,7 +354,7 @@ void QgsBrowserDockWidget::showContextMenu( const QPoint & pt )
     menu->addAction( tr( "Properties" ), this, SLOT( showProperties() ) );
     QAction *action = menu->addAction( tr( "Fast scan this dir." ), this, SLOT( toggleFastScan() ) );
     action->setCheckable( true );
-    action->setChecked( settings.value( "/qgis/scanItemsFastScanUris",
+    action->setChecked( settings.value( "/Qgis/scanItemsFastScanUris",
                                         QStringList() ).toStringList().contains( item->path() ) );
   }
   else if ( item->type() == QgsDataItem::Layer )
@@ -649,7 +649,7 @@ void QgsBrowserDockWidget::toggleFastScan()
   if ( item->type() == QgsDataItem::Directory )
   {
     QSettings settings;
-    QStringList fastScanDirs = settings.value( "/qgis/scanItemsFastScanUris",
+    QStringList fastScanDirs = settings.value( "/Qgis/scanItemsFastScanUris",
                                QStringList() ).toStringList();
     int idx = fastScanDirs.indexOf( item->path() );
     if ( idx != -1 )
@@ -660,7 +660,7 @@ void QgsBrowserDockWidget::toggleFastScan()
     {
       fastScanDirs << item->path();
     }
-    settings.setValue( "/qgis/scanItemsFastScanUris", fastScanDirs );
+    settings.setValue( "/Qgis/scanItemsFastScanUris", fastScanDirs );
   }
 }
 

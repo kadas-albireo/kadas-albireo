@@ -225,7 +225,7 @@ QGISEXTERN QgsDataItem * dataItem( QString thePath, QgsDataItem* parentItem )
 
   // zip settings + info
   QSettings settings;
-  QString scanZipSetting = settings.value( "/qgis/scanZipInBrowser2", "basic" ).toString();
+  QString scanZipSetting = settings.value( "/Qgis/scanZipInBrowser2", "basic" ).toString();
   QString vsiPrefix = QgsZipItem::vsiPrefix( thePath );
   bool is_vsizip = ( vsiPrefix == "/vsizip/" );
   bool is_vsigzip = ( vsiPrefix == "/vsigzip/" );
@@ -236,12 +236,12 @@ QGISEXTERN QgsDataItem * dataItem( QString thePath, QgsDataItem* parentItem )
   // TODO - do this in dir item, but this requires a way to inform which extensions are supported by provider
   // maybe a callback function or in the provider registry?
   bool scanExtSetting = false;
-  if (( settings.value( "/qgis/scanItemsInBrowser2",
+  if (( settings.value( "/Qgis/scanItemsInBrowser2",
                         "extension" ).toString() == "extension" ) ||
-      ( parentItem && settings.value( "/qgis/scanItemsFastScanUris",
+      ( parentItem && settings.value( "/Qgis/scanItemsFastScanUris",
                                       QStringList() ).toStringList().contains( parentItem->path() ) ) ||
       (( is_vsizip || is_vsitar ) && parentItem && parentItem->parent() &&
-       settings.value( "/qgis/scanItemsFastScanUris",
+       settings.value( "/Qgis/scanItemsFastScanUris",
                        QStringList() ).toStringList().contains( parentItem->parent()->path() ) ) )
   {
     scanExtSetting = true;

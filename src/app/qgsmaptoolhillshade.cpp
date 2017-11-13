@@ -46,7 +46,7 @@ QgsMapToolHillshade::QgsMapToolHillshade( QgsMapCanvas* mapCanvas )
 
 void QgsMapToolHillshade::activate()
 {
-  setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   QgsMapToolDrawShape::activate();
 }
 

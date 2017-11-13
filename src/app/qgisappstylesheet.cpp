@@ -51,7 +51,7 @@ QMap<QString, QVariant> QgisAppStyleSheet::defaultOptions()
   QVariant oldFontPointSize = settings.value( "/fontPointSize" );
   QVariant oldFontFamily = settings.value( "/fontFamily" );
 
-  settings.beginGroup( "qgis/stylesheet" );
+  settings.beginGroup( "Qgis/stylesheet" );
 
   int fontSize = mDefaultFont.pointSize();
   if ( mAndroidOS )
@@ -94,7 +94,7 @@ QMap<QString, QVariant> QgisAppStyleSheet::defaultOptions()
 
   opts.insert( "sidebarStyle", settings.value( "sidebarStyle", true ) );
 
-  settings.endGroup(); // "qgis/stylesheet"
+  settings.endGroup(); // "Qgis/stylesheet"
 
   return opts;
 }
@@ -203,7 +203,7 @@ void QgisAppStyleSheet::buildStyleSheet( const QMap<QString, QVariant>& opts )
 void QgisAppStyleSheet::saveToSettings( const QMap<QString, QVariant>& opts )
 {
   QSettings settings;
-  settings.beginGroup( "qgis/stylesheet" );
+  settings.beginGroup( "Qgis/stylesheet" );
 
   QMap<QString, QVariant>::const_iterator opt = opts.constBegin();
   while ( opt != opts.constEnd() )
@@ -211,7 +211,7 @@ void QgisAppStyleSheet::saveToSettings( const QMap<QString, QVariant>& opts )
     settings.setValue( QString( opt.key() ), opt.value() );
     ++opt;
   }
-  settings.endGroup(); // "qgis/stylesheet"
+  settings.endGroup(); // "Qgis/stylesheet"
 }
 
 void QgisAppStyleSheet::setActiveValues()

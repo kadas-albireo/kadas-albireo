@@ -112,7 +112,7 @@ QgsMilXCreateTool::QgsMilXCreateTool( QgisInterface *iface, QgsMilXLibrary* libr
   mBottomBar = new QgsMilxCreateBottomBar( this, library );
   connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
 
-  if ( QSettings().value( "/qgis/showNumericInput", false ).toBool() )
+  if ( QSettings().value( "/Qgis/showNumericInput", false ).toBool() )
   {
     mInputWidget = new QgsFloatingInputWidget( canvas() );
 
@@ -701,7 +701,7 @@ void QgsMilXEditTool::canvasMoveEvent( QMouseEvent * e )
 
         if ( mAnnotationMoveAction != QgsAnnotationItem::NoAction )
           cursor = QCursor( item->cursorShapeForAction( mAnnotationMoveAction ) );
-        if ( QSettings().value( "/qgis/showNumericInput", false ).toBool() )
+        if ( QSettings().value( "/Qgis/showNumericInput", false ).toBool() )
         {
           int pointidx = item->pointIndexForMoveAction( mAnnotationMoveAction );
           int attridx = item->attributeIndexForMoveAction( mAnnotationMoveAction );

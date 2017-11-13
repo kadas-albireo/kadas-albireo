@@ -71,7 +71,7 @@ QString QgsDateTimeEditFactory::representValue( QgsVectorLayer* vl, int fieldIdx
   if ( value.isNull() )
   {
     QSettings settings;
-    return settings.value( "qgis/nullValue", "NULL" ).toString();
+    return settings.value( "Qgis/nullValue", "NULL" ).toString();
   }
 
   const QString displayFormat = config.value( "display_format", QGSDATETIMEEDIT_DATEFORMAT ).toString();

@@ -371,7 +371,7 @@ const QString QgsApplication::activeThemePath()
 const QString QgsApplication::projectTemplatesDir()
 {
   QString applicationTemplatesDir = QDir( prefixPath() ).absoluteFilePath( "share/qgis/project_templates" );
-  QString templatesDir = QSettings().value( "/qgis/projectTemplatesDir" ).toString();
+  QString templatesDir = QSettings().value( "/Qgis/projectTemplatesDir" ).toString();
   if ( templatesDir.isEmpty() && QDir( applicationTemplatesDir ).exists() )
   {
     return applicationTemplatesDir;

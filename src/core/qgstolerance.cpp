@@ -75,8 +75,8 @@ double QgsTolerance::toleranceInMapUnits( double tolerance, QgsMapLayer* layer, 
 double QgsTolerance::vertexSearchRadius( const QgsMapSettings& mapSettings )
 {
   QSettings settings;
-  double tolerance = settings.value( "/qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble();
-  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
+  double tolerance = settings.value( "/Qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble();
+  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/Qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
   if ( units == LayerUnits )
     units = ProjectUnits;
   return toleranceInProjectUnits( tolerance, 0, mapSettings, units );
@@ -85,8 +85,8 @@ double QgsTolerance::vertexSearchRadius( const QgsMapSettings& mapSettings )
 double QgsTolerance::vertexSearchRadius( QgsMapLayer *layer, const QgsMapSettings &mapSettings )
 {
   QSettings settings;
-  double tolerance = settings.value( "/qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble();
-  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
+  double tolerance = settings.value( "/Qgis/digitizing/search_radius_vertex_edit", 10 ).toDouble();
+  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/Qgis/digitizing/search_radius_vertex_edit_unit", QgsTolerance::Pixels ).toInt();
   return toleranceInMapUnits( tolerance, layer, mapSettings, units );
 }
 
@@ -98,8 +98,8 @@ double QgsTolerance::vertexSearchRadius( QgsMapLayer* layer, QgsMapRenderer* ren
 double QgsTolerance::defaultTolerance( QgsMapLayer *layer, const QgsMapSettings& mapSettings )
 {
   QSettings settings;
-  double tolerance = settings.value( "/qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
-  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/qgis/digitizing/default_snapping_tolerance_unit", ProjectUnits ).toInt();
+  double tolerance = settings.value( "/Qgis/digitizing/default_snapping_tolerance", 0 ).toDouble();
+  UnitType units = ( QgsTolerance::UnitType ) settings.value( "/Qgis/digitizing/default_snapping_tolerance_unit", ProjectUnits ).toInt();
   return toleranceInMapUnits( tolerance, layer, mapSettings, units );
 }
 

@@ -68,7 +68,7 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     }
   }
 
-  int addMode = QSettings().value( "/qgis/layerLegendAddMode", 0 ).toInt();
+  int addMode = QSettings().value( "/Qgis/layerLegendAddMode", 0 ).toInt();
   int ins = addMode == 0 ? 0 : mInsertionPointIndex;
   QgsLayerTreeGroup* group = addMode == 0 ? mRoot : mInsertionPointGroup;
 

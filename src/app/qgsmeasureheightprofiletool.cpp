@@ -34,9 +34,9 @@ QgsMeasureHeightProfileTool::QgsMeasureHeightProfileTool( QgsMapCanvas *canvas )
   mDrawTool->setParentTool( this );
 
   QSettings settings;
-  int red = settings.value( "/qgis/default_measure_color_red", 255 ).toInt();
-  int green = settings.value( "/qgis/default_measure_color_green", 0 ).toInt();
-  int blue = settings.value( "/qgis/default_measure_color_blue", 0 ).toInt();
+  int red = settings.value( "/Qgis/default_measure_color_red", 255 ).toInt();
+  int green = settings.value( "/Qgis/default_measure_color_green", 0 ).toInt();
+  int blue = settings.value( "/Qgis/default_measure_color_blue", 0 ).toInt();
 
   mPosMarker = new QgsRubberBand( canvas, QGis::Point );
   mPosMarker->setIcon( QgsRubberBand::ICON_CIRCLE );
@@ -60,7 +60,7 @@ void QgsMeasureHeightProfileTool::activate()
 {
   mPicking = false;
   mDialog->show();
-  mDrawTool->setShowInputWidget( QSettings().value( "/qgis/showNumericInput", false ).toBool() );
+  mDrawTool->setShowInputWidget( QSettings().value( "/Qgis/showNumericInput", false ).toBool() );
   mDrawTool->activate();
   QgsMapTool::activate();
 }

@@ -147,7 +147,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mObserverHeightSpinBox->setRange( 0, 8000 );
   mObserverHeightSpinBox->setDecimals( 1 );
   mObserverHeightSpinBox->setSuffix( heightDisplayUnit == QGis::Feet ? " ft" : " m" );
-  mObserverHeightSpinBox->setValue( QSettings().value( "/qgis/measure/heightprofile/observerheight", 2.0 ).toDouble() );
+  mObserverHeightSpinBox->setValue( QSettings().value( "/Qgis/measure/heightprofile/observerheight", 2.0 ).toDouble() );
   mObserverHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mObserverHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mObserverHeightSpinBox, 0, 1 );
@@ -156,7 +156,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   mTargetHeightSpinBox->setRange( 0, 8000 );
   mTargetHeightSpinBox->setDecimals( 1 );
   mTargetHeightSpinBox->setSuffix( heightDisplayUnit == QGis::Feet ? " ft" : " m" );
-  mTargetHeightSpinBox->setValue( QSettings().value( "/qgis/measure/heightprofile/targetheight", 2.0 ).toDouble() );
+  mTargetHeightSpinBox->setValue( QSettings().value( "/Qgis/measure/heightprofile/targetheight", 2.0 ).toDouble() );
   mTargetHeightSpinBox->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   connect( mTargetHeightSpinBox, SIGNAL( valueChanged( double ) ), this, SLOT( updateLineOfSight() ) );
   layoutLOS->addWidget( mTargetHeightSpinBox, 0, 3 );

@@ -38,14 +38,14 @@ QgsRubberBand* QgsMapToolEdit::createRubberBand( QGis::GeometryType geometryType
 {
   QSettings settings;
   QgsRubberBand* rb = new QgsRubberBand( mCanvas, geometryType );
-  rb->setWidth( settings.value( "/qgis/digitizing/line_width", 1 ).toInt() );
-  QColor color( settings.value( "/qgis/digitizing/line_color_red", 255 ).toInt(),
-                settings.value( "/qgis/digitizing/line_color_green", 0 ).toInt(),
-                settings.value( "/qgis/digitizing/line_color_blue", 0 ).toInt() );
-  double myAlpha = settings.value( "/qgis/digitizing/line_color_alpha", 200 ).toInt() / 255.0;
+  rb->setWidth( settings.value( "/Qgis/digitizing/line_width", 1 ).toInt() );
+  QColor color( settings.value( "/Qgis/digitizing/line_color_red", 255 ).toInt(),
+                settings.value( "/Qgis/digitizing/line_color_green", 0 ).toInt(),
+                settings.value( "/Qgis/digitizing/line_color_blue", 0 ).toInt() );
+  double myAlpha = settings.value( "/Qgis/digitizing/line_color_alpha", 200 ).toInt() / 255.0;
   if ( alternativeBand )
   {
-    myAlpha = myAlpha * settings.value( "/qgis/digitizing/line_color_alpha_scale", 0.75 ).toDouble();
+    myAlpha = myAlpha * settings.value( "/Qgis/digitizing/line_color_alpha_scale", 0.75 ).toDouble();
     rb->setLineStyle( Qt::DotLine );
   }
   if ( geometryType == QGis::Polygon )
@@ -102,10 +102,10 @@ QgsGeometryRubberBand* QgsMapToolEdit::createGeometryRubberBand( QGis::GeometryT
 {
   QSettings settings;
   QgsGeometryRubberBand* rb = new QgsGeometryRubberBand( mCanvas, geometryType );
-  QColor color( settings.value( "/qgis/digitizing/line_color_red", 255 ).toInt(),
-                settings.value( "/qgis/digitizing/line_color_green", 0 ).toInt(),
-                settings.value( "/qgis/digitizing/line_color_blue", 0 ).toInt() );
-  double myAlpha = settings.value( "/qgis/digitizing/line_color_alpha", 200 ).toInt() / 255.0 ;
+  QColor color( settings.value( "/Qgis/digitizing/line_color_red", 255 ).toInt(),
+                settings.value( "/Qgis/digitizing/line_color_green", 0 ).toInt(),
+                settings.value( "/Qgis/digitizing/line_color_blue", 0 ).toInt() );
+  double myAlpha = settings.value( "/Qgis/digitizing/line_color_alpha", 200 ).toInt() / 255.0 ;
   color.setAlphaF( myAlpha );
   rb->setOutlineColor( color );
   rb->setFillColor( color );

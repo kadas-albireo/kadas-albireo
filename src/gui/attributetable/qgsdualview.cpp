@@ -210,7 +210,7 @@ void QgsDualView::initLayerCache( QgsVectorLayer* layer, bool cacheGeometry )
 {
   // Initialize the cache
   QSettings settings;
-  int cacheSize = settings.value( "/qgis/attributeTableRowCache", "10000" ).toInt();
+  int cacheSize = settings.value( "/Qgis/attributeTableRowCache", "10000" ).toInt();
   mLayerCache = new QgsVectorLayerCache( layer, cacheSize, this );
   mLayerCache->setCacheGeometry( cacheGeometry );
   if ( 0 == cacheSize || 0 == ( QgsVectorDataProvider::SelectAtId & mLayerCache->layer()->dataProvider()->capabilities() ) )
