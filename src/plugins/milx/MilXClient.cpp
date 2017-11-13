@@ -560,11 +560,12 @@ bool MilXClient::deletePoint( const QRect &visibleExtent, int dpi, const NPointS
   return true;
 }
 
-bool MilXClient::editSymbol( const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result )
+bool MilXClient::editSymbol( const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString &newSymbolMilitaryName, NPointSymbolGraphic& result, WId parentWid )
 {
 #ifdef Q_OS_WIN
-  WId wid = qApp->topLevelWidgets().front()->winId();
+  WId wid = parentWid;
 #else
+  Q_UNUSED( parentWid );
   WId wid = 0;
 #endif
 
@@ -592,11 +593,12 @@ bool MilXClient::editSymbol( const QRect &visibleExtent, int dpi, const NPointSy
   return true;
 }
 
-bool MilXClient::createSymbol( QString& symbolId, SymbolDesc& result )
+bool MilXClient::createSymbol( QString& symbolId, SymbolDesc& result, WId parentWid )
 {
 #ifdef Q_OS_WIN
-  WId wid = qApp->topLevelWidgets().front()->winId();
+  WId wid = parentWid;
 #else
+  Q_UNUSED( parentWid );
   WId wid = 0;
 #endif
 

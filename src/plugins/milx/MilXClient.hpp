@@ -120,8 +120,8 @@ public:
   static bool moveAttributePoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, int attr, const QPoint& newPos, NPointSymbolGraphic& result);
   static bool canDeletePoint(const NPointSymbol& symbol, int index, bool& canDelete);
   static bool deletePoint(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, int index, NPointSymbolGraphic& result);
-  static bool editSymbol(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result);
-  static bool createSymbol(QString& symbolId, SymbolDesc& result);
+  static bool editSymbol(const QRect &visibleExtent, int dpi, const NPointSymbol& symbol, QString& newSymbolXml, QString& newSymbolMilitaryName, NPointSymbolGraphic& result, WId parentWid);
+  static bool createSymbol(QString& symbolId, SymbolDesc& result, WId parentWid);
 
   static bool updateSymbol(const QRect& visibleExtent, int dpi, const NPointSymbol& symbol, NPointSymbolGraphic& result, bool returnPoints);
   static bool updateSymbols(const QRect& visibleExtent, int dpi, double scaleFactor, const QList<NPointSymbol>& symbols, QList<NPointSymbolGraphic>& result);

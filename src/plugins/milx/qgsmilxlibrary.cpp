@@ -15,7 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "qgisinterface.h"
 #include "qgsapplication.h"
+#include "qgsmapcanvas.h"
 #include "qgsmilxlibrary.h"
 #include "qgsmilxlayer.h"
 #include "qgsfilterlineedit.h"
@@ -78,8 +80,8 @@ class QgsMilXLibrary::TreeFilterProxyModel : public QSortFilterProxyModel
 };
 
 
-QgsMilXLibrary::QgsMilXLibrary( QWidget *parent )
-    : QWidget( parent ), mLoader( 0 )
+QgsMilXLibrary::QgsMilXLibrary( QgisInterface *iface, QWidget *parent )
+    : QWidget( parent ), mIface( iface ), mLoader( 0 )
 {
   setWindowFlags( Qt::Popup );
   setObjectName( "QgsMilXLibrary" );
@@ -186,7 +188,8 @@ void QgsMilXLibrary::itemClicked( const QModelIndex &index )
     if ( symbolTemplate.symbolXml == "<custom>" )
     {
       MilXClient::SymbolDesc desc;
-      if ( !MilXClient::createSymbol( symbolTemplate.symbolXml, desc ) )
+      WId wid = mIface->mapCanvas()->winId();
+      if ( !MilXClient::createSymbol( symbolTemplate.symbolXml, desc, wid ) )
       {
         return;
       }

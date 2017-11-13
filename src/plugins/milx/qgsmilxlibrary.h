@@ -28,6 +28,8 @@ class QTreeView;
 class QgsFilterLineEdit;
 class QgsMilXLibraryLoader;
 
+class QgisInterface;
+
 
 struct QgsMilxSymbolTemplate
 {
@@ -43,7 +45,7 @@ class QgsMilXLibrary : public QWidget
 {
     Q_OBJECT
   public:
-    QgsMilXLibrary( QWidget* parent = 0 );
+    QgsMilXLibrary( QgisInterface* iface, QWidget* parent = 0 );
     ~QgsMilXLibrary();
     void focusFilter();
 
@@ -60,6 +62,7 @@ class QgsMilXLibrary : public QWidget
     static const int SymbolPointCountRole;
     static const int SymbolVariablePointsRole;
 
+    QgisInterface* mIface;
     QgsMilXLibraryLoader* mLoader;
     QgsFilterLineEdit* mFilterLineEdit;
     QTreeView* mTreeView;

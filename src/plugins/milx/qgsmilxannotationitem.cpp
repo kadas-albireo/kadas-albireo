@@ -252,7 +252,7 @@ void QgsMilXAnnotationItem::_showItemEditor()
   MilXClient::NPointSymbol symbol( mSymbolXml, screenPoints(), mControlPoints, screenAttributes(), mFinalized, true );
   MilXClient::NPointSymbolGraphic result;
   int dpi = QApplication::desktop()->logicalDpiX();
-  if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), dpi, symbol, symbolId, symbolMilitaryName, result ) )
+  if ( MilXClient::editSymbol( mMapCanvas->sceneRect().toRect(), dpi, symbol, symbolId, symbolMilitaryName, result, mMapCanvas->winId() ) )
   {
     setSymbolXml( symbolId, symbolMilitaryName );
     setGraphic( result, true );

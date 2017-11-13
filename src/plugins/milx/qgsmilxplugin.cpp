@@ -108,7 +108,7 @@ void QgsMilXPlugin::initGui()
 
   QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsMilXLayerType( mQGisIface->layerTreeView()->menuProvider() ) );
 
-  mMilXLibrary = new QgsMilXLibrary( mQGisIface->mainWindow() );
+  mMilXLibrary = new QgsMilXLibrary( mQGisIface, mQGisIface->mainWindow() );
 
   connect( mQGisIface->mapCanvas(), SIGNAL( layersChanged( QStringList ) ), this, SLOT( connectPickHandlers() ) );
   connect( QgsProject::instance(), SIGNAL( writeProject( QDomDocument& ) ), this, SLOT( stopEditing() ) );
