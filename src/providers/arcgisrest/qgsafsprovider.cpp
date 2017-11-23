@@ -191,5 +191,5 @@ QgsRectangle QgsAfsProvider::extent()
 
 void QgsAfsProvider::reloadData()
 {
-  mSharedData->mCache.clear();
+  mSharedData->clearCache();
 }

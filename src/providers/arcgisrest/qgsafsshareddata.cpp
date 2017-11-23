@@ -24,8 +24,10 @@ QgsAfsSharedData::QgsAfsSharedData()
 
 bool QgsAfsSharedData::getFeature( const QgsFeatureId &id, QgsFeature &f, bool fetchGeometry, const QList<int>& /*fetchAttributes*/, const QgsRectangle filterRect )
 {
+  QMutexLocker locker( &mMutex );
+
   // If cached, return cached feature
-  QMap<QgsFeatureId, QgsFeature>::const_iterator it = mCache.find( id );
+  QMap<QgsFeatureId, QgsFeature>::const_iterator it = mCache.constFind( id );
   if ( it != mCache.end() )
   {
     f = it.value();
@@ -80,9 +82,7 @@ bool QgsAfsSharedData::getFeature( const QgsFeatureId &id, QgsFeature &f, bool f
   {
     QVariantMap featureData = featuresData[i].toMap();
     QgsFeature feature;
-
-    // Set FID
-    feature.setFeatureId( startId + i );
+    int featureId = startId + i;
 
     // Set attributes
     if ( !fetchAttribIdx.isEmpty() )
@@ -93,9 +93,16 @@ bool QgsAfsSharedData::getFeature( const QgsFeatureId &id, QgsFeature &f, bool f
       foreach ( int idx, fetchAttribIdx )
       {
         attributes[idx] = attributesData[mFields.at( idx ).name()];
+        if ( mFields.at( idx ).name() == "OBJECTID" )
+        {
+          featureId = startId + objectIds.indexOf( attributesData[mFields.at( idx ).name()].toInt() );
+        }
       }
       feature.setAttributes( attributes );
     }
+
+    // Set FID
+    feature.setFeatureId( featureId );
 
     // Set geometry
     if ( fetchGeometry )
@@ -109,8 +116,20 @@ bool QgsAfsSharedData::getFeature( const QgsFeatureId &id, QgsFeature &f, bool f
     feature.setValid( true );
     mCache.insert( feature.id(), feature );
   }
-  f = mCache[id];
-  Q_ASSERT( f.isValid() );
-  return filterRect.isNull() || ( f.geometry() && f.geometry()->intersects( filterRect ) );
+  // If added to cache, return feature
+  it = mCache.constFind( id );
+  if ( it != mCache.constEnd() )
+  {
+    f = it.value();
+    return filterRect.isNull() || ( f.geometry() && f.geometry()->intersects( filterRect ) );
+  }
+
+  return false;
+}
+
+void QgsAfsSharedData::clearCache()
+{
+  QMutexLocker locker( &mMutex );
+  mCache.clear();
 }
 
