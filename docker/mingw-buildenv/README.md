@@ -20,3 +20,9 @@ Build within Docker container with attached source code:
 Windows:
 
     docker run -v %CD%:/workspace sourcepole/kadas-mingw-buildenv ms-windows/mingwbuild.sh
+
+Tar within Docker container the portable App:
+
+    docker run -v $PWD:/workspace sourcepole/kadas-mingw-buildenv tar -hcvf ./kadas.tar ./build_mingw64_qt5/dist/usr/x86_64-w64-mingw32/sys-root/mingw
+
+
