@@ -21,6 +21,17 @@ else
     exit 1
 fi
 
+# Do copies instead of links if building inside container
+if [ -f /.dockerenv ]; then
+    lnk() {
+        cp -a "$1" "$2"
+    }
+else
+    lnk() {
+        ln -sf "$1" "$2"
+    }
+fi
+
 # Note: This script is written to be used with the Fedora mingw environment
 MINGWROOT=/usr/$arch-w64-mingw32/sys-root/mingw
 
@@ -130,10 +141,10 @@ function linkDep {
     echo "${indent}${1}"
     [ ! -e "$MINGWROOT/$1" ] && (echo "Error: missing $MINGWROOT/$1"; return 1)
     mkdir -p "$destdir" || return 1
-    ln -sf "$MINGWROOT/$1" "$destdir/$name" || return 1
+    lnk "$MINGWROOT/$1" "$destdir/$name" || return 1
     echo "${2:-bin}/$name: $(rpm -qf "$MINGWROOT/$1")" >> $installprefix/origins.txt
     autoLinkDeps "$destdir/$name" "${indent}  " || return 1
-    [ -e "$MINGWROOT/$1.debug" ] && ln -sf "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
+    [ -e "$MINGWROOT/$1.debug" ] && lnk "$MINGWROOT/$1.debug" "$destdir/$name.debug" || echo "Warning: missing $name.debug"
     return 0
 }
 
@@ -197,18 +208,18 @@ SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 for file in $(find lib/python2.7 -type f); do
     mkdir -p "$installprefix/$(dirname $file)"
-    ln -sf "$MINGWROOT/$file" "$installprefix/$file"
+    lnk "$MINGWROOT/$file" "$installprefix/$file"
 done
 IFS=$SAVEIFS
 )
 
 # Osg plugins
 osgPlugins=$(basename $MINGWROOT/bin/osgPlugins-*)
-ln -sf $MINGWROOT/bin/$osgPlugins $installprefix/bin/$osgPlugins
+lnk $MINGWROOT/bin/$osgPlugins $installprefix/bin/$osgPlugins
 
 # Data files
 mkdir -p $installprefix/share/
-ln -sf /usr/share/gdal $installprefix/share/gdal
+lnk /usr/share/gdal $installprefix/share/gdal
 
 # Sort origins file
 cat $installprefix/origins.txt | sort | uniq > $installprefix/origins.new && mv $installprefix/origins.new $installprefix/origins.txt
