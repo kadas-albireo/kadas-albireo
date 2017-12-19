@@ -473,6 +473,7 @@ int main( int argc, char *argv[] )
   bool myRestorePlugins = true;
   bool myCustomization = true;
   bool ribbonGui = true;
+  bool clearSettings = false;
 
   // This behaviour will set initial extent of map canvas, but only if
   // there are no command line arguments. This gives a usable map
@@ -582,6 +583,10 @@ int main( int argc, char *argv[] )
           ribbonGui = ( args.at( ++i ).compare( "true", Qt::CaseInsensitive ) == 0 );
         }
       }
+      else if ( arg == "--clearsettings" )
+      {
+        clearSettings = true;
+      }
       else
       {
         myFileList.append( QDir::toNativeSeparators( QFileInfo( args[i] ).absoluteFilePath() ) );
@@ -650,6 +655,15 @@ int main( int argc, char *argv[] )
   QgsApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
 
   QgsApplication myApp( argc, argv, myUseGuiFlag, configpath );
+
+  if ( clearSettings )
+  {
+    QDir settingsDir( QgsApplication::qgisSettingsDirPath() );
+    if ( settingsDir.exists() )
+    {
+      settingsDir.removeRecursively();
+    }
+  }
 
   //set stylesheet if there
   if ( ribbonGui )
