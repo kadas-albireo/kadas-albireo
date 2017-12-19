@@ -90,7 +90,7 @@ void QgsKMLExportDialog::selectFile()
     {
       QString layerId = mLayerListWidget->item( i )->data( Qt::UserRole ).toString();
       QgsMapLayer* layer = QgsMapLayerRegistry::instance()->mapLayer( layerId );
-      if ( layer && layer->type() != QgsMapLayer::VectorLayer )
+      if ( layer && layer->type() != QgsMapLayer::VectorLayer && layer->type() != QgsMapLayer::RedliningLayer )
       {
         mLayerListWidget->item( i )->setFlags( Qt::NoItemFlags );
         mLayerListWidget->item( i )->setCheckState( Qt::Unchecked );
