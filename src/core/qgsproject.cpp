@@ -1737,7 +1737,6 @@ bool QgsProject::createEmbeddedLayer( const QString &layerId, const QString &pro
         else
         {
           QDomElement dsElem = mapLayerElem.firstChildElement( "datasource" );
-          QString debug( QFileInfo( projectFilePath ).absolutePath() + "/" + dsElem.text() );
           QFileInfo absoluteDs( QFileInfo( projectFilePath ).absolutePath() + "/" + dsElem.text() );
           if ( absoluteDs.exists() )
           {
