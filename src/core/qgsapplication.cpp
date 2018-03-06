@@ -26,6 +26,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileOpenEvent>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMessageBox>
 #include <QPalette>
 #include <QProcess>
@@ -1114,5 +1117,29 @@ void QgsApplication::setMaxThreads( int maxThreads )
   // set max thread count in QThreadPool
   QThreadPool::globalInstance()->setMaxThreadCount( maxThreads );
   QgsDebugMsg( QString( "set QThreadPool max thread count to %1" ).arg( QThreadPool::globalInstance()->maxThreadCount() ) );
+}
+
+QMap<QString, QString> QgsApplication::readMigrationConfig()
+{
+  QMap<QString, QString> migrationMap;
+  QString dataDir = QDir( QString( "%1/../share/qgis" ).arg( QApplication::applicationDirPath() ) ).absolutePath();
+  QFile migrationsFile( QDir( dataDir ).absoluteFilePath( "migration_config.json" ) );
+  if ( migrationsFile.open( QIODevice::ReadOnly ) )
+  {
+    QJsonDocument doc = QJsonDocument::fromJson( migrationsFile.readAll() );
+    QJsonArray entries = doc.array();
+    for ( int i = 0, n = entries.size(); i < n; ++i )
+    {
+      QJsonObject entry = entries.at( i ).toObject();
+      migrationMap.insert( entry.value( "old" ).toString(), entry.value( "new" ).toString() );
+    }
+  }
+  return migrationMap;
+}
+
+QString QgsApplication::migrateDataPath( const QString& dataPath )
+{
+  static QMap<QString, QString> dataSourceMap = readMigrationConfig();
+  return dataSourceMap.value( dataPath.toLower().replace( "\\", "/" ), dataPath );
 }
 

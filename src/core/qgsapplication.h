@@ -303,6 +303,8 @@ class CORE_EXPORT QgsApplication : public QApplication
     }
 #endif
 
+    static QString migrateDataPath( const QString& dataPath );
+
   signals:
     //! @note not available in python bindings
     void preNotify( QObject * receiver, QEvent * event, bool * done );
@@ -338,6 +340,8 @@ class CORE_EXPORT QgsApplication : public QApplication
     /**
      * @note added in 2.4 */
     static int ABISYM( mMaxThreads );
+
+    static QMap<QString, QString> readMigrationConfig();
 };
 
 #endif

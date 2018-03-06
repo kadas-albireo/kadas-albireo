@@ -20,6 +20,7 @@
 #include <deque>
 #include <memory>
 
+#include "qgsapplication.h"
 #include "qgsdatasourceuri.h"
 #include "qgsexception.h"
 #include "qgslayertree.h"
@@ -670,6 +671,16 @@ QPair< bool, QList<QDomNode> > QgsProject::_getMapLayers( QDomDocument const &do
     QString name = node.namedItem( "layername" ).toElement().text();
     if ( !name.isNull() )
       emit loadingLayer( tr( "Loading layer %1" ).arg( name ) );
+
+    // Migrate paths
+    QDomElement dsElem = element.firstChildElement( "datasource" );
+    QString datasource = dsElem.text().toLower().replace( "\\", "/" );
+    QString newDatasource = QgsApplication::migrateDataPath( datasource );
+    if ( newDatasource != datasource )
+    {
+      dsElem.removeChild( dsElem.childNodes().at( 0 ) );
+      dsElem.appendChild( dsElem.ownerDocument().createTextNode( newDatasource ) );
+    }
 
     if ( element.attribute( "embedded" ) == "1" )
     {

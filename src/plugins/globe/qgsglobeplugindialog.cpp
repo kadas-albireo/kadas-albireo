@@ -438,6 +438,7 @@ QList<QgsGlobePluginDialog::LayerDataSource> QgsGlobePluginDialog::getImageryDat
     LayerDataSource datasource;
     datasource.type  = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/type" );
     datasource.uri   = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/uri" );
+    datasource.uri = QgsApplication::migrateDataPath( datasource.uri );
     datasources.append( datasource );
   }
   return datasources;
@@ -453,6 +454,7 @@ QList<QgsGlobePluginDialog::LayerDataSource> QgsGlobePluginDialog::getElevationD
     LayerDataSource datasource;
     datasource.type  = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/type" );
     datasource.uri   = QgsProject::instance()->readEntry( "Globe-Plugin", key + "/uri" );
+    datasource.uri = QgsApplication::migrateDataPath( datasource.uri );
     datasources.append( datasource );
   }
   return datasources;
