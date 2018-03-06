@@ -51,7 +51,7 @@ namespace osgEarth
   namespace Util
   {
     class FeatureHighlightCallback;
-    class FeatureQueryTool;
+    class RTTPicker;
     class SkyNode;
     class VerticalScale;
     namespace Controls
@@ -123,7 +123,7 @@ class GLOBE_EXPORT GlobePlugin : public QObject, public QgisPlugin
 #if OSGEARTH_VERSION_LESS_THAN(2, 7, 0)
     osg::ref_ptr<osgEarth::Util::FeatureHighlightCallback> mFeatureQueryToolHighlightCb;
 #endif
-    osg::ref_ptr<osgEarth::Util::FeatureQueryTool> mFeatureQueryTool;
+    osg::ref_ptr<osgEarth::Util::RTTPicker> mFeatureQueryTool;
     osg::ref_ptr<osgEarth::Util::Controls::LabelControl> mStatsLabel;
 
     osg::Group* mAnnotationsGroup;

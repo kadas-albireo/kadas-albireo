@@ -22,6 +22,7 @@
 #include <qgsvectorlayer.h>
 #include <osg/ValueObject>
 #include <osgEarth/Registry>
+#include <osgEarthFeatures/FeatureIndex>
 
 QgsGlobeFeatureIdentifyCallback::QgsGlobeFeatureIdentifyCallback( QgsMapCanvas* mapCanvas )
     : mCanvas( mapCanvas ), mRubberBand( new QgsRubberBand( mapCanvas, QGis::Polygon ) )

@@ -65,7 +65,7 @@
 #include <osgEarthUtil/AutoClipPlaneHandler>
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/FeatureQueryTool>
+#include <osgEarthUtil/RTTPicker>
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/VerticalScale>
 #include <osgEarthDrivers/engine_mp/MPTerrainEngineNode>
@@ -373,7 +373,7 @@ void GlobePlugin::run()
   mViewerWidget->setParent( mDockWidget );
 
   mFeatureQueryToolIdentifyCb = new QgsGlobeFeatureIdentifyCallback( mQGisIface->mapCanvas() );
-  mFeatureQueryTool = new osgEarth::Util::FeatureQueryTool();
+  mFeatureQueryTool = new osgEarth::Util::RTTPicker();
   mFeatureQueryTool->addChild( mMapNode );
   mFeatureQueryTool->setDefaultCallback( mFeatureQueryToolIdentifyCb.get() );
 
