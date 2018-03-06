@@ -298,7 +298,7 @@ void QgsMeasureHeightProfileDialog::replot()
   }
 
   GDALRasterBandH band = GDALGetRasterBand( raster, 1 );
-  if ( !raster )
+  if ( !band )
   {
     QgsDebugMsg( "Failed to open raster band 0" );
     GDALClose( raster );
