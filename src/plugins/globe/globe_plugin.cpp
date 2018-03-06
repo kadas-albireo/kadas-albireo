@@ -66,6 +66,7 @@
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthUtil/RTTPicker>
+//#include <osgEarthUtil/Shadowing>
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/VerticalScale>
 #include <osgEarthDrivers/engine_mp/MPTerrainEngineNode>
@@ -579,6 +580,26 @@ void GlobePlugin::applyProjectSettings()
       mRootNode->removeChild( mSkyNode );
       mSkyNode = 0;
     }
+
+    // Shadows
+    /*int unit = 0;
+    if ( mMapNode->getTerrainEngine()->getResources()->reserveTextureImageUnit(unit, "ShadowCaster") )
+    {
+        osgEarth::Util::ShadowCaster* caster = new osgEarth::Util::ShadowCaster();
+        caster->setTextureImageUnit( unit );
+        caster->setLight( mOsgViewer->getLight() );
+        caster->getShadowCastingGroup()->addChild( mMapNode->getModelLayerGroup() );
+        caster->getShadowCastingGroup()->addChild( mMapNode->getTerrainEngine() );
+        if ( mMapNode->getNumParents() > 0 )
+        {
+            osgEarth::insertGroup(caster, mMapNode->getParent(0));
+        }
+        else
+        {
+            caster->addChild(mMapNode);
+            mRootNode = caster;
+        }
+    }*/
   }
 }
 
