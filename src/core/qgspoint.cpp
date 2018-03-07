@@ -273,7 +273,7 @@ QString QgsPoint::toDegreesMinutesSeconds( int thePrecision, const bool useSuffi
   QString rep = myXSign + QString::number( myDegreesX ) + QChar( 176 ) +
                 myMinutesX + QChar( 0x2032 ) +
                 myStrSecondsX + QChar( 0x2033 ) +
-                myXHemisphere + QString( "," ) +
+                myXHemisphere + QString( ", " ) +
                 myYSign + QString::number( myDegreesY ) + QChar( 176 ) +
                 myMinutesY + QChar( 0x2032 ) +
                 myStrSecondsY + QChar( 0x2033 ) +
@@ -358,7 +358,7 @@ QString QgsPoint::toDegreesMinutes( int thePrecision, const bool useSuffix, cons
 
   QString rep = myXSign + QString::number( myDegreesX ) + QChar( 176 ) +
                 myStrMinutesX + QChar( 0x2032 ) +
-                myXHemisphere + QString( "," ) +
+                myXHemisphere + QString( ", " ) +
                 myYSign + QString::number( myDegreesY ) + QChar( 176 ) +
                 myStrMinutesY + QChar( 0x2032 ) +
                 myYHemisphere;
