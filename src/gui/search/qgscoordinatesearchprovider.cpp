@@ -49,10 +49,10 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
     // LV03, LV93 or decimal degrees
     double lon = mPatLVDD.cap( 1 ).replace( "'", "" ).toDouble();
     double lat = mPatLVDD.cap( 3 ).replace( "'", "" ).toDouble();
-    searchResult.pos = QgsPoint( lon, lat );
     bool haveDeg = !mPatLVDD.cap( 2 ).isEmpty() && mPatLVDD.cap( 4 ).isEmpty();
     if (( lon >= -180. && lon <= 180. ) && ( lat >= -90. && lat <= 90. ) )
     {
+      searchResult.pos = QgsPoint( lon, lat );
       searchResult.text = searchResult.pos.toDegreesMinutesSeconds( 2 );
       searchResult.crs = "EPSG:4326";
       emit searchResultFound( searchResult );
@@ -68,14 +68,23 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
       searchResult.crs = "EPSG:4326";
       emit searchResultFound( searchResult );
     }
-    else if ( !haveDeg && (( lon >= 470000. && lon <= 850000. ) && ( lat >= 60000. && lat <= 310000. ) ) )
+    // Right-padded lon to 6 digits, lat to 5 or 6 depending on value
+    double pad6lon = lon * pow( 10, 5 - floor( log10( lon ) ) );
+    double latfirst = floor( lat / pow( 10, floor( log10( lat ) ) ) );
+    double pad6lat = lat * pow( 10, ( latfirst >= 6 ? 4 : 5 ) - floor( log10( lat ) ) );
+    if ( !haveDeg && ( pad6lon >= 470000. && pad6lon <= 850000. ) && ( pad6lat >= 60000. && pad6lat <= 310000. ) )
     {
+      searchResult.pos = QgsPoint( pad6lon, pad6lat );
       searchResult.text = searchResult.pos.toString() + " (LV03)";
       searchResult.crs = "EPSG:21781";
       emit searchResultFound( searchResult );
     }
-    else if ( !haveDeg && ( lon >= 2450000. && lon <= 2850000. ) && ( lat >= 1050000. && lat <= 1300000. ) )
+    // Right-padded lon and lat to 7 digits
+    double pad7lon = lon * pow( 10, 6 - floor( log10( lon ) ) );
+    double pad7lat = lat * pow( 10, 6 - floor( log10( lat ) ) );
+    if ( !haveDeg && ( pad7lon >= 2450000. && pad7lon <= 2850000. ) && ( pad7lat >= 1050000. && pad7lat <= 1300000. ) )
     {
+      searchResult.pos = QgsPoint( pad7lon, pad7lat );
       searchResult.text = searchResult.pos.toString() + " (LV95)";
       searchResult.crs = "EPSG:2056";
       emit searchResultFound( searchResult );
