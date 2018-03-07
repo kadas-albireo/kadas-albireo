@@ -93,9 +93,7 @@ QgsMeasureHeightProfileDialog::QgsMeasureHeightProfileDialog( QgsMeasureHeightPr
   QGis::UnitType heightDisplayUnit = QgsCoordinateFormat::instance()->getHeightDisplayUnit();
 
   mPlot = new QwtPlot( this );
-#if 0
   mPlot->canvas()->setCursor( Qt::ArrowCursor );
-#endif
   mPlot->setCanvasBackground( Qt::white );
   mPlot->enableAxis( QwtPlot::yLeft );
   mPlot->enableAxis( QwtPlot::xBottom );
@@ -213,15 +211,11 @@ void QgsMeasureHeightProfileDialog::setMarkerPos( int segment, const QgsPoint &p
   int idx = qMin( int( x / mTotLength * mNSamples ), mNSamples - 1 );
 #if QWT_VERSION < 0x060000
   mPlotMarker->setValue( mPlotCurve->x( idx ), mPlotCurve->y( idx ) );
-#if 0
   mPlotMarker->setLabel( QString::number( qRound( mPlotCurve->y( idx ) ) ) );
-#endif
 #else
   QPointF sample = mPlotCurve->data()->sample( idx );
   mPlotMarker->setValue( sample );
-#if 0
   mPlotMarker->setLabel( QString::number( qRound( sample.y() ) ) );
-#endif
 #endif
   mPlot->replot();
 }
@@ -386,9 +380,8 @@ void QgsMeasureHeightProfileDialog::replot()
   GDALClose( raster );
 
   // Node markers
-#if 0
   x = 0;
-  for ( int i = 0, n = mPoints.size() - 1; i < n; ++i )
+  for ( int i = 0, n = mPoints.size() - 2; i < n; ++i )
   {
     x += mSegmentLengths[i];
     QwtPlotMarker* nodeMarker = new QwtPlotMarker();
@@ -404,7 +397,6 @@ void QgsMeasureHeightProfileDialog::replot()
     nodeMarker->attach( mPlot );
     mNodeMarkers.append( nodeMarker );
   }
-#endif
 
   updateLineOfSight( );
 }
