@@ -81,7 +81,7 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   statusBar()->addPermanentWidget( statusWidget, 1 );
   mLayersWidget->setVisible( false );
   mLayersWidget->setCursor( Qt::ArrowCursor );
-  mLayersWidget->resize( QSettings().value( "/UI/ribbonLayersWidgetWidth", 200 ).toInt(), mLayersWidget->height() );
+  mLayersWidget->resize( qMax( 10, qMin( 800, QSettings().value( "/UI/ribbonLayersWidgetWidth", 200 ).toInt() ) ), mLayersWidget->height() );
   mLayerTreeViewButton->setCursor( Qt::ArrowCursor );
   mGeodataBox->setCollapsed( false );
   mLayersBox->setCollapsed( false );
@@ -246,7 +246,7 @@ bool QgsRibbonApp::eventFilter( QObject *obj, QEvent *ev )
     if ( e->buttons() == Qt::LeftButton )
     {
       QPoint delta = e->pos() - mResizePressPos;
-      mLayersWidget->resize( mLayersWidget->width() + delta.x(), mLayersWidget->height() );
+      mLayersWidget->resize( qMax( 10, qMin( 800, mLayersWidget->width() + delta.x() ) ), mLayersWidget->height() );
       QSettings().setValue( "/UI/ribbonLayersWidgetWidth", mLayersWidget->width() );
       mLayerTreeViewButton->move( mLayersWidget->width(), mLayerTreeViewButton->y() );
     }
