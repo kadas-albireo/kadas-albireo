@@ -173,7 +173,15 @@ void QgsRedliningMapToolT<T>::canvasReleaseEvent( QMouseEvent *ev )
     QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( T::canvas(), ev->pos(), T::toMapCoordinates( ev->pos() ), QGis::AnyGeometry );
     if ( result.layer == mLayer )
     {
-      QList<QgsFeature> features = QList<QgsFeature>() << createFeature();
+      QgsFeature editFeature = createFeature();
+      if ( mBottomBar->editor() )
+      {
+        QgsAttributes attribs = editFeature.attributes();
+        mBottomBar->editor()->get( attribs, mLayer->pendingFields() );
+        editFeature.setAttributes( attribs );
+      }
+      QList<QgsFeature> features;
+      features.append( editFeature );
       QList<QgsLabelPosition> labels;
       if ( result.feature.isValid() )
       {
@@ -649,6 +657,7 @@ void QgsRedliningEditGroupMapTool::addFeatureToSelection( const QgsFeature &feat
   item.rubberband->setGeometry( feature.geometry()->geometry()->transformed( *ct ) );
   item.nodeRubberband = 0;
   item.flags = flags;
+  item.text = feature.attribute( "text" ).toString();
   item.labelFeature = -1;
 
   QRegExp shapeRe( "\\bshape=(\\w+)\\b" );
@@ -749,6 +758,7 @@ QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) con
   QgsFeature f( fields );
   QgsAttributes attribs = f.attributes();
   attribs[fields.fieldNameIndex( "flags" )] = item.flags;
+  attribs[fields.fieldNameIndex( "text" )] = item.text;
   if ( item.nodeRubberband )   // Is point
   {
     attribs[fields.fieldNameIndex( "size" )] = rubberBand->iconOutlineWidth();

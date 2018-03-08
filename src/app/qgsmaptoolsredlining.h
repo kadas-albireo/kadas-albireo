@@ -165,6 +165,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
       QgsGeometryRubberBand* rubberband;
       QgsRubberBand* nodeRubberband;
       QString flags;
+      QString text;
       QgsFeatureId labelFeature;
     };
     QgsRedliningManager* mRedlining;
