@@ -24,6 +24,7 @@
 
 class QComboBox;
 class QDoubleSpinBox;
+class QSlider;
 
 class APP_EXPORT QgsViewshedDialog : public QDialog
 {
@@ -36,6 +37,7 @@ class APP_EXPORT QgsViewshedDialog : public QDialog
     double getTargetHeight() const;
     bool getHeightRelativeToGround() const;
     DisplayMode getDisplayMode() const;
+    int getAccuracyFactor() const;
 
   signals:
     void radiusChanged( double radius );
@@ -46,6 +48,7 @@ class APP_EXPORT QgsViewshedDialog : public QDialog
     QDoubleSpinBox* mSpinBoxTargetHeight;
     QComboBox* mComboHeightMode;
     QComboBox* mDisplayModeCombo;
+    QSlider* mAccuracySlider;
 };
 
 class APP_EXPORT QgsMapToolViewshed : public QgsMapToolDrawCircularSector

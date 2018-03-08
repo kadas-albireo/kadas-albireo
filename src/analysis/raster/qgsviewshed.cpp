@@ -49,7 +49,7 @@ static inline double pixelToGeoY( double gtrans[6], double px, double py )
   return gtrans[3] + px * gtrans[4] + py * gtrans[5];
 }
 
-bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, bool heightRelToTerr, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, bool displayVisible, QProgressDialog *progress )
+bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outputFile, const QString &outputFormat, QgsPoint observerPos, const QgsCoordinateReferenceSystem &observerPosCrs, double observerHeight, double targetHeight, bool heightRelToTerr, double radius, const QGis::UnitType distanceElevUnit, const QVector<QgsPoint> &filterRegion, bool displayVisible, int accuracyFactor, QProgressDialog *progress )
 {
   // Open input file
   GDALDatasetH inputDataset = GDALOpen( inputFile.toLocal8Bit().data(), GA_ReadOnly );
@@ -133,7 +133,6 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   rowEnd = qMin( terHeight - 1, rowEnd );
   int hmapWidth = colEnd - colStart + 1;
   int hmapHeight = rowEnd - rowStart + 1;
-  int roi = .5 * qMin( hmapWidth, hmapHeight );
   QPolygon filterPoly;
   for ( int i = 0, n = filterRegion.size(); i < n; ++i )
   {
@@ -148,6 +147,46 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
     return false;
   }
 
+  int scaledHmapHeight = hmapHeight / accuracyFactor;
+  int scaledHmapWidth = hmapWidth / accuracyFactor;
+
+  // Read input heightmap
+  // Allow at most 1GB allocated
+  if ( scaledHmapWidth * scaledHmapHeight * sizeof( float ) > 1073741824 )
+  {
+    GDALClose( inputDataset );
+    QgsDebugMsg( "Too much memory required" );
+    return false;
+  }
+  QVector<float> heightmap( scaledHmapWidth * scaledHmapHeight, noDataValue );
+  GDALRasterIOExtraArg rioargs;
+  INIT_RASTERIO_EXTRA_ARG( rioargs );
+  rioargs.eResampleAlg = GRIORA_Average;
+  CPLErr err = GDALRasterIOEx( inputBand, GF_Read, colStart, rowStart, hmapWidth, hmapHeight, heightmap.data(), scaledHmapWidth, scaledHmapHeight, GDT_Float32, 0, 0, &rioargs );
+  if ( err != CE_None )
+  {
+    GDALClose( inputDataset );
+    QgsDebugMsg( "Failed to fetch raster pixels" );
+    return false;
+  }
+
+  // Adjust for reduced resolution
+  gtrans[1] *= accuracyFactor;
+  gtrans[2] *= accuracyFactor;
+  gtrans[4] *= accuracyFactor;
+  gtrans[5] *= accuracyFactor;
+  colStart /= accuracyFactor;
+  colEnd /= accuracyFactor;
+  rowStart /= accuracyFactor;
+  rowEnd /= accuracyFactor;
+  obs[0] /= accuracyFactor;
+  obs[1] /= accuracyFactor;
+  hmapWidth = scaledHmapWidth;
+  hmapHeight = scaledHmapHeight;
+  for ( int i = 0, n = filterPoly.size(); i < n; ++i )
+  {
+    filterPoly[i] = QPoint( filterPoly[i].x() / accuracyFactor, filterPoly[i].y() / accuracyFactor );
+  }
 
   // Prepare output
   GDALDriverH outputDriver = GDALGetDriverByName( outputFormat.toLocal8Bit().data() );
@@ -192,30 +231,13 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
   }
   GDALSetRasterNoDataValue( outputBand, 255 * !displayVisible );
 
-
-  // Read input heightmap
-  // Allow at most 1GB allocated
-  if ( hmapWidth * hmapHeight * sizeof( float ) > 1073741824 )
-  {
-    GDALClose( inputDataset );
-    GDALClose( outputDataset );
-    QgsDebugMsg( "Too much memory required" );
-    return false;
-  }
-  QVector<float> heightmap( hmapWidth * hmapHeight, noDataValue );
-  CPLErr err = GDALRasterIO( inputBand, GF_Read, colStart, rowStart, hmapWidth, hmapHeight, heightmap.data(), hmapWidth, hmapHeight, GDT_Float32, 0, 0 );
-  if ( err != CE_None )
-  {
-    GDALClose( inputDataset );
-    QgsDebugMsg( "Failed to fetch raster pixels" );
-    return false;
-  }
   // Offset observer elevation by position at point
   if ( heightRelToTerr )
     observerHeight += heightmap[( obs[1] - rowStart ) * hmapWidth + ( obs[0] - colStart )];
 
 
   // Compute viewshed
+  int roi = .5 * qMin( hmapWidth, hmapHeight );
   if ( progress )
   {
     progress->setRange( 0, 8 * roi );

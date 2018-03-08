@@ -45,6 +45,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QProgressDialog>
+#include <QSlider>
 
 QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
     : QDialog( parent )
@@ -93,10 +94,25 @@ QgsViewshedDialog::QgsViewshedDialog( double radius, QWidget *parent )
   mDisplayModeCombo->addItem( tr( "Invisible area" ) );
   heightDialogLayout->addWidget( mDisplayModeCombo, 4, 1, 1, 1 );
 
+  heightDialogLayout->addWidget( new QLabel( tr( "Accuracy:" ) ), 5, 0, 1, 1 );
+  mAccuracySlider = new QSlider( Qt::Horizontal );
+  mAccuracySlider->setRange( 1, 10 );
+  mAccuracySlider->setTickPosition( QSlider::TicksBelow );
+  mAccuracySlider->setTickInterval( 1 );
+  heightDialogLayout->addWidget( mAccuracySlider, 5, 1, 1, 1 );
+
+  QWidget* labelWidget = new QWidget( this );
+  labelWidget->setLayout( new QHBoxLayout );
+  labelWidget->layout()->setContentsMargins( 0, 0, 0, 0 );
+  labelWidget->layout()->addWidget( new QLabel( QString( "<small>%1</small>" ).arg( tr( "Accurate" ) ) ) );
+  labelWidget->layout()->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
+  labelWidget->layout()->addWidget( new QLabel( QString( "<small>%1</small>" ).arg( tr( "Fast" ) ) ) );
+  heightDialogLayout->addWidget( labelWidget, 6, 1, 1, 1 );
+
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal );
   connect( bbox, SIGNAL( accepted() ), this, SLOT( accept() ) );
   connect( bbox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-  heightDialogLayout->addWidget( bbox, 5, 0, 1, 2 );
+  heightDialogLayout->addWidget( bbox, 7, 0, 1, 2 );
 
   setLayout( heightDialogLayout );
   setFixedSize( sizeHint() );
@@ -120,6 +136,11 @@ bool QgsViewshedDialog::getHeightRelativeToGround() const
 QgsViewshedDialog::DisplayMode QgsViewshedDialog::getDisplayMode() const
 {
   return static_cast<DisplayMode>( mDisplayModeCombo->currentIndex() );
+}
+
+int QgsViewshedDialog::getAccuracyFactor() const
+{
+  return mAccuracySlider->value();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,8 +215,9 @@ void QgsMapToolViewshed::drawFinished()
   p.setWindowTitle( tr( "Viewshed" ) );
   p.setWindowModality( Qt::ApplicationModal );
   bool displayVisible = viewshedDialog.getDisplayMode() == QgsViewshedDialog::DisplayVisibleArea;
+  int accuracyFactor = viewshedDialog.getAccuracyFactor();
   QApplication::setOverrideCursor( Qt::WaitCursor );
-  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, &p );
+  bool success = QgsViewshed::computeViewshed( layer->source(), outputFile, "GTiff", center, canvasCrs, viewshedDialog.getObserverHeight() * heightConv, viewshedDialog.getTargetHeight() * heightConv, viewshedDialog.getHeightRelativeToGround(), curRadius, QGis::Meters, filterRegion, displayVisible, accuracyFactor, &p );
   QApplication::restoreOverrideCursor();
   if ( success )
   {
