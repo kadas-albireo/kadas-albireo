@@ -222,6 +222,8 @@ void QgsGPSRouteEditor::setLayer( QgsRedliningLayer *layer )
   mLayer->setCustomProperty( "labeling/placementFlags", 10 );
   mLayer->setCustomProperty( "labeling/dist", 2 );
   mLayer->setCustomProperty( "labeling/distInMapUnits", false );
+  mLayer->setCustomProperty( "labeling/bufferDraw", true );
+  mLayer->setCustomProperty( "labeling/bufferSize", 1 );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 }
