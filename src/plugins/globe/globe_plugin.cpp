@@ -1254,20 +1254,20 @@ bool KeyboardControlHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GU
   {
     //move map
     if ( ea.getKey() == '4' )
-      _manip->pan( -MOVE_OFFSET, 0 );
-    else if ( ea.getKey() == '6' )
       _manip->pan( MOVE_OFFSET, 0 );
+    else if ( ea.getKey() == '6' )
+      _manip->pan( -MOVE_OFFSET, 0 );
     else if ( ea.getKey() == '2' )
       _manip->pan( 0, MOVE_OFFSET );
     else if ( ea.getKey() == '8' )
       _manip->pan( 0, -MOVE_OFFSET );
     //rotate
-    else if ( ea.getKey() == '/' )
+    else if ( ea.getKey() == '/' || ea.getKey() == '7' )
       _manip->rotate( MOVE_OFFSET, 0 );
-    else if ( ea.getKey() == '*' )
+    else if ( ea.getKey() == '*' || ea.getKey() == '9' )
       _manip->rotate( -MOVE_OFFSET, 0 );
     //tilt
-    else if ( ea.getKey() == '9' )
+    else if ( ea.getKey() == '1' )
       _manip->rotate( 0, MOVE_OFFSET );
     else if ( ea.getKey() == '3' )
       _manip->rotate( 0, -MOVE_OFFSET );

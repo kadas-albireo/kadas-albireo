@@ -32,6 +32,7 @@
 
 #include <QMenu>
 #include <QSettings>
+#include <QShortcut>
 
 QgsRedliningLabelEditor::QgsRedliningLabelEditor() : QgsRedliningAttribEditor( tr( "Label" ) )
 {
@@ -126,18 +127,23 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
   mActionNewLine = new QAction( QIcon( ":/images/themes/default/redlining_line.svg" ), tr( "Line" ), this );
   mActionNewLine->setCheckable( true );
   connect( mActionNewLine, SIGNAL( triggered( bool ) ), this, SLOT( setLineTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_L ), app ), SIGNAL( activated() ), mActionNewLine, SLOT( trigger() ) );
   mActionNewRectangle = new QAction( QIcon( ":/images/themes/default/redlining_rectangle.svg" ), tr( "Rectangle" ), this );
   mActionNewRectangle->setCheckable( true );
   connect( mActionNewRectangle, SIGNAL( triggered( bool ) ), this, SLOT( setRectangleTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_R ), app ), SIGNAL( activated() ), mActionNewRectangle, SLOT( trigger() ) );
   mActionNewPolygon = new QAction( QIcon( ":/images/themes/default/redlining_polygon.svg" ), tr( "Polygon" ), this );
   mActionNewPolygon->setCheckable( true );
   connect( mActionNewPolygon, SIGNAL( triggered( bool ) ), this, SLOT( setPolygonTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_P ), app ), SIGNAL( activated() ), mActionNewPolygon, SLOT( trigger() ) );
   mActionNewCircle = new QAction( QIcon( ":/images/themes/default/redlining_circle.svg" ), tr( "Circle" ), this );
   mActionNewCircle->setCheckable( true );
   connect( mActionNewCircle, SIGNAL( triggered( bool ) ), this, SLOT( setCircleTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_C ), app ), SIGNAL( activated() ), mActionNewCircle, SLOT( trigger() ) );
   mActionNewText = new QAction( QIcon( ":/images/themes/default/redlining_text.svg" ), tr( "Text" ), this );
   mActionNewText->setCheckable( true );
   connect( mActionNewText, SIGNAL( triggered( bool ) ), this, SLOT( setTextTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_T ), app ), SIGNAL( activated() ), mActionNewText, SLOT( trigger() ) );
 
   mUi.buttonNewObject->setToolTip( tr( "New Object" ) );
   QMenu* menuNewMarker = new QMenu();

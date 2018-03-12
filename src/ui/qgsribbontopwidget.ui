@@ -349,7 +349,7 @@
         </property>
         <widget class="QWidget" name="mMyMapsTab">
          <attribute name="title">
-          <string>My maps</string>
+          <string>My &amp;maps</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
           <property name="leftMargin">
@@ -399,9 +399,6 @@
               <height>32</height>
              </size>
             </property>
-            <property name="shortcut">
-             <string>Ctrl+P</string>
-            </property>
            </widget>
           </item>
           <item row="0" column="0">
@@ -432,9 +429,6 @@
               <width>32</width>
               <height>32</height>
              </size>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+N</string>
             </property>
            </widget>
           </item>
@@ -467,9 +461,6 @@
               <height>32</height>
              </size>
             </property>
-            <property name="shortcut">
-             <string>Ctrl+O</string>
-            </property>
            </widget>
           </item>
           <item row="0" column="2">
@@ -500,9 +491,6 @@
               <width>32</width>
               <height>32</height>
              </size>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+S</string>
             </property>
            </widget>
           </item>
@@ -650,7 +638,7 @@
         </widget>
         <widget class="QWidget" name="mViewTab">
          <attribute name="title">
-          <string>View</string>
+          <string>&amp;View</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_6">
           <property name="leftMargin">
@@ -734,6 +722,9 @@
               <height>32</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>Ctrl+Left</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="2">
@@ -796,6 +787,9 @@
               <height>32</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>Ctrl+G</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -827,6 +821,9 @@
               <height>32</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>Ctrl+Right</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="5">
@@ -846,7 +843,7 @@
         </widget>
         <widget class="QWidget" name="mAnalysisTab">
          <attribute name="title">
-          <string>Analysis</string>
+          <string>&amp;Analysis</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
           <property name="leftMargin">
@@ -1051,6 +1048,9 @@
               <height>32</height>
              </size>
             </property>
+            <property name="shortcut">
+             <string>Ctrl+M, Ctrl+B</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="7">
@@ -1133,7 +1133,7 @@ Sight</string>
         </widget>
         <widget class="QWidget" name="mDrawTab">
          <attribute name="title">
-          <string>Draw</string>
+          <string>&amp;Draw</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4">
           <property name="leftMargin">
@@ -1461,7 +1461,7 @@ Sight</string>
         </widget>
         <widget class="QWidget" name="mGpsTab">
          <attribute name="title">
-          <string>GPS</string>
+          <string>&amp;GPS</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
           <property name="leftMargin">
@@ -1691,7 +1691,7 @@ Sight</string>
         </widget>
         <widget class="QWidget" name="mMssTab">
          <attribute name="title">
-          <string>MSS</string>
+          <string>&amp;MSS</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_8">
           <property name="leftMargin">
@@ -1954,7 +1954,7 @@ Sight</string>
         </widget>
         <widget class="QWidget" name="mSettingsTab">
          <attribute name="title">
-          <string>Settings</string>
+          <string>&amp;Settings</string>
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
@@ -2041,7 +2041,7 @@ Sight</string>
         </widget>
         <widget class="QWidget" name="mHelpTab">
          <attribute name="title">
-          <string>Help</string>
+          <string>&amp;Help</string>
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <property name="spacing">

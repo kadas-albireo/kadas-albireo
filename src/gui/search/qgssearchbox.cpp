@@ -182,6 +182,10 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
 
   mSearchBox->installEventFilter( this );
   mTreeWidget->installEventFilter( this );
+
+  QShortcut* shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_F ), this );
+  QObject::connect( shortcut, SIGNAL( activated() ), mSearchBox, SLOT( setFocus() ) );
+
 }
 
 QgsSearchBox::~QgsSearchBox()

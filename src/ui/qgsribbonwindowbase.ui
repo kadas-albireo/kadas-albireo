@@ -84,6 +84,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+L</string>
+       </property>
       </widget>
       <widget class="QFrame" name="mZoomInOutFrame">
        <property name="geometry">
@@ -145,6 +148,9 @@
             <width>38</width>
             <height>38</height>
            </size>
+          </property>
+          <property name="shortcut">
+           <string>Ctrl++</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -237,6 +243,9 @@
             <width>38</width>
             <height>38</height>
            </size>
+          </property>
+          <property name="shortcut">
+           <string>Ctrl+-</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -526,6 +535,9 @@
          <height>38</height>
         </size>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+H</string>
+       </property>
       </widget>
      </widget>
     </item>
@@ -559,6 +571,9 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
   <include location="../../images/images.qrc"/>
  </resources>
  <connections/>
