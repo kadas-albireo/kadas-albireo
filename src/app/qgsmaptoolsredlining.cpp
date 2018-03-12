@@ -280,6 +280,7 @@ void QgsRedliningMapToolT<T>::onFinished()
   }
   if ( mStandaloneEditor )
   {
+    mStandaloneEditor->set( f.attributes(), mLayer->pendingFields() );
     QDialog dialog( T::canvas() );
     dialog.setModal( true );
     dialog.setLayout( new QVBoxLayout() );

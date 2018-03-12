@@ -35,30 +35,54 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QSettings>
+#include <QSpinBox>
 
 
 int QgsGPSRouteEditor::sFeatureSize = 2;
+
 
 class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
 {
     Q_DECLARE_TR_FUNCTIONS( WaypointEditor )
   public:
-    WaypointEditor() : QgsRedliningAttribEditor( tr( "Waypoint" ) )
+    WaypointEditor()
+        : QgsRedliningAttribEditor( tr( "Waypoint" ) )
     {
-      setLayout( new QHBoxLayout );
-      layout()->setContentsMargins( 2, 2, 2, 2 );
-      layout()->setSpacing( 2 );
-      layout()->addWidget( new QLabel( tr( "Name:" ) ) );
+      QGridLayout* layout = new QGridLayout();
+      setLayout( layout );
+      layout->setContentsMargins( 2, 2, 2, 2 );
+      layout->setSpacing( 2 );
+
+      layout->addWidget( new QLabel( tr( "Name:" ) ), 0, 0, 1, 1 );
       mNameEdit = new QLineEdit;
-      layout()->addWidget( mNameEdit );
+      layout->addWidget( mNameEdit, 0, 1, 1, 3 );
+      mNameEdit->selectAll();
+
+      layout->addWidget( new QLabel( tr( "Color:" ) ), 1, 0, 1, 1 );
+      mColorButton = new QgsColorButtonV2( this );
+      layout->addWidget( mColorButton, 1, 1, 1, 1 );
+
+      layout->addWidget( new QLabel( tr( "Size:" ) ), 1, 2, 1, 1 );
+      mSpinBoxSize = new QSpinBox( this );
+      mSpinBoxSize->setRange( 1, 99 );
+      layout->addWidget( mSpinBoxSize, 1, 3, 1, 1 );
+    }
+    void setTool( QgsMapToolDrawShape* tool )
+    {
+      mTool = tool;
     }
     void set( const QgsAttributes &attribs, const QgsFields &fields ) override
     {
       mNameEdit->setText( attribs.value( fields.fieldNameIndex( "text" ) ).toString() );
+      mSpinBoxSize->setValue( attribs.value( fields.fieldNameIndex( "size" ) ).toInt() );
+      mColorButton->setColor( QgsSymbolLayerV2Utils::decodeColor( attribs.value( fields.fieldNameIndex( "outline" ) ).toString() ) );
     }
     void get( QgsAttributes &attribs, const QgsFields &fields ) const override
     {
       attribs[fields.fieldNameIndex( "text" )] = mNameEdit->text();
+      attribs[fields.fieldNameIndex( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( mColorButton->color() );
+      attribs[fields.fieldNameIndex( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( mColorButton->color() );
+      attribs[fields.fieldNameIndex( "size" )] = QString( "%1" ).arg( mSpinBoxSize->value() );
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
       QFont font;
       flagsMap["family"] = font.family();
@@ -67,6 +91,10 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
       flagsMap["rotation"] = QString( "%1" ).arg( 0. );
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
+
+      QSettings().setValue( "/GPXRoutes/WaypointSize", attribs[fields.fieldNameIndex( "size" )] );
+      QSettings().setValue( "/GPXRoutes/WaypointColor", attribs[fields.fieldNameIndex( "outline" )] );
+      mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
     }
     void setFocus() override
     {
@@ -74,7 +102,10 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
     }
 
   private:
+    QgsMapToolDrawShape* mTool;
     QLineEdit* mNameEdit;
+    QSpinBox* mSpinBoxSize;
+    QgsColorButtonV2* mColorButton;
 };
 
 class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
@@ -90,22 +121,41 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
 
       layout->addWidget( new QLabel( tr( "Name:" ) ), 0, 0, 1, 1 );
       mNameEdit = new QLineEdit();
-      layout->addWidget( mNameEdit, 0, 1, 1, 1 );
+      mNameEdit->selectAll();
+      layout->addWidget( mNameEdit, 0, 1, 1, 3 );
 
       layout->addWidget( new QLabel( tr( "Number:" ) ), 1, 0, 1, 1 );
       mNumberEdit = new QLineEdit();
       mNumberEdit->setValidator( new QIntValidator( 0, std::numeric_limits<int>::max() ) );
-      layout->addWidget( mNumberEdit, 1, 1, 1, 1 );
+      layout->addWidget( mNumberEdit, 1, 1, 1, 3 );
+
+      layout->addWidget( new QLabel( tr( "Color:" ) ), 2, 0, 1, 1 );
+      mColorButton = new QgsColorButtonV2( this );
+      layout->addWidget( mColorButton, 2, 1, 1, 1 );
+
+      layout->addWidget( new QLabel( tr( "Size:" ) ), 2, 2, 1, 1 );
+      mSpinBoxSize = new QSpinBox( this );
+      mSpinBoxSize->setRange( 1, 99 );
+      layout->addWidget( mSpinBoxSize, 2, 3, 1, 1 );
+    }
+    void setTool( QgsMapToolDrawShape* tool )
+    {
+      mTool = tool;
     }
     void set( const QgsAttributes &attribs, const QgsFields &fields ) override
     {
       mNameEdit->setText( attribs.value( fields.fieldNameIndex( "text" ) ).toString() );
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
       mNumberEdit->setText( flagsMap["routeNumber"] );
+      mSpinBoxSize->setValue( attribs.value( fields.fieldNameIndex( "size" ) ).toInt() );
+      mColorButton->setColor( QgsSymbolLayerV2Utils::decodeColor( attribs.value( fields.fieldNameIndex( "outline" ) ).toString() ) );
     }
     void get( QgsAttributes &attribs, const QgsFields &fields ) const override
     {
       attribs[fields.fieldNameIndex( "text" )] = mNameEdit->text();
+      attribs[fields.fieldNameIndex( "outline" )] = QgsSymbolLayerV2Utils::encodeColor( mColorButton->color() );
+      attribs[fields.fieldNameIndex( "fill" )] = QgsSymbolLayerV2Utils::encodeColor( mColorButton->color() );
+      attribs[fields.fieldNameIndex( "size" )] = QString( "%1" ).arg( mSpinBoxSize->value() );
 
       QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
       QFont font;
@@ -116,14 +166,21 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
       flagsMap["fontSize"] = QString( "%1" ).arg( font.pointSize() );
       flagsMap["routeNumber"] = mNumberEdit->text();
       attribs[fields.fieldNameIndex( "flags" )] = QgsRedliningLayer::serializeFlags( flagsMap );
+
+      QSettings().setValue( "/GPXRoutes/RouteSize", attribs[fields.fieldNameIndex( "size" )] );
+      QSettings().setValue( "/GPXRoutes/RouteColor", attribs[fields.fieldNameIndex( "outline" )] );
+      mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
     }
     void setFocus() override
     {
       mNameEdit->setFocus();
     }
   private:
+    QgsMapToolDrawShape* mTool;
     QLineEdit* mNameEdit;
     QLineEdit* mNumberEdit;
+    QSpinBox* mSpinBoxSize;
+    QgsColorButtonV2* mColorButton;
 };
 
 
@@ -222,15 +279,29 @@ void QgsGPSRouteEditor::checkLayerRemoved( const QString &layerId )
 
 void QgsGPSRouteEditor::setWaypointsTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), "circle", editFeature, new WaypointEditor ), mActionCreateWaypoints, active );
+  WaypointEditor* editor = new WaypointEditor;
+  if ( setTool( new QgsRedliningPointMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), "circle", editFeature, editor ), mActionCreateWaypoints, active ) )
+  {
+    editor->setTool( mRedliningTool.data() );
+    int size = QSettings().value( "/GPXRoutes/WaypointSize", sFeatureSize ).toInt();
+    QColor color = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/GPXRoutes/WaypointColor", QgsSymbolLayerV2Utils::encodeColor( Qt::yellow ) ).toString() );
+    mRedliningTool->updateStyle( size, color, color, Qt::SolidLine, Qt::SolidPattern );
+  }
 }
 
 void QgsGPSRouteEditor::setRoutesTool( bool active, const QgsFeature *editFeature )
 {
-  setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), false, editFeature, new RouteEditor ), mActionCreateRoutes, active );
+  RouteEditor* editor = new RouteEditor;
+  if ( setTool( new QgsRedliningPolylineMapTool( mApp->mapCanvas(), this, getOrCreateLayer(), false, editFeature, editor ), mActionCreateRoutes, active ) )
+  {
+    editor->setTool( mRedliningTool.data() );
+    int size = QSettings().value( "/GPXRoutes/RouteSize", sFeatureSize ).toInt();
+    QColor color = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/GPXRoutes/RouteColor", QgsSymbolLayerV2Utils::encodeColor( Qt::yellow ) ).toString() );
+    mRedliningTool->updateStyle( size, color, color, Qt::SolidLine, Qt::SolidPattern );
+  }
 }
 
-void QgsGPSRouteEditor::setTool( QgsMapToolDrawShape *tool, QAction* action , bool active )
+bool QgsGPSRouteEditor::setTool( QgsMapToolDrawShape *tool, QAction* action , bool active )
 {
   if ( active && ( mApp->mapCanvas()->mapTool() == 0 || mApp->mapCanvas()->mapTool()->action() != action ) )
   {
@@ -244,13 +315,13 @@ void QgsGPSRouteEditor::setTool( QgsMapToolDrawShape *tool, QAction* action , bo
     ++mLayerRefCount;
     mApp->mapCanvas()->setMapTool( tool );
     mRedliningTool = tool;
-    tool->updateStyle( sFeatureSize, Qt::yellow, Qt::yellow, Qt::SolidLine, Qt::SolidPattern );
-
+    return true;
   }
   else if ( !active && mApp->mapCanvas()->mapTool() && mApp->mapCanvas()->mapTool()->action() == action )
   {
     mApp->mapCanvas()->unsetMapTool( mApp->mapCanvas()->mapTool() );
   }
+  return false;
 }
 
 void QgsGPSRouteEditor::deactivateTool()
@@ -267,26 +338,6 @@ void QgsGPSRouteEditor::deactivateTool()
     }
     mRedliningTool->deleteLater();
   }
-}
-
-void QgsGPSRouteEditor::updateFeatureStyle( const QgsFeatureId &fid )
-{
-  if ( !mLayer )
-  {
-    return;
-  }
-  QgsFeature f;
-  if ( !mLayer->getFeatures( QgsFeatureRequest( fid ) ).nextFeature( f ) )
-  {
-    return;
-  }
-  const QgsFields& fields = mLayer->pendingFields();
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "size" ), sFeatureSize );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill" ), QgsSymbolLayerV2Utils::encodeColor( QColor( Qt::yellow ) ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "outline_style" ), QgsSymbolLayerV2Utils::encodePenStyle( static_cast<Qt::PenStyle>( Qt::SolidLine ) ) );
-  mLayer->changeAttributeValue( fid, fields.indexFromName( "fill_style" ), QgsSymbolLayerV2Utils::encodeBrushStyle( static_cast<Qt::BrushStyle>( Qt::SolidPattern ) ) );
-  mLayer->triggerRepaint();
 }
 
 void QgsGPSRouteEditor::readProject( const QDomDocument& doc )

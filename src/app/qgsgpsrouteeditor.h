@@ -59,14 +59,13 @@ class QgsGPSRouteEditor : public QgsRedliningManager
     int mLayerRefCount;
 
     void setLayer( QgsRedliningLayer* layer );
-    void setTool( QgsMapToolDrawShape *tool, QAction *action, bool active = true );
+    bool setTool( QgsMapToolDrawShape *tool, QAction *action, bool active = true );
 
   private slots:
     void setWaypointsTool( bool active = true, const QgsFeature* editFeature = 0 );
     void setRoutesTool( bool active = true, const QgsFeature* editFeature = 0 );
     void checkLayerRemoved( const QString &layerId );
     void deactivateTool();
-    void updateFeatureStyle( const QgsFeatureId& fid );
     void readProject( const QDomDocument&doc );
     void writeProject( QDomDocument&doc );
 };
