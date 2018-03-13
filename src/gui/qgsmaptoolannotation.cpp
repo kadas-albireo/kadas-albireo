@@ -50,3 +50,11 @@ void QgsMapToolAnnotation::keyReleaseEvent( QKeyEvent* e )
     canvas()->unsetMapTool( this );
   }
 }
+
+void QgsMapToolAnnotation::deactivate()
+{
+  QgsMapTool::deactivate();
+  QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
+  if ( selectedItem )
+    selectedItem->setSelected( false );
+}
