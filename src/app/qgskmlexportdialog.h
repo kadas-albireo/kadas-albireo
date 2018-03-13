@@ -32,6 +32,7 @@ class QgsKMLExportDialog: public QDialog, private Ui::QgsKMLExportDialogBase
     QgsKMLExportDialog( const QList<QgsMapLayer *> &activeLayers, QWidget * parent = 0, Qt::WindowFlags f = 0 );
     QString getFilename() const { return mFileLineEdit->text(); }
     QList<QgsMapLayer*> getSelectedLayers() const;
+    double getExportScale() const { return 1. / mComboBoxExportScale->scale(); }
 
   private slots:
     void selectFile();

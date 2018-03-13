@@ -44,6 +44,7 @@ QgsKMLExportDialog::QgsKMLExportDialog( const QList<QgsMapLayer*> &activeLayers,
     mLayerListWidget->addItem( item );
   }
   mButtonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+  mComboBoxExportScale->setScale( 1. / 25000 );
 
   connect( mFileSelectionButton, SIGNAL( clicked() ), this, SLOT( selectFile() ) );
 }

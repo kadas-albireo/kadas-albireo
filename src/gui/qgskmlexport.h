@@ -41,12 +41,12 @@ class GUI_EXPORT QgsKMLExport : public QObject
 {
     Q_OBJECT
   public:
-    bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, const QgsMapSettings& settings );
+    bool exportToFile( const QString& filename, const QList<QgsMapLayer*>& layers, double exportScale, const QgsMapSettings& settings );
     static QString convertColor( const QColor& c );
 
   private:
     void writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& outStream, bool labelLayer, QgsKMLPalLabeling& labeling, QgsRenderContext& rc );
-    void writeTiles( QgsMapLayer* mapLayer, const QgsRectangle &layerExtent, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog *progress );
+    void writeTiles( QgsMapLayer* mapLayer, const QgsRectangle &layerExtent, double exportScale, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog *progress );
     void writeGroundOverlay( QTextStream& outStream, const QString& name, const QString& href, const QgsRectangle& latLongBox, int drawingOrder );
     void writeBillboards( const QString& layerId, QTextStream& outStream, QuaZip* quaZip );
     bool renderTile( QImage& img, const QgsRectangle& extent, QgsMapLayer* mapLayer );

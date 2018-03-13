@@ -42,7 +42,7 @@
 #include <quazip5/quazipfile.h>
 #endif
 
-bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLayer *> &layers, const QgsMapSettings& settings )
+bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLayer *> &layers, double exportScale, const QgsMapSettings& settings )
 {
   // Prepare outputs
   bool kmz = filename.endsWith( ".kmz", Qt::CaseInsensitive );
@@ -169,10 +169,10 @@ bool QgsKMLExport::exportToFile( const QString &filename, const QList<QgsMapLaye
       }
       else
       {
-        writeTiles( ml, layerExtent, outStream, ++drawingOrder, quaZip, &progress );
+        writeTiles( ml, layerExtent, exportScale, outStream, ++drawingOrder, quaZip, &progress );
       }
 #else
-      writeTiles( ml, layerExtent, outStream, ++drawingOrder, quaZip, &progress );
+      writeTiles( ml, layerExtent, exportScale, outStream, ++drawingOrder, quaZip, &progress );
 #endif
 
       outStream << "</Folder>" << "\n";
@@ -276,10 +276,9 @@ void QgsKMLExport::writeVectorLayerFeatures( QgsVectorLayer* vl, QTextStream& ou
   renderer->stopRender( rc );
 }
 
-void QgsKMLExport::writeTiles( QgsMapLayer* mapLayer, const QgsRectangle& layerExtent, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog* progress )
+void QgsKMLExport::writeTiles( QgsMapLayer* mapLayer, const QgsRectangle& layerExtent, double exportScale, QTextStream& outStream, int drawingOrder, QuaZip* quaZip, QProgressDialog* progress )
 {
   const int tileSize = 512;
-  const double exportScale = 25000.; // 1:25000
 
   // Make extent square
   QgsPoint center = layerExtent.center();
