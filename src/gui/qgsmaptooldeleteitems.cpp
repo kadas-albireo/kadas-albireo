@@ -30,8 +30,8 @@
 #include <QVBoxLayout>
 
 
-QgsMapToolDeleteItems::QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas )
-    : QgsMapToolDrawRectangle( mapCanvas )
+QgsMapToolDeleteItems::QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas, QgsMessageBar* messageBar )
+    : QgsMapToolDrawRectangle( mapCanvas ), mMessageBar( messageBar )
 {
   setCursor( Qt::ArrowCursor );
   connect( this, SIGNAL( finished() ), this, SLOT( drawFinished() ) );
@@ -53,6 +53,14 @@ void QgsMapToolDeleteItems::drawFinished()
 
   deleteItems( filterRect, filterRectCrs );
   reset();
+}
+
+void QgsMapToolDeleteItems::activate()
+{
+  if ( mMessageBar )
+  {
+    mMessageBar->pushMessage( tr( "Delete items" ), tr( "Drag a rectangle around the items to delete" ), QgsMessageBar::INFO, 5 );
+  }
 }
 
 void QgsMapToolDeleteItems::deleteItems( const QgsRectangle &filterRect, const QgsCoordinateReferenceSystem &filterRectCrs )

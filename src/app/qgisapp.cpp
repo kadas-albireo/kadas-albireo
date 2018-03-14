@@ -1230,7 +1230,7 @@ void QgisApp::createCanvasTools()
   mMapTools.mSlope = new QgsMapToolSlope( mapCanvas() );
   mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
   mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
-  mMapTools.mDeleteItems = new QgsMapToolDeleteItems( mapCanvas() );
+  mMapTools.mDeleteItems = new QgsMapToolDeleteItems( mapCanvas(), messageBar() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );

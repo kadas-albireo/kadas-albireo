@@ -24,11 +24,15 @@ class GUI_EXPORT QgsMapToolDeleteItems : public QgsMapToolDrawRectangle
 {
     Q_OBJECT
   public:
-    QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas );
-    void deleteItems(const QgsRectangle& filterRect, const QgsCoordinateReferenceSystem& filterRectCrs);
+    QgsMapToolDeleteItems( QgsMapCanvas* mapCanvas , QgsMessageBar *messageBar = nullptr );
+    void activate() override;
+    void deleteItems( const QgsRectangle& filterRect, const QgsCoordinateReferenceSystem& filterRectCrs );
 
   private slots:
     void drawFinished();
+
+  private:
+    QgsMessageBar* mMessageBar;
 };
 
 #endif // QGSMAPTOOLDELETEITEMS_H
