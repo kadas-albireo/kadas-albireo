@@ -38,6 +38,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     struct EditContext
     {
       virtual ~EditContext() {}
+      bool move = false;
     };
 
     QgsMapToolDrawShape( QgsMapCanvas* canvas, bool isArea, State* initialState );
@@ -88,6 +89,7 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
 
     const State* state() const { return static_cast<const State*>( mStateStack.state() ); }
     State* mutableState() { return static_cast<State*>( mStateStack.mutableState() ); }
+    const EditContext* currentEditContext() const { return mEditContext; }
     virtual State* cloneState() const { return new State( *state() ); }
     virtual State* emptyState() const = 0;
     virtual void buttonEvent( const QgsPoint& pos, bool press, Qt::MouseButton button ) = 0;
@@ -96,8 +98,9 @@ class GUI_EXPORT QgsMapToolDrawShape : public QgsMapTool
     virtual void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) = 0;
     virtual void initInputWidget() {}
     virtual void updateInputWidget( const QgsPoint& /*mousePos*/ ) {}
+    virtual void updateInputWidget( const EditContext* /*context*/ ) {}
     virtual EditContext* getEditContext( const QgsPoint& pos ) const = 0;
-    virtual void edit( EditContext* context, const QgsPoint& pos, const QgsVector& delta ) = 0;
+    virtual void edit( const EditContext* context, const QgsPoint& pos, const QgsVector& delta ) = 0;
     virtual void addContextMenuActions( const EditContext* /*context*/, QMenu& /*menu*/ ) const {}
     virtual void executeContextMenuAction( const EditContext* /*context*/, int /*action*/, const QgsPoint& /*pos*/ ) {}
 
@@ -156,8 +159,9 @@ class GUI_EXPORT QgsMapToolDrawPoint : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
+    void updateInputWidget( const QgsMapToolDrawShape::EditContext* context ) override;
     QgsMapToolDrawShape::EditContext* getEditContext( const QgsPoint& pos ) const override;
-    void edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
+    void edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
 
   private slots:
     void inputChanged();
@@ -201,8 +205,9 @@ class GUI_EXPORT QgsMapToolDrawPolyLine : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
+    void updateInputWidget( const QgsMapToolDrawShape::EditContext* context ) override;
     QgsMapToolDrawShape::EditContext* getEditContext( const QgsPoint& pos ) const override;
-    void edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
+    void edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
     void addContextMenuActions( const QgsMapToolDrawShape::EditContext* context, QMenu& menu ) const override;
     void executeContextMenuAction( const QgsMapToolDrawShape::EditContext* context, int action, const QgsPoint& pos ) override;
 
@@ -253,8 +258,9 @@ class GUI_EXPORT QgsMapToolDrawRectangle : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
+    void updateInputWidget( const QgsMapToolDrawShape::EditContext* context ) override;
     QgsMapToolDrawShape::EditContext* getEditContext( const QgsPoint& pos ) const override;
-    void edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
+    void edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
 
   private slots:
     void inputChanged();
@@ -302,8 +308,9 @@ class GUI_EXPORT QgsMapToolDrawCircle : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
+    void updateInputWidget( const QgsMapToolDrawShape::EditContext* context ) override;
     QgsMapToolDrawShape::EditContext* getEditContext( const QgsPoint& pos ) const override;
-    void edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
+    void edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
 
   private slots:
     void centerInputChanged();
@@ -355,8 +362,9 @@ class GUI_EXPORT QgsMapToolDrawCircularSector : public QgsMapToolDrawShape
     void doAddGeometry( const QgsAbstractGeometryV2* geometry, const QgsCoordinateTransform& t ) override;
     void initInputWidget() override;
     void updateInputWidget( const QgsPoint& mousePos ) override;
+    void updateInputWidget( const QgsMapToolDrawShape::EditContext* context ) override;
     QgsMapToolDrawShape::EditContext* getEditContext( const QgsPoint& pos ) const override;
-    void edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
+    void edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta ) override;
 
   private slots:
     void centerInputChanged();

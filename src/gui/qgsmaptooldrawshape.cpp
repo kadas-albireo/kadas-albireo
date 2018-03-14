@@ -115,7 +115,6 @@ void QgsMapToolDrawShape::editGeometry( const QgsAbstractGeometryV2 *geometry, c
   State* newState = cloneState();
   newState->status = StatusEditingReady;
   mStateStack.clear( newState );
-  setShowInputWidget( false );
 }
 
 void QgsMapToolDrawShape::setMeasurementMode( QgsGeometryRubberBand::MeasurementMode measurementMode, QGis::UnitType displayUnits , QgsGeometryRubberBand::AngleUnit angleUnits , QgsGeometryRubberBand::AzimuthNorth azimuthNorth )
@@ -154,7 +153,6 @@ void QgsMapToolDrawShape::canvasPressEvent( QMouseEvent* e )
 {
   if ( state()->status == StatusEditingReady )
   {
-    mEditContext = getEditContext( transformPoint( e->pos() ) );
     if ( mEditContext )
     {
       if ( e->button() == Qt::RightButton )
@@ -221,8 +219,26 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
   {
     QgsPoint newPos = transformPoint( e->pos() );
     edit( mEditContext, newPos, newPos - mLastEditPos );
-    update();
     mLastEditPos = newPos;
+  }
+  else if ( state()->status == StatusEditingReady )
+  {
+    delete mEditContext;
+    mEditContext = getEditContext( transformPoint( e->pos() ) );
+    if ( mShowInput )
+    {
+      if ( mEditContext && !mEditContext->move )
+      {
+        mInputWidget->show();
+        updateInputWidget( mEditContext );
+        mInputWidget->move( e->x(), e->y() + 20 );
+      }
+      else
+      {
+        mInputWidget->hide();
+      }
+    }
+    return;
   }
   else if ( state()->status == StatusDrawing )
   {
@@ -230,7 +246,14 @@ void QgsMapToolDrawShape::canvasMoveEvent( QMouseEvent* e )
   }
   if ( mShowInput )
   {
-    updateInputWidget( transformPoint( e->pos() ) );
+    if ( mEditContext )
+    {
+      updateInputWidget( mEditContext );
+    }
+    else
+    {
+      updateInputWidget( transformPoint( e->pos() ) );
+    }
     mInputWidget->move( e->x(), e->y() + 20 );
   }
 }
@@ -239,8 +262,6 @@ void QgsMapToolDrawShape::canvasReleaseEvent( QMouseEvent* e )
 {
   if ( state()->status == StatusEditingMoving )
   {
-    delete mEditContext;
-    mEditContext = 0;
     mutableState()->status = StatusEditingReady;
   }
   else if ( state()->status != StatusEditingReady && state()->status != StatusFinished )
@@ -466,8 +487,18 @@ void QgsMapToolDrawPoint::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusedInputField()->selectAll();
 }
 
+void QgsMapToolDrawPoint::updateInputWidget( const QgsMapToolDrawShape::EditContext* context )
+{
+  const EditContext* ctx = static_cast<const EditContext*>( context );
+  updateInputWidget( state()->points[ctx->index].front() );
+}
+
 void QgsMapToolDrawPoint::inputAccepted()
 {
+  if ( state()->status >= StatusEditingReady )
+  {
+    return;
+  }
   State* newState = cloneState();
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
@@ -482,6 +513,10 @@ void QgsMapToolDrawPoint::inputChanged()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   moveMouseToPos( QgsPoint( x, y ) );
+  if ( currentEditContext() )
+  {
+    edit( currentEditContext(), QgsPoint( x, y ), QgsVector( 0, 0 ) );
+  }
 }
 
 QgsMapToolDrawShape::EditContext* QgsMapToolDrawPoint::getEditContext( const QgsPoint& pos ) const
@@ -512,10 +547,11 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawPoint::getEditContext( const Qgs
   return context;
 }
 
-void QgsMapToolDrawPoint::edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector &/*delta*/ )
+void QgsMapToolDrawPoint::edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector &/*delta*/ )
 {
-  EditContext* ctx = static_cast<EditContext*>( context );
+  const EditContext* ctx = static_cast<const EditContext*>( context );
   mutableState()->points[ctx->index].front() = pos;
+  update();
 }
 
 void QgsMapToolDrawPoint::setPart( int part, const QgsPoint& p )
@@ -753,8 +789,18 @@ void QgsMapToolDrawPolyLine::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusedInputField()->selectAll();
 }
 
+void QgsMapToolDrawPolyLine::updateInputWidget( const QgsMapToolDrawShape::EditContext* context )
+{
+  const EditContext* ctx = static_cast<const EditContext*>( context );
+  updateInputWidget( state()->points[ctx->part][ctx->node] );
+}
+
 void QgsMapToolDrawPolyLine::inputAccepted()
 {
+  if ( state()->status >= StatusEditingReady )
+  {
+    return;
+  }
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   if ( state()->status == StatusReady )
@@ -790,6 +836,10 @@ void QgsMapToolDrawPolyLine::inputChanged()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   moveMouseToPos( QgsPoint( x, y ) );
+  if ( currentEditContext() )
+  {
+    edit( currentEditContext(), QgsPoint( x, y ), QgsVector( 0, 0 ) );
+  }
 }
 
 QgsMapToolDrawShape::EditContext* QgsMapToolDrawPolyLine::getEditContext( const QgsPoint& pos ) const
@@ -833,6 +883,7 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawPolyLine::getEditContext( const 
         EditContext* context = new EditContext;
         context->part = closestPart;
         context->node = -1;
+        context->move = true;
         return context;
       }
     }
@@ -852,6 +903,7 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawPolyLine::getEditContext( const 
           EditContext* context = new EditContext;
           context->part = closestPart;
           context->node = -1;
+          context->move = true;
           return context;
         }
       }
@@ -860,9 +912,9 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawPolyLine::getEditContext( const 
   return 0;
 }
 
-void QgsMapToolDrawPolyLine::edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
+void QgsMapToolDrawPolyLine::edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
 {
-  EditContext* ctx = static_cast<EditContext*>( context );
+  const EditContext* ctx = static_cast<const EditContext*>( context );
   if ( ctx->node != -1 )
   {
     mutableState()->points[ctx->part][ctx->node] = pos;
@@ -875,6 +927,7 @@ void QgsMapToolDrawPolyLine::edit( QgsMapToolDrawShape::EditContext* context, co
       poly[i] += delta;
     }
   }
+  update();
 }
 
 void QgsMapToolDrawPolyLine::addContextMenuActions( const QgsMapToolDrawShape::EditContext* context, QMenu& menu ) const
@@ -1079,8 +1132,35 @@ void QgsMapToolDrawRectangle::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusedInputField()->selectAll();
 }
 
+void QgsMapToolDrawRectangle::updateInputWidget( const QgsMapToolDrawShape::EditContext* context )
+{
+  const EditContext* ctx = static_cast<const EditContext*>( context );
+  QgsPoint pos;
+  if ( ctx->point == 0 )
+  {
+    pos = state()->p1[ctx->part];
+  }
+  else if ( ctx->point == 1 )
+  {
+    pos = QgsPoint( state()->p2[ctx->part].x(), state()->p1[ctx->part].y() );
+  }
+  else if ( ctx->point == 2 )
+  {
+    pos = state()->p2[ctx->part];
+  }
+  else if ( ctx->point == 3 )
+  {
+    pos = QgsPoint( state()->p1[ctx->part].x(), state()->p2[ctx->part].y() );
+  }
+  updateInputWidget( pos );
+}
+
 void QgsMapToolDrawRectangle::inputAccepted()
 {
+  if ( state()->status >= StatusEditingReady )
+  {
+    return;
+  }
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   mInputWidget->setFocusedInputField( mXEdit );
@@ -1106,6 +1186,10 @@ void QgsMapToolDrawRectangle::inputChanged()
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   moveMouseToPos( QgsPoint( x, y ) );
+  if ( currentEditContext() )
+  {
+    edit( currentEditContext(), QgsPoint( x, y ), QgsVector( 0, 0 ) );
+  }
 }
 
 
@@ -1154,15 +1238,16 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawRectangle::getEditContext( const
       EditContext* context = new EditContext;
       context->part = closestPart;
       context->point = -1;
+      context->move = true;
       return context;
     }
   }
   return 0;
 }
 
-void QgsMapToolDrawRectangle::edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
+void QgsMapToolDrawRectangle::edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
 {
-  EditContext* ctx = static_cast<EditContext*>( context );
+  const EditContext* ctx = static_cast<const EditContext*>( context );
   if ( ctx->point == 0 )
   {
     mutableState()->p1[ctx->part] = pos;
@@ -1186,6 +1271,7 @@ void QgsMapToolDrawRectangle::edit( QgsMapToolDrawShape::EditContext* context, c
     mutableState()->p1[ctx->part] += delta;
     mutableState()->p2[ctx->part] += delta;
   }
+  update();
 }
 
 void QgsMapToolDrawRectangle::setPart( int part, const QgsPoint& p1, const QgsPoint& p2 )
@@ -1493,8 +1579,36 @@ void QgsMapToolDrawCircle::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusedInputField()->selectAll();
 }
 
+void QgsMapToolDrawCircle::updateInputWidget( const QgsMapToolDrawShape::EditContext *context )
+{
+  const EditContext* ctx = static_cast<const EditContext*>( context );
+  bool isDegrees = canvas()->mapSettings().destinationCrs().mapUnits() == QGis::Degrees;
+  if ( ctx->point == 0 )
+  {
+    const QgsPoint& pos = state()->centers[ctx->part];
+    mXEdit->setText( QString::number( pos.x(), 'f', isDegrees ? 4 : 0 ) );
+    mYEdit->setText( QString::number( pos.y(), 'f', isDegrees ? 4 : 0 ) );
+    mInputWidget->setInputFieldVisible( 0, true );
+    mInputWidget->setInputFieldVisible( 1, true );
+    mInputWidget->setInputFieldVisible( 2, false );
+  }
+  else if ( ctx->point == 1 )
+  {
+    mREdit->setText( QString::number( qSqrt( state()->centers[ctx->part].sqrDist( state()->ringPos[ctx->part] ) ), 'f', 0 ) );
+    mInputWidget->setInputFieldVisible( 0, false );
+    mInputWidget->setInputFieldVisible( 1, false );
+    mInputWidget->setInputFieldVisible( 2, true );
+  }
+  if ( mInputWidget->focusedInputField() )
+    mInputWidget->focusedInputField()->selectAll();
+}
+
 void QgsMapToolDrawCircle::inputAccepted()
 {
+  if ( state()->status >= StatusEditingReady )
+  {
+    return;
+  }
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
@@ -1529,13 +1643,22 @@ void QgsMapToolDrawCircle::centerInputChanged()
     state->centers.append( QgsPoint( x, y ) );
     state->ringPos.append( QgsPoint( x + r, y ) );
     state->status = StatusDrawing;
+    moveMouseToPos( QgsPoint( x + r, y ) );
   }
-  else
+  else if ( state->status == StatusDrawing )
   {
     state->centers.back() = QgsPoint( x, y );
+    moveMouseToPos( QgsPoint( x + r, y ) );
+  }
+  else if ( currentEditContext() )
+  {
+    const EditContext* ctx = static_cast<const EditContext*>( currentEditContext() );
+    QgsVector delta = QgsPoint( x, y ) - state->centers[ctx->part];
+    state->centers[ctx->part] += delta;
+    state->ringPos[ctx->part] += delta;
+    moveMouseToPos( state->centers[ctx->part] );
   }
   update();
-  moveMouseToPos( QgsPoint( x + r, y ) );
 }
 
 void QgsMapToolDrawCircle::radiusInputChanged()
@@ -1549,13 +1672,21 @@ void QgsMapToolDrawCircle::radiusInputChanged()
     state->centers.append( QgsPoint( x, y ) );
     state->ringPos.append( QgsPoint( x + r, y ) );
     state->status = StatusDrawing;
+    moveMouseToPos( QgsPoint( x + r, y ) );
   }
-  else
+  else if ( state->status == StatusDrawing )
   {
     state->ringPos.back() = QgsPoint( x + r, y );
+    moveMouseToPos( QgsPoint( x + r, y ) );
+  }
+  else if ( currentEditContext() )
+  {
+    const EditContext* ctx = static_cast<const EditContext*>( currentEditContext() );
+    QgsPoint center = state->centers[ctx->part];
+    state->ringPos[ctx->part] = QgsPoint( center.x() + r, center.y() );
+    moveMouseToPos( state->ringPos[ctx->part] );
   }
   update();
-  moveMouseToPos( QgsPoint( x + r, y ) );
 }
 
 QgsMapToolDrawShape::EditContext* QgsMapToolDrawCircle::getEditContext( const QgsPoint& pos ) const
@@ -1580,28 +1711,44 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawCircle::getEditContext( const Qg
     {
       EditContext* context = new EditContext;
       context->part = closestPart;
-      context->point = 0;
+      context->point = 1;
       return context;
     }
   }
   for ( int i = 0, n = state()->centers.size(); i < n; ++i )
   {
+    QPoint p1 = toCanvasCoordinates( pos );
+    QPoint p2 = toCanvasCoordinates( state()->centers[closestPart] );
+    if ( qAbs(( p2 - p1 ).manhattanLength() ) < 10 )
+    {
+      EditContext* context = new EditContext;
+      context->part = i;
+      context->point = 0;
+      return context;
+    }
     double radiusSqr = state()->centers[i].sqrDist( state()->ringPos[i] );
     if ( pos.sqrDist( state()->centers[i] ) <= radiusSqr )
     {
       EditContext* context = new EditContext;
       context->part = i;
       context->point = -1;
+      context->move = true;
       return context;
     }
   }
   return 0;
 }
 
-void QgsMapToolDrawCircle::edit( QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
+void QgsMapToolDrawCircle::edit( const QgsMapToolDrawShape::EditContext* context, const QgsPoint& pos, const QgsVector& delta )
 {
-  EditContext* ctx = static_cast<EditContext*>( context );
+  const EditContext* ctx = static_cast<const EditContext*>( context );
   if ( ctx->point == 0 )
+  {
+    QgsVector delta = pos - state()->centers[ctx->part];
+    mutableState()->centers[ctx->part] += delta;
+    mutableState()->ringPos[ctx->part] += delta;
+  }
+  else if ( ctx->point == 1 )
   {
     mutableState()->ringPos[ctx->part] = pos;
   }
@@ -1610,6 +1757,7 @@ void QgsMapToolDrawCircle::edit( QgsMapToolDrawShape::EditContext* context, cons
     mutableState()->centers[ctx->part] += delta;
     mutableState()->ringPos[ctx->part] += delta;
   }
+  update();
 }
 
 void QgsMapToolDrawCircle::setPart( int part, const QgsPoint& center, double radius )
@@ -1820,8 +1968,17 @@ void QgsMapToolDrawCircularSector::updateInputWidget( const QgsPoint& mousePos )
     mInputWidget->focusedInputField()->selectAll();
 }
 
+void QgsMapToolDrawCircularSector::updateInputWidget( const EditContext */*context*/ )
+{
+  /* Currently not implemented */
+}
+
 void QgsMapToolDrawCircularSector::inputAccepted()
 {
+  if ( state()->status >= StatusEditingReady )
+  {
+    return;
+  }
   double x = mXEdit->text().toDouble();
   double y = mYEdit->text().toDouble();
   double r = mREdit->text().toDouble();
@@ -1986,7 +2143,7 @@ QgsMapToolDrawShape::EditContext* QgsMapToolDrawCircularSector::getEditContext( 
   return 0;
 }
 
-void QgsMapToolDrawCircularSector::edit( EditContext* /*context*/, const QgsPoint& /*pos*/, const QgsVector& /*delta*/ )
+void QgsMapToolDrawCircularSector::edit( const EditContext* /*context*/, const QgsPoint& /*pos*/, const QgsVector& /*delta*/ )
 {
   /* Currently not implemented */
 }
