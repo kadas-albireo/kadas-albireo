@@ -82,6 +82,7 @@ int QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInpu
   if ( initiallyfocused )
   {
     setFocusedInputField( widget );
+    mInitiallyFocusedInput = row;
   }
   return row;
 }
@@ -99,6 +100,10 @@ void QgsFloatingInputWidget::removeInputField( int idx )
     setFocusedInputField( mInputFields[nextIdx] );
   }
   mInputFields.removeAt( idx );
+  if ( mInitiallyFocusedInput >= idx )
+  {
+    mInitiallyFocusedInput = qMax( 0, mInitiallyFocusedInput - 1 );
+  }
   // Because re-creating the layout is actually easier than just deleting a row...
   QGridLayout* oldLayout = static_cast<QGridLayout*>( layout() );
   QGridLayout* newLayout = new QGridLayout();
@@ -229,3 +234,18 @@ void QgsFloatingInputWidget::keyPressEvent( QKeyEvent *ev )
     QWidget::keyPressEvent(( ev ) );
   }
 }
+
+void QgsFloatingInputWidget::showEvent( QShowEvent */*event*/ )
+{
+  int n = mInputFields.size();
+  if ( mInitiallyFocusedInput >= 0 && mInitiallyFocusedInput < n )
+  {
+    int idx = mInitiallyFocusedInput;
+    for ( int i = 0; i < n && mInputFields[idx]->isHidden(); ++i )
+    {
+      idx = ( idx + 1 ) % n;
+    }
+    setFocusedInputField( mInputFields[idx] );
+  }
+}
+

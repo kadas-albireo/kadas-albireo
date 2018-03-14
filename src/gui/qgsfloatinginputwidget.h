@@ -59,8 +59,10 @@ class GUI_EXPORT QgsFloatingInputWidget : public QWidget
   protected:
     bool focusNextPrevChild( bool next ) override;
     void keyPressEvent( QKeyEvent *ev ) override;
+    void showEvent( QShowEvent *event ) override;
 
   private:
+    int mInitiallyFocusedInput = -1;
     QgsMapCanvas* mCanvas;
     QgsFloatingInputWidgetField* mFocusedInput;
     QList<QgsFloatingInputWidgetField*> mInputFields;
