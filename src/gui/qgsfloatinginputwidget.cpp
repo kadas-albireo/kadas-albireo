@@ -72,7 +72,7 @@ QgsFloatingInputWidget::QgsFloatingInputWidget( QgsMapCanvas *canvas )
   move( -1000, -1000 );
 }
 
-void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInputWidgetField* widget, bool initiallyfocused )
+int QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInputWidgetField* widget, bool initiallyfocused )
 {
   QGridLayout* gridLayout = static_cast<QGridLayout*>( layout() );
   int row = gridLayout->isEmpty() ? 0 : gridLayout->rowCount();
@@ -83,6 +83,7 @@ void QgsFloatingInputWidget::addInputField( const QString &label, QgsFloatingInp
   {
     setFocusedInputField( widget );
   }
+  return row;
 }
 
 void QgsFloatingInputWidget::removeInputField( int idx )
@@ -90,8 +91,12 @@ void QgsFloatingInputWidget::removeInputField( int idx )
   if ( mFocusedInput == mInputFields.at( idx ) )
   {
     int n = mInputFields.size();
-    int prev = ( idx - 1 + n ) % n;
-    mFocusedInput = prev != idx ? mInputFields[prev] : 0;
+    int nextIdx = ( n + mInputFields.indexOf( mFocusedInput ) - 1 ) % n;
+    for ( int i = 0; i < n && mInputFields[nextIdx]->isHidden(); ++i )
+    {
+      nextIdx = ( nextIdx - 1 ) % n;
+    }
+    setFocusedInputField( mInputFields[nextIdx] );
   }
   mInputFields.removeAt( idx );
   // Because re-creating the layout is actually easier than just deleting a row...
@@ -123,6 +128,26 @@ void QgsFloatingInputWidget::removeInputField( int idx )
   }
   delete oldLayout;
   setLayout( newLayout );
+}
+
+void QgsFloatingInputWidget::setInputFieldVisible( int idx, bool visible )
+{
+  QGridLayout* gridLayout = static_cast<QGridLayout*>( layout() );
+  if ( idx >= 0 && idx < gridLayout->rowCount() )
+  {
+    gridLayout->itemAtPosition( idx, 0 )->widget()->setVisible( visible );
+    gridLayout->itemAtPosition( idx, 1 )->widget()->setVisible( visible );
+  }
+  if ( !visible && mInputFields[idx] == mFocusedInput )
+  {
+    int n = mInputFields.size();
+    int nextIdx = ( idx + 1 ) % n;
+    for ( int i = 0; i < n && mInputFields[nextIdx]->isHidden(); ++i )
+    {
+      nextIdx = ( nextIdx + 1 ) % n;
+    }
+    setFocusedInputField( mInputFields[nextIdx] );
+  }
 }
 
 void QgsFloatingInputWidget::setFocusedInputField( QgsFloatingInputWidgetField* widget )
@@ -181,6 +206,10 @@ void QgsFloatingInputWidget::keyPressEvent( QKeyEvent *ev )
   {
     int n = mInputFields.size();
     int nextIdx = ( mInputFields.indexOf( mFocusedInput ) + 1 ) % n;
+    for ( int i = 0; i < n && mInputFields[nextIdx]->isHidden(); ++i )
+    {
+      nextIdx = ( nextIdx + 1 ) % n;
+    }
     setFocusedInputField( mInputFields[nextIdx] );
     ev->accept();
   }
@@ -188,6 +217,10 @@ void QgsFloatingInputWidget::keyPressEvent( QKeyEvent *ev )
   {
     int n = mInputFields.size();
     int nextIdx = ( n + mInputFields.indexOf( mFocusedInput ) - 1 ) % n;
+    for ( int i = 0; i < n && mInputFields[nextIdx]->isHidden(); ++i )
+    {
+      nextIdx = ( nextIdx - 1 ) % n;
+    }
     setFocusedInputField( mInputFields[nextIdx] );
     ev->accept();
   }

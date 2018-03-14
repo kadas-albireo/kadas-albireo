@@ -46,8 +46,9 @@ class GUI_EXPORT QgsFloatingInputWidget : public QWidget
 {
   public:
     QgsFloatingInputWidget( QgsMapCanvas* canvas );
-    void addInputField( const QString& label, QgsFloatingInputWidgetField* widget, bool initiallyfocused = false );
+    int addInputField( const QString& label, QgsFloatingInputWidgetField* widget, bool initiallyfocused = false );
     void removeInputField( int idx );
+    void setInputFieldVisible( int idx, bool visible );
     void setFocusedInputField( QgsFloatingInputWidgetField* widget );
     const QList<QgsFloatingInputWidgetField*>& inputFields() const { return mInputFields; }
     QgsFloatingInputWidgetField* focusedInputField() const { return mFocusedInput; }
