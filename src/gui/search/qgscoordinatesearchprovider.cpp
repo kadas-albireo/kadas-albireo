@@ -28,12 +28,12 @@ QgsCoordinateSearchProvider::QgsCoordinateSearchProvider( QgsMapCanvas* mapCanva
   QString minChars = QString( "'%1%2%3" ).arg( QChar( 0x2032 ) ).arg( QChar( 0x02BC ) ).arg( QChar( 0x2019 ) );
   QString secChars = QString( "\"%1%2" ).arg( QChar( 0x2019 ) ).arg( QChar( 0x2033 ) );
 
-  mPatLVDD = QRegExp( QString( "^(-?[\\d']+\\.?\\d*)(%1)?[,;:\\s]\\s*(-?[\\d']+\\.?\\d*)(%1)?$" ).arg( degChar ) );
-  mPatDM = QRegExp( QString( "^(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])[,;:]?[\\s]*(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ) );
-  mPatDMS = QRegExp( QString( "^(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw])[,;:]?[\\s]*(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ).arg( secChars ) );
+  mPatLVDD = QRegExp( QString( "^(-?[\\d']+\\.?\\d*)(%1)?\\s*[,;:\\s]\\s*(-?[\\d']+\\.?\\d*)(%1)?$" ).arg( degChar ) );
+  mPatDM = QRegExp( QString( "^(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])\\s*[,;:]?\\s*(\\d+)%1(\\d+\\.?\\d*)[%2]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ) );
+  mPatDMS = QRegExp( QString( "^(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw])\\s*[,;:]?\\s*(\\d+)%1(\\d+)[%2](\\d+\\.?\\d*)[%3]([NnSsEeWw])$" ).arg( degChar ).arg( minChars ).arg( secChars ) );
   mPatUTM = QRegExp( "^([\\d']+\\.?\\d*)[,\\s]\\s*([\\d']+\\.?\\d*)\\s*\\(\\w+\\s+(\\d+)([A-Za-z])\\)$" );
   mPatUTM2 = QRegExp( "^(\\d+)\\s*([A-Za-z])\\s+([\\d']+\\.?\\d*)[,\\s]\\s*([\\d']+\\.?\\d*)$" );
-  mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s+(\\d+)[,\\s]\\s*(\\d+)$" );
+  mPatMGRS = QRegExp( "^(\\d+)\\s*(\\w)\\s*(\\w\\w)\\s*[,:;\\s]?\\s*(\\d{5})\\s*[,:;\\s]?\\s*(\\d{5})$" );
 }
 
 void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const SearchRegion &/*searchRegion*/ )
