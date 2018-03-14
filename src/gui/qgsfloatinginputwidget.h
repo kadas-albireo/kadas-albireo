@@ -60,6 +60,7 @@ class GUI_EXPORT QgsFloatingInputWidget : public QWidget
     bool focusNextPrevChild( bool next ) override;
     void keyPressEvent( QKeyEvent *ev ) override;
     void showEvent( QShowEvent *event ) override;
+    void hideEvent( QHideEvent *event ) override;
 
   private:
     int mInitiallyFocusedInput = -1;

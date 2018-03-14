@@ -162,15 +162,22 @@ void QgsFloatingInputWidget::setFocusedInputField( QgsFloatingInputWidgetField* 
     mFocusedInput->removeEventFilter( this );
   }
   mFocusedInput = widget;
-  mFocusedInput->setFocus();
-  mFocusedInput->selectAll();
+  if ( !mFocusedInput )
+  {
+    return;
+  }
+  if ( mFocusedInput->isVisible() )
+  {
+    mFocusedInput->setFocus();
+    mFocusedInput->selectAll();
+  }
   mFocusedInput->installEventFilter( this );
 }
 
 bool QgsFloatingInputWidget::eventFilter( QObject *obj, QEvent *ev )
 {
   // If currently focused widget loses focus, make it receive focus again
-  if ( obj == mFocusedInput && ev->type() == QEvent::FocusOut )
+  if ( obj == mFocusedInput && mFocusedInput->isVisible() && ev->type() == QEvent::FocusOut )
   {
     mFocusedInput->setFocus();
     mFocusedInput->selectAll();
@@ -249,3 +256,9 @@ void QgsFloatingInputWidget::showEvent( QShowEvent */*event*/ )
   }
 }
 
+void QgsFloatingInputWidget::hideEvent( QHideEvent */*event*/ )
+{
+  // Move focus back to the canvas to ensure it receives key events
+  setFocusedInputField( nullptr );
+  mCanvas->setFocus();
+}
