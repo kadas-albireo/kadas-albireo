@@ -91,7 +91,10 @@ void QgsMapToolDrawShape::activate()
   {
     mInputWidget = new QgsFloatingInputWidget( canvas() );
     initInputWidget();
-    mInputWidget->show();
+    if ( state()->status != StatusEditingReady )
+    {
+      mInputWidget->show();
+    }
   }
 }
 
