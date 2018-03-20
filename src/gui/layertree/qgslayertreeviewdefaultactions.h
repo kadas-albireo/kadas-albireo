@@ -47,7 +47,8 @@ class GUI_EXPORT QgsLayerTreeViewDefaultActions : public QObject
 
     QAction* actionZoomToLayer( QgsMapCanvas* canvas, QObject* parent = 0 );
     QAction* actionZoomToGroup( QgsMapCanvas* canvas, QObject* parent = 0 );
-    QAction* actionTransparency( QgsMapCanvas *canvas, QObject *parent = 0 );
+    QAction* actionTransparency( QObject *parent = 0 );
+    QAction* actionSymbolScale( QObject *parent = 0 );
     QAction* actionUseAsHightMap( QObject *parent = 0 );
     QAction* actionShowLayerInfo( QObject* parent = 0 );
     // TODO: zoom to selected
@@ -72,6 +73,7 @@ class GUI_EXPORT QgsLayerTreeViewDefaultActions : public QObject
     void zoomToLayer();
     void zoomToGroup();
     void setLayerTransparency();
+    void setLayerSymbolScale();
     void setHeightMapLayer( bool active );
     void showLayerInfo();
     void makeTopLevel();

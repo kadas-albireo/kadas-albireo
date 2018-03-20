@@ -84,9 +84,15 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
     void setLayerId( const QString& layerId );
     const QString& layerId() const { return mLayerId; }
 
+    void setName( const QString& name ) { mName = name; }
+    const QString& getName() const { return mName; }
+
     void updatePosition() override;
 
+    // The bounding rect unaffected by transformations (bascially only used by QGraphicsScene)
     QRectF boundingRect() const override;
+    // The bounding rect affected by transformations (translation, scale)
+    QRectF screenBoundingRect() const;
 
     virtual QSizeF minimumFrameSize() const;
 

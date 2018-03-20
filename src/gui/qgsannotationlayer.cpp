@@ -59,6 +59,7 @@ QgsAnnotationLayer::~QgsAnnotationLayer()
 
 void QgsAnnotationLayer::addItem( QgsAnnotationItem *item )
 {
+  item->setScale( mSymbolScale );
   item->setLayerId( id() );
   mItemIds.insert( item->id() );
 }
@@ -78,7 +79,7 @@ QgsRectangle QgsAnnotationLayer::extent()
     if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
     {
       const QgsCoordinateTransform* t = QgsCoordinateTransformCache::instance()->transform( annotationItem->mapGeoPosCrs().authid(), crs().authid() );
-      QgsPoint p = t->transform(annotationItem->mapGeoPos());
+      QgsPoint p = t->transform( annotationItem->mapGeoPos() );
       if ( empty )
       {
         extent = QgsRectangle( p, p );
@@ -117,6 +118,19 @@ void QgsAnnotationLayer::setLayerTransparency( int value )
     if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
     {
       annotationItem->setOpacity(( 100. - mTransparency ) / 100. );
+    }
+  }
+}
+
+void QgsAnnotationLayer::setSymbolScale( double scale )
+{
+  mSymbolScale = scale;
+  foreach ( QGraphicsItem* item, mCanvas->items() )
+  {
+    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
+    if ( annotationItem && mItemIds.contains( annotationItem->id() ) )
+    {
+      annotationItem->setScale( scale );
     }
   }
 }

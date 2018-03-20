@@ -309,8 +309,8 @@ void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
   }
 
   QRectF frameRect( mOffsetFromReferencePoint.x(), mOffsetFromReferencePoint.y(), mFrameSize.width(), mFrameSize.height() );
-  double handlerSize = 8;
-  p->setPen( QPen( Qt::red, 2 ) );
+  double handlerSize = 8. / scale();
+  p->setPen( QPen( Qt::red, 2. / scale() ) );
   p->setBrush( Qt::white );
   p->drawRect( QRectF( frameRect.left(), frameRect.top(), handlerSize, handlerSize ) );
   p->drawRect( QRectF( frameRect.right() - handlerSize, frameRect.top(), handlerSize, handlerSize ) );
@@ -360,7 +360,7 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 {
   QPointF itemPos = mapFromScene( pos );
 
-  int cursorSensitivity = 7;
+  int cursorSensitivity = 7. / scale();
 
   if (( mFlags & ItemAnchorIsNotMoveable ) == 0 && qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity ) //move map point if position is close to the origin
   {
@@ -372,9 +372,9 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
     QPointF itemPos = mapFromScene( pos );
     double alpha = mAngle / 180. * M_PI;
     QPointF rotPos = mOffsetFromReferencePoint +
-                     QPointF( 0.5 * mFrameSize.width() + ( 0.5 * mFrameSize.width() - 4 ) *  qCos( alpha ),
-                              0.5 * mFrameSize.height() + ( 0.5 * mFrameSize.height() - 4 ) *  qSin( alpha ) );
-    if ( qAbs( rotPos.x() - itemPos.x() ) < 7 && qAbs( rotPos.y() - itemPos.y() ) < 7 )
+                     QPointF( 0.5 * mFrameSize.width() + ( 0.5 * mFrameSize.width() - 4. / scale() ) *  qCos( alpha ),
+                              0.5 * mFrameSize.height() + ( 0.5 * mFrameSize.height() - 4. / scale() ) *  qSin( alpha ) );
+    if ( qAbs( rotPos.x() - itemPos.x() ) < cursorSensitivity && qAbs( rotPos.y() - itemPos.y() ) < cursorSensitivity )
     {
       return RotateItem;
     }
@@ -713,9 +713,16 @@ void QgsAnnotationItem::showContextMenu( const QPoint &screenPos )
   menu.exec( screenPos );
 }
 
+QRectF QgsAnnotationItem::screenBoundingRect() const
+{
+  QSizeF size = mFrameSize * scale();
+  QPointF position = pos() + mOffsetFromReferencePoint * scale();
+  return QRectF( position, size );
+}
+
 bool QgsAnnotationItem::hitTest( const QPoint &screenPos ) const
 {
-  return boundingRect().translated( pos() ).contains( screenPos );
+  return screenBoundingRect().contains( screenPos );
 }
 
 void QgsAnnotationItem::syncGeoPos()

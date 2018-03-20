@@ -22,6 +22,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
 #include "qgsproject.h"
+#include "qgsannotationlayer.h"
 #include "qgspluginlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
@@ -104,7 +105,7 @@ QAction* QgsLayerTreeViewDefaultActions::actionZoomToGroup( QgsMapCanvas* canvas
   return a;
 }
 
-QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canvas, QObject* parent )
+QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QObject* parent )
 {
   QgsMapLayer* layer = mView->currentLayer();
   if ( !layer )
@@ -135,7 +136,6 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
   transpSlider->setRange( 0, 100 );
   transpSlider->setValue( curValue );
   transpSlider->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-  transpSlider->setProperty( "mapcanvas", QVariant::fromValue( reinterpret_cast<void*>( canvas ) ) );
   transpSlider->setTracking( false );
   connect( transpSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setLayerTransparency() ) );
   transpLayout->addWidget( transpSlider );
@@ -143,6 +143,32 @@ QAction* QgsLayerTreeViewDefaultActions::actionTransparency( QgsMapCanvas* canva
   QWidgetAction* transpAction = new QWidgetAction( parent );
   transpAction->setDefaultWidget( transpWidget );
   return transpAction;
+}
+
+QAction* QgsLayerTreeViewDefaultActions::actionSymbolScale( QObject* parent )
+{
+  QgsAnnotationLayer* layer = dynamic_cast<QgsAnnotationLayer*>( mView->currentLayer() );
+  if ( !layer )
+    return 0;
+
+  QWidget* scaleWidget = new QWidget();
+  QHBoxLayout* transpLayout = new QHBoxLayout( scaleWidget );
+
+  QLabel* scaleLabel = new QLabel( tr( "Symbol scale:" ) );
+  scaleLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+  transpLayout->addWidget( scaleLabel );
+
+  QSlider* scaleSlider = new QSlider( Qt::Horizontal );
+  scaleSlider->setRange( -10, 10 );
+  scaleSlider->setValue( log10( layer->symbolScale() ) * 10 );
+  scaleSlider->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  scaleSlider->setTracking( false );
+  connect( scaleSlider, SIGNAL( valueChanged( int ) ), this, SLOT( setLayerSymbolScale() ) );
+  transpLayout->addWidget( scaleSlider );
+
+  QWidgetAction* scaleAction = new QWidgetAction( parent );
+  scaleAction->setDefaultWidget( scaleWidget );
+  return scaleAction;
 }
 
 QAction* QgsLayerTreeViewDefaultActions::actionUseAsHightMap( QObject *parent )
@@ -305,6 +331,20 @@ void QgsLayerTreeViewDefaultActions::setLayerTransparency()
     mView->refreshLayerSymbology( layer->id() );
     layer->triggerRepaint();
   }
+}
+
+void QgsLayerTreeViewDefaultActions::setLayerSymbolScale()
+{
+  QSlider* slider = qobject_cast<QSlider*>( QObject::sender() );
+  int value = slider->value();
+
+  QgsAnnotationLayer* layer = dynamic_cast<QgsAnnotationLayer*>( mView->currentLayer() );
+  if ( !layer )
+  {
+    return;
+  }
+  layer->setSymbolScale( pow( 10., value / 10. ) );
+  layer->triggerRepaint();
 }
 
 void QgsLayerTreeViewDefaultActions::setHeightMapLayer( bool active )

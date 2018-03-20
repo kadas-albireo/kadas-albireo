@@ -33,7 +33,7 @@ QgsFeaturePicker::PickResult QgsFeaturePicker::pick( const QgsMapCanvas* canvas,
   if ( annotationItem )
   {
     pickResult.annotation = annotationItem;
-    pickResult.boundingBox = annotationItem->boundingRect().translated( annotationItem->pos() );
+    pickResult.boundingBox = annotationItem->screenBoundingRect();
     return pickResult;
   }
 

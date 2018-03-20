@@ -43,6 +43,8 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
     int margin() const override;
 
     void setLayerTransparency( int value ) override;
+    void setSymbolScale( double scale );
+    double symbolScale() const { return mSymbolScale; }
 
   protected:
     bool readXml( const QDomNode& layer_node ) override;
@@ -52,6 +54,7 @@ class GUI_EXPORT QgsAnnotationLayer : public QgsPluginLayer
     QgsMapCanvas* mCanvas;
     QSet<QString> mItemIds;
     QString mItemType;
+    double mSymbolScale = 1.;
 
   private slots:
     void updateItemVisibility();

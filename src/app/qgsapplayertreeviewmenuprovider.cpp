@@ -9,6 +9,7 @@
 #include "qgslayertreeviewdefaultactions.h"
 #include "qgsmaplayerstyleguiutils.h"
 #include "qgsproject.h"
+#include "qgsannotationlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectordataprovider.h"
 #include "qgsvectorlayer.h"
@@ -75,8 +76,11 @@ QMenu* QgsAppLayerTreeViewMenuProvider::createContextMenu()
 
       if ( rlayer || vlayer )
       {
-        menu->addAction( actions->actionTransparency( mCanvas, menu ) );
-        menu->addSeparator();
+        menu->addAction( actions->actionTransparency( menu ) );
+      }
+      if ( dynamic_cast<QgsAnnotationLayer*>( layer ) )
+      {
+        menu->addAction( actions->actionSymbolScale( menu ) );
       }
 
       menu->addAction( actions->actionZoomToLayer( mCanvas, menu ) );

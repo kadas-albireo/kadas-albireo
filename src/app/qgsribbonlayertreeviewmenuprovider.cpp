@@ -4,6 +4,7 @@
 #include "qgslayertreeviewdefaultactions.h"
 #include "qgslayertree.h"
 #include "qgslayertreemodel.h"
+#include "qgsannotationlayer.h"
 #include "qgsrasterlayer.h"
 #include "qgsvectorlayer.h"
 #include "qgspluginlayer.h"
@@ -45,7 +46,11 @@ QMenu* QgsRibbonLayerTreeViewMenuProvider::createContextMenu()
       QgsMapLayer *layer = QgsLayerTree::toLayer( node )->layer();
       if ( layer->type() == QgsMapLayer::VectorLayer || layer->type() == QgsMapLayer::RasterLayer || layer->type() == QgsMapLayer::RedliningLayer || layer->type() == QgsMapLayer::PluginLayer )
       {
-        menu->addAction( actions->actionTransparency( mMainWidget->mapCanvas(), menu ) );
+        menu->addAction( actions->actionTransparency( menu ) );
+      }
+      if ( dynamic_cast<QgsAnnotationLayer*>( layer ) )
+      {
+        menu->addAction( actions->actionSymbolScale( menu ) );
       }
       menu->addAction( actions->actionZoomToLayer( mMainWidget->mapCanvas(), menu ) );
       menu->addAction( actions->actionRenameGroupOrLayer( menu ) );
