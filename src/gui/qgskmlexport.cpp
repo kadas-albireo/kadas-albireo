@@ -1,5 +1,5 @@
 /***************************************************************************
- *  qgskmlexportdialog.h                                                   *
+ *  qgskmlexport.cpp                                                       *
  *  -----------                                                            *
  *  begin                : October 2015                                    *
  *  copyright            : (C) 2015 by Marco Hugentobler / Sourcepole AG   *
@@ -462,7 +462,8 @@ void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRe
       width = expr->evaluate( f ).toDouble( ) * QgsSymbolLayerV2Utils::lineWidthScaleFactor( rc, QgsSymbolV2::MM );
     }
 
-    QColor outlineColor = outlineColor = s->symbolLayer( 0 )->outlineColor();
+    QColor outlineColor = s->symbolLayer( 0 )->outlineColor();
+
     expr = s->symbolLayer( 0 )->expression( "color_border" );
     if ( expr )
     {
