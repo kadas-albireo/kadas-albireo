@@ -631,6 +631,8 @@ bool QgsMapLayer::writeLayerXML( QDomElement& layerElement, QDomDocument& docume
     if ( !handled )
       src = QgsProject::instance()->writePath( src, relativeBasePath );
   }
+  // Ensure path is updated, in case dataset was moved to a <projectname>_files folder
+  setSource( QgsProject::instance()->readPath( src ) );
 
   QDomText dataSourceText = document.createTextNode( src );
   dataSource.appendChild( dataSourceText );

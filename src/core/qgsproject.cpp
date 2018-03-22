@@ -1086,19 +1086,6 @@ bool QgsProject::write()
         // general layer metadata
         QDomElement maplayerElem = doc->createElement( "maplayer" );
 
-        // If layer is stored in tmp dir, move to <project>_files folder
-        if ( ml->source().startsWith( QDesktopServices::storageLocation( QDesktopServices::TempLocation ) ) )
-        {
-          QDir projectDir = QFileInfo( fileName() ).absoluteDir();
-          QString projectFilesDirName = QFileInfo( fileName() ).baseName() + "_files";
-          QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
-          QString newDataUrl = projectFilesDir.absoluteFilePath( QFileInfo( ml->source() ).fileName() );
-          if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( ml->source() ).copy( newDataUrl ) )
-          {
-            ml->setSource( newDataUrl );
-          }
-        }
-
         ml->writeLayerXML( maplayerElem, *doc );
 
         emit writeMapLayer( ml, maplayerElem, *doc );
@@ -1534,29 +1521,42 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
     return "./" + src.mid( pos );
   }
 
-  // If stored in tmp dir, move to <project>_files folder
-  if ( src.startsWith( QDesktopServices::storageLocation( QDesktopServices::TempLocation ) ) )
+  // If this is a VSIFILE, remove the VSI prefix and append to final result
+  QString vsiPrefix = qgsVsiPrefix( src );
+  if ( ! vsiPrefix.isEmpty() )
   {
+    srcPath.remove( 0, vsiPrefix.size() );
+  }
+
+  // If stored in tmp dir, move to <project>_files folder
+  QString tmpDir = QDesktopServices::storageLocation( QDesktopServices::TempLocation );
+  if ( srcPath.startsWith( tmpDir ) )
+  {
+    // If a VSI file, determine the portion of the path that actually exists on the filesystem
+    QString vsiPath;
+    if ( !vsiPrefix.isEmpty() )
+    {
+      QFileInfo finfo( srcPath );
+      while ( !finfo.exists() )
+      {
+        vsiPath.prepend( QString( "/%1" ).arg( finfo.fileName() ) );
+        srcPath = finfo.absolutePath();
+        finfo = QFileInfo( srcPath );
+      }
+    }
     QDir projectDir = QFileInfo( fileName() ).absoluteDir();
     QString projectFilesDirName = QFileInfo( fileName() ).baseName() + "_files";
     QDir projectFilesDir = QDir( projectDir.absoluteFilePath( projectFilesDirName ) );
-    QString newSrc = projectFilesDir.absoluteFilePath( QFileInfo( src ).fileName() );
-    if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( src ).copy( newSrc ) )
+    QString newSrc = projectFilesDir.absoluteFilePath( QFileInfo( srcPath ).fileName() );
+    if (( projectFilesDir.exists() || projectDir.mkdir( projectFilesDirName ) ) && QFile( srcPath ).copy( newSrc ) )
     {
-      return QString( "./%1/%2" ).arg( projectFilesDirName ).arg( QFileInfo( src ).fileName() );
+      return vsiPrefix + QString( "./%1/%2" ).arg( projectFilesDirName ).arg( QFileInfo( srcPath ).fileName() ) + vsiPath;
     }
   }
 
   if ( readBoolEntry( "Paths", "/Absolute", false ) || src.isEmpty() )
   {
     return src;
-  }
-
-  // if this is a VSIFILE, remove the VSI prefix and append to final result
-  QString vsiPrefix = qgsVsiPrefix( src );
-  if ( ! vsiPrefix.isEmpty() )
-  {
-    srcPath.remove( 0, vsiPrefix.size() );
   }
 
 #if defined( Q_OS_WIN )
