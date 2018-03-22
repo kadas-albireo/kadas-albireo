@@ -123,6 +123,7 @@
 #include "qgsitemcouplingmanager.h"
 #include "qgskmlexport.h"
 #include "qgskmlexportdialog.h"
+#include "qgskmlimport.h"
 #include "qgslabelinggui.h"
 #include "qgslayerdefinition.h"
 #include "qgslayertree.h"
@@ -3149,6 +3150,31 @@ void QgisApp::kmlExport()
     messageBar()->pushMessage( tr( "KML export failed" ), QgsMessageBar::CRITICAL, 4 );
   }
   QApplication::restoreOverrideCursor();
+}
+
+void QgisApp::kmlImport()
+{
+  QStringList filters;
+  filters.append( tr( "KMZ File (*.kmz)" ) );
+  filters.append( tr( "KML File (*.kml)" ) );
+
+  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+  QString selectedFilter;
+
+  QString filename = QFileDialog::getOpenFileName( this, tr( "Select KML/KMZ File" ), lastDir, filters.join( ";;" ), &selectedFilter );
+  if ( filename.isEmpty() )
+  {
+    return;
+  }
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
+  if ( QgsKMLImport( mapCanvas(), mRedlining->getOrCreateLayer() ).importFile( filename ) )
+  {
+    messageBar()->pushMessage( tr( "KML import completed" ), QgsMessageBar::INFO, 4 );
+  }
+  else
+  {
+    messageBar()->pushMessage( tr( "KML import failed" ), QgsMessageBar::CRITICAL, 4 );
+  }
 }
 
 void QgisApp::openLayerDefinition( const QString & path )

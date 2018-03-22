@@ -423,6 +423,10 @@ void QgsRibbonApp::configureButtons()
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), mActionExportKML, SLOT( trigger() ) );
   setActionToButton( mActionExportKML, mExportKMLButton );
 
+  connect( mActionImportKML, SIGNAL( triggered() ), this, SLOT( kmlImport() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), mActionImportKML, SLOT( trigger() ) );
+  setActionToButton( mActionImportKML, mImportKMLButton );
+
   //view tab
   connect( mActionZoomLast, SIGNAL( triggered() ), this, SLOT( zoomToPrevious() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ), this ), SIGNAL( activated() ), mActionZoomLast, SLOT( trigger() ) );

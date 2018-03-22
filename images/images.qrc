@@ -534,6 +534,7 @@
         <file>ribbon/gpx_export.png</file>
         <file>ribbon/gpx_import.png</file>
         <file>ribbon/kml_export.png</file>
+        <file>ribbon/kml_import.png</file>
         <file>ribbon/milxly_export.png</file>
         <file>ribbon/milxly_import.png</file>
         <file>ribbon/ovl_import.png</file>

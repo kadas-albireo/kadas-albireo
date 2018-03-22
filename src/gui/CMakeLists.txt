@@ -191,6 +191,7 @@ qgshtmlannotationdialog.cpp
 qgsgeoimageannotationitem.cpp
 qgsribbonbutton.cpp
 qgskmlexport.cpp
+qgskmlimport.cpp
 qgskmlpallabeling.cpp
 qgslegendinterface.cpp
 qgsludialog.cpp
@@ -319,6 +320,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsgeoimageannotationitem.h
   qgsidentifymenu.h
   qgskmlexport.h
+  qgskmlimport.h
   qgslegendinterface.h
   qgslonglongvalidator.h
   qgsludialog.h
