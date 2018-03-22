@@ -176,7 +176,7 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
 
   reader.setBackgroundColor( Qt::white );
   reader.setScaledSize( imageSize );
-  mImage = reader.read().convertToFormat( QImage::Format_RGB32 );
+  mImage = reader.read().convertToFormat( QImage::Format_ARGB32 );
   setFrameSize( QSize( imageSize.width() + 4, imageSize.height() + 4 ) );
 }
 
