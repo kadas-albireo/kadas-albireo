@@ -105,7 +105,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
     QDomElement styleEl = styleEls.at( iStyle ).toElement();
     if ( !styleEl.attribute( "id" ).isEmpty() )
     {
-      styleMap.insert( styleEl.attribute( "id" ), parseStyle( styleEl, zip ) );
+      styleMap.insert( QString( "#%1" ).arg( styleEl.attribute( "id" ) ), parseStyle( styleEl, zip ) );
     }
   }
   QDomNodeList styleMapEls = documentEl.elementsByTagName( "StyleMap" );
@@ -114,11 +114,18 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
     QDomElement styleMapEl = styleMapEls.at( iStyleMap ).toElement();
     if ( !styleMapEl.attribute( "id" ).isEmpty() )
     {
-      QDomNodeList styleEls = styleMapEl.elementsByTagName( "Style" );
-      // Just pick the first style in a style map
-      if ( styleEls.size() > 0 )
+      QString id = QString( "#%1" ).arg( styleMapEl.attribute( "id" ) );
+      // Just pick the first item of the StyleMap
+      QDomElement pairEl = styleMapEl.firstChildElement( "Pair" );
+      QDomElement styleEl = pairEl.firstChildElement( "Style" );
+      QDomElement styleUrlEl = pairEl.firstChildElement( "styleUrl" );
+      if ( !styleEl.isNull() )
       {
-        styleMap.insert( QString( "#%1" ).arg( styleMapEl.attribute( "id" ) ), parseStyle( styleEls.at( 0 ).toElement(), zip ) );
+        styleMap.insert( id, parseStyle( styleEl, zip ) );
+      }
+      else if ( !styleUrlEl.isNull() )
+      {
+        styleMap.insert( id, styleMap.value( styleUrlEl.text() ) );
       }
     }
   }
