@@ -136,6 +136,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
   for ( int iPlacemark = 0, nPlacemarks = placemarkEls.size(); iPlacemark < nPlacemarks; ++iPlacemark )
   {
     QDomElement placemarkEl = placemarkEls.at( iPlacemark ).toElement();
+    QString name = placemarkEl.firstChildElement( "name" ).text();
 
     // Geometry
     QList<QgsAbstractGeometryV2*> geoms = parseGeometries( placemarkEl );
@@ -233,7 +234,9 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
           QgsWKBTypes::Type type = QgsWKBTypes::singleType( QgsWKBTypes::flatType( geom->wkbType() ) );
           if ( type == QgsWKBTypes::Point )
           {
-            geomFlags = "shape=point,symbol=circle";
+            // KML does not have point styles, so points without associated icon are rendered as text
+            text = name;
+            geomFlags = "bold=1,family=sans,fontSize=14,shape=point,symbol=";
           }
           else if ( type == QgsWKBTypes::LineString )
           {
