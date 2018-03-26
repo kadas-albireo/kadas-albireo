@@ -405,7 +405,7 @@ for ( const QPair<int, QString>& band : QList<QPair<int, QString>> {qMakePair( 1
 
 QList<QgsPointV2> QgsKMLImport::parseCoordinates( const QDomElement& geomEl ) const
 {
-  QStringList coordinates = geomEl.firstChildElement( "coordinates" ).text().split( " " );
+  QStringList coordinates = geomEl.firstChildElement( "coordinates" ).text().split( QRegExp( "\\s+" ), QString::SkipEmptyParts );
   QList<QgsPointV2> points;
   for ( int i = 0, n = coordinates.size(); i < n; ++i )
   {
