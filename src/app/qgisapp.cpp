@@ -3168,6 +3168,7 @@ void QgisApp::kmlImport()
   }
   QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
   QString errMsg;
+  QgsApplication::setOverrideCursor( Qt::BusyCursor );
   if ( QgsKMLImport( mapCanvas(), mRedlining->getOrCreateLayer() ).importFile( filename, errMsg ) )
   {
     messageBar()->pushMessage( tr( "KML import completed" ), QgsMessageBar::INFO, 4 );
@@ -3176,6 +3177,7 @@ void QgisApp::kmlImport()
   {
     messageBar()->pushMessage( tr( "KML import failed" ), errMsg, QgsMessageBar::CRITICAL, 4 );
   }
+  QgsApplication::restoreOverrideCursor();
 }
 
 void QgisApp::openLayerDefinition( const QString & path )
