@@ -39,6 +39,7 @@
 #include "qgsredlininglayer.h"
 #include "qgsvectorlayer.h"
 #include "qgsvbsrasteridentify.h"
+#include "qgsvbsvectoridentify.h"
 
 QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QPoint& canvasPos, const QgsPoint& mapPos )
     : mMapPos( mapPos ), mCanvas( canvas ), mRubberBand( 0 ), mRectItem( 0 )
@@ -77,7 +78,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
       addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
     }
-    else
+    if ( mPickResult.layer->type() != QgsMapLayer::RedliningLayer || !mPickResult.feature.attribute( "attributes" ).isNull() )
     {
       addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( featureAttributes() ) );
     }
@@ -183,8 +184,8 @@ QgsMapCanvasContextMenu::~QgsMapCanvasContextMenu()
 void QgsMapCanvasContextMenu::featureAttributes()
 {
   QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
-  QgsAttributeDialog *dialog = new QgsAttributeDialog( vlayer, &mPickResult.feature, false, QgisApp::instance() );
-  dialog->show( true );
+  QgsVBSVectorIdentifyResultDialog *dialog = new QgsVBSVectorIdentifyResultDialog( vlayer, mPickResult.feature, QgisApp::instance() );
+  dialog->show();
 }
 
 void QgsMapCanvasContextMenu::deleteAnnotation()

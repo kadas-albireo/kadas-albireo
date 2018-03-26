@@ -144,6 +144,7 @@ SET(QGIS_APP_SRCS
   qgsmaptoolcircularstringcurvepoint.cpp
   qgsmaptoolcircularstringradius.cpp
   qgsvbsrasteridentify.cpp
+  qgsvbsvectoridentify.cpp
 
   catalog/qgscatalogbrowser.cpp
   catalog/qgscatalogprovider.cpp
@@ -286,6 +287,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsredlining.h
   qgsmaptooladdcircularstring.h
   qgsvbsrasteridentify.h
+  qgsvbsvectoridentify.h
 
   qgsmaptoolhillshade.h
   qgsmaptoolslope.h
