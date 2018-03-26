@@ -32,7 +32,7 @@ class GUI_EXPORT QgsKMLImport : public QObject
 {
   public:
     QgsKMLImport( QgsMapCanvas *canvas, QgsRedliningLayer *redliningLayer );
-    bool importFile( const QString& filename );
+    bool importFile( const QString& filename , QString &errMsg );
 
   private:
     struct StyleData
@@ -56,7 +56,7 @@ class GUI_EXPORT QgsKMLImport : public QObject
       QList<TileData> tiles;
     };
 
-    bool importDocument( const QDomDocument& doc, QuaZip* zip = nullptr );
+    bool importDocument( const QDomDocument& doc, QString &errMsg, QuaZip* zip = nullptr );
     void buildVSIVRT( const QString& name, OverlayData &overlayData, QuaZip* kmzZip ) const;
     QList<QgsPointV2> parseCoordinates( const QDomElement &geomEl ) const;
     StyleData parseStyle( const QDomElement& styleEl, QuaZip *zip ) const;

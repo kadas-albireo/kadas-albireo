@@ -46,28 +46,33 @@ QgsKMLImport::QgsKMLImport( QgsMapCanvas *canvas, QgsRedliningLayer *redliningLa
 {
 }
 
-bool QgsKMLImport::importFile( const QString& filename )
+bool QgsKMLImport::importFile( const QString& filename, QString& errMsg )
 {
-  QString basename = QFileInfo( filename ).completeBaseName();
   if ( filename.endsWith( ".kmz", Qt::CaseInsensitive ) )
   {
     QuaZip quaZip( filename );
     if ( !quaZip.open( QuaZip::mdUnzip ) )
     {
+      errMsg = tr( "Unable to open %1." ).arg( QFileInfo( filename ).fileName() );
       return false;
     }
-    if ( !quaZip.setCurrentFile( basename + ".kml", QuaZip::csInsensitive ) )
+    // Search for kml file to open
+    QStringList kmzFileList = quaZip.getFileNameList();
+    int mainKmlIndex = kmzFileList.indexOf( QRegExp( "[^/]+.kml", Qt::CaseInsensitive ) );
+    if ( mainKmlIndex == -1 || !quaZip.setCurrentFile( kmzFileList[mainKmlIndex] ) )
     {
+      errMsg = tr( "Corrupt KMZ file." );
       return false;
     }
     QDomDocument doc;
     QuaZipFile file( &quaZip );
     if ( !file.open( QIODevice::ReadOnly ) || !doc.setContent( &file ) )
     {
+      errMsg = tr( "Corrupt KMZ file." );
       return false;
     }
     file.close();
-    return importDocument( doc, &quaZip );
+    return importDocument( doc, errMsg, &quaZip );
   }
   else if ( filename.endsWith( ".kml", Qt::CaseInsensitive ) )
   {
@@ -75,18 +80,20 @@ bool QgsKMLImport::importFile( const QString& filename )
     QDomDocument doc;
     if ( !file.open( QIODevice::ReadOnly ) || !doc.setContent( &file ) )
     {
+      errMsg = tr( "Unable to open %1." ).arg( QFileInfo( filename ).fileName() );
       return false;
     }
-    return importDocument( doc );
+    return importDocument( doc, errMsg );
   }
   return false;
 }
 
-bool QgsKMLImport::importDocument( const QDomDocument &doc, QuaZip *zip )
+bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, QuaZip *zip )
 {
   QDomElement documentEl = doc.firstChildElement( "kml" ).firstChildElement( "Document" );
   if ( documentEl.isNull() )
   {
+    errMsg = tr( "Corrupt KMZ file." );
     return false;
   }
 

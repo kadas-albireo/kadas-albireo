@@ -3167,13 +3167,14 @@ void QgisApp::kmlImport()
     return;
   }
   QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
-  if ( QgsKMLImport( mapCanvas(), mRedlining->getOrCreateLayer() ).importFile( filename ) )
+  QString errMsg;
+  if ( QgsKMLImport( mapCanvas(), mRedlining->getOrCreateLayer() ).importFile( filename, errMsg ) )
   {
     messageBar()->pushMessage( tr( "KML import completed" ), QgsMessageBar::INFO, 4 );
   }
   else
   {
-    messageBar()->pushMessage( tr( "KML import failed" ), QgsMessageBar::CRITICAL, 4 );
+    messageBar()->pushMessage( tr( "KML import failed" ), errMsg, QgsMessageBar::CRITICAL, 4 );
   }
 }
 
