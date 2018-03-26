@@ -60,6 +60,7 @@ class GUI_EXPORT QgsKMLImport : public QObject
     void buildVSIVRT( const QString& name, OverlayData &overlayData, QuaZip* kmzZip ) const;
     QList<QgsPointV2> parseCoordinates( const QDomElement &geomEl ) const;
     StyleData parseStyle( const QDomElement& styleEl, QuaZip *zip ) const;
+    QList<QgsAbstractGeometryV2 *> parseGeometries( const QDomElement& containerEl );
     QColor parseColor( const QString& abgr ) const;
 
     QgsMapCanvas* mCanvas;

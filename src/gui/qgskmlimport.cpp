@@ -138,42 +138,9 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
     QDomElement placemarkEl = placemarkEls.at( iPlacemark ).toElement();
 
     // Geometry
-    QgsAbstractGeometryV2* geom = nullptr;
-    QDomElement pointEl = placemarkEl.firstChildElement( "Point" );
-    QDomElement lineStringEl = placemarkEl.firstChildElement( "LineString" );
-    QDomElement polygonEl = placemarkEl.firstChildElement( "Polygon" );
-    if ( !pointEl.isNull() )
-    {
-      QList<QgsPointV2> points = parseCoordinates( pointEl );
-      if ( !points.isEmpty() )
-      {
-        geom = points[0].clone();
-      }
-    }
-    else if ( !lineStringEl.isNull() )
-    {
-      geom = new QgsLineStringV2();
-      static_cast<QgsLineStringV2*>( geom )->setPoints( parseCoordinates( lineStringEl ) );
-    }
-    else if ( !polygonEl.isNull() )
-    {
-      QDomElement outerRingEl = polygonEl.firstChildElement( "outerBoundaryIs" ).firstChildElement( "LinearRing" );
-      QgsLineStringV2* exterior = new QgsLineStringV2();
-      exterior->setPoints( parseCoordinates( outerRingEl ) );
-      geom = new QgsPolygonV2();
-      static_cast<QgsPolygonV2*>( geom )->setExteriorRing( exterior );
+    QList<QgsAbstractGeometryV2*> geoms = parseGeometries( placemarkEl );
 
-      QDomNodeList innerBoundaryEls = polygonEl.elementsByTagName( "innerBoundaryIs" );
-      for ( int iRing = 0, nRings = innerBoundaryEls.size(); iRing < nRings; ++iRing )
-      {
-        QDomElement innerRingEl = innerBoundaryEls.at( iRing ).toElement().firstChildElement( "LinearRing" );
-        QgsLineStringV2* interior = new QgsLineStringV2();
-        interior->setPoints( parseCoordinates( innerRingEl ) );
-        static_cast<QgsPolygonV2*>( geom )->addInteriorRing( interior );
-      }
-    }
-
-    if ( !geom )
+    if ( geoms.isEmpty() )
     {
       // Placemark without geometry
       QgsDebugMsg( "Could not parse placemark geometry" );
@@ -194,17 +161,15 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
     }
 
     // If there is an icon and the geometry is a point, add as annotation item, otherwise as redlining symbol
-    if ( !style.icon.isNull() && dynamic_cast<QgsPointV2*>( geom ) )
+    if ( geoms.size() == 1 && !style.icon.isEmpty() && dynamic_cast<QgsPointV2*>( geoms.front() ) )
     {
-      QString filename = QgsTemporaryFile::createNewFile( "kml_import.png" );
-      style.icon.save( filename );
-
-      QgsPointV2* point = static_cast<QgsPointV2*>( geom );
+      QgsPointV2* point = static_cast<QgsPointV2*>( geoms.front() );
       QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( mCanvas );
       item->setItemFlags( QgsAnnotationItem::ItemAnchorIsNotMoveable );
       item->setFilePath( filename );
       item->setMapPosition( QgsPoint( point->x(), point->y() ), QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
       QgsAnnotationLayer::getLayer( mCanvas, "geoImage", tr( "Pictures" ) )->addItem( item );
+      delete geoms.front();
     }
     else
     {
@@ -250,31 +215,38 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
           redliningStyle.fillColor = QgsSymbolLayerV2Utils::decodeColor( simpleDataEl.text() );
         }
       }
-      // If flags is empty, it is not a redlining object. Clear text, because it messes up rendering without matching flags, and automatically set apropriate flags for the geometry type.
+      // If flags is empty, it is not a redlining object. Clear text, because it messes up rendering without matching flags
       if ( flags.isEmpty() )
       {
         text == "";
-        QgsWKBTypes::Type type = QgsWKBTypes::singleType( QgsWKBTypes::flatType( geom->wkbType() ) );
-        if ( type == QgsWKBTypes::Point )
-        {
-          flags = "shape=point,symbol=circle";
-        }
-        else if ( type == QgsWKBTypes::LineString )
-        {
-          flags = "shape=line";
-        }
-        else
-        {
-          flags = "shape=polygon";
-        }
       }
       else
       {
         style = redliningStyle;
       }
 
-      geom->transform( *QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:3857" ) );
-      mRedliningLayer->addShape( new QgsGeometry( geom ), style.outlineColor, style.fillColor, style.outlineSize, style.outlineStyle, style.fillStyle, flags, tooltip, text );
+    for ( QgsAbstractGeometryV2* geom : geoms )
+      {
+        QString geomFlags = flags;
+        if ( geomFlags.isEmpty() )
+        {
+          QgsWKBTypes::Type type = QgsWKBTypes::singleType( QgsWKBTypes::flatType( geom->wkbType() ) );
+          if ( type == QgsWKBTypes::Point )
+          {
+            geomFlags = "shape=point,symbol=circle";
+          }
+          else if ( type == QgsWKBTypes::LineString )
+          {
+            geomFlags = "shape=line";
+          }
+          else
+          {
+            geomFlags = "shape=polygon";
+          }
+        }
+        geom->transform( *QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:3857" ) );
+        mRedliningLayer->addShape( new QgsGeometry( geom ), style.outlineColor, style.fillColor, style.outlineSize, style.outlineStyle, style.fillStyle, geomFlags, tooltip, text );
+      }
     }
   }
 
@@ -458,16 +430,68 @@ QgsKMLImport::StyleData QgsKMLImport::parseStyle( const QDomElement &styleEl, Qu
   {
     QString filename = iconHRefEl.text();
     // Only local files in KMZ are supported (also for security reasons)
-    if ( zip->setCurrentFile( filename ) )
+    if ( zip && zip->setCurrentFile( filename ) )
     {
       QuaZipFile file( zip );
       if ( file.open( QIODevice::ReadOnly ) )
       {
-        style.icon = QImage::fromData( file.readAll() );
+        QImage icon = QImage::fromData( file.readAll() );
+        style.icon = QgsTemporaryFile::createNewFile( "kml_import.png" );
+        icon.save( style.icon );
       }
     }
   }
   return style;
+}
+
+QList<QgsAbstractGeometryV2*> QgsKMLImport::parseGeometries( const QDomElement& containerEl )
+{
+  QList<QgsAbstractGeometryV2*> geoms;
+
+  QDomElement pointEl = containerEl.firstChildElement( "Point" );
+  if ( !pointEl.isNull() )
+  {
+    QList<QgsPointV2> points = parseCoordinates( pointEl );
+    if ( !points.isEmpty() )
+    {
+      geoms.append( points[0].clone() );
+    }
+  }
+
+  QDomElement lineStringEl = containerEl.firstChildElement( "LineString" );
+  if ( !lineStringEl.isNull() )
+  {
+    QgsLineStringV2* line = new QgsLineStringV2();
+    line->setPoints( parseCoordinates( lineStringEl ) );
+    geoms.append( line );
+  }
+
+  QDomElement polygonEl = containerEl.firstChildElement( "Polygon" );
+  if ( !polygonEl.isNull() )
+  {
+    QDomElement outerRingEl = polygonEl.firstChildElement( "outerBoundaryIs" ).firstChildElement( "LinearRing" );
+    QgsLineStringV2* exterior = new QgsLineStringV2();
+    exterior->setPoints( parseCoordinates( outerRingEl ) );
+    QgsPolygonV2* poly = new QgsPolygonV2();
+    poly->setExteriorRing( exterior );
+
+    QDomNodeList innerBoundaryEls = polygonEl.elementsByTagName( "innerBoundaryIs" );
+    for ( int iRing = 0, nRings = innerBoundaryEls.size(); iRing < nRings; ++iRing )
+    {
+      QDomElement innerRingEl = innerBoundaryEls.at( iRing ).toElement().firstChildElement( "LinearRing" );
+      QgsLineStringV2* interior = new QgsLineStringV2();
+      interior->setPoints( parseCoordinates( innerRingEl ) );
+      poly->addInteriorRing( interior );
+    }
+    geoms.append( poly );
+  }
+
+  QDomElement multiGeometryEl = containerEl.firstChildElement( "MultiGeometry" );
+  if ( !multiGeometryEl.isNull() )
+  {
+    geoms.append( parseGeometries( multiGeometryEl ) );
+  }
+  return geoms;
 }
 
 QColor QgsKMLImport::parseColor( const QString& abgr ) const
