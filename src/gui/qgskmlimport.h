@@ -42,7 +42,7 @@ class GUI_EXPORT QgsKMLImport : public QObject
       Qt::BrushStyle fillStyle = Qt::SolidPattern;
       QColor outlineColor = Qt::black;
       QColor fillColor = Qt::white;
-      QImage icon;
+      QString icon;
     };
     struct TileData
     {
