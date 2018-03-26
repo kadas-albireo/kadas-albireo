@@ -3261,7 +3261,7 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
   }
 
   // Handle georeferenced images (with EXIF tags)
-  if ( QgsGeoImageAnnotationItem::create( mapCanvas(), fileName ) )
+  if ( QgsGeoImageAnnotationItem::create( mapCanvas(), fileName, true ) )
   {
     return true;
   }
@@ -7408,9 +7408,7 @@ void QgisApp::addRasterLayer()
   QStringList rasterFiles;
   foreach ( const QString& file, selectedFiles )
   {
-    QByteArray format = QImageReader::imageFormat( file );
-    // Tiff files are most likely raster images, don't open these as geoimages
-    if ( format == "tiff" || !QgsGeoImageAnnotationItem::create( mapCanvas(), file ) )
+    if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), file, true ) )
     {
       rasterFiles.append( file );
     }

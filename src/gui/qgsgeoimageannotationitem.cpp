@@ -29,7 +29,7 @@
 
 REGISTER_QGS_ANNOTATION_ITEM( QgsGeoImageAnnotationItem )
 
-QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, QString* errMsg )
+QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canvas, const QString &filePath, bool onlyGeoreferenced, QString* errMsg )
 {
   QImageReader reader( filePath );
   if ( reader.format().isEmpty() || reader.size().isEmpty() )
@@ -42,6 +42,10 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   // Fall back to canvas center position if image has no geotags
   if ( !readGeoPos( filePath, wgs84Pos, errMsg ) )
   {
+    if ( onlyGeoreferenced )
+    {
+      return 0;
+    }
     locked = false;
     const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( canvas->mapSettings().destinationCrs().authid(), "EPSG:4326" );
     wgs84Pos = crst->transform( canvas->mapSettings().extent().center() );

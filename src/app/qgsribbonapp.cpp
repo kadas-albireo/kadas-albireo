@@ -615,7 +615,7 @@ void QgsRibbonApp::addImage()
     item->setSelected( true );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
   }
-  else if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, &errMsg ) )
+  else if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, false, &errMsg ) )
   {
     mInfoBar->pushCritical( tr( "Could not add image" ), errMsg );
   }
