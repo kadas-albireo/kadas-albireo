@@ -161,6 +161,8 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
       style = styleMap.value( styleUrlEl.text() );
     }
 
+    QMap<QString, QString> attributes = parseExtendedData( placemarkEl );
+
     // If there is an icon and the geometry is a point, add as annotation item, otherwise as redlining symbol
     if ( geoms.size() == 1 && !style.icon.isEmpty() && dynamic_cast<QgsPointV2*>( geoms.front() ) )
     {
@@ -175,47 +177,15 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
     else
     {
       // Attempt to recover redlining attributes
-      QString flags;
-      QString tooltip;
-      QString text;
+      QString flags = attributes.value( "flags" );
+      QString tooltip = attributes.value( "tooltip" );
+      QString text = attributes.value( "text" );
       StyleData redliningStyle;
-      QDomNodeList simpleDataEls = placemarkEl.elementsByTagName( "SimpleData" );
-      for ( int iSimpleData = 0, nSimpleData = simpleDataEls.size(); iSimpleData < nSimpleData; ++iSimpleData )
-      {
-        QDomElement simpleDataEl = simpleDataEls.at( iSimpleData ).toElement();
-        if ( simpleDataEl.attribute( "name" ) == "tooltip" )
-        {
-          tooltip = simpleDataEl.text();
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "flags" )
-        {
-          flags = simpleDataEl.text();
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "text" )
-        {
-          text = simpleDataEl.text();
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "outline_style" )
-        {
-          redliningStyle.outlineStyle = QgsSymbolLayerV2Utils::decodePenStyle( simpleDataEl.text() );
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "fill_style" )
-        {
-          redliningStyle.fillStyle = QgsSymbolLayerV2Utils::decodeBrushStyle( simpleDataEl.text() );
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "size" )
-        {
-          redliningStyle.outlineSize = simpleDataEl.text().toInt();
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "outline" )
-        {
-          redliningStyle.outlineColor = QgsSymbolLayerV2Utils::decodeColor( simpleDataEl.text() );
-        }
-        else if ( simpleDataEl.attribute( "name" ) == "fill" )
-        {
-          redliningStyle.fillColor = QgsSymbolLayerV2Utils::decodeColor( simpleDataEl.text() );
-        }
-      }
+      redliningStyle.outlineStyle = QgsSymbolLayerV2Utils::decodePenStyle( attributes.value( "outline_style" ) );
+      redliningStyle.fillStyle = QgsSymbolLayerV2Utils::decodeBrushStyle( attributes.value( "fill_style" ) );
+      redliningStyle.outlineSize = attributes.value( "size" ).toInt();
+      redliningStyle.outlineColor = QgsSymbolLayerV2Utils::decodeColor( attributes.value( "outline" ) );
+      redliningStyle.fillColor = QgsSymbolLayerV2Utils::decodeColor( attributes.value( "fill" ) );
       // If flags is empty, it is not a redlining object. Clear text, because it messes up rendering without matching flags
       if ( flags.isEmpty() )
       {
@@ -224,7 +194,22 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
       else
       {
         style = redliningStyle;
+        attributes.remove( "flags" );
+        attributes.remove( "tooltip" );
+        attributes.remove( "text" );
+        attributes.remove( "outline_style" );
+        attributes.remove( "fill_style" );
+        attributes.remove( "size" );
+        attributes.remove( "outline" );
+        attributes.remove( "fill" );
       }
+
+      QStringList attributesList;
+      for ( auto it = attributes.begin(), itEnd = attributes.end(); it != itEnd; ++it )
+      {
+        attributesList.append( it.key().toHtmlEscaped() + "=" + it.value().replace( QRegularExpression( "^\\s*(.*[^\\s])\\s*$", QRegularExpression::MultilineOption ), "\\1" ).toHtmlEscaped() );
+      }
+      QString attributesStr = attributesList.join( "&" );
 
     for ( QgsAbstractGeometryV2* geom : geoms )
       {
@@ -248,7 +233,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
           }
         }
         geom->transform( *QgsCoordinateTransformCache::instance()->transform( "EPSG:4326", "EPSG:3857" ) );
-        mRedliningLayer->addShape( new QgsGeometry( geom ), style.outlineColor, style.fillColor, style.outlineSize, style.outlineStyle, style.fillStyle, geomFlags, tooltip, text );
+        mRedliningLayer->addShape( new QgsGeometry( geom ), style.outlineColor, style.fillColor, style.outlineSize, style.outlineStyle, style.fillStyle, geomFlags, tooltip, text, attributesStr );
       }
     }
   }
@@ -508,4 +493,16 @@ QColor QgsKMLImport::parseColor( const QString& abgr ) const
   int g = abgr.mid( 4, 2 ).toInt( nullptr, 16 );
   int r = abgr.mid( 6, 2 ).toInt( nullptr, 16 );
   return QColor( r, g, b, a );
+}
+
+QMap<QString, QString> QgsKMLImport::parseExtendedData( const QDomElement& placemarkEl )
+{
+  QMap<QString, QString> attributes;
+  QDomNodeList simpleDataEls = placemarkEl.elementsByTagName( "SimpleData" );
+  for ( int iSimpleData = 0, nSimpleData = simpleDataEls.size(); iSimpleData < nSimpleData; ++iSimpleData )
+  {
+    QDomElement simpleDataEl = simpleDataEls.at( iSimpleData ).toElement();
+    attributes.insert( simpleDataEl.attribute( "name" ), simpleDataEl.text() );
+  }
+  return attributes;
 }
