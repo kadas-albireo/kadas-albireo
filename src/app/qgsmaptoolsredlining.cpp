@@ -332,7 +332,7 @@ QgsRedliningMapToolT<QgsMapToolDrawPolyLine>::QgsRedliningMapToolT( QgsMapCanvas
 const int QgsRedliningPointMapTool::sSizeRatio = 2;
 
 QgsRedliningPointMapTool::QgsRedliningPointMapTool( QgsMapCanvas* canvas, QgsRedliningManager *redlining, QgsRedliningLayer* layer, const QString& symbol, const QgsFeature* editFeature, QgsRedliningAttribEditor* editor )
-    : QgsRedliningMapToolT<QgsMapToolDrawPoint>( canvas, redlining, layer, QString( "shape=point,symbol=%1,w=%2*\"size\",h=%2*\"size\",r=0" ).arg( symbol ).arg( sSizeRatio ), editFeature, editor )
+    : QgsRedliningMapToolT<QgsMapToolDrawPoint>( canvas, redlining, layer, QString( "shape=point,symbol=%1,r=0" ).arg( symbol ).arg( sSizeRatio ), editFeature, editor )
 {
   if ( symbol == "circle" )
   {

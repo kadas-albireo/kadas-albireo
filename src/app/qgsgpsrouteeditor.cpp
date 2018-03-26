@@ -402,7 +402,7 @@ void QgsGPSRouteEditor::importGpx()
     double lat = wptEl.attribute( "lat" ).toDouble();
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
-    QString flags( "shape=point,symbol=circle,w=2*\"size\",h=2*\"size\",r=0,bold=1" );
+    QString flags( "shape=point,symbol=circle,r=0,bold=1" );
     mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nWpts;
   }

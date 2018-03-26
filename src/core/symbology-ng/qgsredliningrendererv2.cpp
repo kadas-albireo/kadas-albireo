@@ -34,8 +34,8 @@ QgsRedliningRendererV2::QgsRedliningRendererV2()
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_color", "\"outline\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_style", "\"outline_style\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "outline_width", "\"size\" / 4" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "eval(regexp_substr(\"flags\",'w=([^,]+)'))" );
-  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "height", "eval(regexp_substr(\"flags\",'h=([^,]+)'))" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "width", "2 * \"size\"" );
+  mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "height", "2 * \"size\"" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "rotation", "eval(regexp_substr(\"flags\",'r=([^,]+)'))" );
   mMarkerSymbol->symbolLayers().front()->setDataDefinedProperty( "symbol_name", "regexp_substr(\"flags\",'symbol=(\\\\w+)')" );
 
