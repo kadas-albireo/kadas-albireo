@@ -40,7 +40,8 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
                                  << QgsField( "fill_style", QVariant::Int, "integer", 1 )
                                  << QgsField( "text", QVariant::String, "string", 128 )
                                  << QgsField( "flags", QVariant::String, "string", 64 )
-                                 << QgsField( "tooltip", QVariant::String, "string", 128 ) );
+                                 << QgsField( "tooltip", QVariant::String, "string", 128 )
+                                 << QgsField( "attributes", QVariant::String, "string", 8192 ) );
   setRendererV2( new QgsRedliningRendererV2 );
   updateFields();
 
@@ -58,7 +59,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
   connect( this, SIGNAL( layerTransparencyChanged( int ) ), this, SLOT( changeTextTransparency( int ) ) );
 }
 
-bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip , const QString &text )
+bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, const QColor &fill, int outlineSize, Qt::PenStyle outlineStyle, Qt::BrushStyle fillStyle, const QString& flags, const QString& tooltip , const QString &text, const QString& attributes )
 {
   QFont font;
   QgsFeature f( pendingFields() );
@@ -80,6 +81,7 @@ bool QgsRedliningLayer::addShape( QgsGeometry *geometry, const QColor &outline, 
   flagsMap["rotation"] = flagsMap.value( "rotation", "0" );
   f.setAttribute( "flags", serializeFlags( flagsMap ) );
   f.setAttribute( "tooltip", tooltip );
+  f.setAttribute( "attributes", attributes );
   return dataProvider()->addFeatures( QgsFeatureList() << f );
 }
 
@@ -243,6 +245,7 @@ bool QgsRedliningLayer::readXml( const QDomNode& layer_node )
       feature.setAttribute( "text", redliningItemElem.attribute( "text", "" ) );
       feature.setAttribute( "flags", redliningItemElem.attribute( "flags", "" ) );
       feature.setAttribute( "tooltip", redliningItemElem.attribute( "tooltip" ) );
+      feature.setAttribute( "attributes", redliningItemElem.attribute( "attributes", "" ) );
       feature.setGeometry( QgsGeometry::fromWkt( redliningItemElem.attribute( "geometry", "" ) ) );
       features.append( feature );
     }
@@ -278,6 +281,7 @@ bool QgsRedliningLayer::writeXml( QDomNode & layer_node, QDomDocument & document
     redliningItemElem.setAttribute( "flags", feature.attribute( "flags" ).toString() );
     redliningItemElem.setAttribute( "geometry", feature.geometry()->exportToWkt() );
     redliningItemElem.setAttribute( "tooltip", feature.attribute( "tooltip" ).toString() );
+    redliningItemElem.setAttribute( "attributes", feature.attribute( "attributes" ).toString() );
     layer_node.appendChild( redliningItemElem );
   }
   return true;
