@@ -729,7 +729,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     //! Export project in kml format
     void kmlExport();
     //! Import kml
-    void kmlImport();
+    void kmlImport( QString filename = QString() );
     //! Open the project file corresponding to the
     //! text)= of the given action.
     void openProject( QAction *action );

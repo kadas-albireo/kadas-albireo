@@ -3152,21 +3152,24 @@ void QgisApp::kmlExport()
   QApplication::restoreOverrideCursor();
 }
 
-void QgisApp::kmlImport()
+void QgisApp::kmlImport( QString filename )
 {
-  QStringList filters;
-  filters.append( tr( "KMZ File (*.kmz)" ) );
-  filters.append( tr( "KML File (*.kml)" ) );
-
-  QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
-  QString selectedFilter;
-
-  QString filename = QFileDialog::getOpenFileName( this, tr( "Select KML/KMZ File" ), lastDir, filters.join( ";;" ), &selectedFilter );
   if ( filename.isEmpty() )
   {
-    return;
+    QStringList filters;
+    filters.append( tr( "KMZ File (*.kmz)" ) );
+    filters.append( tr( "KML File (*.kml)" ) );
+
+    QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
+    QString selectedFilter;
+
+    filename = QFileDialog::getOpenFileName( this, tr( "Select KML/KMZ File" ), lastDir, filters.join( ";;" ), &selectedFilter );
+    if ( filename.isEmpty() )
+    {
+      return;
+    }
+    QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
   }
-  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
   QString errMsg;
   QgsApplication::setOverrideCursor( Qt::BusyCursor );
   if ( QgsKMLImport( mapCanvas(), mRedlining->getOrCreateLayer() ).importFile( filename, errMsg ) )
@@ -3260,6 +3263,13 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
   // Handle georeferenced images (with EXIF tags)
   if ( QgsGeoImageAnnotationItem::create( mapCanvas(), fileName ) )
   {
+    return true;
+  }
+
+  // Handle KML/KMZ files
+  if ( fileName.endsWith( ".kml", Qt::CaseInsensitive ) || fileName.endsWith( ".kmz", Qt::CaseInsensitive ) )
+  {
+    kmlImport( fileName );
     return true;
   }
 
