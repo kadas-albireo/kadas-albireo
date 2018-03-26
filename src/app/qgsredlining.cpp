@@ -228,6 +228,8 @@ void QgsRedlining::setLayer( QgsRedliningLayer *layer )
   layer->setCustomProperty( "labeling/obstacle", "false" );
   layer->setCustomProperty( "labeling/dataDefined/PositionX",  "1~~1~~$x~~" );
   layer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~1~~$y~~" );
+  layer->setCustomProperty( "labeling/bufferDraw", true );
+  layer->setCustomProperty( "labeling/bufferSize", 0.75 );
 }
 
 QgsRedliningLayer* QgsRedlining::getLayer() const
