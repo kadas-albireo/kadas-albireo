@@ -171,6 +171,7 @@ QgsVBSRasterIdentifyResultDialog::QgsVBSRasterIdentifyResultDialog( const QVaria
   treeWidget->header()->resizeSection( 0, 200 );
   treeWidget->setHeaderLabels( QStringList() << tr( "Attribute" ) << tr( "Value" ) );
   treeWidget->setDropIndicatorShown( false );
+  treeWidget->setVerticalScrollMode(QTreeWidget::ScrollPerPixel);
   connect( treeWidget, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemClicked( QTreeWidgetItem*, int ) ) );
   layout()->addWidget( treeWidget );
   QDialogButtonBox* bbox = new QDialogButtonBox( QDialogButtonBox::Close, Qt::Horizontal, this );
