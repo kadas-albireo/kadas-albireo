@@ -1052,38 +1052,35 @@ int main( int argc, char *argv[] )
 
   //open default online/offline project if no project on command line and online test url is set
   QString templatePath;
-  if ( myProjectFileName.isEmpty() )
+  //check if online / offline and load the corresponding project
+  QString testUrl = mySettings.value( "/Qgis/onlineTestUrl" ).toString();
+  if ( !testUrl.isEmpty() )
   {
-    //check if online / offline and load the corresponding project
-    QString testUrl = mySettings.value( "/Qgis/onlineTestUrl" ).toString();
-    if ( !testUrl.isEmpty() )
+    QString templateDirPath = QgsApplication::projectTemplatesDir();
+    QString offlineProject = mySettings.value( "/Qgis/offlineDefaultProject" ).toString();
+    QString onlineProject = mySettings.value( "/Qgis/onlineDefaultProject" ).toString();
+
+    QEventLoop eventLoop;
+    QNetworkReply* reply = QgsNetworkAccessManager::instance()->head( QNetworkRequest( testUrl ) );
+    QObject::connect( reply, SIGNAL( finished() ), &eventLoop, SLOT( quit() ) );
+    eventLoop.exec();
+
+    if ( reply->error() == QNetworkReply::NoError )
     {
-      QString templateDirPath = QgsApplication::projectTemplatesDir();
-      QString offlineProject = mySettings.value( "/Qgis/offlineDefaultProject" ).toString();
-      QString onlineProject = mySettings.value( "/Qgis/onlineDefaultProject" ).toString();
-
-      QEventLoop eventLoop;
-      QNetworkReply* reply = QgsNetworkAccessManager::instance()->head( QNetworkRequest( testUrl ) );
-      QObject::connect( reply, SIGNAL( finished() ), &eventLoop, SLOT( quit() ) );
-      eventLoop.exec();
-
-      if ( reply->error() == QNetworkReply::NoError )
+      if ( !onlineProject.isEmpty() )
       {
-        if ( !onlineProject.isEmpty() )
-        {
-          templatePath = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
-        }
-        mySettings.setValue( "/Qgis/isOffline", false );
+        templatePath = QFileInfo( onlineProject ).isAbsolute() ? onlineProject : templateDirPath + "/" + onlineProject;
       }
-      else
-      {
-        if ( !offlineProject.isEmpty() )
-        {
-          templatePath = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
-        }
-      }
-      delete reply;
+      mySettings.setValue( "/Qgis/isOffline", false );
     }
+    else
+    {
+      if ( !offlineProject.isEmpty() )
+      {
+        templatePath = QFileInfo( offlineProject ).isAbsolute() ? offlineProject : templateDirPath + "/" + offlineProject;
+      }
+    }
+    delete reply;
   }
 
   /////////////////////////////////////////////////////////////////////
