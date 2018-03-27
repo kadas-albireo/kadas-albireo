@@ -89,7 +89,7 @@ void QgsSearchBox::init( QgsMapCanvas *canvas )
   mTreeWidget->setWindowFlags( Qt::Popup );
   mTreeWidget->setFocusPolicy( Qt::NoFocus );
   mTreeWidget->setFrameStyle( QFrame::Box );
-  mTreeWidget->setRootIsDecorated( false );
+  mTreeWidget->setRootIsDecorated( true );
   mTreeWidget->setColumnCount( 1 );
   mTreeWidget->setEditTriggers( QTreeWidget::NoEditTriggers );
   mTreeWidget->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -373,9 +373,30 @@ void QgsSearchBox::searchProviderFinished()
 
 void QgsSearchBox::searchResultFound( QgsSearchProvider::SearchResult result )
 {
+  // If result is fuzzy, search for fuzzy category
+  QTreeWidgetItem* root = mTreeWidget->invisibleRootItem();
+  if ( result.fuzzy )
+  {
+    int n = root->childCount();
+    if ( n == 0 || root->child( n - 1 )->data( 0, sCatNameRole ).toString() != "fuzzy" )
+    {
+      QTreeWidgetItem* fuzzyItem = new QTreeWidgetItem();
+      fuzzyItem->setData( 0, sEntryTypeRole, EntryTypeCategory );
+      fuzzyItem->setData( 0, sCatNameRole, "fuzzy" );
+      fuzzyItem->setData( 0, sCatPrecedenceRole, 100000 );
+      fuzzyItem->setData( 0, Qt::DisplayRole, tr( "Close matches" ) );
+      fuzzyItem->setFlags( Qt::ItemIsEnabled );
+      QFont font = fuzzyItem->font( 0 );
+      font.setBold( true );
+      font.setItalic( true );
+      fuzzyItem->setFont( 0, font );
+      root->addChild( fuzzyItem );
+      fuzzyItem->setExpanded( true );
+    }
+    root = root->child( root->childCount() - 1 );
+  }
   // Search category item
   QTreeWidgetItem* categoryItem = 0;
-  QTreeWidgetItem* root = mTreeWidget->invisibleRootItem();
   for ( int i = 0, n = root->childCount(); i < n; ++i )
   {
     if ( root->child( i )->data( 0, sCatNameRole ).toString() == result.category )

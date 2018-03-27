@@ -122,6 +122,7 @@ void QgsLocationSearchProvider::replyFinished()
   }
   QVariantMap resultMap = doc.object().toVariantMap();
 #endif
+  bool fuzzy = resultMap["fuzzy"] == "true";
   foreach ( const QVariant& item, resultMap["results"].toList() )
   {
     QVariantMap itemMap = item.toMap();
@@ -145,6 +146,7 @@ void QgsLocationSearchProvider::replyFinished()
     searchResult.text.replace( QRegExp( "<[^>]+>" ), "" ); // Remove HTML tags
     searchResult.crs = "EPSG:21781";
     searchResult.showPin = true;
+    searchResult.fuzzy = fuzzy;
     emit searchResultFound( searchResult );
   }
   mNetReply->deleteLater();

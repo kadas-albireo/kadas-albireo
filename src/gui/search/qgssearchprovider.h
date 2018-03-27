@@ -55,6 +55,7 @@ class GUI_EXPORT QgsSearchProvider : public QObject
       QString crs;
       double zoomScale;
       bool showPin;
+      bool fuzzy = false;
     };
     struct SearchRegion
     {
