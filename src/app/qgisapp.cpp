@@ -283,6 +283,7 @@
 #include "qgsmaptoolslope.h"
 #include "qgsmaptoolhillshade.h"
 #include "qgsmaptoolviewshed.h"
+#include "qgsmaptoolguidegrid.h"
 
 #include "nodetool/qgsmaptoolnodetool.h"
 
@@ -870,6 +871,7 @@ void QgisApp::destroy()
   delete mMapTools.mHillshade;
   delete mMapTools.mViewshed;
   delete mMapTools.mDeleteItems;
+  delete mMapTools.mGuideGridTool;
 
   delete mpMaptip;
 
@@ -1232,6 +1234,7 @@ void QgisApp::createCanvasTools()
   mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
   mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
   mMapTools.mDeleteItems = new QgsMapToolDeleteItems( mapCanvas(), messageBar() );
+  mMapTools.mGuideGridTool = new QgsGuideGridTool( mapCanvas() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
@@ -3355,6 +3358,11 @@ void QgisApp::showComposerManager()
   }
   mComposerManager->show();
   mComposerManager->activate();
+}
+
+void QgisApp::toggleGuideGridTool( bool active )
+{
+  toggleTool( mMapTools.mGuideGridTool, active );
 }
 
 void QgisApp::deleteComposerManager()

@@ -443,6 +443,10 @@ void QgsRibbonApp::configureButtons()
   connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_G ), this ), SIGNAL( activated() ), mActionGrid, SLOT( trigger() ) );
 
+  connect( mActionGuideGrid, SIGNAL( triggered( bool ) ), this, SLOT( toggleGuideGridTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_R ), this ), SIGNAL( activated() ), mActionGuideGrid, SLOT( trigger() ) );
+  setActionToButton( mActionGuideGrid, mGuideGridButton, mMapTools.mGuideGridTool );
+
   //draw tab
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_M ), this ), SIGNAL( activated() ), mActionPin, SLOT( trigger() ) );

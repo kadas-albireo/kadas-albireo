@@ -513,6 +513,7 @@
         <file>ribbon/hoehenprofil.png</file>
         <file>ribbon/inklination.png</file>
         <file>ribbon/koordinatengitter.png</file>
+        <file>ribbon/guide_grid.png</file>
         <file>ribbon/kopieren.png</file>
         <file>ribbon/kreismessung.png</file>
         <file>ribbon/layerbaum.png</file>
@@ -579,6 +580,7 @@
         <file>themes/default/mActionRename.png</file>
         <file>ribbon/home.png</file>
         <file>themes/default/mActionInfo.svg</file>
+        <file>themes/default/mActionPick.svg</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

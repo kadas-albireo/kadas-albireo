@@ -99,6 +99,7 @@ SET(QGIS_CORE_SRCS
   qgsgeometryvalidator.cpp
   qgsgml.cpp
   qgsgmlschema.cpp
+  qgsguidegridlayer.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
@@ -379,6 +380,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgsfeedback.h
   qgsgml.h
   qgsgmlschema.h
+  qgsguidegridlayer.h
   qgsmaplayer.h
   qgsmaplayerlegend.h
   qgsmaplayerregistry.h

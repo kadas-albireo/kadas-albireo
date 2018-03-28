@@ -158,6 +158,7 @@ class APP_EXPORT QgisApp : public QMainWindow
             , mRotateFeature( 0 )
             , mRotateLabel( 0 )
             , mChangeLabelProperties( 0 )
+            , mGuideGridTool( 0 )
         {}
 
         QgsMapTool *mZoomIn;
@@ -210,6 +211,7 @@ class APP_EXPORT QgisApp : public QMainWindow
         QgsMapTool *mHillshade;
         QgsMapTool *mViewshed;
         QgsMapTool *mDeleteItems;
+        QgsMapTool *mGuideGridTool;
     };
 
     //! Destructor
@@ -610,6 +612,8 @@ class APP_EXPORT QgisApp : public QMainWindow
     QList<QgsAnnotationItem*> annotationItems();
 
     void showComposerManager();
+
+    void toggleGuideGridTool( bool active );
 
   protected:
 
