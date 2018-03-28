@@ -51,6 +51,7 @@ QgsMapLayer::QgsMapLayer( QgsMapLayer::LayerType type,
                           QString lyrname,
                           QString source )
     : mValid( false ) // assume the layer is invalid
+    , mPriority( 0 )
     , mDataSource( source )
     , mLayerOrigName( lyrname ) // store the original name
     , mLayerType( type )

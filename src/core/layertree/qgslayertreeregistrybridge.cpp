@@ -52,6 +52,7 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     return;
 
   QList<QgsLayerTreeNode*> nodes;
+  int maxPriority = 0;
   foreach ( QgsMapLayer* layer, layers )
   {
     QgsLayerTreeLayer* nodeLayer = new QgsLayerTreeLayer( layer );
@@ -66,6 +67,7 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
       nodeLayer->setCustomProperty( "embedded", 1 );
       nodeLayer->setCustomProperty( "embedded_project", projectFile );
     }
+    maxPriority = std::max( maxPriority, layer->priority() );
   }
 
   int addMode = QSettings().value( "/Qgis/layerLegendAddMode", 0 ).toInt();
@@ -83,17 +85,16 @@ void QgsLayerTreeRegistryBridge::layersAdded( QList<QgsMapLayer*> layers )
     group = QgsLayerTree::toGroup( parent );
   }
 
-  // Modify insertion point to the first possible slot below any redlining
+  // Modify insertion point to the first possible slot below layers with higher priority
   QList<QgsLayerTreeNode*> childNodes = group->children();
-  for ( int i = childNodes.size() - 1; i >= ins; --i )
+  for ( int i = 0, n = childNodes.size(); i < n; ++i )
   {
     if ( childNodes[i]->nodeType() == QgsLayerTreeNode::NodeLayer )
     {
       QgsLayerTreeLayer* layerNode = static_cast<QgsLayerTreeLayer*>( childNodes[i] );
-      if ( layerNode->layer()->type() == QgsMapLayer::RedliningLayer && i <= ins )
+      if ( layerNode->layer()->priority() > maxPriority )
       {
         ins = i + 1;
-        break;
       }
     }
   }

@@ -417,6 +417,9 @@ class QgsMapLayer : QObject
     */
     bool hasScaleBasedVisibility() const;
 
+    /**Sets the layer priority in the layer tree (higher priority appear above) */
+    int priority() const;
+
   public slots:
 
     /** Event handler for when a coordinate transform fails due to bad vertex error */

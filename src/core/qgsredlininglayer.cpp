@@ -30,6 +30,7 @@ QgsRedliningLayer::QgsRedliningLayer( const QString& name , const QString &crs )
 {
   mLayerType = QgsMapLayer::RedliningLayer;
   mValid = true;
+  mPriority = 10;
 
   setFeatureFormSuppress( QgsVectorLayer::SuppressOn );
   dataProvider()->addAttributes( QList<QgsField>()

@@ -451,6 +451,9 @@ class CORE_EXPORT QgsMapLayer : public QObject
     */
     bool hasScaleBasedVisibility() const;
 
+    /**Sets the layer priority in the layer tree (higher priority appear above) */
+    int priority() const { return mPriority; }
+
   public slots:
 
     /** Event handler for when a coordinate transform fails due to bad vertex error */
@@ -586,6 +589,7 @@ class CORE_EXPORT QgsMapLayer : public QObject
 
     /** Indicates if the layer is valid and can be drawn */
     bool mValid;
+    int mPriority;
 
     /** data source description string, varies by layer type */
     QString mDataSource;
