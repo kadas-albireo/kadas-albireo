@@ -34,6 +34,7 @@ class QgsLegendInterface;
 class QgsMapCanvas;
 class QgsMapLayer;
 class QgsMapLayerPropertiesFactory;
+class QgsMapTool;
 class QgsMessageBar;
 class QgsPasteHandler;
 class QgsPluginInterface;
@@ -335,6 +336,7 @@ class GUI_EXPORT QgisInterface : public QObject
     virtual void openURL( QString url, bool useQgisDocDirectory = true ) = 0;
 
 
+  public:
     /** Accessors for inserting items into menus and toolbars.
      * An item can be inserted before any existing action.
      */
@@ -377,6 +379,59 @@ class GUI_EXPORT QgisInterface : public QObject
 
     // Generic action finder
     virtual QAction* findAction( const QString& name ) = 0;
+
+    enum ActionClassicMenuLocation
+    {
+      NO_MENU,
+      FILE_MENU,
+      PROJECT_MENU,
+      EDIT_MENU,
+      VIEW_MENU,
+      LAYER_MENU,
+      NEWLAYER_MENU,
+      ADDLAYER_MENU,
+      SETTINGS_MENU,
+      PLUGIN_MENU,
+      RASTER_MENU,
+      DATABASE_MENU,
+      VECTOR_MENU,
+      WEB_MENU,
+      FIRST_RIGHT_STANDARD_MENU,
+      WINDOW_MENU,
+      HELP_MENU,
+      CUSTOM_MENU
+    };
+    enum ActionClassicToolbarLocation
+    {
+      NO_TOOLBAR,
+      FILE_TOOLBAR,
+      LAYER_TOOLBAR,
+      MAP_NAV_TOOL_TOOLBAR,
+      ADVANCED_DIGITIZE_TOOLBAR,
+      ATTRIBUTES_TOOLBAR,
+      PLUGIN_TOOLBAR,
+      HELP_TOOLBAR,
+      RASTER_TOOLBAR,
+      VECTOR_TOOLBAR,
+      DATABASE_TOOLBAR,
+      WEB_TOOLBAR,
+      CUSTOM_TOOLBAR
+    };
+    enum ActionRibbonTabLocation
+    {
+      NO_TAB,
+      MAPS_TAB,
+      VIEW_TAB,
+      ANALYSIS_TAB,
+      DRAW_TAB,
+      GPS_TAB,
+      MSS_TAB,
+      SETTINGS_TAB,
+      HELP_TAB,
+      CUSTOM_TAB
+    };
+    // Generic action adder
+    virtual void addAction( QAction* action, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString(), QgsMapTool* associatedMapTool = nullptr ) = 0;
 
     // Generic object finder
     virtual QObject* findObject( const QString& name ) = 0;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1349</width>
-    <height>152</height>
+    <height>133</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -351,7 +351,7 @@
          <attribute name="title">
           <string>My &amp;maps</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_2">
+         <layout class="QHBoxLayout" name="hboxLayout_mymaps">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -364,44 +364,13 @@
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="4">
-           <widget class="QgsRibbonButton" name="mPrintButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Print</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+          <item>
            <widget class="QgsRibbonButton" name="mNewButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -432,7 +401,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item>
            <widget class="QgsRibbonButton" name="mOpenButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -463,7 +432,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item>
            <widget class="QgsRibbonButton" name="mSaveButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -494,7 +463,125 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
+          <item>
+           <widget class="QgsRibbonButton" name="mSaveAsButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Save As</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mPrintButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Print</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mSaveMapExtentButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Copy Map</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mCopyButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Save Map</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QgsRibbonButton" name="mExportKMLButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -526,107 +613,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
-           <widget class="QgsRibbonButton" name="mSaveMapExtentButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Copy Map</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="9">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="5">
-           <widget class="QgsRibbonButton" name="mCopyButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Save Map</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QgsRibbonButton" name="mSaveAsButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Save As</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="8">
+          <item>
            <widget class="QgsRibbonButton" name="mImportKMLButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -658,22 +645,36 @@
             </property>
            </widget>
           </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
-         <zorder>mSaveButton</zorder>
-         <zorder>mOpenButton</zorder>
          <zorder>mPrintButton</zorder>
-         <zorder>mNewButton</zorder>
-         <zorder>mSaveMapExtentButton</zorder>
          <zorder>mExportKMLButton</zorder>
-         <zorder>mCopyButton</zorder>
-         <zorder>mSaveAsButton</zorder>
          <zorder>mImportKMLButton</zorder>
+         <zorder>horizontalSpacer</zorder>
+         <zorder>mNewButton</zorder>
+         <zorder>mOpenButton</zorder>
+         <zorder>mSaveButton</zorder>
+         <zorder>mSaveAsButton</zorder>
+         <zorder>mSaveMapExtentButton</zorder>
+         <zorder>mCopyButton</zorder>
         </widget>
         <widget class="QWidget" name="mViewTab">
          <attribute name="title">
           <string>&amp;View</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_6">
+         <layout class="QHBoxLayout" name="hboxLayout_view">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -686,94 +687,13 @@
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="1">
-           <widget class="QgsRibbonButton" name="mZoomNextButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Next Extent</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+Right</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="7">
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="3">
-           <widget class="QgsRibbonButton" name="m3DButton">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>3D</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+          <item>
            <widget class="QgsRibbonButton" name="mZoomLastButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -807,7 +727,41 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item>
+           <widget class="QgsRibbonButton" name="mZoomNextButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Next Extent</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+Right</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QgsRibbonButton" name="mNewMapWindowButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -838,8 +792,11 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
-           <widget class="QgsRibbonButton" name="mGuideGridButton">
+          <item>
+           <widget class="QgsRibbonButton" name="m3DButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -859,7 +816,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Guide grid</string>
+             <string>3D</string>
             </property>
             <property name="iconSize">
              <size>
@@ -869,7 +826,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
+          <item>
            <widget class="QgsRibbonButton" name="mGridButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -903,13 +860,57 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mGuideGridButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Guide grid</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="mAnalysisTab">
          <attribute name="title">
           <string>&amp;Analysis</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_5">
+         <layout class="QHBoxLayout" name="hboxLayout_analysis">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -922,75 +923,13 @@
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="9">
-           <widget class="QgsRibbonButton" name="mViewshedButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Viewshed</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QgsRibbonButton" name="mMeasureCircleButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Circle</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+          <item>
            <widget class="QgsRibbonButton" name="mDistanceButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1021,7 +960,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item>
            <widget class="QgsRibbonButton" name="mAreaButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1052,8 +991,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="8">
-           <widget class="QgsRibbonButton" name="mHillshadeButton">
+          <item>
+           <widget class="QgsRibbonButton" name="mMeasureCircleButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1073,7 +1012,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Hillshade</string>
+             <string>Circle</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1083,7 +1022,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
+          <item>
            <widget class="QgsRibbonButton" name="mAzimuthButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1117,51 +1056,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
-           <widget class="QgsRibbonButton" name="mSlopeButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Slope</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="10">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>49</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="6">
+          <item>
            <widget class="QgsRibbonButton" name="mProfileButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1193,13 +1088,119 @@ Sight</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mSlopeButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Slope</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mHillshadeButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Hillshade</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mViewshedButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Viewshed</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>49</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="mDrawTab">
          <attribute name="title">
           <string>&amp;Draw</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_4">
+         <layout class="QHBoxLayout" name="hboxLayout_draw">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -1212,88 +1213,13 @@ Sight</string>
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="2">
-           <widget class="QgsRibbonButton" name="mPinButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Pin</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="6">
-           <spacer name="horizontalSpacer_2">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="5">
-           <widget class="QgsRibbonButton" name="mDeleteItemsButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Delete Items</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
+          <item>
            <layout class="QGridLayout" name="mGridLayoutRedlining">
             <property name="spacing">
              <number>10</number>
@@ -1459,7 +1385,38 @@ Sight</string>
             </item>
            </layout>
           </item>
-          <item row="0" column="3">
+          <item>
+           <widget class="QgsRibbonButton" name="mPinButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Pin</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QgsRibbonButton" name="mAddImageButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1490,7 +1447,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
+          <item>
            <widget class="QgsRibbonButton" name="mPasteButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1521,13 +1478,57 @@ Sight</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mDeleteItemsButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Delete Items</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="mGpsTab">
          <attribute name="title">
           <string>&amp;GPS</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QHBoxLayout" name="hboxLayout_gps">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -1540,106 +1541,13 @@ Sight</string>
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="6">
-           <widget class="QgsRibbonButton" name="mDrawWaypointButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Draw Waypoints</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QgsRibbonButton" name="mMoveWithGPSButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Move with GPS</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="10">
-           <widget class="QgsRibbonButton" name="mGpxImportButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Import GPX</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
+          <item>
            <widget class="QgsRibbonButton" name="mEnableGPSButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1670,27 +1578,8 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="12">
-           <spacer name="horizontalSpacer_3">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>83</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="8">
-           <widget class="QgsRibbonButton" name="mGpxExportButton">
+          <item>
+           <widget class="QgsRibbonButton" name="mMoveWithGPSButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1710,7 +1599,7 @@ Sight</string>
              </size>
             </property>
             <property name="text">
-             <string>Export GPX</string>
+             <string>Move with GPS</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1720,7 +1609,38 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
+          <item>
+           <widget class="QgsRibbonButton" name="mDrawWaypointButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Draw Waypoints</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QgsRibbonButton" name="mDrawRouteButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1751,13 +1671,94 @@ Sight</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mGpxExportButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Export GPX</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QgsRibbonButton" name="mGpxImportButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Import GPX</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>83</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="mMssTab">
          <attribute name="title">
           <string>&amp;MSS</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_8">
+         <layout class="QHBoxLayout" name="hboxLayout_mss">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -1770,13 +1771,13 @@ Sight</string>
           <property name="bottomMargin">
            <number>10</number>
           </property>
-          <property name="horizontalSpacing">
+          <property name="horizontalSpacing" stdset="0">
            <number>10</number>
           </property>
-          <property name="verticalSpacing">
+          <property name="verticalSpacing" stdset="0">
            <number>0</number>
           </property>
-          <item row="0" column="0">
+          <item>
            <widget class="QgsRibbonButton" name="mMilxButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1810,7 +1811,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item>
            <widget class="QgsRibbonButton" name="mSaveMilxButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1835,7 +1836,7 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item>
            <widget class="QgsRibbonButton" name="mLoadMilxButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -1860,7 +1861,32 @@ Sight</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
+          <item>
+           <widget class="QgsRibbonButton" name="mOvlButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Import OVL</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QGridLayout" name="mGridLayoutMssOptions">
             <item row="0" column="1">
              <widget class="QSlider" name="mSymbolSizeSlider">
@@ -1976,7 +2002,7 @@ Sight</string>
             </item>
            </layout>
           </item>
-          <item row="0" column="5">
+          <item>
            <spacer name="horizontalSpacer_7">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1988,31 +2014,6 @@ Sight</string>
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="0" column="3">
-           <widget class="QgsRibbonButton" name="mOvlButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Import OVL</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>

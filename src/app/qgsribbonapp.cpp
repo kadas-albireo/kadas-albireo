@@ -541,6 +541,36 @@ void QgsRibbonApp::setActionToButton( QAction* action, QToolButton* button, QgsM
   }
 }
 
+QWidget* QgsRibbonApp::addRibbonTab( const QString& name )
+{
+  QWidget* widget = new QWidget( mRibbonWidget );
+  widget->setLayout( new QHBoxLayout() );
+  widget->layout()->setContentsMargins( 0, 0, 0, 0 );
+  widget->layout()->setSpacing( 6 );
+  widget->layout()->addItem( new QSpacerItem( 1, 1, QSizePolicy::Expanding ) );
+  mRibbonWidget->addTab( widget, name );
+  return widget;
+}
+
+void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool* associatedMapTool )
+{
+  QgsRibbonButton* button = new QgsRibbonButton();
+  button->setText( action->text() );
+  button->setMinimumSize( QSize( 0, 80 ) );
+  button->setMaximumSize( QSize( 80, 80 ) );
+  button->setIconSize( QSize( 32, 32 ) );
+
+  QSizePolicy sizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Fixed );
+  sizePolicy.setHorizontalStretch( 0 );
+  sizePolicy.setVerticalStretch( 0 );
+  sizePolicy.setHeightForWidth( button->sizePolicy().hasHeightForWidth() );
+  button->setSizePolicy( sizePolicy );
+
+  QHBoxLayout* layout = dynamic_cast<QHBoxLayout*>( tabWidget->layout() );
+  layout->insertWidget( layout->count() - 1, button );
+  setActionToButton( action, button, associatedMapTool );
+}
+
 void QgsRibbonApp::attributeTable()
 {
   QgsVectorLayer *layer = qobject_cast<QgsVectorLayer *>( activeLayer() );

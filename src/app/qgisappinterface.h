@@ -24,6 +24,7 @@
 
 class QgisApp;
 class QgsClassicApp;
+class QgsRibbonApp;
 
 
 /** \class QgisAppInterface
@@ -318,6 +319,9 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     //! Generic action finder
     virtual QAction* findAction( const QString& name ) override;
 
+    // Generic action adder
+    void addAction( QAction* action, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString(), QgsMapTool* associatedMapTool = nullptr ) override;
+
     // Generic object finder
     virtual QObject* findObject( const QString& name ) override;
 
@@ -495,6 +499,7 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     //! Pointer to the QgisApp object
     QgisApp *qgis;
     QgsClassicApp * qgisc;
+    QgsRibbonApp *qgisr;
 
     QTimer *mTimer;
 

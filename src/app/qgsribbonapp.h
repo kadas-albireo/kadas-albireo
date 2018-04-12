@@ -41,6 +41,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     QgsMapCanvas *mapCanvas() const override { return mMapCanvas; }
     QgsLayerTreeView* layerTreeView() const override { return mLayerTreeView; }
     QgsMessageBar *messageBar() const override { return mInfoBar; }
+
     QMenu *projectMenu() const override { return mProjectMenu; }
     QMenu *editMenu() const override { return mEditMenu; }
     QMenu *viewMenu() const override { return mViewMenu; }
@@ -67,6 +68,19 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     QMenu *printComposersMenu() const override { return mPrintComposersMenu; }
     QMenu *panelMenu() const override { return mPanelMenu; }
     QMenu *featureActionMenu() const override { return mFeatureActionMenu; }
+
+    QTabWidget* ribbonTabWidget() const { return mRibbonWidget; }
+    QWidget* mapsTab() const { return mRibbonWidget->widget( 0 ); }
+    QWidget* viewTab() const { return mRibbonWidget->widget( 1 ); }
+    QWidget* analysisTab() const { return mRibbonWidget->widget( 2 ); }
+    QWidget* drawTab() const { return mRibbonWidget->widget( 3 ); }
+    QWidget* gpsTab() const { return mRibbonWidget->widget( 4 ); }
+    QWidget* mssTab() const { return mRibbonWidget->widget( 5 ); }
+    QWidget* settingsTab() const { return mRibbonWidget->widget( 6 ); }
+    QWidget* helpTab() const { return mRibbonWidget->widget( 7 ); }
+
+    QWidget* addRibbonTab( const QString& name );
+    void addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool *associatedMapTool = nullptr );
 
   public slots:
     virtual void attributeTable();
