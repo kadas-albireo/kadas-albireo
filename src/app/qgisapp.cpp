@@ -4555,6 +4555,12 @@ QString QgisApp::uniqueComposerTitle( QWidget* parent, bool acceptEmpty, const Q
       }
       else
       {
+        QString baseTitle = tr( "Composer" );
+        newTitle = baseTitle;
+        for ( int i = 1; cNames.contains( newTitle ); ++i )
+        {
+          newTitle = QString( "%1 (%2)" ).arg( baseTitle ).arg( i );
+        }
         break;
       }
     }
