@@ -27,13 +27,15 @@ class QDoubleSpinBox;
 class QSpinBox;
 class QgsGuideGridLayer;
 class QgsGuideGridWidget;
+class QgsLayerTreeView;
 
 class APP_EXPORT QgsGuideGridTool : public QgsMapTool
 {
     Q_OBJECT
   public:
     enum PickMode {PICK_NONE, PICK_TOP_LEFT, PICK_BOTTOM_RIGHT};
-    QgsGuideGridTool( QgsMapCanvas* canvas );
+    QgsGuideGridTool( QgsMapCanvas* canvas , QgsLayerTreeView *layerTreeView );
+    ~QgsGuideGridTool();
 
     void activate() override;
     void deactivate() override;
@@ -43,10 +45,15 @@ class APP_EXPORT QgsGuideGridTool : public QgsMapTool
   private:
     QgsGuideGridWidget* mWidget;
     PickMode mPickMode = PICK_NONE;
+    QAction* mActionEditLayer = nullptr;
+    QgsLayerTreeView* mLayerTreeView;
 
   private slots:
     void setPickMode( QgsGuideGridTool::PickMode pickMode );
     void close();
+    void addLayerTreeMenuAction( QgsMapLayer* mapLayer );
+    void removeLayerTreeMenuAction( const QString& mapLayerId );
+    void editCurrentLayer();
 
   signals:
     void pickResult( PickMode pickMode, QgsPoint pos );
@@ -58,16 +65,20 @@ class APP_EXPORT QgsGuideGridWidget : public QgsBottomBar
     Q_OBJECT
 
   public:
-    QgsGuideGridWidget( QgsMapCanvas* canvas );
-    void init();
+    QgsGuideGridWidget( QgsMapCanvas* canvas , QgsLayerTreeView *layerTreeView );
     void pointPicked( QgsGuideGridTool::PickMode pickMode, const QgsPoint& pos );
 
+  public slots:
+    void createLayer( QString layerName = QString() );
+    void setLayer( QgsMapLayer* layer );
+
   private:
+    QgsLayerTreeView* mLayerTreeView;
     QgsCoordinateReferenceSystem mCrs;
     QgsRectangle mCurRect;
     Ui::QgsGuideGridWidgetBase ui;
+    QgsGuideGridLayer* mCurrentLayer = nullptr;
 
-    QgsGuideGridLayer* getGuideGridLayer() const;
     void updateGrid();
     void showEvent( QShowEvent */*event*/ ) override { setFixedSize( size() ); updatePosition(); }
 
@@ -85,6 +96,8 @@ class APP_EXPORT QgsGuideGridWidget : public QgsBottomBar
     void updateLabeling( int labelingMode );
     void pickTopLeftPos() { emit requestPick( QgsGuideGridTool::PICK_TOP_LEFT ); }
     void pickBottomRight() { emit requestPick( QgsGuideGridTool::PICK_BOTTOM_RIGHT ); }
+    void repopulateLayers();
+    void currentLayerChanged( int cur );
 };
 
 #endif // QGSMAPTOOLGUIDEGRID_H

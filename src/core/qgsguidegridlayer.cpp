@@ -136,8 +136,8 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
     }
 };
 
-QgsGuideGridLayer::QgsGuideGridLayer()
-    : QgsPluginLayer( layerTypeKey(), tr( "Guide Grid" ) )
+QgsGuideGridLayer::QgsGuideGridLayer( const QString& name )
+    : QgsPluginLayer( layerTypeKey(), name )
 {
   mValid = true;
   mPriority = 100;

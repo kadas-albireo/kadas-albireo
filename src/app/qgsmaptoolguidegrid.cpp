@@ -19,9 +19,11 @@
 #include "qgsmaptoolguidegrid.h"
 #include "qgsmapcanvas.h"
 #include "qgsmaplayerregistry.h"
+#include "qgslayertreeview.h"
 
 #include <QDoubleSpinBox>
 #include <QGridLayout>
+#include <QInputDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMouseEvent>
@@ -30,18 +32,80 @@
 #include <QSpinBox>
 
 
-QgsGuideGridTool::QgsGuideGridTool( QgsMapCanvas* canvas )
-    : QgsMapTool( canvas )
+QgsGuideGridTool::QgsGuideGridTool( QgsMapCanvas* canvas, QgsLayerTreeView* layerTreeView )
+    : QgsMapTool( canvas ), mLayerTreeView( layerTreeView )
 {
-  mWidget = new QgsGuideGridWidget( canvas );
+  mWidget = new QgsGuideGridWidget( canvas, mLayerTreeView );
   mWidget->setVisible( false );
   connect( mWidget, SIGNAL( requestPick( QgsGuideGridTool::PickMode ) ), this, SLOT( setPickMode( QgsGuideGridTool::PickMode ) ) );
   connect( mWidget, SIGNAL( close() ), this, SLOT( close() ) );
+
+  mActionEditLayer = new QAction( tr( "Edit" ), this );
+  mActionEditLayer->setIcon( QIcon( ":/images/themes/default/mIconEditable.png" ) );
+  connect( mActionEditLayer, SIGNAL( triggered( bool ) ), this, SLOT( editCurrentLayer( ) ) );
+
+  mLayerTreeView->menuProvider()->addLegendLayerAction( mActionEditLayer, "", "edit_guidegrid_layer", QgsMapLayer::PluginLayer, false );
+
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWasAdded( QgsMapLayer* ) ), this, SLOT( addLayerTreeMenuAction( QgsMapLayer* ) ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layerWillBeRemoved( QString ) ), this, SLOT( removeLayerTreeMenuAction( QString ) ) );
+}
+
+QgsGuideGridTool::~QgsGuideGridTool()
+{
+  mLayerTreeView->menuProvider()->removeLegendLayerAction( mActionEditLayer );
+}
+
+void QgsGuideGridTool::addLayerTreeMenuAction( QgsMapLayer* mapLayer )
+{
+  if ( dynamic_cast<QgsGuideGridLayer*>( mapLayer ) )
+  {
+    mLayerTreeView->menuProvider()->addLegendLayerActionForLayer( "edit_guidegrid_layer", mapLayer );
+  }
+}
+
+void QgsGuideGridTool::removeLayerTreeMenuAction( const QString& mapLayerId )
+{
+  QgsMapLayer* mapLayer = QgsMapLayerRegistry::instance()->mapLayer( mapLayerId );
+  if ( dynamic_cast<QgsGuideGridLayer*>( mapLayer ) )
+  {
+    mLayerTreeView->menuProvider()->removeLegendLayerActionsForLayer( mapLayer );
+  }
+}
+
+void QgsGuideGridTool::editCurrentLayer()
+{
+  if ( dynamic_cast<QgsGuideGridLayer*>( mCanvas->currentLayer() ) )
+  {
+    mCanvas->setMapTool( this );
+  }
 }
 
 void QgsGuideGridTool::activate()
 {
-  mWidget->init();
+  // If current layer is a GuideGridLayer, use that one
+  if ( dynamic_cast<QgsGuideGridLayer*>( mCanvas->currentLayer() ) )
+  {
+    mWidget->setLayer( mCanvas->currentLayer() );
+  }
+  else
+  {
+    // Search first GuideGridLayer
+    bool found = false;
+  for ( QgsMapLayer* layer : QgsMapLayerRegistry::instance()->mapLayers().values() )
+    {
+      if ( dynamic_cast<QgsGuideGridLayer*>( layer ) )
+      {
+        mWidget->setLayer( layer );
+        found = true;
+        break;
+      }
+    }
+    // If none found, create a new one
+    if ( !found )
+    {
+      mWidget->createLayer( tr( "Guide grid" ) );
+    }
+  }
   mWidget->setVisible( true );
   QgsMapTool::activate();
 }
@@ -94,8 +158,8 @@ void QgsGuideGridTool::keyReleaseEvent( QKeyEvent *e )
 
 static QRegExp g_cooRegExp( "^\\s*(\\d+\\.?\\d*)[,\\s]?\\s*(\\d+\\.?\\d*)\\s*$" );
 
-QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas )
-    : QgsBottomBar( canvas )
+QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas, QgsLayerTreeView* layerTreeView )
+    : QgsBottomBar( canvas ), mLayerTreeView( layerTreeView )
 {
   setLayout( new QHBoxLayout );
   layout()->setSpacing( 10 );
@@ -112,6 +176,7 @@ QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas )
   layout()->addWidget( closeButton );
   layout()->setAlignment( closeButton, Qt::AlignTop );
 
+  connect( ui.toolButtonAddLayer, SIGNAL( clicked( bool ) ), this, SLOT( createLayer() ) );
   connect( ui.lineEditTopLeft, SIGNAL( editingFinished() ), this, SLOT( topLeftEdited() ) );
   connect( ui.toolButtonPickTopLeft, SIGNAL( clicked( bool ) ), this, SLOT( pickTopLeftPos() ) );
 
@@ -133,44 +198,59 @@ QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas )
   connect( ui.toolButtonColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( updateColor( QColor ) ) );
   connect( ui.spinBoxFontSize, SIGNAL( valueChanged( int ) ), this, SLOT( updateFontSize( int ) ) );
   connect( ui.comboBoxLabeling, SIGNAL( currentIndexChanged( int ) ), this, SLOT( updateLabeling( int ) ) );
+
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
+  connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
+
+  repopulateLayers();
+  connect( ui.comboBoxLayer, SIGNAL( currentIndexChanged( int ) ), this, SLOT( currentLayerChanged( int ) ) );
 }
 
-void QgsGuideGridWidget::init()
+void QgsGuideGridWidget::createLayer( QString layerName )
 {
-  mCurRect = mCanvas->extent();
-  mCrs = mCanvas->mapSettings().destinationCrs();
-  QgsGuideGridLayer* guideGridLayer = getGuideGridLayer();
+  if ( layerName.isEmpty() )
+  {
+    layerName = QInputDialog::getText( this, tr( "Layer Name" ), tr( "Enter name of new layer:" ) );
+  }
+  if ( !layerName.isEmpty() )
+  {
+    QgsGuideGridLayer* guideGridLayer = new QgsGuideGridLayer( layerName );
+    guideGridLayer->setup( mCanvas->extent(), 10, 10, mCanvas->mapSettings().destinationCrs() );
+    QgsMapLayerRegistry::instance()->addMapLayer( guideGridLayer );
+    setLayer( guideGridLayer );
+  }
+}
+
+void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
+{
+  mCurrentLayer = dynamic_cast<QgsGuideGridLayer*>( layer );
+  if ( !mCurrentLayer )
+  {
+    ui.widgetLayerSetup->setEnabled( false );
+    return;
+  }
+  ui.comboBoxLayer->blockSignals( true );
+  ui.comboBoxLayer->setCurrentIndex( ui.comboBoxLayer->findData( mCurrentLayer->id() ) );
+  ui.comboBoxLayer->blockSignals( false );
+  mLayerTreeView->setLayerVisible( mCurrentLayer, true );
+  mCanvas->setCurrentLayer( mCurrentLayer );
+
   int prec = mCrs.mapUnits() == QGis::Degrees ? 3 : 0;
-  mCrs = guideGridLayer->crs();
-  mCurRect = guideGridLayer->extent();
+  mCrs = mCurrentLayer->crs();
+  mCurRect = mCurrentLayer->extent();
   ui.lineEditTopLeft->setText( QString( "%1, %2" ).arg( mCurRect.xMinimum(), 0, 'f', prec ).arg( mCurRect.yMaximum(), 0, 'f', prec ) );
   ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( mCurRect.xMaximum(), 0, 'f', prec ).arg( mCurRect.yMinimum(), 0, 'f', prec ) );
   ui.spinBoxCols->blockSignals( true );
-  ui.spinBoxCols->setValue( guideGridLayer->cols() );
+  ui.spinBoxCols->setValue( mCurrentLayer->cols() );
   ui.spinBoxCols->blockSignals( false );
   ui.spinBoxRows->blockSignals( true );
-  ui.spinBoxRows->setValue( guideGridLayer->rows() );
+  ui.spinBoxRows->setValue( mCurrentLayer->rows() );
   ui.spinBoxRows->blockSignals( false );
-  ui.toolButtonColor->setColor( guideGridLayer->color() );
-  ui.spinBoxFontSize->setValue( guideGridLayer->fontSize() );
-  ui.comboBoxLabeling->setCurrentIndex( guideGridLayer->labelingMode() );
+  ui.toolButtonColor->setColor( mCurrentLayer->color() );
+  ui.spinBoxFontSize->setValue( mCurrentLayer->fontSize() );
+  ui.comboBoxLabeling->setCurrentIndex( mCurrentLayer->labelingMode() );
   updateIntervals();
-}
-
-QgsGuideGridLayer* QgsGuideGridWidget::getGuideGridLayer() const
-{
-  // Search fpr existing guide grid layer
-for ( QgsMapLayer* layer : QgsMapLayerRegistry::instance()->mapLayers().values() )
-  {
-    if ( dynamic_cast<QgsGuideGridLayer*>( layer ) )
-    {
-      return static_cast<QgsGuideGridLayer*>( layer );
-    }
-  }
-  QgsGuideGridLayer* guideGridLayer = new QgsGuideGridLayer();
-  guideGridLayer->setup( mCurRect, ui.spinBoxCols->value(), ui.spinBoxRows->value(), mCrs );
-  QgsMapLayerRegistry::instance()->addMapLayer( guideGridLayer );
-  return guideGridLayer;
+  ui.widgetLayerSetup->setEnabled( true );
 }
 
 void QgsGuideGridWidget::pointPicked( QgsGuideGridTool::PickMode pickMode, const QgsPoint& pos )
@@ -248,32 +328,85 @@ void QgsGuideGridWidget::updateBottomRight()
 
 void QgsGuideGridWidget::updateGrid()
 {
+  if ( !mCurrentLayer )
+  {
+    return;
+  }
   int prec = mCrs.mapUnits() == QGis::Degrees ? 3 : 0;
   mCurRect.normalize();
   ui.lineEditTopLeft->setText( QString( "%1, %2" ).arg( mCurRect.xMinimum(), 0, 'f', prec ).arg( mCurRect.yMaximum(), 0, 'f', prec ) );
   ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( mCurRect.xMaximum(), 0, 'f', prec ).arg( mCurRect.yMinimum(), 0, 'f', prec ) );
-  QgsGuideGridLayer* layer = getGuideGridLayer();
-  layer->setup( mCurRect, ui.spinBoxCols->value(), ui.spinBoxRows->value(), mCrs );
-  layer->triggerRepaint();
+  mCurrentLayer->setup( mCurRect, ui.spinBoxCols->value(), ui.spinBoxRows->value(), mCrs );
+  mCurrentLayer->triggerRepaint();
 }
 
 void QgsGuideGridWidget::updateColor( const QColor& color )
 {
-  QgsGuideGridLayer* layer = getGuideGridLayer();
-  layer->setColor( color );
-  layer->triggerRepaint();
+  if ( !mCurrentLayer )
+  {
+    return;
+  }
+  mCurrentLayer->setColor( color );
+  mCurrentLayer->triggerRepaint();
 }
 
 void QgsGuideGridWidget::updateFontSize( int fontSize )
 {
-  QgsGuideGridLayer* layer = getGuideGridLayer();
-  layer->setFontSize( fontSize );
-  layer->triggerRepaint();
+  if ( !mCurrentLayer )
+  {
+    return;
+  }
+  mCurrentLayer->setFontSize( fontSize );
+  mCurrentLayer->triggerRepaint();
 }
 
 void QgsGuideGridWidget::updateLabeling( int labelingMode )
 {
-  QgsGuideGridLayer* layer = getGuideGridLayer();
-  layer->setLabelingMode( static_cast<QgsGuideGridLayer::LabelingMode>( labelingMode ) );
-  layer->triggerRepaint();
+  if ( !mCurrentLayer )
+  {
+    return;
+  }
+  mCurrentLayer->setLabelingMode( static_cast<QgsGuideGridLayer::LabelingMode>( labelingMode ) );
+  mCurrentLayer->triggerRepaint();
+}
+
+void QgsGuideGridWidget::repopulateLayers()
+{
+  // Avoid update while updating
+  if ( ui.comboBoxLayer->signalsBlocked() )
+  {
+    return;
+  }
+  ui.comboBoxLayer->blockSignals( true );
+  ui.comboBoxLayer->clear();
+  int idx = 0, current = 0;
+  foreach ( QgsMapLayer* layer, QgsMapLayerRegistry::instance()->mapLayers().values() )
+  {
+    if ( dynamic_cast<QgsGuideGridLayer*>( layer ) )
+    {
+      connect( layer, SIGNAL( layerNameChanged() ), this, SLOT( repopulateLayers() ), Qt::UniqueConnection );
+      ui.comboBoxLayer->addItem( layer->name(), layer->id() );
+      if ( mCanvas->currentLayer() == layer )
+      {
+        current = idx;
+      }
+      ++idx;
+    }
+  }
+  ui.comboBoxLayer->setCurrentIndex( -1 );
+  ui.comboBoxLayer->blockSignals( false );
+  ui.comboBoxLayer->setCurrentIndex( current );
+}
+
+void QgsGuideGridWidget::currentLayerChanged( int cur )
+{
+  QgsGuideGridLayer* layer = dynamic_cast<QgsGuideGridLayer*>( QgsMapLayerRegistry::instance()->mapLayer( ui.comboBoxLayer->itemData( cur ).toString() ) );
+  if ( layer )
+  {
+    setLayer( layer );
+  }
+  else
+  {
+    ui.widgetLayerSetup->setEnabled( false );
+  }
 }

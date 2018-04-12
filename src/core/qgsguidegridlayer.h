@@ -27,7 +27,7 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     static QString layerTypeKey() { return "guide_grid"; }
     enum LabelingMode { LABEL_A_1, LABEL_1_A };
 
-    QgsGuideGridLayer();
+    QgsGuideGridLayer( const QString &name );
     void setup( const QgsRectangle& gridRect, int cols, int rows, const QgsCoordinateReferenceSystem& crs );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }

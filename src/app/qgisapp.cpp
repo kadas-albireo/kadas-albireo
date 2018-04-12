@@ -1234,7 +1234,7 @@ void QgisApp::createCanvasTools()
   mMapTools.mHillshade = new QgsMapToolHillshade( mapCanvas() );
   mMapTools.mViewshed = new QgsMapToolViewshed( mapCanvas() );
   mMapTools.mDeleteItems = new QgsMapToolDeleteItems( mapCanvas(), messageBar() );
-  mMapTools.mGuideGridTool = new QgsGuideGridTool( mapCanvas() );
+  mMapTools.mGuideGridTool = new QgsGuideGridTool( mapCanvas(), layerTreeView() );
 
   mMapTools.mRotateLabel = new QgsMapToolRotateLabel( mapCanvas() );
   mMapTools.mChangeLabelProperties = new QgsMapToolChangeLabelProperties( mapCanvas() );
