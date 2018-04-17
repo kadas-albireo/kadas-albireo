@@ -18,6 +18,23 @@
 #include "qgscrscache.h"
 #include "qgsguidegridlayer.h"
 #include "qgsmaplayerrenderer.h"
+#include "qgspolygonv2.h"
+#include "qgslinestringv2.h"
+
+
+static QString alphaLabel( int i )
+{
+  QString label;
+  do
+  {
+    i -= 1;
+    int res = i % 26;
+    label.prepend( QChar( 'A' + res ) );
+    i /= 26;
+  }
+  while ( i > 0 );
+  return label;
+}
 
 class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
 {
@@ -121,19 +138,6 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
       QPointF sp2 = mapToPixel.transform( crst ? crst->transform( p2 ) : p2 ).toQPointF();
       return qMakePair( sp1, sp2 );
     }
-    QString alphaLabel( int i ) const
-    {
-      QString label;
-      do
-      {
-        i -= 1;
-        int res = i % 26;
-        label.prepend( QChar( 'A' + res ) );
-        i /= 26;
-      }
-      while ( i > 0 );
-      return label;
-    }
 };
 
 QgsGuideGridLayer::QgsGuideGridLayer( const QString& name )
@@ -164,10 +168,44 @@ bool QgsGuideGridLayer::readXml( const QDomNode& layer_node )
   mGridRect.setYMinimum( layerEl.attribute( "ymin" ).toDouble() );
   mGridRect.setXMaximum( layerEl.attribute( "xmax" ).toDouble() );
   mGridRect.setYMaximum( layerEl.attribute( "ymax" ).toDouble() );
-  mCols = layerEl.attribute( "cols" ).toDouble();
-  mRows = layerEl.attribute( "rows" ).toDouble();
+  mCols = layerEl.attribute( "cols" ).toInt();
+  mRows = layerEl.attribute( "rows" ).toInt();
   setCrs( QgsCRSCache::instance()->crsByAuthId( layerEl.attribute( "crs" ) ) );
   return true;
+}
+
+QList<QgsGuideGridLayer::IdentifyResult> QgsGuideGridLayer::identify( const QgsPoint& mapPos, const QgsMapSettings& mapSettings )
+{
+  const QgsCoordinateTransform* crst = QgsCoordinateTransformCache::instance()->transform( mapSettings.destinationCrs().authid(), crs().authid() );
+  QgsPoint pos = crst->transform( mapPos );
+
+  double colWidth = ( mGridRect.xMaximum() - mGridRect.xMinimum() ) / mCols;
+  double rowHeight = ( mGridRect.yMaximum() - mGridRect.yMinimum() ) / mRows;
+
+  int i = std::floor(( pos.x() - mGridRect.xMinimum() ) / colWidth );
+  int j = std::floor(( mGridRect.yMaximum() - pos.y() ) / rowHeight );
+
+  QgsPolygonV2* bbox = new QgsPolygonV2();
+  QgsLineStringV2* ring = new QgsLineStringV2();
+  ring->setPoints(
+    QList<QgsPointV2>()
+    << QgsPointV2( mGridRect.xMinimum() + i * colWidth,     mGridRect.yMaximum() - j * rowHeight )
+    << QgsPointV2( mGridRect.xMinimum() + ( i + 1 ) * colWidth, mGridRect.yMaximum() - j * rowHeight )
+    << QgsPointV2( mGridRect.xMinimum() + ( i + 1 ) * colWidth, mGridRect.yMaximum() - ( j + 1 ) * rowHeight )
+    << QgsPointV2( mGridRect.xMinimum() + i * colWidth,     mGridRect.yMaximum() - ( j + 1 ) * rowHeight )
+    << QgsPointV2( mGridRect.xMinimum() + i * colWidth,     mGridRect.yMaximum() - j * rowHeight )
+  );
+  bbox->setExteriorRing( ring );
+  QMap<QString, QVariant> attrs;
+
+  if ( mLabelingMode == QgsGuideGridLayer::LABEL_1_A )
+  {
+    return QList<IdentifyResult>() << IdentifyResult( tr( "Cell %1, %2" ).arg( alphaLabel( 1 + j ) ).arg( 1 + i ), attrs, QgsGeometry( bbox ) );
+  }
+  else
+  {
+    return QList<IdentifyResult>() << IdentifyResult( tr( "Cell %1, %2" ).arg( 1 + j ).arg( alphaLabel( 1 + i ) ), attrs, QgsGeometry( bbox ) );
+  }
 }
 
 bool QgsGuideGridLayer::writeXml( QDomNode & layer_node, QDomDocument & /*document*/ )

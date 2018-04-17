@@ -40,6 +40,8 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     int fontSize() const { return mFontSize; }
     LabelingMode labelingMode() const { return mLabelingMode; }
 
+    QList<IdentifyResult> identify( const QgsPoint& mapPos, const QgsMapSettings& mapSettings ) override;
+
   public slots:
     void setColor( const QColor& color ) { mColor = color; }
     void setFontSize( int fontSize ) { mFontSize = fontSize; }
@@ -53,8 +55,8 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     class Renderer;
 
     QgsRectangle mGridRect;
-    double mCols = 0;
-    double mRows = 0;
+    int mCols = 0;
+    int mRows = 0;
     int mFontSize = 30;
     QColor mColor = Qt::red;
     LabelingMode mLabelingMode = LABEL_A_1;
