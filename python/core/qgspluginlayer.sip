@@ -44,4 +44,17 @@ class QgsPluginLayer : QgsMapLayer
     virtual int layerTransparency() const;
     /** set the layer transparency */
     virtual void setLayerTransparency(int /*value*/);
+
+    /** Get attributes at the specified map location */
+    class IdentifyResult {
+      %TypeHeaderCode
+      #include "qgspluginlayer.h"
+      %End
+    public:
+      IdentifyResult(const QString& featureName, const QMap<QString, QVariant>& attributes, QgsAbstractGeometryV2* geom);
+      const QString& featureName() const;
+      const QMap<QString, QVariant>& attributes() const;
+      const QgsGeometry& geometry() const;
+    };
+    virtual QList<QgsPluginLayer::IdentifyResult> identify( const QgsPoint& /*mapPos*/, const QgsMapSettings& /*mapSettings*/);
 };

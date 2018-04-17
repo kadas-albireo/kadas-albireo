@@ -34,7 +34,6 @@ class QgsMapCanvasContextMenu : public QMenu
     ~QgsMapCanvasContextMenu();
 
   private slots:
-    void featureAttributes();
     void deleteAnnotation();
     void deleteFeature();
     void deleteLabel();
@@ -57,12 +56,12 @@ class QgsMapCanvasContextMenu : public QMenu
     void drawPolygon();
     void drawCircle();
     void drawText();
+    void identify();
     void measureLine();
     void measurePolygon();
     void measureCircle();
     void measureAngle();
     void measureHeightProfile();
-    void rasterAttributes();
     void terrainSlope();
     void terrainHillshade();
     void terrainViewshed();

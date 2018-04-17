@@ -202,6 +202,7 @@ qgsmapcanvasitem.cpp
 qgsmapcanvasmap.cpp
 qgsmapcanvassnapper.cpp
 qgsmapcanvassnappingutils.cpp
+qgsmapidentifydialog.cpp
 qgsmaplayeractionregistry.cpp
 qgsmaplayercombobox.cpp
 qgsmaplayermodel.cpp
@@ -328,6 +329,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgsmapcanvas.h
   qgsmapcanvasgpsdisplay.h
   qgsmapcanvassnappingutils.h
+  qgsmapidentifydialog.h
   qgsmaplayeractionregistry.h
   qgsmaplayercombobox.h
   qgsmaplayermodel.h

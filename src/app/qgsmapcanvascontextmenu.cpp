@@ -30,6 +30,7 @@
 #include "qgsfeature.h"
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
+#include "qgsmapidentifydialog.h"
 #include "qgsmaptoolslope.h"
 #include "qgsmaptoolhillshade.h"
 #include "qgsmeasuretoolv2.h"
@@ -38,13 +39,14 @@
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
 #include "qgsvectorlayer.h"
-#include "qgsvbsrasteridentify.h"
-#include "qgsvbsvectoridentify.h"
 
 QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QPoint& canvasPos, const QgsPoint& mapPos )
     : mMapPos( mapPos ), mCanvas( canvas ), mRubberBand( 0 ), mRectItem( 0 )
 {
   mPickResult = QgsFeaturePicker::pick( mCanvas, canvasPos, mapPos, QGis::AnyGeometry );
+
+  addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( identify() ) );
+  addSeparator();
 
   if ( mPickResult.annotation )
   {
@@ -78,10 +80,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
       addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
     }
-    if ( mPickResult.layer->type() != QgsMapLayer::RedliningLayer || !mPickResult.feature.attribute( "attributes" ).isNull() )
-    {
-      addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( featureAttributes() ) );
-    }
     addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
     if ( mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
@@ -107,9 +105,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
   }
   if ( mPickResult.isEmpty() )
   {
-    addAction( QIcon( ":/images/themes/default/mActionIdentify.svg" ), tr( "Identify" ), this, SLOT( rasterAttributes() ) );
-    addSeparator();
-
     if ( QgisApp::instance()->canPaste() )
     {
       addAction( QIcon( ":/images/themes/default/mActionEditPaste.png" ), tr( "Paste" ), this, SLOT( paste() ) );
@@ -181,10 +176,9 @@ QgsMapCanvasContextMenu::~QgsMapCanvasContextMenu()
   delete mRectItem;
 }
 
-void QgsMapCanvasContextMenu::featureAttributes()
+void QgsMapCanvasContextMenu::identify()
 {
-  QgsVectorLayer* vlayer = static_cast<QgsVectorLayer*>( mPickResult.layer );
-  QgsVBSVectorIdentifyResultDialog *dialog = new QgsVBSVectorIdentifyResultDialog( vlayer, mPickResult.feature, QgisApp::instance() );
+  QgsMapIdentifyDialog* dialog = new QgsMapIdentifyDialog( mCanvas, mMapPos );
   dialog->show();
 }
 
@@ -394,11 +388,6 @@ void QgsMapCanvasContextMenu::measureHeightProfile()
   {
     static_cast<QgsMeasureHeightProfileTool*>( QgisApp::instance()->mapTools()->mMeasureHeightProfile )->setGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
-}
-
-void QgsMapCanvasContextMenu::rasterAttributes()
-{
-  QgsVBSRasterIdentify::identify( mCanvas, mMapPos );
 }
 
 void QgsMapCanvasContextMenu::terrainSlope()

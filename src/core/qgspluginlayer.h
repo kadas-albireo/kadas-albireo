@@ -15,6 +15,7 @@
 #ifndef QGSPLUGINLAYER_H
 #define QGSPLUGINLAYER_H
 
+#include "geometry/qgsgeometry.h"
 #include "qgsmaplayer.h"
 
 typedef QList< QPair<QString, QPixmap> > QgsLegendSymbologyList;
@@ -70,6 +71,23 @@ class CORE_EXPORT QgsPluginLayer : public QgsMapLayer
     virtual int layerTransparency() const { return mTransparency; }
     /** set the layer transparency */
     virtual void setLayerTransparency( int value ) { mTransparency = value; }
+
+    /** Get attributes at the specified map location */
+    class IdentifyResult
+    {
+      public:
+        IdentifyResult( const QString& featureName, const QMap<QString, QVariant>& attributes, const QgsGeometry& geom )
+            : mFeatureName( featureName ), mAttributes( attributes ), mGeom( geom ) {}
+        const QString& featureName() const { return mFeatureName; }
+        const QMap<QString, QVariant>& attributes() const { return mAttributes; }
+        const QgsGeometry& geometry() const { return mGeom; }
+
+      private:
+        QString mFeatureName;
+        QMap<QString, QVariant> mAttributes;
+        QgsGeometry mGeom;
+    };
+    virtual QList<IdentifyResult> identify( const QgsPoint& /*mapPos*/, const QgsMapSettings& /*mapSettings*/ ) { return QList<IdentifyResult>(); }
 
   protected:
     QString mPluginLayerType;
