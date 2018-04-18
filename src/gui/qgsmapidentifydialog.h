@@ -35,7 +35,7 @@ class QgsRasterLayer;
 class QgsVectorLayer;
 
 
-class APP_EXPORT QgsMapIdentifyDialog : public QDialog
+class GUI_EXPORT QgsMapIdentifyDialog : public QDialog
 {
     Q_OBJECT
   public:
