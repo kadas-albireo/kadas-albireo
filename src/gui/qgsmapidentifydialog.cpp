@@ -121,8 +121,9 @@ void QgsMapIdentifyDialog::onItemClicked( QTreeWidgetItem *item, int /*col*/ )
     mRubberBand = new QgsGeometryRubberBand( mCanvas, static_cast<QGis::GeometryType>( QgsWKBTypes::geometryType( geom->wkbType() ) ) );
     mRubberBand->setGeometry( geom->clone() );
     mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
-    mRubberBand->setFillColor( QColor( 0, 0, 255, 127 ) );
-    mRubberBand->setOutlineColor( QColor( 0, 0, 255 ) );
+    mRubberBand->setFillColor( QColor( 255, 0, 0, 127 ) );
+    mRubberBand->setOutlineColor( QColor( 255, 0, 0 ) );
+    mRubberBand->setOutlineWidth( 2 );
   }
 }
 
