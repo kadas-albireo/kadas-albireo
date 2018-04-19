@@ -58,7 +58,7 @@ QgsMapIdentifyDialog::QgsMapIdentifyDialog( QgsMapCanvas *canvas, const QgsPoint
   mTreeWidget->setColumnCount( 2 );
   mTreeWidget->header()->setStretchLastSection( true );
   mTreeWidget->header()->resizeSection( 0, 200 );
-  mTreeWidget->setHeaderHidden( true );
+  mTreeWidget->setHeaderLabels( QStringList() << "" << "" );
   mTreeWidget->setDropIndicatorShown( false );
   mTreeWidget->setVerticalScrollMode( QTreeWidget::ScrollPerPixel );
   layout()->addWidget( mTreeWidget );
