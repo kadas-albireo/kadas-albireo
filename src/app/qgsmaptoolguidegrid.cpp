@@ -143,7 +143,7 @@ void QgsGuideGridTool::keyReleaseEvent( QKeyEvent *e )
 {
   if ( e->key() == Qt::Key_Escape )
   {
-    if ( e->key() == Qt::Key_Escape && mPickMode != PICK_NONE )
+    if ( mPickMode != PICK_NONE )
     {
       mPickMode = PICK_NONE;
       setCursor( Qt::ArrowCursor );
