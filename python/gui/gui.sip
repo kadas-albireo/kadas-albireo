@@ -27,6 +27,7 @@
 %Include qgsattributedialog.sip
 %Include qgsattributeform.sip
 %Include qgsattributeforminterface.sip
+%Include qgsbottombar.sip
 %Include qgsbusyindicatordialog.sip
 %Include qgsclipboard.sip
 %Include qgscollapsiblegroupbox.sip
