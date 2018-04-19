@@ -555,6 +555,7 @@ QWidget* QgsRibbonApp::addRibbonTab( const QString& name )
 void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool* associatedMapTool )
 {
   QgsRibbonButton* button = new QgsRibbonButton();
+  button->setObjectName( QUuid::createUuid().toString() );
   button->setText( action->text() );
   button->setMinimumSize( QSize( 0, 80 ) );
   button->setMaximumSize( QSize( 80, 80 ) );
