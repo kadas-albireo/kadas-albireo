@@ -80,7 +80,6 @@ class APP_EXPORT QgsGuideGridWidget : public QgsBottomBar
     QgsGuideGridLayer* mCurrentLayer = nullptr;
 
     void updateGrid();
-    void showEvent( QShowEvent */*event*/ ) override { setFixedSize( size() ); updatePosition(); }
 
   signals:
     void requestPick( QgsGuideGridTool::PickMode pickMode );

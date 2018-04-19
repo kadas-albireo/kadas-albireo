@@ -26,6 +26,7 @@ class GUI_EXPORT QgsBottomBar : public QFrame
   public:
     QgsBottomBar( QgsMapCanvas* canvas, const QString& color = "orange" );
     bool eventFilter( QObject* obj, QEvent* event ) override;
+    void showEvent( QShowEvent */*event*/ ) override { setFixedSize( size() ); updatePosition(); }
 
   protected:
     QgsMapCanvas* mCanvas;
