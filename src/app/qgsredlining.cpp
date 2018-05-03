@@ -28,7 +28,6 @@
 #include "qgsrubberband.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsproject.h"
-#include "ui_qgsredliningtexteditor.h"
 
 #include <QMenu>
 #include <QSettings>
