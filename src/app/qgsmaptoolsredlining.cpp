@@ -418,7 +418,7 @@ QgsRedliningEditGroupMapTool::QgsRedliningEditGroupMapTool( QgsMapCanvas* canvas
   }
   for ( int i = 0, n = labels.size(); i < n; ++i )
   {
-    addLabelToSelection( labels[i] );
+    addLabelToSelection( labels[i], false );
   }
   updateRect();
 }
