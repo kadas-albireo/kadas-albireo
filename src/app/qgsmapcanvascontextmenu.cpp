@@ -20,8 +20,10 @@
 #include <QToolButton>
 #include "qgisapp.h"
 #include "qgsannotationitem.h"
+#include "qgsannotationlayer.h"
 #include "qgsattributedialog.h"
 #include "qgscoordinateformat.h"
+#include "qgscrscache.h"
 #include "qgsgeometry.h"
 #include "qgsgeometryrubberband.h"
 #include "qgsgpsrouteeditor.h"
@@ -35,6 +37,7 @@
 #include "qgsmaptoolhillshade.h"
 #include "qgsmeasuretoolv2.h"
 #include "qgsmeasureheightprofiletool.h"
+#include "qgspinannotationitem.h"
 #include "qgspluginlayer.h"
 #include "qgsredlining.h"
 #include "qgsredlininglayer.h"
@@ -162,6 +165,11 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     }
   }
 
+  if ( mPickResult.feature.isValid() && mPickResult.feature.geometry()->type() == QGis::Point )
+  {
+    addAction( QIcon( ":/images/themes/default/pin_red.svg" ), tr( "Convert to pin" ), this, SLOT( convertToPin() ) );
+  }
+
   if ( mPickResult.isEmpty() )
   {
     addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy coordinates" ), this, SLOT( copyCoordinates() ) );
@@ -238,6 +246,33 @@ void QgsMapCanvasContextMenu::editLabel()
     QgisApp::instance()->redlining()->editLabel( mPickResult.labelPos );
   else if ( mPickResult.layer == QgisApp::instance()->gpsRouteEditor()->getLayer() )
     QgisApp::instance()->gpsRouteEditor()->editLabel( mPickResult.labelPos );
+}
+
+void QgsMapCanvasContextMenu::convertToPin()
+{
+  if ( !mPickResult.feature.geometry() )
+  {
+    return;
+  }
+  QgsPointV2* p = dynamic_cast<QgsPointV2*>( mPickResult.feature.geometry()->geometry() );
+  if ( !p )
+  {
+    return;
+  }
+  QgsRedliningLayer* layer = qobject_cast<QgsRedliningLayer*>( mPickResult.layer );
+  if ( !layer )
+  {
+    return;
+  }
+  const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mPickResult.layer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
+  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
+  pinItem->setMapPosition( ct->transform( p->x(), p->y() ) );
+  pinItem->setSelected( true );
+  pinItem->setName( mPickResult.feature.attribute( "text" ).toString() );
+  QgsAnnotationLayer::getLayer( mCanvas, "mapPins", tr( "Pins" ) )->addItem( pinItem );
+
+  layer->deleteFeature( mPickResult.feature.id() );
+  layer->triggerRepaint();
 }
 
 void QgsMapCanvasContextMenu::cutFeature()

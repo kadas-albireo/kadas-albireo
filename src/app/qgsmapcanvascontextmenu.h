@@ -42,6 +42,7 @@ class QgsMapCanvasContextMenu : public QMenu
     void editFeature();
     void editOtherResult();
     void editLabel();
+    void convertToPin();
     void cutFeature();
     void cutOtherResult();
     void copyFeature();

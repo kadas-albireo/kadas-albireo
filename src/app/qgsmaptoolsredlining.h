@@ -182,6 +182,7 @@ class QgsRedliningEditGroupMapTool : public QgsMapTool
     void updateLabelRect( QgsGeometryRubberBand* rubberBand, const QgsLabelPosition& label );
 
   private slots:
+    void convertToPins();
     void copy();
     void cut() { copy(); deleteAll(); }
     void deleteAll();

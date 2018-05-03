@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "qgsmaptoolsredlining.h"
+#include "qgsannotationlayer.h"
 #include "qgisapp.h"
 #include "qgsclipboard.h"
 #include "qgscrscache.h"
@@ -23,6 +24,7 @@
 #include "qgslinestringv2.h"
 #include "qgsmapcanvas.h"
 #include "qgspallabeling.h"
+#include "qgspinannotationitem.h"
 #include "qgspolygonv2.h"
 #include "qgssymbollayerv2utils.h"
 #include "qgsrubberband.h"
@@ -447,6 +449,19 @@ void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
     menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copy() ) );
     menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cut() ) );
     menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
+    bool points = true;
+    for ( const Item& item : mItems )
+    {
+      if ( QgsRedliningLayer::deserializeFlags( item.flags )["shape"] != "point" )
+      {
+        points = false;
+        break;
+      }
+    }
+    if ( points )
+    {
+      menu.addAction( QIcon( ":/images/themes/default/pin_red.svg" ), tr( "Convert to pins" ), this, SLOT( convertToPins() ) );
+    }
     menu.exec( e->globalPos() );
   }
 }
@@ -779,6 +794,19 @@ QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) con
   f.setAttributes( attribs );
   f.setGeometry( new QgsGeometry( rubberBand->geometry()->transformed( *ct ) ) );
   return f;
+}
+
+void QgsRedliningEditGroupMapTool::convertToPins()
+{
+  for ( const Item& item : mItems )
+  {
+    QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
+    pinItem->setMapPosition( *item.nodeRubberband->getPoint( 0 ) );
+    pinItem->setName( item.text );
+    QgsAnnotationLayer::getLayer( mCanvas, "mapPins", tr( "Pins" ) )->addItem( pinItem );
+  }
+
+  deleteAll();
 }
 
 void QgsRedliningEditGroupMapTool::copy()
