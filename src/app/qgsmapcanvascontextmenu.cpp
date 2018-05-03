@@ -73,11 +73,11 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
   }
   else if ( mPickResult.feature.isValid() && mPickResult.layer )
   {
-    QgsCoordinateTransform ct( mPickResult.layer->crs(), mCanvas->mapSettings().destinationCrs() );
+    const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mPickResult.layer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
     mRubberBand = new QgsGeometryRubberBand( mCanvas, mPickResult.feature.geometry()->type() );
     mRubberBand->setIconType( QgsGeometryRubberBand::ICON_NONE );
     mRubberBand->setOutlineWidth( 2 );
-    mRubberBand->setGeometry( mPickResult.feature.geometry()->geometry()->transformed( ct ) );
+    mRubberBand->setGeometry( mPickResult.feature.geometry()->geometry()->transformed( *ct ) );
     if ( mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
       addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
