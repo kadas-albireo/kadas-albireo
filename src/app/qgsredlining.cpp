@@ -64,11 +64,13 @@ void QgsRedliningLabelEditor::set( const QgsAttributes &attribs, const QgsFields
   QMap<QString, QString> flagsMap = QgsRedliningLayer::deserializeFlags( attribs[fields.fieldNameIndex( "flags" )].toString() );
 
   QFont font;
+  font.fromString( QSettings().value( "/Redlining/font", font.toString() ).toString() );
+  QString rotation = QSettings().value( "/Redlining/fontrotation", 0 ).toString();
   ui.lineEditText->setText( text );
   ui.spinBoxFontSize->setValue( flagsMap.value( "fontSize", QString( "%1" ).arg( font.pointSize() ) ).toInt() );
   ui.toolButtonItalic->setChecked( flagsMap.value( "italic", QString( "%1" ).arg( font.italic() ) ).toInt() );
   ui.toolButtonBold->setChecked( flagsMap.value( "bold", QString( "%1" ).arg( font.bold() ) ).toInt() );
-  ui.spinBoxRotation->setValue( flagsMap.value( "rotation" ).toDouble() );
+  ui.spinBoxRotation->setValue( flagsMap.value( "rotation", rotation ).toDouble() );
   // Set only family to make the text in the fontComboBox appear normal
   font.setFamily( flagsMap.value( "family", font.family() ) );
   ui.fontComboBox->setCurrentFont( font );
