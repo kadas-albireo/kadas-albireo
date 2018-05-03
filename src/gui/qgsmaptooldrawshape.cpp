@@ -600,7 +600,7 @@ void QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::M
   }
   else if ( !press && button == Qt::RightButton )
   {
-    if (( mIsArea && state()->points.back().size() >= 3 ) || state()->points.back().size() >= 2 )
+    if (( mIsArea && state()->points.back().size() >= 3 ) || ( !mIsArea && state()->points.back().size() >= 2 ) )
     {
       State* newState = cloneState();
       // If last two points are very close, discard last point
@@ -611,6 +611,11 @@ void QgsMapToolDrawPolyLine::buttonEvent( const QgsPoint& pos, bool press, Qt::M
       if ( qAbs(( p2  - p1 ).manhattanLength() ) < 10 )
       {
         newState->points.back().pop_back();
+      }
+      if (( mIsArea && newState->points.back().size() < 3 ) || ( !mIsArea && newState->points.back().size() < 2 ) )
+      {
+        // Don't terminate geometry if insufficient points remain
+        return;
       }
       if ( mMultipart )
       {
