@@ -632,6 +632,15 @@ void QgsRedliningEditGroupMapTool::updateLabelRect( QgsGeometryRubberBand *rubbe
 
 void QgsRedliningEditGroupMapTool::addLabelToSelection( const QgsLabelPosition& label, bool update )
 {
+  QgsFeature f;
+  mLayer->getFeatures( QgsFeatureRequest( label.featureId ) ).nextFeature( f );
+  QMap<QString, QString> flags = mLayer->deserializeFlags( f.attribute( "flags" ).toString() );
+  if ( !flags["symbol"].isEmpty() )
+  {
+    // If label associated to a visible shape is selected, add the feature itself to the selection
+    addFeatureToSelection( f );
+    return;
+  }
   QgsGeometryRubberBand* rubberBand = new QgsGeometryRubberBand( mCanvas, QGis::Line );
   rubberBand->setOutlineColor( Qt::red );
   rubberBand->setOutlineWidth( 1 );
