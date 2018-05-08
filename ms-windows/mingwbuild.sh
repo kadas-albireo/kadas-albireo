@@ -170,6 +170,8 @@ linkDep bin/python2w.exe
 
 linkDep $(ls $MINGWROOT/bin/libssl-*.dll | sed "s|$MINGWROOT/||")
 linkDep $(ls $MINGWROOT/bin/libcrypto-*.dll | sed "s|$MINGWROOT/||")
+linkDep lib/mod_spatialite.dll bin
+
 # Additional qt4 dependencies
 if [ "$qt" == "qt4" ]; then
   linkDep lib/qt4/plugins/imageformats/qgif4.dll  bin/imageformats
