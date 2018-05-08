@@ -80,7 +80,7 @@ MACRO (PYQT_ADD_RESOURCES outfiles )
       SET(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
     ENDFOREACH(_RC_FILE)
     ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-      COMMAND ${PYRCC4_PROGRAM} -name ${outfile} -o ${outfile} ${infile}
+      COMMAND ${PYRCC4_PROGRAM} -o ${outfile} ${infile}
       MAIN_DEPENDENCY ${infile}
       DEPENDS ${_RC_DEPENDS})
     SET(${outfiles} ${${outfiles}} ${outfile})
