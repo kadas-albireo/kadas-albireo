@@ -163,6 +163,7 @@ QgsMapLayerRenderer* QgsGuideGridLayer::createMapRenderer( QgsRenderContext& ren
 bool QgsGuideGridLayer::readXml( const QDomNode& layer_node )
 {
   QDomElement layerEl = layer_node.toElement();
+  mLayerName = layerEl.attribute( "title" );
   mTransparency = layerEl.attribute( "transparency" ).toInt();
   mGridRect.setXMinimum( layerEl.attribute( "xmin" ).toDouble() );
   mGridRect.setYMinimum( layerEl.attribute( "ymin" ).toDouble() );
@@ -213,6 +214,7 @@ bool QgsGuideGridLayer::writeXml( QDomNode & layer_node, QDomDocument & /*docume
   QDomElement layerEl = layer_node.toElement();
   layerEl.setAttribute( "type", "plugin" );
   layerEl.setAttribute( "name", layerTypeKey() );
+  layerEl.setAttribute( "title", name() );
   layerEl.setAttribute( "transparency", mTransparency );
   layerEl.setAttribute( "xmin", mGridRect.xMinimum() );
   layerEl.setAttribute( "ymin", mGridRect.yMinimum() );

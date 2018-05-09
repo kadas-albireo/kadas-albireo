@@ -119,6 +119,7 @@
 #include "qgsgpsinformationwidget.h"
 #include "qgsgpsrouteeditor.h"
 #include "qgsguivectorlayertools.h"
+#include "qgsguidegridlayer.h"
 #include "qgshtmlannotationitem.h"
 #include "qgsitemcouplingmanager.h"
 #include "qgskmlexport.h"
@@ -653,6 +654,8 @@ void QgisApp::init( bool restorePlugins )
   mSplash->showMessage( tr( "Starting Python" ), Qt::AlignHCenter | Qt::AlignBottom );
   qApp->processEvents();
   loadPythonSupport();
+
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsGuideGridLayerType( ) );
 
   // Create the plugin registry and load plugins
   // load any plugins that were running in the last session

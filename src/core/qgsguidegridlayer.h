@@ -19,6 +19,7 @@
 #define QGSGUIDEGRIDLAYER_H
 
 #include "qgspluginlayer.h"
+#include "qgspluginlayerregistry.h"
 
 class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
 {
@@ -60,6 +61,15 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     int mFontSize = 30;
     QColor mColor = Qt::red;
     LabelingMode mLabelingMode = LABEL_A_1;
+};
+
+class CORE_EXPORT QgsGuideGridLayerType : public QgsPluginLayerType
+{
+  public:
+    QgsGuideGridLayerType( )
+        : QgsPluginLayerType( QgsGuideGridLayer::layerTypeKey() ) {}
+    QgsPluginLayer* createLayer() override { return new QgsGuideGridLayer( "" ); }
+    int hasLayerProperties() const override { return 0; }
 };
 
 #endif // QGSGUIDEGRIDLAYER_H
