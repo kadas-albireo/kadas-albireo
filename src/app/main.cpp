@@ -34,7 +34,6 @@
 #endif
 #include <QTranslator>
 #include <QImageReader>
-#include <QMessageBox>
 #include <QNetworkReply>
 
 #include "qgscustomization.h"
