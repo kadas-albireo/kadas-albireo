@@ -2415,6 +2415,8 @@ QPrinter *QgsComposition::defaultPrinter()
   {
     mPrinter = new QPrinter();
     mPrinter->setOrientation( paperWidth() > paperHeight() ? QPrinter::Landscape : QPrinter::Portrait );
+    mPrinter->setMargins( {0, 0, 0, 0} );
+    mPrinter->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
   }
   return mPrinter;
 }
@@ -2453,11 +2455,12 @@ bool QgsComposition::print( QPrinter* printer, OutputMode mode, bool evaluateDDP
   {
     //set data defined page size
     refreshPageSize();
-    //must set orientation to portrait before setting paper size, otherwise size will be flipped
-    //for landscape sized outputs (#11352)
-    printer->setOrientation( QPrinter::Portrait );
-    printer->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
   }
+  //must set orientation to portrait before setting paper size, otherwise size will be flipped
+  //for landscape sized outputs (#11352)
+  mPrinter->setOrientation( QPrinter::Portrait );
+  mPrinter->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
+  mPrinter->setMargins( {0, 0, 0, 0} );
 
   if ( mode == OutputMode::Single )
   {
