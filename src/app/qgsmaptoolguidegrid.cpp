@@ -190,10 +190,10 @@ QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas, QgsLayerTreeView* 
   connect( ui.spinBoxRows, SIGNAL( valueChanged( int ) ), this, SLOT( updateIntervals() ) );
 
   ui.spinBoxWidth->setRange( 0, 99999999 );
-  connect( ui.spinBoxWidth, SIGNAL( valueChanged() ), this, SLOT( updateBottomRight() ) );
+  connect( ui.spinBoxWidth, SIGNAL( valueChanged( double ) ), this, SLOT( updateBottomRight() ) );
 
   ui.spinBoxHeight->setRange( 0, 99999999 );
-  connect( ui.spinBoxHeight, SIGNAL( valueChanged() ), this, SLOT( updateBottomRight() ) );
+  connect( ui.spinBoxHeight, SIGNAL( valueChanged( double ) ), this, SLOT( updateBottomRight() ) );
 
   connect( ui.toolButtonColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( updateColor( QColor ) ) );
   connect( ui.spinBoxFontSize, SIGNAL( valueChanged( int ) ), this, SLOT( updateFontSize( int ) ) );
