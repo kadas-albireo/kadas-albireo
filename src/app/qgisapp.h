@@ -92,6 +92,7 @@ class QgsDecorationGrid;
 #include "qgsmessagebar.h"
 #include "qgspoint.h"
 #include "qgsraster.h"
+#include "qgsfeaturepicker.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -1090,8 +1091,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void dizzy();
 
     void showCanvasContextMenu( QPoint canvasPos, QgsPoint mapPos );
-    void handleFeaturePicked( QgsMapLayer *layer , const QgsFeature& feature, const QVariant &otherResult );
-    void handleLabelPicked( const QgsLabelPosition& labelPos );
+    void handleItemPicked( const QgsFeaturePicker::PickResult& result );
 
     void onFocusChanged( QWidget* old, QWidget* now );
 

@@ -404,11 +404,6 @@ class GUI_EXPORT QgsMapCanvas : public QGraphicsView
      */
     QgsAnnotationItem* annotationItemAtPos( const QPoint &pos ) const;
 
-    /** Returns the selected annotation item.
-     * @return The selected annotation item, or 0 if none.
-     */
-    QgsAnnotationItem* selectedAnnotationItem() const;
-
   public slots:
 
     /**Repaints the canvas map*/

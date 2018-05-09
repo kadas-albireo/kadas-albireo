@@ -32,10 +32,9 @@ void QgsMapToolAnnotation::canvasReleaseEvent( QMouseEvent * e )
 {
   if ( e->button() == Qt::LeftButton )
   {
-    QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-    if ( selectedItem )
-      selectedItem->setSelected( false );
-    createItem( e->pos() );
+    if ( mItem )
+      mItem->setSelected( false );
+    mItem = createItem( e->pos() );
   }
   else if ( e->button() == Qt::RightButton )
   {
@@ -54,7 +53,103 @@ void QgsMapToolAnnotation::keyReleaseEvent( QKeyEvent* e )
 void QgsMapToolAnnotation::deactivate()
 {
   QgsMapTool::deactivate();
-  QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-  if ( selectedItem )
-    selectedItem->setSelected( false );
+  if ( mItem )
+    mItem->setSelected( false );
+}
+
+
+QgsMapToolEditAnnotation::QgsMapToolEditAnnotation( QgsMapCanvas *canvas, QgsAnnotationItem* item )
+    : QgsMapTool( canvas ), mItem( item )
+{
+  mItem->setSelected( true );
+  connect( mItem, SIGNAL( destroyed( QObject* ) ), this, SLOT( deleteLater() ) );
+  connect( this, SIGNAL( deactivated() ), this, SLOT( deleteLater() ) );
+  mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+}
+
+void QgsMapToolEditAnnotation::deactivate()
+{
+  QgsMapTool::deactivate();
+  if ( mItem )
+  {
+    mItem->setSelected( false );
+  }
+}
+
+void QgsMapToolEditAnnotation::canvasDoubleClickEvent( QMouseEvent *e )
+{
+  if ( mItem == mCanvas->annotationItemAtPos( e->pos() ) )
+  {
+    mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+    mItem->showItemEditor();
+  }
+}
+
+void QgsMapToolEditAnnotation::canvasPressEvent( QMouseEvent *e )
+{
+  if ( e->button() == Qt::LeftButton )
+  {
+    mMouseMoveLastXY = e->pos();
+    if ( mItem == mCanvas->annotationItemAtPos( e->pos() ) )
+    {
+      mAnnotationMoveAction = mItem->moveActionForPosition( e->posF() );
+    }
+  }
+  else if ( e->button() == Qt::RightButton )
+  {
+    // If annotation item is selected, show its context menu
+    if ( mItem->hitTest( e->pos() ) )
+    {
+      mItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
+    }
+  }
+}
+
+void QgsMapToolEditAnnotation::canvasMoveEvent( QMouseEvent *e )
+{
+  if (( e->buttons() & Qt::LeftButton ) )
+  {
+    if ( mAnnotationMoveAction != QgsAnnotationItem::NoAction )
+    {
+      mItem->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
+      mMouseMoveLastXY = e->pos();
+    }
+  }
+  else
+  {
+    int moveAction = mItem->moveActionForPosition( e -> pos() );
+    if ( moveAction != QgsAnnotationItem::NoAction )
+      mCanvas->setCursor( QCursor( mItem->cursorShapeForAction( moveAction ) ) );
+    else
+      mCanvas->setCursor( mCursor );
+  }
+}
+
+void QgsMapToolEditAnnotation::canvasReleaseEvent( QMouseEvent *e )
+{
+  mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+  if ( mItem != mCanvas->annotationItemAtPos( e->pos() ) )
+  {
+    mItem->setSelected( false );
+    deleteLater();
+  }
+}
+
+void QgsMapToolEditAnnotation::keyReleaseEvent( QKeyEvent *e )
+{
+  switch ( e->key() )
+  {
+    case Qt::Key_Escape:
+    {
+      mItem->setSelected( false );
+      deleteLater();
+      break;
+    }
+    case Qt::Key_Delete:
+    case Qt::Key_Backspace:
+    {
+      delete mItem.data();
+      break;
+    }
+  }
 }

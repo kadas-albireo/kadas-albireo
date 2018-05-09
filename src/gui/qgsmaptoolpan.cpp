@@ -13,14 +13,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "qgsfeaturepicker.h"
 #include "qgsmaptoolpan.h"
 #include "qgsmapcanvas.h"
 #include "qgscursors.h"
 #include "qgsmaptopixel.h"
 #include "qgsmaptooldeleteitems.h"
 #include "qgsrubberband.h"
-#include "qgstextannotationitem.h"
 #include <QBitmap>
 #include <QCursor>
 #include <QMouseEvent>
@@ -34,7 +32,6 @@ QgsMapToolPan::QgsMapToolPan( QgsMapCanvas* canvas , bool allowItemInteraction )
     , mPinching( false )
     , mExtentRubberBand( 0 )
     , mPickClick( false )
-    , mAnnotationMoveAction( QgsAnnotationItem::NoAction )
 {
   mToolName = tr( "Pan" );
   setCursor( QCursor( Qt::ArrowCursor ) );
@@ -54,25 +51,7 @@ void QgsMapToolPan::activate()
 void QgsMapToolPan::deactivate()
 {
   mCanvas->ungrabGesture( Qt::PinchGesture );
-  QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
-  if ( selAnnotationItem )
-  {
-    selAnnotationItem->setSelected( false );
-  }
   QgsMapTool::deactivate();
-}
-
-void QgsMapToolPan::canvasDoubleClickEvent( QMouseEvent *e )
-{
-  if ( mAllowItemInteraction )
-  {
-    QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
-    if ( selItem && selItem == mCanvas->annotationItemAtPos( e->pos() ) )
-    {
-      mAnnotationMoveAction = QgsAnnotationItem::NoAction;
-      selItem->showItemEditor();
-    }
-  }
 }
 
 void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
@@ -102,37 +81,16 @@ void QgsMapToolPan::canvasPressEvent( QMouseEvent * e )
     else if ( mAllowItemInteraction )
     {
       mPickClick = true;
-      mMouseMoveLastXY = e->pos();
-
-      QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-      if ( selectedItem && selectedItem == mCanvas->annotationItemAtPos( e->pos() ) )
-      {
-        mAnnotationMoveAction = selectedItem->moveActionForPosition( e->posF() );
-      }
     }
   }
   else if ( e->button() == Qt::RightButton && mAllowItemInteraction )
   {
-    // If annotation item is selected, show its context menu
-    QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
-    if ( selItem && selItem->hitTest( e->pos() ) )
-    {
-      selItem->showContextMenu( canvas()->mapToGlobal( e->pos() ) );
-    }
-    // Otherwise, request application context menu if there is not selected item
-    else if ( !selItem )
-    {
-      QgsAnnotationItem* selItem = canvas()->selectedAnnotationItem();
-      if ( selItem )
-        selItem->setSelected( false );
-      emit contextMenuRequested( e->pos(), toMapCoordinates( e->pos() ) );
-    }
+    emit contextMenuRequested( e->pos(), toMapCoordinates( e->pos() ) );
   }
 }
 
 void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
 {
-  QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
   mPickClick = false;
 
   if (( e->buttons() & Qt::LeftButton ) )
@@ -142,25 +100,12 @@ void QgsMapToolPan::canvasMoveEvent( QMouseEvent * e )
       mExtentRect.setBottomRight( e->pos() );
       mExtentRubberBand->setToCanvasRectangle( mExtentRect );
     }
-    else if ( selAnnotationItem && mAnnotationMoveAction != QgsAnnotationItem::NoAction )
-    {
-      selAnnotationItem->handleMoveAction( mAnnotationMoveAction, e->posF(), mMouseMoveLastXY );
-      mMouseMoveLastXY = e->pos();
-    }
     else
     {
       mDragging = true;
       mCanvas->panAction( e );
       mCanvas->setCursor( QCursor( Qt::ClosedHandCursor ) );
     }
-  }
-  else if ( selAnnotationItem )
-  {
-    int moveAction = selAnnotationItem->moveActionForPosition( e -> pos() );
-    if ( moveAction != QgsAnnotationItem::NoAction )
-      mCanvas->setCursor( QCursor( selAnnotationItem->cursorShapeForAction( moveAction ) ) );
-    else
-      mCanvas->setCursor( mCursor );
   }
   else
   {
@@ -209,93 +154,13 @@ void QgsMapToolPan::canvasReleaseEvent( QMouseEvent * e )
     }
     else if ( mAllowItemInteraction && mPickClick )
     {
-      QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
-      QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-      if ( selectedItem && selectedItem != annotationItem )
+      QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
+      if ( !result.isEmpty() )
       {
-        selectedItem->setSelected( false );
+        emit itemPicked( result );
       }
-      // Handle pick on annotation item if any
-      else if ( annotationItem )
-      {
-        annotationItem->setSelected( true );
-        int moveAction = annotationItem->moveActionForPosition( e -> pos() );
-        if ( moveAction != QgsAnnotationItem::NoAction )
-          mCanvas->setCursor( QCursor( annotationItem->cursorShapeForAction( moveAction ) ) );
-      }
-      // Otherwise pick label / feature
-      else
-      {
-        QgsFeaturePicker::PickResult result = QgsFeaturePicker::pick( mCanvas, e->pos(), toMapCoordinates( e->pos() ), QGis::AnyGeometry );
-        if ( result.layer )
-        {
-          if ( result.labelPos.featureId != -1 )
-          {
-            emit labelPicked( result.labelPos );
-          }
-          else
-          {
-            emit featurePicked( result.layer, result.feature, result.otherResult );
-          }
-        }
-      }
-    }
-    mAnnotationMoveAction = QgsAnnotationItem::NoAction;
-  }
-  else if ( e->button() == Qt::RightButton )
-  {
-    QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-    QgsAnnotationItem* annotationItem = mCanvas->annotationItemAtPos( e->pos() );
-    if ( selectedItem && selectedItem != annotationItem )
-    {
-      selectedItem->setSelected( false );
     }
   }
-}
-
-void QgsMapToolPan::keyPressEvent( QKeyEvent *e )
-{
-  switch ( e->key() )
-  {
-    case Qt::Key_T:
-      if ( e->modifiers() == Qt::ControlModifier )
-      {
-        foreach ( QGraphicsItem* item, mCanvas->items() )
-        {
-          if ( dynamic_cast<QgsTextAnnotationItem*>( item ) )
-          {
-            item->setVisible( !item->isVisible() );
-          }
-        }
-        e->ignore();
-        break;
-      }
-      // Fall-through
-
-    case Qt::Key_Escape:
-    {
-      QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
-      if ( selAnnotationItem )
-      {
-        selAnnotationItem->setSelected( false );
-      }
-      break;
-    }
-    case Qt::Key_Delete:
-    case Qt::Key_Backspace:
-    {
-      QgsAnnotationItem* selAnnotationItem = mAllowItemInteraction ? mCanvas->selectedAnnotationItem() : 0;
-      if ( selAnnotationItem )
-      {
-        delete selAnnotationItem;
-        e->ignore();
-        break;
-      }
-    }
-    default:
-      break;
-  }
-  // Fall-through
 }
 
 bool QgsMapToolPan::gestureEvent( QGestureEvent *event )
@@ -308,7 +173,6 @@ bool QgsMapToolPan::gestureEvent( QGestureEvent *event )
   }
   return true;
 }
-
 
 void QgsMapToolPan::pinchTriggered( QPinchGesture *gesture )
 {

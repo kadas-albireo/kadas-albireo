@@ -18,10 +18,10 @@
 #ifndef QGSMAPTOOLANNOTATION_H
 #define QGSMAPTOOLANNOTATION_H
 
+#include "qgsannotationitem.h"
 #include "qgsmaptoolpan.h"
 
-
-class QgsAnnotationItem;
+#include <QPointer>
 
 class GUI_EXPORT QgsMapToolAnnotation : public QgsMapTool
 {
@@ -29,11 +29,35 @@ class GUI_EXPORT QgsMapToolAnnotation : public QgsMapTool
     QgsMapToolAnnotation( QgsMapCanvas* canvas );
 
     void canvasReleaseEvent( QMouseEvent* e ) override;
-    void keyReleaseEvent( QKeyEvent* e );
+    void keyReleaseEvent( QKeyEvent* e ) override;
     void deactivate() override;
 
   protected:
     virtual QgsAnnotationItem* createItem( const QPoint &/*pos*/ ) { return 0; }
+
+  private:
+    QgsAnnotationItem* mItem = nullptr;
+};
+
+
+class GUI_EXPORT QgsMapToolEditAnnotation : public QgsMapTool
+{
+  public:
+    QgsMapToolEditAnnotation( QgsMapCanvas* canvas , QgsAnnotationItem *item );
+
+    void deactivate() override;
+    void canvasDoubleClickEvent( QMouseEvent *e ) override;
+    void canvasPressEvent( QMouseEvent *e ) override;
+    void canvasMoveEvent( QMouseEvent *e ) override;
+    void canvasReleaseEvent( QMouseEvent* e ) override;
+    void keyReleaseEvent( QKeyEvent* e ) override;
+
+  private:
+    QPointer<QgsAnnotationItem> mItem;
+    //! Previous mouse position during move
+    QPointF mMouseMoveLastXY;
+    //! Current annotation move action
+    int mAnnotationMoveAction;
 };
 
 #endif // QGSMAPTOOLANNOTATION_H

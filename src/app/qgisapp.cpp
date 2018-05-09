@@ -5881,31 +5881,37 @@ void QgisApp::showCanvasContextMenu( QPoint canvasPos, QgsPoint mapPos )
   QgsMapCanvasContextMenu( mapCanvas(), canvasPos, mapPos ).exec( screenPos );
 }
 
-void QgisApp::handleFeaturePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult )
+void QgisApp::handleItemPicked( const QgsFeaturePicker::PickResult &result )
 {
-  if ( mRedlining && mRedlining->getLayer() && layer == mRedlining->getLayer() )
+  if ( result.annotation )
   {
-    mRedlining->editFeature( feature );
+    mapCanvas()->setMapTool( new QgsMapToolEditAnnotation( mapCanvas(), result.annotation ) );
   }
-  else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && layer == mGpsRouteEditor->getLayer() )
+  else if ( result.labelPos.featureId != -1 )
   {
-    mGpsRouteEditor->editFeature( feature );
+    if ( mRedlining && mRedlining->getLayer() && mRedlining->getLayer()->id() == result.labelPos.layerID )
+    {
+      mRedlining->editLabel( result.labelPos );
+    }
+    else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && mGpsRouteEditor->getLayer()->id() == result.labelPos.layerID )
+    {
+      mGpsRouteEditor->editLabel( result.labelPos );
+    }
   }
-  else if ( layer->type() == QgsMapLayer::PluginLayer )
+  else if ( result.layer )
   {
-    static_cast<QgsPluginLayer*>( layer )->handlePick( otherResult );
-  }
-}
-
-void QgisApp::handleLabelPicked( const QgsLabelPosition &labelPos )
-{
-  if ( mRedlining && mRedlining->getLayer() && mRedlining->getLayer()->id() == labelPos.layerID )
-  {
-    mRedlining->editLabel( labelPos );
-  }
-  else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && mGpsRouteEditor->getLayer()->id() == labelPos.layerID )
-  {
-    mGpsRouteEditor->editLabel( labelPos );
+    if ( mRedlining && mRedlining->getLayer() && result.layer == mRedlining->getLayer() )
+    {
+      mRedlining->editFeature( result.feature );
+    }
+    else if ( mGpsRouteEditor && mGpsRouteEditor->getLayer() && result.layer == mGpsRouteEditor->getLayer() )
+    {
+      mGpsRouteEditor->editFeature( result.feature );
+    }
+    else if ( result.layer->type() == QgsMapLayer::PluginLayer )
+    {
+      static_cast<QgsPluginLayer*>( result.layer )->handlePick( result.otherResult );
+    }
   }
 }
 
@@ -7147,8 +7153,7 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     disconnect( oldTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
     if ( dynamic_cast<QgsMapToolPan*>( oldTool ) )
     {
-      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( labelPicked( QgsLabelPosition ) ), this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
-      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ), this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
+      disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( itemPicked( QgsFeaturePicker::PickResult ) ), this, SLOT( handleItemPicked( QgsFeaturePicker::PickResult ) ) );
       disconnect( static_cast<QgsMapToolPan*>( oldTool ), SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ), this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
     }
   }
@@ -7166,8 +7171,7 @@ void QgisApp::mapToolChanged( QgsMapTool *newTool, QgsMapTool *oldTool )
     connect( newTool, SIGNAL( messageDiscarded() ), this, SLOT( removeMapToolMessage() ) );
     if ( dynamic_cast<QgsMapToolPan*>( newTool ) )
     {
-      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( labelPicked( QgsLabelPosition ) ), this, SLOT( handleLabelPicked( QgsLabelPosition ) ) );
-      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( featurePicked( QgsMapLayer*, QgsFeature, QVariant ) ), this, SLOT( handleFeaturePicked( QgsMapLayer*, QgsFeature, QVariant ) ) );
+      connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( itemPicked( QgsFeaturePicker::PickResult ) ), this, SLOT( handleItemPicked( QgsFeaturePicker::PickResult ) ) );
       connect( static_cast<QgsMapToolPan*>( newTool ), SIGNAL( contextMenuRequested( QPoint, QgsPoint ) ), this, SLOT( showCanvasContextMenu( QPoint, QgsPoint ) ) );
     }
   }

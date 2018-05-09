@@ -199,13 +199,6 @@ void QgsMilXCreateTool::canvasPressEvent( QMouseEvent * e )
 
 void QgsMilXCreateTool::initializeItem( const QgsPoint& position )
 {
-  // Deselect any previously selected items
-  QgsAnnotationItem* selectedItem = mCanvas->selectedAnnotationItem();
-  if ( selectedItem )
-  {
-    selectedItem->setSelected( false );
-  }
-
   setCursor( Qt::CrossCursor );
   mItem = new QgsMilXAnnotationItem( mCanvas );
   mItem->setMapPosition( position );

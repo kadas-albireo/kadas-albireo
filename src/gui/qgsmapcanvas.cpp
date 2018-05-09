@@ -1884,19 +1884,6 @@ QgsAnnotationItem* QgsMapCanvas::annotationItemAtPos( const QPoint &pos ) const
   return 0;
 }
 
-QgsAnnotationItem* QgsMapCanvas::selectedAnnotationItem() const
-{
-  foreach ( QGraphicsItem* item, scene()->selectedItems() )
-  {
-    QgsAnnotationItem* annotationItem = dynamic_cast<QgsAnnotationItem*>( item );
-    if ( annotationItem )
-    {
-      return annotationItem;
-    }
-  }
-  return 0;
-}
-
 void QgsMapCanvas::readProject( const QDomDocument & doc )
 {
   QDomNodeList nodes = doc.elementsByTagName( "mapcanvas" );

@@ -33,6 +33,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmapcanvascontextmenu.h"
 #include "qgsmapidentifydialog.h"
+#include "qgsmaptoolannotation.h"
 #include "qgsmaptoolslope.h"
 #include "qgsmaptoolhillshade.h"
 #include "qgsmeasuretoolv2.h"
@@ -219,12 +220,7 @@ void QgsMapCanvasContextMenu::deleteOtherResult()
 
 void QgsMapCanvasContextMenu::editAnnotation()
 {
-  QgsAnnotationItem* selItem = mCanvas->selectedAnnotationItem();
-  if ( selItem )
-  {
-    selItem->setSelected( false );
-  }
-  mPickResult.annotation->setSelected( true );
+  mCanvas->setMapTool( new QgsMapToolEditAnnotation( mCanvas, mPickResult.annotation ) );
 }
 
 void QgsMapCanvasContextMenu::editFeature()

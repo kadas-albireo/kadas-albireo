@@ -16,6 +16,7 @@
 #ifndef QGSMAPTOOLPAN_H
 #define QGSMAPTOOLPAN_H
 
+#include "qgsfeaturepicker.h"
 #include "qgsmaptool.h"
 
 class QgsFeature;
@@ -42,9 +43,6 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     void activate() override;
     void deactivate() override;
 
-    //! Overridden mouse double click event
-    virtual void canvasDoubleClickEvent( QMouseEvent *e ) override;
-
     //! Overridden mouse press event
     virtual void canvasPressEvent( QMouseEvent * e ) override;
 
@@ -54,15 +52,13 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
     //! Overridden mouse release event
     virtual void canvasReleaseEvent( QMouseEvent * e ) override;
 
-    //! Overridden key press event
-    virtual void keyPressEvent( QKeyEvent *e ) override;
-
     virtual bool isTransient() override { return true; }
 
     bool gestureEvent( QGestureEvent *event ) override;
 
   signals:
     void contextMenuRequested( QPoint screenPos, QgsPoint mapPos );
+    void itemPicked( const QgsFeaturePicker::PickResult& result );
     void featurePicked( QgsMapLayer* layer, const QgsFeature& feature, const QVariant& otherResult );
     void labelPicked( const QgsLabelPosition& labelPos );
 
@@ -85,12 +81,6 @@ class GUI_EXPORT QgsMapToolPan : public QgsMapTool
 
     //!Flag to indicate whether mouseRelease is a click (i.e. no moves inbetween)
     bool mPickClick;
-
-    //! Current annotation move action
-    int mAnnotationMoveAction;
-
-    //! Previous mouse position during move
-    QPointF mMouseMoveLastXY;
 
     void pinchTriggered( QPinchGesture *gesture );
 
