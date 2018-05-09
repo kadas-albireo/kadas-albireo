@@ -636,6 +636,7 @@ void QgsAnnotationItem::_writeXML( QDomDocument& doc, QDomElement& itemElem ) co
   annotationElem.setAttribute( "flags", mFlags );
   annotationElem.setAttribute( "visible", isVisible() );
   annotationElem.setAttribute( "opacity", opacity() );
+  annotationElem.setAttribute( "scale", scale() );
   if ( mMarkerSymbol )
   {
     QDomElement symbolElem = QgsSymbolLayerV2Utils::saveSymbol( "marker symbol", mMarkerSymbol, doc );
@@ -679,6 +680,7 @@ void QgsAnnotationItem::_readXML( const QDomDocument& doc, const QDomElement& an
   mFlags = annotationElem.attribute( "flags", QString::number( ItemAllFeatures ) ).toInt();
   setVisible( annotationElem.attribute( "visible", "1" ).toInt() );
   setOpacity( annotationElem.attribute( "opacity", "1." ).toDouble() );
+  setScale( annotationElem.attribute( "scale", "1." ).toDouble() );
 
   //marker symbol
   QDomElement symbolElem = annotationElem.firstChildElement( "symbol" );

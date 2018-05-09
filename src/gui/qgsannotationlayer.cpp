@@ -155,6 +155,7 @@ void QgsAnnotationLayer::updateItemVisibility()
 bool QgsAnnotationLayer::readXml( const QDomNode& layer_node )
 {
   mTransparency = layer_node.toElement().attribute( "transparency" ).toInt();
+  mSymbolScale = layer_node.toElement().attribute( "scale", "1." ).toDouble();
   QDomElement annotationLayerEl = layer_node.firstChildElement( "AnnotationLayer" );
   if ( !annotationLayerEl.isNull() )
   {
@@ -175,6 +176,7 @@ bool QgsAnnotationLayer::writeXml( QDomNode & layer_node, QDomDocument & documen
   layerElement.setAttribute( "type", "plugin" );
   layerElement.setAttribute( "name", layerTypeKey() );
   layerElement.setAttribute( "transparency", mTransparency );
+  layerElement.setAttribute( "scale", mSymbolScale );
   QDomElement annotationLayerEl = document.createElement( "AnnotationLayer" );
   annotationLayerEl.setAttribute( "itemType", mItemType );
   layerElement.appendChild( annotationLayerEl );
