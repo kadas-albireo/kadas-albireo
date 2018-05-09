@@ -1025,26 +1025,6 @@ int main( int argc, char *argv[] )
   // this should be done in QgsApplication::init() but it doesn't know the settings dir.
   QgsApplication::setMaxThreads( QSettings().value( "/Qgis/max_threads", -1 ).toInt() );
 
-  //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
-  QgisApp* qgis = 0;
-  if ( ribbonGui )
-  {
-    qgis = new QgsRibbonApp( mypSplash, myRestorePlugins );
-  }
-  else
-  {
-    qgis = new QgsClassicApp( mypSplash, myRestorePlugins );
-  }
-  qgis->setObjectName( "QgisApp" );
-
-  if ( QgsCustomization::instance()->isEnabled() )
-  {
-    myApp.connect(
-      &myApp, SIGNAL( preNotify( QObject *, QEvent *, bool * ) ),
-      //qgis, SLOT( preNotify( QObject *, QEvent *))
-      QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
-    );
-  }
 
   // By default, assume offline. If online check succeeds below, set online
   mySettings.setValue( "/Qgis/isOffline", true );
@@ -1084,6 +1064,27 @@ int main( int argc, char *argv[] )
 
   // Ensure values are written to disk
   mySettings.sync();
+
+  //QgisApp *qgis = new QgisApp( mypSplash, myRestorePlugins ); // "QgisApp" used to find canonical instance
+  QgisApp* qgis = 0;
+  if ( ribbonGui )
+  {
+    qgis = new QgsRibbonApp( mypSplash, myRestorePlugins );
+  }
+  else
+  {
+    qgis = new QgsClassicApp( mypSplash, myRestorePlugins );
+  }
+  qgis->setObjectName( "QgisApp" );
+
+  if ( QgsCustomization::instance()->isEnabled() )
+  {
+    myApp.connect(
+      &myApp, SIGNAL( preNotify( QObject *, QEvent *, bool * ) ),
+      //qgis, SLOT( preNotify( QObject *, QEvent *))
+      QgsCustomization::instance(), SLOT( preNotify( QObject *, QEvent *, bool * ) )
+    );
+  }
 
   /////////////////////////////////////////////////////////////////////
   // Load a project file if one was specified
