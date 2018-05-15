@@ -42,10 +42,11 @@ class GUI_EXPORT QgsMapToolAnnotation : public QgsMapTool
 
 class GUI_EXPORT QgsMapToolEditAnnotation : public QgsMapTool
 {
+    Q_OBJECT
   public:
     QgsMapToolEditAnnotation( QgsMapCanvas* canvas , QgsAnnotationItem *item );
+    ~QgsMapToolEditAnnotation();
 
-    void deactivate() override;
     void canvasDoubleClickEvent( QMouseEvent *e ) override;
     void canvasPressEvent( QMouseEvent *e ) override;
     void canvasMoveEvent( QMouseEvent *e ) override;
@@ -53,11 +54,16 @@ class GUI_EXPORT QgsMapToolEditAnnotation : public QgsMapTool
     void keyReleaseEvent( QKeyEvent* e ) override;
 
   private:
-    QPointer<QgsAnnotationItem> mItem;
-    //! Previous mouse position during move
+    QList<QPointer<QgsAnnotationItem>> mItems;
     QPointF mMouseMoveLastXY;
-    //! Current annotation move action
-    int mAnnotationMoveAction;
+    int mAnnotationMoveAction = QgsAnnotationItem::NoAction;
+    bool mDraggingRect = false;
+
+    QGraphicsRectItem* mRectItem = nullptr;
+
+  private slots:
+    void deleteAll();
+    void updateRect();
 };
 
 #endif // QGSMAPTOOLANNOTATION_H
