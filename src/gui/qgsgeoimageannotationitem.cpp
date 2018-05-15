@@ -18,6 +18,7 @@
 #include "qgscrscache.h"
 #include "qgsannotationlayer.h"
 #include "qgsgeoimageannotationitem.h"
+#include "qgsmaptoolannotation.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
 #include <QDesktopServices>
@@ -57,8 +58,8 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   }
   item->setFilePath( filePath );
   item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
-  item->setSelected( true );
   QgsAnnotationLayer::getLayer( canvas, "geoImage", tr( "Pictures" ) )->addItem( item );
+  canvas->setMapTool( new QgsMapToolEditAnnotation( canvas, item ) );
   return item;
 }
 

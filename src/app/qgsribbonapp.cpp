@@ -29,6 +29,7 @@
 #include "qgslayertreemapcanvasbridge.h"
 #include "qgslegendinterface.h"
 #include "qgsmaplayerregistry.h"
+#include "qgsmaptoolannotation.h"
 #include "qgsmessagebaritem.h"
 #include "qgsmultimapmanager.h"
 #include "qgsprojecttemplateselectiondialog.h"
@@ -647,8 +648,8 @@ void QgsRibbonApp::addImage()
     item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
     item->setFilePath( filename );
     item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
-    item->setSelected( true );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
+    mapCanvas()->setMapTool( new QgsMapToolEditAnnotation( mapCanvas(), item ) );
   }
   else if ( !QgsGeoImageAnnotationItem::create( mapCanvas(), filename, false, &errMsg ) )
   {
