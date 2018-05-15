@@ -230,7 +230,11 @@ void QgsRedlining::setLayer( QgsRedliningLayer *layer )
   layer->setCustomProperty( "labeling/dataDefined/PositionX",  "1~~1~~$x~~" );
   layer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~1~~$y~~" );
   layer->setCustomProperty( "labeling/bufferDraw", true );
-  layer->setCustomProperty( "labeling/bufferSize", 0.75 );
+  layer->setCustomProperty( "labeling/bufferSize", 0.5 );
+  mLayer->setCustomProperty( "labeling/bufferColorA", 127 );
+  mLayer->setCustomProperty( "labeling/bufferColorB", 0 );
+  mLayer->setCustomProperty( "labeling/bufferColorG", 0 );
+  mLayer->setCustomProperty( "labeling/bufferColorR", 0 );
 }
 
 QgsRedliningLayer* QgsRedlining::getLayer() const

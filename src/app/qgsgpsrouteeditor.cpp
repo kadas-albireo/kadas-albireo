@@ -223,7 +223,11 @@ void QgsGPSRouteEditor::setLayer( QgsRedliningLayer *layer )
   mLayer->setCustomProperty( "labeling/dist", 2 );
   mLayer->setCustomProperty( "labeling/distInMapUnits", false );
   mLayer->setCustomProperty( "labeling/bufferDraw", true );
-  mLayer->setCustomProperty( "labeling/bufferSize", 0.75 );
+  mLayer->setCustomProperty( "labeling/bufferSize", 0.5 );
+  mLayer->setCustomProperty( "labeling/bufferColorA", 127 );
+  mLayer->setCustomProperty( "labeling/bufferColorB", 0 );
+  mLayer->setCustomProperty( "labeling/bufferColorG", 0 );
+  mLayer->setCustomProperty( "labeling/bufferColorR", 0 );
   QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
   mLayerRefCount = 0;
 }
