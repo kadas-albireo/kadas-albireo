@@ -54,9 +54,7 @@ class QgsGPSRouteEditor : public QgsRedliningManager
     QAction* mActionCreateRoutes;
     QAction* mActionEdit;
 
-    QPointer<QgsRedliningLayer> mLayer;
     QPointer<QgsMapToolDrawShape> mRedliningTool;
-    int mLayerRefCount;
 
     void setLayer( QgsRedliningLayer* layer );
     bool setTool( QgsMapToolDrawShape *tool, QAction *action, bool active = true );

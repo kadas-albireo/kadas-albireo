@@ -26,6 +26,7 @@
 
 class QString;
 class QgsMapLayer;
+class QgsRedliningLayer;
 
 /** \ingroup core
 * This class tracks map layers that are currently loaded and provides
@@ -52,6 +53,13 @@ class CORE_EXPORT QgsMapLayerRegistry : public QObject
 
     //! Retrieve the mapLayers collection (mainly intended for use by projection)
     const QMap<QString, QgsMapLayer*> & mapLayers();
+
+    void setRedliningLayer( const QString& layerId );
+    QgsRedliningLayer* getRedliningLayer() const { return mRedliningLayer; }
+    QgsRedliningLayer* getOrCreateRedliningLayer();
+    void setGpsRoutesLayer( const QString& layerId );
+    QgsRedliningLayer* getGpsRoutesLayer() const { return mGpsRoutesLayer; }
+    QgsRedliningLayer* getOrCreateGpsRoutesLayer();
 
     /**
      * @brief
@@ -238,6 +246,8 @@ class CORE_EXPORT QgsMapLayerRegistry : public QObject
 
     QMap<QString, QgsMapLayer*> mMapLayers;
     QSet<QgsMapLayer*> mOwnedLayers;
+    QgsRedliningLayer* mRedliningLayer = nullptr;
+    QgsRedliningLayer* mGpsRoutesLayer = nullptr;
 
 }; // class QgsMapLayerRegistry
 

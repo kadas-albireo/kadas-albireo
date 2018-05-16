@@ -108,8 +108,6 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
     : QgsRedliningManager( app )
     , mApp( app )
     , mUi( ui )
-    , mLayer( 0 )
-    , mLayerRefCount( 0 )
 {
   QAction* actionNewMarker = new QAction( QIcon( ":/images/themes/default/redlining_point.svg" ), tr( "Marker" ), this );
 
@@ -209,37 +207,12 @@ QgsRedlining::QgsRedlining( QgisApp *app, const RedliningUi& ui )
 
 QgsRedliningLayer* QgsRedlining::getOrCreateLayer()
 {
-  if ( !mLayer )
-  {
-    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "Redlining" ) );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer, true, true );
-    setLayer( layer );
-  }
-  return mLayer;
-}
-
-void QgsRedlining::setLayer( QgsRedliningLayer *layer )
-{
-  if ( !layer )
-    return;
-  mLayer = layer;
-  mLayerRefCount = 0;
-
-  layer->setCustomProperty( "labeling/placement", "0" );
-  layer->setCustomProperty( "labeling/obstacle", "false" );
-  layer->setCustomProperty( "labeling/dataDefined/PositionX",  "1~~1~~$x~~" );
-  layer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~1~~$y~~" );
-  layer->setCustomProperty( "labeling/bufferDraw", true );
-  layer->setCustomProperty( "labeling/bufferSize", 0.5 );
-  mLayer->setCustomProperty( "labeling/bufferColorA", 127 );
-  mLayer->setCustomProperty( "labeling/bufferColorB", 0 );
-  mLayer->setCustomProperty( "labeling/bufferColorG", 0 );
-  mLayer->setCustomProperty( "labeling/bufferColorR", 0 );
+  return QgsMapLayerRegistry::instance()->getOrCreateRedliningLayer();
 }
 
 QgsRedliningLayer* QgsRedlining::getLayer() const
 {
-  return mLayer.data();
+  return QgsMapLayerRegistry::instance()->getRedliningLayer();
 }
 
 void QgsRedlining::editFeature( const QgsFeature& feature )
@@ -349,11 +322,10 @@ void QgsRedlining::editFeatures( const QList<QgsFeature> &features )
 
 void QgsRedlining::checkLayerRemoved( const QString &layerId )
 {
-  if ( mLayer && mLayer->id() == layerId )
+  QgsRedliningLayer* layer = getLayer();
+  if ( layer && layer->id() == layerId )
   {
     deactivateTool();
-    mLayerRefCount = 0;
-    mLayer = 0;
   }
 }
 
@@ -400,12 +372,8 @@ void QgsRedlining::setTool( QgsMapTool *tool, QAction* action , bool active )
     tool->setAction( action );
     mUi.buttonNewObject->setDefaultAction( action );
     connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
-    if ( mLayerRefCount == 0 )
-    {
-      mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
-      mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
-    }
-    ++mLayerRefCount;
+    mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
+    mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
     mApp->mapCanvas()->setMapTool( tool );
     mRedliningTool = tool;
     updateToolRubberbandStyle();
@@ -421,14 +389,6 @@ void QgsRedlining::deactivateTool()
 {
   if ( mRedliningTool )
   {
-    if ( mLayer )
-    {
-      --mLayerRefCount;
-      if ( mLayerRefCount == 0 && mApp->mapCanvas()->currentLayer() == mLayer )
-      {
-        mApp->layerTreeView()->setCurrentLayer( 0 );
-      }
-    }
     mRedliningTool.data()->deleteLater();
   }
   mUi.spinBoxSize->setEnabled( true );
@@ -504,12 +464,13 @@ void QgsRedlining::readProject( const QDomDocument& doc )
   {
     return;
   }
-  setLayer( qobject_cast<QgsRedliningLayer*>( QgsMapLayerRegistry::instance()->mapLayer( nl.at( 0 ).toElement().attribute( "layerid" ) ) ) );
+  QgsMapLayerRegistry::instance()->setRedliningLayer( nl.at( 0 ).toElement().attribute( "layerid" ) );
 }
 
 void QgsRedlining::writeProject( QDomDocument& doc )
 {
-  if ( !mLayer )
+  QgsRedliningLayer* layer = getLayer();
+  if ( !layer )
   {
     return;
   }
@@ -522,7 +483,7 @@ void QgsRedlining::writeProject( QDomDocument& doc )
   QDomElement qgisElem = nl.at( 0 ).toElement();
 
   QDomElement redliningElem = doc.createElement( "Redlining" );
-  redliningElem.setAttribute( "layerid", mLayer->id() );
+  redliningElem.setAttribute( "layerid", layer->id() );
   qgisElem.appendChild( redliningElem );
 }
 

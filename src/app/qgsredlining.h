@@ -99,11 +99,8 @@ class QgsRedlining : public QgsRedliningManager
     QAction* mActionNewCircle;
     QAction* mActionNewText;
 
-    QPointer<QgsRedliningLayer> mLayer;
     QPointer<QgsMapTool> mRedliningTool;
-    int mLayerRefCount;
 
-    void setLayer( QgsRedliningLayer* layer );
     void setTool( QgsMapTool *tool, QAction *action, bool active = true );
     static QIcon createOutlineStyleIcon( Qt::PenStyle style );
     static QIcon createFillStyleIcon( Qt::BrushStyle style );

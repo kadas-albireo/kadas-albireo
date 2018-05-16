@@ -17,6 +17,7 @@
 
 #include "qgsmaplayerregistry.h"
 #include "qgsmaplayer.h"
+#include "qgsredlininglayer.h"
 #include "qgslogger.h"
 
 QgsMapLayerRegistry* QgsMapLayerRegistry::sInstance = 0;
@@ -153,6 +154,8 @@ void QgsMapLayerRegistry::removeAllMapLayers()
   // and then consequently any of their map legends
   removeMapLayers( mMapLayers.keys() );
   mMapLayers.clear();
+  mRedliningLayer = nullptr;
+  mGpsRoutesLayer = nullptr;
 } // QgsMapLayerRegistry::removeAllMapLayers()
 
 void QgsMapLayerRegistry::clearAllLayerCaches()
@@ -175,4 +178,64 @@ void QgsMapLayerRegistry::reloadAllLayers()
 const QMap<QString, QgsMapLayer*>& QgsMapLayerRegistry::mapLayers()
 {
   return mMapLayers;
+}
+
+void QgsMapLayerRegistry::setRedliningLayer( const QString &layerId )
+{
+  if ( dynamic_cast<QgsRedliningLayer*>( mapLayer( layerId ) ) )
+  {
+    mRedliningLayer = static_cast<QgsRedliningLayer*>( mapLayer( layerId ) );
+    mRedliningLayer->setCustomProperty( "labeling/placement", "0" );
+    mRedliningLayer->setCustomProperty( "labeling/obstacle", "false" );
+    mRedliningLayer->setCustomProperty( "labeling/dataDefined/PositionX",  "1~~1~~$x~~" );
+    mRedliningLayer->setCustomProperty( "labeling/dataDefined/PositionY", "1~~1~~$y~~" );
+    mRedliningLayer->setCustomProperty( "labeling/bufferDraw", true );
+    mRedliningLayer->setCustomProperty( "labeling/bufferSize", 0.5 );
+    mRedliningLayer->setCustomProperty( "labeling/bufferColorA", 127 );
+    mRedliningLayer->setCustomProperty( "labeling/bufferColorB", 0 );
+    mRedliningLayer->setCustomProperty( "labeling/bufferColorG", 0 );
+    mRedliningLayer->setCustomProperty( "labeling/bufferColorR", 0 );
+  }
+}
+
+QgsRedliningLayer* QgsMapLayerRegistry::getOrCreateRedliningLayer()
+{
+  if ( !mRedliningLayer )
+  {
+    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "Redlining" ) );
+    addMapLayer( layer, true, true );
+    setRedliningLayer( layer->id() );
+  }
+  return mRedliningLayer;
+}
+
+void QgsMapLayerRegistry::setGpsRoutesLayer( const QString &layerId )
+{
+  if ( dynamic_cast<QgsRedliningLayer*>( mapLayer( layerId ) ) )
+  {
+    mGpsRoutesLayer = static_cast<QgsRedliningLayer*>( mapLayer( layerId ) );
+
+    // Labeling tweaks to make both point and line labeling appear more or less sensible
+    mGpsRoutesLayer->setCustomProperty( "labeling/placement", 2 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/placementFlags", 10 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/dist", 2 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/distInMapUnits", false );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferDraw", true );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferSize", 0.5 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferColorA", 127 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferColorB", 0 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferColorG", 0 );
+    mGpsRoutesLayer->setCustomProperty( "labeling/bufferColorR", 0 );
+  }
+}
+
+QgsRedliningLayer* QgsMapLayerRegistry::getOrCreateGpsRoutesLayer()
+{
+  if ( !mGpsRoutesLayer )
+  {
+    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
+    addMapLayer( layer, true, true );
+    setGpsRoutesLayer( layer->id() );
+  }
+  return mGpsRoutesLayer;
 }

@@ -26,6 +26,13 @@ class QgsMapLayerRegistry : QObject
     //! Retrieve the mapLayers collection (mainly intended for use by projection)
     const QMap<QString, QgsMapLayer*> & mapLayers();
 
+    void setRedliningLayer( const QString& layerId );
+    QgsRedliningLayer* getRedliningLayer() const;
+    QgsRedliningLayer* getOrCreateRedliningLayer();
+    void setGpsRoutesLayer( const QString& layerId );
+    QgsRedliningLayer* getGpsRoutesLayer() const;
+    QgsRedliningLayer* getOrCreateGpsRoutesLayer();
+
     /**
      * @brief
      * Add a list of layers to the map of loaded layers

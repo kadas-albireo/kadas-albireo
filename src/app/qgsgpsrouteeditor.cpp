@@ -189,8 +189,6 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoin
     , mApp( app )
     , mActionCreateWaypoints( actionCreateWaypoints )
     , mActionCreateRoutes( actionCreateRoutes )
-    , mLayer( 0 )
-    , mLayerRefCount( 0 )
 {
   mActionEdit = new QAction( this );
 
@@ -203,38 +201,12 @@ QgsGPSRouteEditor::QgsGPSRouteEditor( QgisApp* app, QAction *actionCreateWaypoin
 
 QgsRedliningLayer* QgsGPSRouteEditor::getOrCreateLayer()
 {
-  if ( !mLayer )
-  {
-    QgsRedliningLayer* layer = new QgsRedliningLayer( tr( "GPS Routes" ), "EPSG:4326" );
-    QgsMapLayerRegistry::instance()->addMapLayer( layer, true, true );
-    setLayer( layer );
-  }
-  return mLayer;
-}
-
-void QgsGPSRouteEditor::setLayer( QgsRedliningLayer *layer )
-{
-  if ( !layer )
-    return;
-  mLayer = layer;
-  // Labeling tweaks to make both point and line labeling appear more or less sensible
-  mLayer->setCustomProperty( "labeling/placement", 2 );
-  mLayer->setCustomProperty( "labeling/placementFlags", 10 );
-  mLayer->setCustomProperty( "labeling/dist", 2 );
-  mLayer->setCustomProperty( "labeling/distInMapUnits", false );
-  mLayer->setCustomProperty( "labeling/bufferDraw", true );
-  mLayer->setCustomProperty( "labeling/bufferSize", 0.5 );
-  mLayer->setCustomProperty( "labeling/bufferColorA", 127 );
-  mLayer->setCustomProperty( "labeling/bufferColorB", 0 );
-  mLayer->setCustomProperty( "labeling/bufferColorG", 0 );
-  mLayer->setCustomProperty( "labeling/bufferColorR", 0 );
-  QgsMapLayerRegistry::instance()->addMapLayer( mLayer, true, true );
-  mLayerRefCount = 0;
+  return QgsMapLayerRegistry::instance()->getOrCreateGpsRoutesLayer();
 }
 
 QgsRedliningLayer* QgsGPSRouteEditor::getLayer() const
 {
-  return mLayer.data();
+  return QgsMapLayerRegistry::instance()->getGpsRoutesLayer();
 }
 
 void QgsGPSRouteEditor::editFeature( const QgsFeature& feature )
@@ -275,11 +247,10 @@ void QgsGPSRouteEditor::editFeatures( const QList<QgsFeature> &features )
 
 void QgsGPSRouteEditor::checkLayerRemoved( const QString &layerId )
 {
-  if ( mLayer && mLayer->id() == layerId )
+  QgsRedliningLayer* layer = getLayer();
+  if ( layer && layer->id() == layerId )
   {
     deactivateTool();
-    mLayerRefCount = 0;
-    mLayer = 0;
   }
 }
 
@@ -313,12 +284,8 @@ bool QgsGPSRouteEditor::setTool( QgsMapToolDrawShape *tool, QAction* action , bo
   {
     tool->setAction( action );
     connect( tool, SIGNAL( deactivated() ), this, SLOT( deactivateTool() ) );
-    if ( mLayerRefCount == 0 )
-    {
-      mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
-      mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
-    }
-    ++mLayerRefCount;
+    mApp->layerTreeView()->setCurrentLayer( getOrCreateLayer() );
+    mApp->layerTreeView()->setLayerVisible( getOrCreateLayer(), true );
     mApp->mapCanvas()->setMapTool( tool );
     mRedliningTool = tool;
     return true;
@@ -334,14 +301,6 @@ void QgsGPSRouteEditor::deactivateTool()
 {
   if ( mRedliningTool )
   {
-    if ( mLayer )
-    {
-      --mLayerRefCount;
-      if ( mLayerRefCount == 0 && mApp->mapCanvas()->currentLayer() == mLayer )
-      {
-        mApp->layerTreeView()->setCurrentLayer( 0 );
-      }
-    }
     mRedliningTool->deleteLater();
   }
 }
@@ -353,12 +312,13 @@ void QgsGPSRouteEditor::readProject( const QDomDocument& doc )
   {
     return;
   }
-  setLayer( qobject_cast<QgsRedliningLayer*>( QgsMapLayerRegistry::instance()->mapLayer( nl.at( 0 ).toElement().attribute( "layerid" ) ) ) );
+  QgsMapLayerRegistry::instance()->setGpsRoutesLayer( nl.at( 0 ).toElement().attribute( "layerid" ) );
 }
 
 void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
 {
-  if ( !mLayer )
+  QgsRedliningLayer* layer = getLayer();
+  if ( !layer )
   {
     return;
   }
@@ -371,7 +331,7 @@ void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
   QDomElement qgisElem = nl.at( 0 ).toElement();
 
   QDomElement redliningElem = doc.createElement( "GpsRoutes" );
-  redliningElem.setAttribute( "layerid", mLayer->id() );
+  redliningElem.setAttribute( "layerid", layer->id() );
   qgisElem.appendChild( redliningElem );
 }
 
@@ -391,7 +351,7 @@ void QgsGPSRouteEditor::importGpx()
     mApp->messageBar()->pushCritical( tr( "GPX import failed" ), tr( "Cannot read file" ) );
     return;
   }
-  getOrCreateLayer();
+  QgsRedliningLayer* layer = getOrCreateLayer();
 
   int nWpts = 0;
   int nRtes = 0;
@@ -407,7 +367,7 @@ void QgsGPSRouteEditor::importGpx()
     double lon = wptEl.attribute( "lon" ).toDouble();
     QString name = wptEl.firstChildElement( "name" ).text();
     QString flags( "shape=point,symbol=circle,r=0,bold=1" );
-    mLayer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+    layer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nWpts;
   }
   QDomNodeList rtes = doc.elementsByTagName( "rte" );
@@ -428,7 +388,7 @@ void QgsGPSRouteEditor::importGpx()
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
     QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+    layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nRtes;
   }
   QDomNodeList trks = doc.elementsByTagName( "trk" );
@@ -449,16 +409,17 @@ void QgsGPSRouteEditor::importGpx()
     QgsLineStringV2* line = new QgsLineStringV2();
     line->setPoints( pts );
     QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
-    mLayer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+    layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
     ++nTracks;
   }
-  mLayer->triggerRepaint();
+  layer->triggerRepaint();
   mApp->messageBar()->pushInfo( tr( "GPX import complete" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
 }
 
 void QgsGPSRouteEditor::exportGpx()
 {
-  if ( !mLayer )
+  QgsRedliningLayer* layer = getLayer();
+  if ( !layer )
   {
     return;
   }
@@ -488,7 +449,7 @@ void QgsGPSRouteEditor::exportGpx()
   doc.appendChild( gpxEl );
 
   // Write waypoints (all point geometries)
-  QgsFeatureIterator fit = mLayer->getFeatures();
+  QgsFeatureIterator fit = layer->getFeatures();
   QgsFeature feature;
   while ( fit.nextFeature( feature ) )
   {
@@ -507,7 +468,7 @@ void QgsGPSRouteEditor::exportGpx()
   }
 
   // Write routes (all line geometries)
-  fit = mLayer->getFeatures();
+  fit = layer->getFeatures();
   while ( fit.nextFeature( feature ) )
   {
     if ( feature.geometry()->type() == QGis::Line )
