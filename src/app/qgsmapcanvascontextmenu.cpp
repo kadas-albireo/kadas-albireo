@@ -55,6 +55,11 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
   if ( mPickResult.annotation )
   {
     addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editAnnotation() ) );
+    if ( dynamic_cast<QgsPinAnnotationItem*>( mPickResult.annotation ) )
+    {
+      addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy position" ), static_cast<QgsPinAnnotationItem*>( mPickResult.annotation ), SLOT( copyPosition() ) );
+      addAction( QIcon( ":/images/themes/default/mIconPointLayer.svg" ), tr( "Convert to waypoint" ), static_cast<QgsPinAnnotationItem*>( mPickResult.annotation ), SLOT( convertToWaypoint() ) );
+    }
     addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAnnotation() ) );
     mRectItem = new QGraphicsRectItem();
     mRectItem->setRect( mPickResult.boundingBox );
@@ -82,6 +87,10 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     if ( mPickResult.layer->type() == QgsMapLayer::RedliningLayer )
     {
       addAction( QIcon( ":/images/themes/default/mActionToggleEditing.svg" ), tr( "Edit" ), this, SLOT( editFeature() ) );
+      if ( mPickResult.feature.geometry()->type() == QGis::Point )
+      {
+        addAction( QIcon( ":/images/themes/default/pin_red.svg" ), tr( "Convert to pin" ), this, SLOT( convertToPin() ) );
+      }
       addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cutFeature() ) );
     }
     addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), tr( "Copy" ), this, SLOT( copyFeature() ) );
@@ -164,11 +173,6 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     {
       analysisMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureHeightProfile.png" ), tr( "Line of sight" ), this, SLOT( measureHeightProfile() ) );
     }
-  }
-
-  if ( mPickResult.feature.isValid() && mPickResult.feature.geometry()->type() == QGis::Point )
-  {
-    addAction( QIcon( ":/images/themes/default/pin_red.svg" ), tr( "Convert to pin" ), this, SLOT( convertToPin() ) );
   }
 
   if ( mPickResult.isEmpty() )

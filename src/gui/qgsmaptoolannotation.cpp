@@ -16,8 +16,12 @@
  ***************************************************************************/
 
 #include "qgsmaptoolannotation.h"
-#include "qgslogger.h"
+#include "qgscrscache.h"
+#include "qgsgeometry.h"
 #include "qgsmapcanvas.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsredlininglayer.h"
+#include "qgspinannotationitem.h"
 #include "qgstextannotationitem.h"
 #include <QDialog>
 #include <QMenu>
@@ -117,6 +121,20 @@ void QgsMapToolEditAnnotation::canvasPressEvent( QMouseEvent *e )
     else if ( nItems > 1 && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
     {
       QMenu menu;
+      // If all items are pins, allow converting to waypoints
+      bool allPins = true;
+    for ( QgsAnnotationItem* item : mItems )
+      {
+        if ( !dynamic_cast<QgsPinAnnotationItem*>( item ) )
+        {
+          allPins = false;
+          break;
+        }
+      }
+      if ( allPins )
+      {
+        menu.addAction( QIcon( ":/images/themes/default/mIconPointLayer.svg" ), tr( "Convert to waypoints" ), this, SLOT( convertToWaypoints() ) );
+      }
       menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
       menu.exec( e->globalPos() );
     }
@@ -222,6 +240,20 @@ void QgsMapToolEditAnnotation::keyReleaseEvent( QKeyEvent *e )
       break;
     }
   }
+}
+
+void QgsMapToolEditAnnotation::convertToWaypoints()
+{
+  QgsRedliningLayer* gpsLayer = QgsMapLayerRegistry::instance()->getOrCreateGpsRoutesLayer();
+for ( QgsAnnotationItem* item : mItems )
+  {
+    QgsPoint wgsPos = QgsCoordinateTransformCache::instance()->transform( item->mapGeoPosCrs().authid(), "EPSG:4326" )->transform( item->mapGeoPos() );
+    QString name = item->getName();
+    QString flags( "shape=point,symbol=circle,r=0,bold=1" );
+    gpsLayer->addShape( new QgsGeometry( new QgsPointV2( wgsPos ) ), Qt::yellow, Qt::yellow, 2, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+  }
+  deleteAll();
+  gpsLayer->triggerRepaint();
 }
 
 void QgsMapToolEditAnnotation::deleteAll()

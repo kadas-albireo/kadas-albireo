@@ -42,6 +42,10 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
     const QString& getName() const { return mName; }
     const QString& getRemarks() const { return mRemarks; }
 
+  public slots:
+    void copyPosition();
+    void convertToWaypoint();
+
   protected:
     QgsPinAnnotationItem( QgsMapCanvas* canvas, QgsPinAnnotationItem* source );
 
@@ -49,7 +53,6 @@ class GUI_EXPORT QgsPinAnnotationItem: public QgsSvgAnnotationItem
     QString mRemarks;
 
   private slots:
-    void copyPosition();
     void updateToolTip();
     void _showItemEditor() override;
 };

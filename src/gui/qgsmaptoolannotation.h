@@ -62,6 +62,7 @@ class GUI_EXPORT QgsMapToolEditAnnotation : public QgsMapTool
     QGraphicsRectItem* mRectItem = nullptr;
 
   private slots:
+    void convertToWaypoints();
     void deleteAll();
     void updateRect();
 };

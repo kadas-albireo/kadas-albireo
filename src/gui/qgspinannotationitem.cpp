@@ -19,6 +19,10 @@
 #include "qgsproject.h"
 #include "qgscoordinateformat.h"
 #include "qgscrscache.h"
+#include "qgsgeometry.h"
+#include "qgsmaplayerregistry.h"
+#include "qgsredlininglayer.h"
+#include "qgspointv2.h"
 #include <QApplication>
 #include <QClipboard>
 #include <QContextMenuEvent>
@@ -137,6 +141,7 @@ void QgsPinAnnotationItem::showContextMenu( const QPoint& screenPos )
   QMenu menu;
   menu.addAction( QIcon( ":/images/themes/default/mActionEditor.svg" ), tr( "Attribute editor..." ), this, SLOT( _showItemEditor() ) );
   menu.addAction( QIcon( ":/images/themes/default/mActionCopyCoordinatesToClipboard.png" ), tr( "Copy position" ), this, SLOT( copyPosition() ) );
+  menu.addAction( QIcon( ":/images/themes/default/mIconPointLayer.svg" ), tr( "Convert to waypoint" ), this, SLOT( convertToWaypoint() ) );
   menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }
@@ -184,6 +189,17 @@ void QgsPinAnnotationItem::copyPosition()
                  .arg( posStr )
                  .arg( QgsCoordinateFormat::instance()->getHeightAtPos( mGeoPos, mGeoPosCrs ) );
   QApplication::clipboard()->setText( text );
+}
+
+void QgsPinAnnotationItem::convertToWaypoint()
+{
+  QgsRedliningLayer* gpsLayer = QgsMapLayerRegistry::instance()->getOrCreateGpsRoutesLayer();
+  QgsPoint wgsPos = QgsCoordinateTransformCache::instance()->transform( mapGeoPosCrs().authid(), "EPSG:4326" )->transform( mapGeoPos() );
+  QString name = getName();
+  QString flags( "shape=point,symbol=circle,r=0,bold=1" );
+  gpsLayer->addShape( new QgsGeometry( new QgsPointV2( wgsPos ) ), Qt::yellow, Qt::yellow, 2, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+  deleteLater();
+  gpsLayer->triggerRepaint();
 }
 
 void QgsPinAnnotationItem::_showItemEditor()
