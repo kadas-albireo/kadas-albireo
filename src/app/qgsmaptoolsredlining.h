@@ -92,6 +92,7 @@ class QgsRedliningMapToolT : public T
     void onFinished();
     void copy();
     void cut();
+    void convertToPin();
 };
 
 template<>

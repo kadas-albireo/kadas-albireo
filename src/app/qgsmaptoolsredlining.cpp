@@ -236,6 +236,28 @@ void QgsRedliningMapToolT<T>::cut()
 }
 
 template <class T>
+void QgsRedliningMapToolT<T>::convertToPin()
+{
+}
+
+template <>
+void QgsRedliningMapToolT<QgsMapToolDrawPoint>::convertToPin()
+{
+  QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( QgsMapToolDrawPoint::canvas() );
+  QgsFeature feature = createFeature();
+  if ( mBottomBar->editor() )
+  {
+    QgsAttributes attribs = feature.attributes();
+    mBottomBar->editor()->get( attribs, mLayer->pendingFields() );
+    feature.setAttributes( attribs );
+  }
+  pinItem->setMapPosition( QgsMapToolDrawPoint::state()->points[0][0] );
+  pinItem->setName( feature.attribute( "text" ).toString() );
+  QgsAnnotationLayer::getLayer( QgsMapToolDrawPoint::canvas(), "mapPins", QApplication::translate( "QgsRedliningMapTool", "Pins" ) )->addItem( pinItem );
+  QgsMapToolDrawPoint::deleteShape();
+}
+
+template <class T>
 void QgsRedliningMapToolT<T>::addContextMenuActions( const QgsMapToolDrawShape::EditContext* context, QMenu& menu ) const
 {
   T::addContextMenuActions( context, menu );
@@ -246,6 +268,10 @@ void QgsRedliningMapToolT<T>::addContextMenuActions( const QgsMapToolDrawShape::
   }
   menu.addAction( QIcon( ":/images/themes/default/mActionEditCopy.png" ), QApplication::translate( "QgsRedliningMapTool", "Copy" ), this, &QgsRedliningMapToolT<T>::copy );
   menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), QApplication::translate( "QgsRedliningMapTool", "Cut" ), this, &QgsRedliningMapToolT<T>::cut );
+  if ( QgsRedliningLayer::deserializeFlags( mFlags )["shape"] == "point" )
+  {
+    menu.addAction( QIcon( ":/images/themes/default/pin_red.svg" ), QApplication::translate( "QgsRedliningMapTool", "Convert to pin" ), this, &QgsRedliningMapToolT<T>::convertToPin );
+  }
 #endif
 }
 
@@ -450,7 +476,7 @@ void QgsRedliningEditGroupMapTool::canvasPressEvent( QMouseEvent* e )
     menu.addAction( QIcon( ":/images/themes/default/mActionEditCut.png" ), tr( "Cut" ), this, SLOT( cut() ) );
     menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteAll() ) );
     bool points = true;
-    for ( const Item& item : mItems )
+  for ( const Item& item : mItems )
     {
       if ( QgsRedliningLayer::deserializeFlags( item.flags )["shape"] != "point" )
       {
@@ -807,7 +833,7 @@ QgsFeature QgsRedliningEditGroupMapTool::featureFromItem( const Item &item ) con
 
 void QgsRedliningEditGroupMapTool::convertToPins()
 {
-  for ( const Item& item : mItems )
+for ( const Item& item : mItems )
   {
     QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
     pinItem->setMapPosition( *item.nodeRubberband->getPoint( 0 ) );
