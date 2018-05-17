@@ -378,3 +378,43 @@ int QGis::wkbDimensions( WkbType type )
 {
   return QgsWKBTypes::wkbDimensions(( QgsWKBTypes::Type )type );
 }
+
+QgsWKBTypes::Type QGis::fromOldWkbType( QGis::WkbType type )
+{
+  switch ( type )
+  {
+    case QGis::WKBPoint:
+      return QgsWKBTypes::Point;
+    case QGis::WKBLineString:
+      return QgsWKBTypes::LineString;
+    case QGis::WKBPolygon:
+      return QgsWKBTypes::Polygon;
+    case QGis::WKBMultiPoint:
+      return QgsWKBTypes::MultiPoint;
+    case QGis::WKBMultiLineString:
+      return QgsWKBTypes::MultiLineString;
+    case QGis::WKBMultiPolygon:
+      return QgsWKBTypes::MultiPolygon;
+    case QGis::WKBNoGeometry:
+      return QgsWKBTypes::NoGeometry;
+    case QGis::WKBPoint25D:
+      return QgsWKBTypes::PointZ;
+    case QGis::WKBLineString25D:
+      return QgsWKBTypes::LineStringZ;
+    case QGis::WKBPolygon25D:
+      return QgsWKBTypes::PolygonZ;
+    case QGis::WKBMultiPoint25D:
+      return QgsWKBTypes::MultiPointZ;
+    case QGis::WKBMultiLineString25D:
+      return QgsWKBTypes::MultiLineStringZ;
+    case QGis::WKBMultiPolygon25D:
+      return QgsWKBTypes::MultiPolygonZ;
+    case QGis::WKBUnknown:
+      return QgsWKBTypes::Unknown;
+    default:
+      break;
+  }
+
+  QgsDebugMsg( QString( "unexpected old wkbType=%1" ).arg( type ) );
+  return static_cast< QgsWKBTypes::Type >( type );
+}

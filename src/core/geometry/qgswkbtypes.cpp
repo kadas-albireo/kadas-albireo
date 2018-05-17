@@ -17,108 +17,37 @@
 
 #include "qgswkbtypes.h"
 
+/***************************************************************************
+ * This class is considered CRITICAL and any change MUST be accompanied with
+ * full unit tests.
+ * See details in QEP #17
+ ****************************************************************************/
+
 QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry>* QgsWKBTypes::entries()
 {
   static QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> entries = registerTypes();
   return &entries;
 }
 
-QgsWKBTypes::Type QgsWKBTypes::singleType( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() || it.key() == Unknown )
-  {
-    return Unknown;
-  }
-  return ( it->mSingleType );
-}
-
-QgsWKBTypes::Type QgsWKBTypes::multiType( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() || it.key() == Unknown )
-  {
-    return Unknown;
-  }
-  return it->mMultiType;
-}
-
-QgsWKBTypes::Type QgsWKBTypes::flatType( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() || it.key() == Unknown )
-  {
-    return Unknown;
-  }
-  return it->mFlatType;
-}
-
-QgsWKBTypes::Type QgsWKBTypes::zmType( QgsWKBTypes::Type type, bool hasZ, bool hasM )
-{
-  type = flatType( type );
-  if ( hasZ )
-    type = static_cast<QgsWKBTypes::Type>( static_cast<quint32>( type ) + 1000 );
-  if ( hasM )
-    type = static_cast<QgsWKBTypes::Type>( static_cast<quint32>( type ) + 2000 );
-  return type;
-}
-
 QgsWKBTypes::Type QgsWKBTypes::parseType( const QString &wktStr )
 {
-  QString typestr = wktStr.left( wktStr.indexOf( '(' ) ).simplified().replace( " ", "" );
-  foreach ( const Type& type, entries()->keys() )
+  QString typestr = wktStr.left( wktStr.indexOf( '(' ) ).simplified().remove( ' ' );
+
+  QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry>* knownTypes = entries();
+  QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry>::const_iterator it = knownTypes->constBegin();
+  for ( ; it != knownTypes->constEnd(); ++it )
   {
-    QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-    if ( it != entries()->constEnd() && it.value().mName.compare( typestr, Qt::CaseInsensitive ) == 0 )
+    if ( it.value().mName.compare( typestr, Qt::CaseInsensitive ) == 0 )
     {
-      return type;
+      return it.key();
     }
   }
   return Unknown;
 }
 
-bool QgsWKBTypes::isSingleType( Type type )
-{
-  return ( type != Unknown && !isMultiType( type ) );
-}
-
-bool QgsWKBTypes::isMultiType( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() )
-  {
-    return Unknown;
-  }
-  return it->mIsMultiType;
-}
-
-int QgsWKBTypes::wkbDimensions( Type type )
-{
-  GeometryType gtype = geometryType( type );
-  switch ( gtype )
-  {
-    case LineGeometry:
-      return 1;
-    case PolygonGeometry:
-      return 2;
-    default: //point, no geometry, unknown geometry
-      return 0;
-  }
-}
-
-QgsWKBTypes::GeometryType QgsWKBTypes::geometryType( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() )
-  {
-    return UnknownGeometry;
-  }
-  return it->mGeometryType;
-}
-
 QString QgsWKBTypes::displayString( Type type )
 {
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
+  QMap< Type, wkbEntry >::const_iterator it = entries()->constFind( type );
   if ( it == entries()->constEnd() )
   {
     return QString::null;
@@ -126,66 +55,11 @@ QString QgsWKBTypes::displayString( Type type )
   return it->mName;
 }
 
-bool QgsWKBTypes::hasZ( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() )
-  {
-    return false;
-  }
-  return it->mHasZ;
-}
-
-bool QgsWKBTypes::hasM( Type type )
-{
-  QMap< Type, wkbEntry >::const_iterator it = entries()->find( type );
-  if ( it == entries()->constEnd() )
-  {
-    return false;
-  }
-  return it->mHasM;
-}
-
-QgsWKBTypes::Type QgsWKBTypes::addZ( QgsWKBTypes::Type type )
-{
-  if ( hasZ( type ) )
-    return type;
-  else if ( type == Unknown )
-    return Unknown;
-  else if ( type == NoGeometry )
-    return NoGeometry;
-
-  //upgrade with z dimension
-  Type flat = flatType( type );
-  if ( hasM( type ) )
-    return ( QgsWKBTypes::Type )( flat + 3000 );
-  else
-    return ( QgsWKBTypes::Type )( flat + 1000 );
-}
-
-QgsWKBTypes::Type QgsWKBTypes::addM( QgsWKBTypes::Type type )
-{
-  if ( hasM( type ) )
-    return type;
-  else if ( type == Unknown )
-    return Unknown;
-  else if ( type == NoGeometry )
-    return NoGeometry;
-  else if ( type == Point25D ||
-            type == LineString25D ||
-            type == Polygon25D ||
-            type == MultiPoint25D ||
-            type == MultiLineString25D ||
-            type == MultiPolygon25D )
-    return type; //can't add M dimension to these types
-
-  //upgrade with m dimension
-  Type flat = flatType( type );
-  if ( hasZ( type ) )
-    return ( QgsWKBTypes::Type )( flat + 3000 );
-  else
-    return ( QgsWKBTypes::Type )( flat + 2000 );
-}
+/***************************************************************************
+ * This class is considered CRITICAL and any change MUST be accompanied with
+ * full unit tests.
+ * See details in QEP #17
+ ****************************************************************************/
 
 QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
 {
@@ -193,7 +67,6 @@ QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
   //register the known wkb types
   entries.insert( Unknown, wkbEntry( "Unknown", false, Unknown, Unknown, Unknown, UnknownGeometry, false, false ) );
   entries.insert( NoGeometry, wkbEntry( "NoGeometry", false, NoGeometry, NoGeometry, NoGeometry, NullGeometry, false, false ) );
-  entries.insert( MixedGeometry, wkbEntry( "MixedGeometry", false, MixedGeometry, MixedGeometry, MixedGeometry, AnyGeometry, false, false ) );
   //point
   entries.insert( Point, wkbEntry( "Point", false, MultiPoint, Point, Point, PointGeometry, false, false ) );
   entries.insert( PointZ, wkbEntry( "PointZ", false, MultiPointZ, PointZ, Point, PointGeometry, true, false ) );
@@ -261,20 +134,4 @@ QMap<QgsWKBTypes::Type, QgsWKBTypes::wkbEntry> QgsWKBTypes::registerTypes()
   entries.insert( GeometryCollectionM, wkbEntry( "GeometryCollectionM", true, GeometryCollectionM, Unknown, GeometryCollection, UnknownGeometry, false, true ) );
   entries.insert( GeometryCollectionZM, wkbEntry( "GeometryCollectionZM", true, GeometryCollectionZM, Unknown, GeometryCollection, UnknownGeometry, true, true ) );
   return entries;
-}
-
-bool QgsWKBTypes::isCurvedType( Type type )
-{
-  switch ( flatType( type ) )
-  {
-    case CircularString:
-    case CompoundCurve:
-    case CurvePolygon:
-    case MultiCurve:
-    case MultiSurface:
-      return true;
-
-    default:
-      return false;
-  }
 }

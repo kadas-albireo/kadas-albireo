@@ -72,6 +72,7 @@ class QGis
     static bool isSingleType( WkbType type );
     static bool isMultiType( WkbType type );
     static int wkbDimensions( WkbType type );
+    static QgsWKBTypes::Type fromOldWkbType( QGis::WkbType type );
 
     enum GeometryType
     {
