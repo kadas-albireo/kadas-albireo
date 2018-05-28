@@ -412,18 +412,6 @@ QString QgsProject::fileName() const
   return imp_->file.fileName();
 } // QString QgsProject::fileName() const
 
-QString QgsProject::projectDataDir( bool create ) const
-{
-  if ( fileName().isEmpty() )
-    return "";
-  QDir projectDir = QFileInfo( fileName() ).absoluteDir();
-  QString dataDirName = QFileInfo( fileName() ).baseName() + "_files";
-  QString projectDataDirPath = projectDir.absoluteFilePath( dataDirName );
-  if ( !QDir( projectDataDirPath ).exists() && create )
-    projectDir.mkdir( dataDirName );
-  return QDir( projectDataDirPath ).exists() ? projectDataDirPath : "";
-}
-
 void QgsProject::clear()
 {
   imp_->clear();
@@ -1500,7 +1488,7 @@ QString QgsProject::readPath( QString src ) const
 }
 
 // return the absolute or relative path to write it to the project file
-QString QgsProject::writePath( QString src, QString relativeBasePath ) const
+QString QgsProject::writePath( QString src, QString relativeBasePath , bool copyToDatadir ) const
 {
   QString proj = relativeBasePath.isNull() ? fileName() : relativeBasePath;
 
@@ -1528,9 +1516,9 @@ QString QgsProject::writePath( QString src, QString relativeBasePath ) const
     srcPath.remove( 0, vsiPrefix.size() );
   }
 
-  // If stored in tmp dir, move to <project>_files folder
+  // If stored in tmp dir, move to <project>_files folder, unless project path is in tmp dir
   QString tmpDir = QDesktopServices::storageLocation( QDesktopServices::TempLocation );
-  if ( srcPath.startsWith( tmpDir ) )
+  if (( srcPath.startsWith( tmpDir ) || copyToDatadir ) && !fileName().startsWith( tmpDir ) )
   {
     // If a VSI file, determine the portion of the path that actually exists on the filesystem
     QString vsiPath;

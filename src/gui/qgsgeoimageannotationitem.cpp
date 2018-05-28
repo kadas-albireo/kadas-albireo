@@ -194,13 +194,8 @@ void QgsGeoImageAnnotationItem::writeXML( QDomDocument& doc ) const
   }
 
   QDomElement geoImageAnnotationElem = doc.createElement( "GeoImageAnnotationItem" );
-  QString dataDir = QgsProject::instance()->projectDataDir( true );
-  QString newFilePath = QDir( dataDir ).absoluteFilePath( QFileInfo( mFilePath ).fileName() );
-  if ( !dataDir.isEmpty() && QFile( mFilePath ).copy( newFilePath ) )
-  {
-    mFilePath = newFilePath;
-  }
-  geoImageAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
+  mFilePath = QgsProject::instance()->writePath( mFilePath, QString::null, true );
+  geoImageAnnotationElem.setAttribute( "file", mFilePath );
   QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
   geoImageAnnotationElem.setAttribute( "lon", worldPos.x() );
   geoImageAnnotationElem.setAttribute( "lat", worldPos.y() );

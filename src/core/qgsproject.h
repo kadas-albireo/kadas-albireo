@@ -120,11 +120,6 @@ class CORE_EXPORT QgsProject : public QObject
     QString fileName() const;
     //@}
 
-    /** Returns the path to the <projectname>_files directory.
-     *  If create is true, the directory will be created if it does not exist.
-     *  If the project filename is empty or creation failed, an empty path is returned.*/
-    QString projectDataDir( bool create ) const;
-
     /** Clear the project
      * @note added in 2.4
      */
@@ -250,7 +245,7 @@ class CORE_EXPORT QgsProject : public QObject
     void dumpProperties() const;
 
     /** prepare a filename to save it to the project file */
-    QString writePath( QString filename, QString relativeBasePath = QString::null ) const;
+    QString writePath( QString filename, QString relativeBasePath = QString::null, bool copyToDatadir = false ) const;
 
     /** turn filename read from the project file to an absolute path */
     QString readPath( QString filename ) const;
