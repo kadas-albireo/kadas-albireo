@@ -90,7 +90,6 @@ void QgsMapToolEditAnnotation::canvasDoubleClickEvent( QMouseEvent *e )
 {
   if ( mItems.size() == 1 && mItems.front().data() == mCanvas->annotationItemAtPos( e->pos() ) )
   {
-    mAnnotationMoveAction = QgsAnnotationItem::NoAction;
     mItems.front()->showItemEditor();
   }
 }
@@ -101,9 +100,9 @@ void QgsMapToolEditAnnotation::canvasPressEvent( QMouseEvent *e )
   if ( e->button() == Qt::LeftButton && ( e->modifiers() & Qt::ControlModifier ) == 0 )
   {
     mMouseMoveLastXY = e->pos();
-    if ( nItems == 1 && mItems.front().data() == mCanvas->annotationItemAtPos( e->pos() ) )
+    if ( nItems == 1 )
     {
-      mAnnotationMoveAction = mItems.front()->moveActionForPosition( e->posF() );
+      mAnnotationMoveAction = mItems.front()->moveActionForPosition( e->pos() );
     }
     else if ( nItems > 1 && mRectItem->contains( canvas()->mapToScene( e->pos() ) ) )
     {
@@ -163,7 +162,7 @@ void QgsMapToolEditAnnotation::canvasMoveEvent( QMouseEvent *e )
   }
   else if ( nItems == 1 )
   {
-    int moveAction = mItems.front()->moveActionForPosition( e -> pos() );
+    int moveAction = mItems.front()->moveActionForPosition( e->pos() );
     if ( moveAction != QgsAnnotationItem::NoAction )
       mCanvas->setCursor( QCursor( mItems.front()->cursorShapeForAction( moveAction ) ) );
     else
