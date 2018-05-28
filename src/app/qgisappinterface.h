@@ -79,6 +79,8 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
     bool addProject( QString theProjectName ) override;
     //! Start a new blank project
     void newProject( bool thePromptToSaveFlag = false ) override;
+    //! Save project
+    bool fileSave() override;
 
     //! Returns the default redlining layer
     virtual QgsRedliningLayer* redliningLayer() override;

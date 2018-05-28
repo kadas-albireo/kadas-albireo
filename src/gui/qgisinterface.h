@@ -117,6 +117,8 @@ class GUI_EXPORT QgisInterface : public QObject
     virtual bool addProject( QString theProject ) = 0;
     //! Start a blank project
     virtual void newProject( bool thePromptToSaveFlag = false ) = 0;
+    //! Save project
+    virtual bool fileSave() = 0;
 
     //! Returns the default redlining layer
     virtual QgsRedliningLayer* redliningLayer() = 0;
