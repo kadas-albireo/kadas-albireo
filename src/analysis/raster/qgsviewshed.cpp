@@ -328,7 +328,12 @@ bool QgsViewshed::computeViewshed( const QString &inputFile, const QString &outp
         continue;
       }
 
-      float pElev = heightmap[( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart )];
+      int idx = ( p[1] - rowStart ) * hmapWidth + ( p[0] - colStart );
+      if ( idx >= heightmap.size() )
+      {
+        continue;
+      }
+      float pElev = heightmap[idx];
       if ( pElev == noDataValue )
       {
         continue;
