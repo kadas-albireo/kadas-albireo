@@ -133,6 +133,14 @@ void QgsMapLayerRegistry::removeMapLayers( QStringList theLayerIds )
     if ( mOwnedLayers.contains( lyr ) )
     {
       emit layerWillBeRemoved( myId );
+      if ( lyr == mRedliningLayer )
+      {
+        mRedliningLayer = nullptr;
+      }
+      else if ( lyr == mGpsRoutesLayer )
+      {
+        mGpsRoutesLayer = nullptr;
+      }
       delete lyr;
       mOwnedLayers.remove( lyr );
     }
