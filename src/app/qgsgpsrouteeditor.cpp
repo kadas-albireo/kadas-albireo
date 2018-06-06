@@ -66,6 +66,9 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
       mSpinBoxSize = new QSpinBox( this );
       mSpinBoxSize->setRange( 1, 99 );
       layout->addWidget( mSpinBoxSize, 1, 3, 1, 1 );
+
+      connect( mColorButton, &QgsColorButtonV2::colorChanged, this, &WaypointEditor::updateStyle );
+      connect( mSpinBoxSize, static_cast < void( QSpinBox::* )( int ) > ( &QSpinBox::valueChanged ), this, &WaypointEditor::updateStyle );
     }
     void setTool( QgsMapToolDrawShape* tool )
     {
@@ -94,7 +97,7 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
 
       QSettings().setValue( "/GPXRoutes/WaypointSize", attribs[fields.fieldNameIndex( "size" )] );
       QSettings().setValue( "/GPXRoutes/WaypointColor", attribs[fields.fieldNameIndex( "outline" )] );
-      mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
+      updateStyle();
     }
     void setFocus() override
     {
@@ -102,10 +105,18 @@ class QgsGPSRouteEditor::WaypointEditor : public QgsRedliningAttribEditor
     }
 
   private:
-    QgsMapToolDrawShape* mTool;
+    QgsMapToolDrawShape* mTool = nullptr;
     QLineEdit* mNameEdit;
     QSpinBox* mSpinBoxSize;
     QgsColorButtonV2* mColorButton;
+
+    void updateStyle() const
+    {
+      if ( mTool )
+      {
+        mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
+      }
+    }
 };
 
 class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
@@ -137,6 +148,9 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
       mSpinBoxSize = new QSpinBox( this );
       mSpinBoxSize->setRange( 1, 99 );
       layout->addWidget( mSpinBoxSize, 2, 3, 1, 1 );
+
+      connect( mColorButton, &QgsColorButtonV2::colorChanged, this, &RouteEditor::updateStyle );
+      connect( mSpinBoxSize, static_cast < void( QSpinBox::* )( int ) > ( &QSpinBox::valueChanged ), this, &RouteEditor::updateStyle );
     }
     void setTool( QgsMapToolDrawShape* tool )
     {
@@ -169,18 +183,26 @@ class QgsGPSRouteEditor::RouteEditor : public QgsRedliningAttribEditor
 
       QSettings().setValue( "/GPXRoutes/RouteSize", attribs[fields.fieldNameIndex( "size" )] );
       QSettings().setValue( "/GPXRoutes/RouteColor", attribs[fields.fieldNameIndex( "outline" )] );
-      mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
+      updateStyle();
     }
     void setFocus() override
     {
       mNameEdit->setFocus();
     }
   private:
-    QgsMapToolDrawShape* mTool;
+    QgsMapToolDrawShape* mTool = nullptr;
     QLineEdit* mNameEdit;
     QLineEdit* mNumberEdit;
     QSpinBox* mSpinBoxSize;
     QgsColorButtonV2* mColorButton;
+
+    void updateStyle() const
+    {
+      if ( mTool )
+      {
+        mTool->updateStyle( mSpinBoxSize->value(), mColorButton->color(), mColorButton->color(), Qt::SolidLine, Qt::SolidPattern );
+      }
+    }
 };
 
 
@@ -262,6 +284,11 @@ void QgsGPSRouteEditor::setWaypointsTool( bool active, const QgsFeature *editFea
     editor->setTool( mRedliningTool.data() );
     int size = QSettings().value( "/GPXRoutes/WaypointSize", sFeatureSize ).toInt();
     QColor color = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/GPXRoutes/WaypointColor", QgsSymbolLayerV2Utils::encodeColor( Qt::yellow ) ).toString() );
+    if ( editFeature )
+    {
+      color = QgsSymbolLayerV2Utils::decodeColor( editFeature->attribute( "outline" ).toString() );
+      size = editFeature->attribute( "size" ).toInt();
+    }
     mRedliningTool->updateStyle( size, color, color, Qt::SolidLine, Qt::SolidPattern );
   }
 }
@@ -274,6 +301,11 @@ void QgsGPSRouteEditor::setRoutesTool( bool active, const QgsFeature *editFeatur
     editor->setTool( mRedliningTool.data() );
     int size = QSettings().value( "/GPXRoutes/RouteSize", sFeatureSize ).toInt();
     QColor color = QgsSymbolLayerV2Utils::decodeColor( QSettings().value( "/GPXRoutes/RouteColor", QgsSymbolLayerV2Utils::encodeColor( Qt::yellow ) ).toString() );
+    if ( editFeature )
+    {
+      color = QgsSymbolLayerV2Utils::decodeColor( editFeature->attribute( "outline" ).toString() );
+      size = editFeature->attribute( "size" ).toInt();
+    }
     mRedliningTool->updateStyle( size, color, color, Qt::SolidLine, Qt::SolidPattern );
   }
 }
