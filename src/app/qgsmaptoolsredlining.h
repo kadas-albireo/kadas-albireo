@@ -59,7 +59,7 @@ class QgsRedliningMapToolT : public T
 {
   public:
     QgsRedliningMapToolT( QgsMapCanvas* canvas, QgsRedliningManager* redlining, QgsRedliningLayer* layer, const QString& flags, const QgsFeature* editFeature = 0, QgsRedliningAttribEditor* editor = 0, bool isArea = false )
-        : T( canvas ), mRedlining( redlining ), mLayer( layer ), mFlags( flags ), mEditMode( false )
+        : T( canvas ), mRedlining( redlining ), mLayer( layer ), mFlags( flags )
     {
       init( editFeature, editor );
       Q_UNUSED( isArea );
@@ -85,7 +85,7 @@ class QgsRedliningMapToolT : public T
     QString mFlags;
     QgsRedliningBottomBar* mBottomBar;
     QgsRedliningAttribEditor* mStandaloneEditor;
-    bool mEditMode;
+    bool mEditMode = false;
 
     void init( const QgsFeature* editFeature, QgsRedliningAttribEditor* editor );
     QgsFeature createFeature() const;
