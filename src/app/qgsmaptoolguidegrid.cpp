@@ -396,6 +396,7 @@ void QgsGuideGridWidget::repopulateLayers()
   ui.comboBoxLayer->setCurrentIndex( -1 );
   ui.comboBoxLayer->blockSignals( false );
   ui.comboBoxLayer->setCurrentIndex( current );
+  ui.widgetLayerSetup->setEnabled( ui.comboBoxLayer->count() > 0 );
 }
 
 void QgsGuideGridWidget::currentLayerChanged( int cur )
