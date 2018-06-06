@@ -230,7 +230,7 @@ static void dumpBacktrace( unsigned int depth )
   delete [] buffer;
   if ( stderr_fd >= 0 )
   {
-    int status;
+//    int status;
     close( STDERR_FILENO );
     int dup_stderr = dup( stderr_fd );
     if ( dup_stderr != STDERR_FILENO )

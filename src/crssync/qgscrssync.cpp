@@ -139,7 +139,7 @@ namespace QgsCrsSync
         wkts.insert( epsg, wkt );
         n++;
 
-        OGRFree( wkt );
+        CPLFree( wkt );
       }
 
       f.close();

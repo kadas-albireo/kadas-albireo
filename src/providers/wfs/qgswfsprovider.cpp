@@ -895,7 +895,7 @@ int QgsWFSProvider::readAttributesFromSchema( QDomDocument& schemaDoc, QString& 
 
     //find <complexType name=complexTypeType
     QDomNodeList complexTypeNodeList = schemaElement.elementsByTagNameNS( "http://www.w3.org/2001/XMLSchema", "complexType" );
-    for ( uint i = 0; i < complexTypeNodeList.length(); ++i )
+    for ( int i = 0; i < complexTypeNodeList.length(); ++i )
     {
       if ( complexTypeNodeList.at( i ).toElement().attribute( "name" ) == complexTypeType )
       {

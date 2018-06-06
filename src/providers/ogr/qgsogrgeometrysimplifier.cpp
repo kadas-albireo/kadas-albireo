@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cpl_conv.h>
 #include "qgsogrgeometrysimplifier.h"
 #include "qgsogrprovider.h"
 #include "qgsapplication.h"
@@ -74,7 +75,7 @@ QgsOgrMapToPixelSimplifier::~QgsOgrMapToPixelSimplifier()
 {
   if ( mPointBufferPtr )
   {
-    OGRFree( mPointBufferPtr );
+    CPLFree( mPointBufferPtr );
     mPointBufferPtr = NULL;
   }
 }
@@ -84,13 +85,13 @@ QgsPoint* QgsOgrMapToPixelSimplifier::mallocPoints( int numPoints )
 {
   if ( mPointBufferPtr && mPointBufferCount < numPoints )
   {
-    OGRFree( mPointBufferPtr );
+    CPLFree( mPointBufferPtr );
     mPointBufferPtr = NULL;
   }
   if ( !mPointBufferPtr )
   {
     mPointBufferCount = numPoints;
-    mPointBufferPtr = ( QgsPoint* )OGRMalloc( mPointBufferCount * sizeof( QgsPoint ) );
+    mPointBufferPtr = ( QgsPoint* )CPLMalloc( mPointBufferCount * sizeof( QgsPoint ) );
   }
   return mPointBufferPtr;
 }

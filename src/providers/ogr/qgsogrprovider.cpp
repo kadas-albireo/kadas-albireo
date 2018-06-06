@@ -2339,13 +2339,13 @@ QgsCoordinateReferenceSystem QgsOgrProvider::crs()
     char *pszProj4;
     OSRExportToProj4( mySpatialRefSys, &pszProj4 );
     QgsDebugMsg( pszProj4 );
-    OGRFree( pszProj4 );
+    CPLFree( pszProj4 );
 
     char *pszWkt = NULL;
     OSRExportToWkt( mySpatialRefSys, &pszWkt );
 
     srs.createFromWkt( pszWkt );
-    OGRFree( pszWkt );
+    CPLFree( pszWkt );
   }
   else
   {

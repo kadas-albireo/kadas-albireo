@@ -363,6 +363,7 @@ void QgsGeorefPluginGui::generateGDALScript()
         break;
       }
     }
+    [[fallthrough]];
     default:
       QMessageBox::information( this, tr( "Info" ), tr( "GDAL scripting is not supported for %1 transformation" )
                                 .arg( convertTransformEnumToString( mTransformParam ) ) );

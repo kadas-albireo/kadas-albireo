@@ -210,6 +210,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
   {
     case QGis::WKBPoint25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBPoint:
     {
       currentWkbPtr >> x >> y;
@@ -230,6 +231,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
     }
     case QGis::WKBMultiPoint25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBMultiPoint:
     {
       int nPoints;
@@ -251,6 +253,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
     }
     case QGis::WKBLineString25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBLineString:
     {
       if ( type != POINTS )
@@ -290,6 +293,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
     }
     case QGis::WKBMultiLineString25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBMultiLineString:
     {
       int nLines;
@@ -333,6 +337,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
     }
     case QGis::WKBPolygon25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBPolygon:
     {
       int nRings;
@@ -378,6 +383,7 @@ int QgsTINInterpolator::insertData( QgsFeature* f, bool zCoord, int attr, InputT
 
     case QGis::WKBMultiPolygon25D:
       hasZValue = true;
+      [[fallthrough]];
     case QGis::WKBMultiPolygon:
     {
       int nPolys;

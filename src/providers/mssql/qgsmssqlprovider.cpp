@@ -1359,7 +1359,7 @@ QgsCoordinateReferenceSystem QgsMssqlProvider::crs()
     mCrs.createFromSrid( mSRId );
     if ( mCrs.isValid() )
       return mCrs;
- 
+
     // try to load crs from the database tables as a fallback
     QSqlQuery query = QSqlQuery( mDatabase );
     query.setForwardOnly( true );
@@ -1494,36 +1494,42 @@ void QgsMssqlProvider::mssqlWkbTypeAndDimension( QGis::WkbType wkbType, QString 
   {
     case QGis::WKBPoint25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBPoint:
       geometryType = "POINT";
       break;
 
     case QGis::WKBLineString25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBLineString:
       geometryType = "LINESTRING";
       break;
 
     case QGis::WKBPolygon25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBPolygon:
       geometryType = "POLYGON";
       break;
 
     case QGis::WKBMultiPoint25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBMultiPoint:
       geometryType = "MULTIPOINT";
       break;
 
     case QGis::WKBMultiLineString25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBMultiLineString:
       geometryType = "MULTILINESTRING";
       break;
 
     case QGis::WKBMultiPolygon25D:
       dim = 3;
+      [[fallthrough]];
     case QGis::WKBMultiPolygon:
       geometryType = "MULTIPOLYGON";
       break;

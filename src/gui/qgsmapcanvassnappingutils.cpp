@@ -29,7 +29,7 @@ void QgsMapCanvasSnappingUtils::canvasCurrentLayerChanged()
   setCurrentLayer( qobject_cast<QgsVectorLayer*>( mCanvas->currentLayer() ) );
 }
 
-void QgsMapCanvasSnappingUtils::prepareIndexStarting( int count )
+void QgsMapCanvasSnappingUtils::prepareIndexStarting( int /*count*/ )
 {
 #pragma message("FIXME: causes crashes")
 //  QApplication::setOverrideCursor( Qt::WaitCursor );
