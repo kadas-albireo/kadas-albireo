@@ -54,7 +54,7 @@ QgsGeoImageAnnotationItem* QgsGeoImageAnnotationItem::create( QgsMapCanvas *canv
   QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( canvas );
   if ( locked )
   {
-    item->setItemFlags( QgsAnnotationItem::ItemAnchorIsNotMoveable );
+    item->setItemFlags( QgsAnnotationItem::ItemMapPositionLocked );
   }
   item->setFilePath( filePath );
   item->setMapPosition( wgs84Pos, QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
@@ -262,14 +262,14 @@ void QgsGeoImageAnnotationItem::updateImage()
 
 void QgsGeoImageAnnotationItem::toggleLocked()
 {
-  bool locked = itemFlags() & QgsAnnotationItem::ItemAnchorIsNotMoveable;
-  if ( locked )
+  bool locked = itemFlags() & QgsAnnotationItem::ItemMapPositionLocked;
+  if ( !locked )
   {
-    setItemFlags( itemFlags() & ~QgsAnnotationItem::ItemAnchorIsNotMoveable );
+    setItemFlags( itemFlags() & ~QgsAnnotationItem::ItemMapPositionLocked );
   }
   else
   {
-    setItemFlags( itemFlags() | QgsAnnotationItem::ItemAnchorIsNotMoveable );
+    setItemFlags( itemFlags() | QgsAnnotationItem::ItemMapPositionLocked );
   }
 }
 
@@ -279,7 +279,7 @@ void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
   menu.addAction( tr( "Open" ), this, SLOT( _showItemEditor() ) );
   QAction* lockAction = menu.addAction( tr( "Lock position" ), this, SLOT( toggleLocked() ) );
   lockAction->setCheckable( true );
-  lockAction->setChecked( itemFlags() & QgsAnnotationItem::ItemAnchorIsNotMoveable );
+  lockAction->setChecked( itemFlags() & QgsAnnotationItem::ItemMapPositionLocked );
   menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }

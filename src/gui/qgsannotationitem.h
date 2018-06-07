@@ -48,7 +48,7 @@ class GUI_EXPORT QgsAnnotationItem: public QObject, public QgsMapCanvasItem
       ItemHasNoFrame = 2,
       ItemHasNoMarker = 4,
       ItemIsNotEditable = 8,
-      ItemAnchorIsNotMoveable = 16,
+      ItemMapPositionLocked = 16,
       ItemKeepsAspectRatio = 32,
       ItemMarkerCentered = 64,
       ItemRotatable = 128

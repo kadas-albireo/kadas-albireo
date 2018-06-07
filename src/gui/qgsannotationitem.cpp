@@ -362,7 +362,8 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
 
   int cursorSensitivity = 7. / scale();
 
-  if (( mFlags & ItemAnchorIsNotMoveable ) == 0 && qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity ) //move map point if position is close to the origin
+  // Check whether to move anchor point
+  if (( mFlags & ItemMapPositionLocked ) == 0 && qAbs( itemPos.x() ) < cursorSensitivity && qAbs( itemPos.y() ) < cursorSensitivity )
   {
     return MoveMapPosition;
   }
@@ -428,19 +429,15 @@ int QgsAnnotationItem::moveActionForPosition( const QPointF& pos ) const
     }
   }
 
-  if (( mFlags & ItemHasNoMarker ) == 0 )
+  // If inside frame, move frame if frame is visible, else move map position (unless position is fixed)
+  if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
+       itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
   {
-    //finally test if pos is in the frame area
-    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
-         itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    if (( mFlags & ItemHasNoFrame ) == 0 )
     {
       return MoveFramePosition;
     }
-  }
-  else if (( mFlags & ItemAnchorIsNotMoveable ) == 0 )
-  {
-    if ( itemPos.x() >= mOffsetFromReferencePoint.x() && itemPos.x() <= ( mOffsetFromReferencePoint.x() + mFrameSize.width() ) &&
-         itemPos.y() >= mOffsetFromReferencePoint.y() && itemPos.y() <= ( mOffsetFromReferencePoint.y() + mFrameSize.height() ) )
+    else if (( mFlags & ItemMapPositionLocked ) == 0 )
     {
       return MoveMapPosition;
     }
