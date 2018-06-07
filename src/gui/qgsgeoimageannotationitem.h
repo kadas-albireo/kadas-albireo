@@ -47,6 +47,7 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 
   public slots:
     void setPositionLocked( bool locked );
+    void setFrameVisible( bool visible );
 
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );

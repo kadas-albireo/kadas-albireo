@@ -272,6 +272,19 @@ void QgsGeoImageAnnotationItem::setPositionLocked( bool locked )
   }
 }
 
+void QgsGeoImageAnnotationItem::setFrameVisible( bool visible )
+{
+  if ( !visible )
+  {
+    setItemFlags( itemFlags() | QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemMarkerCentered );
+    setFrameSize( frameSize() ); // Recompute offset from reference point
+  }
+  else
+  {
+    setItemFlags( itemFlags() & ~QgsAnnotationItem::ItemHasNoFrame & ~QgsAnnotationItem::ItemMarkerCentered );
+  }
+}
+
 void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
 {
   QMenu menu;
@@ -280,6 +293,11 @@ void QgsGeoImageAnnotationItem::showContextMenu( const QPoint &screenPos )
   QAction* lockAction = menu.addAction( tr( "Lock position" ), this, SLOT( setPositionLocked( bool ) ) );
   lockAction->setCheckable( true );
   lockAction->setChecked( itemFlags() & QgsAnnotationItem::ItemMapPositionLocked );
+
+  QAction* frameAction = menu.addAction( tr( "Show frame" ), this, SLOT( setFrameVisible( bool ) ) );
+  frameAction->setCheckable( true );
+  frameAction->setChecked(( itemFlags() & QgsAnnotationItem::ItemHasNoFrame ) == 0 );
+
   menu.addAction( QIcon( ":/images/themes/default/mActionDeleteSelected.svg" ), tr( "Delete" ), this, SLOT( deleteLater() ) );
   menu.exec( screenPos );
 }
