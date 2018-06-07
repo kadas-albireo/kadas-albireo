@@ -154,7 +154,10 @@ void QgsMapToolEditAnnotation::canvasMoveEvent( QMouseEvent *e )
     {
     for ( QgsAnnotationItem* item : mItems )
       {
-        item->handleMoveAction( QgsAnnotationItem::MoveMapPosition, e->posF(), mMouseMoveLastXY );
+        if (( item->itemFlags() & QgsAnnotationItem::ItemMapPositionLocked ) == 0 )
+        {
+          item->handleMoveAction( QgsAnnotationItem::MoveMapPosition, e->posF(), mMouseMoveLastXY );
+        }
       }
       mMouseMoveLastXY = e->pos();
       updateRect();
