@@ -45,6 +45,9 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
     void handleMoveAction( int moveAction, const QPointF &newPos, const QPointF &oldPos ) override;
     void showContextMenu( const QPoint& screenPos ) override;
 
+  public slots:
+    void setPositionLocked( bool locked );
+
   protected:
     QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsGeoImageAnnotationItem* source );
 
@@ -60,7 +63,6 @@ class GUI_EXPORT QgsGeoImageAnnotationItem: public QgsAnnotationItem
 
   private slots:
     void _showItemEditor() override;
-    void toggleLocked();
 };
 
 #endif // QGSGEOIMAGEANNOTATIONITEM_H
