@@ -32,7 +32,7 @@ REGISTER_QGS_ANNOTATION_ITEM( QgsSvgAnnotationItem )
 
 QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas ): QgsAnnotationItem( canvas )
 {
-
+  setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
 }
 
 QgsSvgAnnotationItem::QgsSvgAnnotationItem( QgsMapCanvas* canvas, QgsSvgAnnotationItem* source )

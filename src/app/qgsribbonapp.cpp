@@ -645,7 +645,6 @@ void QgsRibbonApp::addImage()
   if ( filename.endsWith( ".svg", Qt::CaseInsensitive ) )
   {
     QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
-    item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
     item->setFilePath( filename );
     item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );

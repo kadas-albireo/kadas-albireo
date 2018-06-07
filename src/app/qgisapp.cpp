@@ -5235,7 +5235,6 @@ void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
     file.write( mimeData->data( "image/svg+xml" ) );
     file.close();
     QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
-    item->setItemFlags( QgsAnnotationItem::ItemHasNoFrame | QgsAnnotationItem::ItemHasNoMarker | QgsAnnotationItem::ItemKeepsAspectRatio | QgsAnnotationItem::ItemMarkerCentered | QgsAnnotationItem::ItemRotatable );
     item->setFilePath( filename );
     item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
     item->setSelected( true );
