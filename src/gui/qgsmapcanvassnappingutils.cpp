@@ -37,7 +37,7 @@ void QgsMapCanvasSnappingUtils::prepareIndexStarting( int /*count*/ )
 //  mProgress->setWindowModality( Qt::WindowModal );
 }
 
-void QgsMapCanvasSnappingUtils::prepareIndexProgress( int index )
+void QgsMapCanvasSnappingUtils::prepareIndexProgress( int /*index*/ )
 {
 #pragma message("FIXME: causes crashes")
 //  mProgress->setValue( index );

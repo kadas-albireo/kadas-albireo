@@ -919,7 +919,7 @@ int QgsWFSProvider::readAttributesFromSchema( QDomDocument& schemaDoc, QString& 
 
   bool foundGeometryAttribute = false;
 
-  for ( uint i = 0; i < attributeNodeList.length(); ++i )
+  for ( int i = 0; i < attributeNodeList.length(); ++i )
   {
     QDomElement attributeElement = attributeNodeList.at( i ).toElement();
     //attribute name

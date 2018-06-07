@@ -177,7 +177,7 @@ bool QgsCoordinateReferenceSystem::createFromUserInput( const QString &theDefini
     if ( OSRExportToWkt( crs, &wkt ) == OGRERR_NONE )
     {
       theWkt = wkt;
-      OGRFree( wkt );
+      CPLFree( wkt );
     }
     OSRDestroySpatialReference( crs );
   }
@@ -1138,7 +1138,7 @@ QString QgsCoordinateReferenceSystem::toWkt() const
     if ( OSRExportToWkt( mCRS, &wkt ) == OGRERR_NONE )
     {
       mWkt = wkt;
-      OGRFree( wkt );
+      CPLFree( wkt );
     }
   }
   return mWkt;
