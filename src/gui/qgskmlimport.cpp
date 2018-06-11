@@ -190,7 +190,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
       // If flags is empty, it is not a redlining object. Clear text, because it messes up rendering without matching flags
       if ( flags.isEmpty() )
       {
-        text == "";
+        text = "";
       }
       else
       {
