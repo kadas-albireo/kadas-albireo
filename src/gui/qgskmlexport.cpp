@@ -366,6 +366,7 @@ void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStre
       outStream << "      <IconStyle>" << "\n";
       outStream << "        <scale>1.0</scale>" << "\n";
       outStream << "        <Icon><href>" << fileName << "</href></Icon>" << "\n";
+      outStream << "        <hotSpot x=\"" << item->hotSpot.x() << "\" y=\"" << item->hotSpot.y() << "\" xunits=\"insetPixels\" yunits=\"insetPixels\" />" << "\n";
       outStream << "      </IconStyle>" << "\n";
       outStream << "    </Style>" << "\n";
       outStream << "  </Pair>" << "\n";
@@ -375,6 +376,7 @@ void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStre
       outStream << "      <IconStyle>" << "\n";
       outStream << "        <scale>1.0</scale>" << "\n";
       outStream << "        <Icon><href>" << fileName << "</href></Icon>" << "\n";
+      outStream << "        <hotSpot x=\"" << item->hotSpot.x() << "\" y=\"" << item->hotSpot.y() << "\" xunits=\"insetPixels\" yunits=\"insetPixels\" />" << "\n";
       outStream << "      </IconStyle>" << "\n";
       outStream << "    </Style>" << "\n";
       outStream << "  </Pair>" << "\n";

@@ -743,7 +743,8 @@ void QgsAnnotationItem::notifyItemUpdated()
   if ( !mIsClone )
   {
     QgsPoint worldPos = QgsCoordinateTransformCache::instance()->transform( mGeoPosCrs.authid(), "EPSG:4326" )->transform( mGeoPos );
-    QgsBillBoardRegistry::instance()->addItem( this, mName, billboardImage(), worldPos, 0, layerId() );
+    QPointF hotSpot = ( itemFlags() & ItemHasNoFrame ) == 0 ? QPointF( -0.5 * mFrameSize.width(), -0.5 * mFrameSize.height() ) : mOffsetFromReferencePoint;
+    QgsBillBoardRegistry::instance()->addItem( this, mName, billboardImage(), worldPos, 0, layerId(), hotSpot );
 
     emit itemUpdated( this );
     mMapCanvas->notifyAnnotationItemChanged( this );

@@ -171,6 +171,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
       item->setPositionLocked( true );
       item->setFrameVisible( false );
       item->setFilePath( style.icon );
+      item->setOffsetFromReferencePoint( style.hotSpot );
       item->setMapPosition( QgsPoint( point->x(), point->y() ), QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
       QgsAnnotationLayer::getLayer( mCanvas, "geoImage", tr( "Pictures" ) )->addItem( item );
       delete geoms.front();
@@ -427,6 +428,22 @@ QgsKMLImport::StyleData QgsKMLImport::parseStyle( const QDomElement &styleEl, Qu
         QImage icon = QImage::fromData( file.readAll() );
         style.icon = QgsTemporaryFile::createNewFile( "kml_import.png" );
         icon.save( style.icon );
+
+        QDomElement hotSpotEl = styleEl.firstChildElement( "IconStyle" ).firstChildElement( "hotSpot" );
+        if ( !hotSpotEl.isNull() )
+        {
+          double x = hotSpotEl.attribute( "x" ).toDouble();
+          double y = hotSpotEl.attribute( "y" ).toDouble();
+          if ( hotSpotEl.attribute( "xunits" ) == "fraction" )
+          {
+            x *= icon.width();
+          }
+          if ( hotSpotEl.attribute( "yunits" ) == "fraction" )
+          {
+            y *= icon.height();
+          }
+          style.hotSpot = QPointF( x, y );
+        }
       }
     }
   }

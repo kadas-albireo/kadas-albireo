@@ -24,7 +24,7 @@ QgsBillBoardRegistry* QgsBillBoardRegistry::instance()
   return &instance;
 }
 
-void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QImage &image, const QgsPoint &worldPos , int xoffset, const QString &layerId )
+void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QImage &image, const QgsPoint &worldPos , int xoffset, const QString &layerId, const QPointF& hotSpot )
 {
   QMap<void*, QgsBillBoardItem*>::iterator it = mItems.find( parent );
   if ( it == mItems.end() )
@@ -46,6 +46,7 @@ void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QIm
   it.value()->name = name;
   it.value()->worldPos = worldPos;
   it.value()->layerId = layerId;
+  it.value()->hotSpot = hotSpot;
   emit itemAdded( it.value() );
 }
 

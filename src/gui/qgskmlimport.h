@@ -43,6 +43,7 @@ class GUI_EXPORT QgsKMLImport : public QObject
       QColor outlineColor = Qt::black;
       QColor fillColor = Qt::white;
       QString icon;
+      QPointF hotSpot;
     };
     struct TileData
     {
