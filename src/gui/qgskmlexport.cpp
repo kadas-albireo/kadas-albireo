@@ -364,7 +364,7 @@ void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStre
       outStream << "    <key>normal</key>" << "\n";
       outStream << "    <Style>" << "\n";
       outStream << "      <IconStyle>" << "\n";
-      outStream << "        <scale>1.1</scale>" << "\n";
+      outStream << "        <scale>1.0</scale>" << "\n";
       outStream << "        <Icon><href>" << fileName << "</href></Icon>" << "\n";
       outStream << "      </IconStyle>" << "\n";
       outStream << "    </Style>" << "\n";
@@ -373,7 +373,7 @@ void QgsKMLExport::writeBillboards( const QString& layerId, QTextStream& outStre
       outStream << "    <key>highlight</key>" << "\n";
       outStream << "    <Style>" << "\n";
       outStream << "      <IconStyle>" << "\n";
-      outStream << "        <scale>1.1</scale>" << "\n";
+      outStream << "        <scale>1.0</scale>" << "\n";
       outStream << "        <Icon><href>" << fileName << "</href></Icon>" << "\n";
       outStream << "      </IconStyle>" << "\n";
       outStream << "    </Style>" << "\n";
