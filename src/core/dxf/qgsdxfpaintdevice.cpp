@@ -53,6 +53,8 @@ int QgsDxfPaintDevice::metric( PaintDeviceMetric metric ) const
     case QPaintDevice::PdmPhysicalDpiX:
     case QPaintDevice::PdmPhysicalDpiY:
       return 96;
+    default:
+      return 0;
   }
   return 0;
 }
