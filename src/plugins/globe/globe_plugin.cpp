@@ -673,6 +673,10 @@ void GlobePlugin::addControl( osgEarth::Util::Controls::Control* control, int x,
 void GlobePlugin::addImageControl( const std::string& imgPath, int x, int y, osgEarth::Util::Controls::ControlEventHandler *handler )
 {
   osg::Image* image = osgDB::readImageFile( imgPath );
+  if ( !image )
+  {
+    return;
+  }
   osgEarth::Util::Controls::ImageControl* control = new NavigationControl( image );
   control->setPosition( x, y );
   control->setWidth( image->s() );
