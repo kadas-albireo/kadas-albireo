@@ -103,6 +103,10 @@ void QgsMapIdentifyDialog::onItemClicked( QTreeWidgetItem *item, int /*col*/ )
 
   int idx = item->data( 0, sGeometryRole ).toInt();
   QgsAbstractGeometryV2* geom = mGeometries[idx];
+  if ( !geom )
+  {
+    return;
+  }
   QgsCoordinateReferenceSystem crs( item->data( 0, sGeometryCrsRole ).toString() );
   if ( crs != mCanvas->mapSettings().destinationCrs() )
   {
