@@ -560,7 +560,7 @@ void QgsComposerMouseHandles::setViewportCursor( Qt::CursorShape cursor )
   //workaround qt bug #3732 by setting cursor for QGraphicsView viewport,
   //rather then setting it directly here
 
-  if ( !mComposition->preventCursorChange() )
+  if ( !mComposition->preventCursorChange() && graphicsView() && graphicsView()->viewport() )
   {
     graphicsView()->viewport()->setCursor( cursor );
   }
