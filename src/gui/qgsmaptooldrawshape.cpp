@@ -82,6 +82,8 @@ QgsMapToolDrawShape::QgsMapToolDrawShape( QgsMapCanvas *canvas, bool isArea, Sta
 QgsMapToolDrawShape::~QgsMapToolDrawShape()
 {
   delete mRubberBand.data();
+  delete mInputWidget;
+  mInputWidget = 0;
 }
 
 void QgsMapToolDrawShape::activate()
