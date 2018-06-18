@@ -369,7 +369,7 @@ bool QgsDelimitedTextSourceSelect::loadDelimitedFileDefinition()
   mFile->setUseHeader( cbxUseHeader->isChecked() );
   mFile->setDiscardEmptyFields( cbxSkipEmptyFields->isChecked() );
   mFile->setTrimFields( cbxTrimFields->isChecked() );
-  return mFile->isValid();
+  return !mFile->fileName().isEmpty() && mFile->isValid();
 }
 
 
@@ -642,6 +642,10 @@ void QgsDelimitedTextSourceSelect::updateFileName()
 {
   // put a default layer name in the text entry
   QString filename = txtFilePath->text();
+  if ( filename.isEmpty() )
+  {
+    return;
+  }
   QFileInfo finfo( filename );
   if ( finfo.exists() )
   {
