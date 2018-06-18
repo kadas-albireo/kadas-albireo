@@ -90,6 +90,7 @@ class APP_EXPORT QgsGuideGridWidget : public QgsBottomBar
     void bottomRightEdited();
     void updateIntervals();
     void updateBottomRight();
+    void updateLockIcon( bool locked );
     void updateColor( const QColor& color );
     void updateFontSize( int fontSize );
     void updateLabeling( int labelingMode );

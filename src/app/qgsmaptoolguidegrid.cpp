@@ -21,6 +21,7 @@
 #include "qgsmaplayerregistry.h"
 #include "qgslayertreeview.h"
 
+#include <QAction>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QInputDialog>
@@ -183,17 +184,20 @@ QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas, QgsLayerTreeView* 
   connect( ui.lineEditBottomRight, SIGNAL( editingFinished() ), this, SLOT( bottomRightEdited() ) );
   connect( ui.toolButtonPickBottomRight, SIGNAL( clicked( bool ) ), this, SLOT( pickBottomRight() ) );
 
-  ui.spinBoxCols->setRange( 0, 10000 );
+  ui.spinBoxCols->setRange( 1, 10000 );
   connect( ui.spinBoxCols, SIGNAL( valueChanged( int ) ), this, SLOT( updateIntervals() ) );
 
-  ui.spinBoxRows->setRange( 0, 10000 );
+  ui.spinBoxRows->setRange( 1, 10000 );
   connect( ui.spinBoxRows, SIGNAL( valueChanged( int ) ), this, SLOT( updateIntervals() ) );
 
-  ui.spinBoxWidth->setRange( 0, 99999999 );
+  ui.spinBoxWidth->setRange( 1, 99999999 );
   connect( ui.spinBoxWidth, SIGNAL( valueChanged( double ) ), this, SLOT( updateBottomRight() ) );
 
-  ui.spinBoxHeight->setRange( 0, 99999999 );
+  ui.spinBoxHeight->setRange( 1, 99999999 );
   connect( ui.spinBoxHeight, SIGNAL( valueChanged( double ) ), this, SLOT( updateBottomRight() ) );
+
+  connect( ui.toolButtonLockHeight, SIGNAL( toggled( bool ) ), this, SLOT( updateLockIcon( bool ) ) );
+  connect( ui.toolButtonLockWidth, SIGNAL( toggled( bool ) ), this, SLOT( updateLockIcon( bool ) ) );
 
   connect( ui.toolButtonColor, SIGNAL( colorChanged( QColor ) ), this, SLOT( updateColor( QColor ) ) );
   connect( ui.spinBoxFontSize, SIGNAL( valueChanged( int ) ), this, SLOT( updateFontSize( int ) ) );
@@ -229,6 +233,8 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
     ui.widgetLayerSetup->setEnabled( false );
     return;
   }
+  ui.toolButtonLockHeight->setChecked( false );
+  ui.toolButtonLockWidth->setChecked( false );
   ui.comboBoxLayer->blockSignals( true );
   ui.comboBoxLayer->setCurrentIndex( ui.comboBoxLayer->findData( mCurrentLayer->id() ) );
   ui.comboBoxLayer->blockSignals( false );
@@ -308,12 +314,28 @@ void QgsGuideGridWidget::updateIntervals()
 {
   int cols = ui.spinBoxCols->value();
   int rows = ui.spinBoxRows->value();
-  ui.spinBoxWidth->blockSignals( true );
-  ui.spinBoxWidth->setValue( cols > 0 ? std::abs( mCurRect.width() ) / cols : 0. );
-  ui.spinBoxWidth->blockSignals( false );
-  ui.spinBoxHeight->blockSignals( true );
-  ui.spinBoxHeight->setValue( rows > 0 ? std::abs( mCurRect.height() ) / rows : 0. );
-  ui.spinBoxHeight->blockSignals( false );
+  QgsRectangle newRect = mCurRect;
+  if ( ui.toolButtonLockWidth->isChecked() )
+  {
+    newRect.setXMaximum( newRect.xMinimum() + ui.spinBoxWidth->value() * cols );
+  }
+  else
+  {
+    ui.spinBoxWidth->blockSignals( true );
+    ui.spinBoxWidth->setValue( cols > 0 ? std::abs( mCurRect.width() ) / cols : 0. );
+    ui.spinBoxWidth->blockSignals( false );
+  }
+  if ( ui.toolButtonLockHeight->isChecked() )
+  {
+    newRect.setYMinimum( newRect.yMaximum() - ui.spinBoxHeight->value() * rows );
+  }
+  else
+  {
+    ui.spinBoxHeight->blockSignals( true );
+    ui.spinBoxHeight->setValue( rows > 0 ? std::abs( mCurRect.height() ) / rows : 0. );
+    ui.spinBoxHeight->blockSignals( false );
+  }
+  mCurRect = newRect;
   updateGrid();
 }
 
@@ -324,6 +346,12 @@ void QgsGuideGridWidget::updateBottomRight()
   mCurRect.setYMinimum( mCurRect.yMaximum() - ui.spinBoxRows->value() * ui.spinBoxHeight->value() );
   ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( mCurRect.xMaximum(), 0, 'f', prec ).arg( mCurRect.yMinimum(), 0, 'f', prec ) );
   updateGrid();
+}
+
+void QgsGuideGridWidget::updateLockIcon( bool locked )
+{
+  QToolButton* button = qobject_cast<QToolButton*>( QObject::sender() );
+  button->setIcon( QIcon( locked ? ":/images/themes/default/locked.svg" : ":/images/themes/default/unlocked.svg" ) );
 }
 
 void QgsGuideGridWidget::updateGrid()
