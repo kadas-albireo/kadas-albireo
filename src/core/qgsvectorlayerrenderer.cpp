@@ -37,6 +37,7 @@
 
 QgsVectorLayerRenderer::QgsVectorLayerRenderer( QgsVectorLayer* layer, QgsRenderContext& context )
     : QgsMapLayerRenderer( layer->id() )
+    , mLayer( layer )
     , mContext( context )
     , mFields( layer->pendingFields() )
     , mRendererV2( 0 )
@@ -45,8 +46,6 @@ QgsVectorLayerRenderer::QgsVectorLayerRenderer( QgsVectorLayer* layer, QgsRender
     , mDiagrams( false )
     , mLayerTransparency( 0 )
 {
-  mSource = new QgsVectorLayerFeatureSource( layer );
-
   mRendererV2 = layer->rendererV2() ? layer->rendererV2()->clone() : 0;
   mSelectedFeatureIds = layer->selectedFeaturesIds();
 
@@ -102,7 +101,6 @@ QgsVectorLayerRenderer::QgsVectorLayerRenderer( QgsVectorLayer* layer, QgsRender
 QgsVectorLayerRenderer::~QgsVectorLayerRenderer()
 {
   delete mRendererV2;
-  delete mSource;
 }
 
 
@@ -208,7 +206,8 @@ bool QgsVectorLayerRenderer::render()
     mContext.setVectorSimplifyMethod( vectorMethod );
   }
 
-  QgsFeatureIterator fit = mSource->getFeatures( featureRequest );
+  QgsVectorLayerFeatureSource source( mLayer );
+  QgsFeatureIterator fit = source.getFeatures( featureRequest );
 
   if (( mRendererV2->capabilities() & QgsFeatureRendererV2::SymbolLevels ) && mRendererV2->usingSymbolLevels() )
     drawRendererV2Levels( fit );

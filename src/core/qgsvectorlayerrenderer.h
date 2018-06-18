@@ -82,13 +82,13 @@ class QgsVectorLayerRenderer : public QgsMapLayerRenderer
 
   protected:
 
+    QgsVectorLayer* mLayer;
+
     QgsRenderContext& mContext;
 
     QgsFields mFields; // TODO: use fields from mSource
 
     QgsFeatureIds mSelectedFeatureIds;
-
-    QgsVectorLayerFeatureSource* mSource;
 
     QgsFeatureRendererV2 *mRendererV2;
 
