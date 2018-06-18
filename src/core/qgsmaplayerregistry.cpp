@@ -162,8 +162,7 @@ void QgsMapLayerRegistry::removeAllMapLayers()
   // and then consequently any of their map legends
   removeMapLayers( mMapLayers.keys() );
   mMapLayers.clear();
-  mRedliningLayer = nullptr;
-  mGpsRoutesLayer = nullptr;
+  mOwnedLayers.clear();
 } // QgsMapLayerRegistry::removeAllMapLayers()
 
 void QgsMapLayerRegistry::clearAllLayerCaches()
