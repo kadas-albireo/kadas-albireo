@@ -17,6 +17,7 @@
 #define QGSGPSROUTEEDITOR_H
 
 #include <QObject>
+#include <QPointer>
 #include "qgsredliningmanager.h"
 #include "qgsfeature.h"
 #include "qgsmaptoolmovelabel.h"

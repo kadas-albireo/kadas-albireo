@@ -1,3 +1,5 @@
+#include <QTextStream>
+
 #include "qgskmlpallabeling.h"
 #include "qgskmlexport.h"
 #include "qgspalgeometry.h"

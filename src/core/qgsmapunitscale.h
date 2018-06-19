@@ -18,7 +18,6 @@
 #ifndef QGSMAPUNITSCALE_H
 #define QGSMAPUNITSCALE_H
 
-#include <QtCore>
 #include "qgsrendercontext.h"
 
 class CORE_EXPORT QgsMapUnitScale
@@ -60,6 +59,3 @@ class CORE_EXPORT QgsMapUnitScale
 
 
 #endif // QGSMAPUNITSCALE_H
-
-
-
