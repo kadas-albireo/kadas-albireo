@@ -147,11 +147,13 @@ QgsGuideGridLayer::QgsGuideGridLayer( const QString& name )
   mPriority = 100;
 }
 
-void QgsGuideGridLayer::setup( const QgsRectangle &gridRect, int cols, int rows, const QgsCoordinateReferenceSystem &crs )
+void QgsGuideGridLayer::setup( const QgsRectangle &gridRect, int cols, int rows, const QgsCoordinateReferenceSystem &crs , bool colSizeLocked, bool rowSizeLocked )
 {
   mGridRect = gridRect;
   mCols = cols;
   mRows = rows;
+  mColSizeLocked = colSizeLocked;
+  mRowSizeLocked = rowSizeLocked;
   setCrs( crs, false );
 }
 
@@ -171,6 +173,8 @@ bool QgsGuideGridLayer::readXml( const QDomNode& layer_node )
   mGridRect.setYMaximum( layerEl.attribute( "ymax" ).toDouble() );
   mCols = layerEl.attribute( "cols" ).toInt();
   mRows = layerEl.attribute( "rows" ).toInt();
+  mColSizeLocked = layerEl.attribute( "colSizeLocked", "0" ).toInt();
+  mRowSizeLocked = layerEl.attribute( "rowSizeLocked", "0" ).toInt();
   setCrs( QgsCRSCache::instance()->crsByAuthId( layerEl.attribute( "crs" ) ) );
   return true;
 }
@@ -222,6 +226,8 @@ bool QgsGuideGridLayer::writeXml( QDomNode & layer_node, QDomDocument & /*docume
   layerEl.setAttribute( "ymax", mGridRect.yMaximum() );
   layerEl.setAttribute( "cols", mCols );
   layerEl.setAttribute( "rows", mRows );
+  layerEl.setAttribute( "colSizeLocked", mColSizeLocked ? 1 : 0 );
+  layerEl.setAttribute( "rowSizeLocked", mRowSizeLocked ? 1 : 0 );
   layerEl.setAttribute( "crs", crs().authid() );
   return true;
 }

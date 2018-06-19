@@ -219,7 +219,7 @@ void QgsGuideGridWidget::createLayer( QString layerName )
   if ( !layerName.isEmpty() )
   {
     QgsGuideGridLayer* guideGridLayer = new QgsGuideGridLayer( layerName );
-    guideGridLayer->setup( mCanvas->extent(), 10, 10, mCanvas->mapSettings().destinationCrs() );
+    guideGridLayer->setup( mCanvas->extent(), 10, 10, mCanvas->mapSettings().destinationCrs(), false, false );
     QgsMapLayerRegistry::instance()->addMapLayer( guideGridLayer );
     setLayer( guideGridLayer );
   }
@@ -233,8 +233,6 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
     ui.widgetLayerSetup->setEnabled( false );
     return;
   }
-  ui.toolButtonLockHeight->setChecked( false );
-  ui.toolButtonLockWidth->setChecked( false );
   ui.comboBoxLayer->blockSignals( true );
   ui.comboBoxLayer->setCurrentIndex( ui.comboBoxLayer->findData( mCurrentLayer->id() ) );
   ui.comboBoxLayer->blockSignals( false );
@@ -252,6 +250,8 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
   ui.spinBoxRows->blockSignals( true );
   ui.spinBoxRows->setValue( mCurrentLayer->rows() );
   ui.spinBoxRows->blockSignals( false );
+  ui.toolButtonLockHeight->setChecked( mCurrentLayer->rowSizeLocked() );
+  ui.toolButtonLockWidth->setChecked( mCurrentLayer->colSizeLocked() );
   ui.toolButtonColor->setColor( mCurrentLayer->color() );
   ui.spinBoxFontSize->setValue( mCurrentLayer->fontSize() );
   ui.comboBoxLabeling->setCurrentIndex( mCurrentLayer->labelingMode() );
@@ -352,6 +352,7 @@ void QgsGuideGridWidget::updateLockIcon( bool locked )
 {
   QToolButton* button = qobject_cast<QToolButton*>( QObject::sender() );
   button->setIcon( QIcon( locked ? ":/images/themes/default/locked.svg" : ":/images/themes/default/unlocked.svg" ) );
+  updateGrid();
 }
 
 void QgsGuideGridWidget::updateGrid()
@@ -364,7 +365,7 @@ void QgsGuideGridWidget::updateGrid()
   mCurRect.normalize();
   ui.lineEditTopLeft->setText( QString( "%1, %2" ).arg( mCurRect.xMinimum(), 0, 'f', prec ).arg( mCurRect.yMaximum(), 0, 'f', prec ) );
   ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( mCurRect.xMaximum(), 0, 'f', prec ).arg( mCurRect.yMinimum(), 0, 'f', prec ) );
-  mCurrentLayer->setup( mCurRect, ui.spinBoxCols->value(), ui.spinBoxRows->value(), mCrs );
+  mCurrentLayer->setup( mCurRect, ui.spinBoxCols->value(), ui.spinBoxRows->value(), mCrs, ui.toolButtonLockWidth->isChecked(), ui.toolButtonLockHeight->isChecked() );
   mCurrentLayer->triggerRepaint();
 }
 

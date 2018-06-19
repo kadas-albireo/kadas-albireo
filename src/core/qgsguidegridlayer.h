@@ -29,13 +29,15 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     enum LabelingMode { LABEL_A_1, LABEL_1_A };
 
     QgsGuideGridLayer( const QString &name );
-    void setup( const QgsRectangle& gridRect, int cols, int rows, const QgsCoordinateReferenceSystem& crs );
+    void setup( const QgsRectangle& gridRect, int cols, int rows, const QgsCoordinateReferenceSystem& crs, bool colSizeLocked, bool rowSizeLocked );
     bool writeSymbology( QDomNode &/*node*/, QDomDocument& /*doc*/, QString& /*errorMessage*/ ) const override { return true; }
     bool readSymbology( const QDomNode &/*node*/, QString &/*errorMessage*/ ) override { return true; }
     QgsMapLayerRenderer* createMapRenderer( QgsRenderContext& rendererContext ) override;
     QgsRectangle extent() override { return mGridRect; }
     int cols() const { return mCols; }
     int rows() const { return mRows; }
+    bool colSizeLocked() const { return mColSizeLocked; }
+    bool rowSizeLocked() const { return mRowSizeLocked; }
 
     const QColor& color() const { return mColor; }
     int fontSize() const { return mFontSize; }
@@ -58,6 +60,8 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     QgsRectangle mGridRect;
     int mCols = 0;
     int mRows = 0;
+    bool mColSizeLocked = false;
+    bool mRowSizeLocked = false;
     int mFontSize = 30;
     QColor mColor = Qt::red;
     LabelingMode mLabelingMode = LABEL_A_1;
