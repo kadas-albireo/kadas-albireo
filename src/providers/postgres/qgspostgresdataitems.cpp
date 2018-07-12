@@ -23,6 +23,7 @@
 #include "qgsapplication.h"
 #include "qgsmessageoutput.h"
 
+#include <QAction>
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <climits>

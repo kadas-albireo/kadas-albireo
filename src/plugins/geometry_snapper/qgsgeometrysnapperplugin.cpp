@@ -17,6 +17,8 @@
 #include "qgsgeometrysnapperplugin.h"
 #include "qgisinterface.h"
 
+#include <QAction>
+
 QgsGeometrySnapperPlugin::QgsGeometrySnapperPlugin( QgisInterface* iface )
     : QgisPlugin( sName, sDescription, sCategory, sPluginVersion, sPluginType ),
     mIface( iface )

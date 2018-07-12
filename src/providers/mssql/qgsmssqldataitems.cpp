@@ -27,6 +27,7 @@
 #include "qgsdatasourceuri.h"
 #include "qgsmssqlprovider.h"
 
+#include <QAction>
 #include <QSettings>
 #include <QMessageBox>
 #include <QtSql/QSqlDatabase>

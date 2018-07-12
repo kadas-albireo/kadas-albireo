@@ -3,6 +3,8 @@
 #include "qgscoordinatetransform.h"
 #include "qgsrasterblock.h"
 
+#include <QDoubleValidator>
+
 QgsExtentGroupBox::QgsExtentGroupBox( QWidget* parent )
     : QgsCollapsibleGroupBox( parent )
     , mExtentState( OriginalExtent )

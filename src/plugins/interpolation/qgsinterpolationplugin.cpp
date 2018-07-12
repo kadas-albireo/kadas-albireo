@@ -20,6 +20,7 @@
 #include "qgisinterface.h"
 #include "qgsinterpolationdialog.h"
 
+#include <QAction>
 #include <QFile>
 
 static const QString name_ = QObject::tr( "Interpolation plugin" );

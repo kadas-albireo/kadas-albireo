@@ -21,6 +21,8 @@
 #include "qgssymbolv2selectordialog.h"
 #include "qgsstylev2.h"
 #include "qgssymbolv2.h"
+
+#include <QButtonGroup>
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QFileInfo>

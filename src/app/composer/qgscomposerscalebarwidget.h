@@ -20,6 +20,8 @@
 #include "ui_qgscomposerscalebarwidgetbase.h"
 #include "qgscomposeritemwidget.h"
 
+#include <QButtonGroup>
+
 class QgsComposerScaleBar;
 
 /** \ingroup MapComposer

@@ -28,6 +28,7 @@
 #include "qgsmapcanvas.h"
 #include "qgsmanageconnectionsdialog.h"
 
+#include <QButtonGroup>
 #include <QItemDelegate>
 #include <QListWidgetItem>
 #include <QMessageBox>

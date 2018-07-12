@@ -22,6 +22,7 @@
 
 #include "qgsapplication.h"
 
+#include <QAction>
 #include <QFileInfo>
 
 // ---------------------------------------------------------------------------

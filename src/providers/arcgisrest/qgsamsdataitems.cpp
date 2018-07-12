@@ -20,6 +20,8 @@
 #include "qgsnewhttpconnection.h"
 #include "qgsowsconnection.h"
 
+#include <QAction>
+
 
 QgsAmsRootItem::QgsAmsRootItem( QgsDataItem* parent, QString name, QString path )
     : QgsDataCollectionItem( parent, name, path )

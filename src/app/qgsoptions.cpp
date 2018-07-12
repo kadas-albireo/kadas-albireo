@@ -41,6 +41,7 @@
 #include "qgssymbollayerv2utils.h"
 #include "qgscolordialog.h"
 
+#include <QButtonGroup>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QSettings>

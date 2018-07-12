@@ -18,10 +18,12 @@
 #ifndef QGSCLASSICAPP_H
 #define QGSCLASSICAPP_H
 
-class QCheckBox;
 class QgsBrowserDockWidget;
 class QgsDoubleSpinBox;
 class QgsScaleComboBox;
+class QCheckBox;
+class QLineEdit;
+class QValidator;
 
 #include "qgisapp.h"
 

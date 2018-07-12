@@ -20,6 +20,7 @@
 #include "qgswfsprovider.h"
 #include "qgswfssourceselect.h"
 
+#include <QAction>
 #include <QSettings>
 #include <QCoreApplication>
 #include <QEventLoop>

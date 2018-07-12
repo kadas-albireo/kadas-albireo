@@ -23,6 +23,8 @@
 #include "qgsnewhttpconnection.h"
 #include "qgstilescalewidget.h"
 
+#include <QAction>
+
 // ---------------------------------------------------------------------------
 QgsWMSConnectionItem::QgsWMSConnectionItem( QgsDataItem* parent, QString name, QString path, QString uri )
     : QgsDataCollectionItem( parent, name, path )

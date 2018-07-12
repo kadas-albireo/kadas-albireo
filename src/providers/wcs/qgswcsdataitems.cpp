@@ -21,6 +21,7 @@
 #include "qgsowsconnection.h"
 #include "qgsnewhttpconnection.h"
 
+#include <QAction>
 #include <QFileInfo>
 #include <QSettings>
 

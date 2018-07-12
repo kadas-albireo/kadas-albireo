@@ -20,6 +20,7 @@
 #include "qgsarcgisrestutils.h"
 #include "qgsafssourceselect.h"
 
+#include <QAction>
 #include <QCoreApplication>
 #include <QSettings>
 #include <QUrl>

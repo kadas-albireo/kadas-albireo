@@ -35,6 +35,7 @@
 #include "qgscharacterselectdialog.h"
 #include "qgssvgselectorwidget.h"
 
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QSettings>
 

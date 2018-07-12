@@ -22,6 +22,8 @@
 #include "qgscomposition.h"
 #include "qgspoint.h"
 #include "qgsdatadefinedbutton.h"
+
+#include <QButtonGroup>
 #include <QColorDialog>
 #include <QPen>
 
