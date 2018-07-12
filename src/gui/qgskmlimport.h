@@ -30,6 +30,7 @@ class QgsRedliningLayer;
 
 class GUI_EXPORT QgsKMLImport : public QObject
 {
+    Q_OBJECT
   public:
     QgsKMLImport( QgsMapCanvas *canvas, QgsRedliningLayer *redliningLayer );
     bool importFile( const QString& filename , QString &errMsg );
