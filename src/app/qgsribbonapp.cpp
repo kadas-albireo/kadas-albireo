@@ -522,9 +522,13 @@ void QgsRibbonApp::configureButtons()
 
   //mss tab
   setActionToButton( mActionMilx, mMilxButton );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_S ), this ), SIGNAL( activated() ), mActionMilx, SLOT( trigger() ) );
   setActionToButton( mActionSaveMilx, mSaveMilxButton );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), mActionSaveMilx, SLOT( trigger() ) );
   setActionToButton( mActionLoadMilx, mLoadMilxButton );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), mActionLoadMilx, SLOT( trigger() ) );
   setActionToButton( mActionImportOVL, mOvlButton );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_O ), this ), SIGNAL( activated() ), mActionImportOVL, SLOT( trigger() ) );
 
   //help tab
   setActionToButton( mActionHelp, mHelpButton );
