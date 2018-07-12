@@ -341,7 +341,7 @@ class APP_EXPORT QgsClassicApp : public QgisApp, private Ui::MainWindow
     void legendLayerSelectionChanged();
     void refreshActionFeatureAction();
     void clipboardDataChanged();
-    void activateDeactivateLayerRelatedActions( QgsMapLayer *layer );
+    void activateDeactivateLayerRelatedActions( QgsMapLayer *layer ) override;
     void updateLayerModifiedActions() override;
 
   private:
