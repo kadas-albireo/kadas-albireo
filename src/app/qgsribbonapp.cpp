@@ -505,7 +505,7 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionDrawRoute, mDrawRouteButton );
 
   connect( mActionEnableGPS, SIGNAL( triggered( bool ) ), this, SLOT( enableGPS( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_G, Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), mActionEnableGPS, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_G, Qt::CTRL + Qt::Key_T ), this ), SIGNAL( activated() ), mActionEnableGPS, SLOT( trigger() ) );
   setActionToButton( mActionEnableGPS, mEnableGPSButton );
 
   connect( mActionMoveWithGPS, SIGNAL( triggered( bool ) ), this, SLOT( moveWithGPS( bool ) ) );
