@@ -85,7 +85,7 @@
         </size>
        </property>
        <property name="shortcut">
-        <string>Ctrl+L</string>
+        <string notr="true">Ctrl+L</string>
        </property>
       </widget>
       <widget class="QFrame" name="mZoomInOutFrame">
@@ -150,7 +150,7 @@
            </size>
           </property>
           <property name="shortcut">
-           <string>Ctrl++</string>
+           <string notr="true">Ctrl++</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -245,7 +245,7 @@
            </size>
           </property>
           <property name="shortcut">
-           <string>Ctrl+-</string>
+           <string notr="true">Ctrl+-</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -536,7 +536,7 @@
         </size>
        </property>
        <property name="shortcut">
-        <string>Ctrl+H</string>
+        <string notr="true">Ctrl+H</string>
        </property>
       </widget>
      </widget>

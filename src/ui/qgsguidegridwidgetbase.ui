@@ -10,9 +10,6 @@
     <height>126</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
     <number>2</number>
@@ -230,7 +227,7 @@
       <item row="1" column="4">
        <widget class="QLabel" name="labelCellX">
         <property name="text">
-         <string>x</string>
+         <string notr="true">x</string>
         </property>
        </widget>
       </item>
@@ -253,7 +250,7 @@
       <item row="0" column="4">
        <widget class="QLabel" name="labelGridX">
         <property name="text">
-         <string>x</string>
+         <string notr="true">x</string>
         </property>
        </widget>
       </item>
@@ -381,12 +378,12 @@
           <widget class="QComboBox" name="comboBoxLabeling">
            <item>
             <property name="text">
-             <string>A- x 1-</string>
+             <string notr="true">A- x 1-</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>1- x A-</string>
+             <string notr="true">1- x A-</string>
             </property>
            </item>
           </widget>
@@ -404,6 +401,7 @@
    <class>QgsColorButtonV2</class>
    <extends>QToolButton</extends>
    <header>qgscolorbuttonv2.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
