@@ -170,7 +170,7 @@ bool QgsKMLImport::importDocument( const QDomDocument &doc, QString& errMsg, Qua
       QgsGeoImageAnnotationItem* item = new QgsGeoImageAnnotationItem( mCanvas );
       item->setPositionLocked( true );
       item->setFrameVisible( false );
-      item->setFilePath( style.icon );
+      item->setFilePath( style.icon, true );
       item->setOffsetFromReferencePoint( style.hotSpot );
       item->setMapPosition( QgsPoint( point->x(), point->y() ), QgsCRSCache::instance()->crsByAuthId( "EPSG:4326" ) );
       QgsAnnotationLayer::getLayer( mCanvas, "geoImage", tr( "Pictures" ) )->addItem( item );

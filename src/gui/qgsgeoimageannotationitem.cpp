@@ -159,7 +159,7 @@ QgsGeoImageAnnotationItem::QgsGeoImageAnnotationItem( QgsMapCanvas* canvas, QgsG
   mImage = source->mImage;
 }
 
-void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
+void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath, bool originalSize )
 {
   mFilePath = filePath;
   mName = QFileInfo( mFilePath ).baseName();
@@ -168,7 +168,11 @@ void QgsGeoImageAnnotationItem::setFilePath( const QString& filePath )
 
   QSize imageSize = reader.size();
   // Scale such that largest dimension is max 64px
-  if ( imageSize.width() > imageSize.height() )
+  if ( originalSize )
+  {
+    // pass
+  }
+  else if ( imageSize.width() > imageSize.height() )
   {
     imageSize.setHeight(( 64. * imageSize.height() ) / imageSize.width() );
     imageSize.setWidth( 64 );
