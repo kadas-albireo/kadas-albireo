@@ -14,63 +14,74 @@
    <string>KML export</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0" colspan="4">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Select layers to export:</string>
+   <item row="5" column="0">
+    <widget class="QLabel" name="labelWarnIcon_2">
+     <property name="minimumSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="4">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: Exporting remote raster layers (deselected by default) is slow.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <property name="maximumSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
-     <property name="wordWrap">
+     <property name="pixmap">
+      <pixmap resource="../../images/images.qrc">:/images/themes/default/mIconWarn.png</pixmap>
+     </property>
+     <property name="scaledContents">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="10" column="0" colspan="4">
-    <widget class="QDialogButtonBox" name="mButtonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="6" column="0">
+    <widget class="QLabel" name="labelWarnIcon">
+     <property name="minimumSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <property name="maximumSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="4">
-    <widget class="QListWidget" name="mLayerListWidget"/>
-   </item>
-   <item row="0" column="1" colspan="2">
-    <widget class="QLineEdit" name="mFileLineEdit">
-     <property name="readOnly">
+     <property name="pixmap">
+      <pixmap resource="../../images/images.qrc">:/images/themes/default/mIconWarn.png</pixmap>
+     </property>
+     <property name="scaledContents">
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="mSaveAsLabel">
-     <property name="text">
-      <string>Output file:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2" colspan="2">
-    <widget class="QgsScaleComboBox" name="mComboBoxExportScale"/>
    </item>
    <item row="0" column="3">
     <widget class="QToolButton" name="mFileSelectionButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="text">
       <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLineEdit" name="mFileLineEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="mSaveAsLabel">
+     <property name="text">
+      <string>Output file:</string>
      </property>
     </widget>
    </item>
@@ -91,20 +102,67 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="3" column="0" colspan="4">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Select layers to export:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="4">
+    <widget class="QListWidget" name="mLayerListWidget">
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="3">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Exporting remote raster layers is slow and deselected by default.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="3">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Local layers larger than 50 MB are deselected by default.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QgsScaleComboBox" name="mComboBoxExportScale"/>
+   </item>
+   <item row="7" column="0" colspan="3">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Raster layer rendering scale:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="4">
+   <item row="8" column="0" colspan="4">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Note: large scales increase the level of detail, but take longer to export and increase the file size.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:small; font-style:italic;&quot;&gt;Large scales increase the level of detail, but take longer to export and increase the file size.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" colspan="4">
+    <widget class="QDialogButtonBox" name="mButtonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -117,7 +175,12 @@
    <header>qgsscalecombobox.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
+  <include location="../../images/images.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>mButtonBox</sender>

@@ -38,8 +38,12 @@ QgsKMLExportDialog::QgsKMLExportDialog( const QList<QgsMapLayer*> &activeLayers,
     QgsMapLayer* layer = layerTreeLayer->layer();
     if ( !layer )
       continue;
+    QFile file( layer->source() );
+    bool largefile = file.exists() && file.size() > 50 * 1024 * 1024; // Local file larger than 50 MB
+    bool slow = largefile || layer->source().contains( "url=http" );
     QListWidgetItem* item = new QListWidgetItem( layer->name() );
-    item->setCheckState( layer->source().contains( "url=http" ) || !activeLayers.contains( layer ) ? Qt::Unchecked : Qt::Checked );
+    item->setCheckState( slow || !activeLayers.contains( layer ) ? Qt::Unchecked : Qt::Checked );
+    item->setIcon( slow ? QIcon( ":/images/themes/default/mIconWarn.png" ) : QIcon() );
     item->setData( Qt::UserRole, layer->id() );
     mLayerListWidget->addItem( item );
   }
