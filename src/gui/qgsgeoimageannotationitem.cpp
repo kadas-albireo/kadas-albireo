@@ -259,9 +259,9 @@ void QgsGeoImageAnnotationItem::_showItemEditor()
 void QgsGeoImageAnnotationItem::updateImage()
 {
   QImageReader reader( mFilePath );
-  reader.setBackgroundColor( Qt::white );
+  reader.setBackgroundColor( Qt::transparent );
   reader.setScaledSize( QSize( mFrameSize.width() - 4, mFrameSize.height() - 4 ) );
-  mImage = reader.read().convertToFormat( QImage::Format_RGB32 );
+  mImage = reader.read().convertToFormat( QImage::Format_ARGB32 );
 }
 
 void QgsGeoImageAnnotationItem::setPositionLocked( bool locked )
