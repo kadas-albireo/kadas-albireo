@@ -166,6 +166,7 @@ void QgsMapCanvasGPSDisplay::updateGPSInformation( const QgsGPSInformation& info
     }
     mMarker->setSize( mMarkerSize );
     mMarker->setCenter( position );
+    mMarker->setDirection( info.direction );
   }
 }
 

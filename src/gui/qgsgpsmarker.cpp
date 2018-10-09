@@ -26,7 +26,7 @@ QgsGpsMarker::QgsGpsMarker( QgsMapCanvas* mapCanvas )
 {
   mSize = 16;
   mWgs84CRS.createFromOgcWmsCrs( "EPSG:4326" );
-  mSvg.load( QString( ":/images/north_arrows/gpsarrow2.svg" ) );
+  mSvg.load( QString( ":/images/north_arrows/gpsarrow3.svg" ) );
   if ( ! mSvg.isValid() )
   {
     qDebug( "GPS marker not found!" );
@@ -63,6 +63,11 @@ void QgsGpsMarker::setCenter( const QgsPoint& point )
   setPos( pt );
 }
 
+void QgsGpsMarker::setDirection( double direction )
+{
+  mDirection = direction;
+}
+
 void QgsGpsMarker::paint( QPainter* p )
 {
   if ( ! mSvg.isValid() )
@@ -75,8 +80,10 @@ void QgsGpsMarker::paint( QPainter* p )
   QPointF pt = toCanvasCoordinates( mCenter );
   setPos( pt );
 
-  float myHalfSize = mSize / 2.0;
-  mSvg.render( p, QRectF( 0 - myHalfSize, 0 - myHalfSize, mSize, mSize ) );
+  p->save();
+  p->rotate( mDirection / 180. * M_PI );
+  mSvg.render( p, QRectF( - mSize, - mSize, 2 * mSize, 2 * mSize ) );
+  p->restore();
 }
 
 
