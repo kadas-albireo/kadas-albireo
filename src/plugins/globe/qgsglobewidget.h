@@ -37,6 +37,7 @@ class QgsGlobeWidget : public QDockWidget
     QMenu* mLayerSelectionMenu;
 
     void contextMenuEvent( QContextMenuEvent * e ) override;
+    bool eventFilter( QObject* obj, QEvent* ev ) override;
 
   private slots:
     void updateLayerSelectionMenu();
