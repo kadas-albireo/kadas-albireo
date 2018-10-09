@@ -34,6 +34,7 @@
 #include <QFileDialog>
 #include <QLineEdit>
 #include <QMenu>
+#include <QMessageBox>
 #include <QSettings>
 #include <QSpinBox>
 
@@ -370,82 +371,98 @@ void QgsGPSRouteEditor::writeProject( QDomDocument& doc )
 void QgsGPSRouteEditor::importGpx()
 {
   QString lastDir = QSettings().value( "/UI/lastImportExportDir", "." ).toString();
-  QString filename = QFileDialog::getOpenFileName( mApp, tr( "Import GPX" ), lastDir, tr( "GPX Files (*.gpx)" ) );
-  if ( filename.isEmpty() )
+  QStringList filenames = QFileDialog::getOpenFileNames( mApp, tr( "Import GPX" ), lastDir, tr( "GPX Files (*.gpx)" ) );
+  if ( filenames.isEmpty() )
   {
     return;
   }
-  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filename ).absolutePath() );
+  QSettings().setValue( "/UI/lastImportExportDir", QFileInfo( filenames[0] ).absolutePath() );
 
-  QFile file( filename );
-  if ( !file.open( QIODevice::ReadOnly ) )
-  {
-    mApp->messageBar()->pushCritical( tr( "GPX import failed" ), tr( "Cannot read file" ) );
-    return;
-  }
   QgsRedliningLayer* layer = getOrCreateLayer();
 
   int nWpts = 0;
   int nRtes = 0;
   int nTracks = 0;
+  QStringList failed;
 
-  QDomDocument doc;
-  doc.setContent( &file );
-  QDomNodeList wpts = doc.elementsByTagName( "wpt" );
-  for ( int i = 0, n = wpts.size(); i < n; ++i )
+  for ( const QString& filename : filenames )
   {
-    QDomElement wptEl = wpts.at( i ).toElement();
-    double lat = wptEl.attribute( "lat" ).toDouble();
-    double lon = wptEl.attribute( "lon" ).toDouble();
-    QString name = wptEl.firstChildElement( "name" ).text();
-    QString flags( "shape=point,symbol=circle,r=0,bold=1" );
-    layer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
-    ++nWpts;
-  }
-  QDomNodeList rtes = doc.elementsByTagName( "rte" );
-  for ( int i = 0, n = rtes.size(); i < n; ++i )
-  {
-    QDomElement rteEl = rtes.at( i ).toElement();
-    QString name = rteEl.firstChildElement( "name" ).text();
-    QString number = rteEl.firstChildElement( "name" ).text();
-    QList<QgsPointV2> pts;
-    QDomNodeList rtepts = rteEl.elementsByTagName( "rtept" );
-    for ( int j = 0, m = rtepts.size(); j < m; ++j )
+    QFile file( filename );
+    if ( !file.open( QIODevice::ReadOnly ) )
     {
-      QDomElement rteptEl = rtepts.at( j ).toElement();
-      double lat = rteptEl.attribute( "lat" ).toDouble();
-      double lon = rteptEl.attribute( "lon" ).toDouble();
-      pts.append( QgsPointV2( lon, lat ) );
+      failed.append( filename );
+      continue;
     }
-    QgsLineStringV2* line = new QgsLineStringV2();
-    line->setPoints( pts );
-    QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
-    layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
-    ++nRtes;
-  }
-  QDomNodeList trks = doc.elementsByTagName( "trk" );
-  for ( int i = 0, n = trks.size(); i < n; ++i )
-  {
-    QDomElement trkEl = trks.at( i ).toElement();
-    QString name = trkEl.firstChildElement( "name" ).text();
-    QString number = trkEl.firstChildElement( "name" ).text();
-    QList<QgsPointV2> pts;
-    QDomNodeList trkpts = trkEl.firstChildElement( "trkseg" ).elementsByTagName( "trkpt" );
-    for ( int j = 0, m = trkpts.size(); j < m; ++j )
+
+    QDomDocument doc;
+    if ( !doc.setContent( &file ) )
     {
-      QDomElement trkptEl = trkpts.at( j ).toElement();
-      double lat = trkptEl.attribute( "lat" ).toDouble();
-      double lon = trkptEl.attribute( "lon" ).toDouble();
-      pts.append( QgsPointV2( lon, lat ) );
+      failed.append( filename );
+      continue;
     }
-    QgsLineStringV2* line = new QgsLineStringV2();
-    line->setPoints( pts );
-    QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
-    layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
-    ++nTracks;
+    QDomNodeList wpts = doc.elementsByTagName( "wpt" );
+    for ( int i = 0, n = wpts.size(); i < n; ++i )
+    {
+      QDomElement wptEl = wpts.at( i ).toElement();
+      double lat = wptEl.attribute( "lat" ).toDouble();
+      double lon = wptEl.attribute( "lon" ).toDouble();
+      QString name = wptEl.firstChildElement( "name" ).text();
+      QString flags( "shape=point,symbol=circle,r=0,bold=1" );
+      layer->addShape( new QgsGeometry( new QgsPointV2( lon, lat ) ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+      ++nWpts;
+    }
+    QDomNodeList rtes = doc.elementsByTagName( "rte" );
+    for ( int i = 0, n = rtes.size(); i < n; ++i )
+    {
+      QDomElement rteEl = rtes.at( i ).toElement();
+      QString name = rteEl.firstChildElement( "name" ).text();
+      QString number = rteEl.firstChildElement( "name" ).text();
+      QList<QgsPointV2> pts;
+      QDomNodeList rtepts = rteEl.elementsByTagName( "rtept" );
+      for ( int j = 0, m = rtepts.size(); j < m; ++j )
+      {
+        QDomElement rteptEl = rtepts.at( j ).toElement();
+        double lat = rteptEl.attribute( "lat" ).toDouble();
+        double lon = rteptEl.attribute( "lon" ).toDouble();
+        pts.append( QgsPointV2( lon, lat ) );
+      }
+      QgsLineStringV2* line = new QgsLineStringV2();
+      line->setPoints( pts );
+      QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
+      layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+      ++nRtes;
+    }
+    QDomNodeList trks = doc.elementsByTagName( "trk" );
+    for ( int i = 0, n = trks.size(); i < n; ++i )
+    {
+      QDomElement trkEl = trks.at( i ).toElement();
+      QString name = trkEl.firstChildElement( "name" ).text();
+      QString number = trkEl.firstChildElement( "name" ).text();
+      QList<QgsPointV2> pts;
+      QDomNodeList trkpts = trkEl.firstChildElement( "trkseg" ).elementsByTagName( "trkpt" );
+      for ( int j = 0, m = trkpts.size(); j < m; ++j )
+      {
+        QDomElement trkptEl = trkpts.at( j ).toElement();
+        double lat = trkptEl.attribute( "lat" ).toDouble();
+        double lon = trkptEl.attribute( "lon" ).toDouble();
+        pts.append( QgsPointV2( lon, lat ) );
+      }
+      QgsLineStringV2* line = new QgsLineStringV2();
+      line->setPoints( pts );
+      QString flags = QString( "shape=line,routeNumber=%1,bold=1" ).arg( number );
+      layer->addShape( new QgsGeometry( line ), Qt::yellow, Qt::yellow, sFeatureSize, Qt::SolidLine, Qt::SolidPattern, flags, QString(), name );
+      ++nTracks;
+    }
   }
   layer->triggerRepaint();
-  mApp->messageBar()->pushInfo( tr( "GPX import complete" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
+  if ( !failed.isEmpty() )
+  {
+    QMessageBox::information( mApp, tr( "GPX import" ), tr( "%1 waypoints, %2 routes and %3 tracks were read.\n\nThe following files could not be imported:\n %4" ).arg( nWpts ).arg( nRtes ).arg( nTracks ).arg( failed.join( "\n " ) ) );
+  }
+  else
+  {
+    mApp->messageBar()->pushInfo( tr( "GPX import complete" ), tr( "%1 waypoints, %2 routes and %3 tracks were read." ).arg( nWpts ).arg( nRtes ).arg( nTracks ) );
+  }
 }
 
 void QgsGPSRouteEditor::exportGpx()
