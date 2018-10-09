@@ -494,36 +494,37 @@ void QgsAnnotationItem::handleMoveAction( int moveAction, const QPointF &newPos,
          moveAction == QgsAnnotationItem::ResizeFrameRightDown ||
          moveAction == QgsAnnotationItem::ResizeFrameRightUp )
     {
-      xmax += dx;
+      if ( xmax + dx > xmin + 20 )
+      {
+        xmax += dx;
+      }
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameLeft ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftUp )
     {
-      xmin += dx;
+      if ( xmin + dx < xmax - 20 )
+      {
+        xmin += dx;
+      }
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameUp ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftUp ||
          moveAction == QgsAnnotationItem::ResizeFrameRightUp )
     {
-      ymin += dy;
+      if ( ymin + dy < ymax - 20 )
+      {
+        ymin += dy;
+      }
     }
     if ( moveAction == QgsAnnotationItem::ResizeFrameDown ||
          moveAction == QgsAnnotationItem::ResizeFrameLeftDown ||
          moveAction == QgsAnnotationItem::ResizeFrameRightDown )
     {
-      ymax += dy;
-    }
-
-    //switch min / max if necessary
-    double tmp;
-    if ( xmax < xmin )
-    {
-      tmp = xmax; xmax = xmin; xmin = tmp;
-    }
-    if ( ymax < ymin )
-    {
-      tmp = ymax; ymax = ymin; ymin = tmp;
+      if ( ymax + dy > ymin + 20 )
+      {
+        ymax += dy;
+      }
     }
 
     // Preserve aspect ratio
