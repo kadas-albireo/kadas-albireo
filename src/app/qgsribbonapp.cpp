@@ -134,7 +134,14 @@ QgsRibbonApp::QgsRibbonApp( QSplashScreen *splash, bool restorePlugins, QWidget*
   QMenu* openLayerMenu = new QMenu( this );
   openLayerMenu->addAction( tr( "Add vector layer" ), this, SLOT( addVectorLayer() ) );
   openLayerMenu->addAction( tr( "Add raster layer" ), this, SLOT( addRasterLayer() ) );
+  openLayerMenu->addAction( tr( "Add CSV layer" ), this, SLOT( addDelimitedTextLayer() ) );
   mOpenLayerButton->setMenu( openLayerMenu );
+
+  QMenu* addServiceMenu = new QMenu( this );
+  addServiceMenu->addAction( tr( "Add WMS layer" ), this, SLOT( addWmsLayer() ) );
+  addServiceMenu->addAction( tr( "Add WFS layer" ), this, SLOT( addWfsLayer() ) );
+  addServiceMenu->addAction( tr( "Add WCS layer" ), this, SLOT( addWcsLayer() ) );
+  mAddServiceButton->setMenu( addServiceMenu );
 
   mMapCanvas->installEventFilter( this );
   mLayersWidgetResizeHandle->installEventFilter( this );

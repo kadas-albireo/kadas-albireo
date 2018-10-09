@@ -402,11 +402,25 @@
                <item>
                 <widget class="QToolButton" name="mOpenLayerButton">
                  <property name="toolTip">
-                  <string>Add Local Dataset</string>
+                  <string>Add Local Layer</string>
                  </property>
                  <property name="icon">
                   <iconset resource="../../images/images.qrc">
                    <normaloff>:/images/ribbon/oeffnen.png</normaloff>:/images/ribbon/oeffnen.png</iconset>
+                 </property>
+                 <property name="popupMode">
+                  <enum>QToolButton::InstantPopup</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="mAddServiceButton">
+                 <property name="toolTip">
+                  <string>Add Service Layer</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../images/images.qrc">
+                   <normaloff>:/images/ribbon/globe_view.png</normaloff>:/images/ribbon/globe_view.png</iconset>
                  </property>
                  <property name="popupMode">
                   <enum>QToolButton::InstantPopup</enum>
