@@ -2414,9 +2414,21 @@ QPrinter *QgsComposition::defaultPrinter()
   if ( !mPrinter )
   {
     mPrinter = new QPrinter();
-    mPrinter->setOrientation( paperWidth() > paperHeight() ? QPrinter::Landscape : QPrinter::Portrait );
-    mPrinter->setMargins( {0, 0, 0, 0} );
-    mPrinter->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
+    QPageLayout layout;
+    layout.setMargins( QMarginsF( 0, 0, 0, 0 ) );
+    layout.setMode( QPageLayout::FullPageMode );
+    if ( paperWidth() > paperHeight() )
+    {
+      layout.setOrientation( QPageLayout::Landscape );
+      layout.setPageSize( QPageSize( QSizeF( paperHeight(), paperWidth() ), QPageSize::Millimeter ) );
+    }
+    else
+    {
+      layout.setOrientation( QPageLayout::Portrait );
+      layout.setPageSize( QPageSize( QSizeF( paperWidth(), paperHeight() ), QPageSize::Millimeter ) );
+    }
+    layout.setUnits( QPageLayout::Millimeter );
+    mPrinter->setPageLayout( layout );
   }
   return mPrinter;
 }
