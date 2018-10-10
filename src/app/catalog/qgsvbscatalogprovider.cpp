@@ -73,15 +73,15 @@ void QgsVBSCatalogProvider::replyFinished()
       QVariantMap resultMap = resultData.toMap();
       if ( resultMap["type"].toString() == "wmts" )
       {
-        wmtsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        wmtsLayers[resultMap["serviceUrl"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
       }
       else if ( resultMap["type"].toString() == "wms" )
       {
-        wmsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        wmsLayers[resultMap["serviceUrl"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
       }
       else if ( resultMap["type"].toString() == "ams" )
       {
-        amsLayers[resultMap["url"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
+        amsLayers[resultMap["serviceUrl"].toString()].insert( resultMap["layerName"].toString(), ResultEntry( resultMap["category"].toString(), resultMap["title"].toString(), resultMap["position"].toString(), resultMap["metadataUrl"].toString() ) );
       }
     }
 
@@ -114,7 +114,7 @@ void QgsVBSCatalogProvider::endTask()
 void QgsVBSCatalogProvider::readWMTSCapabilities( const QString& wmtsUrl, const EntryMap& entries )
 {
   mPendingTasks += 1;
-  QNetworkRequest req( QUrl( wmtsUrl + "/1.0.0/WMTSCapabilities.xml" ) );
+  QNetworkRequest req(( QUrl( wmtsUrl ) ) );
   QNetworkReply* reply = QgsNetworkAccessManager::instance()->get( req );
   reply->setProperty( "entries", QVariant::fromValue<void*>( reinterpret_cast<void*>( new EntryMap( entries ) ) ) );
   connect( reply, SIGNAL( finished() ), this, SLOT( readWMTSCapabilitiesDo() ) );
