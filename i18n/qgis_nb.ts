@@ -22652,7 +22652,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QgsAnnotationItem</name>
     <message>
-        <location filename="../src/gui/qgsannotationitem.cpp" line="711"/>
+        <location filename="../src/gui/qgsannotationitem.cpp" line="712"/>
         <source>Remove</source>
         <translation type="unfinished">Fjern</translation>
     </message>
@@ -31309,42 +31309,42 @@ Vennligst prøv en lavere oppløsning eller et mindre papirformat</translation>
         <translation>Justerte element-vertikal midten</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2472"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2484"/>
         <source>Print error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2486"/>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2597"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2498"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2609"/>
         <source>Atlas feature filter parser error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2495"/>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2604"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2507"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2616"/>
         <source>Rendering maps...</source>
         <translation type="unfinished">Renderer kart...</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2496"/>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2605"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2508"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2617"/>
         <source>Abort</source>
         <translation type="unfinished">Avbryt</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2520"/>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2626"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2532"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2638"/>
         <source>Atlas processing error</source>
         <translation type="unfinished">Atlas prosesseringfeil</translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2679"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2691"/>
         <source>Failed to save image to %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2722"/>
-        <location filename="../src/core/composer/qgscomposition.cpp" line="2832"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2734"/>
+        <location filename="../src/core/composer/qgscomposition.cpp" line="2844"/>
         <source>Error creating %1</source>
         <translation type="unfinished">Feil ved opprettelse %1. {1?}</translation>
     </message>
@@ -37476,12 +37476,12 @@ Velg en gyldig fil.</translation>
 <context>
     <name>QgsGPSRouteEditor</name>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="459"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="476"/>
         <source>Export to GPX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="373"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="374"/>
         <source>Import GPX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37490,8 +37490,8 @@ Velg en gyldig fil.</translation>
         <translation type="obsolete">Feil</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="373"/>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="459"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="374"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="476"/>
         <source>GPX Files (*.gpx)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37500,32 +37500,39 @@ Velg en gyldig fil.</translation>
         <translation type="obsolete">Navn</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="383"/>
-        <source>GPX import failed</source>
+        <source>Cannot read file</source>
+        <translation type="obsolete">Kan ikke lese filen</translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="460"/>
+        <source>GPX import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="383"/>
-        <source>Cannot read file</source>
-        <translation type="unfinished">Kan ikke lese filen</translation>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="460"/>
+        <source>%1 waypoints, %2 routes and %3 tracks were read.
+
+The following files could not be imported:
+ %4</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="448"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="464"/>
         <source>GPX import complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="448"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="464"/>
         <source>%1 waypoints, %2 routes and %3 tracks were read.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="473"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="490"/>
         <source>GPX export failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="473"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="490"/>
         <source>Cannot write to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -40258,7 +40265,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="32"/>
         <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="35"/>
-        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="80"/>
+        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="81"/>
         <source>Globe</source>
         <translation type="unfinished">Globus</translation>
     </message>
@@ -40268,22 +40275,22 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Lag</translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="46"/>
+        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="47"/>
         <source>Sync extent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="53"/>
+        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="54"/>
         <source>Reload scene</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="60"/>
+        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="61"/>
         <source>Globe settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="69"/>
+        <location filename="../src/plugins/globe/qgsglobewidget.cpp" line="70"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
@@ -61522,87 +61529,111 @@ standardavvik ×</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="624"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="137"/>
+        <source>Add CSV layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="141"/>
+        <source>Add WMS layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="142"/>
+        <source>Add WFS layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="143"/>
+        <source>Add WCS layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="obsolete">Intervall</translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="631"/>
         <source>On the fly projection enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="624"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="631"/>
         <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="642"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="649"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="654"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="661"/>
         <source>SVG graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="659"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="666"/>
         <source>Could not add image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="727"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="734"/>
         <source>Language Changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="727"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="734"/>
         <source>The language will be changed at the next program launch.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="756"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="763"/>
         <source>Connecting to GPS device...</source>
         <translation type="unfinished">Kobler til GPS-enhet...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="762"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="769"/>
         <source>GPS connection closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="769"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="776"/>
         <source>GPS device successfully connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="780"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="787"/>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="831"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="838"/>
         <source>Remove</source>
         <translation type="unfinished">Fjern</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="835"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="842"/>
         <source>Favorite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="847"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="854"/>
         <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="860"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="867"/>
         <source>Manually set projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="863"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="870"/>
         <source>Unknown layer projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="864"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="871"/>
         <source>The projection of the layer %1 could not be recognized, its and features might be misplaced.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61901,6 +61932,12 @@ Sight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="875"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2666"/>
+        <source>Guide grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="1848"/>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="2561"/>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="2564"/>
@@ -61973,12 +62010,6 @@ Sight</source>
     <message>
         <source>Ctrl+G</source>
         <translation type="obsolete">Ctrl+G</translation>
-    </message>
-    <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="875"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2666"/>
-        <source>Guide grid</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="902"/>
@@ -62166,21 +62197,26 @@ Sight</source>
     </message>
     <message>
         <location filename="../src/ui/qgsribbonwindowbase.ui" line="405"/>
-        <source>Add Local Dataset</source>
+        <source>Add Local Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbonwindowbase.ui" line="419"/>
+        <source>Add Service Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/qgsribbonwindowbase.ui" line="433"/>
         <source>Refresh Catalog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbonwindowbase.ui" line="430"/>
+        <location filename="../src/ui/qgsribbonwindowbase.ui" line="444"/>
         <source>SAML Authentication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbonwindowbase.ui" line="504"/>
+        <location filename="../src/ui/qgsribbonwindowbase.ui" line="518"/>
         <source>Loading...</source>
         <translation type="unfinished">Laster...</translation>
     </message>
@@ -71391,27 +71427,27 @@ Please configure it before running R scripts.</source>
 <context>
     <name>RouteEditor</name>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="126"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="127"/>
         <source>Route</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="133"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="134"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="138"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="139"/>
         <source>Number:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="143"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="144"/>
         <source>Color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="147"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="148"/>
         <source>Size:</source>
         <translation type="unfinished">Størrelse:</translation>
     </message>
@@ -73178,22 +73214,22 @@ Problem med linje %d</translation>
 <context>
     <name>WaypointEditor</name>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="49"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="50"/>
         <source>Waypoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="56"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="57"/>
         <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="61"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="62"/>
         <source>Color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="65"/>
+        <location filename="../src/app/qgsgpsrouteeditor.cpp" line="66"/>
         <source>Size:</source>
         <translation type="unfinished">Størrelse:</translation>
     </message>
