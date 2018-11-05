@@ -55,13 +55,31 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
     iconBottomY = height() / 2.0 + 5;
   }
 
+  //menu arrow
+  int buttonWidth = width();
+  if ( menu() )
+  {
+    int y = 0.5 * height();
+    p.setPen( Qt::transparent );
+    p.setBrush( QColor( 38, 59, 78 ) );
+    QPainterPath arrow;
+    arrow.moveTo( width() - 12, y - 2 );
+    arrow.lineTo( width() - 3, y - 2 );
+    arrow.lineTo( width() - 7.5, y + 3 );
+    arrow.closeSubpath();
+    p.drawPath( arrow );
+    p.setPen( QColor( 38, 59, 78 ) );
+    p.drawLine( width() - 15.5, 1, width() - 15.5, height() - 1 );
+    buttonWidth = width() - 16;
+  }
+
   //icon
   QIcon buttonIcon = icon();
   if ( !buttonIcon.isNull() )
   {
     QSize iSize = iconSize();
     int pixmapY = iconBottomY - iSize.height();
-    int pixmapX = width() / 2.0 - iSize.width() / 2.0;
+    int pixmapX = buttonWidth / 2.0 - iSize.width() / 2.0;
     if ( isEnabled() && !isChecked() )
     {
       QPixmap pixmap = buttonIcon.pixmap( iSize, QIcon::Normal, QIcon::On );
@@ -96,14 +114,14 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
     QStringList rawRextLines = buttonText.split( "\n" );
     // Insert additional line breaks where exceeds button width
     QStringList textLines;
-    int maxWidth = width() - 10;
-    foreach ( const QString& line, rawRextLines )
+    int maxWidth = buttonWidth - 10;
+  for ( const QString& line : rawRextLines )
     {
       if ( fm.width( line ) > maxWidth )
       {
         QString newline;
         // Measure widths at whitespace pos, fit as many words into a line as possible
-        foreach ( const QString& word, line.split( " " ) )
+      for ( const QString& word : line.split( " " ) )
         {
           if ( fm.width( newline + " " + word ) > maxWidth )
           {
@@ -131,7 +149,7 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
       QString textLine = textLines.at( i );
       double textWidth = fm.width( textLine );
       double textHeight = fm.boundingRect( textLine ).height();
-      int textX = ( width() - textWidth ) / 2.0;
+      int textX = ( buttonWidth - textWidth ) / 2.0;
       int textY = iconBottomY + textHeight * ( i + 1 ) /*+ i * 1*/;
       if ( smallIcon )
       {
@@ -145,25 +163,25 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
 void QgsRibbonButton::enterEvent( QEvent* event )
 {
   update();
-  QAbstractButton::enterEvent( event );
+  QToolButton::enterEvent( event );
 }
 
 void QgsRibbonButton::leaveEvent( QEvent* event )
 {
   update();
-  QAbstractButton::leaveEvent( event );
+  QToolButton::leaveEvent( event );
 }
 
 void QgsRibbonButton::focusInEvent( QFocusEvent* event )
 {
   update();
-  QAbstractButton::focusInEvent( event );
+  QToolButton::focusInEvent( event );
 }
 
 void QgsRibbonButton::focusOutEvent( QFocusEvent* event )
 {
   update();
-  QAbstractButton::focusOutEvent( event );
+  QToolButton::focusOutEvent( event );
 }
 
 void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
@@ -173,8 +191,7 @@ void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
 
 void QgsRibbonButton::mousePressEvent( QMouseEvent* event )
 {
-  QAbstractButton::mousePressEvent( event );
-  event->ignore();
+  QToolButton::mousePressEvent( event );
 }
 
 void QgsRibbonButton::contextMenuEvent( QContextMenuEvent* event )
