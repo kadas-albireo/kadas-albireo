@@ -222,6 +222,17 @@ void QgsRedlining::editFeature( const QgsFeature& feature )
   QRegExp shapeRe( "\\bshape=(\\w+)\\b" );
   shapeRe.indexIn( flags );
   QString shape = shapeRe.cap( 1 );
+  if ( shape.isEmpty() )
+  {
+    // Deduce shape from geometry type
+    switch ( feature.geometry()->type() )
+    {
+      case QGis::Point: shape = "point"; break;
+      case QGis::Line: shape = "line"; break;
+      case QGis::Polygon: shape = "polygon"; break;
+      default: break;
+    }
+  }
   if ( shape == "point" )
   {
     QMap<QString, QAction*> actionMap;
