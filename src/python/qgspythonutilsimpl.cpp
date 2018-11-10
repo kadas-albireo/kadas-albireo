@@ -120,7 +120,7 @@ void QgsPythonUtilsImpl::initPython( QgisInterface* interface )
   runString( "sys.path = [" + newpaths.join( "," ) + "] + sys.path" );
 
   // import SIP
-  if ( !runString( "import sip",
+  if ( !runString( "from PyQt5 import sip",
                    QObject::tr( "Couldn't load SIP module." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
   {
     exitPython();
@@ -276,7 +276,7 @@ void QgsPythonUtilsImpl::initServerPython( QgsServerInterface* interface )
   runString( "sys.path = [" + newpaths.join( "," ) + "] + sys.path" );
 
   // import SIP
-  if ( !runString( "import sip",
+  if ( !runString( "from PyQt5 import sip",
                    QObject::tr( "Couldn't load SIP module." ) + "\n" + QObject::tr( "Python support will be disabled." ) ) )
   {
     exitPython();
