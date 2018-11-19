@@ -59,7 +59,7 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
   int buttonWidth = width();
   if ( menu() )
   {
-    int y = 0.5 * height();
+    int y = height() - 6;
     p.setPen( Qt::transparent );
     p.setBrush( QColor( 38, 59, 78 ) );
     QPainterPath arrow;
@@ -68,9 +68,6 @@ void QgsRibbonButton::paintEvent( QPaintEvent* /*e*/ )
     arrow.lineTo( width() - 7.5, y + 3 );
     arrow.closeSubpath();
     p.drawPath( arrow );
-    p.setPen( QColor( 38, 59, 78 ) );
-    p.drawLine( width() - 15.5, 1, width() - 15.5, height() - 1 );
-    buttonWidth = width() - 16;
   }
 
   //icon

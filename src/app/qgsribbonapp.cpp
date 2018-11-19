@@ -427,13 +427,21 @@ void QgsRibbonApp::configureButtons()
   connect( mActionSaveMapExtent, SIGNAL( triggered() ), this, SLOT( saveMapAsImage() ) );
   setActionToButton( mActionSaveMapExtent, mSaveMapExtentButton );
 
-  connect( mActionExportKML, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), mActionExportKML, SLOT( trigger() ) );
-  setActionToButton( mActionExportKML, mExportKMLButton );
+  QMenu* kmlMenu = new QMenu();
 
-  connect( mActionImportKML, SIGNAL( triggered() ), this, SLOT( kmlImport() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), mActionImportKML, SLOT( trigger() ) );
-  setActionToButton( mActionImportKML, mImportKMLButton );
+  QAction* actionExportKml = new QAction( tr( "KML Export" ) );
+  connect( actionExportKml, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), actionExportKml, SLOT( trigger() ) );
+  kmlMenu->addAction( actionExportKml );
+
+  QAction* actionImportKml = new QAction( tr( "KML Import" ) );
+  connect( actionImportKml, SIGNAL( triggered() ), this, SLOT( kmlImport() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), actionImportKml, SLOT( trigger() ) );
+  kmlMenu->addAction( actionImportKml );
+
+  mKMLButton->setIcon( QIcon( ":/images/ribbon/kml.png" ) );
+  mKMLButton->setMenu( kmlMenu );
+  mKMLButton->setPopupMode( QToolButton::InstantPopup );
 
   //view tab
   connect( mActionZoomLast, SIGNAL( triggered() ), this, SLOT( zoomToPrevious() ) );
