@@ -60,7 +60,7 @@ mkdir -p $builddir
   mingw$bits-cmake \
     -DFULL_RELEASE_NAME="KADAS Albireo" \
     -DRELEASE_NAME="KADAS" \
-    -DRELEASE_VERSION="1.1" \
+    -DRELEASE_VERSION="1.2-pre" \
     -DENABLE_QT5=$useqt5 \
     -DENABLE_TESTS=FALSE \
     -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
