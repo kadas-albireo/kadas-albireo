@@ -2414,21 +2414,6 @@ QPrinter *QgsComposition::defaultPrinter()
   if ( !mPrinter )
   {
     mPrinter = new QPrinter();
-    QPageLayout layout;
-    layout.setMargins( QMarginsF( 0, 0, 0, 0 ) );
-    layout.setMode( QPageLayout::FullPageMode );
-    if ( paperWidth() > paperHeight() )
-    {
-      layout.setOrientation( QPageLayout::Landscape );
-      layout.setPageSize( QPageSize( QSizeF( paperHeight(), paperWidth() ), QPageSize::Millimeter ) );
-    }
-    else
-    {
-      layout.setOrientation( QPageLayout::Portrait );
-      layout.setPageSize( QPageSize( QSizeF( paperWidth(), paperHeight() ), QPageSize::Millimeter ) );
-    }
-    layout.setUnits( QPageLayout::Millimeter );
-    mPrinter->setPageLayout( layout );
   }
   return mPrinter;
 }
@@ -2445,34 +2430,49 @@ bool QgsComposition::print( QPrinter* printer, OutputMode mode, bool evaluateDDP
     mAtlasComposition.prepareForFeature( 0 );
   }
 
+  if ( evaluateDDPageSize && ddPageSizeActive() )
+  {
+    //set data defined page size
+    refreshPageSize();
+  }
+
+  bool showDialog = !printer;
+
   if ( !printer )
   {
     printer = defaultPrinter();
+  }
 
+  //set resolution based on composer setting
+  printer->setResolution( printResolution() );
+  printer->setFullPage( true );
+  printer->setColorMode( QPrinter::Color );
+
+  //setup page layout
+  QPageLayout layout;
+  layout.setMargins( QMarginsF( 0, 0, 0, 0 ) );
+  layout.setMode( QPageLayout::FullPageMode );
+  if ( paperWidth() > paperHeight() )
+  {
+    layout.setOrientation( QPageLayout::Landscape );
+    layout.setPageSize( QPageSize( QSizeF( paperHeight(), paperWidth() ), QPageSize::Millimeter ) );
+  }
+  else
+  {
+    layout.setOrientation( QPageLayout::Portrait );
+    layout.setPageSize( QPageSize( QSizeF( paperWidth(), paperHeight() ), QPageSize::Millimeter ) );
+  }
+  layout.setUnits( QPageLayout::Millimeter );
+  printer->setPageLayout( layout );
+
+  if ( showDialog )
+  {
     QPrintDialog printDialog( printer, 0 );
     if ( printDialog.exec() != QDialog::Accepted )
     {
       return false;
     }
   }
-
-  //set resolution based on composer setting
-  printer->setFullPage( true );
-  printer->setColorMode( QPrinter::Color );
-
-  //set user-defined resolution
-  printer->setResolution( printResolution() );
-
-  if ( evaluateDDPageSize && ddPageSizeActive() )
-  {
-    //set data defined page size
-    refreshPageSize();
-  }
-  //must set orientation to portrait before setting paper size, otherwise size will be flipped
-  //for landscape sized outputs (#11352)
-  mPrinter->setOrientation( QPrinter::Portrait );
-  mPrinter->setPaperSize( QSizeF( paperWidth(), paperHeight() ), QPrinter::Millimeter );
-  mPrinter->setMargins( {0, 0, 0, 0} );
 
   if ( mode == OutputMode::Single )
   {

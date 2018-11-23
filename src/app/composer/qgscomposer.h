@@ -402,9 +402,6 @@ class QgsComposer: public QMainWindow, private Ui::QgsComposerBase
     //! Updates the "set as atlas feature" map layer action when atlas coverage layer changes
     void updateAtlasMapLayerAction( QgsVectorLayer* coverageLayer );
 
-    //! Sets the printer page orientation when the page orientation changes
-    void setPrinterPageOrientation( QString orientation );
-
     void disablePreviewMode();
     void activateGrayscalePreview();
     void activateMonoPreview();

@@ -336,7 +336,6 @@ QgsComposer::QgsComposer( QgsComposerView* view )
   QgsCompositionWidget* compositionWidget = new QgsCompositionWidget( mGeneralDock, mComposition );
   connect( mComposition, SIGNAL( paperSizeChanged() ), compositionWidget, SLOT( displayCompositionWidthHeight() ) );
   connect( this, SIGNAL( printAsRasterChanged( bool ) ), compositionWidget, SLOT( setPrintAsRasterCheckBox( bool ) ) );
-  connect( compositionWidget, SIGNAL( pageOrientationChanged( QString ) ), this, SLOT( setPrinterPageOrientation( QString ) ) );
   mGeneralDock->setWidget( compositionWidget );
 
   //undo widget
@@ -1648,18 +1647,6 @@ void QgsComposer::updateAtlasMapLayerAction( QgsVectorLayer *coverageLayer )
         QgsApplication::getThemeIcon( "/mIconAtlas.svg" ) );
     QgsMapLayerActionRegistry::instance()->addMapLayerAction( mAtlasFeatureAction );
     connect( mAtlasFeatureAction, SIGNAL( triggeredForFeature( QgsMapLayer*, const QgsFeature& ) ), this, SLOT( setAtlasFeature( QgsMapLayer*, const QgsFeature& ) ) );
-  }
-}
-
-void QgsComposer::setPrinterPageOrientation( QString orientation )
-{
-  if ( orientation == tr( "Landscape" ) )
-  {
-    mComposition->defaultPrinter()->setOrientation( QPrinter::Landscape );
-  }
-  else
-  {
-    mComposition->defaultPrinter()->setOrientation( QPrinter::Portrait );
   }
 }
 
