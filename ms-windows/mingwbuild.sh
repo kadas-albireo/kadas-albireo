@@ -198,6 +198,9 @@ elif [ "$qt" == "qt5" ]; then
   linkDep lib/qt5/plugins/platforms/qwindows.dll bin/platforms
   linkDep lib/qt5/plugins/printsupport/windowsprintersupport.dll bin/printsupport
   linkDep lib/qt5/plugins/styles/qwindowsvistastyle.dll bin/styles
+  linkDep lib/qt5/plugins/audio/qtaudio_windows.dll bin/audio
+  linkDep lib/qt5/plugins/mediaservice/dsengine.dll bin/mediaservice
+  linkDep lib/qt5/plugins/mediaservice/qtmedia_audioengine.dll bin/mediaservice
 
   mkdir -p $installprefix/share/qt5/translations/
   cp -a $MINGWROOT/share/qt5/translations/qt_*.qm  $installprefix/share/qt5/translations
