@@ -25307,8 +25307,8 @@ Treba li izbrisati postojeće klase prije klasifikacije?</translation>
     </message>
     <message>
         <location filename="../src/app/composer/qgscomposer.cpp" line="217"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="475"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="485"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="474"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="484"/>
         <source>%1%</source>
         <translation type="unfinished">%1%</translation>
     </message>
@@ -25338,78 +25338,78 @@ Treba li izbrisati postojeće klase prije klasifikacije?</translation>
         <translation>Stavka</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="447"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1646"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1674"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="446"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1645"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1661"/>
         <source>Set as atlas feature for %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="457"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="456"/>
         <source>x: %1 mm</source>
         <translation>x: %1 mm</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="458"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="457"/>
         <source>y: %1 mm</source>
         <translation>y: %1 mm</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="459"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="458"/>
         <source>page: %3</source>
         <translation>stranica: %3</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="543"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="569"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="542"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="568"/>
         <source>Enable atlas preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="544"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="543"/>
         <source>Atlas in not currently enabled for this composition!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="570"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="569"/>
         <source>No matching atlas features found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="888"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="887"/>
         <source>Choose a file name to save the map as</source>
         <translation>Izaberite naziv fajla za snimanje karte kao</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="890"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="889"/>
         <source>PDF Format</source>
         <translation>PDF format</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="909"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="947"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="908"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="946"/>
         <source>PDF Export Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1003"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1135"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1002"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1134"/>
         <source>Choose Output Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1122"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1121"/>
         <source>Choose Output File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1122"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1121"/>
         <source>SVG Images</source>
         <translation type="unfinished">SVG slike</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1142"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1161"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1141"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1160"/>
         <source>SVG Export Failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -25458,7 +25458,7 @@ Treba li izbrisati postojeće klase prije klasifikacije?</translation>
         <translation type="vanished">Za kreiranje slike %1x%2 potrebno je oko %3 MB memorije. Nastaviti?</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="987"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="986"/>
         <source>Choose a file name to save the map image as</source>
         <translation>Izaberite naziv fajla da snimite sliku karte kao</translation>
     </message>
@@ -25477,45 +25477,45 @@ Pokušajte sa nižom rezolucijom ili manjom veličinom papira</translation>
         <translation type="vanished">Direktorij u koji se snimaju fajlovi slika</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1029"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1028"/>
         <source>Image format: </source>
         <translation>Format slike: </translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1043"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1058"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1042"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1057"/>
         <source>Image Export Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1043"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1142"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1042"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1141"/>
         <source>The specified output directory is not writable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1099"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1098"/>
         <source>SVG warning</source>
         <translation>SVG upozorenje</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1100"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1576"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1099"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1575"/>
         <source>Don&apos;t show this message again</source>
         <translation>Ne prikazuj ovu poruku ponovo</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1104"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1103"/>
         <source>&lt;p&gt;The SVG export function in QGIS has several problems due to bugs and deficiencies in the </source>
         <translation>&lt;p&gt;QGIS funkcija eksporta u SVG ima nekoliko problema zbog bug-ova i nedostataka u </translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1106"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1105"/>
         <source>Qt4 svg code. In particular, there are problems with layers not being clipped to the map bounding box.&lt;/p&gt;</source>
         <translation>Qt4 svg kod. Naročito ima problema sa slojevima koji nisu isječeni na granice karte.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1109"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1108"/>
         <source>If you require a vector-based output file from Qgis it is suggested that you try printing to PostScript if the SVG output is not satisfactory.&lt;/p&gt;</source>
         <translation>Ako trebate izlaz iz QGIS-a baziran na vektorima, preporučljivo je da pokušate štampati u PostScript ako izlaz u SVG ne zadovoljava.&lt;/p&gt;</translation>
     </message>
@@ -25528,7 +25528,7 @@ Pokušajte sa nižom rezolucijom ili manjom veličinom papira</translation>
         <translation type="vanished">Direktorij gdje treba snimiti SVG fajlove</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1245"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1244"/>
         <source> copy</source>
         <translation>kopiranje</translation>
     </message>
@@ -25545,38 +25545,38 @@ Pokušajte sa nižom rezolucijom ili manjom veličinom papira</translation>
         <translation type="vanished">Nije uspjelo dupliciranje prijeloma.</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1263"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1262"/>
         <source>Save template</source>
         <translation>Snimi uzorak</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1263"/>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1289"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1262"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1288"/>
         <source>Composer templates</source>
         <translation>Predlošci prijeloma</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1278"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1277"/>
         <source>Save error</source>
         <translation>Greška u snimanju</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1278"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1277"/>
         <source>Error, could not save file</source>
         <translation>Greška, nije moguće snimiti fajl</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1289"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1288"/>
         <source>Load template</source>
         <translation>Učitaj predložak</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1299"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1298"/>
         <source>Read error</source>
         <translation>Greška u čitanju</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1299"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1298"/>
         <source>Error, could not read file</source>
         <translation>Greška, nije moguće čitati fajl</translation>
     </message>
@@ -25593,34 +25593,33 @@ Pokušajte sa nižom rezolucijom ili manjom veličinom papira</translation>
         <translation type="vanished">Učitavanje predloška u prijelom...</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1574"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1573"/>
         <source>Project contains WMS layers</source>
         <translation>Projekat sadrži WMS slojeve</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1575"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1574"/>
         <source>Some WMS servers (e.g. UMN mapserver) have a limit for the WIDTH and HEIGHT parameter. Printing layers from such servers may exceed this limit. If this is the case, the WMS layer will not be printed</source>
         <translation>Neki WMS serveri (npr. UMN mapserver) imaju ograničenje za parametre WIDTH (visina) i HEIGHT (širina). Štampanje slojeva sa takvih servera može preći ograničenja. Akos e ovo desi, WMS sloj neće biti odštampan</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1589"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1588"/>
         <source>Project contains composition effects</source>
         <translation>Projekat sadrži efekte kompozicije</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1590"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1589"/>
         <source>Advanced composition effects such as blend modes or vector layer transparency are enabled in this project, which cannot be printed as vectors. Printing as a raster is recommended.</source>
         <translation>Napredni efekti kompozicije kao što su miješanje modova ili transparentnost vektorskog sloja su omogućeni u projektu, koji ne može biti štampan kao vektorski. Preporuča se štampa kao raster.</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1591"/>
+        <location filename="../src/app/composer/qgscomposer.cpp" line="1590"/>
         <source>Print as raster</source>
         <translation>Štampaj kao raster</translation>
     </message>
     <message>
-        <location filename="../src/app/composer/qgscomposer.cpp" line="1656"/>
         <source>Landscape</source>
-        <translation>Pejzaž</translation>
+        <translation type="vanished">Pejzaž</translation>
     </message>
 </context>
 <context>
@@ -46361,8 +46360,17 @@ Ovo može biti problem do vaše mrežne konekcije ili na WMS serveru.</numerusfo
     </message>
     <message>
         <location filename="../src/app/qgsmapcanvascontextmenu.cpp" line="146"/>
+        <source>Distance</source>
+        <translation type="unfinished">Udaljenost</translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsmapcanvascontextmenu.cpp" line="158"/>
+        <source>Azimuth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Length</source>
-        <translation type="unfinished">Dužina</translation>
+        <translation type="obsolete">Dužina</translation>
     </message>
     <message>
         <location filename="../src/app/qgsmapcanvascontextmenu.cpp" line="150"/>
@@ -46370,9 +46378,8 @@ Ovo može biti problem do vaše mrežne konekcije ili na WMS serveru.</numerusfo
         <translation type="unfinished">Površina</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmapcanvascontextmenu.cpp" line="158"/>
         <source>Angle</source>
-        <translation type="unfinished">Ugao</translation>
+        <translation type="obsolete">Ugao</translation>
     </message>
     <message>
         <location filename="../src/app/qgsmapcanvascontextmenu.cpp" line="162"/>
@@ -61205,87 +61212,97 @@ standardna devijacija ×</translation>
         <translation type="obsolete">Raspon</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="631"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="432"/>
+        <source>KML Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="437"/>
+        <source>KML Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/app/qgsribbonapp.cpp" line="639"/>
         <source>On the fly projection enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="631"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="639"/>
         <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="649"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="657"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="661"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="669"/>
         <source>SVG graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="666"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="674"/>
         <source>Could not add image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="734"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="742"/>
         <source>Language Changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="734"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="742"/>
         <source>The language will be changed at the next program launch.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="763"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="771"/>
         <source>Connecting to GPS device...</source>
         <translation type="unfinished">Spajanje na GPS uređaj...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="769"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="777"/>
         <source>GPS connection closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="776"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="784"/>
         <source>GPS device successfully connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="787"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="795"/>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="838"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="846"/>
         <source>Remove</source>
         <translation type="unfinished">Ukloni</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="842"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="850"/>
         <source>Favorite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="854"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="862"/>
         <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="867"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="875"/>
         <source>Manually set projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="870"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="878"/>
         <source>Unknown layer projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="871"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="879"/>
         <source>The projection of the layer %1 could not be recognized, its and features might be misplaced.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61359,50 +61376,44 @@ standardna devijacija ×</translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="512"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2345"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2311"/>
         <source>Print</source>
         <translation type="unfinished">Štampa</translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="394"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2225"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2191"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="425"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2192"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2158"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="456"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2204"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2170"/>
         <source>Save</source>
         <translation type="unfinished">Snimi</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="605"/>
-        <source>Export
- KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="543"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2333"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2299"/>
         <source>Copy Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="574"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2354"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2320"/>
         <source>Save Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/qgsribbontopwidget.ui" line="487"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2612"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2615"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2569"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2572"/>
         <source>Save As</source>
         <translation type="unfinished">Snimi kao</translation>
     </message>
@@ -61411,32 +61422,32 @@ standardna devijacija ×</translation>
         <translation type="obsolete">Pogled</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="813"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2420"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="779"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2377"/>
         <source>3D</source>
         <translation type="unfinished">3D</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="717"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2384"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="683"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2341"/>
         <source>Previous Extent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="779"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2408"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="745"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2365"/>
         <source>New map window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="844"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2429"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="810"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2386"/>
         <source>Grid</source>
         <translation type="unfinished">Grid</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="748"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2396"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="714"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2353"/>
         <source>Next Extent</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61445,187 +61456,192 @@ standardna devijacija ×</translation>
         <translation type="obsolete">Analize</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1068"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1034"/>
         <source>Profile
 Sight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1162"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2312"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1128"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2278"/>
         <source>Viewshed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1006"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2324"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="972"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2290"/>
         <source>Circle</source>
         <translation type="unfinished">Krug</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="944"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2237"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="910"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2203"/>
         <source>Distance</source>
         <translation type="unfinished">Udaljenost</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="975"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2249"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="941"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2215"/>
         <source>Area</source>
         <translation type="unfinished">Površina</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1131"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2300"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1097"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2266"/>
         <source>Hillshade</source>
         <translation type="unfinished">Orijentacije padina (Hillshade)</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1037"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2276"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1003"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2242"/>
         <source>Azimuth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1100"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2288"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1066"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2254"/>
         <source>Slope</source>
         <translation type="unfinished">Padovi (Slope)</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1294"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1260"/>
         <source>Fill:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1281"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1247"/>
         <source>Border:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1230"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="605"/>
+        <source>KML/KMZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1196"/>
         <source>...</source>
         <translation type="unfinished">...</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1268"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1234"/>
         <source>Size:</source>
         <translation type="unfinished">Veličina:</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1397"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2216"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1363"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2182"/>
         <source>Pin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1490"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2588"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2591"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1456"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2545"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2548"/>
         <source>Delete Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1590"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2486"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2489"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1556"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2443"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2446"/>
         <source>Move with GPS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1621"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2456"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2459"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1587"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2413"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2416"/>
         <source>Draw Waypoints</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1714"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2498"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2501"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1680"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2455"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2458"/>
         <source>Import GPX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2471"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2428"/>
         <source>Enable GPS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1652"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2441"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2444"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1618"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2398"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2401"/>
         <source>Draw Routes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1683"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2510"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2513"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1649"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2467"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2470"/>
         <source>Export GPX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2522"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2525"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2479"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2482"/>
         <source>Add Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2540"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2497"/>
         <source>Add MilX Symbol</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1823"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2549"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2552"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1789"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2506"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2509"/>
         <source>Export MILXLY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="875"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2666"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="841"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2611"/>
         <source>Guide grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1848"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2561"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2564"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1814"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2518"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2521"/>
         <source>Import MILXLY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1959"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1925"/>
         <source>Symbol size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1966"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1932"/>
         <source>Line width:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1973"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1939"/>
         <source>Work mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1981"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1947"/>
         <source>International</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1986"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1952"/>
         <source>CH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1873"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2375"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2573"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2576"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1839"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2332"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2530"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2533"/>
         <source>Import OVL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61634,12 +61650,12 @@ Sight</source>
         <translation type="obsolete">Postavke</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2067"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2033"/>
         <source>Show numeric input box when drawing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2043"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2009"/>
         <source>Language:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61649,13 +61665,7 @@ Sight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="637"/>
-        <source>Import
- KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="675"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="641"/>
         <source>&amp;View</source>
         <translation type="unfinished">&amp;Pogled</translation>
     </message>
@@ -61664,130 +61674,119 @@ Sight</source>
         <translation type="obsolete">Ctrl+G</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="902"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="868"/>
         <source>&amp;Analysis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1189"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1155"/>
         <source>&amp;Draw</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1428"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1394"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1459"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2636"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2639"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1425"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2593"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2596"/>
         <source>Paste</source>
         <translation type="unfinished">Zalijepi</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1517"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1483"/>
         <source>&amp;GPS</source>
         <translation type="unfinished">&amp;GPS</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1559"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2474"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1525"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2431"/>
         <source>Toggle GPS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1747"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1713"/>
         <source>&amp;MSS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2010"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1976"/>
         <source>&amp;Settings</source>
         <translation type="unfinished">Pos&amp;tavke</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2033"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1999"/>
         <source>Height unit:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2050"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2016"/>
         <source>Measurement decimal places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2074"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2040"/>
         <source>Snap to vertices when drawing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2097"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2063"/>
         <source>&amp;Help</source>
         <translation type="unfinished">&amp;Pomoć</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2136"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2600"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2603"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2102"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2557"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2560"/>
         <source>Help</source>
         <translation type="unfinished">Pomoć</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2161"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2624"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2627"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2127"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2581"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2584"/>
         <source>About</source>
         <translation type="unfinished">O proizvodu</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2195"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2161"/>
         <source>Open project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2261"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2227"/>
         <source>Profile &amp; Sight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2264"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2230"/>
         <source>Profile and Line of Sight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2336"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2302"/>
         <source>Copy Map to Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2357"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2323"/>
         <source>Save Map to Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2366"/>
-        <source>Export KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2387"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2344"/>
         <source>Zoom to previous Extent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2399"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2356"/>
         <source>Zoom to next Extent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2648"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2651"/>
-        <source>Import KML/KMZ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2663"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2608"/>
         <source>Guide Grid</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61796,8 +61795,8 @@ Sight</source>
         <translation type="obsolete">Slika</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="1789"/>
-        <location filename="../src/ui/qgsribbontopwidget.ui" line="2537"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="1755"/>
+        <location filename="../src/ui/qgsribbontopwidget.ui" line="2494"/>
         <source>Add MSS Symbol</source>
         <translation type="unfinished"></translation>
     </message>
