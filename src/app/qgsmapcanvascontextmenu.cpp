@@ -155,7 +155,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     }
     if ( !mPickResult.feature.isValid() )
     {
-      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Angle" ), this, SLOT( measureAngle() ) );
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasureAngle.png" ), tr( "Azimuth" ), this, SLOT( measureAzimuth() ) );
     }
     if ( !mPickResult.feature.isValid() || !isCircle )
     {
@@ -407,12 +407,12 @@ void QgsMapCanvasContextMenu::measureCircle()
   }
 }
 
-void QgsMapCanvasContextMenu::measureAngle()
+void QgsMapCanvasContextMenu::measureAzimuth()
 {
-  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureAngle );
+  mCanvas->setMapTool( QgisApp::instance()->mapTools()->mMeasureAzimuth );
   if ( mPickResult.layer )
   {
-    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureAngle )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
+    static_cast<QgsMeasureToolV2*>( QgisApp::instance()->mapTools()->mMeasureAzimuth )->addGeometry( mPickResult.feature.geometry(), static_cast<QgsVectorLayer*>( mPickResult.layer ) );
   }
 }
 
