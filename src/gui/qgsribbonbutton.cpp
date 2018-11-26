@@ -189,6 +189,7 @@ void QgsRibbonButton::mouseMoveEvent( QMouseEvent* event )
 void QgsRibbonButton::mousePressEvent( QMouseEvent* event )
 {
   QToolButton::mousePressEvent( event );
+  event->ignore();
 }
 
 void QgsRibbonButton::contextMenuEvent( QContextMenuEvent* event )
