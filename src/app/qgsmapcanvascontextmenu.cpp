@@ -143,7 +143,7 @@ QgsMapCanvasContextMenu::QgsMapCanvasContextMenu( QgsMapCanvas* canvas, const QP
     addAction( tr( "Measure" ) )->setMenu( measureMenu );
     if ( !mPickResult.feature.isValid() || !isCircle )
     {
-      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Length" ), this, SLOT( measureLine() ) );
+      measureMenu->addAction( QIcon( ":/images/themes/default/mActionMeasure.png" ), tr( "Distance" ), this, SLOT( measureLine() ) );
     }
     if ( !mPickResult.feature.isValid() || ( !isCircle && mPickResult.feature.geometry()->type() == QGis::Polygon ) )
     {
