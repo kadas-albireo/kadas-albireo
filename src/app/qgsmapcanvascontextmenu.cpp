@@ -267,7 +267,6 @@ void QgsMapCanvasContextMenu::convertToPin()
   const QgsCoordinateTransform* ct = QgsCoordinateTransformCache::instance()->transform( mPickResult.layer->crs().authid(), mCanvas->mapSettings().destinationCrs().authid() );
   QgsPinAnnotationItem* pinItem = new QgsPinAnnotationItem( mCanvas );
   pinItem->setMapPosition( ct->transform( p->x(), p->y() ) );
-  pinItem->setSelected( true );
   pinItem->setName( mPickResult.feature.attribute( "text" ).toString() );
   QgsAnnotationLayer::getLayer( mCanvas, "mapPins", tr( "Pins" ) )->addItem( pinItem );
 
