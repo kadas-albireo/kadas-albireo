@@ -322,6 +322,7 @@ void QgsAnnotationItem::drawSelectionBoxes( QPainter* p )
     QPointF pos = mOffsetFromReferencePoint +
                   QPointF( 0.5 * mFrameSize.width() + ( 0.5 * mFrameSize.width() - 0.5 * handlerSize ) *  qCos( alpha ),
                            0.5 * mFrameSize.height() + ( 0.5 * mFrameSize.height() - 0.5 * handlerSize ) *  qSin( alpha ) );
+    p->setPen( QPen( Qt::green, 2. / scale() ) );
     p->drawEllipse( pos, 0.5 * handlerSize, 0.5 * handlerSize );
   }
 }
