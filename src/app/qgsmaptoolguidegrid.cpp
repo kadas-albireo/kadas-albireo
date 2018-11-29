@@ -239,8 +239,8 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
   mLayerTreeView->setLayerVisible( mCurrentLayer, true );
   mCanvas->setCurrentLayer( mCurrentLayer );
 
-  int prec = mCrs.mapUnits() == QGis::Degrees ? 3 : 0;
   mCrs = mCurrentLayer->crs();
+  int prec = mCrs.mapUnits() == QGis::Degrees ? 3 : 0;
   mCurRect = mCurrentLayer->extent();
   ui.lineEditTopLeft->setText( QString( "%1, %2" ).arg( mCurRect.xMinimum(), 0, 'f', prec ).arg( mCurRect.yMaximum(), 0, 'f', prec ) );
   ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( mCurRect.xMaximum(), 0, 'f', prec ).arg( mCurRect.yMinimum(), 0, 'f', prec ) );
