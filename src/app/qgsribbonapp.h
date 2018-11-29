@@ -140,6 +140,8 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
 
     QPointer<QgsMessageBarItem> mReprojMsgItem;
 
+    QMap<QString, QAction*> mAddedActions;
+
     //GPS
     QgsMapCanvasGPSDisplay mCanvasGPSDisplay;
 

@@ -369,6 +369,10 @@ void QgsRibbonApp::dropEvent( QDropEvent* event )
   {
     QString actionName = QString::fromLocal8Bit( event->mimeData()->data( "application/qgis-ribbon-button" ).data() );
     QAction* action = findChild<QAction*>( actionName );
+    if ( !action )
+    {
+      action = mAddedActions.value( actionName, nullptr );
+    }
     QgsRibbonButton* button = dynamic_cast<QgsRibbonButton*>( childAt( event->pos() ) );
     if ( action && button && button->objectName().startsWith( "mFavoriteButton" ) )
     {
@@ -600,6 +604,12 @@ void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTo
   QHBoxLayout* layout = dynamic_cast<QHBoxLayout*>( tabWidget->layout() );
   layout->insertWidget( layout->count() - 1, button );
   setActionToButton( action, button, associatedMapTool );
+
+  if ( action->objectName().isEmpty() )
+  {
+    action->setObjectName( QUuid::createUuid().toString() );
+  }
+  mAddedActions.insert( action->objectName(), action );
 }
 
 void QgsRibbonApp::attributeTable()
