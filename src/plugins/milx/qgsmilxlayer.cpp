@@ -357,7 +357,7 @@ void QgsMilXLayer::addItem( QgsMilXItem *item )
     // FIXME: hardcoded dpi 72 for billboards
     if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), 72, symbol, graphic, false ) )
     {
-      QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id(), QPointF( -0.5 * graphic.graphic.width(), -0.5 * graphic.graphic.height() ) );
+      QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id(), graphic.offset );
     }
   }
 }
@@ -454,7 +454,7 @@ void QgsMilXLayer::invalidateBillboards()
       // FIXME: hardcoded dpi 72 for billboards
       if ( MilXClient::updateSymbol( QRect( -symbolSize, -symbolSize, 2 * symbolSize, 2 * symbolSize ), 72, symbol, graphic, false ) )
       {
-        QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id(), QPointF( -0.5 * graphic.graphic.width(), -0.5 * graphic.graphic.height() ) );
+        QgsBillBoardRegistry::instance()->addItem( item, item->militaryName(), graphic.graphic, item->points().front(), graphic.offset.x() + graphic.graphic.width() / 2, id(), graphic.offset );
       }
     }
   }
