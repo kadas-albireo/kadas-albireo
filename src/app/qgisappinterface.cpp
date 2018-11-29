@@ -472,8 +472,6 @@ void QgisAppInterface::addAction( QAction* action, ActionClassicMenuLocation cla
     {
       case NO_MENU:
         break;
-      case FILE_MENU:
-        targetMenu = fileMenu(); break;
       case PROJECT_MENU:
         targetMenu = projectMenu(); break;
       case EDIT_MENU:

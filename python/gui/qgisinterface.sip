@@ -325,7 +325,6 @@ public:
 
     enum ActionClassicMenuLocation {
       NO_MENU,
-      FILE_MENU,
       PROJECT_MENU,
       EDIT_MENU,
       VIEW_MENU,
