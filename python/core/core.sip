@@ -29,6 +29,7 @@
 %Include qgscolorscheme.sip
 %Include qgscolorschemeregistry.sip
 %Include qgscontexthelp.sip
+%Include qgscoordinateformat.sip
 %Include qgscoordinatereferencesystem.sip
 %Include qgscredentials.sip
 %Include qgscrscache.sip
