@@ -447,21 +447,21 @@ void QgsRibbonApp::configureButtons()
   connect( mActionZoomLast, SIGNAL( triggered() ), this, SLOT( zoomToPrevious() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ), this ), SIGNAL( activated() ), mActionZoomLast, SLOT( trigger() ) );
   setActionToButton( mActionZoomLast, mZoomLastButton );
+
   connect( mActionZoomNext, SIGNAL( triggered() ), this, SLOT( zoomToNext() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageDown ), this ), SIGNAL( activated() ), mActionZoomNext, SLOT( trigger() ) );
   setActionToButton( mActionZoomNext, mZoomNextButton );
+
   connect( mActionNewMapWindow, SIGNAL( triggered() ), mMultiMapManager, SLOT( addMapWidget() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_W ), this ), SIGNAL( activated() ), mActionNewMapWindow, SLOT( trigger() ) );
   setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
-  setActionToButton( mAction3D, m3DButton );
+
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_3 ), this ), SIGNAL( activated() ), mAction3D, SLOT( trigger() ) );
-  setActionToButton( mActionGrid, mGridButton );
+  setActionToButton( mAction3D, m3DButton );
+
   connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_G ), this ), SIGNAL( activated() ), mActionGrid, SLOT( trigger() ) );
-
-  connect( mActionGuideGrid, SIGNAL( triggered( bool ) ), this, SLOT( toggleGuideGridTool( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_R ), this ), SIGNAL( activated() ), mActionGuideGrid, SLOT( trigger() ) );
-  setActionToButton( mActionGuideGrid, mGuideGridButton, mMapTools.mGuideGridTool );
+  setActionToButton( mActionGrid, mGridButton );
 
   //draw tab
   connect( mActionPin, SIGNAL( triggered( bool ) ), this, SLOT( addPinAnnotation( bool ) ) );
@@ -471,6 +471,11 @@ void QgsRibbonApp::configureButtons()
   connect( mActionAddImage, SIGNAL( triggered( bool ) ), this, SLOT( addImage() ) );
   connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), mActionAddImage, SLOT( trigger() ) );
   setActionToButton( mActionAddImage, mAddImageButton );
+
+  connect( mActionGuideGrid, SIGNAL( triggered( bool ) ), this, SLOT( toggleGuideGridTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_G ), this ), SIGNAL( activated() ), mActionGuideGrid, SLOT( trigger() ) );
+  setActionToButton( mActionGuideGrid, mGuideGridButton, mMapTools.mGuideGridTool );
+
 
   connect( mActionPaste, SIGNAL( triggered( bool ) ), this, SLOT( paste() ) );
   setActionToButton( mActionPaste, mPasteButton );
