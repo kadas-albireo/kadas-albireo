@@ -152,6 +152,7 @@ qgscodeeditorhtml.cpp
 qgscodeeditorcss.cpp
 qgscomposerruler.cpp
 qgscomposerview.cpp
+qgscoordinateinput.cpp
 qgsprevieweffect.cpp
 qgscredentialdialog.cpp
 qgscursors.cpp
@@ -293,6 +294,7 @@ SET(QGIS_GUI_MOC_HDRS
   qgscolorwidgets.h
   qgscomposerruler.h
   qgscomposerview.h
+  qgscoordinateinput.h
   qgscredentialdialog.h
   qgsdatadefinedbutton.h
   qgsdatumtransformdialog.h

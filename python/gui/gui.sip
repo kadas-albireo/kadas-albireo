@@ -44,6 +44,7 @@
 %Include qgscolorswatchgrid.sip
 %Include qgscolorschemelist.sip
 %Include qgscolorwidgets.sip
+%Include qgscoordinateinput.sip
 %Include qgscomposerview.sip
 %Include qgscredentialdialog.sip
 %Include qgsdetaileditemdata.sip
