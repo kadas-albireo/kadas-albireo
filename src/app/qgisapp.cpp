@@ -3282,6 +3282,16 @@ bool QgisApp::openLayer( const QString & fileName, bool allowInteractive )
     return true;
   }
 
+  // Handle SVG files
+  if ( fileName.endsWith( ".svg", Qt::CaseInsensitive ) )
+  {
+    QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
+    item->setFilePath( fileName );
+    item->setMapPosition( mapCanvas()->extent().center(), mapCanvas()->mapSettings().destinationCrs() );
+    QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
+    return true;
+  }
+
   // try to load it as raster
   if ( QgsRasterLayer::isValidRasterFileName( fileName ) )
   {
@@ -5245,7 +5255,6 @@ void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
     QgsSvgAnnotationItem* item = new QgsSvgAnnotationItem( mapCanvas() );
     item->setFilePath( filename );
     item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
-    item->setSelected( true );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
   }
 }
