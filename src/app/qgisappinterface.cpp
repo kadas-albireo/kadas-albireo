@@ -462,112 +462,165 @@ QToolBar *QgisAppInterface::webToolBar() { return qgisc ? qgisc->webToolBar() : 
 //! Generic action finder
 QAction *QgisAppInterface::findAction( const QString& name ) { return qgis->findAction( name ); }
 
+QMenu* QgisAppInterface::getClassicMenu( ActionClassicMenuLocation classicMenuLocation, const QString& customName )
+{
+  QMenu* targetMenu = nullptr;
+  switch ( classicMenuLocation )
+  {
+    case NO_MENU:
+      break;
+    case PROJECT_MENU:
+      targetMenu = projectMenu(); break;
+    case EDIT_MENU:
+      targetMenu = editMenu(); break;
+    case VIEW_MENU:
+      targetMenu = viewMenu(); break;
+    case LAYER_MENU:
+      targetMenu = layerMenu(); break;
+    case NEWLAYER_MENU:
+      targetMenu = newLayerMenu(); break;
+    case ADDLAYER_MENU:
+      targetMenu = addLayerMenu(); break;
+    case SETTINGS_MENU:
+      targetMenu = settingsMenu(); break;
+    case PLUGIN_MENU:
+      targetMenu = pluginMenu(); break;
+    case RASTER_MENU:
+      targetMenu = rasterMenu(); break;
+    case DATABASE_MENU:
+      targetMenu = databaseMenu(); break;
+    case VECTOR_MENU:
+      targetMenu = vectorMenu(); break;
+    case WEB_MENU:
+      targetMenu = webMenu(); break;
+    case FIRST_RIGHT_STANDARD_MENU:
+      targetMenu = firstRightStandardMenu(); break;
+    case WINDOW_MENU:
+      targetMenu = windowMenu(); break;
+    case HELP_MENU:
+      targetMenu = helpMenu(); break;
+    case CUSTOM_MENU:
+    for ( const QAction* action : qgis->menuBar()->actions() )
+      {
+        if ( action->menu()->title() == customName )
+        {
+          targetMenu = action->menu();
+          break;
+        }
+      }
+      if ( !targetMenu )
+      {
+        targetMenu = new QMenu( qgis->menuBar() );
+        qgis->menuBar()->addAction( targetMenu->menuAction() );
+        targetMenu->setTitle( customName );
+      }
+      break;
+  }
+  return targetMenu;
+}
+
+QToolBar* QgisAppInterface::getClassicToolbar( ActionClassicToolbarLocation classicToolbarLocation, const QString &customName )
+{
+  QToolBar* targetToolbar = nullptr;
+  switch ( classicToolbarLocation )
+  {
+    case NO_TOOLBAR: break;
+    case FILE_TOOLBAR:
+      targetToolbar = fileToolBar(); break;
+    case LAYER_TOOLBAR:
+      targetToolbar = layerToolBar(); break;
+    case MAP_NAV_TOOL_TOOLBAR:
+      targetToolbar = mapNavToolToolBar(); break;
+    case ADVANCED_DIGITIZE_TOOLBAR:
+      targetToolbar = advancedDigitizeToolBar(); break;
+    case ATTRIBUTES_TOOLBAR:
+      targetToolbar = attributesToolBar(); break;
+    case PLUGIN_TOOLBAR:
+      targetToolbar = pluginToolBar(); break;
+    case HELP_TOOLBAR:
+      targetToolbar = helpToolBar(); break;
+    case RASTER_TOOLBAR:
+      targetToolbar = rasterToolBar(); break;
+    case VECTOR_TOOLBAR:
+      targetToolbar = vectorToolBar(); break;
+    case DATABASE_TOOLBAR:
+      targetToolbar = databaseToolBar(); break;
+    case WEB_TOOLBAR:
+      targetToolbar = webToolBar(); break;
+    case CUSTOM_TOOLBAR:
+    for ( QToolBar* toolBar : qgis->findChildren<QToolBar*>() )
+      {
+        if ( toolBar->windowTitle() == customName )
+        {
+          targetToolbar = toolBar;
+          break;
+        }
+      }
+      if ( !targetToolbar )
+      {
+        targetToolbar = new QToolBar( qgis );
+        targetToolbar->setWindowTitle( customName );
+        qgis->addToolBar( targetToolbar );
+      }
+      break;
+  }
+  return targetToolbar;
+}
+
+QWidget* QgisAppInterface::getRibbonTabWidget( ActionRibbonTabLocation ribbonTabLocation, const QString &customName )
+{
+  QWidget* targetTabWidget = nullptr;
+  switch ( ribbonTabLocation )
+  {
+    case NO_TAB:
+      break;
+    case MAPS_TAB:
+      targetTabWidget = qgisr->mapsTab(); break;
+    case VIEW_TAB:
+      targetTabWidget = qgisr->viewTab(); break;
+    case ANALYSIS_TAB:
+      targetTabWidget = qgisr->analysisTab(); break;
+    case DRAW_TAB:
+      targetTabWidget = qgisr->drawTab(); break;
+    case GPS_TAB:
+      targetTabWidget = qgisr->gpsTab(); break;
+    case MSS_TAB:
+      targetTabWidget = qgisr->mssTab(); break;
+    case SETTINGS_TAB:
+      targetTabWidget = qgisr->settingsTab(); break;
+    case HELP_TAB:
+      targetTabWidget = qgisr->helpTab(); break;
+    case CUSTOM_TAB:
+      for ( int i = 0, n = qgisr->ribbonTabWidget()->count(); i < n; ++i )
+      {
+        if ( qgisr->ribbonTabWidget()->tabText( i ) == customName )
+        {
+          targetTabWidget = qgisr->ribbonTabWidget()->widget( i );
+          break;
+        }
+      }
+      if ( !targetTabWidget )
+      {
+        targetTabWidget = qgisr->addRibbonTab( customName );
+      }
+      break;
+  }
+  return targetTabWidget;
+}
+
 void QgisAppInterface::addAction( QAction* action, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName, QgsMapTool *associatedMapTool )
 {
   if ( qgisc )
   {
     // Add action to classic app menu
-    QMenu* targetMenu = nullptr;
-    switch ( classicMenuLocation )
-    {
-      case NO_MENU:
-        break;
-      case PROJECT_MENU:
-        targetMenu = projectMenu(); break;
-      case EDIT_MENU:
-        targetMenu = editMenu(); break;
-      case VIEW_MENU:
-        targetMenu = viewMenu(); break;
-      case LAYER_MENU:
-        targetMenu = layerMenu(); break;
-      case NEWLAYER_MENU:
-        targetMenu = newLayerMenu(); break;
-      case ADDLAYER_MENU:
-        targetMenu = addLayerMenu(); break;
-      case SETTINGS_MENU:
-        targetMenu = settingsMenu(); break;
-      case PLUGIN_MENU:
-        targetMenu = pluginMenu(); break;
-      case RASTER_MENU:
-        targetMenu = rasterMenu(); break;
-      case DATABASE_MENU:
-        targetMenu = databaseMenu(); break;
-      case VECTOR_MENU:
-        targetMenu = vectorMenu(); break;
-      case WEB_MENU:
-        targetMenu = webMenu(); break;
-      case FIRST_RIGHT_STANDARD_MENU:
-        targetMenu = firstRightStandardMenu(); break;
-      case WINDOW_MENU:
-        targetMenu = windowMenu(); break;
-      case HELP_MENU:
-        targetMenu = helpMenu(); break;
-      case CUSTOM_MENU:
-      for ( const QAction* action : qgis->menuBar()->actions() )
-        {
-          if ( action->menu()->title() == customName )
-          {
-            targetMenu = action->menu();
-            break;
-          }
-        }
-        if ( !targetMenu )
-        {
-          targetMenu = new QMenu( qgis->menuBar() );
-          qgis->menuBar()->addAction( targetMenu->menuAction() );
-          targetMenu->setTitle( customName );
-        }
-        break;
-    }
+    QMenu* targetMenu = getClassicMenu( classicMenuLocation, customName );
     if ( targetMenu )
     {
       targetMenu->addAction( action );
     }
 
     // Add action to classic app toolbar
-    QToolBar* targetToolbar = nullptr;
-    switch ( classicToolbarLocation )
-    {
-      case NO_TOOLBAR: break;
-      case FILE_TOOLBAR:
-        targetToolbar = fileToolBar(); break;
-      case LAYER_TOOLBAR:
-        targetToolbar = layerToolBar(); break;
-      case MAP_NAV_TOOL_TOOLBAR:
-        targetToolbar = mapNavToolToolBar(); break;
-      case ADVANCED_DIGITIZE_TOOLBAR:
-        targetToolbar = advancedDigitizeToolBar(); break;
-      case ATTRIBUTES_TOOLBAR:
-        targetToolbar = attributesToolBar(); break;
-      case PLUGIN_TOOLBAR:
-        targetToolbar = pluginToolBar(); break;
-      case HELP_TOOLBAR:
-        targetToolbar = helpToolBar(); break;
-      case RASTER_TOOLBAR:
-        targetToolbar = rasterToolBar(); break;
-      case VECTOR_TOOLBAR:
-        targetToolbar = vectorToolBar(); break;
-      case DATABASE_TOOLBAR:
-        targetToolbar = databaseToolBar(); break;
-      case WEB_TOOLBAR:
-        targetToolbar = webToolBar(); break;
-      case CUSTOM_TOOLBAR:
-      for ( QToolBar* toolBar : qgis->findChildren<QToolBar*>() )
-        {
-          if ( toolBar->windowTitle() == customName )
-          {
-            targetToolbar = toolBar;
-            break;
-          }
-        }
-        if ( !targetToolbar )
-        {
-          targetToolbar = new QToolBar( qgis );
-          targetToolbar->setWindowTitle( customName );
-          qgis->addToolBar( targetToolbar );
-        }
-        break;
-    }
+    QToolBar* targetToolbar = getClassicToolbar( classicToolbarLocation, customName );
     if ( targetToolbar )
     {
       targetToolbar->addAction( action );
@@ -577,42 +630,7 @@ void QgisAppInterface::addAction( QAction* action, ActionClassicMenuLocation cla
   // Add action to ribbon tabs
   if ( qgisr )
   {
-    QWidget* targetTabWidget = nullptr;
-    switch ( ribbonTabLocation )
-    {
-      case NO_TAB:
-        break;
-      case MAPS_TAB:
-        targetTabWidget = qgisr->mapsTab(); break;
-      case VIEW_TAB:
-        targetTabWidget = qgisr->viewTab(); break;
-      case ANALYSIS_TAB:
-        targetTabWidget = qgisr->analysisTab(); break;
-      case DRAW_TAB:
-        targetTabWidget = qgisr->drawTab(); break;
-      case GPS_TAB:
-        targetTabWidget = qgisr->gpsTab(); break;
-      case MSS_TAB:
-        targetTabWidget = qgisr->mssTab(); break;
-      case SETTINGS_TAB:
-        targetTabWidget = qgisr->settingsTab(); break;
-      case HELP_TAB:
-        targetTabWidget = qgisr->helpTab(); break;
-      case CUSTOM_TAB:
-        for ( int i = 0, n = qgisr->ribbonTabWidget()->count(); i < n; ++i )
-        {
-          if ( qgisr->ribbonTabWidget()->tabText( i ) == customName )
-          {
-            targetTabWidget = qgisr->ribbonTabWidget()->widget( i );
-            break;
-          }
-        }
-        if ( !targetTabWidget )
-        {
-          targetTabWidget = qgisr->addRibbonTab( customName );
-        }
-        break;
-    }
+    QWidget* targetTabWidget = getRibbonTabWidget( ribbonTabLocation, customName );
     if ( targetTabWidget )
     {
       qgisr->addActionToTab( action, targetTabWidget, associatedMapTool );
@@ -621,6 +639,43 @@ void QgisAppInterface::addAction( QAction* action, ActionClassicMenuLocation cla
   if ( associatedMapTool )
   {
     associatedMapTool->setAction( action );
+  }
+}
+
+void QgisAppInterface::addActionMenu( const QString &text, const QIcon &icon, QMenu* menu, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName )
+{
+  if ( qgisc )
+  {
+    // Add action to classic app menu
+    QMenu* targetMenu = getClassicMenu( classicMenuLocation, customName );
+    if ( targetMenu )
+    {
+      QAction* menuAction = new QAction( icon, text );
+      menuAction->setMenu( menu );
+      targetMenu->addAction( menuAction );
+    }
+
+    // Add action to classic app toolbar
+    QToolBar* targetToolbar = getClassicToolbar( classicToolbarLocation, customName );
+    if ( targetToolbar )
+    {
+      QToolButton* menuButton = new QToolButton();
+      menuButton->setText( text );
+      menuButton->setIcon( icon );
+      menuButton->setMenu( menu );
+      menuButton->setPopupMode( QToolButton::InstantPopup );
+      targetToolbar->addWidget( menuButton );
+    }
+  }
+
+  // Add action to ribbon tabs
+  if ( qgisr )
+  {
+    QWidget* targetTabWidget = getRibbonTabWidget( ribbonTabLocation, customName );
+    if ( targetTabWidget )
+    {
+      qgisr->addMenuButtonToTab( text, icon, menu, targetTabWidget );
+    }
   }
 }
 

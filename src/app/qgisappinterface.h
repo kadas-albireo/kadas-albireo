@@ -323,6 +323,7 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     // Generic action adder
     void addAction( QAction* action, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString(), QgsMapTool* associatedMapTool = nullptr ) override;
+    virtual void addActionMenu( const QString &text, const QIcon &icon, QMenu* menu, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString() ) override;
 
     // Generic object finder
     virtual QObject* findObject( const QString& name ) override;
@@ -510,6 +511,10 @@ class APP_EXPORT QgisAppInterface : public QgisInterface
 
     //! Pointer to the PluginManagerInterface object
     QgsAppPluginManagerInterface pluginManagerIface;
+
+    QMenu* getClassicMenu( ActionClassicMenuLocation classicMenuLocation, const QString &customName );
+    QToolBar* getClassicToolbar( ActionClassicToolbarLocation classicToolbarLocation, const QString &customName );
+    QWidget* getRibbonTabWidget( ActionRibbonTabLocation ribbonTabLocation, const QString &customName );
 };
 Q_NOWARN_DEPRECATED_POP
 

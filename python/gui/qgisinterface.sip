@@ -371,6 +371,7 @@ public:
     };
     // Generic action adder
     virtual void addAction(QAction* action, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString(), QgsMapTool* associatedMapTool = nullptr) = 0;
+    virtual void addActionMenu( const QString &text, const QIcon &icon, QMenu* menu, ActionClassicMenuLocation classicMenuLocation, ActionClassicToolbarLocation classicToolbarLocation, ActionRibbonTabLocation ribbonTabLocation, const QString& customName = QString()) = 0;
 
     // Generic object finder
     virtual QObject* findObject( const QString& name ) = 0;

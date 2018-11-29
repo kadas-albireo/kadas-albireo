@@ -586,11 +586,10 @@ QWidget* QgsRibbonApp::addRibbonTab( const QString& name )
   return widget;
 }
 
-void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool* associatedMapTool )
+QgsRibbonButton* QgsRibbonApp::addRibbonButton( QWidget *tabWidget )
 {
   QgsRibbonButton* button = new QgsRibbonButton();
   button->setObjectName( QUuid::createUuid().toString() );
-  button->setText( action->text() );
   button->setMinimumSize( QSize( 0, 80 ) );
   button->setMaximumSize( QSize( 80, 80 ) );
   button->setIconSize( QSize( 32, 32 ) );
@@ -603,6 +602,13 @@ void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTo
 
   QHBoxLayout* layout = dynamic_cast<QHBoxLayout*>( tabWidget->layout() );
   layout->insertWidget( layout->count() - 1, button );
+  return button;
+}
+
+void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool* associatedMapTool )
+{
+  QgsRibbonButton* button = addRibbonButton( tabWidget );
+  button->setText( action->text() );
   setActionToButton( action, button, associatedMapTool );
 
   if ( action->objectName().isEmpty() )
@@ -610,6 +616,15 @@ void QgsRibbonApp::addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTo
     action->setObjectName( QUuid::createUuid().toString() );
   }
   mAddedActions.insert( action->objectName(), action );
+}
+
+void QgsRibbonApp::addMenuButtonToTab( const QString& text, const QIcon& icon, QMenu* menu, QWidget* tabWidget )
+{
+  QgsRibbonButton* button = addRibbonButton( tabWidget );
+  button->setText( text );
+  button->setIcon( icon );
+  button->setMenu( menu );
+  button->setPopupMode( QToolButton::InstantPopup );
 }
 
 void QgsRibbonApp::attributeTable()

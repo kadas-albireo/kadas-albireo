@@ -81,6 +81,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
 
     QWidget* addRibbonTab( const QString& name );
     void addActionToTab( QAction* action, QWidget* tabWidget, QgsMapTool *associatedMapTool = nullptr );
+    void addMenuButtonToTab( const QString &text, const QIcon &icon, QMenu* menu, QWidget* tabWidget );
 
   public slots:
     virtual void attributeTable();
@@ -157,6 +158,7 @@ class APP_EXPORT QgsRibbonApp: public QgisApp, private Ui::QgsRibbonWindowBase, 
     void initLayerTreeView();
     void initGPSDisplay();
     void setGPSIcon( const QColor& color );
+    QgsRibbonButton* addRibbonButton( QWidget* tabWidget );
 };
 
 #endif // QGSRIBBONAPP_H
