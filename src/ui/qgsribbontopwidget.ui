@@ -1415,6 +1415,31 @@ Sight</string>
            </widget>
           </item>
           <item>
+           <widget class="QgsRibbonButton" name="mBullseyeButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Bullseye</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QgsRibbonButton" name="mDeleteItemsButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -2591,6 +2616,21 @@ Sight</string>
    </property>
    <property name="toolTip">
     <string>Guide grid</string>
+   </property>
+  </action>
+  <action name="mActionBullseye">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../images/images.qrc">
+     <normaloff>:/images/ribbon/bullseye.png</normaloff>:/images/ribbon/bullseye.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bullseye</string>
+   </property>
+   <property name="toolTip">
+    <string>Bullseye</string>
    </property>
   </action>
  </widget>

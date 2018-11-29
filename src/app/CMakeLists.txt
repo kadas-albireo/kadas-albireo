@@ -109,6 +109,7 @@ SET(QGIS_APP_SRCS
   qgsmaptoolslope.cpp
   qgsmaptoolviewshed.cpp
   qgsmaptoolguidegrid.cpp
+  qgsmaptoolbullseye.cpp
 
   nodetool/qgsmaptoolnodetool.cpp
   nodetool/qgsselectedfeature.cpp
@@ -286,6 +287,7 @@ SET (QGIS_APP_MOC_HDRS
   qgsmaptoolsredlining.h
   qgsmaptooladdcircularstring.h
   qgsmaptoolguidegrid.h
+  qgsmaptoolbullseye.h
 
   qgsmaptoolhillshade.h
   qgsmaptoolslope.h

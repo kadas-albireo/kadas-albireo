@@ -477,6 +477,11 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionGuideGrid, mGuideGridButton, mMapTools.mGuideGridTool );
 
 
+  connect( mActionBullseye, SIGNAL( triggered( bool ) ), this, SLOT( toggleBullseyeTool( bool ) ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_D, Qt::CTRL + Qt::Key_B ), this ), SIGNAL( activated() ), mActionGuideGrid, SLOT( trigger() ) );
+  setActionToButton( mActionBullseye, mBullseyeButton, mMapTools.mBullseyeTool );
+
+
   connect( mActionPaste, SIGNAL( triggered( bool ) ), this, SLOT( paste() ) );
   setActionToButton( mActionPaste, mPasteButton );
   mActionPaste->setEnabled( canPaste() );

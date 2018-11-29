@@ -100,6 +100,7 @@ SET(QGIS_CORE_SRCS
   qgsgml.cpp
   qgsgmlschema.cpp
   qgsguidegridlayer.cpp
+  qgsbullseyelayer.cpp
   qgslayerdefinition.cpp
   qgslabel.cpp
   qgslabelattributes.cpp
@@ -381,6 +382,7 @@ SET(QGIS_CORE_MOC_HDRS
   qgsgml.h
   qgsgmlschema.h
   qgsguidegridlayer.h
+  qgsbullseyelayer.h
   qgsmaplayer.h
   qgsmaplayerlegend.h
   qgsmaplayerregistry.h
@@ -712,6 +714,7 @@ INCLUDE_DIRECTORIES(
   ${SPATIALITE_INCLUDE_DIR}
   ${QUAZIP_INCLUDE_DIR}
   ${QJSON_INCLUDE_DIR}
+  ${GeographicLib_INCLUDE_DIR}
 )
 
 
@@ -808,6 +811,7 @@ TARGET_LINK_LIBRARIES(qgis_core
   ${SPATIALITE_LIBRARY}
   ${QUAZIP_LIBRARIES}
   ${QJSON_LIBRARIES}
+  ${GeographicLib_LIBRARIES}
 )
 
 

@@ -584,6 +584,7 @@
         <file>themes/default/mActionPick.svg</file>
         <file>north_arrows/gpsarrow3.svg</file>
         <file>ribbon/kml.png</file>
+        <file>ribbon/bullseye.png</file>
     </qresource>
     <qresource prefix="/images/tips">
         <file alias="symbol_levels.png">qgis_tips/symbol_levels.png</file>

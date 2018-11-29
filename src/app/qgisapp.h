@@ -160,6 +160,7 @@ class APP_EXPORT QgisApp : public QMainWindow
             , mRotateLabel( 0 )
             , mChangeLabelProperties( 0 )
             , mGuideGridTool( 0 )
+            , mBullseyeTool( 0 )
         {}
 
         QgsMapTool *mZoomIn;
@@ -213,6 +214,7 @@ class APP_EXPORT QgisApp : public QMainWindow
         QgsMapTool *mViewshed;
         QgsMapTool *mDeleteItems;
         QgsMapTool *mGuideGridTool;
+        QgsMapTool *mBullseyeTool;
     };
 
     //! Destructor
@@ -615,6 +617,7 @@ class APP_EXPORT QgisApp : public QMainWindow
     void showComposerManager();
 
     void toggleGuideGridTool( bool active );
+    void toggleBullseyeTool( bool active );
 
   protected:
 
