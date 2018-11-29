@@ -120,6 +120,7 @@
 #include "qgsgpsrouteeditor.h"
 #include "qgsguivectorlayertools.h"
 #include "qgsguidegridlayer.h"
+#include "qgsbullseyelayer.h"
 #include "qgshtmlannotationitem.h"
 #include "qgsitemcouplingmanager.h"
 #include "qgskmlexport.h"
@@ -657,6 +658,7 @@ void QgisApp::init( bool restorePlugins )
   loadPythonSupport();
 
   QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsGuideGridLayerType( ) );
+  QgsPluginLayerRegistry::instance()->addPluginLayerType( new QgsBullsEyeLayerType( ) );
 
   // Create the plugin registry and load plugins
   // load any plugins that were running in the last session

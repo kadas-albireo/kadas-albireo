@@ -66,10 +66,10 @@ class CORE_EXPORT QgsBullsEyeLayer : public QgsPluginLayer
     LabellingMode mLabellingMode = NO_LABELS;
 };
 
-class CORE_EXPORT QgsBullEyeLayerType : public QgsPluginLayerType
+class CORE_EXPORT QgsBullsEyeLayerType : public QgsPluginLayerType
 {
   public:
-    QgsBullEyeLayerType( )
+    QgsBullsEyeLayerType( )
         : QgsPluginLayerType( QgsBullsEyeLayer::layerTypeKey() ) {}
     QgsPluginLayer* createLayer() override { return new QgsBullsEyeLayer( "" ); }
     int hasLayerProperties() const override { return 0; }
