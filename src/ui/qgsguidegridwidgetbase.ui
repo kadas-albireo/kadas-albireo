@@ -359,6 +359,9 @@
          </item>
          <item>
           <widget class="QSpinBox" name="spinBoxFontSize">
+           <property name="suffix">
+            <string> px</string>
+           </property>
            <property name="minimum">
             <number>1</number>
            </property>
