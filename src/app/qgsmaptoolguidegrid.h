@@ -54,9 +54,6 @@ class APP_EXPORT QgsGuideGridTool : public QgsMapTool
     void addLayerTreeMenuAction( QgsMapLayer* mapLayer );
     void removeLayerTreeMenuAction( const QString& mapLayerId );
     void editCurrentLayer();
-
-  signals:
-    void pickResult( PickMode pickMode, QgsPoint pos );
 };
 
 
