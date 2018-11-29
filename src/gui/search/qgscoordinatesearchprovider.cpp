@@ -187,5 +187,4 @@ void QgsCoordinateSearchProvider::startSearch( const QString &searchtext, const 
     }
   }
   emit searchFinished();
-  return;
 }
