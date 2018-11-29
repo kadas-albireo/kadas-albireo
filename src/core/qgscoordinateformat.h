@@ -48,6 +48,8 @@ class CORE_EXPORT QgsCoordinateFormat : public QObject
     double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QString* errMsg = 0 );
     static double getHeightAtPos( const QgsPoint& p, const QgsCoordinateReferenceSystem& crs, QGis::UnitType unit, QString* errMsg = 0 );
 
+    QgsPoint parseCoordinate( const QString& text, Format format, bool& valid ) const;
+
   public slots:
     void setCoordinateDisplayFormat( Format format, const QString& epsg );
     void setHeightDisplayUnit( QGis::UnitType heightUnit );
