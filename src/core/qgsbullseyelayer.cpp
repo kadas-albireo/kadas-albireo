@@ -19,6 +19,7 @@
 #include "qgsbullseyelayer.h"
 #include "qgsmaplayerrenderer.h"
 #include "qgsdistancearea.h"
+#include "qgssymbollayerv2utils.h"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -181,6 +182,11 @@ bool QgsBullsEyeLayer::readXml( const QDomNode& layer_node )
   mRings = layerEl.attribute( "rings" ).toInt();
   mAxesInterval = layerEl.attribute( "axes" ).toDouble();
   mInterval = layerEl.attribute( "interval" ).toDouble();
+  mFontSize = layerEl.attribute( "fontSize" ).toInt();
+  mLineWidth = layerEl.attribute( "lineWidth" ).toInt();
+  mColor = QgsSymbolLayerV2Utils::decodeColor( layerEl.attribute( "color" ) );
+  mLabellingMode = static_cast<LabellingMode>( layerEl.attribute( "labellingMode" ).toInt() );
+
   setCrs( QgsCRSCache::instance()->crsByAuthId( layerEl.attribute( "crs" ) ) );
   return true;
 }
@@ -198,5 +204,9 @@ bool QgsBullsEyeLayer::writeXml( QDomNode & layer_node, QDomDocument & /*documen
   layerEl.setAttribute( "axes", mAxesInterval );
   layerEl.setAttribute( "interval", mInterval );
   layerEl.setAttribute( "crs", crs().authid() );
+  layerEl.setAttribute( "fontSize", mFontSize );
+  layerEl.setAttribute( "lineWidth", mLineWidth );
+  layerEl.setAttribute( "color", QgsSymbolLayerV2Utils::encodeColor( mColor ) );
+  layerEl.setAttribute( "labellingMode", static_cast<int>( mLabellingMode ) );
   return true;
 }

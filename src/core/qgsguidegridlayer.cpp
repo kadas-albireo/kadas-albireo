@@ -20,6 +20,7 @@
 #include "qgsmaplayerrenderer.h"
 #include "qgspolygonv2.h"
 #include "qgslinestringv2.h"
+#include "qgssymbollayerv2utils.h"
 
 
 static QString alphaLabel( int i )
@@ -83,7 +84,7 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
 
         double sx1 = vLine1.first.x();
         double sx2 = vLine2.first.x();
-        QString label = mLayer->mLabelingMode == QgsGuideGridLayer::LABEL_A_1 ? alphaLabel( col ) : QString( "%1" ).arg( col );
+        QString label = mLayer->mLabellingMode == QgsGuideGridLayer::LABEL_A_1 ? alphaLabel( col ) : QString( "%1" ).arg( col );
         if ( sy1 < vLine1.second.y() - 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx1, sy1, sx2 - sx1, labelBoxSize ), Qt::AlignHCenter | Qt::AlignVCenter, label );
@@ -110,7 +111,7 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
 
         double sy1 = hLine1.first.y();
         double sy2 = hLine2.first.y();
-        QString label = mLayer->mLabelingMode == QgsGuideGridLayer::LABEL_1_A ? alphaLabel( row ) : QString( "%1" ).arg( row );
+        QString label = mLayer->mLabellingMode == QgsGuideGridLayer::LABEL_1_A ? alphaLabel( row ) : QString( "%1" ).arg( row );
         if ( sx1 < vLine1.second.x() - 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx1, sy1, labelBoxSize, sy2 - sy1 ), Qt::AlignHCenter | Qt::AlignVCenter, label );
@@ -175,6 +176,10 @@ bool QgsGuideGridLayer::readXml( const QDomNode& layer_node )
   mRows = layerEl.attribute( "rows" ).toInt();
   mColSizeLocked = layerEl.attribute( "colSizeLocked", "0" ).toInt();
   mRowSizeLocked = layerEl.attribute( "rowSizeLocked", "0" ).toInt();
+  mFontSize = layerEl.attribute( "fontSize" ).toInt();
+  mColor = QgsSymbolLayerV2Utils::decodeColor( layerEl.attribute( "color" ) );
+  mLabellingMode = static_cast<LabellingMode>( layerEl.attribute( "labellingMode" ).toInt() );
+
   setCrs( QgsCRSCache::instance()->crsByAuthId( layerEl.attribute( "crs" ) ) );
   return true;
 }
@@ -203,7 +208,7 @@ QList<QgsGuideGridLayer::IdentifyResult> QgsGuideGridLayer::identify( const QgsP
   bbox->setExteriorRing( ring );
   QMap<QString, QVariant> attrs;
 
-  if ( mLabelingMode == QgsGuideGridLayer::LABEL_1_A )
+  if ( mLabellingMode == QgsGuideGridLayer::LABEL_1_A )
   {
     return QList<IdentifyResult>() << IdentifyResult( tr( "Cell %1, %2" ).arg( alphaLabel( 1 + j ) ).arg( 1 + i ), attrs, QgsGeometry( bbox ) );
   }
@@ -229,5 +234,8 @@ bool QgsGuideGridLayer::writeXml( QDomNode & layer_node, QDomDocument & /*docume
   layerEl.setAttribute( "colSizeLocked", mColSizeLocked ? 1 : 0 );
   layerEl.setAttribute( "rowSizeLocked", mRowSizeLocked ? 1 : 0 );
   layerEl.setAttribute( "crs", crs().authid() );
+  layerEl.setAttribute( "fontSize", mFontSize );
+  layerEl.setAttribute( "color", QgsSymbolLayerV2Utils::encodeColor( mColor ) );
+  layerEl.setAttribute( "labellingMode", static_cast<int>( mLabellingMode ) );
   return true;
 }

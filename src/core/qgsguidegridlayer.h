@@ -26,7 +26,7 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     Q_OBJECT
   public:
     static QString layerTypeKey() { return "guide_grid"; }
-    enum LabelingMode { LABEL_A_1, LABEL_1_A };
+    enum LabellingMode { LABEL_A_1, LABEL_1_A };
 
     QgsGuideGridLayer( const QString &name );
     void setup( const QgsRectangle& gridRect, int cols, int rows, const QgsCoordinateReferenceSystem& crs, bool colSizeLocked, bool rowSizeLocked );
@@ -41,14 +41,14 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
 
     const QColor& color() const { return mColor; }
     int fontSize() const { return mFontSize; }
-    LabelingMode labelingMode() const { return mLabelingMode; }
+    LabellingMode labelingMode() const { return mLabellingMode; }
 
     QList<IdentifyResult> identify( const QgsPoint& mapPos, const QgsMapSettings& mapSettings ) override;
 
   public slots:
     void setColor( const QColor& color ) { mColor = color; }
     void setFontSize( int fontSize ) { mFontSize = fontSize; }
-    void setLabelingMode( LabelingMode labelingMode ) { mLabelingMode = labelingMode; }
+    void setLabelingMode( LabellingMode labelingMode ) { mLabellingMode = labelingMode; }
 
   protected:
     bool readXml( const QDomNode& layer_node ) override;
@@ -64,7 +64,7 @@ class CORE_EXPORT QgsGuideGridLayer : public QgsPluginLayer
     bool mRowSizeLocked = false;
     int mFontSize = 30;
     QColor mColor = Qt::red;
-    LabelingMode mLabelingMode = LABEL_A_1;
+    LabellingMode mLabellingMode = LABEL_A_1;
 };
 
 class CORE_EXPORT QgsGuideGridLayerType : public QgsPluginLayerType

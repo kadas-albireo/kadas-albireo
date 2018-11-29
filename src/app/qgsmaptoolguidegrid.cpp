@@ -395,7 +395,7 @@ void QgsGuideGridWidget::updateLabeling( int labelingMode )
   {
     return;
   }
-  mCurrentLayer->setLabelingMode( static_cast<QgsGuideGridLayer::LabelingMode>( labelingMode ) );
+  mCurrentLayer->setLabelingMode( static_cast<QgsGuideGridLayer::LabellingMode>( labelingMode ) );
   mCurrentLayer->triggerRepaint();
 }
 
