@@ -349,7 +349,7 @@
         </property>
         <widget class="QWidget" name="mMyMapsTab">
          <attribute name="title">
-          <string>My &amp;maps</string>
+          <string>&amp;Map</string>
          </attribute>
          <layout class="QHBoxLayout" name="hboxLayout_mymaps">
           <property name="leftMargin">
