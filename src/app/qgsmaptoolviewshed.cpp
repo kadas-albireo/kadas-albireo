@@ -226,12 +226,14 @@ void QgsMapToolViewshed::drawFinished()
     if ( displayVisible )
     {
       QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
+          << QgsColorRampShader::ColorRampItem( 0, QColor( 0, 0, 0, 0 ), "" )
           << QgsColorRampShader::ColorRampItem( 255, QColor( 0, 255, 0 ), tr( "Visible" ) );
       rampShader->setColorRampItemList( colorRampItems );
     }
     else
     {
       QList<QgsColorRampShader::ColorRampItem> colorRampItems = QList<QgsColorRampShader::ColorRampItem>()
+          << QgsColorRampShader::ColorRampItem( 0, QColor( 0, 0, 0, 0 ), "" )
           << QgsColorRampShader::ColorRampItem( 0, QColor( 255, 0, 0 ), tr( "Invisible" ) );
       rampShader->setColorRampItemList( colorRampItems );
     }
