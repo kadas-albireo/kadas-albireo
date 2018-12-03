@@ -140,6 +140,8 @@ QgsGdalProvider::QgsGdalProvider( const QString &uri, bool update )
     CPLSetConfigOption( "VRT_SHARED_SOURCE", "NO" );
   }
 
+  CPLSetConfigOption( "OGR_GPKG_FOREIGN_KEY_CHECK", "NO" );
+
   // To get buildSupportedRasterFileFilter the provider is called with empty uri
   if ( uri.isEmpty() )
   {
