@@ -59,7 +59,10 @@ void QgsMapToolAnnotation::deactivate()
 {
   QgsMapTool::deactivate();
   if ( mItem )
+  {
     mItem->setSelected( false );
+    mItem.clear();
+  }
 }
 
 

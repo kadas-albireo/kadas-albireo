@@ -36,7 +36,7 @@ class GUI_EXPORT QgsMapToolAnnotation : public QgsMapTool
     virtual QgsAnnotationItem* createItem( const QPoint &/*pos*/ ) { return 0; }
 
   private:
-    QgsAnnotationItem* mItem = nullptr;
+    QPointer<QgsAnnotationItem> mItem;
 };
 
 
