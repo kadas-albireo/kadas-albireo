@@ -435,12 +435,12 @@ void QgsRibbonApp::configureButtons()
 
   QAction* actionExportKml = new QAction( tr( "KML Export" ) );
   connect( actionExportKml, SIGNAL( triggered() ), this, SLOT( kmlExport() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_E ), this ), SIGNAL( activated() ), actionExportKml, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_E, Qt::CTRL + Qt::Key_K ), this ), SIGNAL( activated() ), actionExportKml, SLOT( trigger() ) );
   kmlMenu->addAction( actionExportKml );
 
   QAction* actionImportKml = new QAction( tr( "KML Import" ) );
   connect( actionImportKml, SIGNAL( triggered() ), this, SLOT( kmlImport() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_I ), this ), SIGNAL( activated() ), actionImportKml, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_I, Qt::CTRL + Qt::Key_K ), this ), SIGNAL( activated() ), actionImportKml, SLOT( trigger() ) );
   kmlMenu->addAction( actionImportKml );
 
   mKMLButton->setIcon( QIcon( ":/images/ribbon/kml.png" ) );
@@ -495,35 +495,35 @@ void QgsRibbonApp::configureButtons()
 
   //analysis tab
   connect( mActionDistance, SIGNAL( triggered( bool ) ), this, SLOT( measure( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_D ), this ), SIGNAL( activated() ), mActionDistance, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_D ), this ), SIGNAL( activated() ), mActionDistance, SLOT( trigger() ) );
   setActionToButton( mActionDistance, mDistanceButton, mMapTools.mMeasureDist );
 
   connect( mActionArea, SIGNAL( triggered( bool ) ), this, SLOT( measureArea( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_A ), this ), SIGNAL( activated() ), mActionArea, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_A ), this ), SIGNAL( activated() ), mActionArea, SLOT( trigger() ) );
   setActionToButton( mActionArea, mAreaButton, mMapTools.mMeasureArea );
 
   connect( mActionCircle, SIGNAL( triggered( bool ) ), this, SLOT( measureCircle( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_C ), this ), SIGNAL( activated() ), mActionCircle, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_C ), this ), SIGNAL( activated() ), mActionCircle, SLOT( trigger() ) );
   setActionToButton( mActionCircle, mMeasureCircleButton, mMapTools.mMeasureCircle );
 
   connect( mActionAzimuth, SIGNAL( triggered( bool ) ), this, SLOT( measureAzimuth( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_B ), this ), SIGNAL( activated() ), mActionAzimuth, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_B ), this ), SIGNAL( activated() ), mActionAzimuth, SLOT( trigger() ) );
   setActionToButton( mActionAzimuth, mAzimuthButton, mMapTools.mMeasureAzimuth );
 
   connect( mActionProfile, SIGNAL( triggered( bool ) ), this, SLOT( measureHeightProfile( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_P ), this ), SIGNAL( activated() ), mActionProfile, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_P ), this ), SIGNAL( activated() ), mActionProfile, SLOT( trigger() ) );
   setActionToButton( mActionProfile, mProfileButton, mMapTools.mMeasureHeightProfile );
 
   connect( mActionSlope, SIGNAL( triggered( bool ) ), this, SLOT( slope( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_S ), this ), SIGNAL( activated() ), mActionSlope, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_S ), this ), SIGNAL( activated() ), mActionSlope, SLOT( trigger() ) );
   setActionToButton( mActionSlope, mSlopeButton, mMapTools.mSlope );
 
   connect( mActionHillshade, SIGNAL( triggered( bool ) ), this, SLOT( hillshade( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_H ), this ), SIGNAL( activated() ), mActionHillshade, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_H ), this ), SIGNAL( activated() ), mActionHillshade, SLOT( trigger() ) );
   setActionToButton( mActionHillshade, mHillshadeButton, mMapTools.mHillshade );
 
   connect( mActionViewshed, SIGNAL( triggered( bool ) ), this, SLOT( viewshed( bool ) ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_M, Qt::CTRL + Qt::Key_V ), this ), SIGNAL( activated() ), mActionViewshed, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_A, Qt::CTRL + Qt::Key_V ), this ), SIGNAL( activated() ), mActionViewshed, SLOT( trigger() ) );
   setActionToButton( mActionViewshed, mViewshedButton, mMapTools.mViewshed );
 
   //gps tab
