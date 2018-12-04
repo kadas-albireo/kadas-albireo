@@ -18400,10 +18400,10 @@ Only %1 of %2 features written.</source>
     <message>
         <location filename="../src/plugins/evis/idtool/eviseventidtool.cpp" line="77"/>
         <location filename="../src/plugins/evis/idtool/eviseventidtool.cpp" line="82"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="698"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="765"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="796"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="807"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="700"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="767"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="798"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="809"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="846"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="859"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="1199"/>
@@ -18948,68 +18948,68 @@ Only %1 of %2 features written.</source>
         <translation>수를 세고, 더하고, 벡터 레이어의 각 폴리곤에 대한 래스터의 평균을 계산하는 플러그인</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="699"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="701"/>
         <source>Cannot open GDAL MEM dataset %1: %2</source>
         <translation>GDAL MEM 데이터셋 %1을 열지 못함: %2</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="766"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="768"/>
         <source>Cannot GDALCreateGenImgProjTransformer: </source>
         <translation>GDALCreateGenImgProjTransformer을 실행할 수 없음:</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="797"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="799"/>
         <source>Cannot inittialize GDALWarpOperation : </source>
         <translation>GDALWarpOperation 초기화 할 수 없음 :</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="808"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="810"/>
         <source>Cannot ChunkAndWarpImage: %1</source>
         <translation>ChunkAndWarpImage 못함: %1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2159"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2161"/>
         <location filename="../src/providers/ogr/qgsogrprovider.cpp" line="1937"/>
         <source>GDAL/OGR VSIFileHandler</source>
         <translation>GDAL/OGR VSIFileHandler</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2210"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2212"/>
         <source>This raster file has no bands and is invalid as a raster layer.</source>
         <translation>이 래스터 파일은 밴드를 가지고 있지 않아 잘못된 래스터 레이어입니다.</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2542"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2544"/>
         <source>Cannot get GDAL raster band: %1</source>
         <translation>GDAL 래스터 밴드 가져오지 못함: %1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2986"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2988"/>
         <source>Nearest Neighbour</source>
         <translation>최근린</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2987"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2989"/>
         <source>Average</source>
         <translation>평균</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2988"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2990"/>
         <source>Gauss</source>
         <translation>Gauss</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2989"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2991"/>
         <source>Cubic</source>
         <translation>큐빅</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2990"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2992"/>
         <source>Mode</source>
         <translation>모드</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2991"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2993"/>
         <source>None</source>
         <translation>없음</translation>
     </message>
@@ -19332,7 +19332,7 @@ GRASS 설치 경로(GISBASE)를 지정하시겠습니까?</translation>
         <translation>X-Plane/Flightgear</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2165"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2167"/>
         <location filename="../src/providers/ogr/qgsogrprovider.cpp" line="1944"/>
         <source>All files</source>
         <translation>모든 파일</translation>
@@ -24426,42 +24426,35 @@ Database: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="71"/>
-        <source>Columns</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="113"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="110"/>
         <source>Rings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="120"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="117"/>
         <source>Font size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="140"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="137"/>
         <source>Labels:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="150"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="147"/>
         <source>Line width:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="213"/>
         <source>Rows</source>
-        <translation type="unfinished">행</translation>
+        <translation type="obsolete">행</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="216"/>
         <source>°</source>
-        <translation type="unfinished">°</translation>
+        <translation type="obsolete">°</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="263"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="257"/>
         <source>Layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37612,52 +37605,52 @@ The following files could not be imported:
 <context>
     <name>QgsGdalProvider</name>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="262"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="264"/>
         <source>Dataset Description</source>
         <translation>데이터셋 설명</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="283"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="285"/>
         <source>Band %1</source>
         <translation>밴드 %1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="317"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="319"/>
         <source>X: %1 Y: %2 Bands: %3</source>
         <translation>X: %1 Y: %2 밴드: %3</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="314"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="316"/>
         <source>Dimensions</source>
         <translation>차원</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="351"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="353"/>
         <source>Origin</source>
         <translation>원점</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="360"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="362"/>
         <source>Pixel Size</source>
         <translation>픽셀 사이즈</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="972"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="974"/>
         <source>Band</source>
         <translation>밴드</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="990"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="992"/>
         <source>Format not supported</source>
         <translation>지원하지 않는 형식</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="1063"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="1065"/>
         <source>Cannot read data</source>
         <translation>데이터를 읽을수 없음</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2530"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2532"/>
         <source>Cannot get GDAL raster band: %1</source>
         <translation>GDAL 래스터 밴드 가져오지 못함: %1</translation>
     </message>
@@ -43480,9 +43473,8 @@ at line %2 column %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsguidegridwidgetbase.ui" line="363"/>
         <source> px</source>
-        <translation type="unfinished"> px</translation>
+        <translation type="obsolete"> px</translation>
     </message>
     <message>
         <location filename="../src/ui/qgsguidegridwidgetbase.ui" line="376"/>
@@ -47997,12 +47989,12 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="229"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="230"/>
         <source>Visible</source>
         <translation type="unfinished">표시</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="235"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="237"/>
         <source>Invisible</source>
         <translation type="unfinished"></translation>
     </message>
@@ -48012,12 +48004,12 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="250"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="252"/>
         <source>Error</source>
         <translation type="unfinished">오류</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="250"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="252"/>
         <source>Failed to compute viewshed.</source>
         <translation type="unfinished"></translation>
     </message>

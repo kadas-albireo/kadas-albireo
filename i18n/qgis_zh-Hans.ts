@@ -18402,10 +18402,10 @@ Only %1 of %2 features written.</source>
     <message>
         <location filename="../src/plugins/evis/idtool/eviseventidtool.cpp" line="77"/>
         <location filename="../src/plugins/evis/idtool/eviseventidtool.cpp" line="82"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="698"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="765"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="796"/>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="807"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="700"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="767"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="798"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="809"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="846"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="859"/>
         <location filename="../src/providers/grass/qgsgrass.cpp" line="1199"/>
@@ -18950,68 +18950,68 @@ Only %1 of %2 features written.</source>
         <translation>一个用于计算矢量图层中每个多边形的栅格的计数、求和及平均值的插件</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="699"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="701"/>
         <source>Cannot open GDAL MEM dataset %1: %2</source>
         <translation>无法打开GDAL MEM数据集%1：%2</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="766"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="768"/>
         <source>Cannot GDALCreateGenImgProjTransformer: </source>
         <translation>无法执行GDALCreateGenImgProjTransforme：</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="797"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="799"/>
         <source>Cannot inittialize GDALWarpOperation : </source>
         <translation>无法初始化GDAL重新投影操作：</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="808"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="810"/>
         <source>Cannot ChunkAndWarpImage: %1</source>
         <translation>无法执行ChunkAndWarpImage：%1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2159"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2161"/>
         <location filename="../src/providers/ogr/qgsogrprovider.cpp" line="1937"/>
         <source>GDAL/OGR VSIFileHandler</source>
         <translation>GDAL/OGR VSIFileHandler</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2210"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2212"/>
         <source>This raster file has no bands and is invalid as a raster layer.</source>
         <translation>该栅格文件不包含任何波段，不能作为一个有效的栅格图层。</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2542"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2544"/>
         <source>Cannot get GDAL raster band: %1</source>
         <translation>无法获取GDAL栅格波段：%1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2986"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2988"/>
         <source>Nearest Neighbour</source>
         <translation>近邻取样</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2987"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2989"/>
         <source>Average</source>
         <translation>平均值</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2988"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2990"/>
         <source>Gauss</source>
         <translation>高斯</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2989"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2991"/>
         <source>Cubic</source>
         <translation>立方卷积</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2990"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2992"/>
         <source>Mode</source>
         <translation>模式</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2991"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2993"/>
         <source>None</source>
         <translation>无</translation>
     </message>
@@ -19334,7 +19334,7 @@ Would you like to specify path (GISBASE) to your GRASS installation?</source>
         <translation>模拟飞行</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2165"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2167"/>
         <location filename="../src/providers/ogr/qgsogrprovider.cpp" line="1944"/>
         <source>All files</source>
         <translation>全部文件</translation>
@@ -24401,42 +24401,39 @@ Database: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="71"/>
         <source>Columns</source>
-        <translation type="unfinished">列</translation>
+        <translation type="obsolete">列</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="113"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="110"/>
         <source>Rings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="120"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="117"/>
         <source>Font size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="140"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="137"/>
         <source>Labels:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="150"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="147"/>
         <source>Line width:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="213"/>
         <source>Rows</source>
-        <translation type="unfinished">行</translation>
+        <translation type="obsolete">行</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="216"/>
         <source>°</source>
-        <translation type="unfinished">°</translation>
+        <translation type="obsolete">°</translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="263"/>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="257"/>
         <source>Layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37546,52 +37543,52 @@ The following files could not be imported:
 <context>
     <name>QgsGdalProvider</name>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="262"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="264"/>
         <source>Dataset Description</source>
         <translation>数据集描述</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="283"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="285"/>
         <source>Band %1</source>
         <translation>波段%1</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="317"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="319"/>
         <source>X: %1 Y: %2 Bands: %3</source>
         <translation>横坐标：%1 纵坐标：%2 波段：%3</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="314"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="316"/>
         <source>Dimensions</source>
         <translation>维度</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="351"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="353"/>
         <source>Origin</source>
         <translation>起点</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="360"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="362"/>
         <source>Pixel Size</source>
         <translation>像素大小</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="972"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="974"/>
         <source>Band</source>
         <translation>波段</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="990"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="992"/>
         <source>Format not supported</source>
         <translation>不受支持的格式</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="1063"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="1065"/>
         <source>Cannot read data</source>
         <translation>无法读取数据</translation>
     </message>
     <message>
-        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2530"/>
+        <location filename="../src/providers/gdal/qgsgdalprovider.cpp" line="2532"/>
         <source>Cannot get GDAL raster band: %1</source>
         <translation>无法获取GDAL栅格波段：%1</translation>
     </message>
@@ -43395,9 +43392,8 @@ at line %2 column %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/qgsguidegridwidgetbase.ui" line="363"/>
         <source> px</source>
-        <translation type="unfinished"> 像素</translation>
+        <translation type="obsolete"> 像素</translation>
     </message>
     <message>
         <location filename="../src/ui/qgsguidegridwidgetbase.ui" line="376"/>
@@ -47950,12 +47946,12 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="229"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="230"/>
         <source>Visible</source>
         <translation type="unfinished">显示</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="235"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="237"/>
         <source>Invisible</source>
         <translation type="unfinished"></translation>
     </message>
@@ -47965,12 +47961,12 @@ This may be a problem in your network connection or at the WMS server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="250"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="252"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="250"/>
+        <location filename="../src/app/qgsmaptoolviewshed.cpp" line="252"/>
         <source>Failed to compute viewshed.</source>
         <translation type="unfinished"></translation>
     </message>
