@@ -56,6 +56,7 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
       static int labelBoxSize = mLayer->mFontSize + 5;
       mRendererContext.painter()->save();
       mRendererContext.painter()->setOpacity(( 100. - mLayer->mTransparency ) / 100. );
+      mRendererContext.painter()->setCompositionMode( QPainter::CompositionMode_Source );
       mRendererContext.painter()->setPen( QPen( mLayer->mColor, 1. ) );
 
       QFont font;
