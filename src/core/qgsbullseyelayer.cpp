@@ -51,6 +51,8 @@ class QgsBullsEyeLayer::Renderer : public QgsMapLayerRenderer
       bool labelRings = mLayer->mLabellingMode == LABEL_RINGS || mLayer->mLabellingMode == LABEL_AXES_RINGS;
 
       mRendererContext.painter()->save();
+      mRendererContext.painter()->setOpacity(( 100. - mLayer->mTransparency ) / 100. );
+      mRendererContext.painter()->setCompositionMode( QPainter::CompositionMode_Source );
       mRendererContext.painter()->setPen( QPen( mLayer->mColor, mLayer->mLineWidth ) );
       QFont font = mRendererContext.painter()->font();
       font.setPixelSize( mLayer->mFontSize );
