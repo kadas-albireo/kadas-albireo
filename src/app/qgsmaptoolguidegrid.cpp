@@ -280,16 +280,12 @@ void QgsGuideGridWidget::pointPicked( QgsGuideGridTool::PickMode pickMode, const
   if ( pickMode == QgsGuideGridTool::PICK_TOP_LEFT )
   {
     ui.lineEditTopLeft->setText( QString( "%1, %2" ).arg( pos.x(), 0, 'f', prec ).arg( pos.y(), 0, 'f', prec ) );
-    mCurRect.setXMinimum( pos.x() );
-    mCurRect.setYMaximum( pos.y() );
-    updateGrid();
+    topLeftEdited();
   }
   else if ( pickMode == QgsGuideGridTool::PICK_BOTTOM_RIGHT )
   {
     ui.lineEditBottomRight->setText( QString( "%1, %2" ).arg( pos.x(), 0, 'f', prec ).arg( pos.y(), 0, 'f', prec ) );
-    mCurRect.setXMaximum( pos.x() );
-    mCurRect.setYMinimum( pos.y() );
-    updateIntervals();
+    bottomRightEdited();
   }
 }
 
@@ -300,6 +296,26 @@ void QgsGuideGridWidget::topLeftEdited()
   {
     mCurRect.setXMinimum( g_cooRegExp.cap( 1 ).toDouble() );
     mCurRect.setYMaximum( g_cooRegExp.cap( 2 ).toDouble() );
+    if ( ui.toolButtonLockWidth->isChecked() )
+    {
+      mCurRect.setXMaximum( mCurRect.xMinimum() + ui.spinBoxCols->value() * ui.spinBoxWidth->value() );
+    }
+    else
+    {
+      ui.spinBoxWidth->blockSignals( true );
+      ui.spinBoxWidth->setValue( mCurRect.width() / ui.spinBoxCols->value() );
+      ui.spinBoxWidth->blockSignals( false );
+    }
+    if ( ui.toolButtonLockHeight->isChecked() )
+    {
+      mCurRect.setYMinimum( mCurRect.yMaximum() - ui.spinBoxRows->value() * ui.spinBoxHeight->value() );
+    }
+    else
+    {
+      ui.spinBoxHeight->blockSignals( true );
+      ui.spinBoxHeight->setValue( mCurRect.height() / ui.spinBoxRows->value() );
+      ui.spinBoxHeight->blockSignals( false );
+    }
     updateGrid();
   }
   else
@@ -316,7 +332,27 @@ void QgsGuideGridWidget::bottomRightEdited()
   {
     mCurRect.setXMaximum( g_cooRegExp.cap( 1 ).toDouble() );
     mCurRect.setYMinimum( g_cooRegExp.cap( 2 ).toDouble() );
-    updateIntervals();
+    if ( ui.toolButtonLockWidth->isChecked() )
+    {
+      mCurRect.setXMinimum( mCurRect.xMaximum() - ui.spinBoxCols->value() * ui.spinBoxWidth->value() );
+    }
+    else
+    {
+      ui.spinBoxWidth->blockSignals( true );
+      ui.spinBoxWidth->setValue( mCurRect.width() / ui.spinBoxCols->value() );
+      ui.spinBoxWidth->blockSignals( false );
+    }
+    if ( ui.toolButtonLockHeight->isChecked() )
+    {
+      mCurRect.setYMaximum( mCurRect.yMinimum() + ui.spinBoxRows->value() * ui.spinBoxHeight->value() );
+    }
+    else
+    {
+      ui.spinBoxHeight->blockSignals( true );
+      ui.spinBoxHeight->setValue( mCurRect.height() / ui.spinBoxRows->value() );
+      ui.spinBoxHeight->blockSignals( false );
+    }
+    updateGrid();
   }
   else
   {
