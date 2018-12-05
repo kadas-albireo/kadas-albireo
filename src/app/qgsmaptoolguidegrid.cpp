@@ -209,6 +209,7 @@ QgsGuideGridWidget::QgsGuideGridWidget( QgsMapCanvas *canvas, QgsLayerTreeView* 
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
+  connect( mCanvas, SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( updateSelectedLayer( QgsMapLayer* ) ) );
 
   repopulateLayers();
   connect( ui.comboBoxLayer, SIGNAL( currentIndexChanged( int ) ), this, SLOT( currentLayerChanged( int ) ) );
@@ -442,5 +443,14 @@ void QgsGuideGridWidget::currentLayerChanged( int cur )
   else
   {
     ui.widgetLayerSetup->setEnabled( false );
+  }
+}
+
+void QgsGuideGridWidget::updateSelectedLayer( QgsMapLayer* layer )
+{
+  QgsGuideGridLayer* guideGridLayer = dynamic_cast<QgsGuideGridLayer*>( layer );
+  if ( guideGridLayer )
+  {
+    setLayer( guideGridLayer );
   }
 }

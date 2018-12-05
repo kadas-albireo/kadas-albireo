@@ -87,6 +87,7 @@ class APP_EXPORT QgsBullsEyeWidget : public QgsBottomBar
     void updateLineWidth( int width );
     void repopulateLayers();
     void currentLayerChanged( int cur );
+    void updateSelectedLayer( QgsMapLayer* layer );
 };
 
 #endif // QGSMAPTOOLBULLSEYE_H

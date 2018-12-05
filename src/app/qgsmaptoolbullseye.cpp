@@ -200,6 +200,10 @@ QgsBullsEyeWidget::QgsBullsEyeWidget( QgsMapCanvas *canvas, QgsLayerTreeView* la
 
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersAdded( QList<QgsMapLayer*> ) ), this, SLOT( repopulateLayers() ) );
   connect( QgsMapLayerRegistry::instance(), SIGNAL( layersRemoved( QStringList ) ), this, SLOT( repopulateLayers() ) );
+  connect( mCanvas, SIGNAL( currentLayerChanged( QgsMapLayer* ) ), this, SLOT( updateSelectedLayer( QgsMapLayer* ) ) );
+
+  repopulateLayers();
+  connect( ui.comboBoxLayer, SIGNAL( currentIndexChanged( int ) ), this, SLOT( currentLayerChanged( int ) ) );
 }
 
 void QgsBullsEyeWidget::createLayer( QString layerName )
@@ -351,5 +355,14 @@ void QgsBullsEyeWidget::currentLayerChanged( int cur )
   else
   {
     ui.widgetLayerSetup->setEnabled( false );
+  }
+}
+
+void QgsBullsEyeWidget::updateSelectedLayer( QgsMapLayer* layer )
+{
+  QgsBullsEyeLayer* bullsEyeLayer = dynamic_cast<QgsBullsEyeLayer*>( layer );
+  if ( bullsEyeLayer )
+  {
+    setLayer( bullsEyeLayer );
   }
 }

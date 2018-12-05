@@ -95,6 +95,7 @@ class APP_EXPORT QgsGuideGridWidget : public QgsBottomBar
     void pickBottomRight() { emit requestPick( QgsGuideGridTool::PICK_BOTTOM_RIGHT ); }
     void repopulateLayers();
     void currentLayerChanged( int cur );
+    void updateSelectedLayer( QgsMapLayer *layer );
 };
 
 #endif // QGSMAPTOOLGUIDEGRID_H
