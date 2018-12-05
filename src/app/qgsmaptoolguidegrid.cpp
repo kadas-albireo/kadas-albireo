@@ -138,6 +138,10 @@ void QgsGuideGridTool::canvasReleaseEvent( QMouseEvent *e )
     mPickMode = PICK_NONE;
     setCursor( Qt::ArrowCursor );
   }
+  else if ( e->button() == Qt::RightButton )
+  {
+    canvas()->unsetMapTool( this );
+  }
 }
 
 void QgsGuideGridTool::keyReleaseEvent( QKeyEvent *e )

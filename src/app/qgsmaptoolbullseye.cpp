@@ -140,6 +140,10 @@ void QgsBullsEyeTool::canvasReleaseEvent( QMouseEvent *e )
     mWidget->centerPicked( toMapCoordinates( e->pos() ) );
     setPicking( false );
   }
+  else if ( e->button() == Qt::RightButton )
+  {
+    canvas()->unsetMapTool( this );
+  }
 }
 
 void QgsBullsEyeTool::keyReleaseEvent( QKeyEvent *e )
