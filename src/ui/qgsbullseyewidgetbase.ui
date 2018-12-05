@@ -200,7 +200,7 @@
       <item row="0" column="3">
        <widget class="QLabel" name="labelAxes">
         <property name="text">
-         <string notr="true">Axes:</string>
+         <string>Axes:</string>
         </property>
        </widget>
       </item>

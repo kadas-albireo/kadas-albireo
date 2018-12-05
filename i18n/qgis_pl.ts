@@ -9547,7 +9547,7 @@ Błąd geoprocesingu GEOS: Jeden lub więcej wejściowych obiektów ma błędną
     </message>
     <message>
         <location filename="../src/plugins/globe/globe_plugin.cpp" line="254"/>
-        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1185"/>
+        <location filename="../src/plugins/globe/globe_plugin.cpp" line="1194"/>
         <source>&amp;Globe</source>
         <translation>&amp;Glob</translation>
     </message>
@@ -24413,37 +24413,37 @@ Baza danych: %2</translation>
 <context>
     <name>QgsBullsEyeWidget</name>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="174"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="178"/>
         <source>Close</source>
         <translation type="unfinished">Zamknij</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="179"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="183"/>
         <source>Disabled</source>
         <translation type="unfinished">Wyłączone</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="180"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="184"/>
         <source>Axes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="181"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="185"/>
         <source>Rings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="182"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="186"/>
         <source>Axes and rings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="205"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="213"/>
         <source>Layer Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="205"/>
+        <location filename="../src/app/qgsmaptoolbullseye.cpp" line="213"/>
         <source>Enter name of new layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -24488,6 +24488,11 @@ Baza danych: %2</translation>
     <message>
         <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="147"/>
         <source>Line width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/qgsbullseyewidgetbase.ui" line="203"/>
+        <source>Axes:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -43413,8 +43418,8 @@ w wierszu %2 kolumnie %3</translation>
 <context>
     <name>QgsGuideGridLayer</name>
     <message>
-        <location filename="../src/core/qgsguidegridlayer.cpp" line="213"/>
-        <location filename="../src/core/qgsguidegridlayer.cpp" line="217"/>
+        <location filename="../src/core/qgsguidegridlayer.cpp" line="214"/>
+        <location filename="../src/core/qgsguidegridlayer.cpp" line="218"/>
         <source>Cell %1, %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -43435,17 +43440,17 @@ w wierszu %2 kolumnie %3</translation>
 <context>
     <name>QgsGuideGridWidget</name>
     <message>
-        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="175"/>
+        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="179"/>
         <source>Close</source>
         <translation type="unfinished">Zamknij</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="217"/>
+        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="222"/>
         <source>Layer Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="217"/>
+        <location filename="../src/app/qgsmaptoolguidegrid.cpp" line="222"/>
         <source>Enter name of new layer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -47434,12 +47439,12 @@ Może to być spowodowane problemem w sieci lokalnej lub problemem serwera WMS.<
 <context>
     <name>QgsMapToolEditAnnotation</name>
     <message>
-        <location filename="../src/gui/qgsmaptoolannotation.cpp" line="135"/>
+        <location filename="../src/gui/qgsmaptoolannotation.cpp" line="138"/>
         <source>Convert to waypoints</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qgsmaptoolannotation.cpp" line="137"/>
+        <location filename="../src/gui/qgsmaptoolannotation.cpp" line="140"/>
         <source>Delete</source>
         <translation type="unfinished">Usuń</translation>
     </message>
@@ -61645,87 +61650,87 @@ od średniej +/-</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="674"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="675"/>
         <source>On the fly projection enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="674"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="675"/>
         <source>The following layers are being reprojected to the selected CRS: %1. Performance may suffer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="692"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="693"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="704"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="705"/>
         <source>SVG graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="709"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="710"/>
         <source>Could not add image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="777"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="778"/>
         <source>Language Changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="777"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="778"/>
         <source>The language will be changed at the next program launch.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="806"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="807"/>
         <source>Connecting to GPS device...</source>
         <translation type="unfinished">Podłączanie do urządzenia GPS...</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="812"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="813"/>
         <source>GPS connection closed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="819"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="820"/>
         <source>GPS device successfully connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="830"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="831"/>
         <source>Connection to GPS device failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="881"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="882"/>
         <source>Remove</source>
         <translation type="unfinished">Usuń</translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="885"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="886"/>
         <source>Favorite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="897"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="898"/>
         <source>Project saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="910"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="911"/>
         <source>Manually set projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="913"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="914"/>
         <source>Unknown layer projection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/app/qgsribbonapp.cpp" line="914"/>
+        <location filename="../src/app/qgsribbonapp.cpp" line="915"/>
         <source>The projection of the layer %1 could not be recognized, its and features might be misplaced.</source>
         <translation type="unfinished"></translation>
     </message>
