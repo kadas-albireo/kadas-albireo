@@ -7062,11 +7062,11 @@ bool QgisApp::saveDirty()
     // old code: mProjectIsDirtyFlag = true;
 
     // prompt user to save
-    answer = QMessageBox::information( this, tr( "Save?" ),
-                                       tr( "Do you want to save the current project? %1" )
-                                       .arg( whyDirty ),
-                                       QMessageBox::Save | QMessageBox::Cancel | QMessageBox::Discard,
-                                       hasUnsavedEdits ? QMessageBox::Cancel : QMessageBox::Save );
+    answer = QMessageBox::question( this, tr( "Save?" ),
+                                    tr( "Do you want to save the current project? %1" )
+                                    .arg( whyDirty ),
+                                    QMessageBox::Yes | QMessageBox::Cancel | QMessageBox::No,
+                                    hasUnsavedEdits ? QMessageBox::Cancel : QMessageBox::Yes );
     if ( QMessageBox::Save == answer )
     {
       if ( !fileSave() )
