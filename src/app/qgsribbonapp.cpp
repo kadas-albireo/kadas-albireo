@@ -457,14 +457,14 @@ void QgsRibbonApp::configureButtons()
   setActionToButton( mActionZoomNext, mZoomNextButton );
 
   connect( mActionNewMapWindow, SIGNAL( triggered() ), mMultiMapManager, SLOT( addMapWidget() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_W ), this ), SIGNAL( activated() ), mActionNewMapWindow, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_W, Qt::CTRL + Qt::Key_N ), this ), SIGNAL( activated() ), mActionNewMapWindow, SLOT( trigger() ) );
   setActionToButton( mActionNewMapWindow, mNewMapWindowButton );
 
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_3 ), this ), SIGNAL( activated() ), mAction3D, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_W, Qt::CTRL + Qt::Key_3 ), this ), SIGNAL( activated() ), mAction3D, SLOT( trigger() ) );
   setActionToButton( mAction3D, m3DButton );
 
   connect( mActionGrid, SIGNAL( triggered() ), mDecorationGrid, SLOT( run() ) );
-  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V, Qt::CTRL + Qt::Key_G ), this ), SIGNAL( activated() ), mActionGrid, SLOT( trigger() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_W, Qt::CTRL + Qt::Key_G ), this ), SIGNAL( activated() ), mActionGrid, SLOT( trigger() ) );
   setActionToButton( mActionGrid, mGridButton );
 
   //draw tab
@@ -487,6 +487,7 @@ void QgsRibbonApp::configureButtons()
 
 
   connect( mActionPaste, SIGNAL( triggered( bool ) ), this, SLOT( paste() ) );
+  connect( new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this ), SIGNAL( activated() ), mActionPaste, SLOT( trigger() ) );
   setActionToButton( mActionPaste, mPasteButton );
   mActionPaste->setEnabled( canPaste() );
 
