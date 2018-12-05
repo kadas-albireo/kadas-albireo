@@ -24,25 +24,14 @@ QgsBillBoardRegistry* QgsBillBoardRegistry::instance()
   return &instance;
 }
 
-void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QImage &image, const QgsPoint &worldPos , int xoffset, const QString &layerId, const QPointF& hotSpot )
+void QgsBillBoardRegistry::addItem( void* parent, const QString& name, const QImage &image, const QgsPoint &worldPos, const QString &layerId, const QPointF& hotSpot )
 {
   QMap<void*, QgsBillBoardItem*>::iterator it = mItems.find( parent );
   if ( it == mItems.end() )
   {
     it = mItems.insert( parent, new QgsBillBoardItem );
   }
-  if ( xoffset == 0 )
-  {
-    it.value()->image = image;
-  }
-  else
-  {
-    QImage newimage( image.width() + 2 * qAbs( xoffset ), image.height(), image.format() );
-    newimage.fill( Qt::transparent );
-    QPainter p( &newimage );
-    p.drawImage( xoffset < 0 ? 0 : 2 * xoffset, 0, image );
-    it.value()->image = newimage;
-  }
+  it.value()->image = image;
   it.value()->name = name;
   it.value()->worldPos = worldPos;
   it.value()->layerId = layerId;

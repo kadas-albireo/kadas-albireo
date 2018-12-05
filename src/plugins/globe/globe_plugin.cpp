@@ -1098,7 +1098,16 @@ void GlobePlugin::addBillboard( QgsBillBoardItem* item )
     const QgsPoint& p = item->worldPos;
     osgEarth::GeoPoint geop( osgEarth::SpatialReference::get( "wgs84" ), p.x(), p.y(), 0, osgEarth::ALTMODE_RELATIVE );
 
-    const QImage& image = item->image;
+    QImage image = item->image;
+    if ( item->hotSpot.x() != image.width() / 2 )
+    {
+      int offset = item->hotSpot.x() + image.width() / 2;
+      QImage newimage( image.width() + 2 * qAbs( offset ), image.height(), image.format() );
+      newimage.fill( Qt::transparent );
+      QPainter p( &newimage );
+      p.drawImage( offset < 0 ? 0 : 2 * offset, 0, image );
+      image = newimage;
+    }
     unsigned char* imgbuf = new unsigned char[image.bytesPerLine() * image.height()];
     std::memcpy( imgbuf, image.bits(), image.bytesPerLine() * image.height() );
     osg::Image* osgImage = new osg::Image;
