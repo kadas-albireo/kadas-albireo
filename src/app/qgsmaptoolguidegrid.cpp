@@ -232,6 +232,10 @@ void QgsGuideGridWidget::createLayer( QString layerName )
 
 void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
 {
+  if ( layer == mCurrentLayer )
+  {
+    return;
+  }
   mCurrentLayer = dynamic_cast<QgsGuideGridLayer*>( layer );
   if ( !mCurrentLayer )
   {

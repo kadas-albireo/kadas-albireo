@@ -230,6 +230,10 @@ void QgsBullsEyeWidget::createLayer( QString layerName )
 
 void QgsBullsEyeWidget::setLayer( QgsMapLayer *layer )
 {
+  if ( layer == mCurrentLayer )
+  {
+    return;
+  }
   mCurrentLayer = dynamic_cast<QgsBullsEyeLayer*>( layer );
   if ( !mCurrentLayer )
   {
