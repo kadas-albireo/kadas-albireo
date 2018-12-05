@@ -259,8 +259,14 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
   ui.spinBoxRows->blockSignals( true );
   ui.spinBoxRows->setValue( mCurrentLayer->rows() );
   ui.spinBoxRows->blockSignals( false );
+  ui.toolButtonLockHeight->blockSignals( true );
   ui.toolButtonLockHeight->setChecked( mCurrentLayer->rowSizeLocked() );
+  ui.toolButtonLockHeight->setIcon( QIcon( ui.toolButtonLockHeight->isChecked() ? ":/images/themes/default/locked.svg" : ":/images/themes/default/unlocked.svg" ) );
+  ui.toolButtonLockHeight->blockSignals( false );
+  ui.toolButtonLockWidth->blockSignals( true );
   ui.toolButtonLockWidth->setChecked( mCurrentLayer->colSizeLocked() );
+  ui.toolButtonLockWidth->setIcon( QIcon( ui.toolButtonLockWidth->isChecked() ? ":/images/themes/default/locked.svg" : ":/images/themes/default/unlocked.svg" ) );
+  ui.toolButtonLockWidth->blockSignals( false );
   ui.toolButtonColor->setColor( mCurrentLayer->color() );
   ui.spinBoxFontSize->setValue( mCurrentLayer->fontSize() );
   ui.comboBoxLabeling->setCurrentIndex( mCurrentLayer->labelingMode() );
