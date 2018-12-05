@@ -290,8 +290,9 @@ void QgsKMLImport::buildVSIVRT( const QString& name, OverlayData &overlayData, Q
   }
 
   // Prepare vsi output
-  QString vsifilename = QgsTemporaryFile::createNewFile( QString( "%1.zip" ).arg( name ) );
-  vsifilename.replace( QRegExp( "[<>:\"/\\\\|?*]" ), "_" ); // Replace invalid path chars
+  QString safename = name;
+  safename.replace( QRegExp( "[<>:\"/\\\\|?*]" ), "_" ); // Replace invalid path chars
+  QString vsifilename = QgsTemporaryFile::createNewFile( QString( "%1.zip" ).arg( safename ) );
   QuaZip vsiZip( vsifilename );
   if ( !vsiZip.open( QuaZip::mdCreate ) )
   {
