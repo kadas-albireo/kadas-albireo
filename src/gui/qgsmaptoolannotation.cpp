@@ -267,6 +267,7 @@ for ( const auto& item : mItems )
   {
     delete item.data();
   }
+  mItems.clear();
   deleteLater();
 }
 
