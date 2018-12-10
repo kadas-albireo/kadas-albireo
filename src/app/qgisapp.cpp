@@ -5176,8 +5176,10 @@ void QgisApp::paste( QgsMapLayer *destinationLayer, const QgsPoint *mapPos )
   }
   if ( clipboard()->hasFormat( "image/svg+xml" ) )
   {
-    pasteSvgImage( mapPos );
-    return;
+    if ( pasteSvgImage( mapPos ) )
+    {
+      return;
+    }
   }
   QList<QByteArray> mimeTypes = QImageReader::supportedMimeTypes();
   mimeTypes.prepend( "image/png" ); // Try png first
@@ -5256,7 +5258,7 @@ void QgisApp::pasteFeatures( QgsMapLayer *destinationLayer, const QgsPoint* mapP
   }
 }
 
-void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
+bool QgisApp::pasteSvgImage( const QgsPoint *mapPos )
 {
   const QMimeData* mimeData = QApplication::clipboard()->mimeData();
   QString filename = QgsTemporaryFile::createNewFile( "pasted_image.svg" );
