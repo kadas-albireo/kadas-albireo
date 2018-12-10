@@ -5179,6 +5179,18 @@ void QgisApp::paste( QgsMapLayer *destinationLayer, const QgsPoint *mapPos )
     pasteSvgImage( mapPos );
     return;
   }
+  QList<QByteArray> mimeTypes = QImageReader::supportedMimeTypes();
+  mimeTypes.prepend( "image/png" ); // Try png first
+for ( const QByteArray& mimeType : mimeTypes )
+  {
+    if ( clipboard()->hasFormat( mimeType ) )
+    {
+      if ( pasteImage( mapPos, mimeType ) )
+      {
+        return;
+      }
+    }
+  }
   foreach ( const QString& format, mPasteHandlers.keys() )
   {
     if ( clipboard()->hasFormat( format ) )
@@ -5258,7 +5270,32 @@ void QgisApp::pasteSvgImage( const QgsPoint *mapPos )
     item->setFilePath( filename );
     item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
     QgsAnnotationLayer::getLayer( mapCanvas(), "svgSymbols", tr( "SVG graphics" ) )->addItem( item );
+    return true;
   }
+  return false;
+}
+
+bool QgisApp::pasteImage( const QgsPoint *mapPos, const QByteArray& mimeType )
+{
+  const QMimeData* mimeData = QApplication::clipboard()->mimeData();
+  QByteArray imageData = mimeData->data( mimeType );
+  QBuffer buf( &imageData );
+  QString ext = QImageReader( &buf ).format();
+  QString filename = QgsTemporaryFile::createNewFile( QString( "pasted_image.%1" ).arg( ext ) );
+  QFile file( filename );
+  if ( file.open( QIODevice::WriteOnly ) )
+  {
+    QgsPoint insPos = mapPos ? *mapPos : mapCanvas()->extent().center();
+    file.write( imageData );
+    file.close();
+    QgsGeoImageAnnotationItem* item = QgsGeoImageAnnotationItem::create( mapCanvas(), filename, false );
+    if ( item )
+    {
+      item->setMapPosition( insPos, mapCanvas()->mapSettings().destinationCrs() );
+      return true;
+    }
+  }
+  return false;
 }
 
 bool QgisApp::canPaste()

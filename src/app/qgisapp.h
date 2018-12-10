@@ -530,6 +530,7 @@ class APP_EXPORT QgisApp : public QMainWindow
      */
     void pasteFeatures( QgsMapLayer *destinationLayer = 0 , const QgsPoint *mapPos = 0 );
     void pasteSvgImage( const QgsPoint *mapPos );
+    bool pasteImage( const QgsPoint *mapPos, const QByteArray& mimeType );
     void paste( QgsMapLayer *destinationLayer = 0, const QgsPoint* mapPos = 0 );
     void paste( QgsPoint mapPos ) { paste( 0, &mapPos ); }
     /** Returns whether there are features to paste */
