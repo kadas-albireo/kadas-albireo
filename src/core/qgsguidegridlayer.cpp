@@ -59,6 +59,9 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
       mRendererContext.painter()->setCompositionMode( QPainter::CompositionMode_Source );
       mRendererContext.painter()->setPen( QPen( mLayer->mColor, 1. ) );
 
+      QStringList flags = mRendererContext.customRenderFlags().split( ";" );
+      bool adaptLabelsToScreen = !( flags.contains( "globe" ) || flags.contains( "kml" ) );
+
       QFont font;
       font.setPixelSize( mLayer->mFontSize );
       mRendererContext.painter()->setFont( font );
@@ -71,26 +74,34 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
       QPointF screenBR = mapToPixel.transform( crst ? crst->transform( pBR ) : pBR ).toQPointF();
       QRectF screenRect( screenTL, screenBR );
 
-      // Draw vertical lines
       double ix = gridRect.width() / mLayer->mCols;
-      QPair<QPointF, QPointF> vLine1 = screenLine( QgsPoint( gridRect.xMinimum(), gridRect.yMaximum() ), QgsPoint( gridRect.xMinimum(), gridRect.yMinimum() ) );
-      mRendererContext.painter()->drawLine( vLine1.first, vLine1.second );
-      double sy1 = qMax( vLine1.first.y(), screenRect.top() );
-      double sy2 = qMin( vLine1.second.y(), screenRect.bottom() );
+      double iy = gridRect.height() / mLayer->mRows;
+
+      // Draw vertical lines
+      QPolygonF vLine1 = vScreenLine( gridRect.xMinimum(), iy );
+      {
+        QPainterPath path;
+        path.addPolygon( vLine1 );
+        mRendererContext.painter()->drawPath( path );
+      }
+      double sy1 = adaptLabelsToScreen ? qMax( vLine1.first().y(), screenRect.top() ) : vLine1.first().y();
+      double sy2 = adaptLabelsToScreen ? qMin( vLine1.last().y(), screenRect.bottom() ) : vLine1.last().y();
       for ( int col = 1; col <= mLayer->mCols; ++col )
       {
         double x2 = gridRect.xMinimum() + col * ix;
-        QPair<QPointF, QPointF> vLine2 = screenLine( QgsPoint( x2, gridRect.yMaximum() ), QgsPoint( x2, gridRect.yMinimum() ) );
-        mRendererContext.painter()->drawLine( vLine2.first, vLine2.second );
+        QPolygonF vLine2 = vScreenLine( x2, iy );
+        QPainterPath path;
+        path.addPolygon( vLine2 );
+        mRendererContext.painter()->drawPath( path );
 
-        double sx1 = vLine1.first.x();
-        double sx2 = vLine2.first.x();
+        double sx1 = vLine1.first().x();
+        double sx2 = vLine2.first().x();
         QString label = mLayer->mLabellingMode == QgsGuideGridLayer::LABEL_A_1 ? alphaLabel( col ) : QString( "%1" ).arg( col );
-        if ( sy1 < vLine1.second.y() - 2 * labelBoxSize )
+        if ( sy1 < vLine1.last().y() - 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx1, sy1, sx2 - sx1, labelBoxSize ), Qt::AlignHCenter | Qt::AlignVCenter, label );
         }
-        if ( sy2 > vLine1.first.y() + 2 * labelBoxSize )
+        if ( sy2 > vLine1.first().y() + 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx1, sy2 - labelBoxSize, sx2 - sx1, labelBoxSize ), Qt::AlignHCenter | Qt::AlignVCenter, label );
         }
@@ -99,25 +110,30 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
       }
 
       // Draw horizontal lines
-      double iy = gridRect.height() / mLayer->mRows;
-      QPair<QPointF, QPointF> hLine1 = screenLine( QgsPoint( gridRect.xMinimum(), gridRect.yMaximum() ), QgsPoint( gridRect.xMaximum(), gridRect.yMaximum() ) );
-      mRendererContext.painter()->drawLine( hLine1.first, hLine1.second );
-      double sx1 = qMax( hLine1.first.x(), screenRect.left() );
-      double sx2 = qMin( vLine1.second.x(), screenRect.right() );;
+      QPolygonF hLine1 = hScreenLine( gridRect.yMaximum(), ix );
+      {
+        QPainterPath path;
+        path.addPolygon( hLine1 );
+        mRendererContext.painter()->drawPath( path );
+      }
+      double sx1 = adaptLabelsToScreen ? qMax( hLine1.first().x(), screenRect.left() ) : hLine1.first().x();
+      double sx2 = adaptLabelsToScreen ? qMin( vLine1.last().x(), screenRect.right() ) : vLine1.last().x();
       for ( int row = 1; row <= mLayer->mRows; ++row )
       {
         double y = gridRect.yMaximum() - row * iy;
-        QPair<QPointF, QPointF> hLine2 = screenLine( QgsPoint( gridRect.xMinimum(), y ), QgsPoint( gridRect.xMaximum(), y ) );
-        mRendererContext.painter()->drawLine( hLine2.first, hLine2.second );
+        QPolygonF hLine2 = hScreenLine( y, ix );
+        QPainterPath path;
+        path.addPolygon( hLine2 );
+        mRendererContext.painter()->drawPath( path );
 
-        double sy1 = hLine1.first.y();
-        double sy2 = hLine2.first.y();
+        double sy1 = hLine1.first().y();
+        double sy2 = hLine2.first().y();
         QString label = mLayer->mLabellingMode == QgsGuideGridLayer::LABEL_1_A ? alphaLabel( row ) : QString( "%1" ).arg( row );
-        if ( sx1 < vLine1.second.x() - 2 * labelBoxSize )
+        if ( sx1 < vLine1.last().x() - 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx1, sy1, labelBoxSize, sy2 - sy1 ), Qt::AlignHCenter | Qt::AlignVCenter, label );
         }
-        if ( sx2 > hLine1.first.x() + 2 * labelBoxSize )
+        if ( sx2 > hLine1.first().x() + 2 * labelBoxSize )
         {
           mRendererContext.painter()->drawText( QRectF( sx2 - labelBoxSize, sy1, labelBoxSize, sy2 - sy1 ), Qt::AlignHCenter | Qt::AlignVCenter, label );
         }
@@ -132,13 +148,33 @@ class QgsGuideGridLayer::Renderer : public QgsMapLayerRenderer
     QgsGuideGridLayer* mLayer;
     QgsRenderContext& mRendererContext;
 
-    QPair<QPointF, QPointF> screenLine( const QgsPoint& p1, const QgsPoint& p2 ) const
+    QPolygonF vScreenLine( double x, double iy ) const
     {
       const QgsCoordinateTransform* crst = mRendererContext.coordinateTransform();
       const QgsMapToPixel& mapToPixel = mRendererContext.mapToPixel();
-      QPointF sp1 = mapToPixel.transform( crst ? crst->transform( p1 ) : p1 ).toQPointF();
-      QPointF sp2 = mapToPixel.transform( crst ? crst->transform( p2 ) : p2 ).toQPointF();
-      return qMakePair( sp1, sp2 );
+      const QgsRectangle& gridRect = mLayer->mGridRect;
+      QPolygonF screenPoints;
+      for ( int row = 0; row <= mLayer->mRows; ++row )
+      {
+        QgsPoint p( x, gridRect.yMaximum() - row * iy );
+        QPointF screenPoint = mapToPixel.transform( crst ? crst->transform( p ) : p ).toQPointF();
+        screenPoints.append( screenPoint );
+      }
+      return screenPoints;
+    }
+    QPolygonF hScreenLine( double y, double ix ) const
+    {
+      const QgsCoordinateTransform* crst = mRendererContext.coordinateTransform();
+      const QgsMapToPixel& mapToPixel = mRendererContext.mapToPixel();
+      const QgsRectangle& gridRect = mLayer->mGridRect;
+      QPolygonF screenPoints;
+      for ( int col = 0; col <= mLayer->mCols; ++col )
+      {
+        QgsPoint p( gridRect.xMinimum() + col * ix, y );
+        QPointF screenPoint = mapToPixel.transform( crst ? crst->transform( p ) : p ).toQPointF();
+        screenPoints.append( screenPoint );
+      }
+      return screenPoints;
     }
 };
 
