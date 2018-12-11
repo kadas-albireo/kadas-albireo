@@ -1518,7 +1518,7 @@ QString QgsProject::writePath( QString src, QString relativeBasePath , bool copy
 
   // If stored in tmp dir, move to <project>_files folder, unless project path is in tmp dir
   QString tmpDir = QDesktopServices::storageLocation( QDesktopServices::TempLocation );
-  if (( srcPath.startsWith( tmpDir ) || copyToDatadir ) && !fileName().startsWith( tmpDir ) )
+  if (( srcPath.startsWith( tmpDir ) || copyToDatadir ) && !fileName().startsWith( tmpDir, Qt::CaseInsensitive ) )
   {
     // If a VSI file, determine the portion of the path that actually exists on the filesystem
     QString vsiPath;
