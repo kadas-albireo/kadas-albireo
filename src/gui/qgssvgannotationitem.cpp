@@ -50,7 +50,7 @@ void QgsSvgAnnotationItem::writeXML( QDomDocument& doc ) const
   }
 
   QDomElement svgAnnotationElem = doc.createElement( "SVGAnnotationItem" );
-  svgAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath ) );
+  svgAnnotationElem.setAttribute( "file", QgsProject::instance()->writePath( mFilePath, QString::null, true ) );
   _writeXML( doc, svgAnnotationElem );
   documentElem.appendChild( svgAnnotationElem );
 }
