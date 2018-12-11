@@ -81,7 +81,7 @@ void QgsGpsMarker::paint( QPainter* p )
   setPos( pt );
 
   p->save();
-  p->rotate( mDirection / 180. * M_PI );
+  p->rotate( mDirection );
   mSvg.render( p, QRectF( - mSize, - mSize, 2 * mSize, 2 * mSize ) );
   p->restore();
 }
