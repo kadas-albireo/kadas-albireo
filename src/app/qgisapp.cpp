@@ -7131,6 +7131,8 @@ void QgisApp::closeProject()
   // remove any message widgets from the message bar
   messageBar()->clearWidgets();
 
+  mapCanvas()->setMapTool( mMapTools.mPan );
+
   mTrustedMacros = false;
 
   setFilterLegendByMapEnabled( false );
