@@ -7132,6 +7132,7 @@ void QgisApp::closeProject()
   messageBar()->clearWidgets();
 
   mapCanvas()->setMapTool( mMapTools.mPan );
+  mapCanvas()->setCurrentLayer( nullptr );
 
   mTrustedMacros = false;
 
