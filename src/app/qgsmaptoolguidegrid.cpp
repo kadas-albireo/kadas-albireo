@@ -257,9 +257,15 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
   ui.spinBoxCols->blockSignals( true );
   ui.spinBoxCols->setValue( mCurrentLayer->cols() );
   ui.spinBoxCols->blockSignals( false );
+  ui.spinBoxWidth->blockSignals( true );
+  ui.spinBoxWidth->setValue( mCurRect.width() / mCurrentLayer->cols() );
+  ui.spinBoxWidth->blockSignals( false );
   ui.spinBoxRows->blockSignals( true );
   ui.spinBoxRows->setValue( mCurrentLayer->rows() );
   ui.spinBoxRows->blockSignals( false );
+  ui.spinBoxHeight->blockSignals( true );
+  ui.spinBoxHeight->setValue( mCurRect.height() / mCurrentLayer->rows() );
+  ui.spinBoxHeight->blockSignals( false );
   ui.toolButtonLockHeight->blockSignals( true );
   ui.toolButtonLockHeight->setChecked( mCurrentLayer->rowSizeLocked() );
   ui.toolButtonLockHeight->setIcon( QIcon( ui.toolButtonLockHeight->isChecked() ? ":/images/themes/default/locked.svg" : ":/images/themes/default/unlocked.svg" ) );
