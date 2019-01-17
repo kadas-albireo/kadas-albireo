@@ -236,6 +236,7 @@ void QgsGuideGridWidget::setLayer( QgsMapLayer *layer )
   {
     return;
   }
+  emit requestPick( QgsGuideGridTool::PICK_NONE );
   mCurrentLayer = dynamic_cast<QgsGuideGridLayer*>( layer );
   if ( !mCurrentLayer )
   {

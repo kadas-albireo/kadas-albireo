@@ -76,7 +76,7 @@ class APP_EXPORT QgsBullsEyeWidget : public QgsBottomBar
     void updateGrid();
 
   signals:
-    void requestPickCenter();
+    void requestPickCenter( bool active = true );
     void close();
 
   private slots:

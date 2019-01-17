@@ -41,7 +41,7 @@ QgsBullsEyeTool::QgsBullsEyeTool( QgsMapCanvas* canvas, QgsLayerTreeView* layerT
 {
   mWidget = new QgsBullsEyeWidget( canvas, mLayerTreeView );
   mWidget->setVisible( false );
-  connect( mWidget, SIGNAL( requestPickCenter() ), this, SLOT( setPicking() ) );
+  connect( mWidget, SIGNAL( requestPickCenter( bool ) ), this, SLOT( setPicking( bool ) ) );
   connect( mWidget, SIGNAL( close() ), this, SLOT( close() ) );
 
   mActionEditLayer = new QAction( tr( "Edit" ), this );
@@ -234,6 +234,7 @@ void QgsBullsEyeWidget::setLayer( QgsMapLayer *layer )
   {
     return;
   }
+  emit requestPickCenter( false );
   mCurrentLayer = dynamic_cast<QgsBullsEyeLayer*>( layer );
   if ( !mCurrentLayer )
   {
