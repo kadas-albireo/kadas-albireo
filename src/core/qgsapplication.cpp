@@ -374,10 +374,14 @@ const QString QgsApplication::activeThemePath()
 const QString QgsApplication::projectTemplatesDir()
 {
   QString applicationTemplatesDir = QDir( prefixPath() ).absoluteFilePath( "share/qgis/project_templates" );
-  QString templatesDir = QSettings().value( "/Qgis/projectTemplatesDir" ).toString();
-  if ( templatesDir.isEmpty() && QDir( applicationTemplatesDir ).exists() )
+  QString customTemplatesDir = QSettings().value( "/Qgis/projectTemplatesDir" ).toString();
+  if ( customTemplatesDir.isEmpty() && QDir( applicationTemplatesDir ).exists() )
   {
     return applicationTemplatesDir;
+  }
+  else if ( !customTemplatesDir.isEmpty() && QDir( customTemplatesDir ).exists() )
+  {
+    return customTemplatesDir;
   }
   return QDir( QgsApplication::qgisSettingsDirPath() ).absoluteFilePath( "project_templates" );
 }
