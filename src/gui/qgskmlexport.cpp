@@ -478,9 +478,16 @@ void QgsKMLExport::addStyle( QTextStream& outStream, QgsFeature& f, QgsFeatureRe
     {
       fillColor = QgsSymbolLayerV2Utils::decodeColor( expr->evaluate( f ).toString() );
     }
+    int fill = 0;
+    expr = s->symbolLayer( 0 )->expression( "fill_style" );
+    if ( expr )
+    {
+      Qt::BrushStyle brushStyle = QgsSymbolLayerV2Utils::decodeBrushStyle( expr->evaluate( f ).toString() );
+      fill = brushStyle != Qt::NoBrush;
+    }
 
-    outStream << QString( "<LineStyle><width>%1</width><color>%2</color></LineStyle><PolyStyle><fill>1</fill><color>%3</color></PolyStyle>" )
-    .arg( width ).arg( convertColor( outlineColor ) ).arg( convertColor( fillColor ) );
+    outStream << QString( "<LineStyle><width>%1</width><color>%2</color></LineStyle><PolyStyle><fill>%3</fill><color>%4</color></PolyStyle>" )
+    .arg( width ).arg( convertColor( outlineColor ) ).arg( fill ).arg( convertColor( fillColor ) );
   }
   outStream << "</Style>\n";
 }
