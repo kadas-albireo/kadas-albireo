@@ -224,7 +224,7 @@ void QgsBullsEyeWidget::createLayer( QString layerName )
     QgsBullsEyeLayer* bullEyeLayer = new QgsBullsEyeLayer( layerName );
     bullEyeLayer->setup( mCanvas->extent().center(), mCanvas->mapSettings().destinationCrs(), 5, interval, 45 );
     QgsMapLayerRegistry::instance()->addMapLayer( bullEyeLayer );
-    setLayer( bullEyeLayer );
+    mLayerTreeView->setCurrentLayer( bullEyeLayer );
   }
 }
 

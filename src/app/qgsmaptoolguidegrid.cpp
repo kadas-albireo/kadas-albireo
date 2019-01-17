@@ -226,7 +226,7 @@ void QgsGuideGridWidget::createLayer( QString layerName )
     QgsGuideGridLayer* guideGridLayer = new QgsGuideGridLayer( layerName );
     guideGridLayer->setup( mCanvas->extent(), 10, 10, mCanvas->mapSettings().destinationCrs(), false, false );
     QgsMapLayerRegistry::instance()->addMapLayer( guideGridLayer );
-    setLayer( guideGridLayer );
+    mLayerTreeView->setCurrentLayer( guideGridLayer );
   }
 }
 
